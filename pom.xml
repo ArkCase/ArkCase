@@ -11,8 +11,8 @@
 
     <scm>
         <connection>scm:git:ssh://git@github.com:Armedia/ACM3.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:Armedia/ACM3.git</developerConnection>
-        <url>git@github.com:Armedia/ACM3.git</url>
+        <developerConnection>scm:git:ssh://git@github.com/Armedia/ACM3.git</developerConnection>
+        <url>git@github.com|Armedia/ACM3.git</url>
     </scm>
 
     <properties>
