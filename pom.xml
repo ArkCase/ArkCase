@@ -10,9 +10,9 @@
     <packaging>pom</packaging>
 
     <scm>
-        <connection>scm:git:ssh://git@github.com:Armedia/ACM3.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/Armedia/ACM3.git</developerConnection>
-        <url>git@github.com|Armedia/ACM3.git</url>
+        <connection>scm:git:git@github.com:Armedia/ACM3.git</connection>
+        <developerConnection>scm:git:git@github.com:Armedia/ACM3.git</developerConnection>
+        <url>scm:git:git@github.com:Armedia/ACM3.git</url>
     </scm>
 
     <properties>
@@ -64,6 +64,13 @@
                 </excludes>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.3.2</version>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencyManagement>
