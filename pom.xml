@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.armedia</groupId>
+    <artifactId>acm</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <scm>
+        <connection>scm:git:ssh://git@github.com:Armedia/ACM3.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:Armedia/ACM3.git</developerConnection>
+        <url>git@github.com:Armedia/ACM3.git</url>
+    </scm>
+
+    <properties>
+        <activiti.version>5.14</activiti.version>
+        <h2.version>1.3.169</h2.version>
+        <junit.version>4.11</junit.version>
+        <mule.version>3.4.0</mule.version>
+        <slf4j.version>1.7.5</slf4j.version>
+        <spring.version>3.2.6.RELEASE</spring.version>
+    </properties>
+
+    <repositories>
+        <!-- The Activiti repository -->
+        <repository>
+            <name>Activiti repository (hosted by Alfresco)</name>
+            <id>Alfresco Maven Repository</id>
+            <url>https://maven.alfresco.com/nexus/content/groups/public/</url>
+        </repository>
+        <!-- Mule repository -->
+        <repository>
+            <id>mulesoft-releases</id>
+            <name>MuleSoft Releases Repository</name>
+            <url>http://repository.mulesoft.org/releases/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
+    <build>
+        <resources>
+            <resource>
+                <!-- Mule Studio puts the flow definitions in the src/main/app folder.
+                     We need to treat them the same as resources from src/main/resources. -->
+                <directory>src/main/app/</directory>
+            </resource>
+            <resource>
+                <!-- filter the spring config files (apply Maven variables) -->
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/spring-config-*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <!-- do not filter non-Spring files -->
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/spring-config-*.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- activiti -->
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-engine</artifactId>
+                <version>${activiti.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-spring</artifactId>
+                <version>${activiti.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- mule -->
+            <dependency>
+                <groupId>org.mule</groupId>
+                <artifactId>mule-core</artifactId>
+                <version>${mule.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-client</artifactId>
+                <version>${mule.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule</groupId>
+                <artifactId>mule-module-spring-config</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.transports</groupId>
+                <artifactId>mule-transport-vm</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.transports</groupId>
+                <artifactId>mule-transport-file</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.transports</groupId>
+                <artifactId>mule-transport-http</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.transports</groupId>
+                <artifactId>mule-transport-jdbc</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.transports</groupId>
+                <artifactId>mule-transport-jms</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-management</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-scripting</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-sxc</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-xml</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-json</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <!-- end of mule -->
+
+
+            <!-- logging -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>log4j-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <!-- end of logging -->
+
+            <!-- testing -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <!-- h2 is the in-memory database used for Activiti tests -->
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- end of testing -->
+
+        </dependencies>
+
+    </dependencyManagement>
+
+
+</project>
