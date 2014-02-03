@@ -6,13 +6,18 @@
     <artifactId>acm</artifactId>
     <version>1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <name>Armedia Case Management Framework</name>
+
+    <modules>
+        <module>activiti-tools</module>
+    </modules>
 
     <scm>
         <connection>scm:git:git@github.com:Armedia/ACM3.git</connection>
         <developerConnection>scm:git:git@github.com:Armedia/ACM3.git</developerConnection>
         <url>scm:git:git@github.com:Armedia/ACM3.git</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <activiti.version>5.14</activiti.version>
@@ -218,11 +223,39 @@
                 <version>${h2.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+                <scope>test</scope>
+            </dependency>
             <!-- end of testing -->
 
         </dependencies>
 
     </dependencyManagement>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>armedia.snapshot</id>
+            <name>Armedia Release Maven Repository</name>
+            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/repositories/armedia.snapshot</url>
+        </snapshotRepository>
+        <repository>
+            <id>armedia.release</id>
+            <name>Armedia Release Maven Repository</name>
+            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/repositories/armedia.release</url>
+        </repository>
+        <site>
+            <name>Armedia Case Management</name>
+            <id>ACM Site</id>
+            <url>file://D:/Users/dmiller/site</url>
+        </site>
+    </distributionManagement>
+
+    <reports>
+        <project></project>
+    </reports>
 
 
 </project>
