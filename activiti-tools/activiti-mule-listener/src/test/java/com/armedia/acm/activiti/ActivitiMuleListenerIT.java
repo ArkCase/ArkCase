@@ -2,7 +2,6 @@ package com.armedia.acm.activiti;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -27,8 +26,8 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {
         "classpath:/activitiFlow.xml",
         "classpath:/spring/spring-library-activiti-mule-listener.xml",
-        "classpath:/spring-config-activiti-test.xml"} )
-public class ActivitiMuleListenerTest
+        "classpath:/spring-library-activiti-test.xml"} )
+public class ActivitiMuleListenerIT
 {
 
     @Autowired

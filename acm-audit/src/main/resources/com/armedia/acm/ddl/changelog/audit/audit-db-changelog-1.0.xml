@@ -1,0 +1,60 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-audit-table" author="dmiller">
+        <createTable tableName="acm_audit_log">
+            <column name="cm_audit_id" type="RAW(16)" valueComputed="SYS_GUID()" >
+                <constraints
+                    primaryKey="true"
+                    primaryKeyName="pk_audit_log"/>
+            </column>
+            <column name="cm_audit_datetime" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_audit_user" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_audit_activity" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_audit_activity_result" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_audit_ip_address" type="VARCHAR(256)"/>
+        </createTable>
+        <createTable tableName="acm_audit_log_property">
+            <column name="cm_audit_id" type="RAW(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_audit_property_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_audit_property_value" type="VARCHAR(4000)"/>
+        </createTable>
+        <addPrimaryKey
+                tableName="acm_audit_log_property"
+                columnNames="cm_audit_id, cm_audit_property_name"
+                constraintName="pk_audit_log_property"/>
+        <addForeignKeyConstraint
+                baseTableName="acm_audit_log_property"
+                baseColumnNames="cm_audit_id"
+                constraintName="fk_audit_property_audit_log"
+                referencedTableName="acm_audit_log"
+                referencedColumnNames="cm_audit_id"
+                deferrable="true"
+                initiallyDeferred="true" />
+        <createIndex tableName="acm_audit_log" indexName="idx_audit_log_user">
+            <column name="cm_audit_user"/>
+        </createIndex>
+        <createIndex tableName="acm_audit_log" indexName="idx_audit_log_activity">
+            <column name="cm_audit_activity" />
+        </createIndex>
+        <createIndex tableName="acm_audit_log" indexName="idx_audit_log_date">
+            <column name="cm_audit_datetime"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
+

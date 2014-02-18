@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress SpringSecurityFiltersConfiguredInspection -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="applicationRoleToUserGroupProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/applicationRoleToUserGroup.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <!-- following properties are the default mapping of roles to
+             groups.  These properties will be overwritten by properties in the
+             properties file.  The properties file must have each key from the
+             below list. -->
+        <property name="properties">
+            <props>
+                <prop key="ROLE_INVESTIGATOR">INVESTIGATOR</prop>
+                <prop key="ROLE_INVESTIGATOR_SUPERVISOR">INVESTIGATOR_SUPERVISOR</prop>
+                <prop key="ROLE_ANALYST">ANALYST</prop>
+                <prop key="ROLE_CALLCENTER">CALLCENTER</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean
+            id="acmAuthoritiesMapper"
+            class="com.armedia.acm.auth.AcmGrantedAuthoritiesMapper"
+            init-method="initBean">
+        <property name="applicationRoleToUserGroupProperties" ref="applicationRoleToUserGroupProperties"/>
+    </bean>
+
+    <bean id="acmAuthenticationManager" class="com.armedia.acm.auth.AcmAuthenticationManager">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="authoritiesMapper" ref="acmAuthoritiesMapper"/>
+        <property name="authenticationEventPublisher" ref="ssAuthenticationEventPublisher"/>
+    </bean>
+
+    <bean id="acmAuthenticationDetailsFactory" class="com.armedia.acm.auth.AcmAuthenticationDetailsFactory"/>
+
+    <bean id="acmLoginSuccessListener" class="com.armedia.acm.auth.AcmLoginSuccessEventListener"/>
+    <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler"/>
+    <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>
+    <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
+        <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
+        <property name="defaultTargetUrl" value="/app/login"/>
+        <property name="alwaysUseDefaultTargetUrl" value="true"/>
+    </bean>
+
+    <bean id="ssAuthenticationEventPublisher"
+          class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
+
+</beans>
