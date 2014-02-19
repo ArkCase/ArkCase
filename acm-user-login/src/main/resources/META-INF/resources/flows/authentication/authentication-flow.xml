@@ -5,7 +5,7 @@
         parent="parent-flow">
 
     <!--<view-state id="endAndLogout" redirect="true" view="/logout"/>-->
-    <view-state id="view">
+    <view-state id="authentication-view">
         <transition on="logout"  to="endAndLogout"/>
     </view-state>
     <end-state id="endAndLogout" view="externalRedirect:contextRelative:logout" />

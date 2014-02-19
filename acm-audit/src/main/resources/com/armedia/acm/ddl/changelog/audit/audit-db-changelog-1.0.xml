@@ -56,5 +56,19 @@
             <column name="cm_audit_datetime"/>
         </createIndex>
     </changeSet>
+
+    <changeSet id="02-add-track-id-column" author="dmiller">
+        <addColumn tableName="acm_audit_log">
+            <column name="cm_audit_track_id" type="VARCHAR(1024)"/>
+        </addColumn>
+        <createIndex tableName="acm_audit_log" indexName="idx_audit_log_track_id">
+            <column name="cm_audit_track_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="03-fix-audit-id-default-value" author="dmiller">
+        <addDefaultValue tableName="acm_audit_log" columnName="cm_audit_id" defaultValueComputed="SYS_GUID()"/>
+    </changeSet>
+
 </databaseChangeLog>
 

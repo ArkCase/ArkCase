@@ -6,4 +6,17 @@
 
     <bean id="auditWriter" class="com.armedia.acm.audit.AuditWriter"/>
 
+    <bean id="auditConfigurer" class="com.armedia.acm.audit.AuditConfigurer"
+            destroy-method="closeBean">
+        <property name="auditConfigFilename" value="/audit.xml"/>
+    </bean>
+
+    <bean id="auditSpringDataSourceHelper" class="com.armedia.commons.audit.sink.jdbc.SpringDataSourceHelper">
+        <property name="sinks">
+            <set>
+                <value>jdbcSink</value>
+            </set>
+        </property>
+    </bean>
+
 </beans>

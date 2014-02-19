@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<audit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.armedia.com/ns/audit"
+       xsi:schemaLocation="http://www.armedia.com/ns/audit platform:/audit.xsd">
+
+    <queues>
+        <queue id="acmEvents">
+            <className>com.armedia.commons.audit.MemoryThreadedAuditQueue</className>
+            <includes>
+                <pattern>com.armedia.acm.*</pattern>
+            </includes>
+        </queue>
+    </queues>
+
+    <sinks>
+        <sink id="logSink">
+            <className>com.armedia.commons.audit.LoggerAuditSink</className>
+            <queues>
+                <queue>acmEvents</queue>
+            </queues>
+            <settings>
+                <setting name="log.name">acm-audit-log</setting>
+            </settings>
+        </sink>
+        <sink id="jdbcSink">
+            <className>com.armedia.commons.audit.sink.jdbc.JdbcAuditSink</className>
+            <queues>
+                <queue>acmEvents</queue>
+            </queues>
+            <settings>
+                <setting name="jdbc.factory.class">com.armedia.commons.audit.sink.jdbc.SpringDataSourceConnectionFactory</setting>
+                <setting name="jdbc.persister.class">com.armedia.commons.audit.sink.jdbc.JdbcTwoTablePersister</setting>
+                <setting name="jdbc.factory.data.source">acmDataSource</setting>
+                <setting name="jdbc.persister.main.table">acm_audit_log</setting>
+                <setting name="jdbc.persister.main.table.pk">cm_audit_id</setting>
+                <setting name="jdbc.persister.main.table.column.timestamp">cm_audit_datetime</setting>
+                <setting name="jdbc.persister.main.table.column.trackid">cm_audit_track_id</setting>
+                <setting name="jdbc.persister.main.table.column.activity">cm_audit_activity</setting>
+                <setting name="jdbc.persister.main.table.column.actor">cm_audit_user</setting>
+                <setting name="jdbc.persister.main.table.column.result">cm_audit_activity_result</setting>
+                <setting name="jdbc.persister.main.table.mappings">ipAddress=cm_audit_ip_address</setting>
+                <setting name="jdbc.persister.parameter.table">acm_audit_log_property</setting>
+                <setting name="jdbc.persister.parameter.table.fk">cm_audit_id</setting>
+                <setting name="jdbc.persister.parameter.table.param.name">cm_audit_property_name</setting>
+                <setting name="jdbc.persister.parameter.table.param.value">cm_audit_property_value</setting>
+            </settings>
+
+        </sink>
+    </sinks>
+
+</audit>

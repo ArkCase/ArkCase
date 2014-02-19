@@ -13,6 +13,13 @@
     <artifactId>acm-audit</artifactId>
 
     <dependencies>
+
+        <!-- armedia commons -->
+        <dependency>
+            <groupId>com.armedia.commons</groupId>
+            <artifactId>audit-sink-jdbc</artifactId>
+        </dependency>
+
         <!-- acm -->
         <dependency>
             <groupId>com.armedia.acm</groupId>
@@ -39,6 +46,33 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <!-- datasource -->
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>jdbc</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 

@@ -24,7 +24,7 @@
     <!-- The registry of executable flow definitions -->
     <flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices" base-path="/flows"
             parent="parentFlowRegistry">
-        <flow-location-pattern value="/**/flow.xml" />
+        <flow-location-pattern value="/**/*-flow.xml" />
     </flow-registry>
 
 	<!-- Executes flows: the central entry point into the Spring Web Flow system -->
