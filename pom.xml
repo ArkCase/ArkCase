@@ -15,6 +15,7 @@
         <module>acm-web</module>
         <module>acm-audit</module>
         <module>acm-event</module>
+        <module>arm-file-tools</module>
     </modules>
 
     <scm>

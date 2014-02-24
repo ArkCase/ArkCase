@@ -1,59 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:camel="http://camel.apache.org/schema/spring"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-2.12.2.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
     <context:property-placeholder />
 
-    <bean id="acmContextHolder" class="com.armedia.acm.spring.SpringContextHolder"
-            init-method="startWatchingSpringFolder">
-        <property name="springFolder" ref="spring-folder"/>
-        <property name="springFolderMonitor" ref="spring-file-monitor"/>
-    </bean>
-
-    <bean id="user-home-folder" class="java.io.File">
-        <constructor-arg value="${user.home}"/>
-    </bean>
-
-    <bean id="vfs-manager" class="org.apache.commons.vfs2.VFS" factory-method="getManager"/>
-    <bean id="spring-folder" factory-bean="vfs-manager"  factory-method="resolveFile">
-        <constructor-arg index="0" ref="user-home-folder"/>
-        <constructor-arg index="1" value=".acm/spring"/>
-    </bean>
-
-    <bean id="spring-file-monitor" class="org.apache.commons.vfs2.impl.DefaultFileMonitor">
-        <constructor-arg ref="spring-file-listener"/>
-        <property name="recursive" value="false"/>
-        <!--<property name="delay" value="3000"/>-->
-    </bean>
-
-    <bean id="spring-file-listener"
-          class="com.armedia.acm.spring.SpringFileWatcher">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-    </bean>
-
-    <camel:camelContext id="spring-context-holder-camel-context">
-        <camel:errorHandler id="springContextErrorHandler" type="DefaultErrorHandler">
-            <camel:redeliveryPolicy
-                    maximumRedeliveries="3"
-                    redeliveryDelay="500"
-                    retryAttemptedLogLevel="WARN"
-                    />
-        </camel:errorHandler>
-
-        <!-- watches for new files in the spring folder -->
-        <camel:endpoint id="spring-file-endpoint"
-                        camelContextId="spring-context-holder-camel-context"
-                        uri="file:///${user.home}/.acm/spring?antInclude=spring-config-*.xml&amp;noop=true&amp;readLock=changed"/>
-
-        <camel:route id="new-spring-files">
-            <camel:from ref="spring-file-endpoint"/>
-            <camel:to pattern="InOnly" uri="bean:acmContextHolder?method=addContextFromFile"/>
-        </camel:route>
-    </camel:camelContext>
+    <bean id="acmContextHolder" class="com.armedia.acm.spring.SpringContextHolder"/>
 
 </beans>

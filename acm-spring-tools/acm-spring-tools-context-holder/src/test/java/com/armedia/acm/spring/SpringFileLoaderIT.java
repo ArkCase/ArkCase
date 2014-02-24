@@ -1,6 +1,5 @@
 package com.armedia.acm.spring;
 
-import org.apache.camel.util.FileUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.FileCopyUtils;
 
 import java.io.File;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-context-holder.xml"})
+@ContextConfiguration(locations = {"/spring/spring-library-context-holder.xml", "classpath*:/spring/spring-library-folder-watcher.xml"})
 public class SpringFileLoaderIT
 {
     @Autowired
@@ -31,13 +31,17 @@ public class SpringFileLoaderIT
         assertTrue(springFile.exists());
 
         String userHome = System.getProperty("user.home");
-        String springFileName = userHome + File.separator + ".acm" + File.separator + "spring" + File.separator +
-                springFile.getFilename();
+        String springFolderName = userHome + File.separator + ".acm" + File.separator + "spring";
+        String springFileName = springFolderName + File.separator + springFile.getFilename();
+
+        File springFolder = new File(springFolderName);
+        springFolder.mkdirs();
+
         File target = new File(springFileName);
 
-        FileUtil.copyFile(springFile.getFile(), target);
+        FileCopyUtils.copy(springFile.getFile(), target);
 
-        // wait for camel to process the file
+        // wait for the folder watcher to process the file
         Thread.sleep(4000);
 
         // see whether our context holder now has a string bean, like it should have, from the spring context
