@@ -62,8 +62,8 @@ public class ConfigFileWatcherIT
         assertTrue(homeFolder.exists());
         assertTrue(configFolder.exists());
 
-        assertEquals(0, listener.getAddedCount());
-        assertEquals(0, listener.getRemovedCount());
+        int originalAdded = listener.getAddedCount();
+        int originalRemoved = listener.getRemovedCount();
 
         Resource testFile = new ClassPathResource("/log4j.properties");
         assertTrue(testFile.exists());
@@ -80,7 +80,7 @@ public class ConfigFileWatcherIT
 
         Thread.sleep(5000);
 
-        assertEquals(1, listener.getAddedCount());
-        assertEquals(1, listener.getRemovedCount());
+        assertEquals(originalAdded + 1, listener.getAddedCount());
+        assertEquals(originalRemoved + 1, listener.getRemovedCount());
     }
 }
