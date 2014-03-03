@@ -36,12 +36,23 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
     {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("The application context has been set!");
+            log.debug("Looking for files in: " + getBaseFolder().getName());
+        }
+
+
         // this event just tells us when the whole application context is ready.  we don't actually need the context.
         try
         {
             FileObject[] existingFiles = getBaseFolder().findFiles(new FileTypeSelector(FileType.FILE));
             for ( FileObject current : existingFiles )
             {
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug("Raising event for file " + current.getName());
+                }
                 fileCreated(new FileChangeEvent(current));
             }
         } catch (Exception e)
@@ -121,6 +132,7 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
+        log.debug("The application event publisher has been set!");
         this.applicationEventPublisher = applicationEventPublisher;
     }
 

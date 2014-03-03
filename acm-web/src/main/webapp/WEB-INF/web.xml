@@ -65,6 +65,12 @@
         <param-value>1</param-value>
     </context-param>
 
+    <!-- PrimeFaces Theme -->
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>bootstrap</param-value>
+    </context-param>
+
     <!-- Just here so the JSF implementation can initialize, *not* used at runtime -->
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>

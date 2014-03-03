@@ -3,35 +3,41 @@
 	    		xmlns:ui="http://java.sun.com/jsf/facelets"
 				xmlns:c="http://java.sun.com/jsp/jstl/core"
 	  			xmlns:p="http://primefaces.org/ui"
-				template="/WEB-INF/layouts/standard.xhtml">
+				template="/WEB-INF/layouts/acm.xhtml">
 
 <ui:define name="title">Login</ui:define>
 
 <ui:define name="content">
-<div class="span-10">
-	<c:if test="${not empty param.login_error}">
-		<div class="error">
-			Your login attempt was not successful, try again.<br />
-			Reason: #{sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
-		</div>
-	</c:if>
-	<p:panel header="Login">
-		<form name="f" action="${request.contextPath}/j_spring_security_check" method="post">
-			<p>
-				<c:if test="${not empty param.login_error}">
-					<c:set var="username" value="${sessionScope.SPRING_SECURITY_LAST_USERNAME}"/>
-				</c:if>
+<div class="span-10 login">
+    <div class="login-box main-content">
+        <c:if test="${not empty param.login_error}">
+            <div class="error">
+                Your login attempt was not successful, try again.<br />
+                Reason: #{sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
+            </div>
+        </c:if>
+        <p:panel header="Login">
+            <div class="section">
+                <div class="message info full">Enter your username and password.</div>
+                <form name="f" action="${request.contextPath}/j_spring_security_check" method="post" class="clearfix">
+                    <p>
+                        <c:if test="${not empty param.login_error}">
+                            <c:set var="username" value="${sessionScope.SPRING_SECURITY_LAST_USERNAME}"/>
+                        </c:if>
 
-				<input type="text" name="j_username" value="#{username}" placeholder="Username"/>
-			</p>
-			<p>
-				<input type="password" name="j_password" placeholder="Password"/>
-			</p>
-			<p>
-				<input name="submit" type="submit" value="Login" />
-			</p>
-		</form>
-	</p:panel>
+                        <input type="text" name="j_username" value="#{username}" placeholder="Username" class="full"/>
+                    </p>
+                    <p>
+                        <input type="password" name="j_password" placeholder="Password" class="full"/>
+                    </p>
+                    <p>
+                        <button class="button button-gray fr" type="submit">Login</button>
+                        <!--<input name="submit" type="submit" value="Login" />-->
+                    </p>
+                </form>
+            </div>
+        </p:panel>
+    </div>
 </div>
 </ui:define>
 </ui:composition>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -7,10 +7,19 @@
 	xmlns:p="http://primefaces.org/ui">
 <f:view contentType="text/html">
 <h:head>
+    <title>ACM: Armedia Case Management</title>
+
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Armedia Case Management</title>
-	<link rel="stylesheet" href="${request.contextPath}/resources/styles/blueprint/screen.css" type="text/css" media="screen, projection" />
-	<link rel="stylesheet" href="${request.contextPath}/resources/styles/blueprint/print.css" type="text/css" media="print" />
+    <meta name="Author" content="Armedia LLC" />
+    <meta name="viewport" content="width=1024" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+
+	<!--<link rel="stylesheet" href="${request.contextPath}/app/resources/styles/blueprint/screen.css" type="text/css" media="screen, projection" />-->
+	<!--<link rel="stylesheet" href="${request.contextPath}/app/resources/styles/blueprint/print.css" type="text/css" media="print" />-->
+	<link rel="stylesheet" href="${request.contextPath}/app/resources/styles/acm/basic.css" type="text/css" media="screen, projection" />
+	<link rel="stylesheet" href="${request.contextPath}/app/resources/styles/acm/forms.css" type="text/css" media="screen, projection" />
+	<link rel="stylesheet" href="${request.contextPath}/app/resources/styles/acm/messages.css" type="text/css" media="screen, projection" />
 	<!--[if lt IE 8]>
 		<link rel="stylesheet" href="${request.servletPath}/styles/blueprint/ie.css" type="text/css" media="screen, projection" />
 	<![endif]-->
@@ -18,6 +27,12 @@
 </h:head>
 <h:body>
 <div class="container">
+    <!-- topbar / skipnav, action buttons
+        sidebar / navigation lines (home, eda, eprp, etc)
+        main / username,
+        footer
+
+    -->
 	<div>
 		<ui:insert name="notes"/>
 	</div>

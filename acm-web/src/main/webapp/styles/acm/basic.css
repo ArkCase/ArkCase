@@ -1,0 +1,85 @@
+/* redefine primefaces styles */
+.ui-panel-title {
+    font-family: Georgia, 'Times New Roman', 'Bitstream Charter', Times, serif;
+    font-weight: normal;
+    font-size: 18px;
+    margin: 0;
+    text-shadow: 0 1px 0 #fff;
+}
+
+div.error
+{
+    border:1px solid #eeb7ba;
+    background:0;
+    -pie-background:linear-gradient(top,#fae2e2,#f2cacb);
+    color:#be4741;
+    text-shadow:0 1px 0 #fff;
+}
+
+.ui-widget
+{
+    font-family: Arial,san-serif;
+    font-size: 1em;
+}
+
+/* end of redefining primefaces styles */
+
+input.full,select.full,textarea.full {
+    width:95%;
+}
+
+div.login {
+    height:0;
+    overflow: hidden;
+}
+
+.login-box {
+    margin: 0 auto !important;
+    margin-top: -140px !important;
+    margin-left: -175px !important;
+    position: absolute !important;
+    top: 50%;
+    left: 50%;
+    width:350px;
+}
+
+.login-box.main-content {
+    min-height: 0;
+}
+
+.login-box form {
+    border-bottom:1px solid #DDDDDD;
+    margin:10px 0;
+}
+/*.login-box ul {*/
+    /*list-style-type: none;*/
+    /*padding: 0;*/
+/*}*/
+
+/*body.login section {*/
+    /*margin: 10px;*/
+/*}*/
+
+.login-box .message.info {
+    left: 0px;
+    margin-left: 0px;
+}
+
+.clearfix:after
+{
+    visibility:hidden;
+    display:block;
+    font-size:0;
+    content:" ";
+    clear:both;
+    height:0;
+}
+
+div.section
+{
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -khtml-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
+}
