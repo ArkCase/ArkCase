@@ -1,5 +1,5 @@
 <html>
 <head>
-    <meta http-equiv="Refresh" content="0; URL=app/authentication">
+    <meta http-equiv="Refresh" content="0; URL=app/home">
 </head>
 </html>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="acmPluginManager" class="com.armedia.acm.pluginmanager.AcmPluginManager">
+        <property name="acmPlugins">
+            <list>
+                <ref bean="acmTestPlugin"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmTestPlugin" class="com.armedia.acm.pluginmanager.AcmPlugin">
+        <property name="pluginName" value="testPlugin"/>
+    </bean>
+
+</beans>

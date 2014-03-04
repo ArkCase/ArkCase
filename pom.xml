@@ -16,6 +16,8 @@
         <module>acm-audit</module>
         <module>acm-event</module>
         <module>arm-file-tools</module>
+        <module>acm-case-plugin</module>
+        <module>acm-core-plugin-manager</module>
     </modules>
 
     <scm>
@@ -28,7 +30,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
 
         <java.version>1.7</java.version>
 
@@ -88,20 +89,8 @@
                 <directory>src/main/app/</directory>
             </resource>
             <resource>
-                <!-- filter the spring config files (apply Maven variables) -->
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
-                <includes>
-                    <include>**/spring-library-*.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <!-- do not filter non-Spring files -->
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>**/spring-library-*.xml</exclude>
-                </excludes>
             </resource>
         </resources>
         <plugins>

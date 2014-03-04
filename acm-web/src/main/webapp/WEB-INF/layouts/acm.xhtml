@@ -26,20 +26,43 @@
 	<ui:insert name="headIncludes"/>
 </h:head>
 <h:body>
-<div class="container">
+<!--<div class="container">-->
     <!-- topbar / skipnav, action buttons
         sidebar / navigation lines (home, eda, eprp, etc)
         main / username,
         footer
 
     -->
-	<div>
-		<ui:insert name="notes"/>
-	</div>
-	<div>
-		<ui:insert name="content"/>
-	</div>
-</div>
+    <p:layout fullPage="true">
+
+        <!-- header="Top" -->
+        <p:layoutUnit position="north" size="100"  resizable="true" closable="false" collapsible="true" >
+            <ui:insert name="topBar"/>
+        </p:layoutUnit>
+
+        <p:layoutUnit position="south" size="100" header="Bottom" resizable="true" closable="false" collapsible="true">
+            <h:outputText value="South unit content."/>
+        </p:layoutUnit>
+
+        <p:layoutUnit position="west" size="200" header="Left" resizable="true" closable="false" collapsible="true">
+            <!--<h:outputText value="West unit content."/>-->
+            <h:outputText id="pluginName" value="#{acmTestPlugin.pluginName}"/>
+        </p:layoutUnit>
+
+        <!--<p:layoutUnit position="east" size="200" header="Right" resizable="true" closable="false" collapsible="true"-->
+                      <!--effect="drop">-->
+            <!--<h:outputText value="Right unit content."/>-->
+        <!--</p:layoutUnit>-->
+
+        <p:layoutUnit position="center">
+            <h:form>
+                This fullPage layout consists of five different layoutUnits which are resizable and closable by default.
+
+            </h:form>
+        </p:layoutUnit>
+
+    </p:layout>
+
 </h:body>
 </f:view>
 </html>

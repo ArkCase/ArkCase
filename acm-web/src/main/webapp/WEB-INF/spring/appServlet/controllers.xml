@@ -15,13 +15,5 @@
 	-->
 	<mvc:view-controller path="/login" />
 
-	<mvc:view-controller path="/home" />
-    <!--<mvc:view-controller path="/app/home.xhtml" view-name="home"/>-->
-    <!--<mvc:view-controller path="/home.xhtml" view-name="home"/>-->
-    <!--<mvc:view-controller path="/app/authentication"/>-->
-    <!--<mvc:view-controller path="/authentication"/>-->
-    <!--<mvc:view-controller path="/" view-name="app/home"/>-->
-	
-	<!--<context:component-scan base-package="org.springframework.samples.webflow" />-->
-	 
+
 </beans>

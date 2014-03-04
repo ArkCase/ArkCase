@@ -19,16 +19,17 @@
 
     <flow-registry id="parentFlowRegistry" flow-builder-services="flowBuilderServices" base-path="/WEB-INF/flows">
         <flow-location id="parent-flow" path="parent-flow.xml"/>
+        <flow-location id="home" path="home/home-flow.xml"/>
     </flow-registry>
 
     <!-- The registry of executable flow definitions -->
-    <flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices" base-path="/flows"
-            parent="parentFlowRegistry">
-        <flow-location-pattern value="/**/*-flow.xml" />
-    </flow-registry>
+    <!--<flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices" base-path="/flows"-->
+            <!--parent="parentFlowRegistry">-->
+        <!--<flow-location-pattern value="/**/*-flow.xml" />-->
+    <!--</flow-registry>-->
 
 	<!-- Executes flows: the central entry point into the Spring Web Flow system -->
-	<flow-executor id="flowExecutor" flow-registry="flowRegistry">
+	<flow-executor id="flowExecutor" flow-registry="parentFlowRegistry">
 		<flow-execution-listeners>
 			<listener ref="facesContextListener"/>
 			<listener ref="securityListener"/>

@@ -42,7 +42,8 @@
 		/hotels/booking looks for a flow with id "hotels/booking"
 	-->
 	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
-		<property name="flowRegistry" ref="flowRegistry" />
+		<property name="flowRegistry" ref="parentFlowRegistry" />
+		<!--<property name="flowRegistry" ref="flowRegistry" />-->
         <property name="order" value="0"/>
 	</bean>
 
