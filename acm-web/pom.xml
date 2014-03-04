@@ -39,10 +39,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.webflow</groupId>
-            <artifactId>spring-webflow</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.webflow</groupId>
             <artifactId>spring-faces</artifactId>
         </dependency>
         <dependency>

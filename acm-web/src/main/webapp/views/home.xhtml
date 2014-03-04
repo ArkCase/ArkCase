@@ -7,24 +7,13 @@
     xmlns:sec="http://www.springframework.org/security/tags"
 	template="/WEB-INF/layouts/acm.xhtml">
 
-
     <ui:define name="topBar">
-        <h:form>
+        <div id="topMenu">
             <p:menubar>
-                <f:facet name="options">
-                    <h:outputText id="username" value="${acm_username}"/>
-                    <p:spacer width="5"/>
-                    <p:commandButton value="Logout" action="logout" />
-                </f:facet>
-
+                <p:submenu label="${acm_username}" style="text-align: center">
+                    <p:menuitem value="Logout" url="/logout"/>
+                </p:submenu>
             </p:menubar>
-        </h:form>
-        <!--<p>-->
-            <!--Welcome to ACM, ${acm_username}.-->
-        <!--</p>-->
-        <!--<h:form>-->
-            <!--<p:commandButton value="Logout" action="logout"/>-->
-        <!--</h:form>-->
-        <!--<hr/>-->
+        </div>
     </ui:define>
 </ui:composition>

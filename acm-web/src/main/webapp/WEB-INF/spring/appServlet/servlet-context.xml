@@ -15,15 +15,12 @@
 
 	<!-- Imports user-defined @Controller beans that process client requests -->
 	<import resource="controllers.xml" />
-	<import resource="webflow.xml" />
 
 	<!-- Scan for Spring beans declared via annotations. -->
-	<context:component-scan base-package="com.armedia.acm.web"/>
+	<!--<context:component-scan base-package="com.armedia.acm.web"/>-->
 
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven />
-
-
 
 	<!-- 
 		Enable serving of classpath with Spring 3 resource serving mechanism. For example:
@@ -38,30 +35,15 @@
 	<faces:resources   />
 
 	<!--
-		Maps request paths to flows in the flowRegistry; e.g. a path of
-		/hotels/booking looks for a flow with id "hotels/booking"
-	-->
-	<bean class="org.springframework.webflow.mvc.servlet.FlowHandlerMapping">
-		<property name="flowRegistry" ref="parentFlowRegistry" />
-		<!--<property name="flowRegistry" ref="flowRegistry" />-->
-        <property name="order" value="0"/>
-	</bean>
-
-	<!--
 		Resolves views selected for rendering by @Controllers to .xhtml
-		resources in the /WEB-INF/views directory
+		resources in the /views directory
 	-->
-	<bean id="mvcViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+	<bean id="jsfViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<property name="viewClass" value="org.springframework.faces.mvc.JsfView" />
-		<property name="prefix" value="/" />
+		<property name="prefix" value="/views/" />
 		<property name="suffix" value=".xhtml" />
 	</bean>
 
-	<!--
-		Dispatches requests mapped to flows to FlowHandler implementations
-	-->
-	<bean class="org.springframework.faces.webflow.JsfFlowHandlerAdapter">
-		<property name="flowExecutor" ref="flowExecutor" />
-	</bean>
+
 
 </beans>

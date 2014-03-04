@@ -200,11 +200,6 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.webflow</groupId>
-                <artifactId>spring-webflow</artifactId>
-                <version>${springwebflow.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.webflow</groupId>
                 <artifactId>spring-faces</artifactId>
                 <version>${springwebflow.version}</version>
             </dependency>
