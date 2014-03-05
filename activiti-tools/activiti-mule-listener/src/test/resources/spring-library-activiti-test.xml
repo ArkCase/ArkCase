@@ -19,11 +19,31 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
 
+    <bean id="acmTaskActivitiListener" class="org.activiti.bpmn.model.ActivitiListener">
+        <property name="event" value="all"/>
+        <property name="implementationType" value="expression"/>
+        <property name="implementation" value="${cmMuleActivitiListener.sendMessage('vm://activiti-flow', 'From Parser - all', 'bandResults', execution)}"/>
+    </bean>
+
+    <bean id="acmBpmnParser" class="com.armedia.acm.activiti.AcmParseHandler">
+        <property name="listenersToAdd">
+            <list>
+                <ref bean="acmTaskActivitiListener"/>
+            </list>
+        </property>
+    </bean>
+
     <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
         <property name="dataSource" ref="dataSource" />
         <property name="transactionManager" ref="transactionManager" />
         <property name="databaseSchemaUpdate" value="true" />
         <property name="jobExecutorActivate" value="false" />
+        <property name="preBpmnParseHandlers">
+            <list>
+                <ref bean="acmBpmnParser"/>
+            </list>
+        </property>
+
     </bean>
 
     <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">

@@ -5,8 +5,10 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.event.EventHandler;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Task;
+import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +50,9 @@ public class ActivitiMuleListenerIT
     @Autowired
     private HistoryService hs;
 
+    @Autowired
+    private SpringProcessEngineConfiguration springProcessEngineConfiguration;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
@@ -60,6 +65,8 @@ public class ActivitiMuleListenerIT
         repo.createDeployment()
                 .addClasspathResource("FinancialReportProcess.bpmn20.xml")
                 .deploy();
+
+        List<EventHandler> handlers = springProcessEngineConfiguration.getCustomEventHandlers();
 
     }
 

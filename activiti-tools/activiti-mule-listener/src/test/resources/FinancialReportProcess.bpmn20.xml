@@ -9,7 +9,7 @@
             <activiti:executionListener
                     expression="${cmMuleActivitiListener.sendMessage('vm://activiti-flow', 'Grateful Dead',
                             'bandResults', execution)}"
-                    event="start"/>
+                    event="start" />
         </extensionElements>
 
         <startEvent id="theStart" />
