@@ -21,11 +21,13 @@
 
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven />
+    <!--<context:spring-configured/>-->
+    <!--<context:annotation-config/>-->
 
-	<!-- 
-		Enable serving of classpath with Spring 3 resource serving mechanism. For example:
-		/webflow-primefaces-showcase/app/resources/styles/blueprint/print.css
-	-->
+    <!--
+        Enable serving of classpath with Spring 3 resource serving mechanism. For example:
+        /webflow-primefaces-showcase/app/resources/styles/blueprint/print.css
+    -->
 	<mvc:resources location="/" mapping="/resources/**" />
 
 	<!-- 
