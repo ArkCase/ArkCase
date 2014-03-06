@@ -9,7 +9,7 @@ public class AcmPluginManager
 
     public String getName()
     {
-        return "acmPluginManager";
+        return "acmPluginManager Restored";
     }
 
     public Collection<AcmPlugin> getAcmPlugins()

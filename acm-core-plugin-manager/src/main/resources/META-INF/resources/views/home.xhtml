@@ -9,11 +9,15 @@
 
     <ui:define name="topBar">
         <div id="topMenu">
-            <p:menubar>
-                <p:submenu label="${acm_username}" style="text-align: center">
-                    <p:menuitem value="Logout" url="/logout"/>
-                </p:submenu>
-            </p:menubar>
+            <h:form>
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <p:menuButton value="${acm_username}">
+                            <p:menuitem value="Logout" url="/logout"/>
+                        </p:menuButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+            </h:form>
         </div>
     </ui:define>
 </ui:composition>
