@@ -6,7 +6,117 @@
     <artifactId>acm</artifactId>
     <version>1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <name>Armedia Case Management Framework</name>
+    <description>ACM3 Framework with Default Plugins</description>
+    <inceptionYear>2014</inceptionYear>
+
+    <organization>
+        <name>Armedia LLC</name>
+        <url>http://www.armedia.com</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>David Miller</name>
+            <email>david.miller@armedia.com</email>
+            <id>dmiller</id>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Technical Lead</role>
+            </roles>
+            <timezone>-5</timezone>
+            <url>http://www.armedia.com/blog/author/dmiller</url>
+        </developer>
+        <developer>
+            <name>AJ McClary</name>
+            <email>andrew.mcclary@armedia.com</email>
+            <id>amcclary</id>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>User Experience</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Ronda Ringo</name>
+            <email>ronda.ringo@armedia.com</email>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Business Analyst</role>
+            </roles>
+            <timezone>-5</timezone>
+        </contributor>
+        <contributor>
+            <name>Deja Nichols</name>
+            <email>deja.nichols@armedia.com</email>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Business Analyst</role>
+            </roles>
+            <timezone>-5</timezone>
+        </contributor>
+
+        <contributor>
+            <name>Mark Johnson</name>
+            <email>mark.johnson@armedia.com</email>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Infrastructure</role>
+            </roles>
+            <timezone>-5</timezone>
+        </contributor>
+
+        <contributor>
+            <name>Allison Cotney</name>
+            <email>allison.cotney@armedia.com</email>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Marketing</role>
+            </roles>
+            <timezone>-5</timezone>
+        </contributor>
+        <contributor>
+            <name>Mannix Litonjua</name>
+            <email>mannix.litonjua@armedia.com</email>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Sales</role>
+            </roles>
+            <timezone>-5</timezone>
+        </contributor>
+
+        <contributor>
+            <name>James Bailey</name>
+            <email>james.bailey@armedia.com</email>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Sponsor</role>
+            </roles>
+            <timezone>-5</timezone>
+        </contributor>
+        <contributor>
+            <name>John Shinnick</name>
+            <email>john.shinnick@armedia.com</email>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Technical Oversight</role>
+            </roles>
+            <timezone>-5</timezone>
+        </contributor>
+    </contributors>
 
     <modules>
         <module>activiti-tools</module>
@@ -18,6 +128,7 @@
         <module>arm-file-tools</module>
         <module>acm-case-plugin</module>
         <module>acm-core-plugin-manager</module>
+        <module>acm-plugins</module>
     </modules>
 
     <scm>
@@ -26,6 +137,33 @@
         <url>scm:git:git@github.com:Armedia/ACM3.git</url>
         <tag>HEAD</tag>
     </scm>
+
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://arm-proj-web01:8989/jira/browse/AFDP</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>http://ci.dev.armedia.com/jenkins/job/Armedia%20-%20ACM%203.0/</url>
+    </ciManagement>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>armedia.snapshot</id>
+            <name>Armedia Release Maven Repository</name>
+            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/repositories/armedia.snapshot</url>
+        </snapshotRepository>
+        <repository>
+            <id>armedia.release</id>
+            <name>Armedia Release Maven Repository</name>
+            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/repositories/armedia.release</url>
+        </repository>
+        <site>
+            <id>${maven.site.id}</id>
+            <url>${maven.site.url}</url>
+        </site>
+    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,8 +183,23 @@
         <h2.version>1.3.169</h2.version>
         <javax.servlet.version>2.5</javax.servlet.version>
         <jsf.version>2.2.5</jsf.version>
+
+        <jira.resolutionIds>Fixed,Won't Fix,Duplicate,Incomplete,Cannot Reproduce</jira.resolutionIds>
+
+        <jira.statusIds>Resolved,Closed</jira.statusIds>
+
         <junit.version>4.11</junit.version>
         <liquibase.version>3.1.1</liquibase.version>
+
+        <maven.changes.version>2.9</maven.changes.version>
+        <maven.javadoc.version>2.9.1</maven.javadoc.version>
+        <maven.project-info-reports.version>2.7</maven.project-info-reports.version>
+        <maven.resources.version>2.6</maven.resources.version>
+        <maven.site.basedir>${project.basedir}</maven.site.basedir>
+        <maven.site.id>acm3-documentation</maven.site.id>
+        <maven.site.url>scp://arm-proj-web02.armedia.com/var/www/html/acm3</maven.site.url>
+        <maven.taglist.version>2.4</maven.taglist.version>
+
         <mule.version>3.4.0</mule.version>
         <oracle.jdbc.version>6</oracle.jdbc.version>
         <primefaces.version>4.0</primefaces.version>
@@ -59,6 +212,19 @@
     </properties>
 
     <repositories>
+        <repository>
+            <id>central</id>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>repository.jboss.org-public</id>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>codehaus</id>
+            <url>http://repository.codehaus.org</url>
+        </repository>
+
         <!-- The Activiti repository -->
         <repository>
             <name>Activiti repository (hosted by Alfresco)</name>
@@ -95,6 +261,25 @@
         </resources>
         <plugins>
             <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-descriptor</id>
+                        <goals>
+                            <goal>attach-descriptor</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency><!-- add support for ssh/scp -->
+                        <groupId>org.apache.maven.wagon</groupId>
+                        <artifactId>wagon-ssh</artifactId>
+                        <version>1.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.3.2</version>
@@ -118,8 +303,12 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
             <plugin>
@@ -148,6 +337,55 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven.resources.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-sitedescriptor</id>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/site/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${maven.site.basedir}/src/site/</directory>
+                                    <includes>
+                                        <include>**/site.xml</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-sitecss</id>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/site/resources/css</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${maven.site.basedir}/src/site/resources/css</directory>
+                                    <includes>
+                                        <include>**/site.css</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- need these report plugins defined here to avoid spurious Maven warning about missing versions -->
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven.project-info-reports.version}</version>
             </plugin>
         </plugins>
     </build>
@@ -504,24 +742,124 @@
 
     </dependencyManagement>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>armedia.snapshot</id>
-            <name>Armedia Release Maven Repository</name>
-            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/repositories/armedia.snapshot</url>
-        </snapshotRepository>
-        <repository>
-            <id>armedia.release</id>
-            <name>Armedia Release Maven Repository</name>
-            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/repositories/armedia.release</url>
-        </repository>
 
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven.project-info-reports.version}</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>cim</report>
+                            <report>dependencies</report>
+                            <report>dependency-convergence</report>
+                            <report>dependency-info</report>
+                            <report>dependency-management</report>
+                            <report>distribution-management</report>
+                            <report>index</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+                            <report>modules</report>
+                            <report>plugin-management</report>
+                            <report>plugins</report>
+                            <report>project-team</report>
+                            <report>scm</report>
+                            <report>summary</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
 
-    </distributionManagement>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <version>${maven.changes.version}</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <jiraUser>${jira.username}</jiraUser>
+                    <jiraPassword>${jira.password}</jiraPassword>
+                    <webUser>${jira.username}</webUser>
+                    <webPassword>${jira.password}</webPassword>
+                    <columnNames>Key,Component,Summary,Status,Resolution,Assignee</columnNames>
+                    <resolutionIds>${jira.resolutionIds}</resolutionIds>
+                    <statusIds>${jira.statusIds}</statusIds>
+                    <useJql>true</useJql>
+                    <sortColumnNames>Key</sortColumnNames>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>changes-report</report>
+                            <report>jira-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
 
-    <reports>
-        <project />
-    </reports>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven.javadoc.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                            <report>test-javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <inherited>false</inherited>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+                <version>${maven.taglist.version}</version>
+                <configuration>
+                    <aggregate>true</aggregate>
+                    <tagListOptions>
+                        <tagClasses>
+                            <tagClass>
+                                <displayName>Todo Work</displayName>
+                                <tags>
+                                    <tag>
+                                        <matchString>TODO</matchString>
+                                        <matchType>exact</matchType>
+                                    </tag>
+                                    <tag>
+                                        <matchString>FIXME</matchString>
+                                        <matchType>exact</matchType>
+                                    </tag>
+                                </tags>
+                            </tagClass>
+                            <tagClass>
+                                <displayName>Code Debt</displayName>
+                                <tags>
+                                    <tag>
+                                        <matchString>HACK</matchString>
+                                        <matchType>exact</matchType>
+                                    </tag>
+                                </tags>
+                            </tagClass>
+                        </tagClasses>
+                    </tagListOptions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <profiles>
         <profile>
