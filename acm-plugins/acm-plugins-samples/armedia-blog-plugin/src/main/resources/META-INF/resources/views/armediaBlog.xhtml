@@ -1,0 +1,24 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/layouts/acm.xhtml">
+
+    <ui:define name="acmContent">
+        <div id="acmContent">
+            <p:feedReader value="${feedUrl}" var="feed">
+                <a href="#{feed.link}" target="_blank" class="acm-feed-url"><h:outputText value="#{feed.title}" /></a>
+                <br/>
+                <h:outputText value="#{feed.description.value}" escape="false"/>
+                <p:separator/>
+                <f:facet name="error">
+                    Could not open the blog from ${feedUrl}.
+                </f:facet>
+            </p:feedReader>
+        </div>
+    </ui:define>
+</ui:composition>

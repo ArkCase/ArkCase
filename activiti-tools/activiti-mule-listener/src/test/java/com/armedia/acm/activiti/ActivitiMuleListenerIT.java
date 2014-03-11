@@ -1,11 +1,6 @@
 package com.armedia.acm.activiti;
 
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.impl.event.EventHandler;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.spring.SpringProcessEngineConfiguration;
@@ -22,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -65,8 +60,6 @@ public class ActivitiMuleListenerIT
         repo.createDeployment()
                 .addClasspathResource("FinancialReportProcess.bpmn20.xml")
                 .deploy();
-
-        List<EventHandler> handlers = springProcessEngineConfiguration.getCustomEventHandlers();
 
     }
 

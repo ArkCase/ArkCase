@@ -83,3 +83,10 @@ div.section
     -khtml-border-radius: 0 0 5px 5px;
     border-radius: 0 0 5px 5px;
 }
+
+.acm-feed-url
+{
+    text-decoration:underline;
+    font-weight:bold;
+    color: blue;
+}
