@@ -32,11 +32,11 @@
             <artifactId>mule-context-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-plugins.samples</groupId>
-            <artifactId>armedia-blog-plugin</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.armedia.acm.acm-plugins.samples</groupId>-->
+            <!--<artifactId>armedia-blog-plugin</artifactId>-->
+            <!--<version>${acm.version}</version>-->
+        <!--</dependency>-->
 
         <!-- spring -->
         <dependency>
@@ -76,26 +76,6 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- jsf -->
-        <!-- Sun Mojarra JSF 2 runtime -->
-        <dependency>
-            <groupId>com.sun.faces</groupId>
-            <artifactId>jsf-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.faces</groupId>
-            <artifactId>jsf-impl</artifactId>
-        </dependency>
-        <!-- PrimeFaces component library -->
-        <dependency>
-            <groupId>org.primefaces</groupId>
-            <artifactId>primefaces</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.primefaces.themes</groupId>
-            <artifactId>all-themes</artifactId>
-        </dependency>
-
         <!-- apache utilities -->
         <dependency>
             <groupId>commons-fileupload</groupId>
@@ -123,7 +103,11 @@
         <!-- servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
         </dependency>
 
         <!-- datasource -->

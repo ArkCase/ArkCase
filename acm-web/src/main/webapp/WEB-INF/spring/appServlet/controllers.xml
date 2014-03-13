@@ -11,7 +11,7 @@
 		URL mappings for views without controller logic.
 		Example: 
 			Incoming path '/home' is mapped maps to the view name 'home'
-			UrlBasedViewResolver in servlet-context resolves 'home' to /WEB-INF/views/view.xhtml
+			UrlBasedViewResolver in servlet-context resolves 'home' to /WEB-INF/views/home.jsp
 	-->
 	<mvc:view-controller path="/login" />
 

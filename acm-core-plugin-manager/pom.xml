@@ -13,6 +13,18 @@
     <artifactId>acm-core-plugin-manager</artifactId>
 
     <dependencies>
+        <!-- acm -->
+        <dependency>
+            <groupId>com.armedia.acm.arm-file-tools</groupId>
+            <artifactId>arm-folder-watcher</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.spring-tools</groupId>
+            <artifactId>acm-spring-tools-context-holder</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -23,24 +35,31 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
 
-        <!-- for idea syntax highlighting -->
-        <!-- jsf -->
-        <!-- Sun Mojarra JSF 2 runtime -->
+        <!-- logging -->
         <dependency>
-            <groupId>com.sun.faces</groupId>
-            <artifactId>jsf-api</artifactId>
-            <scope>provided</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sun.faces</groupId>
-            <artifactId>jsf-impl</artifactId>
-            <scope>provided</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
         </dependency>
-        <!-- PrimeFaces component library -->
+
+        <!-- servlet -->
         <dependency>
-            <groupId>org.primefaces</groupId>
-            <artifactId>primefaces</artifactId>
-            <scope>provided</scope>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+        <!-- testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
         </dependency>
     </dependencies>
 

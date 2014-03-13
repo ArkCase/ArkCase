@@ -119,6 +119,14 @@ public class SpringContextHolder implements ApplicationContextAware, Application
         childContextMap.put(configFile.getName(), child);
     }
 
+    public void addContext(String contextName, AbstractApplicationContext context) throws IOException, BeansException
+    {
+        log.info("Adding context '" + contextName + "'");
+//        context.setParent(toplevelContext);
+
+        childContextMap.put(contextName, context);
+    }
+
     public void removeContext(String configFileName)
     {
         if ( childContextMap.containsKey(configFileName) )

@@ -12,7 +12,8 @@ import org.springframework.util.FileCopyUtils;
 import java.io.File;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-context-holder.xml", "classpath*:/spring/spring-library-folder-watcher.xml"})
@@ -20,6 +21,7 @@ public class SpringFileLoaderIT
 {
     @Autowired
     private SpringContextHolder springContextHolder;
+
 
     @Test
     public void loadSpringFile() throws Exception

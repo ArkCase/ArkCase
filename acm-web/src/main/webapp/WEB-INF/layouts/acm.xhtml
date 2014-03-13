@@ -39,7 +39,7 @@
 
         <!-- header="Top" -->
         <p:layoutUnit position="north" size="100"  resizable="true" closable="false" collapsible="true" >
-            <ui:insert name="topBar"/>
+            <ui:include src="/views/topBar.xhtml"/>
         </p:layoutUnit>
 
         <p:layoutUnit position="south" size="100" header="Bottom" resizable="true" closable="false" collapsible="true">
@@ -55,7 +55,7 @@
         <!--</h:form>-->
 
         <p:layoutUnit position="west" size="200" header="Left" resizable="true" closable="false" collapsible="true">
-            <h:outputText value="#{acmPluginManager.name}"/>
+            <h:outputText value="Plugin List Should Go Here"/>
         </p:layoutUnit>
 
         <!--<p:layoutUnit position="east" size="200" header="Right" resizable="true" closable="false" collapsible="true"-->

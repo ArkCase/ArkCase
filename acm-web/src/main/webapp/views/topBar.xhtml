@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags">
+
+    <head/>
+    <body>
+        <ui:composition>
+            <div id="topMenu">
+                <h:form>
+                    <p:toolbar>
+                        <p:toolbarGroup align="right">
+                            <p:menuButton value="${acm_username}">
+                                <p:menuitem value="Logout" url="/logout"/>
+                            </p:menuButton>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+                </h:form>
+            </div>
+        </ui:composition>
+    </body>
+</html>
