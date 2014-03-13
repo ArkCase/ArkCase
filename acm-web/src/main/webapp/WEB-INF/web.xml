@@ -11,16 +11,14 @@
 		everything in one big application context.  That means controllers have to be defined in
 		spring-web-*.xml files, and service beans in spring-library-*.xml files.
 	-->
-
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:/spring/spring-library-*.xml,
                      WEB-INF/spring/spring-security-*.xml</param-value>
     </context-param>
-
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
 
     <!--
 		SPRING SECURITY
@@ -32,7 +30,6 @@
 
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <!--<servlet-name>Spring MVC Servlet</servlet-name>?    -->
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
@@ -50,12 +47,12 @@
 		SPRING MVC
 	-->
     <servlet>
-        <servlet-name>Spring MVC Servlet</servlet-name>
+        <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>
-                /WEB-INF/spring/appServlet/servlet-context.xml,
+                /WEB-INF/spring/appServlet/servlet-context.xml
                 classpath*:spring/spring-web-*.xml
             </param-value>
         </init-param>
@@ -63,19 +60,32 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>Spring MVC Servlet</servlet-name>
-        <url-pattern>/app/*</url-pattern>
+        <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+    <!--
+        FORCE UTF8 ENCODING
+    -->
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
     <!-- springsecurity.taglib.xml
   		Spring Security Facelets tag library declaration
   	-->
 
-    <!--
-        DEFAULT PAGE
-    -->
-
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
 </web-app>

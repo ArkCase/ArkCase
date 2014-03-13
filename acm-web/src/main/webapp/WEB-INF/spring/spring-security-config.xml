@@ -12,13 +12,16 @@
 		Configure Spring Security.
 	-->
 
-
-
     <!-- The login page itself, along with the JavaScript and images that
          appear on the login page, do not have to be protected.  -->
-    <http security="none" pattern="/app/login" />
-    <http security="none" pattern="/app/javax.faces.resource/**" />
-    <http security="none" pattern="/app/resources/**" />
+    <http security="none" pattern="/login" />
+    <http security="none" pattern="/login.html" />
+    <http security="none" pattern="/login.jsp" />
+    <http security="none" pattern="/resources/**" />
+    <http security="none" pattern="/resources/js/*"/>
+    <http security="none" pattern="/resources/styles/**"/>
+    <http security="none" pattern="/resources/styles/acm/**"/>
+    <http security="none" pattern="/resources/styles/blueprint/**"/>
 
     <!-- acmAuthenticationManager, acmLogoutSuccessHandler, and acmAuthenticationDetailsFactory are defined
          in spring-library-user-login.xml -->
@@ -29,9 +32,9 @@
             authentication-manager-ref="acmAuthenticationManager"  >
         <intercept-url pattern="/**" access="isAuthenticated()" />
 		<form-login 
-                login-page="/app/login"
+                login-page="/login"
                 authentication-details-source-ref="acmAuthenticationDetailsFactory"
-                authentication-failure-url="/app/login?login_error=1"
+                authentication-failure-url="/login?login_error=1"
                 authentication-success-handler-ref="acmLoginSuccessHandler"/>
 		<logout 
                 logout-url="/logout"

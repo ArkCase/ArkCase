@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:c="http://java.sun.com/jstl/core">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<html>
 <head>
     <title>ACM: Armedia Case Management</title>
 
@@ -13,14 +11,13 @@
 
     <!--<link rel="stylesheet" href="${request.contextPath}/app/resources/styles/blueprint/screen.css" type="text/css" media="screen, projection" />-->
     <!--<link rel="stylesheet" href="${request.contextPath}/app/resources/styles/blueprint/print.css" type="text/css" media="print" />-->
-    <link rel="stylesheet" href="${request.contextPath}/app/resources/styles/acm/basic.css" type="text/css"
+    <link rel="stylesheet" href="<c:url value="/resources/styles/acm/basic.css"/>" type="text/css"
           media="screen, projection"/>
-    <link rel="stylesheet" href="${request.contextPath}/app/resources/styles/acm/forms.css" type="text/css"
+    <link rel="stylesheet" href="<c:url value="/resources/styles/acm/forms.css"/>" type="text/css"
           media="screen, projection"/>
-    <link rel="stylesheet" href="${request.contextPath}/app/resources/styles/acm/messages.css" type="text/css"
-          media="screen, projection"/>
+    <link rel="stylesheet" href="<c:url value="/resources/styles/acm/messages.css"/>" type="text/css" media="screen, projection"/>
     <!--[if lt IE 8]>
-        <link rel="stylesheet" href="${request.servletPath}/styles/blueprint/ie.css" type="text/css" media="screen, projection" />
+        <link rel="stylesheet" href="<c:url value="/resources/styles/blueprint/ie.css"/>" type="text/css" media="screen, projection" />
     <![endif]-->
     <ui:insert name="headIncludes"/>
 </head>

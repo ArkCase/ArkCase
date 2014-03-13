@@ -11,8 +11,18 @@
 		DispatcherServlet Context: defines this servlet's request-processing infrastructure
 	-->
 
-	<!-- Imports user-defined @Controller beans that process client requests -->
-	<import resource="controllers.xml" />
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!-- Imports user-defined @Controller beans that process client requests -->
+	<!--<import resource="controllers.xml" />-->
+    <mvc:view-controller path="/" view-name="home"/>
+    <mvc:view-controller path="/login" view-name="login"/>
+    <mvc:view-controller path="/login.html" view-name="login"/>
+    <mvc:view-controller path="/portal.html" view-name="home"/>
+    <mvc:view-controller path="/overview.html" view-name="home"/>
 
 	<!-- Scan for Spring beans declared via annotations. -->
 	<!--<context:component-scan base-package="com.armedia.acm.web"/>-->
@@ -26,17 +36,11 @@
         Enable serving of classpath with Spring 3 resource serving mechanism. For example:
         /webflow-primefaces-showcase/app/resources/styles/blueprint/print.css
     -->
-	<mvc:resources location="/" mapping="/resources/**" />
+	<mvc:resources mapping="/resources/**" location="/resources/"  />
 
-	<!--
-		Resolves views selected for rendering by @Controllers to .xhtml
-		resources in the /views directory
-	-->
-	<bean id="acmViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-		<property name="prefix" value="/views/" />
-		<property name="suffix" value=".jsp" />
-	</bean>
+    <!-- Saves a locale change using a cookie -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/>
+
 
 
 
