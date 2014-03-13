@@ -13,17 +13,6 @@
     <artifactId>acm-core-plugin-manager</artifactId>
 
     <dependencies>
-        <!-- acm -->
-        <dependency>
-            <groupId>com.armedia.acm.arm-file-tools</groupId>
-            <artifactId>arm-folder-watcher</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.spring-tools</groupId>
-            <artifactId>acm-spring-tools-context-holder</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
 
         <!-- spring -->
         <dependency>
@@ -46,11 +35,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- servlet -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-        </dependency>
 
         <!-- testing -->
         <dependency>

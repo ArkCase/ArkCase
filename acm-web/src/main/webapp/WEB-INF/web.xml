@@ -6,7 +6,10 @@
   <display-name>Armedia Case Management</display-name>
 
     <!--
-		SPRING ROOT WEB APPLICATION CONTEXT
+		SPRING ROOT WEB APPLICATION CONTEXT.  Spring MVC does require us to have a root application
+		context with service beans, and a web application context with controllers.  We can't have
+		everything in one big application context.  That means controllers have to be defined in
+		spring-web-*.xml files, and service beans in spring-library-*.xml files.
 	-->
 
     <context-param>
@@ -44,10 +47,25 @@
     </servlet-mapping>
 
     <!--
-		SPRING MVC is configured via the AcmWebAppInitializer class.  Do not add any
-		Spring MVC initializers in web.xml.
+		SPRING MVC
 	-->
+    <servlet>
+        <servlet-name>Spring MVC Servlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>
+                /WEB-INF/spring/appServlet/servlet-context.xml,
+                classpath*:spring/spring-web-*.xml
+            </param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
+    <servlet-mapping>
+        <servlet-name>Spring MVC Servlet</servlet-name>
+        <url-pattern>/app/*</url-pattern>
+    </servlet-mapping>
 
     <!-- springsecurity.taglib.xml
   		Spring Security Facelets tag library declaration

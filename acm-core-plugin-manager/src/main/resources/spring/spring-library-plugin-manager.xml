@@ -12,10 +12,4 @@
         <property name="navigatorViewName" value="home"/>
     </bean>
 
-    <bean id="pluginDymamicLoader" class="com.armedia.acm.pluginmanager.PluginDynamicLoader">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-    </bean>
-
-
-
 </beans>

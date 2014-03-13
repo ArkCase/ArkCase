@@ -32,7 +32,7 @@
 		Resolves views selected for rendering by @Controllers to .xhtml
 		resources in the /views directory
 	-->
-	<bean id="acmViewResolver" class="com.armedia.acm.pluginmanager.AcmViewResolver">
+	<bean id="acmViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
 		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
 		<property name="prefix" value="/views/" />
 		<property name="suffix" value=".jsp" />
