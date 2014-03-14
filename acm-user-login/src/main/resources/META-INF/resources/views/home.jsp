@@ -4,7 +4,11 @@
 
 <body>
 <%@include file="/fragments/topbar.jspf"%>
-    <p>Some content should appear here.</p>
+
+<div id="content">
+    <p>Some content goes here.</p>
+</div>
+
 </body>
 
-</html>
+<%@include file="/fragments/footer.jspf"%>

@@ -1,14 +1,34 @@
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="acm-topbar-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">${sessionScope.acm_username} <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="<c:url value="/logout"/>" >Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
+<div id="header">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="acm-topbar-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">${sessionScope.acm_username} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="<c:url value="/logout"/>" >Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </nav>
+</div>
+<aside class="grid_1">
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Links</div>
+        <%--
+        <div class="panel-body">
+            <p>...</p>
+        </div>
+        --%>
+
+        <!-- List group -->
+        <ul class="list-group">
+            <li class="list-group-item">TBD...</li>
+            <li class="list-group-item">TBD...</li>
+        </ul>
     </div>
-</nav>
+</aside>
+
