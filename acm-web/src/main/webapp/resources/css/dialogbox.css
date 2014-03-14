@@ -1,0 +1,24 @@
+.j-dialog-box{ background:url(./images/dialogbox.png) no-repeat;width:100%;height:180px;z-index: 999999;}
+.j-dialog-box-overlay {
+    position:absolute;
+    zIndex: 998;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background:#FFF;
+    opacity:0.4;
+    filter:alpha(opacity=40); /* For IE8 and earlier */
+}
+.j-dialog-box label{width:90px;display:inline-block}
+.j-dialog-box-pad{padding:5px 0 0 15px;width:100%}
+.j-dialog-box-footer{background:url(./images/dialogbox.png)  0 100% no-repeat;height:60px;width:100%}
+
+.centerDivHV {
+    width:100%;
+    height:388px;
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin:-240px 0 0 -200px;
+}

@@ -32,11 +32,11 @@
             <artifactId>mule-context-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.armedia.acm.acm-plugins.samples</groupId>-->
-            <!--<artifactId>armedia-blog-plugin</artifactId>-->
-            <!--<version>${acm.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.samples</groupId>
+            <artifactId>armedia-blog-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>

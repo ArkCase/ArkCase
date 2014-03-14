@@ -44,7 +44,8 @@
     </servlet-mapping>
 
     <!--
-		SPRING MVC
+		SPRING MVC. This servlet MUST be named "Spring MVC Dispatcher Servlet" or else the view resolver will not  be
+		able to find JSP files.
 	-->
     <servlet>
         <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>

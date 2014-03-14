@@ -47,8 +47,8 @@
     <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>
     <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
         <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
-        <property name="defaultTargetUrl" value="/app/login"/>
-        <property name="alwaysUseDefaultTargetUrl" value="true"/>
+        <property name="defaultTargetUrl" value="/home"/>
+        <property name="alwaysUseDefaultTargetUrl" value="false"/>
     </bean>
 
     <bean id="ssAuthenticationEventPublisher"

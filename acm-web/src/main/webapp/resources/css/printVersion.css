@@ -1,0 +1,114 @@
+/* @override http://localhost/~aj/OPM2/css/printVersion.css */
+
+@charset "UTF-8";
+/* CSS Document */
+
+div.center {
+	width: 8.5in;
+	margin: 0 auto;	
+	
+}
+
+div.center.alpha h1 {
+	text-align: center;
+	text-transform: uppercase;
+}
+
+div.center h2 {
+	text-align: center;
+	text-transform: capitalize;
+}
+
+div.center .rightArea{
+	float: right;
+	width: 4in;
+	margin-left: 400px;
+	margin-bottom: 20px;
+	text-transform: uppercase;
+}
+
+
+div.center div.left {
+	width: 4in;
+	float: left;
+	margin-bottom: 20px;
+	margin-left: 30px;
+	text-transform: uppercase;
+}
+
+div.center div.right {
+	width: 4in;
+	float: left;
+	margin-bottom: 20px;
+	text-transform: uppercase;
+}
+
+div.center span.right {
+	float: right;
+	margin-right: 50px;	
+}
+
+div.center div.left p {
+	margin: 10px 0px 10px 0;
+}
+
+div.center div.right p {
+	margin: 10px 0px 10px 0;
+}
+
+div.center table {
+	width: 100%;
+	border-collapse:collapse;
+	margin: 20px 0px 20px 0;
+}
+
+
+div.center table th {
+	border: 1px double gray;
+	padding: 0px;
+	text-transform: uppercase;
+}
+div.center table td {
+	border: 1px double gray;
+	padding: 10px;
+}
+div.center table tfoot td {
+	border: 0px;
+	padding: 10px;
+}
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+ 
+.clearfix {
+	display: inline-block;
+}
+
+ p {font-size:12px;
+    color:rgb(0,0,0);
+    }
+
+ 
+ p
+ {
+ font-family: Georgia, 'Times New Roman', 'Bitstream Charter', Times, serif;
+ } 
+ 
+ strong
+ {
+ font-family: Georgia, 'Times New Roman', 'Bitstream Charter', Times, serif;
+ } 
+ strong {font-size:12px;}
+ 
+ span{font-size:12px;
+      }
+      
+tr.comment td{
+border:0px solid #000;
+}
+    
