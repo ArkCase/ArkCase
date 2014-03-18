@@ -18,16 +18,12 @@
     <div class="panel panel-default">
         <!-- Default panel contents -->
         <div class="panel-heading">Links</div>
-        <%--
-        <div class="panel-body">
-            <p>...</p>
-        </div>
-        --%>
 
         <!-- List group -->
         <ul class="list-group">
-            <li class="list-group-item">TBD...</li>
-            <li class="list-group-item">TBD...</li>
+            <c:forEach var="plugin" items="${sessionScope.acm_navigator_plugins}">
+                <li class="list-group-item"><a href="<c:url value="${plugin.homeUrl}"/>">${plugin.navigatorTabName}</a></li>
+            </c:forEach>
         </ul>
     </div>
 </aside>

@@ -17,6 +17,7 @@ public class AcmPluginManager implements ApplicationContextAware
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private Collection<AcmPlugin> acmPlugins;
+    private Collection<AcmPlugin> enabledNavigatorPlugins;
 
     public synchronized Collection<AcmPlugin> getAcmPlugins()
     {
@@ -26,6 +27,15 @@ public class AcmPluginManager implements ApplicationContextAware
     public synchronized void registerPlugin(AcmPlugin plugin)
     {
         acmPlugins.add(plugin);
+
+        if ( plugin.isNavigatorTab() && plugin.isEnabled() )
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("Adding navigator plugin " + plugin.getPluginName());
+            }
+            enabledNavigatorPlugins.add(plugin);
+        }
     }
 
     /**
@@ -35,6 +45,7 @@ public class AcmPluginManager implements ApplicationContextAware
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
     {
         acmPlugins = new ArrayList<>();
+        enabledNavigatorPlugins = new ArrayList<>();
 
         Map<String, AcmPlugin> plugins = applicationContext.getBeansOfType(AcmPlugin.class);
 
@@ -55,6 +66,10 @@ public class AcmPluginManager implements ApplicationContextAware
     }
 
 
+    public synchronized Collection<AcmPlugin> getEnabledNavigatorPlugins()
+    {
+        return Collections.unmodifiableCollection(enabledNavigatorPlugins);
+    }
 
 
 }

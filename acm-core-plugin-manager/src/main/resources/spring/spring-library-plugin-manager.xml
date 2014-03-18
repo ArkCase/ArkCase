@@ -9,7 +9,7 @@
         <property name="pluginName" value="homePlugin"/>
         <property name="navigatorTab" value="true"/>
         <property name="navigatorTabName" value="Home"/>
-        <property name="navigatorViewName" value="home"/>
+        <property name="homeUrl" value="home"/>
     </bean>
 
 </beans>

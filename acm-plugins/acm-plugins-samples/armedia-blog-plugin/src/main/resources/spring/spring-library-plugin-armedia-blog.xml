@@ -7,7 +7,8 @@
         <property name="pluginName" value="armediaBlogPlugin"/>
         <property name="navigatorTab" value="true"/>
         <property name="navigatorTabName" value="Armedia Blog"/>
-        <property name="navigatorViewName" value="armediaBlog"/>
+        <property name="homeUrl" value="/plugin/sample/armediaBlog"/>
+        <property name="enabled" value="true"/>
     </bean>
 
 </beans>

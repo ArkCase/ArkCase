@@ -1,12 +1,19 @@
 package com.armedia.acm.pluginmanager;
 
 
-public class AcmPlugin
+import java.io.Serializable;
+
+public class AcmPlugin implements Serializable
 {
+    private static final long serialVersionUID = -364262047493069587L;
+
     private String pluginName;
     private boolean navigatorTab;
     private String navigatorTabName;
-    private String navigatorViewName;
+    private String homeUrl;
+    private boolean enabled;
+
+
 
     public String getPluginName()
     {
@@ -38,13 +45,23 @@ public class AcmPlugin
         this.navigatorTabName = navigatorTabName;
     }
 
-    public String getNavigatorViewName()
+    public String getHomeUrl()
     {
-        return navigatorViewName;
+        return homeUrl;
     }
 
-    public void setNavigatorViewName(String navigatorViewName)
+    public void setHomeUrl(String homeUrl)
     {
-        this.navigatorViewName = navigatorViewName;
+        this.homeUrl = homeUrl;
+    }
+
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
     }
 }
