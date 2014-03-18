@@ -3,12 +3,18 @@
     <parent>
         <artifactId>arm-file-tools</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.arm-file-tools</groupId>
     <artifactId>arm-folder-watcher</artifactId>
+    <name>File Tools - Folder Watcher</name>
+    <description>
+        Watches a designated folder for new, updated, and deleted files.  Uses
+        Apache vfs2 to monitor the folder, since neither Mule nor Camel raises events
+        for deleted files.
+    </description>
 
     <dependencies>
         <!-- spring -->

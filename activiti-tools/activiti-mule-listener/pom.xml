@@ -3,13 +3,13 @@
     <parent>
         <artifactId>activiti-tools</artifactId>
         <groupId>com.armedia</groupId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.activiti-tools</groupId>
     <artifactId>activiti-mule-listener</artifactId>
-    <name>Activiti Mule Execution Listener</name>
+    <name>Activiti Tools - Mule Execution Listener</name>
     <description>
         This module provides a generic Activiti execution listener
         that invokes a Mule ESB flow.  The Mule flow will have access to the following inbound properties
