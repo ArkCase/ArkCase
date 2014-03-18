@@ -193,6 +193,7 @@
         <camel.version>2.12.2</camel.version>
         <easymock.version>3.2</easymock.version>
         <h2.version>1.3.169</h2.version>
+        <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
         <javax.servlet.version>3.0.1</javax.servlet.version>
 
         <jira.resolutionIds>Fixed,Won't Fix,Duplicate,Incomplete,Cannot Reproduce</jira.resolutionIds>
@@ -635,6 +636,12 @@
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>
                 <version>${org.json.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>${jackson-mapper-asl.version}</version>
             </dependency>
 
             <!-- servlet -->

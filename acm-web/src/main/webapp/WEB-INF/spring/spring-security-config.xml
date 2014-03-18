@@ -26,6 +26,19 @@
     <!-- acmAuthenticationManager, acmLogoutSuccessHandler, and acmAuthenticationDetailsFactory are defined
          in spring-library-user-login.xml -->
 
+    <!-- TODO: enable token-security for services, e.g. Alfresco alf_ticket -->
+    <http pattern="/service/**"
+            auto-config="true"
+            use-expressions="true"
+            authentication-manager-ref="acmAuthenticationManager">
+        <intercept-url pattern="/service/**" access="isAuthenticated()"/>
+        <http-basic authentication-details-source-ref="acmAuthenticationDetailsFactory"/>
+        <logout
+                logout-url="/logout"
+                success-handler-ref="acmLogoutSuccessHandler"
+                invalidate-session="true"/>
+    </http>
+
 	<http 
             auto-config="true"
             use-expressions="true"
