@@ -34,7 +34,7 @@
                 <setting name="jdbc.persister.main.table">acm_audit_log</setting>
                 <setting name="jdbc.persister.main.table.pk">cm_audit_id</setting>
                 <setting name="jdbc.persister.main.table.column.timestamp">cm_audit_datetime</setting>
-                <setting name="jdbc.persister.main.table.column.trackid">cm_audit_track_id</setting>
+                <setting name="jdbc.persister.main.table.column.trackId">cm_audit_track_id</setting>
                 <setting name="jdbc.persister.main.table.column.activity">cm_audit_activity</setting>
                 <setting name="jdbc.persister.main.table.column.actor">cm_audit_user</setting>
                 <setting name="jdbc.persister.main.table.column.result">cm_audit_activity_result</setting>
