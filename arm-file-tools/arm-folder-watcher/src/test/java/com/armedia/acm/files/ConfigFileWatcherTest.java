@@ -98,20 +98,20 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     {
         verifyAll();
 
-        assertEquals(fileSeparator + "file.txt", capturedEvent.getValue().getBaseFileName());
+        assertEquals("file.txt", capturedEvent.getValue().getConfigFile().getName());
         assertNotNull(capturedEvent.getValue().getConfigFile());
     }
 
     private Capture<AbstractConfigurationFileEvent> setupEventTest() throws FileSystemException, MalformedURLException
     {
         unit.setApplicationEventPublisher(mockPublisher);
-        unit.setBaseFolderPath("C:" + fileSeparator + "home" + fileSeparator + "acm");
+        unit.setBaseFolderPath("home" + fileSeparator + "acm");
 
         Capture<AbstractConfigurationFileEvent> capturedEvent = new Capture<>();
 
         expect(mockFileChangeEvent.getFile()).andReturn(mockFileObject).atLeastOnce();
         expect(mockFileObject.getName()).andReturn(mockFileName).anyTimes();
-        expect(mockFileObject.getURL()).andReturn(new URL("file:///" + unit.getBaseFolderPath() + "" + fileSeparator + "file.txt"));
+        expect(mockFileObject.getURL()).andReturn(new URL("file:/" + unit.getBaseFolderPath() + fileSeparator + "file.txt"));
 
         mockPublisher.publishEvent(capture(capturedEvent));
 
