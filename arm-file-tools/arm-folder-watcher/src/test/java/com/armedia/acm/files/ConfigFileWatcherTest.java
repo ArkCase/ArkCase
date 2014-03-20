@@ -58,7 +58,15 @@ public class ConfigFileWatcherTest extends EasyMockSupport
 
         verifyAll();
 
-        assertEquals("C:" + fileSeparator + "home" + fileSeparator + "acm", unit.getBaseFolderPath());
+
+        String expected = "C:" + fileSeparator + "home" + fileSeparator + "acm";
+        // cross platform canonical path names...
+        if ( "/".equals(fileSeparator) )
+        {
+            expected = "/" + expected;
+        }
+
+        assertEquals(expected, unit.getBaseFolderPath());
     }
 
     @Test
