@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.ApplicationEventPublisher;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -38,6 +39,7 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     private FileName mockFileName;
 
     private ConfigFileWatcher unit;
+    private String fileSeparator = File.separator;
 
     @Before
     public void setUp() throws Exception
@@ -48,7 +50,7 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     @Test
     public void baseFolderPath_shouldBeSet_afterSourceFolderIsSet() throws Exception
     {
-        expect(mockFileObject.getURL()).andReturn(new URL("file:///C:\\home\\acm"));
+        expect(mockFileObject.getURL()).andReturn(new URL("file:///C:" + fileSeparator + "home" + fileSeparator + "acm"));
 
         replayAll();
 
@@ -56,7 +58,7 @@ public class ConfigFileWatcherTest extends EasyMockSupport
 
         verifyAll();
 
-        assertEquals("C:\\home\\acm", unit.getBaseFolderPath());
+        assertEquals("C:" + fileSeparator + "home" + fileSeparator + "acm", unit.getBaseFolderPath());
     }
 
     @Test
@@ -96,20 +98,20 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     {
         verifyAll();
 
-        assertEquals("\\file.txt", capturedEvent.getValue().getBaseFileName());
+        assertEquals(fileSeparator + "file.txt", capturedEvent.getValue().getBaseFileName());
         assertNotNull(capturedEvent.getValue().getConfigFile());
     }
 
     private Capture<AbstractConfigurationFileEvent> setupEventTest() throws FileSystemException, MalformedURLException
     {
         unit.setApplicationEventPublisher(mockPublisher);
-        unit.setBaseFolderPath("C:\\home\\acm");
+        unit.setBaseFolderPath("C:" + fileSeparator + "home" + fileSeparator + "acm");
 
         Capture<AbstractConfigurationFileEvent> capturedEvent = new Capture<>();
 
         expect(mockFileChangeEvent.getFile()).andReturn(mockFileObject).atLeastOnce();
         expect(mockFileObject.getName()).andReturn(mockFileName).anyTimes();
-        expect(mockFileObject.getURL()).andReturn(new URL("file:///" + unit.getBaseFolderPath() + "\\file.txt"));
+        expect(mockFileObject.getURL()).andReturn(new URL("file:///" + unit.getBaseFolderPath() + "" + fileSeparator + "file.txt"));
 
         mockPublisher.publishEvent(capture(capturedEvent));
 
