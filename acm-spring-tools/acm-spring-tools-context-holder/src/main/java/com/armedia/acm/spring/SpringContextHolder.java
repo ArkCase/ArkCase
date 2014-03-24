@@ -114,8 +114,11 @@ public class SpringContextHolder implements ApplicationContextAware, Application
     public void addContextFromFile(File configFile) throws IOException, BeansException
     {
         log.info("Adding context from file " + configFile.getCanonicalPath());
+
+        // the canonical path will be an absolute path.  But it will start with a / on Linux,
+        // which Spring will treat as a relative path.  Must start with file: to force an absolute path.
         AbstractApplicationContext child = new FileSystemXmlApplicationContext(
-                new String[] {configFile.getCanonicalPath()}, true, toplevelContext);
+                new String[] { "file:" + configFile.getCanonicalPath()}, true, toplevelContext);
         childContextMap.put(configFile.getName(), child);
     }
 
