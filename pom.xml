@@ -251,6 +251,14 @@
             <url>http://repository.mulesoft.org/releases/</url>
             <layout>default</layout>
         </repository>
+
+        <!-- Armedia repository -->
+        <repository>
+            <id>armedia-shared</id>
+            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/groups/armedia</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
     </repositories>
 
     <build>
