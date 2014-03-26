@@ -19,6 +19,7 @@
     <!-- Imports user-defined @Controller beans that process client requests -->
 	<!--<import resource="controllers.xml" />-->
     <mvc:view-controller path="/" view-name="home"/>
+    <mvc:view-controller path="/home" view-name="home"/>
     <mvc:view-controller path="/login" view-name="login"/>
     <mvc:view-controller path="/login.html" view-name="login"/>
     <mvc:view-controller path="/portal.html" view-name="home"/>
