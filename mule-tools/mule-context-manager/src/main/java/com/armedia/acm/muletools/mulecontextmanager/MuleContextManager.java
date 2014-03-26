@@ -87,6 +87,7 @@ public class MuleContextManager implements ApplicationContextAware
             {
                 log.debug("Stopping Mule context");
                 getMuleContext().stop();
+                getMuleContext().dispose();
             }
         }
         catch (MuleException e)

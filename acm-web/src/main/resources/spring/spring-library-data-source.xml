@@ -48,7 +48,8 @@
         </property>
     </bean>
 
-    <bean id="acmDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    <bean id="acmDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+            destroy-method="close">
         <property name="driverClass" value="$[acm.driverClassName]"/>
         <property name="jdbcUrl" value="$[acm.url]"/>
         <!--<property name="overrideDefaultUser" value="${acm.schema}"/>-->

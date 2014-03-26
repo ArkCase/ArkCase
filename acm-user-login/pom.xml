@@ -66,6 +66,12 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
 
+        <!-- apache libraries -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>junit</groupId>
