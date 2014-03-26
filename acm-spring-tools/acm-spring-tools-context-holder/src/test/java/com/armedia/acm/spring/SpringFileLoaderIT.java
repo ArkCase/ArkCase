@@ -27,7 +27,6 @@ public class SpringFileLoaderIT
     public void loadSpringFile() throws Exception
     {
 
-        // when this method starts the Camel context should be loaded.
         // let's copy a spring file to the incoming folder and see if it gets loaded
         Resource springFile = new ClassPathResource("spring/spring-config-context-holder-test-context.xml");
         assertTrue(springFile.exists());
