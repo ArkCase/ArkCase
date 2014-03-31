@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+<head>
+<meta charset="utf-8" />
+<title>New Task | ACM | Armedia Case Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="css/animate.css" type="text/css" />
+<link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="css/icon.css" type="text/css" />
+<link rel="stylesheet" href="css/font.css" type="text/css" />
+<link rel="stylesheet" href="css/app.css" type="text/css" />
+<!--[if lt IE 9]>
+    <script src="js/ie/html5shiv.js"></script>
+    <script src="js/ie/respond.min.js"></script>
+    <script src="js/ie/excanvas.js"></script>
+  <![endif]-->
+</head>
+<body class="">
+<section class="vbox">
+  <header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
+    <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="images/armedia.png" class="m-r-sm"></a></div>
+    <ul class="nav navbar-nav hidden-xs">
+      <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
+        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
+          <div class="row m-l-none m-r-none m-t m-b text-center">
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newComplaint.html"> <span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>
+            </div>
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>
+            </div>
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>
+            </div>
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newDocument.html"> <span class="m-b-xs block"> <i class="i i-file i-2x text-info-lt"></i> </span> <small class="text-muted">Document</small> </a> </div>
+            </div>
+          </div>
+        </section>
+      </li>
+    </ul>
+    <form class="navbar-form navbar-right input-s-lg m-t m-l-n-xs hidden-xs" method="post" action="upload.php" enctype="multipart/form-data">
+      <div class="form-group">
+        <div class="input-group"> <span class="input-group-btn">
+          <button type="submit" class="btn btn-sm bg-white b-white btn-icon"><i class="fa fa-search"></i></button>
+          </span>
+          <input type="text" class="form-control input-sm no-border" placeholder="Search complaints, cases...">
+        </div>
+      </div>
+    </form>
+    <ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user user">
+      <li class="hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-chat3"></i> <span class="badge badge-sm up bg-danger count">0</span> </a>
+        <section class="dropdown-menu aside-xl animated flipInY">
+          <section class="panel bg-white">
+            <header class="panel-heading b-light bg-light"> <strong>You have <span class="count">0</span> notifications</strong> </header>
+            <div class="list-group list-group-alt"> </div>
+            <footer class="panel-footer text-sm"> <a href="#" class="pull-right"><i class="fa fa-cog"></i></a> <a href="#notes" data-toggle="class:show animated fadeInRight">See all acitivity</a> </footer>
+          </section>
+        </section>
+      </li>
+    </ul>
+  </header>
+  <section>
+    <section class="hbox stretch"> 
+      <!-- .aside -->
+      <aside class="bg-light lt b-r b-light aside hidden-print" id="nav">
+        <section class="vbox">
+          <section class="w-f scrollable">
+            <div class=slim-scroll data-height=auto data-disable-fade-out=true data-distance=0 data-size=10px data-railOpacity=0.2>
+              <div class="clearfix wrapper dk nav-user hidden-xs">
+                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
+                  <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                    <span class="arrow top hidden-nav-xs"></span>
+                    <li> <a href="profile.html">My Profile</a> </li>
+                    <li> <a href="#">Switch User</a> </li>
+                    <li class="divider"></li>
+                    <li> <a href="index.html">Logout</a> </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- nav -->
+              <nav class="nav-primary hidden-xs">
+                <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Navigation</div>
+                <ul class="nav nav-main" data-ride="collapse">
+                  <li class=""> <a href="portal.html" class="auto"> <i class="i i-statistics icon"> </i> <span class="font-bold">Dashboard</span> </a> </li>
+                  <li class=""> <a href="activity.html" class="auto"> <i class="i i-alarm icon"> </i> <span class="font-bold">Activity</span> </a> </li>
+                  <li class=""> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
+                  <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
+                  <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
+                  <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
+                  <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
+                  <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
+                  <li class=""> <a href="admin.html" class="auto"> <i class="i i-settings icon"> </i> <span class="font-bold">Admin</span> </a> </li>
+                </ul>
+              </nav>
+              <!-- / nav --> 
+            </div>
+          </section>
+          <footer class="footer hidden-xs no-padder text-center-nav-xs"> <a href="#nav" data-toggle="class:nav-xs" class="btn btn-icon icon-muted btn-inactive m-l-xs m-r-xs"> <i class="i i-circleleft text"></i> <i class="i i-circleright text-active"></i> </a> </footer>
+        </section>
+      </aside>
+      <!-- /.aside -->
+      <section id="content">
+        <section class="vbox">
+          <section class="scrollable padder">
+            <section class="row m-b-md">
+              <div class="col-sm-12">
+                <h3 class="m-b-xs text-black">New Task</h3>
+              </div>
+            </section>
+            <div class="row">
+              <div class="col-sm-12">
+                <form id="wizardform" method="get" action="">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <ul class="nav nav-tabs font-bold">
+                        <li><a href="#step1" data-toggle="tab">Step 1: Task Information</a></li>
+                        <li><a href="#step2" data-toggle="tab">Step 2: Details</a></li>
+                        <li><a href="#step3" data-toggle="tab">Step 3: Attachments</a></li>
+                        <li><a href="#step4" data-toggle="tab">Step 4: Assignment</a></li>
+                      </ul>
+                    </div>
+                    <div class="panel-body">
+                      <div class="progress progress-xs m-t-sm">
+                        <div class="progress-bar bg-success"></div>
+                      </div>
+                      <div class="tab-content">
+                        
+                        <div class="tab-pane" id="step1">
+                          <h4>Task Information</h4>
+                          <p>Description</p>
+                          <section class="row m-b-md">
+                            <div class="col-sm-6">
+                              <label for="dueDate" class="label">Due Date</label>
+                              <input id="dueDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                             
+                            </div>
+                            <div class="col-sm-6">
+                              <label for="priority"  class="label">Priority</label>
+                              <select name="priority" class="form-control m-b">
+                                <option>Choose Priority</option>
+                                <option>option 2</option>
+                                <option>option 3</option>
+                                <option>option 4</option>
+                              </select>
+                            </div>
+                          </section>
+                        </div>
+                        <div class="tab-pane" id="step2">
+                          <h4>Details</h4>
+                          <p>Description</p>
+                          <label for="subject"  class="label">Subject</label>
+                          <input id="subject" type="text" class="form-control" placeholder="Subject">
+                          <hr />
+                          <div class="complaintDetails">Complaint Details</div>
+                        </div>
+                        <div class="tab-pane" id="step3">
+                          <h4>Attachments</h4>
+                          <p>Description</p>
+                          <div id="upload">
+                          <div id="drop"> Drop Here <br />
+                            <a>Browse</a>
+                            <input type="file" name="upl" multiple />
+                          </div>
+                          <ul>
+                            <!-- The file uploads will be shown here -->
+                          </ul>
+                          </div>
+                        </div>
+                        <div class="tab-pane" id="step4">
+                          <h4>Assignment</h4>
+                          <p>Description</p>
+                          <label for="approvers" class="label">Approvers</label>
+                          <input id="approvers" type="text" class="form-control" placeholder="Approvers">
+                          <hr/>
+                          <label for="collab" class="label">Collaborators</label>
+                          <input id="collab" type="text" class="form-control" placeholder="Collaborators">
+                          <hr/>
+                          <label for="notifications" class="label">Notifications</label>
+                          <input id="notifications" type="text" class="form-control" placeholder="Notifications">
+                        </div>
+                        <ul class="pager wizard m-b-sm">
+                          <li class="previous first" style="display:none;"><a href="#">First</a></li>
+                          <li class="previous"><a href="#">Previous</a></li>
+                          <li class="next"><a href="#">Next</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+        </section>
+      </section>
+    </section>
+  </section>
+</section>
+<script src="js/jquery.min.js"></script> 
+<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+
+<!-- Bootstrap --> 
+<script src="js/bootstrap.js"></script> 
+<!-- App --> 
+<!-- datepicker --> 
+<script src="js/datepicker/bootstrap-datepicker.js"></script> 
+<script src="js/app.js"></script> 
+<script src="js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="js/parsley/parsley.min.js"></script> 
+<script src="js/wizard/jquery.bootstrap.wizard.js"></script> 
+<script src="js/wizard/demo.js"></script> 
+<script src="js/app.plugin.js"></script> 
+
+<!-- File Manager --> 
+
+<script src="js/upload/js/jquery.fileupload.js"></script> 
+<script src="js/upload/js/jquery.iframe-transport.js"></script> 
+<script src="js/upload/js/file-uploads-custom.js"></script> 
+
+<!-- Summernote WYSIWYG -->
+
+<link rel="stylesheet" href="js/summernote/summernote.css" type="text/css"/>
+<script src="js/summernote/summernote.js"></script> 
+<script>
+    $(document).ready(function() {
+      $('.complaintDetails').summernote({
+  height: 300
+});
+  });
+</script>
+</body>
+</html>
