@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>acm-default-plugins</artifactId>
+        <groupId>com.armedia.acm.acm-plugins</groupId>
+        <version>1.4-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.armedia.acm.acm-plugins.default</groupId>
+    <artifactId>acm-complaint-plugin</artifactId>
+    <name>ACM Complaint Plugin</name>
+    <description>This plugin enables the complaint feature.  Complaints allow the organization to monitor
+        events that may or may not become full-blown case files.  Complaints may result in a new case file, or the
+        complaint may be dropped (if there is not enough substance to warrant a full investigation), or may be
+        referred to another organization.
+    </description>
+
+
+</project>
