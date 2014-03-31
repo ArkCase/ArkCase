@@ -45,6 +45,11 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
 
         HttpSession session = request.getSession(true);
         session.setAttribute("acm_username", userId);
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Session 'acm_username' set to '" + userId + "'");
+        }
     }
 
     protected void addNavigatorPluginsToSession(HttpServletRequest request, Authentication authentication)
