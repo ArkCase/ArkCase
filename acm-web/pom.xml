@@ -38,6 +38,11 @@
             <artifactId>armedia-blog-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <artifactId>acm-object-association-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>

@@ -16,6 +16,7 @@
     <description>Parent project for default plugins.</description>
     <modules>
         <module>acm-complaint-plugin</module>
+        <module>acm-object-association-plugin</module>
     </modules>
 
 

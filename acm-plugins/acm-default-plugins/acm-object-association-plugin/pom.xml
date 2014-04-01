@@ -11,13 +11,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-plugins.default</groupId>
-    <artifactId>acm-complaint-plugin</artifactId>
-    <name>ACM Default Plugin: Complaints</name>
-    <description>This plugin enables the complaint feature.  Complaints allow the organization to monitor
-        events that may or may not become full-blown case files.  Complaints may result in a new case file, or the
-        complaint may be dropped (if there is not enough substance to warrant a full investigation), or may be
-        referred to another organization.
+    <artifactId>acm-object-association-plugin</artifactId>
+    <name>ACM Default Plugin: Object Associations</name>
+    <description>This plugin enables arbitrary associations of parent objects to target objects
+        (persons to addresses, complaints to files ...).
     </description>
+
+    <dependencies>
+        <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
 
 
 </project>
