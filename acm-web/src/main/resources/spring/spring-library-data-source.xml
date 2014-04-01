@@ -85,6 +85,7 @@
     <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
         <property name="dataSource" ref="acmDataSource" />
         <property name="changeLog" value="classpath:/ddl/acm-database-changelog.xml" />
+        <property name="shouldRun" value="$[schema.autoUpdate]"/>
 
         <!--
         contexts specifies the runtime contexts to use.
