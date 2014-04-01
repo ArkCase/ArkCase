@@ -38,14 +38,6 @@
                 tableName="acm_audit_log_property"
                 columnNames="cm_audit_id, cm_audit_property_name"
                 constraintName="pk_audit_log_property"/>
-        <addForeignKeyConstraint
-                baseTableName="acm_audit_log_property"
-                baseColumnNames="cm_audit_id"
-                constraintName="fk_audit_property_audit_log"
-                referencedTableName="acm_audit_log"
-                referencedColumnNames="cm_audit_id"
-                deferrable="true"
-                initiallyDeferred="true" />
         <createIndex tableName="acm_audit_log" indexName="idx_audit_log_user">
             <column name="cm_audit_user"/>
         </createIndex>
