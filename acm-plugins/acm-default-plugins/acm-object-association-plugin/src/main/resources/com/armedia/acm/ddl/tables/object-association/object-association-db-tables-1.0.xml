@@ -54,5 +54,10 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="02-widen-object-names" author="dmiller">
+        <modifyDataType tableName="acm_object_association" columnName="cm_parent_name" newDataType="VARCHAR2(4000)"/>
+        <modifyDataType tableName="acm_object_association" columnName="cm_target_name" newDataType="VARCHAR2(4000)"/>
+    </changeSet>
+
 </databaseChangeLog>
 

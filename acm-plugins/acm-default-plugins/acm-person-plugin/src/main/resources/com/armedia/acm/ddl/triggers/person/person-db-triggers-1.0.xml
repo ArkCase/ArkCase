@@ -1,0 +1,42 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-person-triggers" author="dmiller" runOnChange="true">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_prsn_update_assn_names
+            AFTER UPDATE OF cm_given_name, cm_family_name
+            ON acm_person
+            FOR EACH ROW
+            DECLARE
+                v_person_name VARCHAR2(4000);
+            BEGIN
+                SELECT :NEW.cm_given_name ||
+                    NVL2(:NEW.cm_given_name, ' ', NULL) ||
+                    :NEW.cm_family_name
+                INTO v_person_name
+                FROM dual;
+
+                pkg_update_association_names.update_association_names(:NEW.cm_person_id, 'PERSON', v_person_name);
+
+            END trg_prsn_update_assn_names;
+        </createProcedure>
+
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_prsn_delete
+            AFTER DELETE ON acm_person
+            FOR EACH ROW
+            BEGIN
+                pkg_update_association_names.remove_associations(:OLD.cm_person_id, 'PERSON');
+            END trg_prsn_delete;
+        </createProcedure>
+
+        <rollback>
+            DROP TRIGGER trg_prsn_update_assn_names;
+            DROP TRIGGER trg_prsn_delete;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

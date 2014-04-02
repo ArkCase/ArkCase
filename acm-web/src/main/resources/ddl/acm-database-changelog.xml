@@ -19,16 +19,13 @@
     <includeAll path="classpath*:/com/armedia/acm/ddl/packageSpecs" relativeToChangelogFile="false" />
     <includeAll path="classpath*:/com/armedia/acm/ddl/packageBodies" relativeToChangelogFile="false" />
 
-    <!-- NOTE: Liquibase fails if it finds no objects.  So only enable the next few lines when we have
-    triggers and stored procedures. -->
-
     <!-- then triggers.  -->
-    <!--<includeAll path="classpath*:/com/armedia/acm/ddl/triggers" relativeToChangelogFile="false"/>-->
+    <includeAll path="classpath*:/com/armedia/acm/ddl/triggers" relativeToChangelogFile="false"/>
 
-    <!-- and stored procedures -->
-    <!--<includeAll path="classpath*:/com/armedia/acm/ddl/storedProcedures" relativeToChangelogFile="false" />-->
-
-    <!-- other types of database objects can be included here as the need arises -->
+    <!-- other types of database objects can be included here as the need arises.
+         NOTE: Liquibase fails if it finds no objects.  So only add more object type patterns when
+         you need to create them.
+    -->
 
 </databaseChangeLog>
 

@@ -1,0 +1,79 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-addressable-update-trigger" author="dmiller" runOnChange="true">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_addr_update_assn_names
+            AFTER UPDATE OF cm_street_address, cm_locality, cm_region, cm_postal_code
+            ON acm_postal_address
+            FOR EACH ROW
+            DECLARE
+                v_address_name VARCHAR2(4000);
+            BEGIN
+                SELECT :NEW.cm_street_address ||
+                    NVL2(:NEW.cm_street_address, ', ', NULL) ||
+                    :NEW.cm_locality ||
+                    NVL2(:NEW.cm_locality, ', ', NULL) ||
+                    :NEW.cm_region ||
+                    NVL2(:NEW.cm_region, '  ', NULL) ||
+                    :NEW.cm_postal_code
+                INTO v_address_name
+                FROM dual;
+
+                pkg_update_association_names.update_association_names(:NEW.cm_address_id, 'POSTAL_ADDRESS', v_address_name);
+
+            END trg_addr_update_assn_names;
+        </createProcedure>
+
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_ctmd_update_assn_names
+            AFTER UPDATE OF cm_contact_type, cm_contact_location, cm_contact_value
+            ON acm_contact_method
+            FOR EACH ROW
+            DECLARE
+                v_contact_method_name VARCHAR2(4000);
+            BEGIN
+                SELECT :NEW.cm_contact_type ||
+                    NVL2(:NEW.cm_contact_value, ': ' || :NEW.cm_contact_value, NULL) ||
+                    NVL2(:NEW.cm_contact_location, ' (' || :NEW.cm_contact_location || ')', NULL)
+                INTO v_contact_method_name
+                FROM dual;
+
+                pkg_update_association_names.update_association_names(:NEW.cm_contact_method_id, 'CONTACT_METHOD',
+                    v_contact_method_name);
+
+            END trg_ctmd_update_assn_names;
+        </createProcedure>
+        <rollback>
+            DROP TRIGGER trg_addr_update_assn_names;
+            DROP TRIGGER trg_ctmd_update_assn_names;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="02-addressable-delete-trigger" author="dmiller" runOnChange="true">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_ctmd_delete
+            AFTER DELETE ON acm_contact_method
+            FOR EACH ROW
+            BEGIN
+                pkg_update_association_names.remove_associations(:OLD.cm_contact_method_id, 'CONTACT_METHOD');
+            END trg_ctmd_delete;
+        </createProcedure>
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_addr_delete
+            AFTER DELETE ON acm_postal_address
+            FOR EACH ROW
+            BEGIN
+                pkg_update_association_names.remove_associations(:OLD.cm_address_id, 'POSTAL_ADDRESS');
+            END trg_addr_delete;
+        </createProcedure>
+        <rollback>
+            DROP TRIGGER trg_ctmd_delete;
+            DROP TRIGGER trg_addr_delete;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

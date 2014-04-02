@@ -1,0 +1,37 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-complaint-triggers" author="dmiller" runOnChange="true">
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_cmpt_update_assn_names
+            AFTER UPDATE OF cm_complaint_number
+            ON acm_complaint
+            FOR EACH ROW
+            BEGIN
+
+                pkg_update_association_names.update_association_names(:NEW.cm_complaint_id, 'COMPLAINT',
+                    :NEW.cm_complaint_number);
+
+            END trg_cmpt_update_assn_names;
+        </createProcedure>
+
+        <createProcedure>
+            CREATE OR REPLACE TRIGGER trg_cmpt_delete
+            AFTER DELETE ON acm_complaint
+            FOR EACH ROW
+            BEGIN
+                pkg_update_association_names.remove_associations(:OLD.cm_complaint_id, 'COMPLAINT');
+            END trg_cmpt_delete;
+        </createProcedure>
+
+
+        <rollback>
+            DROP TRIGGER trg_cmpt_update_assn_names;
+            DROP TRIGGER trg_cmpt_delete;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

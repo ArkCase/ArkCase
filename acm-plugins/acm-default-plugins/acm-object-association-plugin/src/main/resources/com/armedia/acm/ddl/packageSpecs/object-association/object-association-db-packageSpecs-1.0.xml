@@ -9,9 +9,14 @@
             CREATE OR REPLACE PACKAGE pkg_update_association_names
             AS
                 PROCEDURE update_association_names(
-                    p_object_id IN RAW(16),
-                    p_object_type IN VARCHAR2(1024),
-                    p_object_name IN VARCHAR2(1024);
+                    p_object_id IN RAW,
+                    p_object_type IN VARCHAR2,
+                    p_object_name IN VARCHAR2);
+
+            PROCEDURE remove_associations(
+                p_object_id IN RAW,
+                p_object_type IN VARCHAR2);
+
             END pkg_update_association_names;
         </createProcedure>
         <rollback>

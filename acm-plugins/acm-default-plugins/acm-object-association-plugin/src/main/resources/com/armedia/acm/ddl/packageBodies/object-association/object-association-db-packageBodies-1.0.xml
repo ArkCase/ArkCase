@@ -9,9 +9,9 @@
             CREATE OR REPLACE PACKAGE BODY pkg_update_association_names
             AS
                 PROCEDURE update_association_names(
-                    p_object_id IN RAW(16),
-                    p_object_type IN VARCHAR2(1024),
-                    p_object_name IN VARCHAR2(1024)
+                    p_object_id IN RAW,
+                    p_object_type IN VARCHAR2,
+                    p_object_name IN VARCHAR2)
                 IS
                 BEGIN
                     UPDATE acm_object_association
@@ -24,6 +24,21 @@
                     WHERE cm_target_id = p_object_id
                     AND cm_target_type = p_object_type;
                 END update_association_names;
+
+                PROCEDURE remove_associations(
+                    p_object_id IN RAW,
+                    p_object_type IN VARCHAR2)
+                IS
+                BEGIN
+                    DELETE FROM acm_object_association
+                    WHERE cm_target_id = p_object_id
+                    AND cm_target_type = p_object_type;
+
+                    DELETE FROM acm_object_association
+                    WHERE cm_parent_id = p_object_id
+                    AND cm_parent_type = p_object_type;
+                END remove_associations;
+
             END pkg_update_association_names;
         </createProcedure>
         <rollback>
