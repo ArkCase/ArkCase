@@ -13,6 +13,12 @@
     <!-- then constraints.  Foreign key constraint changelogs should go in these folders. -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/constraints" relativeToChangelogFile="false"/>
 
+    <!-- packages before triggers, since triggers can call packages. Note we have some Oracle specific
+         assumptions here.  When we support other databases we will have to configure Spring to load a
+         database-specific changelog file. -->
+    <includeAll path="classpath*:/com/armedia/acm/ddl/packageSpecs" relativeToChangelogFile="false" />
+    <includeAll path="classpath*:/com/armedia/acm/ddl/packageBodies" relativeToChangelogFile="false" />
+
     <!-- NOTE: Liquibase fails if it finds no objects.  So only enable the next few lines when we have
     triggers and stored procedures. -->
 

@@ -1,0 +1,34 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-update-association-names-package-body" author="dmiller" runOnChange="true">
+        <createProcedure>
+            CREATE OR REPLACE PACKAGE BODY pkg_update_association_names
+            AS
+                PROCEDURE update_association_names(
+                    p_object_id IN RAW(16),
+                    p_object_type IN VARCHAR2(1024),
+                    p_object_name IN VARCHAR2(1024)
+                IS
+                BEGIN
+                    UPDATE acm_object_association
+                    SET cm_parent_name = p_object_name
+                    WHERE cm_parent_id = p_object_id
+                    AND cm_parent_type = p_object_type;
+
+                    UPDATE acm_object_association
+                    SET cm_target_name = p_object_name
+                    WHERE cm_target_id = p_object_id
+                    AND cm_target_type = p_object_type;
+                END update_association_names;
+            END pkg_update_association_names;
+        </createProcedure>
+        <rollback>
+            DROP PACKAGE BODY pkg_update_association_names;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
