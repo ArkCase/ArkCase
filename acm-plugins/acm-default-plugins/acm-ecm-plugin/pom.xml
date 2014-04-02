@@ -10,23 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-plugins.default</groupId>
-    <artifactId>acm-complaint-plugin</artifactId>
-    <name>ACM Default Plugin: Complaints</name>
-    <description>This plugin enables the complaint feature.  Complaints allow the organization to monitor
-        events that may or may not become full-blown case files.  Complaints may result in a new case file, or the
-        complaint may be dropped (if there is not enough substance to warrant a full investigation), or may be
-        referred to another organization.
-    </description>
+    <artifactId>acm-ecm-plugin</artifactId>
+    <name>ACM Default Plugin: Enterprise Content Management</name>
+    <description>This plugin adds the ability to store folders and files in an ECM repository.</description>
 
     <dependencies>
-        <!-- need the person plugin since the complaint is originated by a person -->
-        <dependency>
-            <groupId>com.armedia.acm.acm-plugins.default</groupId>
-            <artifactId>acm-complaint-plugin</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-
-
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -34,6 +22,5 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-
 
 </project>

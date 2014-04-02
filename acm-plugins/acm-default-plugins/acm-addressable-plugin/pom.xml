@@ -10,23 +10,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-plugins.default</groupId>
-    <artifactId>acm-complaint-plugin</artifactId>
-    <name>ACM Default Plugin: Complaints</name>
-    <description>This plugin enables the complaint feature.  Complaints allow the organization to monitor
-        events that may or may not become full-blown case files.  Complaints may result in a new case file, or the
-        complaint may be dropped (if there is not enough substance to warrant a full investigation), or may be
-        referred to another organization.
+    <artifactId>acm-addressable-plugin</artifactId>
+    <name>ACM Default Plugin: Addressable</name>
+    <description>This plugin adds physical addresses and contact methods.  Both people and organizations
+        can have addresses and contact methods.  Contact methods include e-mail and telephone (including SMS).
     </description>
 
     <dependencies>
-        <!-- need the person plugin since the complaint is originated by a person -->
-        <dependency>
-            <groupId>com.armedia.acm.acm-plugins.default</groupId>
-            <artifactId>acm-complaint-plugin</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-
-
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>

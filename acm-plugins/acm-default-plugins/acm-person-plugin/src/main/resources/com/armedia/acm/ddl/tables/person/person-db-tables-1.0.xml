@@ -1,0 +1,46 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-person-table" author="dmiller">
+        <createTable tableName="acm_person">
+            <column name="cm_person_id" type="RAW(16)" defaultValueComputed="SYS_GUID()" >
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_person"/>
+            </column>
+            <column name="cm_person_status" type="VARCHAR(128)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_given_name" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_family_name" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="acm_person" indexName="idx_person_family_name">
+            <column name="UPPER(cm_family_name)"/>
+        </createIndex>
+        <createIndex tableName="acm_person" indexName="idx_person_given_name">
+            <column name="UPPER(cm_given_name)"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
+
