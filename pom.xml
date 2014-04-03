@@ -47,6 +47,7 @@
         <maven.site.id>acm3-documentation</maven.site.id>
         <maven.site.url>scp://arm-proj-web02.armedia.com/var/www/html/acm3</maven.site.url>
         <maven.taglist.version>2.4</maven.taglist.version>
+        <maven-jgitflow-plugin.version>1.0-alpha27</maven-jgitflow-plugin.version>
 
         <mule.version>3.4.0</mule.version>
         <oracle.jdbc.version>6</oracle.jdbc.version>
@@ -96,6 +97,17 @@
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
                 <role>Ephesoft Developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <name>James Wu</name>
+            <email>james.wu@armedia.com</email>
+            <id>jwu</id>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
             </roles>
             <timezone>-5</timezone>
         </developer>
@@ -204,8 +216,8 @@
     </issueManagement>
 
     <ciManagement>
-        <system>Jenkins</system>
-        <url>http://ci.dev.armedia.com/jenkins/job/Armedia%20-%20ACM%203.0/</url>
+        <system>Bamboo</system>
+        <url>http://arm-proj-web02.armedia.com:8085/browse/ACM-AFDP</url>
     </ciManagement>
 
     <distributionManagement>
@@ -404,8 +416,22 @@
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>${maven.project-info-reports.version}</version>
             </plugin>
+
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-jgitflow-plugin</artifactId>
+                <version>${maven-jgitflow-plugin.version}</version>
+                <configuration>
+                    <flowInitContext>
+                        <versionTagPrefix>acm</versionTagPrefix>
+                    </flowInitContext>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+
 
     <dependencyManagement>
         <dependencies>
@@ -913,6 +939,8 @@
             </properties>
         </profile>
     </profiles>
+
+
 
 
 </project>
