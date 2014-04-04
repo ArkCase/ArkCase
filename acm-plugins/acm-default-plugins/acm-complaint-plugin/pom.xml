@@ -22,7 +22,7 @@
         <!-- need the person plugin since the complaint is originated by a person -->
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.default</groupId>
-            <artifactId>acm-complaint-plugin</artifactId>
+            <artifactId>acm-person-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
