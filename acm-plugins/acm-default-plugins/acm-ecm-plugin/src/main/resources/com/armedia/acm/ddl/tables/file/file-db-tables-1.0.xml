@@ -39,5 +39,10 @@
 
     </changeSet>
 
+    <changeSet id="02-file-switch-to-sequence-pk" author="dmiller">
+        <dropDefaultValue tableName="acm_file" columnName="cm_file_id"/>
+        <modifyDataType tableName="acm_file" columnName="cm_file_id" newDataType="NUMBER(32,0)"/>
+    </changeSet>
+
 </databaseChangeLog>
 

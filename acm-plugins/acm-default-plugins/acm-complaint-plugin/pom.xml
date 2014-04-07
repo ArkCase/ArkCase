@@ -22,23 +22,20 @@
         <!-- need the person plugin since the complaint is originated by a person -->
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.default</groupId>
-            <artifactId>acm-complaint-plugin</artifactId>
+            <artifactId>acm-person-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.spring-tools</groupId>
             <artifactId>acm-spring-tools-data-source</artifactId>
             <version>${acm.version}</version>
-            <scope>runtime</scope>
         </dependency>
-
-
-
-        <!-- spring -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-data</artifactId>
+            <version>${acm.version}</version>
         </dependency>
+
 
         <!-- logging -->
         <dependency>
@@ -71,6 +68,13 @@
             <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>jdbc</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 

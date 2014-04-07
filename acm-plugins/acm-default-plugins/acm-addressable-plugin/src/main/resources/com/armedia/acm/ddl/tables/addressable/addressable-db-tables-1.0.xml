@@ -83,5 +83,13 @@
 
     </changeSet>
 
+    <changeSet id="02-addr-switch-to-sequence-pk" author="dmiller">
+        <dropDefaultValue tableName="acm_postal_address" columnName="cm_address_id"/>
+        <modifyDataType tableName="acm_postal_address" columnName="cm_address_id" newDataType="NUMBER(32,0)"/>
+
+        <dropDefaultValue tableName="acm_contact_method" columnName="cm_contact_method_id"/>
+        <modifyDataType tableName="acm_contact_method" columnName="cm_contact_method_id" newDataType="NUMBER(32,0)"/>
+    </changeSet>
+
 </databaseChangeLog>
 

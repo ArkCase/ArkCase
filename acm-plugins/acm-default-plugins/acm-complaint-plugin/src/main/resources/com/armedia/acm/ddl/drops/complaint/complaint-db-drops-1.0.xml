@@ -1,0 +1,16 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-drop-complaint-person-foreign-key" author="dmiller">
+        <preConditions>
+            <foreignKeyConstraintExists foreignKeyName="fk_cmpl_person_id"/>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="acm_complaint" constraintName="fk_cmpl_person_id"/>
+    </changeSet>
+
+</databaseChangeLog>
+

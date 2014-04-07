@@ -4,7 +4,12 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-complaint-person-foreign-key" author="dmiller">
+    <changeSet id="01-complaint-person-foreign-key" author="dmiller" runAlways="true" >
+        <preConditions onFail="MARK_RAN" >
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_cmpl_person_id"/>
+            </not>
+        </preConditions>
         <addForeignKeyConstraint baseTableName="acm_complaint"
                                  baseColumnNames="cm_originator_id"
                                  constraintName="fk_cmpl_person_id"

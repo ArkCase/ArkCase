@@ -57,6 +57,19 @@
         </createIndex>
 
     </changeSet>
+    <changeSet id="02-complaint-switch-to-sequence-pk" author="dmiller">
+        <dropDefaultValue tableName="acm_complaint" columnName="cm_complaint_id"/>
+        <modifyDataType tableName="acm_complaint" columnName="cm_complaint_id" newDataType="NUMBER(32,0)"/>
+    </changeSet>
+
+    <changeSet id="03-create-jpa-sequence" author="dmiller">
+        <createSequence sequenceName="SEQ_GEN_IDENTITY"/>
+    </changeSet>
+
+    <changeSet id="04-fix-originator-id-type" author="dmiller">
+        <modifyDataType tableName="acm_complaint" columnName="cm_originator_id" newDataType="NUMBER(32,0)"/>
+    </changeSet>
+
 
 </databaseChangeLog>
 
