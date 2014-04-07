@@ -42,5 +42,10 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="02-person-switch-to-sequence-pk" author="dmiller">
+        <dropDefaultValue tableName="acm_person" columnName="cm_person_id"/>
+        <modifyDataType tableName="acm_person" columnName="cm_person_id" newDataType="NUMBER(32,0)"/>
+    </changeSet>
+
 </databaseChangeLog>
 

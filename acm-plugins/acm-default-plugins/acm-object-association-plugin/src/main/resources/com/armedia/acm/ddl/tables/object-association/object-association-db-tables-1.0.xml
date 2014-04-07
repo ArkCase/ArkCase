@@ -59,5 +59,15 @@
         <modifyDataType tableName="acm_object_association" columnName="cm_target_name" newDataType="VARCHAR2(4000)"/>
     </changeSet>
 
+    <changeSet id="03-object-assn-switch-to-sequence-pk" author="dmiller">
+        <dropDefaultValue tableName="acm_object_association" columnName="cm_association_id"/>
+        <modifyDataType tableName="acm_object_association" columnName="cm_association_id" newDataType="NUMBER(32,0)"/>
+    </changeSet>
+
+    <changeSet id="04-fix-object-id-type" author="dmiller">
+        <modifyDataType tableName="acm_object_association" columnName="cm_parent_id" newDataType="NUMBER(32,0)"/>
+        <modifyDataType tableName="acm_object_association" columnName="cm_target_id" newDataType="NUMBER(32,0)"/>
+    </changeSet>
+
 </databaseChangeLog>
 

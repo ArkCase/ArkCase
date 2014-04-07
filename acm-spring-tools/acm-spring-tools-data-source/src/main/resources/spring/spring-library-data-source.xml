@@ -2,11 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
 
 
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -71,15 +69,46 @@
         <property name="breakAfterAcquireFailure" value="false"/>
     </bean>
 
+    <!--<bean id="loadTimeWeaver" class="org.springframework.context.weaving.DefaultContextLoadTimeWeaver"/>-->
+
+    <bean id="acmEntityManager" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="acmDataSource"/>
+        <!--<property name="loadTimeWeaver" ref="loadTimeWeaver"/>-->
+        <property name="jpaDialect" ref="eclipseLinkDialect"/>
+        <property name="persistenceProviderClass" value="org.eclipse.persistence.jpa.PersistenceProvider"/>
+        <property name="jpaPropertyMap">
+            <props>
+                <prop key="eclipselink.weaving">false</prop>
+            </props>
+        </property>
+
+        <!-- using * here means there can only be one persistence unit (all entities on the classpath are added
+             to this persistence unit).  Perhaps we should allow the flexibility of multiple persistence units (e.g.
+             multiple database schemas).  If so we will have to select a standard ACM package name format.
+        -->
+        <property name="packagesToScan" value="*"/>
+    </bean>
+
+    <bean id="eclipseLinkDialect" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect"/>
+
+    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
+        <property name="databasePlatform" value="$[database.platform]"/>
+        <property name="generateDdl" value="false"/>
+        <property name="showSql" value="$[database.platform.showSql]"/>
+    </bean>
+
     <!-- Plain old JDBC transaction manager (use JtaTransactionManager for
          global tx) -->
-    <bean id="transactionManager"
-          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="acmDataSource" />
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="dataSource" ref="acmDataSource"/>
+        <property name="entityManagerFactory" ref="acmEntityManager"/>
     </bean>
 
     <!-- enable transaction demarcation with annotations -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- bean post-processor for JPA annotations -->
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
     <!-- generate the database structures -->
     <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
