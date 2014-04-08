@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.complaint;
 
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.person.model.Person;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -13,9 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.UUID;
-
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -23,38 +19,21 @@ import static org.junit.Assert.*;
         "/spring/spring-library-complaint-plugin-test.xml",
         "/spring/spring-library-complaint.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
-public class ComplaintIT
+public class ComplaintDaoIT
 {
     @Autowired
     private ComplaintDao complaintDao;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    private ComplaintFactory complaintFactory = new ComplaintFactory();
+
     @Test
     @Transactional
     public void saveComplaint()
     {
-        Complaint complaint = new Complaint();
-        complaint.setComplaintNumber(UUID.randomUUID().toString());
-        complaint.setComplaintTitle("testTitle");
-        complaint.setComplaintType("TEST");
-        complaint.setCreated(new Date());
-        complaint.setCreator("tester");
-        complaint.setDetails("details");
-        complaint.setPriority("testPriority");
-        complaint.setModified(new Date());
-        complaint.setModifier("testModifier");
 
-        Person p = new Person();
-        p.setModifier("testModifier");
-        p.setCreator("testCreator");
-        p.setCreated(new Date());
-        p.setModified(new Date());
-        p.setFamilyName("Person");
-        p.setGivenName("ACM");
-        p.setStatus("testStatus");
-
-        complaint.setOriginator(p);
+        Complaint complaint = complaintFactory.complaint();
 
         complaint = complaintDao.save(complaint);
 
