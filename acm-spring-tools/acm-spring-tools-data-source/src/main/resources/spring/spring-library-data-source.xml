@@ -69,24 +69,18 @@
         <property name="breakAfterAcquireFailure" value="false"/>
     </bean>
 
-    <!--<bean id="loadTimeWeaver" class="org.springframework.context.weaving.DefaultContextLoadTimeWeaver"/>-->
 
     <bean id="acmEntityManager" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="acmDataSource"/>
-        <!--<property name="loadTimeWeaver" ref="loadTimeWeaver"/>-->
         <property name="jpaDialect" ref="eclipseLinkDialect"/>
         <property name="persistenceProviderClass" value="org.eclipse.persistence.jpa.PersistenceProvider"/>
         <property name="jpaPropertyMap">
             <props>
                 <prop key="eclipselink.weaving">false</prop>
+                <prop key="eclipselink.logging.level">$[eclipselink.logging.level]</prop>
             </props>
         </property>
-
-        <!-- using * here means there can only be one persistence unit (all entities on the classpath are added
-             to this persistence unit).  Perhaps we should allow the flexibility of multiple persistence units (e.g.
-             multiple database schemas).  If so we will have to select a standard ACM package name format.
-        -->
-        <property name="packagesToScan" value="*"/>
+        <property name="packagesToScan" value="$[jpa.model.packages]"/>
     </bean>
 
     <bean id="eclipseLinkDialect" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect"/>
