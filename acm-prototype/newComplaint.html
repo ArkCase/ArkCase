@@ -137,6 +137,8 @@
                               <input id="fname" type="text" class="form-control" placeholder="Name">
                               <label for="lname" class="label">Last Name</label>
                               <input id="lname" type="text" class="form-control" placeholder="Name">
+                              <label for="company" class="label">Company</label>
+                              <input id="company" type="text" class="form-control" placeholder="Company">
                               <label for="email"  class="label">Email</label>
                               <input id="email" type="text" class="form-control" placeholder="Email">
                               <label for="phone"  class="label">Phone</label>
@@ -145,6 +147,14 @@
                               <input id="altphone" type="text" class="form-control" placeholder="Alternative Phone">
                             </div>
                             <div class="col-sm-6">
+                            <label for="personTitle" class="label">Title</label>
+                             <select id="personTitle" class="form-control" >
+                                <option value="">Choose Title</option>
+                                <option value="Mr.">Mr.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="Ms.">Dr.</option>
+                         </select>
                               <label for="address1"  class="label">Address</label>
                               <input id="address1" type="text" class="form-control" placeholder="Address">
                               <label for="address2"  class="label">Address 2</label>
@@ -157,6 +167,17 @@
                               <input id="zip" type="text" class="form-control" placeholder="ZIP">
                             </div>
                           </section>
+                          
+                          
+                           <label for="security" class="label">Security Requirements</label>
+                          
+                          <select data-placeholder="Choose Security Requirements..." id="security" class="choose-security form-control" multiple >
+                                <option value=""></option>
+                                <option value="Trade Secret">Anonymous</option>
+                                <option value="Confidential">Confidential</option>
+                                <option value="Trade Secret">Trade Secret</option>
+                         </select>
+                          
                         </div>
                         <div class="tab-pane" id="step2">
                           <h4>Incident Information</h4>
@@ -168,27 +189,97 @@
                               <label for="complaintType"  class="label">Complaint Type</label>
                               <select name="complaintType" class="form-control m-b">
                                 <option>Choose Complaint Type</option>
-                                <option>option 2</option>
-                                <option>option 3</option>
-                                <option>option 4</option>
+                                <option>Domestic Dispute</option>
+                                <option>Arson</option>
+                                <option>Better Business Dispute</option>
+                                <option>Government</option>
+                                <option>Local</option>
+                                <option>Agricultural</option>
+                                <option>Pollution </option>
                               </select>
                             </div>
                             <div class="col-sm-6">
                               <label for="priority"  class="label">Priority</label>
                               <select name="priority" class="form-control m-b">
                                 <option>Choose Priority</option>
-                                <option>option 2</option>
-                                <option>option 3</option>
-                                <option>option 4</option>
+                                <option selected>Low</option>
+                                <option>Medium</option>
+                                <option>High</option>
+                                <option>Expedited</option>
                               </select>
                             </div>
                           </section>
+                          
+                          
+                          <h4>People Involved</h4>
+                         
+                           <div class="table-tools">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;
+                                                Add New
+                                            </button>
+                                            <button type="button" class="btn btn-default"><i
+                                                    class="fa fa-print"></i>&nbsp; Print
+                                            </button>
+                                            <button type="button" class="btn btn-default"><i
+                                                    class="fa fa-file-text-o"></i>&nbsp; PDF
+                                            </button>
+                                            <button type="button" class="btn btn-default"><i class="fa fa-copy"></i>&nbsp;
+                                                Excel
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="col-md-6 pull-right">
+                                            <div class="form-inline pull-right">
+                                                <div class="form-group"><label class="control-label">Search:</label>&nbsp;<input
+                                                        type="text" class="form-control"/></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <table class="table table-striped table-bordered table-hover" style="margin-top:5px;">
+                                        <thead>
+                                        <tr>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Type</th>
+                                            <th>Phone</th>
+                                            <th>Address</th>
+                                            <th>City</th>
+                                            <th>State</th>
+                                            <th>ZIP</th>
+                                            <th width="3%">Edit</th>
+                                            <th width="4%">Delete</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr class="odd gradeA">
+                                            <td>[First]</td>
+                                            <td>[Last]</td>
+                                            <td>[Type]</td>
+                                            <td>[Phone]</td>
+                                           <td>[Address]</td>
+                                           <td>[City]</td>
+                                           <td>[State]</td>
+                                           <td>[ZIP]</td>
+                                            <td><a href="javascript:;" class="edit">Edit</a></td>
+                                            <td><a href="javascript:;" class="delete">Delete</a></td>
+                                        </tr>
+                                       
+                                        
+                                        </tbody>
+                                    </table>
+                               
+                                
+                            
+                          
                         </div>
                         <div class="tab-pane" id="step3">
                           <h4>Details</h4>
                           <p>Description</p>
-                          <label for="subject"  class="label">Subject</label>
-                          <input id="subject" type="text" class="form-control" placeholder="Subject">
+                          <label for="title"  class="label">Complaint Title</label>
+                          <input id="title" type="text" class="form-control" placeholder="Complaint Title">
                           <hr />
                           <div class="complaintDetails">Complaint Details</div>
                         </div>
@@ -209,13 +300,45 @@
                           <h4>Assignment</h4>
                           <p>Description</p>
                           <label for="approvers" class="label">Approvers</label>
-                          <input id="approvers" type="text" class="form-control" placeholder="Approvers">
+                          
+                          <select data-placeholder="Choose Approvers..." id="approvers" class="choose-approvers form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
+
                           <hr/>
                           <label for="collab" class="label">Collaborators</label>
-                          <input id="collab" type="text" class="form-control" placeholder="Collaborators">
+                          
+                          
+                          <select data-placeholder="Choose Collaborators..." id="collab" class="choose-collab form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
+                          
                           <hr/>
                           <label for="notifications" class="label">Notifications</label>
-                          <input id="notifications" type="text" class="form-control" placeholder="Notifications">
+                          
+                          <select data-placeholder="Choose Notifications..." id="notifications" class="choose-notifications form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
+                          
+                          
                         </div>
                         <ul class="pager wizard m-b-sm">
                           <li class="previous first" style="display:none;"><a href="#">First</a></li>
@@ -266,5 +389,22 @@
 });
   });
 </script>
+
+
+<!-- Multi-Select Field WYSIWYG -->
+
+<script src="js/chosen.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+var config = {
+  '.choose-security' : {}, 
+  '.choose-approvers' : {}, 
+  '.choose-collab' : {}, 
+  '.choose-notifications' : {}
+}
+for (var selector in config) {
+  $(selector).chosen(config[selector]);
+}
+</script>
+
 </body>
 </html>

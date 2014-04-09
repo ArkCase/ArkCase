@@ -179,13 +179,43 @@
                           <h4>Assignment</h4>
                           <p>Description</p>
                           <label for="approvers" class="label">Approvers</label>
-                          <input id="approvers" type="text" class="form-control" placeholder="Approvers">
+                          
+                          <select data-placeholder="Choose Approvers..." id="approvers" class="choose-approvers form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
+
                           <hr/>
                           <label for="collab" class="label">Collaborators</label>
-                          <input id="collab" type="text" class="form-control" placeholder="Collaborators">
+                          
+                          
+                          <select data-placeholder="Choose Collaborators..." id="collab" class="choose-collab form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
+                          
                           <hr/>
                           <label for="notifications" class="label">Notifications</label>
-                          <input id="notifications" type="text" class="form-control" placeholder="Notifications">
+                          
+                          <select data-placeholder="Choose Notifications..." id="notifications" class="choose-notifications form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
                         </div>
                         <ul class="pager wizard m-b-sm">
                           <li class="previous first" style="display:none;"><a href="#">First</a></li>
@@ -235,6 +265,23 @@
   height: 300
 });
   });
+  
 </script>
+
+
+<!-- Multi-Select Field WYSIWYG -->
+
+<script src="js/chosen.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+var config = {
+  '.choose-approvers' : {}, 
+  '.choose-collab' : {}, 
+  '.choose-notifications' : {}
+}
+for (var selector in config) {
+  $(selector).chosen(config[selector]);
+}
+</script>
+
 </body>
 </html>
