@@ -1,20 +1,14 @@
 package com.armedia.acm.plugins.complaint;
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import org.junit.After;
-import org.junit.Before;
+import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.MuleContext;
-import org.mule.api.MuleMessage;
-import org.mule.api.context.MuleContextFactory;
-import org.mule.config.ConfigResource;
-import org.mule.config.spring.SpringXmlConfigurationBuilder;
-import org.mule.context.DefaultMuleContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -25,42 +19,19 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
         "/spring/spring-library-complaint-plugin-test.xml",
-        "/spring/spring-library-complaint.xml"})
-@TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
+        "/spring/spring-library-complaint.xml",
+        "/spring/spring-library-mule-context-manager.xml",
+        "/spring/spring-library-person.xml"})
+@TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class ComplaintMuleIT
 {
-    private MuleContext muleContext;
 
     @Autowired
-    private ApplicationContext applicationContext;
+    private SaveComplaintTransaction saveComplaintTransaction;
 
     private ComplaintFactory complaintFactory = new ComplaintFactory();
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
-    @Before
-    public void setUp() throws Exception
-    {
-
-        assertNotNull(applicationContext);
-
-        // mule
-        ConfigResource[] configs = { new ConfigResource("flows/saveComplaintFlow.xml") };
-
-        SpringXmlConfigurationBuilder builder = new SpringXmlConfigurationBuilder(configs);
-
-        builder.setParentContext(applicationContext);
-        MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
-        muleContext = muleContextFactory.createMuleContext(builder);
-        muleContext.start();
-    }
-
-    @After
-    public void shutDown() throws Exception
-    {
-        muleContext.stop();
-        muleContext.dispose();
-    }
 
     @Test
     @Transactional
@@ -68,9 +39,9 @@ public class ComplaintMuleIT
     {
         Complaint complaint = complaintFactory.complaint();
 
-        MuleMessage message = muleContext.getClient().send("vm://saveComplaint.in", complaint, null);
+        Authentication auth = new UsernamePasswordAuthenticationToken("testUser", "testUser");
 
-        Complaint saved = message.getPayload(Complaint.class);
+        Complaint saved = saveComplaintTransaction.saveComplaint(complaint, auth);
 
         assertNotNull(saved.getComplaintId());
 
