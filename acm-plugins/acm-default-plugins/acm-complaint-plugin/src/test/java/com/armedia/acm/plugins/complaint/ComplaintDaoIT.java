@@ -17,7 +17,8 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
         "/spring/spring-library-complaint-plugin-test.xml",
-        "/spring/spring-library-complaint.xml"})
+        "/spring/spring-library-complaint.xml",
+        "/spring/spring-library-mule-context-manager.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintDaoIT
 {
@@ -38,7 +39,7 @@ public class ComplaintDaoIT
         complaint = complaintDao.save(complaint);
 
         log.info("Complaint ID: " + complaint.getComplaintId());
-        log.info("Compaint originator object ID: " + complaint.getOriginator().getId());
+        log.info("Complaint originator object ID: " + complaint.getOriginator().getId());
 
         assertNotNull(complaint.getComplaintId());
         assertNotNull(complaint.getOriginator().getId());

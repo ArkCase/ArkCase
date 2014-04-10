@@ -1,18 +1,25 @@
 package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.plugins.person.model.Person;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -21,8 +28,11 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "acm_complaint")
-public class Complaint
+public class Complaint implements Serializable
 {
+    private static final long serialVersionUID = -1154137631399833851L;
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+
     @Id
     @Column(name = "cm_complaint_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +50,7 @@ public class Complaint
     @Column(name = "cm_complaint_title")
     private String complaintTitle;
 
+    @Lob
     @Column(name = "cm_complaint_details")
     private String details;
 
@@ -50,24 +61,24 @@ public class Complaint
 
     @Column(name = "cm_complaint_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created = new Date();
+    private Date created;
 
     @Column(name = "cm_complaint_creator", insertable = true, updatable = false)
     private String creator;
 
     @Column(name = "cm_complaint_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date modified = new Date();
+    private Date modified;
 
     @Column(name = "cm_complaint_modifier")
     private String modifier;
 
     @Column(name = "cm_complaint_status")
-    private String status = "DRAFT";
+    private String status;
 
     // the same person could originate many complaints, but each complaint is originated by
     // only one person, so a ManyToOne mapping makes sense here.
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_originator_id")
     private Person originator;
 
@@ -75,6 +86,32 @@ public class Complaint
 
     public Complaint()
     {
+    }
+
+    @PrePersist
+    protected void beforeInsert()
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("In beforeInsert()");
+        }
+        setCreated(new Date());
+        setModified(new Date());
+
+        if ( getStatus() == null || getStatus().trim().isEmpty() )
+        {
+            setStatus("DRAFT");
+        }
+    }
+
+    @PreUpdate
+    protected void beforeUpdate()
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("In beforeUpdate()");
+        }
+        setModified(new Date());
     }
 
     public Long getComplaintId()
@@ -152,9 +189,18 @@ public class Complaint
         return created;
     }
 
+    /**
+     * Sets the created date of this Complaint and of any nested objects.
+     * @param created
+     */
     public void setCreated(Date created)
     {
         this.created = created;
+
+        if ( getOriginator() != null )
+        {
+            getOriginator().setCreated(created);
+        }
     }
 
     public String getCreator()
@@ -162,9 +208,18 @@ public class Complaint
         return creator;
     }
 
+    /**
+     * Sets the creator of this Complaint and of any nested objects.
+     * @param creator
+     */
     public void setCreator(String creator)
     {
         this.creator = creator;
+
+        if ( getOriginator() != null )
+        {
+            getOriginator().setCreator(creator);
+        }
     }
 
     public Date getModified()
@@ -172,9 +227,18 @@ public class Complaint
         return modified;
     }
 
+    /**
+     * Sets the modified date of this Complaint and of any nested objects.
+     * @param modified
+     */
     public void setModified(Date modified)
     {
         this.modified = modified;
+
+        if ( getOriginator() != null )
+        {
+            getOriginator().setModified(modified);
+        }
     }
 
     public String getModifier()
@@ -182,9 +246,18 @@ public class Complaint
         return modifier;
     }
 
+    /**
+     * Sets the modifier of this Complaint and of any nested objects.
+     * @param modifier
+     */
     public void setModifier(String modifier)
     {
         this.modifier = modifier;
+
+        if ( getOriginator() != null )
+        {
+            getOriginator().setModifier(modifier);
+        }
     }
 
     public String getStatus()
@@ -199,6 +272,11 @@ public class Complaint
 
     public Person getOriginator()
     {
+        if ( originator == null )
+        {
+            originator = new Person();
+        }
+
         return originator;
     }
 
