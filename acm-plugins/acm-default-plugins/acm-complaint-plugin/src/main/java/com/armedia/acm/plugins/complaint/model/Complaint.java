@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.plugins.person.model.Person;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +24,7 @@ import java.util.Date;
 @Table(name = "acm_complaint")
 public class Complaint
 {
+    @NumberFormat
     @Id
     @Column(name = "cm_complaint_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,20 +45,21 @@ public class Complaint
     @Column(name = "cm_complaint_details")
     private String details;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "cm_complaint_incident_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date incidentDate;
 
     @Column(name = "cm_complaint_created", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    private Date created = new Date();
 
     @Column(name = "cm_complaint_creator")
     private String creator;
 
     @Column(name = "cm_complaint_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date modified;
+    private Date modified = new Date();
 
     @Column(name = "cm_complaint_modifier")
     private String modifier;
