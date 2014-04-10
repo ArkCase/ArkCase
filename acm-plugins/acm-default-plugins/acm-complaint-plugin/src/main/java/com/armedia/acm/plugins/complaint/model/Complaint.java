@@ -48,11 +48,11 @@ public class Complaint
     @Temporal(TemporalType.TIMESTAMP)
     private Date incidentDate;
 
-    @Column(name = "cm_complaint_created", nullable = false)
+    @Column(name = "cm_complaint_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created = new Date();
 
-    @Column(name = "cm_complaint_creator")
+    @Column(name = "cm_complaint_creator", insertable = true, updatable = false)
     private String creator;
 
     @Column(name = "cm_complaint_modified", nullable = false)
