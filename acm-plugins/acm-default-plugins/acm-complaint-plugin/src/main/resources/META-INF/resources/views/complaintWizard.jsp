@@ -28,7 +28,7 @@
         <input type="text" name="incidentDate" id="incidentDate" value="${complaint.incidentDate}"/>
         <br/>
 
-        <input type="hidden" id="id" value="${complaint.id}"/>
+        <input type="hidden" name="complaintId" id="complaintId" value="${complaint.complaintId}"/>
         <button type="submit" value="Save">Save</button>
         <button type="reset" value="Reset">Reset</button>
 

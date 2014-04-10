@@ -45,7 +45,7 @@ public class SaveComplaintController
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintWizard");
 
-        log.info("Complaint ID: " + complaint.getId());
+        log.info("Complaint ID: " + complaint.getComplaintId());
 
         if ( bindingResult.hasErrors() )
         {

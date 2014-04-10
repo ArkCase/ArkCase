@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.plugins.person.model.Person;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,11 +23,10 @@ import java.util.Date;
 @Table(name = "acm_complaint")
 public class Complaint
 {
-    @NumberFormat
     @Id
     @Column(name = "cm_complaint_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long complaintId;
 
     @Column(name = "cm_complaint_number")
     private String complaintNumber;
@@ -79,9 +77,14 @@ public class Complaint
     {
     }
 
-    public Long getId()
+    public Long getComplaintId()
     {
-        return id;
+        return complaintId;
+    }
+
+    public void setComplaintId(Long complaintId)
+    {
+        this.complaintId = complaintId;
     }
 
     public String getComplaintNumber()

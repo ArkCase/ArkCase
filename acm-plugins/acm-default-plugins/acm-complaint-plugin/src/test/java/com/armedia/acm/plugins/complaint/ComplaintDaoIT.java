@@ -37,10 +37,10 @@ public class ComplaintDaoIT
 
         complaint = complaintDao.save(complaint);
 
-        log.info("Complaint ID: " + complaint.getId());
+        log.info("Complaint ID: " + complaint.getComplaintId());
         log.info("Compaint originator object ID: " + complaint.getOriginator().getId());
 
-        assertNotNull(complaint.getId());
+        assertNotNull(complaint.getComplaintId());
         assertNotNull(complaint.getOriginator().getId());
     }
 

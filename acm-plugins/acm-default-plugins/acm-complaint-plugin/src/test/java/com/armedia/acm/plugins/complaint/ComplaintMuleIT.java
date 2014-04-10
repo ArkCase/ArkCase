@@ -72,8 +72,8 @@ public class ComplaintMuleIT
 
         Complaint saved = message.getPayload(Complaint.class);
 
-        assertNotNull(saved.getId());
+        assertNotNull(saved.getComplaintId());
 
-        log.info("New complaint id: " + saved.getId());
+        log.info("New complaint id: " + saved.getComplaintId());
     }
 }
