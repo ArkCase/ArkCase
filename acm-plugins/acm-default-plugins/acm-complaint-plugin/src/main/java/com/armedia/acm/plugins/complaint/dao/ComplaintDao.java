@@ -9,10 +9,4 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 public class ComplaintDao extends AcmAbstractDao<Complaint>
 {
 
-    // need an override for Mule to find the method
-    @Override
-    public Complaint save(Complaint toSave)
-    {
-        return super.save(toSave);
-    }
 }

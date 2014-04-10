@@ -34,13 +34,6 @@
             <version>${acm.version}</version>
         </dependency>
 
-
-        <!-- JPA -->
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-        </dependency>
-
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>

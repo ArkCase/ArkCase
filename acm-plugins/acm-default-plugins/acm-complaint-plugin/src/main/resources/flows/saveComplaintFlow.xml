@@ -25,12 +25,19 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 
         <timer-interceptor/>
 
+        <component doc:name="Set Creator / Modifier">
+            <spring-object bean="complaintOperators"/>
+        </component>
+
         <component doc:name="Complaint DAO">
-            <method-entry-point-resolver>
-                <include-entry-point method="save"/>
-            </method-entry-point-resolver>
+            <property-entry-point-resolver property="methodToCall"/>
             <spring-object bean="acmComplaintDao"/>
         </component>
+
+        <catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.plugins.complaint" message="Exception saving: #[exception.message]"/>
+            <set-property propertyName="saveException" value="#[exception]"/>
+        </catch-exception-strategy>
 
     </flow>
 
