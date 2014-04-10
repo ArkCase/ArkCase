@@ -70,6 +70,14 @@
         <modifyDataType tableName="acm_complaint" columnName="cm_originator_id" newDataType="NUMBER(32,0)"/>
     </changeSet>
 
+    <changeSet id="05-drop-target-name-column" author="dmiller">
+        <dropColumn tableName="acm_complaint" columnName="cm_target_name"/>
+    </changeSet>
+
+    <changeSet id="06-make-details-nullable" author="dmiller">
+        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_details"/>
+    </changeSet>
+
 
 </databaseChangeLog>
 
