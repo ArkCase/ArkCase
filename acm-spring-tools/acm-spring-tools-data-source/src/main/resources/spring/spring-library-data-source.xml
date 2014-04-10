@@ -42,6 +42,23 @@
                 <prop key="acm.validationQuery">select 1 from dual</prop>
                 <prop key="acm.acquireRetryAttempts">30</prop>
                 <prop key="acm.acquireRetryDelay">1000</prop>
+
+                <!-- whether the schema should be updated at application startup - set to false to run with JRebel  -->
+                <prop key="schema.autoUpdate">true</prop>
+                <!-- database.platform must be an EclipseLink database platform. -->
+                <prop key="database.platform">org.eclipse.persistence.platform.database.OraclePlatform</prop>
+                <!-- EclipseLink specific: whether it should output the SQL that caused an exception -->
+                <prop key="database.platform.showSql">true</prop>
+                <!-- EclipseLink specific: logging level - FINER shows SQL and transaction details -->
+                <prop key="eclipselink.logging.level">FINER</prop>
+
+                <!-- JPA package scanning:
+                    - comma separated list of packages to scan for JPA entity classes.
+                    - NOTE: Cannot start with a wild card.  The leading package name must be specified.
+                    - NOTE: Use '**' to recurse into sub-packages.
+                 -->
+                <prop key="jpa.model.packages">com.armedia.**</prop>
+
             </props>
         </property>
     </bean>
