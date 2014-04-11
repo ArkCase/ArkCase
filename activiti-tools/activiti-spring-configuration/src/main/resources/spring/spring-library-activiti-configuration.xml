@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="activitiProcessEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+        <property name="dataSource" ref="acmDataSource" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="databaseSchemaUpdate" value="true" />
+    </bean>
+
+    <bean id="activitiProcessEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="activitiProcessEngineConfiguration" />
+    </bean>
+
+    <bean id="activitiRepositoryService" factory-bean="activitiProcessEngine" factory-method="getRepositoryService" />
+    <bean id="activitiRuntimeService" factory-bean="activitiProcessEngine" factory-method="getRuntimeService" />
+    <bean id="activitiTaskService" factory-bean="activitiProcessEngine" factory-method="getTaskService" />
+    <bean id="activitiHistoryService" factory-bean="activitiProcessEngine" factory-method="getHistoryService" />
+
+</beans>
