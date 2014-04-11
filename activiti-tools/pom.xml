@@ -13,6 +13,7 @@
     <description>Parent project for all Activiti tools.</description>
     <modules>
         <module>activiti-mule-listener</module>
+        <module>activiti-spring-configuration</module>
     </modules>
 
 

@@ -23,7 +23,12 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 
         <logger level="DEBUG" category="com.armedia.plugins.complaint"/>
 
+
         <timer-interceptor/>
+
+        <set-property doc:name="Created or Updated?"
+                      propertyName="complaintCreated" value="#[payload.complaintId == null]"/>
+        <logger level="DEBUG" category="com.armedia.plugins.complaint"/>
 
         <component doc:name="Set Creator / Modifier">
             <spring-object bean="complaintOperators"/>

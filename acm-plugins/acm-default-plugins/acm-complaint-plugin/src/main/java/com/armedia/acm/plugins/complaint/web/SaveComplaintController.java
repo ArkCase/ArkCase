@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint.web;
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ public class SaveComplaintController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private SaveComplaintTransaction complaintTransaction;
+    private SaveComplaintEventPublisher eventPublisher;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -42,13 +44,18 @@ public class SaveComplaintController
             BindingResult bindingResult,
             Authentication authentication)
     {
+        // auditing and exception handling are handled here; transactions must be handled in the service layer.
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintWizard");
+
+        boolean isInsert = complaint.getComplaintId() == null;
 
         log.info("Complaint ID: " + complaint.getComplaintId());
 
         if ( bindingResult.hasErrors() )
         {
+            getEventPublisher().publishComplaintEvent(
+                    complaint, authentication, isInsert, false);
             retval.addObject("complaint", complaint);
             retval.addObject("succeeded", false);
             retval.addObject("errors", bindingResult.getAllErrors());
@@ -62,6 +69,8 @@ public class SaveComplaintController
             retval.addObject("complaint", saved);
             retval.addObject("succeeded", true);
 
+            getEventPublisher().publishComplaintEvent(saved, authentication, isInsert, true);
+
             return retval;
 
         } catch ( MuleException | TransactionException e)
@@ -70,6 +79,10 @@ public class SaveComplaintController
             retval.addObject("complaint", complaint);
             retval.addObject("succeeded", false);
             retval.addObject("errors", Arrays.asList(new ObjectError("complaint", e.getMessage())));
+
+            getEventPublisher().publishComplaintEvent(
+                    complaint, authentication, isInsert, false);
+
             return retval;
         }
     }
@@ -82,5 +95,15 @@ public class SaveComplaintController
     public void setComplaintTransaction(SaveComplaintTransaction complaintTransaction)
     {
         this.complaintTransaction = complaintTransaction;
+    }
+
+    public SaveComplaintEventPublisher getEventPublisher()
+    {
+        return eventPublisher;
+    }
+
+    public void setEventPublisher(SaveComplaintEventPublisher eventPublisher)
+    {
+        this.eventPublisher = eventPublisher;
     }
 }

@@ -62,5 +62,15 @@
         <addDefaultValue tableName="acm_audit_log" columnName="cm_audit_id" defaultValueComputed="SYS_GUID()"/>
     </changeSet>
 
+    <changeSet id="04-add-object-type-columns" author="dmiller">
+        <addColumn tableName="acm_audit_log">
+            <column name="cm_object_type" type="VARCHAR(1024)"/>
+            <column name="cm_object_id" type="NUMBER(32,0)"/>
+        </addColumn>
+        <createIndex tableName="acm_audit_log" indexName="idx_audit_log_object_id">
+            <column name="cm_object_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
 
