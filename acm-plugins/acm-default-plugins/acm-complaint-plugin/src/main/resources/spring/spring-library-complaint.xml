@@ -19,4 +19,6 @@
 
     <bean id="complaintOperators" class="com.armedia.acm.plugins.complaint.model.ComplaintOperators"/>
 
+    <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher"/>
+
 </beans>
