@@ -1,0 +1,14 @@
+<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="acm-footer-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-center">
+                <li>Copyright notice here.</li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>Version Number here.</li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+</html>

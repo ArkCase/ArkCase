@@ -5,7 +5,7 @@
     <div class="span-10 login">
         <div class="login-box main-content">
             <header>
-                <img src="<c:url value="/resources/images/acm-logo.png"/>"
+                <img src="<c:url value='/resources/images/acm-logo.png'/>"
                      width="103" height="103" align="center"
                      alt="Armedia Case Management"/>
             </header>

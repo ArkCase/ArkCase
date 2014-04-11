@@ -13,6 +13,7 @@
     <name>ACM Sample Plugins Parent Project</name>
     <description>Parent project for sample plugins.</description>
     <modules>
+        <module>hello-world-plugin</module>
         <module>armedia-blog-plugin</module>
     </modules>
 
