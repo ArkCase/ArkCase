@@ -3,6 +3,8 @@ package com.armedia.acm.plugins.complaint.service;
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,19 +34,17 @@ public class SaveComplaintEventPublisher implements ApplicationEventPublisherAwa
     {
         if ( log.isDebugEnabled() )
         {
-            log.debug("Publishing a complaint created event.");
+            log.debug("Publishing a complaint event.");
         }
 
-        if ( newComplaint )
+        ComplaintPersistenceEvent complaintPersistenceEvent =
+                newComplaint ? new ComplaintCreatedEvent(source) : new ComplaintUpdatedEvent(source);
+        complaintPersistenceEvent.setSucceeded(succeeded);
+        if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {
-            ComplaintCreatedEvent event = new ComplaintCreatedEvent(source);
-            event.setSucceeded(succeeded);
-            if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
-            {
-                event.setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
-            }
-
-            eventPublisher.publishEvent(event);
+            complaintPersistenceEvent.setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
         }
+
+        eventPublisher.publishEvent(complaintPersistenceEvent);
     }
 }
