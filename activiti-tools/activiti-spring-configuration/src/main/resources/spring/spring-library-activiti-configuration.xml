@@ -18,4 +18,8 @@
     <bean id="activitiTaskService" factory-bean="activitiProcessEngine" factory-method="getTaskService" />
     <bean id="activitiHistoryService" factory-bean="activitiProcessEngine" factory-method="getHistoryService" />
 
+    <bean id="bpmnFileAddedMonitor" class="com.armedia.acm.activiti.BpmnFileAddedMonitor">
+        <property name="repositoryService" ref="activitiRepositoryService"/>
+    </bean>
+
 </beans>

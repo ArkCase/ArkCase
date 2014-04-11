@@ -22,6 +22,11 @@
             <artifactId>acm-spring-tools-data-source</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.arm-file-tools</groupId>
+            <artifactId>arm-folder-watcher</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- activiti -->
         <dependency>
