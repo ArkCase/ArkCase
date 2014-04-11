@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.4.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+
+
+    <flow name="saveComplaint" doc:name="Save Complaint">
+        <description>Saves a complaint (creates new complaint if it has not been saved
+            previously).  The payload must be a Complaint entity object.  The return message&quot;s
+            payload is the (possibly updated) complaint; i.e. for a new complaint, the return payload&quot;s
+            ID fields are populated.</description>
+        <vm:inbound-endpoint
+                address="vm://saveComplaint.in"
+                exchange-pattern="request-response"
+                doc:name="Save Complaint">
+        </vm:inbound-endpoint>
+
+        <logger level="DEBUG" category="com.armedia.plugins.complaint"/>
+
+        <timer-interceptor/>
+
+        <component doc:name="Set Creator / Modifier">
+            <spring-object bean="complaintOperators"/>
+        </component>
+
+        <component doc:name="Complaint DAO">
+            <property-entry-point-resolver property="methodToCall"/>
+            <spring-object bean="acmComplaintDao"/>
+        </component>
+
+        <catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.plugins.complaint" message="Exception saving: #[exception.message]"/>
+            <set-property propertyName="saveException" value="#[exception]"/>
+        </catch-exception-strategy>
+
+    </flow>
+
+</mule>

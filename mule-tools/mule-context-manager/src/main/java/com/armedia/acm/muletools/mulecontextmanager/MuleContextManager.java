@@ -3,9 +3,12 @@ package com.armedia.acm.muletools.mulecontextmanager;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
+import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.context.MuleContextFactory;
+import org.mule.config.AnnotationsConfigurationBuilder;
 import org.mule.config.ConfigResource;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
+import org.mule.context.DefaultMuleContextBuilder;
 import org.mule.context.DefaultMuleContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MuleContextManager implements ApplicationContextAware
 {
@@ -35,9 +40,41 @@ public class MuleContextManager implements ApplicationContextAware
             return;
         }
 
+        ConfigResource[] configs = findConfigResources();
+        SpringXmlConfigurationBuilder springXmlConfigurationBuilder = new SpringXmlConfigurationBuilder(configs);
+
+        // allow Mule flows to see Spring beans defined in the main Spring application context
+        springXmlConfigurationBuilder.setParentContext(applicationContext);
+
+        // ensure Mule processes Mule annotations in Spring beans
+        AnnotationsConfigurationBuilder annotationsConfigurationBuilder = new AnnotationsConfigurationBuilder();
+
+        List<ConfigurationBuilder> builders = new ArrayList<>();
+        builders.add(springXmlConfigurationBuilder);
+        builders.add(annotationsConfigurationBuilder);
+
+        MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
+        MuleContext muleContext = muleContextFactory.createMuleContext(builders, new DefaultMuleContextBuilder());
+
         if ( log.isDebugEnabled() )
         {
-            log.debug("Creating spring config builder.");
+            log.debug("Starting mule context");
+        }
+
+        muleContext.start();
+        setMuleContext(muleContext);
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Done.");
+        }
+    }
+
+    private ConfigResource[] findConfigResources() throws IOException
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Finding Mule flow XML configuration files.");
         }
 
         PathMatchingResourcePatternResolver pathResolver = new PathMatchingResourcePatternResolver();
@@ -58,25 +95,7 @@ public class MuleContextManager implements ApplicationContextAware
             }
             configs[a] = new ConfigResource(muleConfig.getURL());
         }
-
-        SpringXmlConfigurationBuilder builder = new SpringXmlConfigurationBuilder(configs);
-
-        builder.setParentContext(applicationContext);
-        MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
-        MuleContext muleContext = muleContextFactory.createMuleContext(builder);
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Starting mule context");
-        }
-
-        muleContext.start();
-        setMuleContext(muleContext);
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Done.");
-        }
+        return configs;
     }
 
     public void shutdownBean()

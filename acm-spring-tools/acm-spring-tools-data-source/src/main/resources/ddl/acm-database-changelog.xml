@@ -4,7 +4,12 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <!-- tables first... The table changelogs can include indexes and primary keys,
+    <!-- drop constraints need to be first of all, in case we make any structure changes involving
+         foreign-key constraint related tables.
+    -->
+    <includeAll path="classpath*:/com/armedia/acm/ddl/drops" relativeToChangelogFile="false"/>
+
+    <!-- tables next... The table changelogs can include indexes and primary keys,
          but should not include foreign keys. Check constraints can be either in the table DDL
          or the constraint ddl.
     -->

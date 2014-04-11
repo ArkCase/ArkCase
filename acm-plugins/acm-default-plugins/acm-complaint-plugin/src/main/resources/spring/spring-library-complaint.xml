@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="acmComplaintDao" class="com.armedia.acm.plugins.complaint.dao.ComplaintDao"/>
+
+    <bean id="saveComplaintTransaction" class="com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction">
+        <property name="muleClient" ref="muleClient"/>
+    </bean>
+    
+    <bean id="complaintPlugin" class="com.armedia.acm.pluginmanager.AcmPlugin">
+        <property name="enabled" value="true"/>
+        <property name="homeUrl" value="/plugin/complaint"/>
+        <property name="navigatorTab" value="true"/>
+        <property name="navigatorTabName" value="Complaints"/>
+        <property name="pluginName" value="Complaint Plugin"/>
+    </bean>
+
+    <bean id="complaintOperators" class="com.armedia.acm.plugins.complaint.model.ComplaintOperators"/>
+
+</beans>
