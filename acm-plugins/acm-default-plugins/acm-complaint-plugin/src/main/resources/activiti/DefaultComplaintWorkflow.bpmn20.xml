@@ -1,0 +1,23 @@
+<definitions targetNamespace="http://activiti.org/bpmn20"
+             xmlns:activiti="http://activiti.org/bpmn"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+
+    <process id="cmComplaintWorkflow" name="Complaint review and approval process">
+
+        <startEvent id="complaintInitiated" />
+
+        <sequenceFlow id="flow1" sourceRef="complaintInitiated" targetRef="approveComplaint" />
+
+        <userTask id="approveComplaint" name="Approve Complaint" >
+            <documentation>
+                Write monthly financial report for publication to shareholders.
+            </documentation>
+        </userTask>
+
+        <sequenceFlow id="flow2" sourceRef="approveComplaint" targetRef="done" />
+
+        <endEvent id="done" />
+
+    </process>
+
+</definitions>
