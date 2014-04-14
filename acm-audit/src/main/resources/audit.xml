@@ -38,7 +38,7 @@
                 <setting name="jdbc.persister.main.table.column.activity">cm_audit_activity</setting>
                 <setting name="jdbc.persister.main.table.column.actor">cm_audit_user</setting>
                 <setting name="jdbc.persister.main.table.column.result">cm_audit_activity_result</setting>
-                <setting name="jdbc.persister.main.table.mappings">ipAddress=cm_audit_ip_address</setting>
+                <setting name="jdbc.persister.main.table.mappings">ipAddress=cm_audit_ip_address,objectId=cm_object_id,objectType=cm_object_type</setting>
                 <setting name="jdbc.persister.parameter.table">acm_audit_log_property</setting>
                 <setting name="jdbc.persister.parameter.table.fk">cm_audit_id</setting>
                 <setting name="jdbc.persister.parameter.table.param.name">cm_audit_property_name</setting>

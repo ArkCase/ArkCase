@@ -14,6 +14,7 @@
     <description>Parent project for all Spring tools.</description>
     <modules>
         <module>acm-spring-tools-context-holder</module>
+        <module>acm-spring-tools-data-source</module>
     </modules>
 
 

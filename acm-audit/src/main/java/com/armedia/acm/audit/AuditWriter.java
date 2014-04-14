@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AuditWriter implements ApplicationListener<AcmEvent>
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -23,13 +26,22 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
 
         if ( isAuditable(acmEvent) )
         {
-            AuditActivity.Parameter ipAddress = new AuditActivity.Parameter("ipAddress", acmEvent.getIpAddress());
+            Map<String, String> params = new HashMap<>();
+            params.put("ipAddress", acmEvent.getIpAddress());
+            if ( acmEvent.getObjectId() != null )
+            {
+                params.put("objectId", String.valueOf(acmEvent.getObjectId()));
+            }
+            if ( acmEvent.getObjectType() != null )
+            {
+                params.put("objectType", acmEvent.getObjectType());
+            }
             AuditActivity.audit(
                     acmEvent.getEventType(),
                     acmEvent.getUserId() + "|" + acmEvent.getEventType(), // trackId
                     acmEvent.getUserId(),
                     acmEvent.isSucceeded() ? "success" : "failure",
-                    ipAddress);
+                    params);
         }
 
     }

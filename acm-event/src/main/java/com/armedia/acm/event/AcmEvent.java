@@ -11,6 +11,8 @@ public abstract class AcmEvent extends ApplicationEvent
     private Date eventDate;
     private boolean succeeded;
     private String ipAddress;
+    private String objectType;
+    private Long objectId;
 
     public AcmEvent(Object source)
     {
@@ -55,5 +57,25 @@ public abstract class AcmEvent extends ApplicationEvent
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public String getObjectType()
+    {
+        return objectType;
+    }
+
+    public void setObjectType(String objectType)
+    {
+        this.objectType = objectType;
+    }
+
+    public Long getObjectId()
+    {
+        return objectId;
+    }
+
+    public void setObjectId(Long objectId)
+    {
+        this.objectId = objectId;
     }
 }

@@ -69,6 +69,7 @@ public class ActivitiMuleListenerIT
         pe.close();
 
         muleClient.getMuleContext().stop();
+        muleClient.getMuleContext().dispose();
     }
 
     @Test
