@@ -6,15 +6,15 @@
 
         <startEvent id="complaintInitiated" />
 
-        <sequenceFlow id="flow1" sourceRef="complaintInitiated" targetRef="approveComplaint" />
+        <sequenceFlow id="initiatedToApproval" sourceRef="complaintInitiated" targetRef="approveComplaint" />
 
         <userTask id="approveComplaint" name="Approve Complaint" >
             <documentation>
-                Write monthly financial report for publication to shareholders.
+                Approve the complaint; it will become part of a new case file.
             </documentation>
         </userTask>
 
-        <sequenceFlow id="flow2" sourceRef="approveComplaint" targetRef="done" />
+        <sequenceFlow id="approvalToEnd" sourceRef="approveComplaint" targetRef="done" />
 
         <endEvent id="done" />
 

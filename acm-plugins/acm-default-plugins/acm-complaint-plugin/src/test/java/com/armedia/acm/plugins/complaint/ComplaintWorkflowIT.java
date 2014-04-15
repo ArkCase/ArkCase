@@ -8,13 +8,10 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
-import org.activiti.engine.history.HistoricVariableInstance;
-import org.activiti.engine.history.HistoricVariableInstanceQuery;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ExecutionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +53,7 @@ public class ComplaintWorkflowIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/DefaultComplaintWorkflow.bpmn20.xml")
+                .addClasspathResource("activiti/DefaultComplaintWorkflow_v1.bpmn20.xml")
                 .deploy();
 
     }
