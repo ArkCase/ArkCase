@@ -4,12 +4,12 @@
 <meta charset="utf-8" />
 <title>New Complaint | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
-<link rel="stylesheet" href="css/animate.css" type="text/css" />
-<link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
-<link rel="stylesheet" href="css/icon.css" type="text/css" />
-<link rel="stylesheet" href="css/font.css" type="text/css" />
-<link rel="stylesheet" href="css/app.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/icon.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/app.css" type="text/css" />
 <!--[if lt IE 9]>
     <script src="js/ie/html5shiv.js"></script>
     <script src="js/ie/respond.min.js"></script>
@@ -19,7 +19,7 @@
 <body class="">
 <section class="vbox">
   <header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
-    <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="images/armedia.png" class="m-r-sm"></a></div>
+    <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
     <ul class="nav navbar-nav hidden-xs">
       <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
         <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
@@ -69,7 +69,7 @@
           <section class="w-f scrollable">
             <div class=slim-scroll data-height=auto data-disable-fade-out=true data-distance=0 data-size=10px data-railOpacity=0.2>
               <div class="clearfix wrapper dk nav-user hidden-xs">
-                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
+                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="resources/images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
@@ -137,6 +137,8 @@
                               <input id="fname" type="text" class="form-control" placeholder="Name">
                               <label for="lname" class="label">Last Name</label>
                               <input id="lname" type="text" class="form-control" placeholder="Name">
+                              <label for="company" class="label">Company</label>
+                              <input id="company" type="text" class="form-control" placeholder="Company">
                               <label for="email"  class="label">Email</label>
                               <input id="email" type="text" class="form-control" placeholder="Email">
                               <label for="phone"  class="label">Phone</label>
@@ -145,6 +147,14 @@
                               <input id="altphone" type="text" class="form-control" placeholder="Alternative Phone">
                             </div>
                             <div class="col-sm-6">
+                            <label for="personTitle" class="label">Title</label>
+                             <select id="personTitle" class="form-control" >
+                                <option value="">Choose Title</option>
+                                <option value="Mr.">Mr.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="Ms.">Dr.</option>
+                         </select>
                               <label for="address1"  class="label">Address</label>
                               <input id="address1" type="text" class="form-control" placeholder="Address">
                               <label for="address2"  class="label">Address 2</label>
@@ -157,6 +167,17 @@
                               <input id="zip" type="text" class="form-control" placeholder="ZIP">
                             </div>
                           </section>
+                          
+                          
+                           <label for="security" class="label">Security</label>
+                          
+                          <select data-placeholder="Choose Security..." id="security" class="choose-security form-control" multiple >
+                                <option value=""></option>
+                                <option value="Trade Secret">Anonymous</option>
+                                <option value="Confidential">Confidential</option>
+                                <option value="Trade Secret">Trade Secret</option>
+                         </select>
+                          
                         </div>
                         <div class="tab-pane" id="step2">
                           <h4>Incident Information</h4>
@@ -168,27 +189,97 @@
                               <label for="complaintType"  class="label">Complaint Type</label>
                               <select name="complaintType" class="form-control m-b">
                                 <option>Choose Complaint Type</option>
-                                <option>option 2</option>
-                                <option>option 3</option>
-                                <option>option 4</option>
+                                <option>Domestic Dispute</option>
+                                <option>Arson</option>
+                                <option>Better Business Dispute</option>
+                                <option>Government</option>
+                                <option>Local</option>
+                                <option>Agricultural</option>
+                                <option>Pollution </option>
                               </select>
                             </div>
                             <div class="col-sm-6">
                               <label for="priority"  class="label">Priority</label>
                               <select name="priority" class="form-control m-b">
                                 <option>Choose Priority</option>
-                                <option>option 2</option>
-                                <option>option 3</option>
-                                <option>option 4</option>
+                                <option selected>Low</option>
+                                <option>Medium</option>
+                                <option>High</option>
+                                <option>Expedited</option>
                               </select>
                             </div>
                           </section>
+                          
+                          
+                          <h4>People Involved</h4>
+                         
+                           <div class="table-tools">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;
+                                                Add New
+                                            </button>
+                                            <button type="button" class="btn btn-default"><i
+                                                    class="fa fa-print"></i>&nbsp; Print
+                                            </button>
+                                            <button type="button" class="btn btn-default"><i
+                                                    class="fa fa-file-text-o"></i>&nbsp; PDF
+                                            </button>
+                                            <button type="button" class="btn btn-default"><i class="fa fa-copy"></i>&nbsp;
+                                                Excel
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="col-md-6 pull-right">
+                                            <div class="form-inline pull-right">
+                                                <div class="form-group"><label class="control-label">Search:</label>&nbsp;<input
+                                                        type="text" class="form-control"/></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <table class="table table-striped table-bordered table-hover" style="margin-top:5px;">
+                                        <thead>
+                                        <tr>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Type</th>
+                                            <th>Phone</th>
+                                            <th>Address</th>
+                                            <th>City</th>
+                                            <th>State</th>
+                                            <th>ZIP</th>
+                                            <th width="3%">Edit</th>
+                                            <th width="4%">Delete</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr class="odd gradeA">
+                                            <td>[First]</td>
+                                            <td>[Last]</td>
+                                            <td>[Type]</td>
+                                            <td>[Phone]</td>
+                                           <td>[Address]</td>
+                                           <td>[City]</td>
+                                           <td>[State]</td>
+                                           <td>[ZIP]</td>
+                                            <td><a href="javascript:;" class="edit">Edit</a></td>
+                                            <td><a href="javascript:;" class="delete">Delete</a></td>
+                                        </tr>
+                                       
+                                        
+                                        </tbody>
+                                    </table>
+                               
+                                
+                            
+                          
                         </div>
                         <div class="tab-pane" id="step3">
                           <h4>Details</h4>
                           <p>Description</p>
-                          <label for="subject"  class="label">Subject</label>
-                          <input id="subject" type="text" class="form-control" placeholder="Subject">
+                          <label for="title"  class="label">Complaint Title</label>
+                          <input id="title" type="text" class="form-control" placeholder="Complaint Title">
                           <hr />
                           <div class="complaintDetails">Complaint Details</div>
                         </div>
@@ -209,13 +300,45 @@
                           <h4>Assignment</h4>
                           <p>Description</p>
                           <label for="approvers" class="label">Approvers</label>
-                          <input id="approvers" type="text" class="form-control" placeholder="Approvers">
+                          
+                          <select data-placeholder="Choose Approvers..." id="approvers" class="choose-approvers form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
+
                           <hr/>
                           <label for="collab" class="label">Collaborators</label>
-                          <input id="collab" type="text" class="form-control" placeholder="Collaborators">
+                          
+                          
+                          <select data-placeholder="Choose Collaborators..." id="collab" class="choose-collab form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
+                          
                           <hr/>
                           <label for="notifications" class="label">Notifications</label>
-                          <input id="notifications" type="text" class="form-control" placeholder="Notifications">
+                          
+                          <select data-placeholder="Choose Notifications..." id="notifications" class="choose-notifications form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
+                          
+                          
                         </div>
                         <ul class="pager wizard m-b-sm">
                           <li class="previous first" style="display:none;"><a href="#">First</a></li>
@@ -234,31 +357,31 @@
     </section>
   </section>
 </section>
-<script src="js/jquery.min.js"></script> 
-<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="resources/js/jquery.min.js"></script> 
+<script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 
 <!-- Bootstrap --> 
-<script src="js/bootstrap.js"></script> 
+<script src="resources/js/bootstrap.js"></script> 
 <!-- App --> 
 <!-- datepicker --> 
-<script src="js/datepicker/bootstrap-datepicker.js"></script> 
-<script src="js/app.js"></script> 
-<script src="js/slimscroll/jquery.slimscroll.min.js"></script> 
-<script src="js/parsley/parsley.min.js"></script> 
-<script src="js/wizard/jquery.bootstrap.wizard.js"></script> 
-<script src="js/wizard/demo.js"></script> 
-<script src="js/app.plugin.js"></script> 
+<script src="resources/js/datepicker/bootstrap-datepicker.js"></script> 
+<script src="resources/js/app.js"></script> 
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="resources/js/parsley/parsley.min.js"></script> 
+<script src="resources/js/wizard/jquery.bootstrap.wizard.js"></script> 
+<script src="resources/js/wizard/demo.js"></script> 
+<script src="resources/js/app.plugin.js"></script> 
 
 <!-- File Manager --> 
 
-<script src="js/upload/js/jquery.fileupload.js"></script> 
-<script src="js/upload/js/jquery.iframe-transport.js"></script> 
-<script src="js/upload/js/file-uploads-custom.js"></script> 
+<script src="resources/js/upload/js/jquery.fileupload.js"></script> 
+<script src="resources/js/upload/js/jquery.iframe-transport.js"></script> 
+<script src="resources/js/upload/js/file-uploads-custom.js"></script> 
 
 <!-- Summernote WYSIWYG -->
 
-<link rel="stylesheet" href="js/summernote/summernote.css" type="text/css"/>
-<script src="js/summernote/summernote.js"></script> 
+<link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>
+<script src="resources/js/summernote/summernote.js"></script> 
 <script>
     $(document).ready(function() {
       $('.complaintDetails').summernote({
@@ -266,5 +389,22 @@
 });
   });
 </script>
+
+
+<!-- Multi-Select Field WYSIWYG -->
+
+<script src="resources/js/chosen.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+var config = {
+  '.choose-security' : {}, 
+  '.choose-approvers' : {}, 
+  '.choose-collab' : {}, 
+  '.choose-notifications' : {}
+}
+for (var selector in config) {
+  $(selector).chosen(config[selector]);
+}
+</script>
+
 </body>
 </html>

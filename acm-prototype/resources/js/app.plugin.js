@@ -116,7 +116,7 @@
   $('#docs pre code').each(function(){
 	    var $this = $(this);
 	    var t = $this.html();
-	    $this.html(t.replace(/</g, '&lt;').replace(/>/g, '&gt;'));
+	    $this.html(t.replace(/</g, '&lt;').replace(/>/g, '>'));
 	});
 
 	// table select/deselect all
