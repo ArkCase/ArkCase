@@ -22,4 +22,17 @@
         <property name="repositoryService" ref="activitiRepositoryService"/>
     </bean>
 
+    <bean id="deployFolder" class="java.io.File">
+        <constructor-arg value="${user.home}/.acm/activiti"/>
+    </bean>
+
+    <bean id="activitiResourceExpression" class="java.lang.String">
+        <constructor-arg value="classpath*:/activiti/*.bpmn20.xml"/>
+    </bean>
+
+    <bean id="activitiDeployer" class="com.armedia.acm.activiti.BpmnClasspathDeployer">
+        <property name="activitiProcessDefinitionPattern" ref="activitiResourceExpression"/>
+        <property name="deployFolder" ref="deployFolder"/>
+    </bean>
+
 </beans>
