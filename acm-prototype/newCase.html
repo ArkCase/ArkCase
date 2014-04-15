@@ -4,12 +4,12 @@
 <meta charset="utf-8" />
 <title>New Case | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
-<link rel="stylesheet" href="css/animate.css" type="text/css" />
-<link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
-<link rel="stylesheet" href="css/icon.css" type="text/css" />
-<link rel="stylesheet" href="css/font.css" type="text/css" />
-<link rel="stylesheet" href="css/app.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/icon.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/app.css" type="text/css" />
 <!--[if lt IE 9]>
     <script src="js/ie/html5shiv.js"></script>
     <script src="js/ie/respond.min.js"></script>
@@ -19,7 +19,7 @@
 <body class="">
 <section class="vbox">
   <header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
-    <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="images/armedia.png" class="m-r-sm"></a></div>
+    <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
     <ul class="nav navbar-nav hidden-xs">
       <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
         <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
@@ -69,7 +69,7 @@
           <section class="w-f scrollable">
             <div class=slim-scroll data-height=auto data-disable-fade-out=true data-distance=0 data-size=10px data-railOpacity=0.2>
               <div class="clearfix wrapper dk nav-user hidden-xs">
-                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
+                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="resources/images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
@@ -179,13 +179,43 @@
                           <h4>Assignment</h4>
                           <p>Description</p>
                           <label for="approvers" class="label">Approvers</label>
-                          <input id="approvers" type="text" class="form-control" placeholder="Approvers">
+                          
+                          <select data-placeholder="Choose Approvers..." id="approvers" class="choose-approvers form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
+
                           <hr/>
                           <label for="collab" class="label">Collaborators</label>
-                          <input id="collab" type="text" class="form-control" placeholder="Collaborators">
+                          
+                          
+                          <select data-placeholder="Choose Collaborators..." id="collab" class="choose-collab form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
+                          
                           <hr/>
                           <label for="notifications" class="label">Notifications</label>
-                          <input id="notifications" type="text" class="form-control" placeholder="Notifications">
+                          
+                          <select data-placeholder="Choose Notifications..." id="notifications" class="choose-notifications form-control" multiple style="width:350px;" >
+                                <option value=""></option>
+                                <option value="David Miller">David Miller</option>
+                                <option value="James Bailey">James Bailey</option>
+                                <option value="Judy Hsu">Judy Hsu</option>
+                                <option value="Ronda Ringo">Ronda Ringo</option>
+                                <option value="AJ McClary">AJ McClary</option>
+                                <option value="Jim Nasr">Jim Nasr</option>
+                         </select>
                         </div>
                         <ul class="pager wizard m-b-sm">
                           <li class="previous first" style="display:none;"><a href="#">First</a></li>
@@ -204,37 +234,54 @@
     </section>
   </section>
 </section>
-<script src="js/jquery.min.js"></script> 
-<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="resources/js/jquery.min.js"></script> 
+<script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 
 <!-- Bootstrap --> 
-<script src="js/bootstrap.js"></script> 
+<script src="resources/js/bootstrap.js"></script> 
 <!-- App --> 
 <!-- datepicker --> 
-<script src="js/datepicker/bootstrap-datepicker.js"></script> 
-<script src="js/app.js"></script> 
-<script src="js/slimscroll/jquery.slimscroll.min.js"></script> 
-<script src="js/parsley/parsley.min.js"></script> 
-<script src="js/wizard/jquery.bootstrap.wizard.js"></script> 
-<script src="js/wizard/demo.js"></script> 
-<script src="js/app.plugin.js"></script> 
+<script src="resources/js/datepicker/bootstrap-datepicker.js"></script> 
+<script src="resources/js/app.js"></script> 
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="resources/js/parsley/parsley.min.js"></script> 
+<script src="resources/js/wizard/jquery.bootstrap.wizard.js"></script> 
+<script src="resources/js/wizard/demo.js"></script> 
+<script src="resources/js/app.plugin.js"></script> 
 
 <!-- File Manager --> 
 
-<script src="js/upload/js/jquery.fileupload.js"></script> 
-<script src="js/upload/js/jquery.iframe-transport.js"></script> 
-<script src="js/upload/js/file-uploads-custom.js"></script> 
+<script src="resources/js/upload/js/jquery.fileupload.js"></script> 
+<script src="resources/js/upload/js/jquery.iframe-transport.js"></script> 
+<script src="resources/js/upload/js/file-uploads-custom.js"></script> 
 
 <!-- Summernote WYSIWYG -->
 
-<link rel="stylesheet" href="js/summernote/summernote.css" type="text/css"/>
-<script src="js/summernote/summernote.js"></script> 
+<link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>
+<script src="resources/js/summernote/summernote.js"></script> 
 <script>
     $(document).ready(function() {
       $('.complaintDetails').summernote({
   height: 300
 });
   });
+  
 </script>
+
+
+<!-- Multi-Select Field WYSIWYG -->
+
+<script src="resources/js/chosen.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+var config = {
+  '.choose-approvers' : {}, 
+  '.choose-collab' : {}, 
+  '.choose-notifications' : {}
+}
+for (var selector in config) {
+  $(selector).chosen(config[selector]);
+}
+</script>
+
 </body>
 </html>
