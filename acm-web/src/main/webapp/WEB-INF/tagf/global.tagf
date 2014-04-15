@@ -9,9 +9,8 @@
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/css/bootstrap.css'/>" />
 
 
-<link rel="stylesheet" media="screen" href="<c:url value='/resources/css/bootstrap.css'/>" />
-<link rel="stylesheet" media="screen" href="<c:url value='/resources/css/animate.css'/>" />
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/css/font-awesome.min.css'/>" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/css/animate.css'/>" />
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/css/icon.css'/>" />
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/css/font.css'/>" />
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/css/app.css'/>" />
@@ -24,13 +23,13 @@
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
-<script type="text/javascript" src="<c:url value='/resources/js/html5shiv.js'/>" ></script>
-<script type="text/javascript" src="<c:url value='/resources/js/respond.min.js' /> ></script>
+<script type="text/javascript" src="<c:url value='/resources/js/ie/html5shiv.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/js/ie/respond.min.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/js/ie/excanvas.js'/>"></script>
 <![endif]-->
 
 
 <!-- jquery must be first -->
 <script type="text/javascript" src="<c:url value='/resources/js/jquery-1.11.0.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/bootstrap.js'/>"></script>
-
 <script type="text/javascript" src="<c:url value='/resources/js/issueCollector/jiraIssueCollector.js'/>" ></script>
