@@ -11,6 +11,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class BpmnClasspathDeployer implements ApplicationContextAware
@@ -18,6 +19,8 @@ public class BpmnClasspathDeployer implements ApplicationContextAware
     private File deployFolder;
 
     private String activitiProcessDefinitionPattern;
+
+    private PathMatchingResourcePatternResolver resolver;
 
     private transient Logger log = LoggerFactory.getLogger(getClass());
 
@@ -29,26 +32,27 @@ public class BpmnClasspathDeployer implements ApplicationContextAware
         {
             log.info("Scanning for Activiti process definitions");
         }
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+
         try
         {
-            Resource[] processDefinitions = resolver.getResources(getActivitiProcessDefinitionPattern());
+            Resource[] processDefinitions = getResolver().getResources(getActivitiProcessDefinitionPattern());
             for ( Resource processDefinition : processDefinitions )
             {
                 String resourceFilename = processDefinition.getFilename();
-                if ( log.isDebugEnabled() )
+                if ( log.isInfoEnabled() )
                 {
-                    log.debug("Found activiti resource '" + resourceFilename + "'");
+                    log.info("Found activiti resource '" + resourceFilename + "'");
                 }
 
-                File existing = new File(getDeployFolder() + File.separator + resourceFilename);
-                if ( !existing.exists() )
+                File target = new File(getDeployFolder() + File.separator + resourceFilename);
+                if ( !target.exists() )
                 {
                     if ( log.isDebugEnabled() )
                     {
                         log.debug("Copying resource '" + resourceFilename + "' to deploy folder.");
                     }
-                    FileCopyUtils.copy(processDefinition.getFile(), existing);
+                    // NOTE: FileCopyUtils will close both the input and the output streams.
+                    FileCopyUtils.copy(processDefinition.getInputStream(), new FileOutputStream(target));
                 }
             }
         } catch (IOException e)
@@ -81,5 +85,15 @@ public class BpmnClasspathDeployer implements ApplicationContextAware
     public void setDeployFolder(File deployFolder)
     {
         this.deployFolder = deployFolder;
+    }
+
+    public PathMatchingResourcePatternResolver getResolver()
+    {
+        return resolver;
+    }
+
+    public void setResolver(PathMatchingResourcePatternResolver resolver)
+    {
+        this.resolver = resolver;
     }
 }

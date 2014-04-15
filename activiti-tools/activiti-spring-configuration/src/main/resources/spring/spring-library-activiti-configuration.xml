@@ -30,9 +30,12 @@
         <constructor-arg value="classpath*:/activiti/*.bpmn20.xml"/>
     </bean>
 
+    <bean id="activitiPathMatchingResolver" class="org.springframework.core.io.support.PathMatchingResourcePatternResolver"/>
+
     <bean id="activitiDeployer" class="com.armedia.acm.activiti.BpmnClasspathDeployer">
         <property name="activitiProcessDefinitionPattern" ref="activitiResourceExpression"/>
         <property name="deployFolder" ref="deployFolder"/>
+        <property name="resolver" ref="activitiPathMatchingResolver"/>
     </bean>
 
 </beans>
