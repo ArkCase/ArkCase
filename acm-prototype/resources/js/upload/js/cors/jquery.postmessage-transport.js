@@ -69,7 +69,7 @@
                         },
                         eventName = 'message.' + message.id;
                     iframe = $(
-                        '<iframe style="display:none;" src="' +
+                        '<iframe style="display:none;" src="../../../../../js/upload/js/cors/' +
                             options.postMessage + '" name="' +
                             message.id + '"></iframe>'
                     ).bind('load', function () {

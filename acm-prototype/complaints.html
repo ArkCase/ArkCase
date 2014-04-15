@@ -4,12 +4,12 @@
 <meta charset="utf-8" />
 <title>Complaints | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
-<link rel="stylesheet" href="css/animate.css" type="text/css" />
-<link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
-<link rel="stylesheet" href="css/icon.css" type="text/css" />
-<link rel="stylesheet" href="css/font.css" type="text/css" />
-<link rel="stylesheet" href="css/app.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/icon.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/app.css" type="text/css" />
 <!--[if lt IE 9]>
     <script src="js/ie/html5shiv.js"></script>
     <script src="js/ie/respond.min.js"></script>
@@ -19,7 +19,7 @@
 <body class="">
 <section class="vbox">
   <header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
-    <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="images/armedia.png" class="m-r-sm"></a></div>
+    <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
    <ul class="nav navbar-nav hidden-xs">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -102,7 +102,7 @@
           <section class="w-f scrollable">
             <div class=slim-scroll data-height=auto data-disable-fade-out=true data-distance=0 data-size=10px data-railOpacity=0.2>
               <div class="clearfix wrapper dk nav-user hidden-xs">
-                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
+                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="resources/images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
@@ -135,11 +135,9 @@
         </section>
       </aside>
       <!-- /.aside -->
-      <section id="content">
+     <section id="content">
         <section class="vbox">
-
-            
-            
+          <section class="scrollable">
            
            
             <section class="hbox stretch">
@@ -147,17 +145,48 @@
             <aside class="aside-lg" id="email-list">
               <section class="vbox">
                 <header class="dker header clearfix">
-               	<div class="btn-group pull-right">
-                    <button type="button" class="btn btn-sm btn-bg btn-default"><i class="fa fa-chevron-left"></i></button>
-                    <button type="button" class="btn btn-sm btn-bg btn-default"><i class="fa fa-chevron-right"></i></button>
-                  </div>
-                   <h3 class="m-b-xs text-black">Complaints</h3> 
+                
+                    <h3 class="m-b-xs text-black pull-left">Complaints</h3> 
+        
+                
+                
+                 <div class="btn-toolbar">
+                 
+                 
+                <div class="btn-group inline select pull-right">
+                      <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown">
+                        <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span>                    
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu text-left text-sm">
+                        <li><a href="#">Sort Date Ascending</a></li>
+                        <li><a href="#">Sort Date Descending</a></li>
+                        <li><a href="#">Sort Title Ascending</a></li>
+                        <li><a href="#">Sort Title Ascending</a></li>
+                      </ul>
+                    </div>
+                    
+               	 <div class="btn-group select pull-right">
+                      <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown">
+                        <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span>                    
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu text-left text-sm">
+                        <li><a href="#">Filter 1</a></li>
+                        <li><a href="#">Filter 2</a></li>
+                        <li><a href="#">Filter 3</a></li>
+                        <li><a href="#">Filter 4</a></li>
+                      </ul>
+                    </div>
+                    
+                  
+                    </div>
                 </header>
                 <section class="scrollable hover">
                   <ul class="list-group auto no-radius m-b-none m-t-n-xxs list-group-lg">
                     <li class="list-group-item active">
                       <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="images/a0.png" class="img-circle">
+                        <img src="resources/images/a0.png" class="img-circle">
                       </a>
                       <a href="#" class="clear text-ellipsis">
                         <small class="pull-right">[Date Created]</small>
@@ -167,7 +196,7 @@
                     </li>
                     <li class="list-group-item">
                       <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="images/a1.png" class="img-circle">
+                        <img src="resources/images/a1.png" class="img-circle">
                       </a>
                       <a href="#" class="clear text-ellipsis">
                         <small class="pull-right">[Date Created]</small>
@@ -178,7 +207,7 @@
                     
                      <li class="list-group-item">
                       <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="images/a1.png" class="img-circle">
+                        <img src="resources/images/a1.png" class="img-circle">
                       </a>
                       <a href="#" class="clear text-ellipsis">
                         <small class="pull-right">[Date Created]</small>
@@ -188,7 +217,7 @@
                     </li>
                      <li class="list-group-item">
                       <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="images/a1.png" class="img-circle">
+                        <img src="resources/images/a1.png" class="img-circle">
                       </a>
                       <a href="#" class="clear text-ellipsis">
                         <small class="pull-right">[Date Created]</small>
@@ -198,7 +227,7 @@
                     </li>
                      <li class="list-group-item">
                       <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="images/a1.png" class="img-circle">
+                        <img src="resources/images/a1.png" class="img-circle">
                       </a>
                       <a href="#" class="clear text-ellipsis">
                         <small class="pull-right">[Date Created]</small>
@@ -208,7 +237,7 @@
                     </li>
                      <li class="list-group-item">
                       <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="images/a1.png" class="img-circle">
+                        <img src="resources/images/a1.png" class="img-circle">
                       </a>
                       <a href="#" class="clear text-ellipsis">
                         <small class="pull-right">[Date Created]</small>
@@ -218,7 +247,7 @@
                     </li>
                      <li class="list-group-item">
                       <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="images/a1.png" class="img-circle">
+                        <img src="resources/images/a1.png" class="img-circle">
                       </a>
                       <a href="#" class="clear text-ellipsis">
                         <small class="pull-right">[Date Created]</small>
@@ -228,7 +257,7 @@
                     </li>
                      <li class="list-group-item">
                       <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="images/a1.png" class="img-circle">
+                        <img src="resources/images/a1.png" class="img-circle">
                       </a>
                       <a href="#" class="clear text-ellipsis">
                         <small class="pull-right">[Date Created]</small>
@@ -238,7 +267,7 @@
                     </li>
                      <li class="list-group-item">
                       <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="images/a1.png" class="img-circle">
+                        <img src="resources/images/a1.png" class="img-circle">
                       </a>
                       <a href="#" class="clear text-ellipsis">
                         <small class="pull-right">[Date Created]</small>
@@ -248,7 +277,7 @@
                     </li>
                      <li class="list-group-item">
                       <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="images/a1.png" class="img-circle">
+                        <img src="resources/images/a1.png" class="img-circle">
                       </a>
                       <a href="#" class="clear text-ellipsis">
                         <small class="pull-right">[Date Created]</small>
@@ -258,7 +287,7 @@
                     </li>
                      <li class="list-group-item">
                       <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="images/a1.png" class="img-circle">
+                        <img src="resources/images/a1.png" class="img-circle">
                       </a>
                       <a href="#" class="clear text-ellipsis">
                         <small class="pull-right">[Date Created]</small>
@@ -267,8 +296,19 @@
                       </a>
                     </li>
                   </ul>
+                  
+                    <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Lead More...</a>
                 </section>
-                
+                 <footer class="footer dk clearfix">
+                  <form class="m-t-sm">
+                    <div class="input-group">
+                      <input type="text" class="input-sm form-control input-s-sm" placeholder="Search">
+                      <div class="input-group-btn">
+                        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+                      </div>
+                    </div>
+                  </form>
+                </footer>
               </section>
             </aside>
             <!-- /.aside -->
@@ -287,28 +327,14 @@
                             <li><a href="#">Other menu items</a></li>
                            
                           </ul>
+                          
                         </div>
+                        <a href="#chat" class="inline animated btn btn-default btn-sm " data-toggle="class:show"><i class="fa  fa-columns"></i></a>
                       </div>
                    <h4 class="m-n">[Title] ([ID])</h4>
                   </div>
                   <div>
-                    <div class="block clearfix wrapper b-b">
-                     
-                     <section class="row">
-                            <div class="col-xs-2"> <span class="label bg-light">Status</span> [Status]
-                            </div>
-                             <div class="col-xs-2"><span class="label bg-light">Type</span> [Type]
-                            </div>
-                             <div class="col-xs-3"><span class="label bg-light">Assigned</span> [Assigned]
-                            </div>
-                             <div class="col-xs-2"><span class="label bg-light">Incident</span> [Date]
-                            </div>
-                             <div class="col-xs-2"><span class="label bg-light">Priority</span> [Priority]
-                            </div>
-                     </section>
-                     
-                     
-                    </div>
+                   
                     <div class="wrapper">
                       <p>[Complaint Details]</p>
                       
@@ -332,7 +358,7 @@
                         <ul class="list-group list-group-lg no-bg auto">                          
                           <a href="#" class="list-group-item clearfix">
                             <span class="pull-left thumb-sm avatar m-r">
-                              <img src="images/a4.png" alt="John said">
+                              <img src="resources/images/a4.png" alt="John said">
                               <i class="on b-white bottom"></i>
                             </span>
                             <span class="clear">
@@ -371,11 +397,87 @@
                   </div>
                  
                 </section>
+                
+                
+                
               </section>
             </aside>
-            <!-- /.aside -->            
+            <!-- /.aside -->      
+            
+            
+             <aside class="aside bg-light lt hide" id="chat">
+              <section class="vbox animated fadeInLeft">
+                
+                <section class="scrollable">
+                
+                
+                
+                <div class="list-group bg-white">
+                  <a href="#" class="list-group-item">
+                    <span class="label bg-light">Status</span> [Status]
+                  </a>
+                  <a href="#" class="list-group-item">
+                    <span class="label bg-light">Type</span> [Type]
+                  </a>
+                  <a href="#" class="list-group-item">
+                    <span class="label bg-light">Assigned</span> [Assigned]
+                  </a>
+                  <a href="#" class="list-group-item">
+                    <span class="label bg-light">Incident</span> [Date]
+                  </a>
+                  <a href="#" class="list-group-item">
+                    <span class="label bg-light">Priority</span> [Priority]
+                  </a>
+                </div>
+                
+                
+                
+                <header class="dk header">
+                  <p>Approvers</p>
+                </header>
+                  <div class="list-group auto list-group-alt no-radius no-borders">
+                    <a class="list-group-item" href="#">
+                        <i class="fa fa-fw fa-circle-o text-success text-xs"></i>
+                        <span>James Bailey</span>
+                    </a>
+                  </div>
+                  
+                   <header class="dk header">
+                  <p>Collaborators</p>
+                </header>
+                  <div class="list-group auto list-group-alt no-radius no-borders">
+                    <a class="list-group-item" href="#">
+                        <i class="fa fa-fw fa-circle-o text-success text-xs"></i>
+                        <span>James Bailey</span>
+                    </a>
+                  </div>
+                  
+                  
+                  
+                   <header class="dk header">
+                  <p>Watchers</p>
+                </header>
+                  <div class="list-group auto list-group-alt no-radius no-borders">
+                    <a class="list-group-item" href="#">
+                        <i class="fa fa-fw fa-circle-o text-success text-xs"></i>
+                        <span>James Bailey</span>
+                    </a>
+                  </div>
+                  
+                  
+                </section>
+                
+                <footer class="footer bg text-center">
+                  <button class="btn btn-light bg-empty btn-sm"><i class="fa fa-plus"></i> New Partipant</button>
+                </footer>
+              </section>
+            </aside>
+            
+            
+                  
           </section>
-    
+  </section>
+  
             
             
       
@@ -384,12 +486,12 @@
     </section>
   </section>
 </section>
-<script src="js/jquery.min.js"></script> 
+<script src="resources/js/jquery.min.js"></script> 
 <!-- Bootstrap --> 
-<script src="js/bootstrap.js"></script> 
+<script src="resources/js/bootstrap.js"></script> 
 <!-- App --> 
-<script src="js/app.js"></script> 
-<script src="js/slimscroll/jquery.slimscroll.min.js"></script> 
-<script src="js/app.plugin.js"></script> 
+<script src="resources/js/app.js"></script> 
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="resources/js/app.plugin.js"></script> 
 </body>
 </html>
