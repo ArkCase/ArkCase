@@ -3,6 +3,7 @@
 
 <%@attribute name="endOfHead" fragment="true" %>
 <%@attribute name="endOfBody" fragment="true" %>
+
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
