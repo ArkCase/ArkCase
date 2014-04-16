@@ -206,6 +206,7 @@
         <module>acm-plugins</module>
         <module>mule-tools</module>
         <module>acm-data</module>
+        <module>activemq-tools</module>
     </modules>
 
     <scm>
