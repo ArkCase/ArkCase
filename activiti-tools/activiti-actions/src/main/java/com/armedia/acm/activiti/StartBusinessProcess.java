@@ -31,15 +31,7 @@ public class StartBusinessProcess implements ApplicationEventPublisherAware
             throw new IllegalStateException("Must specify a processDefinitionKey to start a business process.");
         }
 
-        // exclude Mule and JMS headers
-        Map<String, Object> messageHeaders = new HashMap<>();
-        for ( Map.Entry<String, Object> header : muleHeaders.entrySet() )
-        {
-            if ( !header.getKey().startsWith("MULE_") && !header.getKey().startsWith("JMS") )
-            {
-                messageHeaders.put(header.getKey(), header.getValue());
-            }
-        }
+        Map<String, Object> messageHeaders = filterMuleAndJmsHeaders(muleHeaders);
 
         ProcessInstance pi = getRuntimeService().startProcessInstanceByKey(businessProcessKey, messageHeaders);
 
@@ -50,6 +42,20 @@ public class StartBusinessProcess implements ApplicationEventPublisherAware
         event.setObjectType(businessProcessKey);
         getApplicationEventPublisher().publishEvent(event);
 
+    }
+
+    private Map<String, Object> filterMuleAndJmsHeaders(Map<String, Object> muleHeaders)
+    {
+        // exclude Mule and JMS headers
+        Map<String, Object> messageHeaders = new HashMap<>();
+        for ( Map.Entry<String, Object> header : muleHeaders.entrySet() )
+        {
+            if ( !header.getKey().startsWith("MULE_") && !header.getKey().startsWith("JMS") )
+            {
+                messageHeaders.put(header.getKey(), header.getValue());
+            }
+        }
+        return messageHeaders;
     }
 
     @Override
