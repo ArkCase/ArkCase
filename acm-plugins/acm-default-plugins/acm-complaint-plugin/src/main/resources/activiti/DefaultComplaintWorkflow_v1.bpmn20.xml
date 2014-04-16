@@ -1,0 +1,23 @@
+<definitions targetNamespace="http://activiti.org/bpmn20"
+             xmlns:activiti="http://activiti.org/bpmn"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+
+    <process id="cmComplaintWorkflow" name="Complaint review and approval process">
+
+        <startEvent id="complaintInitiated" />
+
+        <sequenceFlow id="initiatedToApproval" sourceRef="complaintInitiated" targetRef="approveComplaint" />
+
+        <userTask id="approveComplaint" name="Approve Complaint" >
+            <documentation>
+                Approve the complaint; it will become part of a new case file.
+            </documentation>
+        </userTask>
+
+        <sequenceFlow id="approvalToEnd" sourceRef="approveComplaint" targetRef="done" />
+
+        <endEvent id="done" />
+
+    </process>
+
+</definitions>

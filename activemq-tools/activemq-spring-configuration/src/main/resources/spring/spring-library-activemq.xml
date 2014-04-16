@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.9.0.xsd">
+
+
+    <!--*************************************************************************** -->
+    <!-- ActiveMQ Configuration                                                     -->
+    <!--*************************************************************************** -->
+
+    <amq:broker useJmx="false" persistent="true">
+        <amq:managementContext>
+            <amq:managementContext connectorHost="localhost" createConnector="false" />
+        </amq:managementContext>
+
+        <amq:persistenceAdapter>
+            <amq:kahaDB directory="${user.home}/.acm/activemq"/>
+        </amq:persistenceAdapter>
+        <amq:systemUsage>
+            <amq:systemUsage>
+                <amq:memoryUsage>
+                    <amq:memoryUsage limit="20 mb"/>
+                </amq:memoryUsage>
+                <amq:storeUsage>
+                    <amq:storeUsage limit="128 mb"/>
+                </amq:storeUsage>
+                <amq:tempUsage>
+                    <amq:tempUsage limit="128 mb"/>
+                </amq:tempUsage>
+            </amq:systemUsage>
+        </amq:systemUsage>
+        <amq:transportConnectors>
+            <amq:transportConnector uri="tcp://localhost:0" discoveryUri="multicast://default" />
+        </amq:transportConnectors>
+    </amq:broker>
+
+    <amq:connectionFactory id="amqConnectionFactory" brokerURL="vm://localhost?broker.useJmx=false" />
+
+    <bean id="jmsConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <constructor-arg ref="amqConnectionFactory" />
+        <property name="sessionCacheSize" value="1" />
+    </bean>
+
+</beans>
