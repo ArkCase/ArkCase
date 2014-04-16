@@ -332,6 +332,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <forkMode>pertest</forkMode>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

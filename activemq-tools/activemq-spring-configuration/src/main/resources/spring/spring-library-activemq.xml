@@ -11,13 +11,9 @@
     <!-- ActiveMQ Configuration                                                     -->
     <!--*************************************************************************** -->
 
-    <amq:broker useJmx="false" persistent="true">
-        <amq:managementContext>
-            <amq:managementContext connectorHost="localhost" createConnector="false" />
-        </amq:managementContext>
-
+    <amq:broker id="broker" useJmx="false" persistent="true" >
         <amq:persistenceAdapter>
-            <amq:kahaDB directory="${user.home}/.acm/activemq"/>
+            <amq:kahaDB directory="${user.home}/.acm/activemq" />
         </amq:persistenceAdapter>
         <amq:systemUsage>
             <amq:systemUsage>
@@ -33,15 +29,15 @@
             </amq:systemUsage>
         </amq:systemUsage>
         <amq:transportConnectors>
-            <amq:transportConnector uri="tcp://localhost:0" discoveryUri="multicast://default" />
+            <amq:transportConnector uri="vm://localhost" />
         </amq:transportConnectors>
     </amq:broker>
 
-    <amq:connectionFactory id="amqConnectionFactory" brokerURL="vm://localhost?broker.useJmx=false" />
+    <amq:connectionFactory id="amqConnectionFactory" brokerURL="vm://localhost" />
 
-    <bean id="jmsConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
-        <constructor-arg ref="amqConnectionFactory" />
-        <property name="sessionCacheSize" value="1" />
+    <bean id="jmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+          destroy-method="stop" depends-on="broker">
+        <property name="connectionFactory" ref="amqConnectionFactory"/>
     </bean>
 
 </beans>
