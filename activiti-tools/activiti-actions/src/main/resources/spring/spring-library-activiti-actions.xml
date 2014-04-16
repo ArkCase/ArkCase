@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="startBusinessProcessAction" class="com.armedia.acm.event.AcmAction">
+        <property name="actionId" value="START_BUSINESS_PROCESS"/>
+        <property name="actionName" value="Start Business Process"/>
+        <property name="targetMuleEndpoint" value="jms://startBusinessProcessQueue"/>
+        <property name="parameters">
+            <list>
+                <value>processDefinitionKey</value>
+            </list>
+        </property>
+
+    </bean>
+
+</beans>
