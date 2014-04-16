@@ -22,4 +22,3 @@
         <p>Hello, ${sessionScope.acm_username}!</p>
     </jsp:body>
 </t:layout>
-
