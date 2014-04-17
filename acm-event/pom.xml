@@ -13,11 +13,21 @@
     <description>Provides the base class to use for all ACM events.</description>
 
     <dependencies>
-        <!-- spring -->
+        <!-- acm -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <groupId>com.armedia.acm.spring-tools</groupId>
+            <artifactId>acm-spring-tools-context-holder</artifactId>
+            <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.mule-tools</groupId>
+            <artifactId>mule-context-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+
+
+
     </dependencies>
 
 

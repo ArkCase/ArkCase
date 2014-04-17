@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.9.0.xsd">
+
+
+    <!--*************************************************************************** -->
+    <!-- ActiveMQ Configuration                                                     -->
+    <!--*************************************************************************** -->
+
+    <amq:broker id="broker" useJmx="false" persistent="true" >
+        <amq:persistenceAdapter>
+            <amq:kahaDB directory="${user.home}/.acm/activemq" />
+        </amq:persistenceAdapter>
+        <amq:systemUsage>
+            <amq:systemUsage>
+                <amq:memoryUsage>
+                    <amq:memoryUsage limit="20 mb"/>
+                </amq:memoryUsage>
+                <amq:storeUsage>
+                    <amq:storeUsage limit="128 mb"/>
+                </amq:storeUsage>
+                <amq:tempUsage>
+                    <amq:tempUsage limit="128 mb"/>
+                </amq:tempUsage>
+            </amq:systemUsage>
+        </amq:systemUsage>
+        <amq:transportConnectors>
+            <amq:transportConnector uri="vm://localhost" />
+        </amq:transportConnectors>
+    </amq:broker>
+
+    <amq:connectionFactory id="amqConnectionFactory" brokerURL="vm://localhost" />
+
+    <bean id="jmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+          destroy-method="stop" depends-on="broker">
+        <property name="connectionFactory" ref="amqConnectionFactory"/>
+    </bean>
+
+</beans>

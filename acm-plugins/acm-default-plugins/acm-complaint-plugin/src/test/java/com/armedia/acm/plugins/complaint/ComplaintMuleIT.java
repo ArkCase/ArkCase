@@ -21,7 +21,10 @@ import static org.junit.Assert.*;
         "/spring/spring-library-complaint-plugin-test.xml",
         "/spring/spring-library-complaint.xml",
         "/spring/spring-library-mule-context-manager.xml",
-        "/spring/spring-library-person.xml"})
+        "/spring/spring-library-person.xml",
+        "/spring/spring-library-activiti-actions.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-activiti-configuration.xml"})
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class ComplaintMuleIT
 {
