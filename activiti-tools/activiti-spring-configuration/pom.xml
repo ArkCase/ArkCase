@@ -25,6 +25,11 @@
             <artifactId>arm-folder-watcher</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.spring-tools</groupId>
+            <artifactId>spring-classpath-copier</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- activiti -->
         <dependency>

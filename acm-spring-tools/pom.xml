@@ -15,6 +15,7 @@
     <modules>
         <module>acm-spring-tools-context-holder</module>
         <module>acm-spring-tools-data-source</module>
+        <module>spring-classpath-copier</module>
     </modules>
 
 

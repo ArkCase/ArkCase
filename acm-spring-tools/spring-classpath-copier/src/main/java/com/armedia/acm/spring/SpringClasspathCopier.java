@@ -1,5 +1,4 @@
-package com.armedia.acm.activiti;
-
+package com.armedia.acm.spring;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,34 +13,45 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class BpmnClasspathDeployer implements ApplicationContextAware
+/**
+ * Created by armdev on 4/17/14.
+ */
+public class SpringClasspathCopier implements ApplicationContextAware
 {
     private File deployFolder;
 
-    private String activitiProcessDefinitionPattern;
+    private String resourcePattern;
 
     private PathMatchingResourcePatternResolver resolver;
 
     private transient Logger log = LoggerFactory.getLogger(getClass());
-
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
     {
         if ( log.isInfoEnabled() )
         {
-            log.info("Scanning for Activiti process definitions");
+            log.info("Scanning for resources matching '" + getResourcePattern() + "'");
         }
 
         try
         {
-            Resource[] processDefinitions = getResolver().getResources(getActivitiProcessDefinitionPattern());
-            for ( Resource processDefinition : processDefinitions )
+            if ( ! getDeployFolder().exists() )
             {
-                String resourceFilename = processDefinition.getFilename();
                 if ( log.isInfoEnabled() )
                 {
-                    log.info("Found activiti resource '" + resourceFilename + "'");
+                    log.info("Creating folder '" + getDeployFolder().getCanonicalPath() + "'");
+                }
+                getDeployFolder().mkdirs();
+            }
+
+            Resource[] matchingResources = getResolver().getResources(getResourcePattern());
+            for ( Resource resource : matchingResources )
+            {
+                String resourceFilename = resource.getFilename();
+                if ( log.isInfoEnabled() )
+                {
+                    log.info("Found resource '" + resourceFilename + "'");
                 }
 
                 File target = new File(getDeployFolder() + File.separator + resourceFilename);
@@ -52,29 +62,18 @@ public class BpmnClasspathDeployer implements ApplicationContextAware
                         log.debug("Copying resource '" + resourceFilename + "' to deploy folder.");
                     }
                     // NOTE: FileCopyUtils will close both the input and the output streams.
-                    FileCopyUtils.copy(processDefinition.getInputStream(), new FileOutputStream(target));
+                    FileCopyUtils.copy(resource.getInputStream(), new FileOutputStream(target));
                 }
             }
         } catch (IOException e)
         {
-            log.error("Could not copy process definition: " + e.getMessage(), e);
+            log.error("Could not copy resource: " + e.getMessage(), e);
         }
 
         if ( log.isInfoEnabled() )
         {
-            log.info("Done scanning for Activiti process definitions");
+            log.info("Done scanning for resources matching " + getResourcePattern() + "'");
         }
-
-    }
-
-    public String getActivitiProcessDefinitionPattern()
-    {
-        return activitiProcessDefinitionPattern;
-    }
-
-    public void setActivitiProcessDefinitionPattern(String activitiProcessDefinitionPattern)
-    {
-        this.activitiProcessDefinitionPattern = activitiProcessDefinitionPattern;
     }
 
     public File getDeployFolder()
@@ -85,6 +84,16 @@ public class BpmnClasspathDeployer implements ApplicationContextAware
     public void setDeployFolder(File deployFolder)
     {
         this.deployFolder = deployFolder;
+    }
+
+    public String getResourcePattern()
+    {
+        return resourcePattern;
+    }
+
+    public void setResourcePattern(String resourcePattern)
+    {
+        this.resourcePattern = resourcePattern;
     }
 
     public PathMatchingResourcePatternResolver getResolver()

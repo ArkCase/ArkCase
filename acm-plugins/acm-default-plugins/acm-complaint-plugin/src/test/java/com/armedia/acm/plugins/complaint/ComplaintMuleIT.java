@@ -24,7 +24,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-person.xml",
         "/spring/spring-library-activiti-actions.xml",
         "/spring/spring-library-activemq.xml",
-        "/spring/spring-library-activiti-configuration.xml"})
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-folder-watcher.xml"})
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class ComplaintMuleIT
 {
@@ -42,12 +43,17 @@ public class ComplaintMuleIT
     {
         Complaint complaint = complaintFactory.complaint();
 
+        // complaint number should be set by the flow
+        complaint.setComplaintNumber(null);
+
         Authentication auth = new UsernamePasswordAuthenticationToken("testUser", "testUser");
 
         Complaint saved = saveComplaintTransaction.saveComplaint(complaint, auth);
 
         assertNotNull(saved.getComplaintId());
+        assertNotNull(saved.getComplaintNumber());
 
         log.info("New complaint id: " + saved.getComplaintId());
+        log.info("New complaint number: " + saved.getComplaintNumber());
     }
 }

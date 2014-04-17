@@ -32,8 +32,8 @@
 
     <bean id="activitiPathMatchingResolver" class="org.springframework.core.io.support.PathMatchingResourcePatternResolver"/>
 
-    <bean id="activitiDeployer" class="com.armedia.acm.activiti.BpmnClasspathDeployer">
-        <property name="activitiProcessDefinitionPattern" ref="activitiResourceExpression"/>
+    <bean id="activitiDeployer" class="com.armedia.acm.spring.SpringClasspathCopier">
+        <property name="resourcePattern" ref="activitiResourceExpression"/>
         <property name="deployFolder" ref="deployFolder"/>
         <property name="resolver" ref="activitiPathMatchingResolver"/>
     </bean>

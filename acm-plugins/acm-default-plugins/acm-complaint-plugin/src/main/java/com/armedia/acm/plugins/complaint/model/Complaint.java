@@ -38,7 +38,7 @@ public class Complaint implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long complaintId;
 
-    @Column(name = "cm_complaint_number")
+    @Column(name = "cm_complaint_number", insertable = true, updatable = false)
     private String complaintNumber;
 
     @Column(name = "cm_complaint_type")
