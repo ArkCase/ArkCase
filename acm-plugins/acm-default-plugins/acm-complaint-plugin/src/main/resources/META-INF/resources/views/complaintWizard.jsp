@@ -16,7 +16,8 @@
                   enctype="application/x-www-form-urlencoded">
 
                 <label for="complaintNumber">Complaint Number: </label>
-                <input type="text" name="complaintNumber" id="complaintNumber" value="${complaint.complaintNumber}"/>
+                <!-- complaint number is set automatically so should not be submitted with the form -->
+                <div id="complaintNumber">${complaint.complaintNumber}</div>
                 <br/>
                 <label for="complaintType">Complaint Type: </label>
                 <input type="text" name="complaintType" id="complaintType" value="${complaint.complaintType}"/>

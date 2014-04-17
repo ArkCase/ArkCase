@@ -63,6 +63,11 @@
             <artifactId>activemq-spring-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.drools-tools</groupId>
+            <artifactId>drools-rule-monitor</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- date time -->
         <dependency>

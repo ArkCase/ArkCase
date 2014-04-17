@@ -76,6 +76,7 @@ public class SaveComplaintController
         } catch ( MuleException | TransactionException e)
         {
             log.error("Could not save complaint: " + e.getMessage(), e);
+            // TODO: return the current complaint from the db, since the update failed
             retval.addObject("complaint", complaint);
             retval.addObject("succeeded", false);
             retval.addObject("errors", Arrays.asList(new ObjectError("complaint", e.getMessage())));

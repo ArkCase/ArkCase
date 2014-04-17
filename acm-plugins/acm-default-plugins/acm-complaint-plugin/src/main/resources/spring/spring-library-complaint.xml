@@ -33,4 +33,8 @@
 
     <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher"/>
 
+    <bean id="saveComplaintBusinessRule" class="com.armedia.acm.plugins.complaint.service.SaveComplaintBusinessRule">
+        <property name="ruleSpreadsheetFilename" value="drools-complaint-number-rules.xlsx"/>
+    </bean>
+
 </beans>

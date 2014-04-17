@@ -88,6 +88,16 @@
             <artifactId>activemq-spring-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.drools-tools</groupId>
+            <artifactId>drools-rule-monitor</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.spring-tools</groupId>
+            <artifactId>spring-classpath-copier</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>

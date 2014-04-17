@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>drools-tools</artifactId>
+        <groupId>com.armedia.acm</groupId>
+        <version>1.5-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.armedia.acm.drools-tools</groupId>
+    <artifactId>drools-rule-monitor</artifactId>
+    <name>Drools Tools: Business Rule Monitor</name>
+    <description>Parent class to monitor a Drools decision table for changes and auto-reload
+        rules when the spreadsheet changes.  This library also defines a classpath deployer that
+        copies Drools decision tables from the classpath into the application working folder.
+    </description>
+
+    <dependencies>
+        <!-- acm -->
+        <dependency>
+            <groupId>com.armedia.acm.arm-file-tools</groupId>
+            <artifactId>arm-folder-watcher</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.spring-tools</groupId>
+            <artifactId>spring-classpath-copier</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <!-- business rules -->
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-decisiontables</artifactId>
+        </dependency>
+
+        <!-- spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+    </dependencies>
+
+
+</project>

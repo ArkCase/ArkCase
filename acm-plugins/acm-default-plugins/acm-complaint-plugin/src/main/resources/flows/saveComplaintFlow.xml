@@ -39,6 +39,10 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
             <spring-object bean="acmComplaintDao"/>
         </component>
 
+        <component doc:name="Save Complaint Business Rules">
+            <spring-object bean="saveComplaintBusinessRule"/>
+        </component>
+
         <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.plugins.complaint" message="Exception saving: #[exception.message]"/>
             <set-property propertyName="saveException" value="#[exception]"/>
