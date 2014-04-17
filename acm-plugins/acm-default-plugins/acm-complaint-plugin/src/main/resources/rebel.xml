@@ -6,11 +6,11 @@
 		</dir>
 	</classpath>
 
-    <!--<web>-->
-        <!--<link target="/">-->
-            <!--<dir name="${workspace.home}/ACM3/acm-plugins/acm-default-plugins/acm-complaint-plugin/src/main/resources/META-INF/resources">-->
-            <!--</dir>-->
-        <!--</link>-->
-    <!--</web>-->
+    <web>
+        <link target="/">
+            <dir name="${workspace.home}/ACM3/acm-plugins/acm-default-plugins/acm-complaint-plugin/src/main/resources/META-INF/resources">
+            </dir>
+        </link>
+    </web>
 
 </application>
