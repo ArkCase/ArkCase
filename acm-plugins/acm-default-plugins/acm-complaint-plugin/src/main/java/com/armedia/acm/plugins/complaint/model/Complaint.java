@@ -82,6 +82,18 @@ public class Complaint implements Serializable
     @JoinColumn(name = "cm_originator_id")
     private Person originator;
 
+    /**
+     * This field is only used when the complaint is created. Usually it will be null.  Use the ecmFolderId
+     * to get the CMIS object ID of the complaint folder.
+     */
+    private String ecmFolderPath;
+
+    /**
+     * CMIS object ID of the folder where the complaint's attachments/content files are stored.
+     */
+    private String ecmFolderId;
+
+
 
 
     public Complaint()
@@ -285,4 +297,23 @@ public class Complaint implements Serializable
         this.originator = originator;
     }
 
+    public String getEcmFolderPath()
+    {
+        return ecmFolderPath;
+    }
+
+    public void setEcmFolderPath(String ecmFolderPath)
+    {
+        this.ecmFolderPath = ecmFolderPath;
+    }
+
+    public String getEcmFolderId()
+    {
+        return ecmFolderId;
+    }
+
+    public void setEcmFolderId(String ecmFolderId)
+    {
+        this.ecmFolderId = ecmFolderId;
+    }
 }
