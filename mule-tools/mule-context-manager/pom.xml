@@ -29,10 +29,6 @@
             <artifactId>mule-module-annotations</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-jms</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-cmis</artifactId>
         </dependency>

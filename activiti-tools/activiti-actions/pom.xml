@@ -26,11 +26,6 @@
             <artifactId>activiti-spring-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.mule-tools</groupId>
-            <artifactId>mule-context-manager</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
 
         <!-- spring -->
         <dependency>

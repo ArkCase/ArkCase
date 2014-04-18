@@ -24,6 +24,11 @@
             <artifactId>mule-context-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.activemq-tools</groupId>
+            <artifactId>activemq-spring-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
 
 
