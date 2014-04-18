@@ -51,7 +51,7 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     {
         unit = new ConfigFileWatcher();
         unit.setIgnoreFolders(Arrays.asList("/ignoreFolder"));
-        unit.setBaseFolderPath("home" + fileSeparator + "acm");
+        unit.setBaseFolderPath("home" + "/" + "acm");
     }
 
     @Test
@@ -80,8 +80,8 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     public void raiseEvent_ignoreFilesFromIgnoreFolders() throws Exception
     {
         Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest("file:/" + unit.getBaseFolderPath() + fileSeparator +
-                        "ignoreFolder" + fileSeparator + "file.txt");
+                setupEventTest("file:/" + unit.getBaseFolderPath() + "/" +
+                        "ignoreFolder" + "/" + "file.txt");
 
         unit.fileCreated(mockFileChangeEvent);
 
