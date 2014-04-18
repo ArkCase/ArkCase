@@ -2,12 +2,14 @@
 
 <mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
       xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       version="CE-3.4.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
 
 
     <flow name="saveComplaint" doc:name="Save Complaint">
@@ -42,6 +44,16 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
         <component doc:name="Save Complaint Business Rules">
             <spring-object bean="saveComplaintBusinessRule"/>
         </component>
+
+        <choice>
+            <when expression="#[payload.ecmFolderPath != null]">
+                <enricher  source="#[message.payload]" target="#[flowVars['cmisFolder']]">
+                    <cmis:get-or-create-folder-by-path folderPath="#[payload.ecmFolderPath]"/>
+                </enricher>
+
+            </when>
+        </choice>
+
 
         <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.plugins.complaint" message="Exception saving: #[exception.message]"/>

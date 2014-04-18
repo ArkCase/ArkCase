@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="cmisPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="cmisProperties"/>
+    </bean>
+
+
+    <bean id="cmisProperties"
+                 class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/cmis.properties"/>
+        <property name="ignoreResourceNotFound" value="false"/>
+        <property name="localOverride" value="false"/>
+        <!-- following properties are the default cmis mappings.  The properties file
+             should include all of these properties.  In practice there should always be a
+             specific properties file; these defaults are here for reference, not to be used. -->
+        <property name="properties">
+            <props>
+                <prop key="cmis.baseUrl">http://localhost:8080/alfresco/cmisatom</prop>
+                <prop key="cmis.username">admin</prop>
+                <prop key="cmis.password">AdM!n</prop>
+                <prop key="cmis.useAlfrescoExtension">true</prop>
+                <!-- endpoint is either ATOM or SOAP -->
+                <prop key="cmis.endpoint">ATOM</prop>
+                <prop key="cmis.maxIdle">10</prop>
+                <prop key="cmis.maxActive">10</prop>
+                <prop key="cmis.maxWait">120</prop>
+                <prop key="cmis.minEvictionMillis">60000</prop>
+                <prop key="cmis.evictionCheckIntervalMillis">30000</prop>
+                <prop key="cmis.reconnectCount">5</prop>
+                <prop key="cmis.reconnectFrequency">1000</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>

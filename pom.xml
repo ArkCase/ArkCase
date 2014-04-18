@@ -212,6 +212,7 @@
         <module>acm-data</module>
         <module>activemq-tools</module>
         <module>drools-tools</module>
+        <module>cmis-tools</module>
     </modules>
 
     <scm>
