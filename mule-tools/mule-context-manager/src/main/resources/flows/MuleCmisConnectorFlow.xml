@@ -1,0 +1,72 @@
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xsi:schemaLocation="
+               http://www.mulesoft.org/schema/mule/core
+               http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+               http://www.mulesoft.org/schema/mule/cmis
+               http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <spring:beans>
+        <spring:bean id="cmisPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <spring:property name="properties" ref="cmisProperties"/>
+            <!--&lt;!&ndash; placeholders changed due to maven using same type &ndash;&gt;-->
+            <!--<spring:property name="placeholderPrefix" value="$["/>-->
+            <!--<spring:property name="placeholderSuffix" value="]"/>-->
+        </spring:bean>
+
+
+        <spring:bean id="cmisProperties"
+              class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+            <!-- note: must leave "file:" at the start of the file name for spring
+            to be able to read the file; otherwise it will try to read from the
+            classpath -->
+            <spring:property name="location" value="file:${user.home}/.acm/cmis.properties"/>
+            <spring:property name="ignoreResourceNotFound" value="true"/>
+            <spring:property name="localOverride" value="false"/>
+            <!-- following properties are the default cmis mappings.  The properties file
+                 should include all of these properties.  In practice there should always be a
+                 specific properties file; these defaults are here for reference, not to be used. -->
+            <spring:property name="properties">
+                <spring:props>
+                    <spring:prop key="cmis.baseUrl">http://localhost:8080/alfresco/cmisatom</spring:prop>
+                    <spring:prop key="cmis.username">admin</spring:prop>
+                    <spring:prop key="cmis.password">AdM!n</spring:prop>
+                    <spring:prop key="cmis.useAlfrescoExtension">true</spring:prop>
+                    <!-- endpoint is either ATOM or SOAP -->
+                    <spring:prop key="cmis.endpoint">ATOM</spring:prop>
+                    <spring:prop key="cmis.maxIdle">10</spring:prop>
+                    <spring:prop key="cmis.maxActive">10</spring:prop>
+                    <spring:prop key="cmis.maxWait">120</spring:prop>
+                    <spring:prop key="cmis.minEvictionMillis">60000</spring:prop>
+                    <spring:prop key="cmis.evictionCheckIntervalMillis">30000</spring:prop>
+                    <spring:prop key="cmis.reconnectCount">5</spring:prop>
+                    <spring:prop key="cmis.reconnectFrequency">1000</spring:prop>
+                </spring:props>
+            </spring:property>
+        </spring:bean>
+    </spring:beans>
+
+    <cmis:config
+            name="acmCmisConnector"
+            baseUrl="${cmis.baseUrl}"
+            username="${cmis.username}"
+            password="${cmis.password}"
+            useAlfrescoExtension="${cmis.useAlfrescoExtension}"
+            endpoint="${cmis.endpoint}">
+
+        <!-- somehow we can't use a property for exhausted action. -->
+        <cmis:connection-pooling-profile
+                maxActive="${cmis.maxActive}"
+                maxIdle="${cmis.maxIdle}"
+                exhaustedAction="WHEN_EXHAUSTED_GROW"
+                maxWait="${cmis.maxWait}"
+                minEvictionMillis="${cmis.minEvictionMillis}"
+                evictionCheckIntervalMillis="${cmis.evictionCheckIntervalMillis}"/>
+        <reconnect count="${cmis.reconnectCount}" frequency="${cmis.reconnectFrequency}"/>
+
+    </cmis:config>
+
+</mule>

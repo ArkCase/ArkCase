@@ -58,6 +58,7 @@
         <maven-jgitflow-plugin.version>1.0-alpha27</maven-jgitflow-plugin.version>
 
         <mule.version>3.4.0</mule.version>
+        <mule-cmis-connector.version>1.13</mule-cmis-connector.version>
         <oracle.jdbc.version>6</oracle.jdbc.version>
         <org.json.version>20140107</org.json.version>
         <rome.version>1.0</rome.version>
@@ -704,6 +705,11 @@
                 <groupId>org.mule.modules</groupId>
                 <artifactId>mule-module-annotations</artifactId>
                 <version>${mule.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-cmis</artifactId>
+                <version>${mule-cmis-connector.version}</version>
             </dependency>
             <!-- end of mule -->
 
