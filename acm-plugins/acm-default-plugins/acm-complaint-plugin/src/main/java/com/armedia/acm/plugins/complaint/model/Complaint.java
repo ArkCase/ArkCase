@@ -19,6 +19,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -86,11 +87,13 @@ public class Complaint implements Serializable
      * This field is only used when the complaint is created. Usually it will be null.  Use the ecmFolderId
      * to get the CMIS object ID of the complaint folder.
      */
+    @Transient
     private String ecmFolderPath;
 
     /**
      * CMIS object ID of the folder where the complaint's attachments/content files are stored.
      */
+    @Transient
     private String ecmFolderId;
 
 
