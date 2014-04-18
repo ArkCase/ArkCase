@@ -21,9 +21,7 @@
         <section class="hbox stretch">
             <%@include file="/WEB-INF/tagf/sidebar.tagf"%>
 
-            <div id="divContent">
-                <jsp:doBody/>
-            </div>
+            <jsp:doBody/>
 
         </section>
     </section>

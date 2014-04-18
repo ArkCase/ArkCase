@@ -19,6 +19,8 @@
     </jsp:attribute>
 
     <jsp:body>
-        <p>Hello, ${sessionScope.acm_username}!</p>
+        <div id="divContent">
+            <p>Hello, ${sessionScope.acm_username}!</p>
+        </div>
     </jsp:body>
 </t:layout>
