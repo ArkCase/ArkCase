@@ -8,6 +8,18 @@ describe("ACM", function()
     beforeEach(function() {
     });
 
+    it("ACM.Initialize", function() {
+        spyOn(ACM.Dispatcher, "initialize");
+        spyOn(ACM.Ajax,       "initialize");
+        spyOn(ACM.Object,     "initialize");
+        spyOn(ACM.Validation, "initialize");
+        ACM.initialize();
+        expect(ACM.Dispatcher.initialize).toHaveBeenCalled();
+        expect(ACM.Ajax      .initialize).toHaveBeenCalled();
+        expect(ACM.Object    .initialize).toHaveBeenCalled();
+        expect(ACM.Validation.initialize).toHaveBeenCalled();
+    });
+
     it("Test ACM.isEmpty() function", function() {
         var varNotInitialized;
         var varObject = ACM;
@@ -49,8 +61,8 @@ describe("ACM", function()
         var varNotInitialized;
         expect(ACM.goodValue("some value")).toBe("some value");
         expect(ACM.goodValue("some value",      "should not be")).toBe("some value");
-        expect(ACM.goodValue("",                "dont be null")) .toBe("dont be null");
-        expect(ACM.goodValue("",                ""))             .toBe("");    //really to allow empty string
+        expect(ACM.goodValue("",                "dont be empty")) .toBe("dont be empty");
+        expect(ACM.goodValue("",                ""))             .toBe("");    //empty string really allowed
         expect(ACM.goodValue(varNotInitialized, "good value"))   .toBe("good value");
 
         expect(ACM.goodValue(null, "string")).toBe("string");
@@ -58,7 +70,7 @@ describe("ACM", function()
         expect(ACM.goodValue(null, false))   .toBe(false);
         expect(ACM.goodValue(null, 123))     .toBe(123);
 
-        expect(ACM.goodValue(false, true))   .toBe(false);  //false is a good boolean value
+        expect(ACM.goodValue(false, true))   .toBe(false);  //false is a valid boolean value
         expect(ACM.goodValue(0,    123))     .toBe(0);      //0 is a valid number
     });
 
