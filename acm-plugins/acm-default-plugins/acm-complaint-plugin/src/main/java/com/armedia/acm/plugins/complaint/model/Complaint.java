@@ -93,7 +93,7 @@ public class Complaint implements Serializable
     /**
      * CMIS object ID of the folder where the complaint's attachments/content files are stored.
      */
-    @Transient
+    @Column(name = "cm_complaint_ecm_folder_id")
     private String ecmFolderId;
 
 
@@ -317,6 +317,10 @@ public class Complaint implements Serializable
 
     public void setEcmFolderId(String ecmFolderId)
     {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Set folder ID to '" + ecmFolderId + "'");
+        }
         this.ecmFolderId = ecmFolderId;
     }
 }
