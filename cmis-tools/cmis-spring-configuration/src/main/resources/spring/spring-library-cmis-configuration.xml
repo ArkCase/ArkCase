@@ -14,7 +14,7 @@
         to be able to read the file; otherwise it will try to read from the
         classpath -->
         <property name="location" value="file:${user.home}/.acm/cmis.properties"/>
-        <property name="ignoreResourceNotFound" value="false"/>
+        <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <!-- following properties are the default cmis mappings.  The properties file
              should include all of these properties.  In practice there should always be a
