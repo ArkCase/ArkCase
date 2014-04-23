@@ -5,7 +5,7 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>Complaints9 | ACM | Armedia Case Management</title>
+    <title>Complaints | ACM | Armedia Case Management</title>
     <script type="text/javascript">
         $(document).ready(function () {
             $('.complaintDetails').summernote({
@@ -54,29 +54,9 @@
     <!-- Summernote WYSIWYG -->
     <link rel="stylesheet" href="<c:url value='/resources/js/summernote/summernote.css'/>" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/resources/js/summernote/summernote.js'/>"></script>
-    <script>
-        //        $(document).ready(function() {
-        //            $('.complaintDetails').summernote({
-        //                height: 300
-        //            });
-        //        });
-    </script>
-
 
     <!-- Multi-Select Field WYSIWYG -->
-    <link rel="stylesheet" href="<c:url value='/resources/js/chosen/chosen.css'/>" type="text/css"/>
     <script type="text/javascript" charset="utf-8" src="<c:url value='/resources/js/chosen/chosen.js'/>"></script>
-    <script type="text/javascript">
-//        var config = {
-//            '.choose-security' : {},
-//            '.choose-approvers' : {},
-//            '.choose-collab' : {},
-//            '.choose-notifications' : {}
-//        }
-//        for (var selector in config) {
-//            $(selector).chosen(config[selector]);
-//        }
-    </script>
 </jsp:attribute>
 
 <jsp:body>
