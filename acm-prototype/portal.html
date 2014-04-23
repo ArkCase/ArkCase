@@ -151,34 +151,134 @@
               <div class="col-sm-12">
                 <div class="panel b-a">
                   <div class="row m-n">
-                    <div class="col-md-3 b-r"> <a href="#" class="block padder-v hover"> <span class="i-s i-s-2x pull-left m-r-sm"> <i class="i i-hexagon2 i-s-base text-danger hover-rotate"></i> <i class="i i-notice i-1x text-white"></i> </span> <span class="clear"> <span class="h3 block m-t-xs text-danger">2,000</span> <small class="text-muted text-u-c">New Complaints</small> </span> </a> </div>
-                    <div class="col-md-3 b-r"> <a href="#" class="block padder-v hover"> <span class="i-s i-s-2x pull-left m-r-sm"> <i class="i i-hexagon2 i-s-base text-success-lt hover-rotate"></i> <i class="i i-folder i-sm text-white"></i> </span> <span class="clear"> <span class="h3 block m-t-xs text-success">150</span> <small class="text-muted text-u-c">New Cases</small> </span> </a> </div>
-                    <div class="col-md-3 b-r"> <a href="#" class="block padder-v hover"> <span class="i-s i-s-2x pull-left m-r-sm"> <i class="i i-hexagon2 i-s-base text-info hover-rotate"></i> <i class="i i-checkmark i-sm text-white"></i> </span> <span class="clear"> <span class="h3 block m-t-xs text-info">25 <span class="text-sm"></span></span> <small class="text-muted text-u-c">New Tasks</small> </span> </a> </div>
-                    <div class="col-md-3"> <a href="#" class="block padder-v hover"> <span class="i-s i-s-2x pull-left m-r-sm"> <i class="i i-hexagon2 i-s-base text-primary hover-rotate"></i> <i class="i i-file i-sm text-white"></i> </span> <span class="clear"> <span class="h3 block m-t-xs text-primary">150</span> <small class="text-muted text-u-c">New Documents</small> </span> </a> </div>
+                    <div class="col-md-3 b-r"> <a href="complaints.html" class="block padder-v hover"> <span class="i-s i-s-2x pull-left m-r-sm"> <i class="i i-hexagon2 i-s-base text-danger hover-rotate"></i> <i class="i i-notice i-1x text-white"></i> </span> <span class="clear"> <span class="h3 block m-t-xs text-danger">2,000</span> <small class="text-muted text-u-c">New Complaints</small> </span> </a> </div>
+                    <div class="col-md-3 b-r"> <a href="cases.hmtl" class="block padder-v hover"> <span class="i-s i-s-2x pull-left m-r-sm"> <i class="i i-hexagon2 i-s-base text-success-lt hover-rotate"></i> <i class="i i-folder i-sm text-white"></i> </span> <span class="clear"> <span class="h3 block m-t-xs text-success">150</span> <small class="text-muted text-u-c">New Cases</small> </span> </a> </div>
+                    <div class="col-md-3 b-r"> <a href="documents.html" class="block padder-v hover"> <span class="i-s i-s-2x pull-left m-r-sm"> <i class="i i-hexagon2 i-s-base text-info hover-rotate"></i> <i class="i i-checkmark i-sm text-white"></i> </span> <span class="clear"> <span class="h3 block m-t-xs text-info">25 <span class="text-sm"></span></span> <small class="text-muted text-u-c">New Tasks</small> </span> </a> </div>
+                    <div class="col-md-3"> <a href="tasks.html" class="block padder-v hover"> <span class="i-s i-s-2x pull-left m-r-sm"> <i class="i i-hexagon2 i-s-base text-primary hover-rotate"></i> <i class="i i-file i-sm text-white"></i> </span> <span class="clear"> <span class="h3 block m-t-xs text-primary">150</span> <small class="text-muted text-u-c">New Documents</small> </span> </a> </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <section class="panel b-a">
-                  <div class="panel-heading b-b"> <span class="badge pull-right">12</span> <a href="#" class="font-bold">Complaints Assigned To You</a> </div>
-                  <div class="panel-body"> test </div>
+                  <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="complaints.html" class="font-bold">My Complaints</a> </div>
+                  <div class="panel-body max-200 no-padder">
+                                        <table class="table table-striped th-sortable table-hover">
+                                          <thead>
+                                            <tr>
+                                              <th>ID</th>
+                                              <th>Title</th>
+                                              <th>Priority</th>
+                                              <th>Due</th>
+                                              <th>Status</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr class="odd gradeA">
+                                              <td>[ID]</td>
+                                              <td>[Title]</td>
+                                              <td>[Priority]</td>
+                                              <td>[Due]</td>
+                                              <td>[Status]</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
                 </section>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <section class="panel b-a">
-                  <div class="panel-heading b-b"> <span class="badge pull-right">12</span> <a href="#" class="font-bold">Cases Assigned To You</a> </div>
-                  <div class="panel-body"> test </div>
+                  <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="cases.html" class="font-bold">My Cases</a> </div>
+                  <div class="panel-body max-200 no-padder">
+                                        <table class="table table-striped th-sortable table-hover">
+                                          <thead>
+                                            <tr>
+                                              <th>ID</th>
+                                              <th>Title</th>
+                                              <th>Priority</th>
+                                              <th>Due</th>
+                                              <th>Status</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr class="odd gradeA">
+                                              <td>[ID]</td>
+                                              <td>[Title]</td>
+                                              <td>[Priority]</td>
+                                              <td>[Due]</td>
+                                              <td>[Status]</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
                 </section>
               </div>
-              <div class="col-md-4">
-                <section class="panel b-a">
-                  <div class="panel-heading b-b"> <span class="badge pull-right">12</span> <a href="#" class="font-bold">Tasks Assigned To You</a> </div>
-                  <div class="panel-body"> test </div>
-                </section>
-              </div>
+          
             </div>
+            
+            
+            
+             <div class="row">
+              <div class="col-md-6">
+                <section class="panel b-a">
+                  <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="documents.html" class="font-bold">My Documents</a> </div>
+                  <div class="panel-body max-200 no-padder">
+                                        <table class="table table-striped th-sortable table-hover">
+                                          <thead>
+                                            <tr>
+                                              <th>ID</th>
+                                              <th>Title</th>
+                                              <th>Priority</th>
+                                              <th>Due</th>
+                                              <th>Status</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr class="odd gradeA">
+                                              <td>[ID]</td>
+                                              <td>[Title]</td>
+                                              <td>[Priority]</td>
+                                              <td>[Due]</td>
+                                              <td>[Status]</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                </section>
+              </div>
+              <div class="col-md-6">
+                <section class="panel b-a">
+                  <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="tasks.html" class="font-bold">My Tasks</a> </div>
+                  <div class="panel-body max-200 no-padder">
+                                        <table class="table table-striped th-sortable table-hover">
+                                          <thead>
+                                            <tr>
+                                              <th>ID</th>
+                                              <th>Title</th>
+                                              <th>Priority</th>
+                                              <th>Due</th>
+                                              <th>Status</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr class="odd gradeA">
+                                              <td>[ID]</td>
+                                              <td>[Title]</td>
+                                              <td>[Priority]</td>
+                                              <td>[Due]</td>
+                                              <td>[Status]</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                </section>
+              </div>
+         
+            </div>
+            
+            
+            
             <div class="row bg-light dk m-b">
               <div class="col-md-6 dker">
                 <section>
