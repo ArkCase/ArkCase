@@ -29,5 +29,6 @@
 
 <!-- jquery must be first -->
 <script type="text/javascript" src="<c:url value='/resources/js/jquery-1.11.0.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-ui-1.10.3.custom.min.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/bootstrap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/issueCollector/jiraIssueCollector.js'/>" ></script>

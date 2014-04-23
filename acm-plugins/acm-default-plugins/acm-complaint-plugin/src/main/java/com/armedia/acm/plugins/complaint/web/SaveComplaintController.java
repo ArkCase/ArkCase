@@ -32,13 +32,15 @@ public class SaveComplaintController
     public ModelAndView complaint()
     {
         ModelAndView retval = new ModelAndView();
-        retval.setViewName("complaintWizard");
+        retval.setViewName("complaint");
         retval.addObject("complaint", new Complaint());
 
         return retval;
     }
 
-    @RequestMapping(method= RequestMethod.POST)
+    //jwu: for quick testing; will change back to POST
+    //@RequestMapping(value = "/wizard", method = RequestMethod.POST)
+    @RequestMapping(value = "/wizard", method = RequestMethod.GET)
     public ModelAndView saveComplaint(
             @Valid Complaint complaint,
             BindingResult bindingResult,

@@ -8,372 +8,308 @@
     <title>Complaints | ACM | Armedia Case Management</title>
     <script type="text/javascript">
         $(document).ready(function () {
-            Complaint.initialize();
+            $('.complaintDetails').summernote({
+                height: 300
+            });
+
+
+            var config = {
+                '.choose-security' : {},
+                '.choose-approvers' : {},
+                '.choose-collab' : {},
+                '.choose-notifications' : {}
+            }
+            for (var selector in config) {
+                $(selector).chosen(config[selector]);
+            }
+
+
+            ComplaintWizard.initialize();
         });
     </script>
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaintObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaintEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaintPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaintRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaintService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaintCallback.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizard.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardObject.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardEvent.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardPage.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardCallback.js'/>"></script>
 
-    <script src="<c:url value='/resources/js/app.js'/>"></script>
-    <script src="<c:url value='/resources/js/slimscroll/jquery.slimscroll.min.js'/>"></script>
-    <script src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/datepicker/bootstrap-datepicker.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/slimscroll/jquery.slimscroll.min.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/parsley/parsley.min.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/wizard/jquery.bootstrap.wizard.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/wizard/demo.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+
+    <!-- File Manager -->
+    <script type="text/javascript" src="<c:url value='/resources/js/upload/js/jquery.fileupload.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/upload/js/jquery.iframe-transport.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/upload/js/file-uploads-custom.js'/>"></script>
+
+    <!-- Summernote WYSIWYG -->
+    <link rel="stylesheet" href="<c:url value='/resources/js/summernote/summernote.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/js/summernote/summernote.js'/>"></script>
+
+    <!-- Multi-Select Field WYSIWYG -->
+    <script type="text/javascript" charset="utf-8" src="<c:url value='/resources/js/chosen/chosen.js'/>"></script>
 </jsp:attribute>
 
 <jsp:body>
 <section id="content">
 <section class="vbox">
-<section class="scrollable">
-
-
-<section class="hbox stretch">
-
-<aside class="aside-lg" id="email-list">
-    <section class="vbox">
-        <header class="dker header clearfix">
-
-            <h3 class="m-b-xs text-black pull-left">Complaints</h3>
-
-
-
-            <div class="btn-toolbar">
-
-
-                <div class="btn-group inline select pull-right">
-                    <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown">
-                        <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu text-left text-sm">
-                        <li><a href="#">Sort Date Ascending</a></li>
-                        <li><a href="#">Sort Date Descending</a></li>
-                        <li><a href="#">Sort Title Ascending</a></li>
-                        <li><a href="#">Sort Title Ascending</a></li>
-                    </ul>
-                </div>
-
-                <div class="btn-group select pull-right">
-                    <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown">
-                        <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu text-left text-sm">
-                        <li><a href="#">Filter 1</a></li>
-                        <li><a href="#">Filter 2</a></li>
-                        <li><a href="#">Filter 3</a></li>
-                        <li><a href="#">Filter 4</a></li>
-                    </ul>
-                </div>
-
-
-            </div>
-        </header>
-        <section class="scrollable hover">
-            <ul class="list-group auto no-radius m-b-none m-t-n-xxs list-group-lg">
-                <li class="list-group-item active">
-                    <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="resources/images/a0.png" class="img-circle">
-                    </a>
-                    <a href="#" class="clear text-ellipsis">
-                        <small class="pull-right">[Date Created]</small>
-                        <strong class="block">[Title]</strong>
-                        <small>[Description]</small>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="resources/images/a1.png" class="img-circle">
-                    </a>
-                    <a href="#" class="clear text-ellipsis">
-                        <small class="pull-right">[Date Created]</small>
-                        <strong class="block">[Title]</strong>
-                        <small>[Description]</small>
-                    </a>
-                </li>
-
-                <li class="list-group-item">
-                    <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="resources/images/a1.png" class="img-circle">
-                    </a>
-                    <a href="#" class="clear text-ellipsis">
-                        <small class="pull-right">[Date Created]</small>
-                        <strong class="block">[Title]</strong>
-                        <small>[Description]</small>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="resources/images/a1.png" class="img-circle">
-                    </a>
-                    <a href="#" class="clear text-ellipsis">
-                        <small class="pull-right">[Date Created]</small>
-                        <strong class="block">[Title]</strong>
-                        <small>[Description]</small>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="resources/images/a1.png" class="img-circle">
-                    </a>
-                    <a href="#" class="clear text-ellipsis">
-                        <small class="pull-right">[Date Created]</small>
-                        <strong class="block">[Title]</strong>
-                        <small>[Description]</small>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="resources/images/a1.png" class="img-circle">
-                    </a>
-                    <a href="#" class="clear text-ellipsis">
-                        <small class="pull-right">[Date Created]</small>
-                        <strong class="block">[Title]</strong>
-                        <small>[Description]</small>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="resources/images/a1.png" class="img-circle">
-                    </a>
-                    <a href="#" class="clear text-ellipsis">
-                        <small class="pull-right">[Date Created]</small>
-                        <strong class="block">[Title]</strong>
-                        <small>[Description]</small>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="resources/images/a1.png" class="img-circle">
-                    </a>
-                    <a href="#" class="clear text-ellipsis">
-                        <small class="pull-right">[Date Created]</small>
-                        <strong class="block">[Title]</strong>
-                        <small>[Description]</small>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="resources/images/a1.png" class="img-circle">
-                    </a>
-                    <a href="#" class="clear text-ellipsis">
-                        <small class="pull-right">[Date Created]</small>
-                        <strong class="block">[Title]</strong>
-                        <small>[Description]</small>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="resources/images/a1.png" class="img-circle">
-                    </a>
-                    <a href="#" class="clear text-ellipsis">
-                        <small class="pull-right">[Date Created]</small>
-                        <strong class="block">[Title]</strong>
-                        <small>[Description]</small>
-                    </a>
-                </li>
-                <li class="list-group-item">
-                    <a href="#" class="thumb-sm pull-left m-r-sm">
-                        <img src="resources/images/a1.png" class="img-circle">
-                    </a>
-                    <a href="#" class="clear text-ellipsis">
-                        <small class="pull-right">[Date Created]</small>
-                        <strong class="block">[Title]</strong>
-                        <small>[Description]</small>
-                    </a>
-                </li>
-            </ul>
-
-            <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Lead More...</a>
-        </section>
-        <footer class="footer dk clearfix">
-            <form class="m-t-sm">
-                <div class="input-group">
-                    <input type="text" class="input-sm form-control input-s-sm" placeholder="Search">
-                    <div class="input-group-btn">
-                        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
-                    </div>
-                </div>
-            </form>
-        </footer>
-    </section>
-</aside>
-<!-- /.aside -->
-<!-- .aside -->
-<aside id="email-content" class="bg-light lter">
-    <section class="vbox">
-        <section class="scrollable">
-            <div class="wrapper dk  clearfix">
-                <div class="pull-right inline">
-                    <div class="btn-group">
-                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Forward"><i class="fa fa-share"></i></button>
-                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Lock"><i class="fa fa-lock"></i></button>
-                        <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a href="#">Other menu items</a></li>
-
-                        </ul>
-
-                    </div>
-                    <a href="#chat" class="inline animated btn btn-default btn-sm " data-toggle="class:show"><i class="fa  fa-columns"></i></a>
-                </div>
-                <h4 class="m-n">[Title] ([ID])</h4>
-            </div>
-            <div>
-
-                <div class="wrapper">
-                    <p>[Complaint Details]</p>
-
-
-                    <section class="panel panel-default">
-                        <header class="panel-heading bg-light">
-                            <ul class="nav nav-tabs nav-justified">
-                                <li class="active"><a href="#notes" data-toggle="tab">Notes</a></li>
-                                <li><a href="#documents" data-toggle="tab">Documents</a></li>
-                                <li><a href="#tasks" data-toggle="tab">Tasks</a></li>
-                                <li><a href="#history" data-toggle="tab">History</a></li>
-                            </ul>
-                        </header>
-                        <div class="panel-body">
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="notes">
-
-
-
-
-                                    <ul class="list-group list-group-lg no-bg auto">
-                                        <a href="#" class="list-group-item clearfix">
-                            <span class="pull-left thumb-sm avatar m-r">
-                              <img src="resources/images/a4.png" alt="John said">
-                              <i class="on b-white bottom"></i>
-                            </span>
-                            <span class="clear">
-                             <small class="text-muted pull-right">5m ago</small>
-                              <span>Judy Hsu</span>
-                              <small class="text-muted clear text-ellipsis">Sample notes go here.</small>
-                            </span>
-                                        </a>
-
-                                    </ul>
-
-
-                                    <div class="input-group">
-                                        <input type="text" class="form-control input-sm " placeholder="Type in your notes here...">
-                            <span class="input-group-btn">
-                              <button type="submit" class="btn btn-default btn-sm"><i class="fa fa-arrow-right"></i></button>
-                            </span>
-                                    </div>
-
-
-
-
-                                </div>
-                                <div class="tab-pane" id="documents">Documents</div>
-                                <div class="tab-pane" id="tasks">Tasks</div>
-                                <div class="tab-pane" id="history">History</div>
-                            </div>
-                        </div>
-                    </section>
-
-
-
-
-                </div>
-            </div>
-            </div>
-
-        </section>
-
-
-
-    </section>
-</aside>
-<!-- /.aside -->
-
-
-<aside class="aside bg-light lt hide" id="chat">
-    <section class="vbox animated fadeInLeft">
-
-        <section class="scrollable">
-
-
-
-            <div class="list-group bg-white">
-                <a href="#" class="list-group-item">
-                    <span class="label bg-light">Status</span> [Status]
-                </a>
-                <a href="#" class="list-group-item">
-                    <span class="label bg-light">Type</span> [Type]
-                </a>
-                <a href="#" class="list-group-item">
-                    <span class="label bg-light">Assigned</span> [Assigned]
-                </a>
-                <a href="#" class="list-group-item">
-                    <span class="label bg-light">Incident</span> [Date]
-                </a>
-                <a href="#" class="list-group-item">
-                    <span class="label bg-light">Priority</span> [Priority]
-                </a>
-            </div>
-
-
-
-            <header class="dk header">
-                <p>Approvers</p>
-            </header>
-            <div class="list-group auto list-group-alt no-radius no-borders">
-                <a class="list-group-item" href="#">
-                    <i class="fa fa-fw fa-circle-o text-success text-xs"></i>
-                    <span>James Bailey</span>
-                </a>
-            </div>
-
-            <header class="dk header">
-                <p>Collaborators</p>
-            </header>
-            <div class="list-group auto list-group-alt no-radius no-borders">
-                <a class="list-group-item" href="#">
-                    <i class="fa fa-fw fa-circle-o text-success text-xs"></i>
-                    <span>James Bailey</span>
-                </a>
-            </div>
-
-
-
-            <header class="dk header">
-                <p>Watchers</p>
-            </header>
-            <div class="list-group auto list-group-alt no-radius no-borders">
-                <a class="list-group-item" href="#">
-                    <i class="fa fa-fw fa-circle-o text-success text-xs"></i>
-                    <span>James Bailey</span>
-                </a>
-            </div>
-
-
-        </section>
-
-        <footer class="footer bg text-center">
-            <button class="btn btn-light bg-empty btn-sm"><i class="fa fa-plus"></i> New Partipant</button>
-        </footer>
-    </section>
-</aside>
-
-
-
+<section class="scrollable padder">
+<section class="row m-b-md">
+    <div class="col-sm-12">
+        <h3 class="m-b-xs text-black">New Complaint</h3>
+    </div>
 </section>
+<div class="row">
+<div class="col-sm-12">
+<form id="wizardform" method="get" action="">
+<div class="panel panel-default">
+<div class="panel-heading">
+    <ul class="nav nav-tabs font-bold">
+        <li><a href="#step1" data-toggle="tab">Step 1: Contact</a></li>
+        <li><a href="#step2" data-toggle="tab">Step 2: Incident</a></li>
+        <li><a href="#step3" data-toggle="tab">Step 3: Details</a></li>
+        <li><a href="#step4" data-toggle="tab">Step 4: Attachments</a></li>
+        <li><a href="#step5" data-toggle="tab">Step 5: Assignment</a></li>
+    </ul>
+</div>
+<div class="panel-body">
+<div class="progress progress-xs m-t-sm">
+    <div class="progress-bar bg-success"></div>
+</div>
+<div class="tab-content">
+<div class="tab-pane" id="step1">
+    <h4>Contact Information</h4>
+    <p>Description</p>
+    <section class="row m-b-md">
+        <div class="col-sm-6">
+            <label for="fname" class="label">First Name</label>
+            <input id="fname" type="text" class="form-control" placeholder="Name">
+            <label for="lname" class="label">Last Name</label>
+            <input id="lname" type="text" class="form-control" placeholder="Name">
+            <label for="company" class="label">Company</label>
+            <input id="company" type="text" class="form-control" placeholder="Company">
+            <label for="email"  class="label">Email</label>
+            <input id="email" type="text" class="form-control" placeholder="Email">
+            <label for="phone"  class="label">Phone</label>
+            <input id="phone" type="text" class="form-control" placeholder="Phone">
+            <label for="altphone"  class="label">Alternative Phone</label>
+            <input id="altphone" type="text" class="form-control" placeholder="Alternative Phone">
+        </div>
+        <div class="col-sm-6">
+            <label for="personTitle" class="label">Title</label>
+            <select id="personTitle" class="form-control" >
+                <option value="">Choose Title</option>
+                <option value="Mr.">Mr.</option>
+                <option value="Mrs.">Mrs.</option>
+                <option value="Ms.">Ms.</option>
+                <option value="Ms.">Dr.</option>
+            </select>
+            <label for="address1"  class="label">Address</label>
+            <input id="address1" type="text" class="form-control" placeholder="Address">
+            <label for="address2"  class="label">Address 2</label>
+            <input id="address2" type="text" class="form-control" placeholder="Address 2">
+            <label for="city"  class="label">City</label>
+            <input id="city" type="text" class="form-control" placeholder="City">
+            <label for="state"  class="label">State</label>
+            <input id="state" type="text" class="form-control" placeholder="State">
+            <label for="zip"  class="label">ZIP</label>
+            <input id="zip" type="text" class="form-control" placeholder="ZIP">
+        </div>
+    </section>
+
+
+    <label for="security" class="label">Security</label>
+
+    <select data-placeholder="Choose Security..." id="security" class="choose-security form-control" multiple >
+        <option value=""></option>
+        <option value="Trade Secret">Anonymous</option>
+        <option value="Confidential">Confidential</option>
+        <option value="Trade Secret">Trade Secret</option>
+    </select>
+
+</div>
+<div class="tab-pane" id="step2">
+    <h4>Incident Information</h4>
+    <p>Description</p>
+    <section class="row m-b-md">
+        <div class="col-sm-6">
+            <label for="incidentDate" class="label">Incident Date</label>
+            <input id="incidentDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="12-02-2013" data-date-format="dd-mm-yyyy" >
+            <label for="complaintType"  class="label">Complaint Type</label>
+            <select name="complaintType" class="form-control m-b">
+                <option>Choose Complaint Type</option>
+                <option>Domestic Dispute</option>
+                <option>Arson</option>
+                <option>Better Business Dispute</option>
+                <option>Government</option>
+                <option>Local</option>
+                <option>Agricultural</option>
+                <option>Pollution </option>
+            </select>
+        </div>
+        <div class="col-sm-6">
+            <label for="priority"  class="label">Priority</label>
+            <select name="priority" class="form-control m-b">
+                <option>Choose Priority</option>
+                <option selected>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+                <option>Expedited</option>
+            </select>
+        </div>
+    </section>
+
+
+    <h4>People Involved</h4>
+
+    <div class="table-tools">
+        <div class="row">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;
+                    Add New
+                </button>
+                <button type="button" class="btn btn-default"><i
+                        class="fa fa-print"></i>&nbsp; Print
+                </button>
+                <button type="button" class="btn btn-default"><i
+                        class="fa fa-file-text-o"></i>&nbsp; PDF
+                </button>
+                <button type="button" class="btn btn-default"><i class="fa fa-copy"></i>&nbsp;
+                    Excel
+                </button>
+            </div>
+
+            <div class="col-md-6 pull-right">
+                <div class="form-inline pull-right">
+                    <div class="form-group"><label class="control-label">Search:</label>&nbsp;<input
+                            type="text" class="form-control"/></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover" style="margin-top:5px;">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Type</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>ZIP</th>
+            <th width="3%">Edit</th>
+            <th width="4%">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="odd gradeA">
+            <td>[First]</td>
+            <td>[Last]</td>
+            <td>[Type]</td>
+            <td>[Phone]</td>
+            <td>[Address]</td>
+            <td>[City]</td>
+            <td>[State]</td>
+            <td>[ZIP]</td>
+            <td><a href="javascript:;" class="edit">Edit</a></td>
+            <td><a href="javascript:;" class="delete">Delete</a></td>
+        </tr>
+
+
+        </tbody>
+    </table>
+
+
+
+
+</div>
+<div class="tab-pane" id="step3">
+    <h4>Details</h4>
+    <p>Description</p>
+    <label for="title"  class="label">Complaint Title</label>
+    <input id="title" type="text" class="form-control" placeholder="Complaint Title">
+    <hr />
+    <div class="complaintDetails">Complaint Details</div>
+</div>
+<div class="tab-pane" id="step4">
+    <h4>Attachments</h4>
+    <p>Description</p>
+    <div id="upload">
+        <div id="drop"> Drop Here <br />
+            <a>Browse</a>
+            <input type="file" name="upl" multiple />
+        </div>
+        <ul>
+            <!-- The file uploads will be shown here -->
+        </ul>
+    </div>
+</div>
+<div class="tab-pane" id="step5">
+    <h4>Assignment</h4>
+    <p>Description</p>
+    <label for="approvers" class="label">Approvers</label>
+
+    <select data-placeholder="Choose Approvers..." id="approvers" class="choose-approvers form-control" multiple style="width:350px;" >
+        <option value=""></option>
+        <option value="David Miller">David Miller</option>
+        <option value="James Bailey">James Bailey</option>
+        <option value="Judy Hsu">Judy Hsu</option>
+        <option value="Ronda Ringo">Ronda Ringo</option>
+        <option value="AJ McClary">AJ McClary</option>
+        <option value="Jim Nasr">Jim Nasr</option>
+    </select>
+
+    <hr/>
+    <label for="collab" class="label">Collaborators</label>
+
+
+    <select data-placeholder="Choose Collaborators..." id="collab" class="choose-collab form-control" multiple style="width:350px;" >
+        <option value=""></option>
+        <option value="David Miller">David Miller</option>
+        <option value="James Bailey">James Bailey</option>
+        <option value="Judy Hsu">Judy Hsu</option>
+        <option value="Ronda Ringo">Ronda Ringo</option>
+        <option value="AJ McClary">AJ McClary</option>
+        <option value="Jim Nasr">Jim Nasr</option>
+    </select>
+
+    <hr/>
+    <label for="notifications" class="label">Notifications</label>
+
+    <select data-placeholder="Choose Notifications..." id="notifications" class="choose-notifications form-control" multiple style="width:350px;" >
+        <option value=""></option>
+        <option value="David Miller">David Miller</option>
+        <option value="James Bailey">James Bailey</option>
+        <option value="Judy Hsu">Judy Hsu</option>
+        <option value="Ronda Ringo">Ronda Ringo</option>
+        <option value="AJ McClary">AJ McClary</option>
+        <option value="Jim Nasr">Jim Nasr</option>
+    </select>
+
+
+</div>
+<ul class="pager wizard m-b-sm">
+    <li class="previous first" style="display:none;"><a href="#">First</a></li>
+    <li class="previous"><a href="#">Previous</a></li>
+    <li class="next"><a href="#">Next</a></li>
+</ul>
+</div>
+</div>
+</div>
+</form>
+</div>
+</div>
 </section>
-
-
-
-
 </section>
 </section>
 </jsp:body>

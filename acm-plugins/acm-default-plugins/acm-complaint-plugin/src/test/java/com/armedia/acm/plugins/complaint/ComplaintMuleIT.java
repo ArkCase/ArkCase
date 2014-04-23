@@ -26,7 +26,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-activemq.xml",
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-folder-watcher.xml",
-        "/spring/spring-library-cmis-configuration.xml"})
+        "/spring/spring-library-cmis-configuration.xml",
+        "/spring/spring-library-drools-monitor.xml"})
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class ComplaintMuleIT
 {
