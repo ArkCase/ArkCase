@@ -22,7 +22,8 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
-        "/spring/spring-library-ecm-file.xml"
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-mule-context-manager.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
