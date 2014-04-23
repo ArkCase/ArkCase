@@ -38,6 +38,7 @@ public class SaveComplaintController
         return retval;
     }
 
+    //jwu: for quick testing; will change back to POST
     //@RequestMapping(value = "/wizard", method = RequestMethod.POST)
     @RequestMapping(value = "/wizard", method = RequestMethod.GET)
     public ModelAndView saveComplaint(
