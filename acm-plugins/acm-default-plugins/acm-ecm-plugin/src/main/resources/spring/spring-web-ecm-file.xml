@@ -3,8 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="fileUploadController" class="com.armedia.acm.cmis.fileupload.web.FileUploadController">
-
+    <bean id="fileUploadController" class="com.armedia.acm.plugins.ecm.web.FileUploadController">
+        <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
     </bean>
-
 </beans>

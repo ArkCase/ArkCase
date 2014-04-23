@@ -6,7 +6,9 @@
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
 
     <bean id="ecmFileTransaction" class="com.armedia.acm.plugins.ecm.service.EcmFileTransaction">
-
+        <property name="muleClient" ref="muleClient"/>
     </bean>
+
+
 
 </beans>

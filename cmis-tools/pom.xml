@@ -16,7 +16,6 @@
     <description>Everything specific to CMIS.</description>
     <modules>
         <module>cmis-spring-configuration</module>
-        <module>acm-file-upload</module>
     </modules>
 
     <dependencies>

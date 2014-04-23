@@ -1,4 +1,4 @@
-package com.armedia.acm.cmis.fileupload.model;
+package com.armedia.acm.plugins.ecm.model;
 
 
 public class FileUpload
