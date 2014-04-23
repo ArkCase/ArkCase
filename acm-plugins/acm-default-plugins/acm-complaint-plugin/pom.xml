@@ -74,6 +74,11 @@
             <version>${acm.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <artifactId>acm-object-association-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- date time -->
         <dependency>

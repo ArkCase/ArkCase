@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.complaint.model;
 
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -21,6 +23,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 
@@ -96,6 +101,10 @@ public class Complaint implements Serializable
     @Column(name = "cm_complaint_ecm_folder_id")
     private String ecmFolderId;
 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "cm_parent_id")
+    private Collection<ObjectAssociation> childObjects = new ArrayList<>();
+
 
 
 
@@ -116,6 +125,11 @@ public class Complaint implements Serializable
         if ( getStatus() == null || getStatus().trim().isEmpty() )
         {
             setStatus("DRAFT");
+        }
+
+        for ( ObjectAssociation childObject : childObjects )
+        {
+            childObject.setParentId(complaintId);
         }
     }
 
@@ -216,6 +230,16 @@ public class Complaint implements Serializable
         {
             getOriginator().setCreated(created);
         }
+
+        for ( ObjectAssociation oa : childObjects )
+        {
+            if ( oa.getCreated() == null )
+            {
+                oa.setCreated(created);
+            }
+        }
+
+
     }
 
     public String getCreator()
@@ -234,6 +258,14 @@ public class Complaint implements Serializable
         if ( getOriginator() != null )
         {
             getOriginator().setCreator(creator);
+        }
+
+        for ( ObjectAssociation oa : childObjects )
+        {
+            if ( oa.getCreator() == null )
+            {
+                oa.setCreator(creator);
+            }
         }
     }
 
@@ -254,6 +286,14 @@ public class Complaint implements Serializable
         {
             getOriginator().setModified(modified);
         }
+
+        for ( ObjectAssociation oa : childObjects )
+        {
+            if ( oa.getModified() == null )
+            {
+                oa.setModified(modified);
+            }
+        }
     }
 
     public String getModifier()
@@ -272,6 +312,14 @@ public class Complaint implements Serializable
         if ( getOriginator() != null )
         {
             getOriginator().setModifier(modifier);
+        }
+
+        for ( ObjectAssociation oa : childObjects )
+        {
+            if ( oa.getModifier() == null )
+            {
+                oa.setModifier(modifier);
+            }
         }
     }
 
@@ -323,4 +371,19 @@ public class Complaint implements Serializable
         }
         this.ecmFolderId = ecmFolderId;
     }
+
+    public Collection<ObjectAssociation> getChildObjects()
+    {
+        return Collections.unmodifiableCollection(childObjects);
+    }
+
+    public void addChildObject(ObjectAssociation childObject)
+    {
+        childObjects.add(childObject);
+        childObject.setParentName(getComplaintNumber());
+        childObject.setParentType("COMPLAINT");
+        childObject.setParentId(getComplaintId());
+    }
+
+
 }
