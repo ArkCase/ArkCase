@@ -1,3 +1,5 @@
+/* @override http://localhost/~aj/acm3/resources/css/bootstrap.css */
+
 /*!
  * Bootstrap v3.1.1 (http://getbootstrap.com)
  * Copyright 2011-2014 Twitter, Inc.
@@ -457,6 +459,8 @@ h4,
 .h4 {
   font-size: 18px;
 }
+
+
 h5,
 .h5 {
   font-size: 14px;
@@ -770,6 +774,8 @@ pre code {
   padding-right: 15px;
   padding-left: 15px;
 }
+
+
 .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
   float: left;
 }
@@ -2376,8 +2382,8 @@ input[type="button"].btn-block {
 @font-face {
   font-family: 'Glyphicons Halflings';
 
-  src: url('../../fonts/glyphicons-halflings-regular.eot');
-  src: url('../../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+  src: url('../../resources/fonts/glyphicons-halflings-regular.eot');
+  src: url('../..resources/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../../resources/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../../resources/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 .glyphicon {
   position: relative;
