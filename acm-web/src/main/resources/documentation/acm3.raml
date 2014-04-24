@@ -1,0 +1,93 @@
+#%RAML 0.8
+title: ACM 3.0 API
+baseUri: http://armdec6acm1.armedia.com/api/{version}
+version: v1
+
+securitySchemes:
+  - spring_security_form_auth:
+      description: ACM3 uses Spring Security form authentication for interactive users.
+      type: x-Spring Security form authentication
+  - spring_security_basic_auth:
+      description: ACM3 uses Spring Security basic authentication for service users.    
+      type: Basic Authentication  
+
+/plugin:
+  /complaint:
+    post:
+      description: Create a complaint based on the complaint originator's contact information
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      body: 
+        application/json:
+          example: |
+            {
+              "id": null,
+              "originator.id": null,
+              "originator.title": "Mr.",
+              "originator.givenName": "John",
+              "originator.familyName": "Doe",
+              "originator.company": "Contoso",
+              "originator.addresses": [
+                {
+                  "type": "home"
+                  "streetAddress": "123 Main St.",
+                  "streetAddress2": null,
+                  "city": "Peoria",
+                  "state": "IL",
+                  "zip": "12345"
+                }
+              ],
+              "originator.contactMethods": [
+                {
+                  "type": "Mobile Phone",
+                  "value": "123-456-7890"
+                },
+                {
+                  "type": "Personal E-mail",
+                  "value": "john.doe@gmail.com"
+                }
+              ],
+              "originator.securityTags": ["Anonymous", "Confidential", "Top Secret"]
+            }
+      responses:
+        200:
+          description: Normal response indicating the system created a new complaint
+          body: 
+            application/json:
+              example: |
+                {
+                  "complaintId": 555,
+                  "complaintNumber": "20140424_555",
+                  "complaintStatus": "DRAFT",
+                  "originator.id": 556,
+                  "originator.status": "ACTIVE",
+                  "originator.title": "Mr.",
+                  "originator.givenName": "John",
+                  "originator.familyName": "Doe",
+                  "originator.company": "Contoso",
+                  "originator.addresses": [
+                    {
+                      "id": 557,
+                      "type": "home"
+                      "streetAddress": "123 Main St.",
+                      "streetAddress2": null,
+                      "city": "Peoria",
+                      "state": "IL",
+                      "zip": "12345"
+                    }
+                  ],
+                  "originator.contactMethods": [
+                    {
+                      "id": 558,
+                      "type": "Mobile Phone",
+                      "value": "123-456-7890"
+                    },
+                    {
+                      "id": 559,
+                      "type": "Personal E-mail",
+                      "value": "john.doe@gmail.com"
+                    }
+                  ],
+                  "originator.securityTags": ["Anonymous", "Confidential", "Top Secret"]
+                }
+              
+      
