@@ -31,6 +31,11 @@
             <artifactId>acm-data</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <artifactId>acm-addressable-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- logging -->
         <dependency>

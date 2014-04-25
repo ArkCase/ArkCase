@@ -1,6 +1,6 @@
 #%RAML 0.8
 title: ACM 3.0 API
-baseUri: http://armdec6acm1.armedia.com/api/{version}
+baseUri: http://armdec6acm1.armedia.com/acm/api/{version}
 version: v1
 
 securitySchemes:
@@ -20,33 +20,35 @@ securitySchemes:
         application/json:
           example: |
             {
-              "id": null,
-              "originator.id": null,
-              "originator.title": "Mr.",
-              "originator.givenName": "John",
-              "originator.familyName": "Doe",
-              "originator.company": "Contoso",
-              "originator.addresses": [
-                {
-                  "type": "home"
-                  "streetAddress": "123 Main St.",
-                  "streetAddress2": null,
-                  "city": "Peoria",
-                  "state": "IL",
-                  "zip": "12345"
-                }
-              ],
-              "originator.contactMethods": [
-                {
-                  "type": "Mobile Phone",
-                  "value": "123-456-7890"
-                },
-                {
-                  "type": "Personal E-mail",
-                  "value": "john.doe@gmail.com"
-                }
-              ],
-              "originator.securityTags": ["Anonymous", "Confidential", "Top Secret"]
+              "complaintId": null,
+              "originator": {
+                "id": null,
+                "title": "Mr.",
+                "givenName": "John",
+                "familyName": "Doe",
+                "company": "Contoso",
+                "addresses": [
+                  {
+                    "type": "home"
+                    "streetAddress": "123 Main St.",
+                    "streetAddress2": null,
+                    "city": "Peoria",
+                    "state": "IL",
+                    "zip": "12345"
+                  }
+                ],
+                "contactMethods": [
+                  {
+                    "type": "Mobile Phone",
+                    "value": "123-456-7890"
+                  },
+                  {
+                    "type": "Personal E-mail",
+                    "value": "john.doe@gmail.com"
+                  }
+                ],
+                "securityTags": ["Anonymous", "Confidential", "Top Secret"]
+              }
             }
       responses:
         200:
@@ -58,36 +60,39 @@ securitySchemes:
                   "complaintId": 555,
                   "complaintNumber": "20140424_555",
                   "complaintStatus": "DRAFT",
-                  "originator.id": 556,
-                  "originator.status": "ACTIVE",
-                  "originator.title": "Mr.",
-                  "originator.givenName": "John",
-                  "originator.familyName": "Doe",
-                  "originator.company": "Contoso",
-                  "originator.addresses": [
-                    {
-                      "id": 557,
-                      "type": "home"
-                      "streetAddress": "123 Main St.",
-                      "streetAddress2": null,
-                      "city": "Peoria",
-                      "state": "IL",
-                      "zip": "12345"
-                    }
-                  ],
-                  "originator.contactMethods": [
-                    {
-                      "id": 558,
-                      "type": "Mobile Phone",
-                      "value": "123-456-7890"
-                    },
-                    {
-                      "id": 559,
-                      "type": "Personal E-mail",
-                      "value": "john.doe@gmail.com"
-                    }
-                  ],
-                  "originator.securityTags": ["Anonymous", "Confidential", "Top Secret"]
+                  "originator": {
+                    "id": 556,
+                    "status": "ACTIVE",
+                    "title": "Mr.",
+                    "givenName": "John",
+                    "familyName": "Doe",
+                    "company": "Contoso",
+                    "addresses": [
+                      {
+                        "id": 557,
+                        "type": "home"
+                        "streetAddress": "123 Main St.",
+                        "streetAddress2": null,
+                        "city": "Peoria",
+                        "state": "IL",
+                        "zip": "12345"
+                      }
+                    ],
+                    "contactMethods": [
+                      {
+                        "id": 558,
+                        "type": "Mobile Phone",
+                        "value": "123-456-7890"
+                      },
+                      {
+                        "id": 559,
+                        "type": "Personal E-mail",
+                        "value": "john.doe@gmail.com"
+                      }
+                    ],
+                    "securityTags": ["Anonymous", "Confidential", "Top Secret"]
+                  }
                 }
+                  
               
       

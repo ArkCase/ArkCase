@@ -102,7 +102,7 @@
             <div class="col-md-9" role="main">
                 <div class="page-header">
                     <h1>ACM 3.0 API API documentation <small>version v1</small></h1>
-                    <p>http://armdec6acm1.armedia.com/api/v1</p>
+                    <p>http://armdec6acm1.armedia.com/acm/api/v1</p>
 
                     
                 </div>
@@ -197,33 +197,35 @@
                                     
                                         <p><strong>Type: application/json</strong></p>
                                         <pre>{
-  &quot;id&quot;: null,
-  &quot;originator.id&quot;: null,
-  &quot;originator.title&quot;: &quot;Mr.&quot;,
-  &quot;originator.givenName&quot;: &quot;John&quot;,
-  &quot;originator.familyName&quot;: &quot;Doe&quot;,
-  &quot;originator.company&quot;: &quot;Contoso&quot;,
-  &quot;originator.addresses&quot;: [
-    {
-      &quot;type&quot;: &quot;home&quot;
-      &quot;streetAddress&quot;: &quot;123 Main St.&quot;,
-      &quot;streetAddress2&quot;: null,
-      &quot;city&quot;: &quot;Peoria&quot;,
-      &quot;state&quot;: &quot;IL&quot;,
-      &quot;zip&quot;: &quot;12345&quot;
-    }
-  ],
-  &quot;originator.contactMethods&quot;: [
-    {
-      &quot;type&quot;: &quot;Mobile Phone&quot;,
-      &quot;value&quot;: &quot;123-456-7890&quot;
-    },
-    {
-      &quot;type&quot;: &quot;Personal E-mail&quot;,
-      &quot;value&quot;: &quot;john.doe@gmail.com&quot;
-    }
-  ],
-  &quot;originator.securityTags&quot;: [&quot;Anonymous&quot;, &quot;Confidential&quot;, &quot;Top Secret&quot;]
+  &quot;complaintId&quot;: null,
+  &quot;originator&quot;: {
+    &quot;id&quot;: null,
+    &quot;title&quot;: &quot;Mr.&quot;,
+    &quot;givenName&quot;: &quot;John&quot;,
+    &quot;familyName&quot;: &quot;Doe&quot;,
+    &quot;company&quot;: &quot;Contoso&quot;,
+    &quot;addresses&quot;: [
+      {
+        &quot;type&quot;: &quot;home&quot;
+        &quot;streetAddress&quot;: &quot;123 Main St.&quot;,
+        &quot;streetAddress2&quot;: null,
+        &quot;city&quot;: &quot;Peoria&quot;,
+        &quot;state&quot;: &quot;IL&quot;,
+        &quot;zip&quot;: &quot;12345&quot;
+      }
+    ],
+    &quot;contactMethods&quot;: [
+      {
+        &quot;type&quot;: &quot;Mobile Phone&quot;,
+        &quot;value&quot;: &quot;123-456-7890&quot;
+      },
+      {
+        &quot;type&quot;: &quot;Personal E-mail&quot;,
+        &quot;value&quot;: &quot;john.doe@gmail.com&quot;
+      }
+    ],
+    &quot;securityTags&quot;: [&quot;Anonymous&quot;, &quot;Confidential&quot;, &quot;Top Secret&quot;]
+  }
 }
 </pre>
                                     
@@ -247,37 +249,40 @@
   &quot;complaintId&quot;: 555,
   &quot;complaintNumber&quot;: &quot;20140424_555&quot;,
   &quot;complaintStatus&quot;: &quot;DRAFT&quot;,
-  &quot;originator.id&quot;: 556,
-  &quot;originator.status&quot;: &quot;ACTIVE&quot;,
-  &quot;originator.title&quot;: &quot;Mr.&quot;,
-  &quot;originator.givenName&quot;: &quot;John&quot;,
-  &quot;originator.familyName&quot;: &quot;Doe&quot;,
-  &quot;originator.company&quot;: &quot;Contoso&quot;,
-  &quot;originator.addresses&quot;: [
-    {
-      &quot;id&quot;: 557,
-      &quot;type&quot;: &quot;home&quot;
-      &quot;streetAddress&quot;: &quot;123 Main St.&quot;,
-      &quot;streetAddress2&quot;: null,
-      &quot;city&quot;: &quot;Peoria&quot;,
-      &quot;state&quot;: &quot;IL&quot;,
-      &quot;zip&quot;: &quot;12345&quot;
-    }
-  ],
-  &quot;originator.contactMethods&quot;: [
-    {
-      &quot;id&quot;: 558,
-      &quot;type&quot;: &quot;Mobile Phone&quot;,
-      &quot;value&quot;: &quot;123-456-7890&quot;
-    },
-    {
-      &quot;id&quot;: 559,
-      &quot;type&quot;: &quot;Personal E-mail&quot;,
-      &quot;value&quot;: &quot;john.doe@gmail.com&quot;
-    }
-  ],
-  &quot;originator.securityTags&quot;: [&quot;Anonymous&quot;, &quot;Confidential&quot;, &quot;Top Secret&quot;]
+  &quot;originator&quot;: {
+    &quot;id&quot;: 556,
+    &quot;status&quot;: &quot;ACTIVE&quot;,
+    &quot;title&quot;: &quot;Mr.&quot;,
+    &quot;givenName&quot;: &quot;John&quot;,
+    &quot;familyName&quot;: &quot;Doe&quot;,
+    &quot;company&quot;: &quot;Contoso&quot;,
+    &quot;addresses&quot;: [
+      {
+        &quot;id&quot;: 557,
+        &quot;type&quot;: &quot;home&quot;
+        &quot;streetAddress&quot;: &quot;123 Main St.&quot;,
+        &quot;streetAddress2&quot;: null,
+        &quot;city&quot;: &quot;Peoria&quot;,
+        &quot;state&quot;: &quot;IL&quot;,
+        &quot;zip&quot;: &quot;12345&quot;
+      }
+    ],
+    &quot;contactMethods&quot;: [
+      {
+        &quot;id&quot;: 558,
+        &quot;type&quot;: &quot;Mobile Phone&quot;,
+        &quot;value&quot;: &quot;123-456-7890&quot;
+      },
+      {
+        &quot;id&quot;: 559,
+        &quot;type&quot;: &quot;Personal E-mail&quot;,
+        &quot;value&quot;: &quot;john.doe@gmail.com&quot;
+      }
+    ],
+    &quot;securityTags&quot;: [&quot;Anonymous&quot;, &quot;Confidential&quot;, &quot;Top Secret&quot;]
+  }
 }
+  
 </pre>
                                             
                                         

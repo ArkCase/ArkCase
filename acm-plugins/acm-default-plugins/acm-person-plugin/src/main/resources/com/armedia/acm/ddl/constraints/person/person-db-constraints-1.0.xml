@@ -1,0 +1,46 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-person-foreign-keys" author="dmiller">
+
+        <addForeignKeyConstraint baseTableName="acm_person_security_tag" baseColumnNames="cm_person_id"
+                                 constraintName="fk_person_sec_tag_person_id"
+                                 referencedTableName="acm_person"
+                                 referencedColumnNames="cm_person_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+
+        <addForeignKeyConstraint baseTableName="acm_person_postal_address" baseColumnNames="cm_person_id"
+                                 constraintName="fk_person_addr_person_id"
+                                 referencedTableName="acm_person"
+                                 referencedColumnNames="cm_person_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+
+        <addForeignKeyConstraint baseTableName="acm_person_postal_address" baseColumnNames="cm_address_id"
+                                 constraintName="fk_person_addr_addr_id"
+                                 referencedTableName="acm_postal_address"
+                                 referencedColumnNames="cm_address_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+
+        <addForeignKeyConstraint baseTableName="acm_person_contact_method" baseColumnNames="cm_person_id"
+                                 constraintName="fk_person_cntct_person_id"
+                                 referencedTableName="acm_person"
+                                 referencedColumnNames="cm_person_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+
+        <addForeignKeyConstraint baseTableName="acm_person_contact_method" baseColumnNames="cm_contact_method_id"
+                                 constraintName="fk_person_cntct_cntct_id"
+                                 referencedTableName="acm_contact_method"
+                                 referencedColumnNames="cm_contact_method_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+
+    </changeSet>
+
+</databaseChangeLog>
