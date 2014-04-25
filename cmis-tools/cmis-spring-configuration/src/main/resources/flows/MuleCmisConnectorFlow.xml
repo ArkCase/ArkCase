@@ -1,0 +1,37 @@
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xsi:schemaLocation="
+               http://www.mulesoft.org/schema/mule/core
+               http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+               http://www.mulesoft.org/schema/mule/cmis
+               http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
+               http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+
+    <spring:beans>
+        <spring:import resource="classpath:/spring/spring-library-cmis-configuration.xml"/>
+    </spring:beans>
+
+    <cmis:config
+            name="acmCmisConnector"
+            baseUrl="${cmis.baseUrl}"
+            username="${cmis.username}"
+            password="${cmis.password}"
+            useAlfrescoExtension="${cmis.useAlfrescoExtension}"
+            endpoint="${cmis.endpoint}">
+
+        <!-- somehow we can't use a property for exhausted action. -->
+        <cmis:connection-pooling-profile
+                maxActive="${cmis.maxActive}"
+                maxIdle="${cmis.maxIdle}"
+                exhaustedAction="WHEN_EXHAUSTED_GROW"
+                maxWait="${cmis.maxWait}"
+                minEvictionMillis="${cmis.minEvictionMillis}"
+                evictionCheckIntervalMillis="${cmis.evictionCheckIntervalMillis}"/>
+        <reconnect count="${cmis.reconnectCount}" frequency="${cmis.reconnectFrequency}"/>
+
+    </cmis:config>
+
+</mule>

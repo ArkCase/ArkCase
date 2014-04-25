@@ -16,6 +16,14 @@ public abstract class AcmAbstractDao<T>
         return saved;
     }
 
+    public T find(Class<? extends T> cls, Long id)
+    {
+        T found = em.find(cls, id);
+        em.refresh(found);
+
+        return found;
+    }
+
     public EntityManager getEm()
     {
         return em;

@@ -1,34 +1,32 @@
-<!DOCTYPE html>
-<%@include file="/fragments/header.jspf" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<link rel="stylesheet" media="screen" href="<c:url value="/resources/css/feedReader/FeedEk.css"/>" />
+<t:layout>
+    <jsp:attribute name="endOfHead">
+        <title>Armedia Blog | ACM | Armedia Case Management</title>
+        <script type="text/javascript">
+            $(document).ready(function ()
+            {
+                $('#divRss').FeedEk({
+                    FeedUrl : '${feedUrl}',
+                    MaxCount : 5,
+                    ShowDesc : true,
+                    ShowPubDate:true,
+                    DescCharacterLimit:500,
+                    TitleLinkTarget:'_blank'
+                });
+            });
 
-<script type="text/javascript" src="<c:url value="/resources/js/feedReader/FeedEk.js"/> "></script>
+        </script>
+    </jsp:attribute>
 
-<script type="text/javascript">
-$(document).ready(function ()
-{
-    $('#divRss').FeedEk({
-    FeedUrl : '${feedUrl}',
-    MaxCount : 5,
-    ShowDesc : true,
-    ShowPubDate:true,
-    DescCharacterLimit:500,
-    TitleLinkTarget:'_blank'
-    });
-});
+    <jsp:attribute name="endOfBody">
+        <link rel="stylesheet" media="screen" href="<c:url value="/resources/css/feedReader/FeedEk.css"/>" />
+        <script type="text/javascript" src="<c:url value="/resources/js/feedReader/FeedEk.js"/> "></script>
+    </jsp:attribute>
 
-</script>
-
-</head>
-
-<body>
-<%@include file="/fragments/topbar.jspf" %>
-
-<div id="content">
-    <div id="divRss"></div>
-</div>
-
-</body>
-
-<%@include file="/fragments/footer.jspf" %>
+    <jsp:body>
+        <div id="divRss"></div>
+    </jsp:body>
+</t:layout>

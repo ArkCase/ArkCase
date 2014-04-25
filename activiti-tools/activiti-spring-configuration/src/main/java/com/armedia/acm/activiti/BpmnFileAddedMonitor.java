@@ -36,19 +36,12 @@ public class BpmnFileAddedMonitor implements ApplicationListener<ConfigurationFi
                     log.debug("Deploying new Activiti file: " + eventFile.getCanonicalPath());
                 }
                 DeploymentBuilder deploymentBuilder = getRepositoryService().createDeployment();
-                deploymentBuilder.enableDuplicateFiltering();
-                if (log.isDebugEnabled())
-                {
-                    log.debug("... got the deployment builder...");
-                }
-                deploymentBuilder = deploymentBuilder.addInputStream(eventFile.getName(), bpmnInputStream);
-                if (log.isDebugEnabled())
-                {
-                    log.debug("... added the BPMN input stream...");
-                }
-                deploymentBuilder.name(eventFile.getName());
-                deploymentBuilder.category("ACM Workflow");
-                deploymentBuilder.deploy();
+                deploymentBuilder.
+                        enableDuplicateFiltering().
+                        addInputStream(eventFile.getName(), bpmnInputStream).
+                        name(eventFile.getName()).
+                        category("ACM Workflow").
+                        deploy();
                 if (log.isDebugEnabled())
                 {
                     log.debug("... finished deploying from: " + eventFile.getCanonicalPath());

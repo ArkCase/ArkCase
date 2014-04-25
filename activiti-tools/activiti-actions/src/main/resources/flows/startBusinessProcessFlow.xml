@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.4.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+
+
+    <flow name="startBusinessProcess" doc:name="Start Activiti Business Process">
+        <jms:inbound-endpoint connector-ref="ActiveMQ-ACM" queue="startBusinessProcessQueue"/>
+
+        <logger category="com.armedia.acm.activiti.actions" level="DEBUG"/>
+
+        <timer-interceptor/>
+
+        <component doc:name="Start Business Process">
+            <spring-object bean="startBusinessProcessImpl"/>
+        </component>
+
+    </flow>
+
+</mule>

@@ -3,7 +3,7 @@
     <parent>
         <artifactId>mule-tools</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>1.4</version>
+        <version>1.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,11 +28,21 @@
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-annotations</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-cmis</artifactId>
+        </dependency>
 
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

@@ -2,7 +2,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>1.4</version>
+        <version>1.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia.acm</groupId>
@@ -39,6 +39,11 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-plugins.samples</groupId>
+            <artifactId>hello-world-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-plugins.default</groupId>
             <artifactId>acm-object-association-plugin</artifactId>
             <version>${acm.version}</version>
@@ -71,6 +76,31 @@
         <dependency>
             <groupId>com.armedia.activiti-tools</groupId>
             <artifactId>activiti-spring-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.activiti-tools</groupId>
+            <artifactId>activiti-actions</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.activemq-tools</groupId>
+            <artifactId>activemq-spring-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.drools-tools</groupId>
+            <artifactId>drools-rule-monitor</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.spring-tools</groupId>
+            <artifactId>spring-classpath-copier</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.cmis-tools</groupId>
+            <artifactId>cmis-spring-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

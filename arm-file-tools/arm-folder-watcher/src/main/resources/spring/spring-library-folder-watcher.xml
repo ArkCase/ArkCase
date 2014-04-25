@@ -22,6 +22,11 @@
 
     <bean id="configFileListener" class="com.armedia.acm.files.ConfigFileWatcher">
         <property name="baseFolder" ref="configFolder"/>
+        <property name="ignoreFolders">
+            <list>
+                <value>${file.separator}activemq</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="configFileMonitor" class="org.apache.commons.vfs2.impl.DefaultFileMonitor">

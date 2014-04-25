@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>1.4</version>
+        <version>1.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -52,6 +52,44 @@
             <groupId>com.armedia</groupId>
             <artifactId>acm-user-login</artifactId>
             <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.activiti-tools</groupId>
+            <artifactId>activiti-actions</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.activemq-tools</groupId>
+            <artifactId>activemq-spring-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.drools-tools</groupId>
+            <artifactId>drools-rule-monitor</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.cmis-tools</groupId>
+            <artifactId>cmis-spring-configuration</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <artifactId>acm-object-association-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <!-- date time -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
+        <!-- business rules -->
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-decisiontables</artifactId>
         </dependency>
 
         <!-- spring -->
@@ -112,8 +150,29 @@
             <artifactId>mule-transport-vm</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-cmis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-scripting</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- activiti -->
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring</artifactId>
+        </dependency>
+
+        <!-- json -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
             <scope>runtime</scope>
         </dependency>
 
@@ -121,19 +180,31 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- h2 is the in-memory database used for Activiti tests -->
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>jdbc</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
             <scope>test</scope>
         </dependency>
 

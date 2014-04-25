@@ -22,4 +22,20 @@
         <property name="repositoryService" ref="activitiRepositoryService"/>
     </bean>
 
+    <bean id="deployFolder" class="java.io.File">
+        <constructor-arg value="${user.home}/.acm/activiti"/>
+    </bean>
+
+    <bean id="activitiResourceExpression" class="java.lang.String">
+        <constructor-arg value="classpath*:/activiti/*.bpmn20.xml"/>
+    </bean>
+
+    <bean id="activitiPathMatchingResolver" class="org.springframework.core.io.support.PathMatchingResourcePatternResolver"/>
+
+    <bean id="activitiDeployer" class="com.armedia.acm.spring.SpringClasspathCopier">
+        <property name="resourcePattern" ref="activitiResourceExpression"/>
+        <property name="deployFolder" ref="deployFolder"/>
+        <property name="resolver" ref="activitiPathMatchingResolver"/>
+    </bean>
+
 </beans>

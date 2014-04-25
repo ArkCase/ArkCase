@@ -3,7 +3,7 @@
     <parent>
         <artifactId>activiti-tools</artifactId>
         <groupId>com.armedia</groupId>
-        <version>1.4</version>
+        <version>1.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,6 +23,11 @@
         <dependency>
             <groupId>com.armedia.acm.arm-file-tools</groupId>
             <artifactId>arm-folder-watcher</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.spring-tools</groupId>
+            <artifactId>spring-classpath-copier</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

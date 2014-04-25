@@ -11,11 +11,14 @@ import org.easymock.Mock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -41,10 +44,14 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     private ConfigFileWatcher unit;
     private String fileSeparator = File.separator;
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+
     @Before
     public void setUp() throws Exception
     {
         unit = new ConfigFileWatcher();
+        unit.setIgnoreFolders(Arrays.asList("/ignoreFolder"));
+        unit.setBaseFolderPath("home" + "/" + "acm");
     }
 
     @Test
@@ -70,9 +77,23 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     }
 
     @Test
+    public void raiseEvent_ignoreFilesFromIgnoreFolders() throws Exception
+    {
+        Capture<AbstractConfigurationFileEvent> capturedEvent =
+                setupEventTest("file:/" + unit.getBaseFolderPath() + "/" +
+                        "ignoreFolder" + "/" + "file.txt");
+
+        unit.fileCreated(mockFileChangeEvent);
+
+        // since no event should have been raised, nothing should have been captured.
+        assertFalse(capturedEvent.hasCaptured());
+    }
+
+    @Test
     public void raiseEvent_whenFileIsAdded() throws Exception
     {
-        Capture<AbstractConfigurationFileEvent> capturedEvent = setupEventTest();
+        Capture<AbstractConfigurationFileEvent> capturedEvent =
+                setupEventTest("file:/" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileCreated(mockFileChangeEvent);
 
@@ -83,7 +104,8 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     @Test
     public void raiseEvent_whenFileIsRemoved() throws Exception
     {
-        Capture<AbstractConfigurationFileEvent> capturedEvent = setupEventTest();
+        Capture<AbstractConfigurationFileEvent> capturedEvent =
+                setupEventTest("file:/" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileDeleted(mockFileChangeEvent);
 
@@ -94,7 +116,8 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     @Test
     public void raiseEvent_whenFileIsChanged() throws Exception
     {
-        Capture<AbstractConfigurationFileEvent> capturedEvent = setupEventTest();
+        Capture<AbstractConfigurationFileEvent> capturedEvent =
+                setupEventTest("file:/" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileChanged(mockFileChangeEvent);
 
@@ -110,18 +133,29 @@ public class ConfigFileWatcherTest extends EasyMockSupport
         assertNotNull(capturedEvent.getValue().getConfigFile());
     }
 
-    private Capture<AbstractConfigurationFileEvent> setupEventTest() throws FileSystemException, MalformedURLException
+    private Capture<AbstractConfigurationFileEvent> setupEventTest(String fileUrl) throws FileSystemException, MalformedURLException
     {
         unit.setApplicationEventPublisher(mockPublisher);
-        unit.setBaseFolderPath("home" + fileSeparator + "acm");
+
 
         Capture<AbstractConfigurationFileEvent> capturedEvent = new Capture<>();
 
         expect(mockFileChangeEvent.getFile()).andReturn(mockFileObject).atLeastOnce();
         expect(mockFileObject.getName()).andReturn(mockFileName).anyTimes();
-        expect(mockFileObject.getURL()).andReturn(new URL("file:/" + unit.getBaseFolderPath() + fileSeparator + "file.txt"));
 
-        mockPublisher.publishEvent(capture(capturedEvent));
+        URL fileUrlObj = new URL(fileUrl);
+        expect(mockFileObject.getURL()).andReturn(fileUrlObj).times(1, 2);
+
+        log.debug("File URL: " + fileUrl);
+
+        // if file is in one of the folders to be ignored we shouldn't raise an event
+        boolean ignored = unit.ignoreThisFile(fileUrlObj);
+
+
+        if ( !ignored )
+        {
+            mockPublisher.publishEvent(capture(capturedEvent));
+        }
 
         replayAll();
         return capturedEvent;

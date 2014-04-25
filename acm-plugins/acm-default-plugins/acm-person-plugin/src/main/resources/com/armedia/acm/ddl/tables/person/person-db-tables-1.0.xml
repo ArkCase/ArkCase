@@ -47,5 +47,64 @@
         <modifyDataType tableName="acm_person" columnName="cm_person_id" newDataType="NUMBER(32,0)"/>
     </changeSet>
 
+    <changeSet id="03-add-title-and-company-columns" author="dmiller">
+        <addColumn tableName="acm_person">
+            <column name="cm_person_company_name" type="VARCHAR(1024)"/>
+        </addColumn>
+        <addColumn tableName="acm_person">
+            <column name="cm_person_title" type="VARCHAR(256)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="04-add-security-tags" author="dmiller">
+        <createTable tableName="acm_person_security_tag">
+            <column name="cm_person_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_security_tag" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="acm_person_security_tag" indexName="idx_person_sec_tag_person_id">
+            <column name="cm_person_id"/>
+        </createIndex>
+
+
+    </changeSet>
+
+    <changeSet id="05-add-person-address-table" author="dmiller">
+        <createTable tableName="acm_person_postal_address">
+            <column name="cm_person_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_address_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="acm_person_postal_address" indexName="idx_person_addr_person_id">
+            <column name="cm_person_id"/>
+        </createIndex>
+        <createIndex tableName="acm_person_postal_address" indexName="idx_person_addr_addr_id">
+            <column name="cm_address_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="06-add-person-contact-method-table" author="dmiller">
+        <createTable tableName="acm_person_contact_method">
+            <column name="cm_person_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_contact_method_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="acm_person_contact_method" indexName="idx_person_cntct_person_id">
+            <column name="cm_person_id"/>
+        </createIndex>
+        <createIndex tableName="acm_person_contact_method" indexName="idx_person_cntct_cntct_id">
+            <column name="cm_contact_method_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
 

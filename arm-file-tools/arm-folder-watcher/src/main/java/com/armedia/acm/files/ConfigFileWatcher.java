@@ -3,12 +3,9 @@ package com.armedia.acm.files;
 import org.apache.commons.vfs2.FileChangeEvent;
 import org.apache.commons.vfs2.FileListener;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSelectInfo;
-import org.apache.commons.vfs2.FileSelector;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileType;
 import org.apache.commons.vfs2.FileTypeSelector;
-import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -22,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Watch for file events in the ACM configuration folder.  Raise application events for each such event.
@@ -32,6 +30,7 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
     private FileObject baseFolder;
     private String baseFolderPath;
     private ApplicationEventPublisher applicationEventPublisher;
+    private List<String> ignoreFolders;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
@@ -64,6 +63,11 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
     @Override
     public void fileCreated(FileChangeEvent fileChangeEvent) throws Exception
     {
+        if ( ignoreThisFile(fileChangeEvent.getFile().getURL() ))
+        {
+            return;
+        }
+
         if ( log.isDebugEnabled() )
         {
             log.debug("file added: " + fileChangeEvent.getFile().getName());
@@ -95,6 +99,11 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
     @Override
     public void fileDeleted(FileChangeEvent fileChangeEvent) throws Exception
     {
+        if ( ignoreThisFile(fileChangeEvent.getFile().getURL() ))
+        {
+            return;
+        }
+
         if ( log.isDebugEnabled() )
         {
             log.debug("file deleted: " + fileChangeEvent.getFile().getName());
@@ -114,6 +123,11 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
     @Override
     public void fileChanged(FileChangeEvent fileChangeEvent) throws Exception
     {
+        if ( ignoreThisFile(fileChangeEvent.getFile().getURL() ))
+        {
+            return;
+        }
+
         if ( log.isDebugEnabled() )
         {
             log.debug("file changed: " + fileChangeEvent.getFile().getName());
@@ -127,6 +141,31 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
         event.setConfigFile(eventFile);
 
         getApplicationEventPublisher().publishEvent(event);
+    }
+
+    public boolean ignoreThisFile(URL fileUrl)
+    {
+        boolean retval = false;
+        for ( String ignoreFolder : getIgnoreFolders() )
+        {
+            String ignoreFolderPath = getBaseFolderPath() + ignoreFolder;
+
+            if ( log.isTraceEnabled() )
+            {
+                log.trace("checking for " + ignoreFolderPath);
+            }
+
+            if ( fileUrl.toString().contains( ignoreFolderPath ))
+            {
+                if ( log.isTraceEnabled() )
+                {
+                    log.debug("this file will be ignored");
+                }
+                retval = true;
+            }
+        }
+
+        return retval;
     }
 
     @Override
@@ -173,5 +212,15 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
     public void setBaseFolderPath(String baseFolderPath)
     {
         this.baseFolderPath = baseFolderPath;
+    }
+
+    public void setIgnoreFolders(List<String> ignoreFolders)
+    {
+        this.ignoreFolders = ignoreFolders;
+    }
+
+    public List<String> getIgnoreFolders()
+    {
+        return ignoreFolders;
     }
 }

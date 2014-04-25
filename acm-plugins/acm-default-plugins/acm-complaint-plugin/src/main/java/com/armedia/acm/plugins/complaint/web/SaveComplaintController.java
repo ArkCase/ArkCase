@@ -32,13 +32,15 @@ public class SaveComplaintController
     public ModelAndView complaint()
     {
         ModelAndView retval = new ModelAndView();
-        retval.setViewName("complaintWizard");
+        retval.setViewName("complaint");
         retval.addObject("complaint", new Complaint());
 
         return retval;
     }
 
-    @RequestMapping(method= RequestMethod.POST)
+    //jwu: for quick testing; will change back to POST
+    //@RequestMapping(value = "/wizard", method = RequestMethod.POST)
+    @RequestMapping(value = "/wizard", method = RequestMethod.GET)
     public ModelAndView saveComplaint(
             @Valid Complaint complaint,
             BindingResult bindingResult,
@@ -76,6 +78,7 @@ public class SaveComplaintController
         } catch ( MuleException | TransactionException e)
         {
             log.error("Could not save complaint: " + e.getMessage(), e);
+            // TODO: return the current complaint from the db, since the update failed
             retval.addObject("complaint", complaint);
             retval.addObject("succeeded", false);
             retval.addObject("errors", Arrays.asList(new ObjectError("complaint", e.getMessage())));
