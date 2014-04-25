@@ -153,6 +153,11 @@
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-cmis</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-scripting</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- activiti -->
         <dependency>
@@ -184,6 +189,10 @@
             <!-- h2 is the in-memory database used for Activiti tests -->
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
         </dependency>
 
         <dependency>

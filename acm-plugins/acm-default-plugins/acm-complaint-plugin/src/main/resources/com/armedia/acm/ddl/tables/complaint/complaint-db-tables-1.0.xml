@@ -87,6 +87,13 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="08-drop-not-null-on-priority-type-title" author="dmiller">
+        <comment>Allow creating complaint with minimal data.  These columns must be populated before it can be approved.</comment>
+        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_type"/>
+        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_priority"/>
+        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_title"/>
+    </changeSet>
+
 
 </databaseChangeLog>
 

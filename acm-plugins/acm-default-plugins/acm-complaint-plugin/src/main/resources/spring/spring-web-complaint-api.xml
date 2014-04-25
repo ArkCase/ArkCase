@@ -4,6 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="createComplaintAPIController" class="com.armedia.acm.plugins.complaint.web.api.CreateComplaintAPIController">
-
+        <property name="complaintTransaction" ref="saveComplaintTransaction"/>
+        <property name="eventPublisher" ref="complaintEventPublisher"/>
+        <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 </beans>

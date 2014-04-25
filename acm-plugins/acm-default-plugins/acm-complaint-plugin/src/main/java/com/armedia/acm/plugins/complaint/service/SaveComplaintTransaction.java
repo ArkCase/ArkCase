@@ -29,7 +29,6 @@ public class SaveComplaintTransaction
             throws MuleException
     {
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("methodToCall", "save");
         messageProps.put("acmUser", authentication);
         MuleMessage received = getMuleClient().send("vm://saveComplaint.in", complaint, messageProps);
         Complaint saved = received.getPayload(Complaint.class);
