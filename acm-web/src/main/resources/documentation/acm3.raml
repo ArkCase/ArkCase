@@ -96,3 +96,36 @@ securitySchemes:
                   
               
       
+        400:
+          description: Usually means the request body was invalid (did not match the expected JSON format).  The response body will be empty.
+    /details/{complaintId}:
+      post:
+        description: Update complaint details, including title, description text, type, etc.
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+        body:
+          application/json:
+            example: |
+              {
+                "incidentDate": "2014-04-28",
+                // complaintType must be a value from the "GET types" service
+                "complaintType": "Agricultural",
+                // complaintPriority must be a value from the "GET priorities" service
+                "complaintPriority": "expedite",
+                "complaintTitle": "Sample Title",
+                "complaintText": "<strong>Sample Text, properly encoding HTML within JSON</strong>"
+              }
+    
+    /types:
+      description: Manage the list of complaint types.
+      get:
+        description: Retrieve array of valid complaint types.
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+        responses:
+          200:
+            description: Expected response including the valid complaint types.
+            body:
+              application/json:
+                example: |
+                  [ "Domestic Dispute", "Arson", "Better Business Dispute", "Government", "Local", "Agricultural", "Pollution" ]
+                
+          
