@@ -16,7 +16,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-context-holder.xml", "classpath*:/spring/spring-library-folder-watcher.xml"})
+@ContextConfiguration(locations = {
+        "/spring/spring-library-context-holder.xml",
+        "classpath*:/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-config-context-holder-depends-on-beans.xml"})
 public class SpringFileLoaderIT
 {
     @Autowired

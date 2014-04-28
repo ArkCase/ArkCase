@@ -37,7 +37,8 @@
 
     <bean id="configMonitorController" class="com.armedia.acm.files.ConfigFileController"
             init-method="initBean"
-            destroy-method="stopBean">
+            destroy-method="stopBean"
+            depends-on="activitiProcessEngineConfiguration,drlDeployer">
         <property name="configFolder" ref="configFolder"/>
         <property name="configFolderMonitor" ref="configFileMonitor"/>
     </bean>
