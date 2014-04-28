@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.4.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
+
+
+    <flow name="getTestFolderId" doc:name="Get Test Folder Id">
+        <description>Lookup a test folder ID from the CMIS repository.</description>
+        <vm:inbound-endpoint
+                address="vm://getTestFolderId.in"
+                exchange-pattern="request-response"
+                doc:name="Get Test Folder ID">
+        </vm:inbound-endpoint>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
+
+        <timer-interceptor/>
+
+        <cmis:get-or-create-folder-by-path folderPath="#[payload]"/>
+
+        <set-payload value="#[payload.id]"/>
+    </flow>
+
+</mule>

@@ -4,12 +4,12 @@
 <meta charset="utf-8" />
 <title>Activity | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
-<link rel="stylesheet" href="css/animate.css" type="text/css" />
-<link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
-<link rel="stylesheet" href="css/icon.css" type="text/css" />
-<link rel="stylesheet" href="css/font.css" type="text/css" />
-<link rel="stylesheet" href="css/app.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/icon.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/app.css" type="text/css" />
 <!--[if lt IE 9]>
     <script src="js/ie/html5shiv.js"></script>
     <script src="js/ie/respond.min.js"></script>
@@ -19,60 +19,27 @@
 <body class="">
 <section class="vbox">
   <header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
-    <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="images/armedia.png" class="m-r-sm"></a></div>
+    <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
     <ul class="nav navbar-nav hidden-xs">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="i i-plus"></i> New
-          </a>
-          <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
-         
-            <div class="row m-l-none m-r-none m-t m-b text-center">
-              <div class="col-xs-3">
-                <div class="padder-v2">
-                  <a href="newComplaint.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-notice i-2x text-primary-lt"></i>
-                    </span>
-                    <small class="text-muted">Complaint</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-3">
-                <div class="padder-v2">
-                  <a href="newCase.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-folder i-2x text-danger-lt"></i>
-                    </span>
-                    <small class="text-muted">Case</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-3">
-                <div class="padder-v2">
-                  <a href="newTask.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-checkmark i-2x text-success-lt"></i>
-                    </span>
-                    <small class="text-muted">Task</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-3">
-                <div class="padder-v2">
-                  <a href="newDocument.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-file i-2x text-info-lt"></i>
-                    </span>
-                    <small class="text-muted">Document</small>
-                  </a>
-                </div>
-              </div>
-             
+      <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
+        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
+          <div class="row m-l-none m-r-none m-t m-b text-center">
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newComplaint.html"> <span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>
             </div>
-          </section>
-        </li>
-      </ul>
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>
+            </div>
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>
+            </div>
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newDocument.html"> <span class="m-b-xs block"> <i class="i i-file i-2x text-info-lt"></i> </span> <small class="text-muted">Document</small> </a> </div>
+            </div>
+          </div>
+        </section>
+      </li>
+    </ul>
     <form class="navbar-form navbar-right input-s-lg m-t m-l-n-xs hidden-xs" role="search">
       <div class="form-group">
         <div class="input-group"> <span class="input-group-btn">
@@ -102,11 +69,11 @@
           <section class="w-f scrollable">
             <div class=slim-scroll data-height=auto data-disable-fade-out=true data-distance=0 data-size=10px data-railOpacity=0.2>
               <div class="clearfix wrapper dk nav-user hidden-xs">
-                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
+                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="resources/images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
-<li> <a href="#">Switch User</a> </li>
+                    <li> <a href="#">Switch User</a> </li>
                     <li class="divider"></li>
                     <li> <a href="index.html">Logout</a> </li>
                   </ul>
@@ -125,7 +92,7 @@
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
-<li class=""> <a href="admin.html" class="auto"> <i class="i i-settings icon"> </i> <span class="font-bold">Admin</span> </a> </li>
+                  <li class=""> <a href="admin.html" class="auto"> <i class="i i-settings icon"> </i> <span class="font-bold">Admin</span> </a> </li>
                 </ul>
               </nav>
               <!-- / nav --> 
@@ -140,108 +107,96 @@
           <section class="scrollable padder">
             <section class="row m-b-md">
               <div class="col-sm-12">
-                <h3 class="m-b-xs text-black">Activity</h3> 
+                <h3 class="m-b-xs text-black">Activity</h3>
               </div>
             </section>
-            
-            
-            
-             <div class="timeline">
-                    <article class="timeline-item active">
-                        <div class="timeline-caption">
-                          <div class="panel bg-gradient lt no-borders">
-                            <div class="panel-body">
-                              <span class="timeline-icon"><i class="fa fa-calendar-o time-icon bg-primary"></i></span> 
-                              <span class="timeline-date">3/18/2014</span>
-                              <h5 class="text-center">David Miller</h5>
-                            </div>
-                          </div>
-                        </div>
-                    </article>
-                    <article class="timeline-item">
-                        <div class="timeline-caption">
-                          <div class="panel panel-default">
-                            <div class="panel-body">
-                              <span class="arrow left"></span>
-                              <span class="timeline-icon"><i class="fa fa-folder time-icon bg-primary"></i></span>
-                              <span class="timeline-date">12:25 am</span>
-                              <div class="text-sm">New Case</div>
-                              <h5>                                
-                                Case Title (Case ID)
-                              </h5>
-                            </div>       
-                          </div>
-                        </div>
-                    </article>
-                    <article class="timeline-item alt">
-                        <div class="timeline-caption">                
-                          <div class="panel panel-default">
-                            <div class="panel-body">
-                              <span class="arrow right"></span>
-                              <span class="timeline-icon"><i class="fa  fa-check-square-o time-icon bg-success"></i></span>
-                              <span class="timeline-date">10:00 am</span>
-                              <div class="text-sm">Approved Document</div>
-                              <h5>                                
-                               Document Name (Case ID)
-                              </h5>
-                              <p>Document description</p>
-                            </div>
-                          </div>
-                        </div>
-                    </article>          
-                    <article class="timeline-item">
-                        <div class="timeline-caption">                
-                          <div class="panel panel-default">
-                            <div class="panel-body">
-                              <span class="arrow left"></span>
-                              <span class="timeline-icon"><i class="fa fa-bullhorn time-icon bg-dark"></i></span>
-                              <span class="timeline-date">8:00 am</span>
-                              <div class="text-sm">New Complaint</div>
-                              <h5>                                
-                                Complaint Name (Case ID)
-                              </h5>
-                              <p>Complaint description</p>
-                            </div>
-                          </div>
-                        </div>
-                    </article>
-                    <article class="timeline-item alt">
-                        <div class="timeline-caption">                
-                          <div class="panel panel-default">
-                            <div class="panel-body">
-                              <span class="arrow right"></span>
-                              <span class="timeline-icon"><i class="fa fa-file-text time-icon bg-info"></i></span>
-                              <span class="timeline-date">9:30 am</span>
-                              <div class="text-sm">New Task</div>
-                              <h5>                                
-                                Task Name (Case ID)
-                              </h5>
-                              <p>Assigned by (Supervisor Name)</p>
-                            </div>
-                          </div>
-                        </div>
-                    </article>
-                  
-                    <div class="timeline-footer"><a href="#"><i class="fa fa-plus time-icon inline-block bg-dark"></i></a></div>
+            <section class="panel panel-default">
+              <div class="row wrapper">
+                <div class="col-sm-4 m-b-xs">
+                  <select class="input-sm form-control input-s-sm inline v-middle">
+                    <option value="0">Action</option>
+                    <option value="1">Export to Excel</option>
+                  </select>
+                  <button class="btn btn-sm btn-default">Apply</button>
+                </div>
+                <div class="col-sm-5 m-b-xs">
+                  <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-sm btn-default active">
+                      <input type="radio" name="options" id="option1">
+                      Today </label>
+                    <label class="btn btn-sm btn-default">
+                      <input type="radio" name="options" id="option2">
+                      This Week </label>
+                    <label class="btn btn-sm btn-default">
+                      <input type="radio" name="options" id="option2">
+                      This Month </label>
                   </div>
-            
-            
-            
-            
-            
+                </div>
+                <div class="col-sm-3">
+                  <div class="input-group">
+                    <input type="text" class="input-sm form-control" placeholder="Search">
+                    <span class="input-group-btn">
+                    <button class="btn btn-sm btn-default" type="button">Go!</button>
+                    </span> </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-striped b-t b-light">
+                  <thead>
+                    <tr>
+                      <th width="20"><label class="checkbox m-n i-checks">
+                          <input type="checkbox">
+                          <i></i></label></th>
+                      <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                      <th>Date/Time</th>
+                      <th>Type</th>
+                      <th width="30">Read?</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><label class="checkbox m-n i-checks">
+                          <input type="checkbox" name="post[]">
+                          <i></i></label></td>
+                      <td>David Miller created a document and assigned it to you.</td>
+                      <td>4/23/2014 12:00:00</td>
+                      <td>Document</td>
+                      <td><a href="#" class="active" data-toggle="class"><i class="fa fa-check text-success text-active"></i><i class="fa fa-times text-danger text"></i></a></td>
+                    </tr>
+                      </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+              <footer class="panel-footer">
+                <div class="row">
+                  <div class="col-sm-8 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small> </div>
+                  <div class="col-sm-4 text-right text-center-xs">
+                    <ul class="pagination pagination-sm m-t-none m-b-none">
+                      <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                      <li><a href="#">1</a></li>
+                      <li><a href="#">2</a></li>
+                      <li><a href="#">3</a></li>
+                      <li><a href="#">4</a></li>
+                      <li><a href="#">5</a></li>
+                      <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                    </ul>
+                  </div>
+                </div>
+              </footer>
+            </section>
           </section>
-      
         </section>
       </section>
     </section>
   </section>
 </section>
-<script src="js/jquery.min.js"></script> 
+<script src="resources/js/jquery.min.js"></script> 
 <!-- Bootstrap --> 
-<script src="js/bootstrap.js"></script> 
+<script src="resources/js/bootstrap.js"></script> 
 <!-- App --> 
-<script src="js/app.js"></script> 
-<script src="js/slimscroll/jquery.slimscroll.min.js"></script> 
-<script src="js/app.plugin.js"></script> 
+<script src="resources/js/app.js"></script> 
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="resources/js/app.plugin.js"></script>
 </body>
 </html>

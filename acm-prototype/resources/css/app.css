@@ -1,3 +1,5 @@
+/* @override http://localhost/~aj/acm3/resources/css/app.css */
+
 /* @override http://localhost/~aj/acm3/css/app.css */
 
 /* @override http://localhost/~aj/acm3/css/app.css */
@@ -290,7 +292,6 @@ a.list-group-item:focus {
   border-radius: 2px 2px 0 0;
 }
 .panel-default .panel-heading {
-  background-color: #f9fafc;
 }
 .panel-heading.no-border {
   margin: -1px -1px 0 -1px;
@@ -860,6 +861,20 @@ body.container {
 
 
 
+#peopleinvolved table.table.table-striped.table-hover {
+	padding: 0px;
+	margin: 0px;
+}
+
+#maps iframe.col-xs-12 {
+	padding: 0px;
+	height: 400px;
+	border: 0px;
+	
+}
+
+
+
 
 
 .chosen-container {
@@ -895,7 +910,24 @@ body.container {
   cursor: pointer;
 }
 
+
+div.tooltip {
+	z-index: 1000001;
+	position: fixed;
+}
+
+div.h4.font-bold {
+	font-size: 14px;
+}
+
+
 /* @end */
+
+div.panel-body.max-200 {
+	max-height: 200px;
+	overflow-y: auto;
+}
+
 /* @group Single Chosen */
 .chosen-container-single .chosen-single {
   position: relative;
@@ -938,9 +970,11 @@ body.container {
   display: block;
   width: 12px;
   height: 12px;
-  background: url('../../css/chosen-sprite.png') -42px 1px no-repeat;
+  background: url('../../resources/css/chosen-sprite.png') -42px 1px no-repeat;
   font-size: 1px;
+
 }
+
 .chosen-container-single .chosen-single abbr:hover {
   background-position: -42px -10px;
 }
@@ -2511,6 +2545,10 @@ fieldset[disabled] .btn-dark.active {
 }
 .th-sortable.active .text {
   display: none !important;
+}
+
+div.panel-body.no-padder table {
+	margin: 0px;
 }
 .th-sortable.active .text-active {
   display: inline-block !important;

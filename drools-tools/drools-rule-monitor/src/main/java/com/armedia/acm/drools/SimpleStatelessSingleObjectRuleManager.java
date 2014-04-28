@@ -42,6 +42,11 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
         getRulesSession().execute(businessObject);
 
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Done applying rules: " + businessObject);
+        }
+
         return businessObject;
     }
 
