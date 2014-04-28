@@ -9,6 +9,9 @@
     -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/drops" relativeToChangelogFile="false"/>
 
+    <!-- sequences are shared objects with no dependencies, so they should be next. -->
+    <includeAll path="classpath*:/com/armedia/acm/ddl/sequences" relativeToChangelogFile="false"/>
+
     <!-- tables next... The table changelogs can include indexes and primary keys,
          but should not include foreign keys. Check constraints can be either in the table DDL
          or the constraint ddl.
