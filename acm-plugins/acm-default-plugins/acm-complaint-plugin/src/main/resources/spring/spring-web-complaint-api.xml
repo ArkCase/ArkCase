@@ -8,4 +8,8 @@
         <property name="eventPublisher" ref="complaintEventPublisher"/>
         <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
+
+    <bean id="getComplaintTypesAPIController" class="com.armedia.acm.plugins.complaint.web.api.GetComplaintTypesAPIController">
+        <property name="complaintPlugin" ref="complaintPlugin"/>
+    </bean>
 </beans>
