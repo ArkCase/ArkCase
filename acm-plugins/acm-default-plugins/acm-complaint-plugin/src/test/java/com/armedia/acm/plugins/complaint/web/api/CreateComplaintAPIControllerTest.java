@@ -73,7 +73,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-            post("/api/latest/complaint.json")
+            post("/api/latest/plugin/complaint")
                     .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(in))
@@ -103,7 +103,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/complaint.json")
+                post("/api/latest/plugin/complaint")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(notComplaintJson))
@@ -115,6 +115,10 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         log.info("result code: " + result.getResponse().getStatus());
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
+
+        log.info("failing results: " + result.getResponse().getContentAsString());
+
+
 
     }
 }
