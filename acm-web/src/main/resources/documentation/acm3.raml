@@ -127,5 +127,17 @@ securitySchemes:
               application/json:
                 example: |
                   [ "Domestic Dispute", "Arson", "Better Business Dispute", "Government", "Local", "Agricultural", "Pollution" ]
+    /priorities:
+      description: Manage the list of complaint priorities.
+      get:
+        description: Retrieve array of valid complaint priorities.
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+        responses:
+          200:
+            description: Expected response including the valid complaint priorities.
+            body:
+              application/json:
+                example: |
+                  [ "Low", "Medium", "High" ]
                 
           

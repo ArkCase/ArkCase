@@ -17,11 +17,11 @@ public class ComplaintFactory
         Complaint complaint = new Complaint();
         complaint.setComplaintNumber(UUID.randomUUID().toString());
         complaint.setComplaintTitle("testTitle");
-        complaint.setComplaintType("TEST");
+        complaint.setComplaintType("Local");
         complaint.setCreated(new Date());
         complaint.setCreator("tester");
         complaint.setDetails("details");
-        complaint.setPriority("testPriority");
+        complaint.setPriority("Expedite");
         complaint.setModified(new Date());
         complaint.setModifier("testModifier");
 
