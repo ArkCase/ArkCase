@@ -10,6 +10,7 @@ public class AcmPlugin implements Serializable
     private String pluginName;
     private boolean navigatorTab;
     private String navigatorTabName;
+    private String navigatorImage;
     private String homeUrl;
     private boolean enabled;
 
@@ -63,5 +64,13 @@ public class AcmPlugin implements Serializable
     public void setEnabled(boolean enabled)
     {
         this.enabled = enabled;
+    }
+
+    public String getNavigatorImage() {
+        return navigatorImage;
+    }
+
+    public void setNavigatorImage(String navigatorImage) {
+        this.navigatorImage = navigatorImage;
     }
 }

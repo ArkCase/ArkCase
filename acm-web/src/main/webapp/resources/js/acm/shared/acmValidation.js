@@ -1,4 +1,4 @@
-ACM.Validation = {
+Acm.Validation = {
     initialize: function() {
     }
 
@@ -20,7 +20,7 @@ ACM.Validation = {
 /*
     validateCase: function (caseNumber, errors) {
         if(undefined !== caseNumber && caseNumber.length > 0) {
-            if (!((caseNumber.length == 8 || caseNumber.length == 10) && ACM.Validation.isAlphaNumeric(caseNumber))) {
+            if (!((caseNumber.length == 8 || caseNumber.length == 10) && Acm.Validation.isAlphaNumeric(caseNumber))) {
                 errors.push("Case Number is invalid. Must be either 8 or 10 characters and alpha-numeric only.");
             }
         }
@@ -28,7 +28,7 @@ ACM.Validation = {
 
     validateEqipId: function (eqipNumber, errors) {
         if(eqipNumber !== undefined && eqipNumber.length > 0) {
-            if (!ACM.Validation.isAlphaNumeric(eqipNumber)) {
+            if (!Acm.Validation.isAlphaNumeric(eqipNumber)) {
                 errors.push("e-QIP ID is invalid.  Must be alpha-numeric only");
             }
         }
@@ -36,16 +36,16 @@ ACM.Validation = {
 
     validateLastName: function (lastName, errors) {
         if(undefined !== lastName && lastName.length > 0) {
-            //if (!ACM.Validation.isAlphaWithAnySpace(lastName)) {
-            if (!ACM.Validation.isAlphaNumericSpace(lastName)) {
+            //if (!Acm.Validation.isAlphaWithAnySpace(lastName)) {
+            if (!Acm.Validation.isAlphaNumericSpace(lastName)) {
                 errors.push("Last Name must be alpha-numeric");
             }
         }
     },
     validateNamePart: function (part, fieldName, errors) {
         if(undefined !== part && part.length > 0) {
-            //if (!ACM.Validation.isAlphaWithAnySpace(part)) {
-            if (!ACM.Validation.isAlphaNumericSpace(part)) {
+            //if (!Acm.Validation.isAlphaWithAnySpace(part)) {
+            if (!Acm.Validation.isAlphaNumericSpace(part)) {
                 errors.push(fieldName + " must be alpha-numeric");
             }
         }
@@ -81,13 +81,13 @@ ACM.Validation = {
             }
         }
 
-//jwu pos info is not shown with ACM.Popup
+//jwu pos info is not shown with Acm.Popup
 //        if(undefined !== pos) {
-//            ACM.Alert.showErrorDialogPositioned(msg, errors.join('<br>'), title, pos);
+//            Acm.Alert.showErrorDialogPositioned(msg, errors.join('<br>'), title, pos);
 //        } else {
-//            ACM.Alert.showErrorDialog(msg, errors.join('<br>'), title, pos);
+//            Acm.Alert.showErrorDialog(msg, errors.join('<br>'), title, pos);
 //        }
-          ACM.Popup.error2(msg, errors.join('<br>'), ACM.Popup.NO_CALLBACK, title);
+          Acm.Popup.error2(msg, errors.join('<br>'), Acm.Popup.NO_CALLBACK, title);
 
     },
     _getCorrectDateFormat : function(val) {

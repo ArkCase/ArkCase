@@ -23,31 +23,31 @@ ComplaintWizard.Object = {
 
     }
     ,usePagination: function(totalItems, itemsPerPage, callback) {
-        ACM.Object.usePagination(this.$jPaginate, totalItems, itemsPerPage, callback)
+        Acm.Object.usePagination(this.$jPaginate, totalItems, itemsPerPage, callback)
     }
     ,setEnableBtnPrint: function(enable) {
-        ACM.Object.setEnable(this.$btnPrint, enable);
+        Acm.Object.setEnable(this.$btnPrint, enable);
     }
     ,setEnableBtnAssign: function(enable) {
-        ACM.Object.setEnable(this.$btnAssign, enable);
+        Acm.Object.setEnable(this.$btnAssign, enable);
     }
     ,setEnableBtnDelete: function(enable) {
-        ACM.Object.setEnable(this.$btnDelete, enable);
+        Acm.Object.setEnable(this.$btnDelete, enable);
     }
     ,showBtnPrint: function(show) {
-        ACM.Object.show(this.$btnPrint, show);
+        Acm.Object.show(this.$btnPrint, show);
     }
     ,setEnableBtnFingerPrint: function(enable) {
-        ACM.Object.setEnable(this.$btnFingerPrint, enable);
+        Acm.Object.setEnable(this.$btnFingerPrint, enable);
     }
     ,showBtnFingerPrint: function(show) {
-        ACM.Object.show(this.$btnFingerPrint, show);
+        Acm.Object.show(this.$btnFingerPrint, show);
     }
     ,showBtnAssign: function(show) {
-        ACM.Object.show(this.$btnAssign, show);
+        Acm.Object.show(this.$btnAssign, show);
     }
     ,showBtnDelete: function(show) {
-        ACM.Object.show(this.$btnDelete, show);
+        Acm.Object.show(this.$btnDelete, show);
     }
     ,showLnkNextItems: function() {
         alert("showLnkNextItem depleted");
@@ -57,10 +57,10 @@ ComplaintWizard.Object = {
 //        ComplaintWizard.Object.showLnkNextItemMb(checked);
     }
     ,showLnkNextItemQa: function(show) {
-        ACM.Object.showParent(this.$lnkNextItemQa, show);
+        Acm.Object.showParent(this.$lnkNextItemQa, show);
     }
     ,showLnkNextItemMb: function(show) {
-        ACM.Object.showParent(this.$lnkNextItemMb, show);
+        Acm.Object.showParent(this.$lnkNextItemMb, show);
     }
 	,putUnassignedDoc: function(unassignedTaskId, unassignedDoc) {
         var selected = false;
@@ -134,58 +134,58 @@ ComplaintWizard.Object = {
         return ComplaintWizard.ticket;
     }
     ,showLabAssigneeProgress: function(show) {
-    	ACM.Object.show(this.$labAssigneeProgress, show);
+    	Acm.Object.show(this.$labAssigneeProgress, show);
 	}
     ,setTextLabTotalCount: function(value) {
-    	ACM.Object.setText(this.$labTotalCount, value);
+    	Acm.Object.setText(this.$labTotalCount, value);
     }
     ,setHtmlDivResultList : function(html) {
-    	ACM.Object.setHtml(this.$divResultList, html);
+    	Acm.Object.setHtml(this.$divResultList, html);
     }
     ,setHtmlDivResultGrid: function(html) {
-    	ACM.Object.setHtml(this.$divResultGrid, html);
+    	Acm.Object.setHtml(this.$divResultGrid, html);
     }
     ,emptySelAssignee: function() {
-    	ACM.Object.empty(this.$selAssignee);
+    	Acm.Object.empty(this.$selAssignee);
     }
     ,setHtmlSelAssignee : function(html) {
-    	ACM.Object.setHtml(this.$selAssignee, html);
+    	Acm.Object.setHtml(this.$selAssignee, html);
     }
     ,emptySelWidAssignee: function() {
-        ACM.Object.empty(this.$selWidAssignee);
+        Acm.Object.empty(this.$selWidAssignee);
     }
     ,setHtmlSelWidAssignee : function(html) {
-        ACM.Object.setHtml(this.$selWidAssignee, html);
+        Acm.Object.setHtml(this.$selWidAssignee, html);
     }
     ,getValueSelWidAssignee: function() {
-        return ACM.Object.getSelectValue(this.$selWidAssignee);
+        return Acm.Object.getSelectValue(this.$selWidAssignee);
     }
     ,showSelWidAssignee: function(show) {
-        return ACM.Object.show(this.$selWidAssignee, show);
+        return Acm.Object.show(this.$selWidAssignee, show);
     }
     ,getTextDivAssigneeSelf: function() {
-        return ACM.Object.getTextNodeText(this.$divAssigneeSelf);
+        return Acm.Object.getTextNodeText(this.$divAssigneeSelf);
     }
     ,setTextDivAssigneeSelf: function() {
-        ACM.Object.setTextNodeText(this.$divAssigneeSelf);
+        Acm.Object.setTextNodeText(this.$divAssigneeSelf);
     }
     ,showDivAssigneeSelf: function(show) {
-        ACM.Object.show(this.$divAssigneeSelf, show);
+        Acm.Object.show(this.$divAssigneeSelf, show);
     }
     ,isVisibleDivAssigneeSelf: function() {
-        return ACM.Object.isVisible(this.$divAssigneeSelf);
+        return Acm.Object.isVisible(this.$divAssigneeSelf);
     }
     ,getWidAssign: function() {
 	    return this.$widAssign;
 	}
     ,getValueTxtAssignComment: function() {
-        return ACM.Object.getValue(this.$txtAssignComment);
+        return Acm.Object.getValue(this.$txtAssignComment);
     }
     ,setValueTxtAssignComment: function(value) {
-        ACM.Object.setValue(this.$txtAssignComment, value);
+        Acm.Object.setValue(this.$txtAssignComment, value);
     }
     ,showInvalidAssign: function(show) {
-        ACM.Object.showParent(this.$spanInvalidAssign, show);
+        Acm.Object.showParent(this.$spanInvalidAssign, show);
     }
     ,closeFrmWidAssign: function() {
         this.$btnWidAssignCancel.click();
@@ -198,13 +198,13 @@ ComplaintWizard.Object = {
     	return jQuery(this.idWidDelete);
 	}
     ,getValueTxtDeleteComment: function() {
-        return ACM.Object.getValue(jQuery(this.idTxtDeleteComment));
+        return Acm.Object.getValue(jQuery(this.idTxtDeleteComment));
     }
     ,setValueTxtDeleteComment: function(value) {
-        ACM.Object.setValue(this.$txtDeleteComment, value);
+        Acm.Object.setValue(this.$txtDeleteComment, value);
     }
     ,showInvalidDelete: function(show) {
-        ACM.Object.showParent(this.$spanInvalidDelete, show);
+        Acm.Object.showParent(this.$spanInvalidDelete, show);
     }
     ,closeFrmWidDelete: function() {
         jQuery(ComplaintWizard.Object.idBtnWidDeleteCancel).click();
@@ -217,13 +217,13 @@ ComplaintWizard.Object = {
 	    return this.$widFingerPrint;
 	}
     ,getValueTxtFingerPrintName: function() {
-        return ACM.Object.getValue(this.$txtFingerPrintName);
+        return Acm.Object.getValue(this.$txtFingerPrintName);
     }
     ,setValueTxtFingerPrintName: function(value) {
-        ACM.Object.setValue(this.$txtFingerPrintName, value);
+        Acm.Object.setValue(this.$txtFingerPrintName, value);
     }
     ,showInvalidFingerPrint: function(show) {
-        ACM.Object.showParent(this.$spanInvalidFingerPrint, show);
+        Acm.Object.showParent(this.$spanInvalidFingerPrint, show);
     }
     ,closeFrmWidFingerPrint: function() {
         this.$btnWidFingerPrintCancel.click();
@@ -298,7 +298,7 @@ ComplaintWizard.Object = {
     		queueNames += "," + Unassigned.queueMailback.name;
     	}
 
-    	if (ACM.Common.isNotEmpty(queueNames)) {
+    	if (Acm.Common.isNotEmpty(queueNames)) {
     		queueNames = queueNames.substring(1, queueNames.length); //discard extra leading ','
     	}
     	return queueNames;
@@ -316,89 +316,89 @@ ComplaintWizard.Object = {
 //    }
 
     ,_showLnkViewList: function(show) {
-        ACM.Object.show(this.$lnkViewList).closest('li', show);
+        Acm.Object.show(this.$lnkViewList).closest('li', show);
     }
     ,_showLnkViewGrid: function(show) {
-        ACM.Object.show(this.$lnkViewGrid).closest('li', show);
+        Acm.Object.show(this.$lnkViewGrid).closest('li', show);
     }
     ,_showDivResultList: function(show) {
-        ACM.Object.show(this.$divResultList, show);
+        Acm.Object.show(this.$divResultList, show);
     }
     ,_showDivResultGrid: function(show) {
-        ACM.Object.show(this.$divResultGrid, show);
+        Acm.Object.show(this.$divResultGrid, show);
     }
     ,_getValueSelDocType : function() {
-        return ACM.Object.getSelectValue(this.$selDocType);
+        return Acm.Object.getSelectValue(this.$selDocType);
     }
     ,_setValueSelDocType : function(val) {
-        ACM.Object.setSelectValue(this.$selDocType, val);
+        Acm.Object.setSelectValue(this.$selDocType, val);
     }
     ,_getValueEdtLastName: function() {
-        return ACM.Object.getPlaceHolderInput(this.$edtLastName);
+        return Acm.Object.getPlaceHolderInput(this.$edtLastName);
     }
     ,_setValueEdtLastName: function(val) {
-        ACM.Object.setPlaceHolderInput(this.$edtLastName, val);
+        Acm.Object.setPlaceHolderInput(this.$edtLastName, val);
     }
     ,_getValueEdtSsn: function() {
-    	var display = ACM.Object.getPlaceHolderInput(this.$edtSsn);
-        return ACM.Object.getSsnValue(display);
+    	var display = Acm.Object.getPlaceHolderInput(this.$edtSsn);
+        return Acm.Object.getSsnValue(display);
     }
     ,_setValueEdtSsn: function(val) {
-        ACM.Object.setPlaceHolderInput(this.$edtSsn, val);
+        Acm.Object.setPlaceHolderInput(this.$edtSsn, val);
     }
     ,_getValueEdtEQipRequest: function() {
-    	return ACM.Object.getPlaceHolderInput(this.$edtEQipRequest);
+    	return Acm.Object.getPlaceHolderInput(this.$edtEQipRequest);
     }
     ,_setValueEdtEQipRequest: function(val) {
-        ACM.Object.setPlaceHolderInput(this.$edtEQipRequest, val);
+        Acm.Object.setPlaceHolderInput(this.$edtEQipRequest, val);
     }
     ,_getValueEdtSoi: function() {
-    	return ACM.Object.getPlaceHolderInput(this.$edtSoi);
+    	return Acm.Object.getPlaceHolderInput(this.$edtSoi);
     }
     ,_setValueEdtSoi: function(val) {
-        ACM.Object.setPlaceHolderInput(this.$edtSoi, val);
+        Acm.Object.setPlaceHolderInput(this.$edtSoi, val);
     }
     ,_getValueEdtSon: function() {
-    	return ACM.Object.getPlaceHolderInput(this.$edtSon);
+    	return Acm.Object.getPlaceHolderInput(this.$edtSon);
     }
     ,_setValueEdtSon: function(val) {
-        ACM.Object.setPlaceHolderInput(this.$edtSon, val);
+        Acm.Object.setPlaceHolderInput(this.$edtSon, val);
     }
     ,_getValueSelAssignee: function() {
-    	return ACM.Object.getSelectValue(this.$selAssignee);
+    	return Acm.Object.getSelectValue(this.$selAssignee);
     }
     ,_setValueSelAssignee : function(val) {
-        ACM.Object.setSelectValue(this.$selAssignee, val);
+        Acm.Object.setSelectValue(this.$selAssignee, val);
     }
     ,_isCheckedChkSupervisorReview: function() {
-    	return ACM.Object.isChecked(this.$chkSupervisorReview);
+    	return Acm.Object.isChecked(this.$chkSupervisorReview);
     }
     ,_setCheckedChkSupervisorReview: function(val) {
-        ACM.Object.setChecked(this.$chkSupervisorReview, val);
+        Acm.Object.setChecked(this.$chkSupervisorReview, val);
     }
     ,_isCheckedChkContractOversight: function() {
-    	return ACM.Object.isChecked(this.$chkContractOversight);
+    	return Acm.Object.isChecked(this.$chkContractOversight);
     }
     ,_setCheckedChkContractOversight: function(val) {
-        ACM.Object.setChecked(this.$chkContractOversight, val);
+        Acm.Object.setChecked(this.$chkContractOversight, val);
     }
     ,isCheckedChkProcessing: function() {
-    	return ACM.Object.isChecked(this.$chkProcessing);
+    	return Acm.Object.isChecked(this.$chkProcessing);
     }
     ,_setCheckedChkProcessing: function(val) {
-        ACM.Object.setChecked(this.$chkProcessing, val);
+        Acm.Object.setChecked(this.$chkProcessing, val);
     }
     ,isCheckedChkQa: function() {
-    	return ACM.Object.isChecked(this.$chkQa);
+    	return Acm.Object.isChecked(this.$chkQa);
     }
     ,_setCheckedChkQa: function(val) {
-        ACM.Object.setChecked(this.$chkQa, val);
+        Acm.Object.setChecked(this.$chkQa, val);
     }
     ,isCheckedChkMailback: function() {
-    	return ACM.Object.isChecked(this.$chkMailback);
+    	return Acm.Object.isChecked(this.$chkMailback);
     }
     ,_setCheckedChkMailback: function(val) {
-        ACM.Object.setChecked(this.$chkMailback, val);
+        Acm.Object.setChecked(this.$chkMailback, val);
     }
 
 };

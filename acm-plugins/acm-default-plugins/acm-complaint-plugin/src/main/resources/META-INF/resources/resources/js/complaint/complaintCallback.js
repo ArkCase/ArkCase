@@ -7,7 +7,7 @@
  */
 Complaint.Callback = {
     initialize : function() {
-//        ACM.Dispatcher.addCallbackListener(this.CallbackResultReceived, this.onResultReceived);
+//        Acm.Dispatcher.addCallbackListener(this.CallbackResultReceived, this.onResultReceived);
     }
 
     ,CallbackResultReceived		: "complaint-result-received"
