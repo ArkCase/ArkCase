@@ -7,7 +7,7 @@
  */
 ComplaintWizard.Callback = {
     initialize : function() {
-//        ACM.Dispatcher.addCallbackListener(this.CallbackResultReceived, this.onResultReceived);
+//        Acm.Dispatcher.addCallbackListener(this.CallbackResultReceived, this.onResultReceived);
     }
 
     ,CALLBACK_SOME		: "complaint-wizard-result-received"

@@ -13,7 +13,8 @@
                 <div class="row m-l-none m-r-none m-t m-b text-center">
                     <div class="col-xs-3">
                         <div class="padder-v2">
-                            <a href="newComplaint.html">
+                            <a href="<c:url value='/plugin/complaint/wizard'/>">
+                            <!-- <a href="#" id="lnkNewComponent"> -->
                     <span class="m-b-xs block">
                       <i class="i i-notice i-2x text-primary-lt"></i>
                     </span>

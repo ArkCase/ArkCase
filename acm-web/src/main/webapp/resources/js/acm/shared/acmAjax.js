@@ -1,11 +1,11 @@
 /**
- * ACM.Ajax
+ * Acm.Ajax
  *
  * Make Ajax call with typical settings
  *
  * @author jwu
  */
-ACM.Ajax = {
+Acm.Ajax = {
     initialize: function() {
     }
 
@@ -16,11 +16,11 @@ ACM.Ajax = {
             ,data: data
             ,dataType: 'json'
             ,success: function(response) {
-                ACM.Dispatcher.triggerEvent(callback, response);
+                Acm.Dispatcher.triggerEvent(callback, response);
             }
             ,error: function(xhr, status, error) {
                 //var err = eval("(" + xhr.responseText + ")");
-                ACM.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+                Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
             }
         });
     }
@@ -31,10 +31,10 @@ ACM.Ajax = {
 	        ,async: true
 	        ,dataType: 'json'
 	        ,success: function(response) {
-	            ACM.Dispatcher.triggerEvent(callback, response);
+	            Acm.Dispatcher.triggerEvent(callback, response);
 	        }
 	        ,error: function(xhr, status, error) {
-	            ACM.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+	            Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
 	        }
 	    });
 	}
@@ -45,10 +45,10 @@ ACM.Ajax = {
             ,async: false
             ,dataType: 'json'
             ,success: function(response) {
-                ACM.Dispatcher.triggerEvent(callback, response);
+                Acm.Dispatcher.triggerEvent(callback, response);
             }
             ,error: function(xhr, status, error) {
-                ACM.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+                Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
             }
         });
     }
@@ -66,10 +66,10 @@ ACM.Ajax = {
                 }
             }
             ,success: function(response) {
-                ACM.Dispatcher.triggerEvent(callback, response);
+                Acm.Dispatcher.triggerEvent(callback, response);
             }
             ,error: function(xhr, status, error) {
-                ACM.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+                Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
             }
         });
     }
@@ -80,10 +80,10 @@ ACM.Ajax = {
             ,async: true
             ,contentType: "application/x-www-form-urlencoded; charset=UTF-8"
             ,success: function(response) {
-                ACM.Dispatcher.triggerEvent(callback, response);
+                Acm.Dispatcher.triggerEvent(callback, response);
             }
             ,error: function(xhr, status, error) {
-                ACM.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+                Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
             }
         });
     }
@@ -100,10 +100,10 @@ ACM.Ajax = {
 	            }
 	        }
 	        ,success: function(response) {
-	            ACM.Dispatcher.triggerEvent(callback, response);
+	            Acm.Dispatcher.triggerEvent(callback, response);
 	        }
 	        ,error: function(xhr, status, error) {
-	            ACM.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+	            Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
 	        }
 	    });
 	}

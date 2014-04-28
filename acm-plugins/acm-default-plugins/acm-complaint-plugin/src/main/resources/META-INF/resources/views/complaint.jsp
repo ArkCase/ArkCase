@@ -6,6 +6,7 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>Complaints | ACM | Armedia Case Management</title>
+
     <script type="text/javascript">
         $(document).ready(function () {
             Complaint.initialize();

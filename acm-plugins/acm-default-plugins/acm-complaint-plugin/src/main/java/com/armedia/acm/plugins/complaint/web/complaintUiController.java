@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.complaint.web;
 
+import com.armedia.acm.pluginmanager.AcmPlugin;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
@@ -17,8 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.Arrays;
 
-@RequestMapping("/api/latest/plugin/complaint")
-public class SaveComplaintController
+@RequestMapping("/plugin/complaint")
+public class ComplaintUiController
 {
 
 
@@ -26,19 +27,25 @@ public class SaveComplaintController
 
     private SaveComplaintTransaction complaintTransaction;
     private SaveComplaintEventPublisher eventPublisher;
+    private AcmPlugin acmPlugin;
 
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView complaint()
     {
         ModelAndView retval = new ModelAndView();
-        retval.setViewName("complaintWizard");
+        retval.setViewName("complaint");
         retval.addObject("complaint", new Complaint());
+
+        retval.addObject("pluginName",  getAcmPlugin().getPluginName());
+        retval.addObject("pluginUrl",   getAcmPlugin().getHomeUrl());
+        //retval.addObject("pluginImage", getAcmPlugin().getNavigatorImage());
+
 
         return retval;
     }
 
-    @RequestMapping(method= RequestMethod.POST)
+    @RequestMapping(value = "/wizard", method = RequestMethod.GET)
     public ModelAndView saveComplaint(
             @Valid Complaint complaint,
             BindingResult bindingResult,
@@ -47,6 +54,10 @@ public class SaveComplaintController
         // auditing and exception handling are handled here; transactions must be handled in the service layer.
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintWizard");
+
+        retval.addObject("pluginName",  getAcmPlugin().getPluginName());
+        retval.addObject("pluginUrl",   getAcmPlugin().getHomeUrl());
+        //retval.addObject("pluginImage", getAcmPlugin().getNavigatorImage());
 
         boolean isInsert = complaint.getComplaintId() == null;
 
@@ -76,6 +87,7 @@ public class SaveComplaintController
         } catch ( MuleException | TransactionException e)
         {
             log.error("Could not save complaint: " + e.getMessage(), e);
+            // TODO: return the current complaint from the db, since the update failed
             retval.addObject("complaint", complaint);
             retval.addObject("succeeded", false);
             retval.addObject("errors", Arrays.asList(new ObjectError("complaint", e.getMessage())));
@@ -105,5 +117,13 @@ public class SaveComplaintController
     public void setEventPublisher(SaveComplaintEventPublisher eventPublisher)
     {
         this.eventPublisher = eventPublisher;
+    }
+
+    public AcmPlugin getAcmPlugin() {
+        return acmPlugin;
+    }
+
+    public void setAcmPlugin(AcmPlugin acmPlugin) {
+        this.acmPlugin = acmPlugin;
     }
 }

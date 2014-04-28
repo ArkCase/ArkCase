@@ -1,13 +1,35 @@
 /**
- * ACM.Object
+ * Acm.Object
  *
  * common function for screen object management
  * Argument $s must be a valid jQuery selector
  *
  * @author jwu
  */
-ACM.Object = {
+Acm.Object = {
     initialize : function() {
+        var items = $(document).items();
+        this._contextPath = items.properties("contextPath").itemValue();
+        this._pluginName = items.properties("pluginName").itemValue();
+        this._pluginUrl = items.properties("pluginUrl").itemValue();
+        this._pluginImage = items.properties("pluginImage").itemValue();
+    }
+
+    ,_contextPath: "/acm"
+    ,_pluginName: ""
+    ,_pluginUrl: ""
+    ,_pluginImage: ""
+    ,getContextPath: function() {
+        return this._contextPath;
+    }
+    ,getPluginName: function() {
+        return this._pluginName;
+    }
+    ,getPluginUrl: function() {
+        return this._pluginUrl;
+    }
+    ,getPluginImage: function() {
+        return this._pluginImage;
     }
 
     ,getValue : function($s) {
@@ -58,8 +80,8 @@ ACM.Object = {
         return v;
     }
     ,setPlaceHolderInput : function($s, val) {
-        //$s.val(ACM.Common.goodValue(val, ""));
-        $s.trigger('focus').val(ACM.Common.goodValue(val, "")).trigger('blur');
+        //$s.val(Acm.Common.goodValue(val, ""));
+        $s.trigger('focus').val(Acm.Common.goodValue(val, "")).trigger('blur');
     }
 
     ,changePlaceHolderSelect : function($s) {
@@ -165,7 +187,7 @@ ACM.Object = {
 
     ,useSsnInput: function($s) {
 //        $s.keypress(function (keypressed) {
-//            return ACM.Callbacks.onSsnKeypress(this, keypressed);
+//            return Acm.Callbacks.onSsnKeypress(this, keypressed);
 //        });
 
         $s.keyup(function() {
@@ -194,7 +216,7 @@ ACM.Object = {
         return ssn;
     }
     ,getSsnDisplay: function (ssn) {
-        if (ACM.Common.isEmpty(ssn))
+        if (Acm.Common.isEmpty(ssn))
             return "";
 
         var ssnDisplay = ssn.substring(0, 3) + '-' + ssn.substring(3, 5) + '-' + ssn.substring(5, 9);
