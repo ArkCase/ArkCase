@@ -213,6 +213,7 @@
         <module>activemq-tools</module>
         <module>drools-tools</module>
         <module>cmis-tools</module>
+        <module>acm-configuration-service</module>
     </modules>
 
     <scm>
