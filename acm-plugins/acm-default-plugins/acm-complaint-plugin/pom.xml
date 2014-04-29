@@ -84,6 +84,11 @@
             <artifactId>acm-configuration-service</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <artifactId>acm-ecm-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- date time -->
         <dependency>
@@ -181,6 +186,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>junit</groupId>
@@ -203,13 +215,6 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>jdbc</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- servlet -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
             <scope>test</scope>
         </dependency>
 

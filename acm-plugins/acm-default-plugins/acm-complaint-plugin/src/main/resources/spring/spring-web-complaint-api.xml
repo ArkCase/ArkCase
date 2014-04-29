@@ -20,4 +20,9 @@
         <property name="eventPublisher" ref="complaintEventPublisher"/>
         <property name="complaintTransaction" ref="saveComplaintTransaction"/>
     </bean>
+
+    <bean id="addComplaintFileController" class="com.armedia.acm.plugins.complaint.web.api.AddFileAPIController">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
+    </bean>
 </beans>
