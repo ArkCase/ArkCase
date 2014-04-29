@@ -27,11 +27,11 @@
          in spring-library-user-login.xml -->
 
     <!-- TODO: enable token-security for services, e.g. Alfresco alf_ticket -->
-    <http pattern="/service/**"
+    <http pattern="/api/**"
             auto-config="true"
             use-expressions="true"
             authentication-manager-ref="acmAuthenticationManager">
-        <intercept-url pattern="/service/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/api/**" access="isAuthenticated()"/>
         <http-basic authentication-details-source-ref="acmAuthenticationDetailsFactory"/>
         <logout
                 logout-url="/logout"

@@ -14,4 +14,10 @@
         <property name="priorityDescriptor" ref="complaintPriorityTable"/>
         <property name="typesDescriptor" ref="complaintTypeTable"/>
     </bean>
+
+    <bean id="saveComplaintDetailsAPIController" class="com.armedia.acm.plugins.complaint.web.api.SaveComplaintDetailsAPIController">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="eventPublisher" ref="complaintEventPublisher"/>
+        <property name="complaintTransaction" ref="saveComplaintTransaction"/>
+    </bean>
 </beans>
