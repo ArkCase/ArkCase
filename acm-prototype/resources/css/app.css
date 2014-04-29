@@ -681,6 +681,20 @@ body.container {
 }
 
 
+
+.pager .save > a,
+.pager .save > span {
+  float: right;
+  margin-right: 5px;
+}
+
+.pager .submit > a,
+.pager .submit > span {
+  float: right;
+   margin-right: 5px;
+
+}
+
 @media (min-width: 768px) {
   body.container {
     -webkit-box-shadow: 0 3px 60px rgba(0,0,0,0.3);
