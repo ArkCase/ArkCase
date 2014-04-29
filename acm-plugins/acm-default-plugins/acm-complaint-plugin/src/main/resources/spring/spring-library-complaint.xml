@@ -12,6 +12,7 @@
         order="1"/>
 
 
+    <!-- keeping this bean for now even though we are not using any properties yet.  -->
     <bean id="complaintPluginProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring
@@ -22,8 +23,6 @@
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
-                <prop key="complaint.complaintTypes">Domestic Dispute,Arson,Better Business Dispute,Government,Local,Agricultural,Pollution</prop>
-                <prop key="complaint.complaintPriorities">Low,Medium,High,Expedited</prop>
             </props>
         </property>
     </bean>
@@ -38,6 +37,16 @@
                 <entry key="processDefinitionKey" value="cmComplaintWorkflow"/>
             </map>
         </property>
+    </bean>
+
+    <!-- lookup tables -->
+    <bean id="complaintPriorityTable" class="com.armedia.acm.configuration.LookupTableDescriptor">
+        <property name="tableName" value="acm_complaint_priority_lu"/>
+        <property name="description" value="Valid complaint priorities."/>
+    </bean>
+    <bean id="complaintTypeTable" class="com.armedia.acm.configuration.LookupTableDescriptor">
+        <property name="tableName" value="acm_complaint_type_lu"/>
+        <property name="description" value="Valid complaint types."/>
     </bean>
 
     <bean id="acmComplaintDao" class="com.armedia.acm.plugins.complaint.dao.ComplaintDao"/>

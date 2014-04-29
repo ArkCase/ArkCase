@@ -33,16 +33,17 @@ public class ListOfValuesServiceTest extends EasyMockSupport
     @Test
     public void lookupListOfStringValues() throws Exception
     {
-        ListOfValuesType valueType = ListOfValuesType.COMPLAINT_TYPE;
+        LookupTableDescriptor ltd = new LookupTableDescriptor();
+        ltd.setTableName("lookupTable");
 
         List<String> values = Arrays.asList("One", "Two", "Three");
 
-        expect(mockJdbcTemplate.queryForList("SELECT cm_value FROM " + valueType.getTableName() +
+        expect(mockJdbcTemplate.queryForList("SELECT cm_value FROM " + ltd.getTableName() +
             " WHERE cm_status = 'ACTIVE' ORDER BY cm_order", String.class)).andReturn(values);
 
         replayAll();
 
-        List<String> found = unit.lookupListOfStringValues(ListOfValuesType.COMPLAINT_TYPE);
+        List<String> found = unit.lookupListOfStringValues(ltd);
 
         verifyAll();
 

@@ -11,5 +11,7 @@
 
     <bean id="getComplaintTypesAPIController" class="com.armedia.acm.plugins.complaint.web.api.GetComplaintListOfValuesAPIController">
         <property name="listOfValuesService" ref="listOfValuesService"/>
+        <property name="priorityDescriptor" ref="complaintPriorityTable"/>
+        <property name="typesDescriptor" ref="complaintTypeTable"/>
     </bean>
 </beans>
