@@ -1,9 +1,11 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
 
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import com.armedia.acm.plugins.person.model.Person;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -51,6 +53,16 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         Complaint complaint = new Complaint();
         complaint.setComplaintId(500L);
         complaint.setComplaintType("complaintType");
+
+        Person person = new Person();
+        person.setFamilyName("Jones");
+        person.setGivenName("David");
+        PostalAddress address = new PostalAddress();
+        address.setCity("Falls Church");
+        address.setState("VA");
+        address.setStreetAddress("8221 Old Courthouse Road");
+        person.getAddresses().add(address);
+        complaint.setOriginator(person);
 
         Complaint saved = new Complaint();
         saved.setComplaintId(complaint.getComplaintId());
