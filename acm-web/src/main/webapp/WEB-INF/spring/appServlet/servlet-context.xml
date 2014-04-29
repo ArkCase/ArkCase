@@ -39,7 +39,7 @@
         <property name="targetMethod" value="without" />
         <property name="arguments">
             <list>
-                <value type="org.codehaus.jackson.map.SerializationConfig$Feature">WRITE_DATES_AS_TIMESTAMPS</value>
+                <value>WRITE_DATES_AS_TIMESTAMPS</value>
             </list>
         </property>
     </bean>
