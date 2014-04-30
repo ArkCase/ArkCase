@@ -9,7 +9,12 @@ ComplaintWizard.Event = {
     initialize : function() {
     }
 
-    ,onClickBtnSave : function(btn) {
+    ,onClickLnkSubmit : function(e) {
+        alert("submit2");
+        e.preventDefault();
+
+    }
+    ,onClickLnkSave : function(e) {
         var data0 =
         {
             //"complaintId": null,
@@ -44,7 +49,9 @@ ComplaintWizard.Event = {
         };
 
         var data = ComplaintWizard.Object.getComplaintData();
-        ComplaintWizard.Service.createComplaint(data);
+        //ComplaintWizard.Service.createComplaint(data);
+        alert("saeve");
+        e.preventDefault();
     }
 
     ,test : function(btn) {

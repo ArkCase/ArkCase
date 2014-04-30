@@ -7,20 +7,34 @@
  */
 ComplaintWizard.Object = {
     initialize : function() {
-        this.$btnSave           = $("#btnSave");
-        this.$edtFname          = $("#fname");
-        this.$edtLname          = $("#lname");
-        this.$edtCompany        = $("#company");
-        this.$selPersonTitle    = $("#personTitle");
+        this.$lnkSave                = $("#lnkSave");
+        this.$lnkSubmit              = $("#lnkSubmit");
+        this.$edtFname               = $("#fname");
+        this.$edtLname               = $("#lname");
+        this.$edtCompany             = $("#company");
+        this.$selPersonTitle         = $("#personTitle");
+        this.$divComplaintDetails    = $('.complaintDetails');
+        this.$selIntiatorFlags       = $(".choose-intitiatorFlags");   //"#intiatorFlags"
+        this.$selComplaintFlags      = $(".choose-complaintFlags");    //"#intiatorFlags"
+        this.$selApprovers           = $(".choose-approvers");         //"#approvers"
+        this.$selCollab              = $(".choose-collab");            //""
+        this.$selNotifications       = $(".choose-notifications");     //"#notifications"
 
-        this.$btnSave.click(function() {ComplaintWizard.Event.onClickBtnSave(this);});
+
+        this.$lnkSave.click(function(e) {ComplaintWizard.Event.onClickLnkSave(e);});
+        this.$lnkSubmit.click(function(e) {ComplaintWizard.Event.onClickLnkSubmit(e);});
+
+        this.$divComplaintDetails.summernote({
+            height: 300
+        });
+
+        this.$selIntiatorFlags.chosen();
+        this.$selComplaintFlags.chosen();
+        this.$selApprovers.chosen();
+        this.$selCollab.chosen();
+        this.$selNotifications.chosen();
     }
 
-    ,$btnSave                   : undefined
-    ,$edtFname                  : undefined
-    ,$edtLname                  : undefined
-    ,$edtCompany                : undefined
-    ,$selPersonTitle            : undefined
 
     ,setEnableBtnSave: function(enable) {
         Acm.Object.setEnable(this.$btnSave, enable);
@@ -40,6 +54,16 @@ ComplaintWizard.Object = {
     ,getValueSelPersonTitle: function() {
         return Acm.Object.getSelectValue(this.$selPersonTitle);
     }
+    ,getHtmlDivComplaintDetails: function() {
+        return Acm.Object.getHtml(this.$divComplaintDetails);
+    }
+    ,getValueDivComplaintDetails: function() {
+        return Acm.Object.getValue(this.$divComplaintDetails);
+    }
+    ,getTextDivComplaintDetails: function() {
+        return Acm.Object.getText(this.$divComplaintDetails);
+    }
+
 
     ,getComplaintData : function() {
         var data = {};
@@ -49,6 +73,11 @@ ComplaintWizard.Object = {
         data.originator.givenName = this.getValueEdtFname();
         data.originator.familyName = this.getValueEdtLname();
         data.originator.company = this.getValueEdtCompany();
+        //data.details
+        var a1 = this.getHtmlDivComplaintDetails();
+        var a2 = this.getValueDivComplaintDetails();
+        var a3 = this.getTextDivComplaintDetails();
+        var z = 1;
 
 //        term.docType = ComplaintWizard.Object._getValueSelDocType();
 //        term.subjectLastName = ComplaintWizard.Object._getValueEdtLastName();

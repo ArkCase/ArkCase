@@ -33,13 +33,13 @@ Acm.Object = {
     }
 
     ,getValue : function($s) {
-        return $s.val();;
+        return $s.val();
     }
     ,setValue : function($s, value) {
         $s.val(value);
     }
     ,getText : function($s) {
-        return $s.val();;
+        return $s.val();
     }
     ,setText : function($s, value) {
     	$s.text(value);

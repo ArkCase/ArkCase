@@ -13,6 +13,7 @@
     <name>ACM Default Plugins</name>
     <description>Parent project for default plugins.</description>
     <modules>
+        <module>acm-dashboard-plugin</module>
         <module>acm-complaint-plugin</module>
         <module>acm-object-association-plugin</module>
         <module>acm-addressable-plugin</module>

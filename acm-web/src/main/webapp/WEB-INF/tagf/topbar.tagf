@@ -1,58 +1,26 @@
 <header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
     <div class="navbar-header aside dk text-center">
         <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a>
-        <a href="portal.html" class="navbar-brand"><img src="<c:url value='/resources/images/armedia.png'/>" class="m-r-sm"></a>
-    </div>
+        <a href="portal.html" class="navbar-brand"><img src="<c:url value='/resources/images/armedia.png'/>" class="m-r-sm"></a></div>
     <ul class="nav navbar-nav hidden-xs">
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="i i-plus"></i> New
-            </a>
+        <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
             <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
-
                 <div class="row m-l-none m-r-none m-t m-b text-center">
                     <div class="col-xs-3">
                         <div class="padder-v2">
                             <a href="<c:url value='/plugin/complaint/wizard'/>">
                             <!-- <a href="#" id="lnkNewComponent"> -->
-                    <span class="m-b-xs block">
-                      <i class="i i-notice i-2x text-primary-lt"></i>
-                    </span>
-                                <small class="text-muted">Complaint</small>
-                            </a>
-                        </div>
+                            <span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>
                     </div>
                     <div class="col-xs-3">
-                        <div class="padder-v2">
-                            <a href="newCase.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-folder i-2x text-danger-lt"></i>
-                    </span>
-                                <small class="text-muted">Case</small>
-                            </a>
-                        </div>
+                        <div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>
                     </div>
                     <div class="col-xs-3">
-                        <div class="padder-v2">
-                            <a href="newTask.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-checkmark i-2x text-success-lt"></i>
-                    </span>
-                                <small class="text-muted">Task</small>
-                            </a>
-                        </div>
+                        <div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>
                     </div>
                     <div class="col-xs-3">
-                        <div class="padder-v2">
-                            <a href="newDocument.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-file i-2x text-info-lt"></i>
-                    </span>
-                                <small class="text-muted">Document</small>
-                            </a>
-                        </div>
+                        <div class="padder-v2"> <a href="newDocument.html"> <span class="m-b-xs block"> <i class="i i-file i-2x text-info-lt"></i> </span> <small class="text-muted">Document</small> </a> </div>
                     </div>
-
                 </div>
             </section>
         </li>
@@ -78,4 +46,3 @@
         </li>
     </ul>
 </header>
-
