@@ -28,8 +28,35 @@
 	<!-- Scan for Spring beans declared via annotations. -->
 	<!--<context:component-scan base-package="com.armedia.acm.web"/>-->
 
+    <!-- set JSON date format to ISO-8601 e.g. 1970-01-01T00:00:00.000+0000 -->
+    <bean id="jacksonObjectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
+    <bean id="jacksonSerializationConfig"
+          class="org.codehaus.jackson.map.SerializationConfig"
+          factory-bean="jacksonObjectMapper"
+          factory-method="getSerializationConfig" />
+    <bean id="acmSerializationConfig" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="jacksonSerializationConfig" />
+        <property name="targetMethod" value="without" />
+        <property name="arguments">
+            <list>
+                <value>WRITE_DATES_AS_TIMESTAMPS</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="acmObjectMapper" class="org.codehaus.jackson.map.ObjectMapper">
+        <property name="serializationConfig" ref="acmSerializationConfig"/>
+    </bean>
+
+    <bean id="acmJacksonConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+        <property name="objectMapper" ref="acmObjectMapper"/>
+    </bean>
+
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<mvc:annotation-driven />
+	<mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <ref bean="acmJacksonConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
     <!--<context:spring-configured/>-->
     <!--<context:annotation-config/>-->
 

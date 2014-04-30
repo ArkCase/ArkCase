@@ -29,7 +29,7 @@ securitySchemes:
                 "company": "Contoso",
                 "addresses": [
                   {
-                    "type": "home"
+                    "type": "home",
                     "streetAddress": "123 Main St.",
                     "streetAddress2": null,
                     "city": "Peoria",
@@ -70,7 +70,7 @@ securitySchemes:
                     "addresses": [
                       {
                         "id": 557,
-                        "type": "home"
+                        "type": "home",
                         "streetAddress": "123 Main St.",
                         "streetAddress2": null,
                         "city": "Peoria",
@@ -110,10 +110,58 @@ securitySchemes:
                 // complaintType must be a value from the "GET types" service
                 "complaintType": "Agricultural",
                 // complaintPriority must be a value from the "GET priorities" service
-                "complaintPriority": "expedite",
+                "priority": "expedite",
                 "complaintTitle": "Sample Title",
-                "complaintText": "<strong>Sample Text, properly encoding HTML within JSON</strong>"
+                "details": "<strong>Sample Text, properly encoding HTML within JSON</strong>"
               }
+        responses:
+          200:
+            description: Indicates the details were saved.  Response is the complete Complaint JSON.
+            body:
+              application/json:
+                example: |
+                  {
+                    "complaintId": 555,
+                    "complaintNumber": "20140424_555",
+                    "complaintStatus": "DRAFT",
+                    "incidentDate": "2014-04-28",
+                    "complaintType": "Agricultural",
+                    "priority": "expedite",
+                    "complaintTitle": "Sample Title",
+                    "details": "<strong>Sample Text, properly encoding HTML within JSON</strong>"
+                    "originator": {
+                      "id": 556,
+                      "status": "ACTIVE",
+                      "title": "Mr.",
+                      "givenName": "John",
+                      "familyName": "Doe",
+                      "company": "Contoso",
+                      "addresses": [
+                        {
+                          "id": 557,
+                          "type": "home",
+                          "streetAddress": "123 Main St.",
+                          "streetAddress2": null,
+                          "city": "Peoria",
+                          "state": "IL",
+                          "zip": "12345"
+                        }
+                      ],
+                      "contactMethods": [
+                        {
+                          "id": 558,
+                          "type": "Mobile Phone",
+                          "value": "123-456-7890"
+                        },
+                        {
+                          "id": 559,
+                          "type": "Personal E-mail",
+                          "value": "john.doe@gmail.com"
+                        }
+                      ],
+                      "securityTags": ["Anonymous", "Confidential", "Top Secret"]
+                    }
+                  }
     
     /types:
       description: Manage the list of complaint types.

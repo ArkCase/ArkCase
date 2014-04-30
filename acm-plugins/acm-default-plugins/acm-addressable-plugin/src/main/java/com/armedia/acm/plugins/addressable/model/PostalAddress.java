@@ -13,7 +13,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -69,19 +68,10 @@ public class PostalAddress implements Serializable
     @Column(name = "cm_country")
     private String country;
 
-
-
-    /**
-     * Value to use for modifier if this object is saved.  This value may be set by containing objects
-     * even when this address object has not been modified.  If this object is actually updated,
-     * this value becomes the modifier.
-     */
-    @Transient
-    private String modifierToBe;
-
     @PrePersist
     protected void beforeInsert()
     {
+        log.info("In before insert on PostalAddress");
         if ( getStatus() == null || getStatus().trim().isEmpty() )
         {
             setStatus("ACTIVE");
@@ -96,13 +86,13 @@ public class PostalAddress implements Serializable
         {
             setModified(new Date());
         }
+
     }
 
     @PreUpdate
     protected void beforeUpdate()
     {
         setModified(new Date());
-        setModifier(getModifierToBe());
     }
 
     public Long getId()
@@ -163,16 +153,6 @@ public class PostalAddress implements Serializable
     public void setStatus(String status)
     {
         this.status = status;
-    }
-
-    public String getModifierToBe()
-    {
-        return modifierToBe;
-    }
-
-    public void setModifierToBe(String modifierToBe)
-    {
-        this.modifierToBe = modifierToBe;
     }
 
     public String getType()

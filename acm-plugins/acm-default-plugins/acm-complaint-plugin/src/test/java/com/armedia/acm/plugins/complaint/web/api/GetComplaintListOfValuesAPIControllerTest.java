@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.configuration.ListOfValuesService;
-import com.armedia.acm.configuration.ListOfValuesType;
+import com.armedia.acm.configuration.LookupTableDescriptor;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -34,6 +34,9 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    private LookupTableDescriptor priorityDescriptor = new LookupTableDescriptor();
+    private LookupTableDescriptor typeDescriptor = new LookupTableDescriptor();
+
     @Before
     public void setUp() throws Exception
     {
@@ -42,7 +45,12 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
         mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
         mockListOfValuesService = createMock(ListOfValuesService.class);
 
+        priorityDescriptor.setTableName("priorityTable");
+        typeDescriptor.setTableName("typeTable");
+
         unit.setListOfValuesService(mockListOfValuesService);
+        unit.setPriorityDescriptor(priorityDescriptor);
+        unit.setTypesDescriptor(typeDescriptor);
     }
 
     @Test
@@ -50,7 +58,7 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
     {
         List<String> typeList = Arrays.asList("Type 1", "Type 2", "Type 3");
 
-        expect(mockListOfValuesService.lookupListOfStringValues(ListOfValuesType.COMPLAINT_TYPE)).andReturn(typeList);
+        expect(mockListOfValuesService.lookupListOfStringValues(typeDescriptor)).andReturn(typeList);
 
         replayAll();
 
@@ -82,7 +90,7 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
     {
         List<String> priorityList = Arrays.asList("Cold", "Medium", "Hot");
 
-        expect(mockListOfValuesService.lookupListOfStringValues(ListOfValuesType.COMPLAINT_PRIORITY)).andReturn(priorityList);
+        expect(mockListOfValuesService.lookupListOfStringValues(priorityDescriptor)).andReturn(priorityList);
 
         replayAll();
 

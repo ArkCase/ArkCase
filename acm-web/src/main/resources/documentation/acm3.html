@@ -206,7 +206,7 @@
     &quot;company&quot;: &quot;Contoso&quot;,
     &quot;addresses&quot;: [
       {
-        &quot;type&quot;: &quot;home&quot;
+        &quot;type&quot;: &quot;home&quot;,
         &quot;streetAddress&quot;: &quot;123 Main St.&quot;,
         &quot;streetAddress2&quot;: null,
         &quot;city&quot;: &quot;Peoria&quot;,
@@ -259,7 +259,7 @@
     &quot;addresses&quot;: [
       {
         &quot;id&quot;: 557,
-        &quot;type&quot;: &quot;home&quot;
+        &quot;type&quot;: &quot;home&quot;,
         &quot;streetAddress&quot;: &quot;123 Main St.&quot;,
         &quot;streetAddress2&quot;: null,
         &quot;city&quot;: &quot;Peoria&quot;,
@@ -349,6 +349,8 @@
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#_plugin_complaint_details__complaintId__post_request" data-toggle="tab">Request</a></li>
                             
+                                <li><a href="#_plugin_complaint_details__complaintId__post_response" data-toggle="tab">Response</a></li>
+                            
                         </ul>
 
                         <!-- Tab panes -->
@@ -374,15 +376,75 @@
   // complaintType must be a value from the &quot;GET types&quot; service
   &quot;complaintType&quot;: &quot;Agricultural&quot;,
   // complaintPriority must be a value from the &quot;GET priorities&quot; service
-  &quot;complaintPriority&quot;: &quot;expedite&quot;,
+  &quot;priority&quot;: &quot;expedite&quot;,
   &quot;complaintTitle&quot;: &quot;Sample Title&quot;,
-  &quot;complaintText&quot;: &quot;&lt;strong&gt;Sample Text, properly encoding HTML within JSON&lt;/strong&gt;&quot;
+  &quot;details&quot;: &quot;&lt;strong&gt;Sample Text, properly encoding HTML within JSON&lt;/strong&gt;&quot;
 }
 </pre>
                                     
                                 
                             </div>
 
+                            
+                                <div class="tab-pane" id="_plugin_complaint_details__complaintId__post_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>Indicates the details were saved.  Response is the complete Complaint JSON.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>{
+  &quot;complaintId&quot;: 555,
+  &quot;complaintNumber&quot;: &quot;20140424_555&quot;,
+  &quot;complaintStatus&quot;: &quot;DRAFT&quot;,
+  &quot;incidentDate&quot;: &quot;2014-04-28&quot;,
+  &quot;complaintType&quot;: &quot;Agricultural&quot;,
+  &quot;priority&quot;: &quot;expedite&quot;,
+  &quot;complaintTitle&quot;: &quot;Sample Title&quot;,
+  &quot;details&quot;: &quot;&lt;strong&gt;Sample Text, properly encoding HTML within JSON&lt;/strong&gt;&quot;
+  &quot;originator&quot;: {
+    &quot;id&quot;: 556,
+    &quot;status&quot;: &quot;ACTIVE&quot;,
+    &quot;title&quot;: &quot;Mr.&quot;,
+    &quot;givenName&quot;: &quot;John&quot;,
+    &quot;familyName&quot;: &quot;Doe&quot;,
+    &quot;company&quot;: &quot;Contoso&quot;,
+    &quot;addresses&quot;: [
+      {
+        &quot;id&quot;: 557,
+        &quot;type&quot;: &quot;home&quot;,
+        &quot;streetAddress&quot;: &quot;123 Main St.&quot;,
+        &quot;streetAddress2&quot;: null,
+        &quot;city&quot;: &quot;Peoria&quot;,
+        &quot;state&quot;: &quot;IL&quot;,
+        &quot;zip&quot;: &quot;12345&quot;
+      }
+    ],
+    &quot;contactMethods&quot;: [
+      {
+        &quot;id&quot;: 558,
+        &quot;type&quot;: &quot;Mobile Phone&quot;,
+        &quot;value&quot;: &quot;123-456-7890&quot;
+      },
+      {
+        &quot;id&quot;: 559,
+        &quot;type&quot;: &quot;Personal E-mail&quot;,
+        &quot;value&quot;: &quot;john.doe@gmail.com&quot;
+      }
+    ],
+    &quot;securityTags&quot;: [&quot;Anonymous&quot;, &quot;Confidential&quot;, &quot;Top Secret&quot;]
+  }
+}
+</pre>
+                                            
+                                        
+                                    
+                                </div>
                             
                         </div>
                     </div>
