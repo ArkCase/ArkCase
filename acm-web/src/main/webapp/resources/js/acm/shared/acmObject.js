@@ -80,8 +80,8 @@ Acm.Object = {
         return v;
     }
     ,setPlaceHolderInput : function($s, val) {
-        //$s.val(Acm.Common.goodValue(val, ""));
-        $s.trigger('focus').val(Acm.Common.goodValue(val, "")).trigger('blur');
+        //$s.val(Acm.goodValue(val, ""));
+        $s.trigger('focus').val(Acm.goodValue(val, "")).trigger('blur');
     }
 
     ,changePlaceHolderSelect : function($s) {
@@ -216,7 +216,7 @@ Acm.Object = {
         return ssn;
     }
     ,getSsnDisplay: function (ssn) {
-        if (Acm.Common.isEmpty(ssn))
+        if (Acm.isEmpty(ssn))
             return "";
 
         var ssnDisplay = ssn.substring(0, 3) + '-' + ssn.substring(3, 5) + '-' + ssn.substring(5, 9);

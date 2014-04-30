@@ -30,13 +30,21 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizard.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/wizard/complaintWizardCallback.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaint.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintObject.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintEvent.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintPage.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>
+
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizard.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizardObject.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizardEvent.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizardPage.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizardRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizardService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizardCallback.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/resources/js/datepicker/bootstrap-datepicker.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>
@@ -304,6 +312,7 @@
     <li class="next"><a href="#">Next</a></li>
 </ul>
 </div>
+<button id="btnSave" type="button" class="btn btn-default"><i class="fa fa-copy"></i>&nbsp;Save</button>
 </div>
 </div>
 </form>

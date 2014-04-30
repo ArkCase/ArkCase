@@ -34,7 +34,7 @@ public class ComplaintUiController
     public ModelAndView complaint()
     {
         ModelAndView retval = new ModelAndView();
-        retval.setViewName("complaint");
+        retval.setViewName("complaintList");
         retval.addObject("complaint", new Complaint());
 
         retval.addObject("pluginName",  getAcmPlugin().getPluginName());

@@ -9,11 +9,13 @@ describe("Acm", function()
     });
 
     it("Acm.Initialize", function() {
+        spyOn(Acm.Dialog,     "initialize");
         spyOn(Acm.Dispatcher, "initialize");
         spyOn(Acm.Ajax,       "initialize");
         spyOn(Acm.Object,     "initialize");
         spyOn(Acm.Validation, "initialize");
         Acm.initialize();
+        expect(Acm.Dialog    .initialize).toHaveBeenCalled();
         expect(Acm.Dispatcher.initialize).toHaveBeenCalled();
         expect(Acm.Ajax      .initialize).toHaveBeenCalled();
         expect(Acm.Object    .initialize).toHaveBeenCalled();
@@ -61,7 +63,7 @@ describe("Acm", function()
         var varNotInitialized;
         expect(Acm.goodValue("some value")).toBe("some value");
         expect(Acm.goodValue("some value",      "should not be")).toBe("some value");
-        expect(Acm.goodValue("",                "dont be empty")) .toBe("dont be empty");
+        expect(Acm.goodValue("",                "dont be empty")).toBe("dont be empty");
         expect(Acm.goodValue("",                ""))             .toBe("");    //empty string really allowed
         expect(Acm.goodValue(varNotInitialized, "good value"))   .toBe("good value");
 

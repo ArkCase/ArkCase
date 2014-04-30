@@ -5,12 +5,14 @@
  */
 var Acm = Acm || {
     initialize : function() {
+        Acm.Dialog.initialize();
         Acm.Dispatcher.initialize();
         Acm.Ajax.initialize();
         Acm.Object.initialize();
         Acm.Validation.initialize();
     }
 
+    ,Dialog : {}
     ,Dispatcher : {}
     ,Ajax : {}
     ,Object : {}
