@@ -1,11 +1,11 @@
 /**
- * ComplaintWizard.Callback
+ * ComplaintList.Callback
  *
  * Callback handlers for server responses
  *
  * @author jwu
  */
-ComplaintWizard.Callback = {
+ComplaintList.Callback = {
     initialize : function() {
 //        Acm.Dispatcher.addCallbackListener(this.CallbackResultReceived, this.onResultReceived);
     }

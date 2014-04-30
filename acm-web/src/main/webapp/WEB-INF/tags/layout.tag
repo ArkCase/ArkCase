@@ -39,6 +39,7 @@
 
 
 <script type="text/javascript" src="<c:url value='/resources/js/acm/shared/acm.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm/shared/acmDialog.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/acm/shared/acmAjax.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/acm/shared/acmDispatcher.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/acm/shared/acmObject.js'/>"></script>

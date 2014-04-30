@@ -6,22 +6,73 @@
  * @author jwu
  */
 ComplaintWizard.Object = {
-    $chkSelectAll              : undefined
+    initialize : function() {
+        this.$btnSave           = $("#btnSave");
+        this.$edtFname          = $("#fname");
+        this.$edtLname          = $("#lname");
+        this.$edtCompany        = $("#company");
+        this.$selPersonTitle    = $("#personTitle");
 
-    ,initialize : function() {
-//        this.$chkSelectAll              = jQuery("#chkSelectAll");
-
-//        this.$chkSelectAll.click(function() {ComplaintWizard.Event.onClickChkSelectAll(this);});
+        this.$btnSave.click(function() {ComplaintWizard.Event.onClickBtnSave(this);});
     }
 
-    ,readPermissions: function() {
-        this.$hidPermissions.each (function(i, e) {
-            var val = jQuery(e).val();
-            var key = jQuery(e).attr("id");
-            ComplaintWizard.permissions[key] = ("true" === val);
-        });
+    ,$btnSave                   : undefined
+    ,$edtFname                  : undefined
+    ,$edtLname                  : undefined
+    ,$edtCompany                : undefined
+    ,$selPersonTitle            : undefined
 
+    ,setEnableBtnSave: function(enable) {
+        Acm.Object.setEnable(this.$btnSave, enable);
     }
+    ,getValueEdtFname: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtFname);
+    }
+//    ,setValueEdtFname: function(val) {
+//        return Acm.Object.setPlaceHolderInput(this.$edtFname, val);
+//    }
+    ,getValueEdtLname: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtLname);
+    }
+    ,getValueEdtCompany: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtCompany);
+    }
+    ,getValueSelPersonTitle: function() {
+        return Acm.Object.getSelectValue(this.$selPersonTitle);
+    }
+
+    ,getComplaintData : function() {
+        var data = {};
+
+        data.originator = {};
+        data.originator.title = this.getValueSelPersonTitle();
+        data.originator.givenName = this.getValueEdtFname();
+        data.originator.familyName = this.getValueEdtLname();
+        data.originator.company = this.getValueEdtCompany();
+
+//        term.docType = ComplaintWizard.Object._getValueSelDocType();
+//        term.subjectLastName = ComplaintWizard.Object._getValueEdtLastName();
+//        term.subjectSSN = ComplaintWizard.Object._getValueEdtSsn();
+//        term.eqipRequestNumber = ComplaintWizard.Object._getValueEdtEQipRequest();
+//        term.soi = ComplaintWizard.Object._getValueEdtSoi();
+//        term.son = ComplaintWizard.Object._getValueEdtSon();
+//        term.assignee = ComplaintWizard.Object._getValueSelAssignee();
+//
+//        term.supervisorReviewFlag = ComplaintWizard.Object._isCheckedChkSupervisorReview();
+//        term.contractOversightReviewFlag = ComplaintWizard.Object._isCheckedChkContractOversight();
+//
+//        term.queues = [{},{},{}];
+//        term.queues[0].name = Unassigned.queueProcessing.name;
+//        term.queues[0].checked = ComplaintWizard.Object.isCheckedChkProcessing();
+//        term.queues[1].name = Unassigned.queueQa.name;
+//        term.queues[1].checked = ComplaintWizard.Object.isCheckedChkQa();
+//        term.queues[2].name = Unassigned.queueMailback.name;
+//        term.queues[2].checked = ComplaintWizard.Object.isCheckedChkMailback();
+
+        return data;
+    }
+
+
     ,usePagination: function(totalItems, itemsPerPage, callback) {
         Acm.Object.usePagination(this.$jPaginate, totalItems, itemsPerPage, callback)
     }

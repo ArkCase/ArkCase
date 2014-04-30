@@ -23,6 +23,14 @@
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>
 
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintList.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListObject.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListEvent.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListPage.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListCallback.js'/>"></script>
+
     <script src="<c:url value='/resources/js/app.js'/>"></script>
     <script src="<c:url value='/resources/js/slimscroll/jquery.slimscroll.min.js'/>"></script>
     <script src="<c:url value='/resources/js/app.plugin.js'/>"></script>
