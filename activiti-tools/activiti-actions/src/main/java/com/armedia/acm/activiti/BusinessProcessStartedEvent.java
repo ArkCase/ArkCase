@@ -1,4 +1,4 @@
-package com.armedia.acm.activiti.com.armedia.acm.activiti;
+package com.armedia.acm.activiti;
 
 import com.armedia.acm.event.AcmEvent;
 import org.activiti.engine.runtime.ProcessInstance;
