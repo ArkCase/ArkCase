@@ -1,11 +1,11 @@
 /**
- * ComplaintWizard.Page
+ * ComplaintList.Page
  *
  * manages all dynamic created page element
  *
  * @author jwu
  */
-ComplaintWizard.Page = {
+ComplaintList.Page = {
     initialize : function() {
     }
 };

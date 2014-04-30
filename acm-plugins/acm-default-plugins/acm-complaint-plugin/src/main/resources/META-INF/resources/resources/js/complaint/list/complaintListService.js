@@ -1,11 +1,11 @@
 /**
- * ComplaintWizard.Service
+ * ComplaintList.Service
  *
  * manages all service call to application server
  *
  * @author jwu
  */
-ComplaintWizard.Service = {
+ComplaintList.Service = {
     initialize : function() {
     }
     ,search : function() {
