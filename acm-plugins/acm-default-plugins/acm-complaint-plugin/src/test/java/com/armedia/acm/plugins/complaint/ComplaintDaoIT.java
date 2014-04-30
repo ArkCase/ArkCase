@@ -25,7 +25,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-mule-context-manager.xml",
         "/spring/spring-library-activiti-actions.xml",
         "/spring/spring-library-activemq.xml",
-        "/spring/spring-library-activiti-configuration.xml"
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-ecm-file.xml"
         })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintDaoIT
