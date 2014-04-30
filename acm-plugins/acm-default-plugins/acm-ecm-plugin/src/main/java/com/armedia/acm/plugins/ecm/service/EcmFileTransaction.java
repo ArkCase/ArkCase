@@ -93,7 +93,7 @@ public class EcmFileTransaction
     {
         // construct JSON suitable for jQuery File Upload Plugin
         List<FileUpload> retval = Collections.singletonList(fileUpload);
-        Map retMap = Collections.singletonMap("files", retval);
+        Map<String, List<FileUpload>> retMap = Collections.singletonMap("files", retval);
 
         ObjectMapper om = new ObjectMapper();
 

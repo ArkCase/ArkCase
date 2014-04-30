@@ -22,6 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping( { "/api/v1/plugin/complaint", "/api/latest/plugin/complaint"} )
@@ -32,8 +35,8 @@ public class AddFileAPIController
     private ComplaintDao complaintDao;
     private EcmFileTransaction ecmFileTransaction;
 
-    @RequestMapping(value = "/file", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> uploadFile(
+    @RequestMapping(value = "/file", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    public ResponseEntity<? extends Object> uploadFile(
             @RequestParam("complaintId") Long complaintId,
             @RequestParam("files[]") MultipartFile file,
             @RequestHeader("Accept") String acceptType,
@@ -73,10 +76,24 @@ public class AddFileAPIController
 
             FileUpload fileUpload = getEcmFileTransaction().fileUploadFromEcmFile(file, contextPath, uploaded);
 
-            String json = getEcmFileTransaction().constructJqueryFileUploadJson(fileUpload);
+            Object retval = null;
+
+            if ( responseHeaders.getContentType().equals(MediaType.TEXT_PLAIN) )
+            {
+                // sending a string with text/plain for IE.
+                String json = getEcmFileTransaction().constructJqueryFileUploadJson(fileUpload);
+                retval = json;
+            }
+            else
+            {
+                // Jackson will convert this map into proper JSON for non-IE browsers.
+                Map<String, List<FileUpload>> jsonMap = Collections.singletonMap("files", Collections.singletonList(fileUpload));
+                retval = jsonMap;
+            }
 
 
-            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+
+            return new ResponseEntity<>(retval, responseHeaders, HttpStatus.OK);
         } catch (IOException | MuleException e)
         {
             log.error("Could not upload file: " + e.getMessage(), e);
