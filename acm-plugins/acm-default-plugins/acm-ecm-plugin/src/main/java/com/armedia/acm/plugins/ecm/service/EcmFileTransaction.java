@@ -10,7 +10,9 @@ import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,6 +69,74 @@ public class EcmFileTransaction
         }
 
         return saved;
+    }
+
+    @Transactional
+    public ResponseEntity<? extends Object> upload(
+            MultipartFile file,
+            String acceptHeader,
+            String contextPath,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            String parentObjectName)
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Single files");
+            log.debug("Accept header: '" + acceptHeader + "'");
+        }
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info("The user '" + authentication.getName() + "' uploaded file: '" + file.getOriginalFilename() + "'");
+            log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
+        }
+
+        HttpHeaders responseHeaders = contentTypeFromAcceptHeader(acceptHeader);
+
+
+        log.debug("context path: '" + contextPath + "'");
+
+
+        try
+        {
+            EcmFile uploaded = addFileTransaction(
+                    authentication,
+                    file.getInputStream(),
+                    file.getContentType(),
+                    file.getOriginalFilename(),
+                    targetCmisFolderId,
+                    parentObjectType,
+                    parentObjectId,
+                    parentObjectName);
+
+            FileUpload fileUpload = fileUploadFromEcmFile(file, contextPath, uploaded);
+
+            Object retval = null;
+
+            if ( responseHeaders.getContentType().equals(MediaType.TEXT_PLAIN) )
+            {
+                // sending a string with text/plain for IE.
+                String json = constructJqueryFileUploadJson(fileUpload);
+                retval = json;
+            }
+            else
+            {
+                // Jackson will convert this map into proper JSON for non-IE browsers.
+                Map<String, List<FileUpload>> jsonMap = Collections.singletonMap("files", Collections.singletonList(fileUpload));
+                retval = jsonMap;
+            }
+
+
+
+            return new ResponseEntity<>(retval, responseHeaders, HttpStatus.OK);
+        } catch (IOException | MuleException e)
+        {
+            log.error("Could not upload file: " + e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 
     public HttpHeaders contentTypeFromAcceptHeader(String acceptType)

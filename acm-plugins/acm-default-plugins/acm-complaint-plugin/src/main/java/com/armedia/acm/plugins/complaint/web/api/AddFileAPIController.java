@@ -2,14 +2,9 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.FileUpload;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
-import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping( { "/api/v1/plugin/complaint", "/api/latest/plugin/complaint"} )
@@ -43,63 +34,18 @@ public class AddFileAPIController
             HttpServletRequest request,
             Authentication authentication)
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Single files");
-            log.debug("Accept header: '" + acceptType + "'");
-        }
-
-        if ( log.isInfoEnabled() )
-        {
-            log.info("The user '" + authentication.getName() + "' uploaded file: '" + file.getOriginalFilename() + "'");
-            log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
-        }
-
-        HttpHeaders responseHeaders = getEcmFileTransaction().contentTypeFromAcceptHeader(acceptType);
-
-        String contextPath = request.getServletContext().getContextPath();
-        log.debug("context path: '" + contextPath + "'");
 
         Complaint in = getComplaintDao().find(Complaint.class, complaintId);
+        String folderId = in.getEcmFolderId();
+        String objectType = "COMPLAINT";
+        Long objectId = complaintId;
+        String objectName = in.getComplaintNumber();
 
-        try
-        {
-            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
-                    authentication,
-                    file.getInputStream(),
-                    file.getContentType(),
-                    file.getOriginalFilename(),
-                    in.getEcmFolderId(),
-                    "COMPLAINT",
-                    in.getComplaintId(),
-                    in.getComplaintNumber());
+        String contextPath = request.getServletContext().getContextPath();
 
-            FileUpload fileUpload = getEcmFileTransaction().fileUploadFromEcmFile(file, contextPath, uploaded);
-
-            Object retval = null;
-
-            if ( responseHeaders.getContentType().equals(MediaType.TEXT_PLAIN) )
-            {
-                // sending a string with text/plain for IE.
-                String json = getEcmFileTransaction().constructJqueryFileUploadJson(fileUpload);
-                retval = json;
-            }
-            else
-            {
-                // Jackson will convert this map into proper JSON for non-IE browsers.
-                Map<String, List<FileUpload>> jsonMap = Collections.singletonMap("files", Collections.singletonList(fileUpload));
-                retval = jsonMap;
-            }
-
-
-
-            return new ResponseEntity<>(retval, responseHeaders, HttpStatus.OK);
-        } catch (IOException | MuleException e)
-        {
-            log.error("Could not upload file: " + e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
+        return getEcmFileTransaction().upload(file, acceptType, contextPath, authentication, folderId, objectType, objectId, objectName);
     }
+
 
 
 
