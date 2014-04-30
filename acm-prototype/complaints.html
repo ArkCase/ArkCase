@@ -261,35 +261,221 @@
                                 <div class="row">
                                   <div class="col-md-12">
                                     <section class="panel b-a">
-                                      <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Complaintant</a> </div>
-                                      <div class="panel-body max-200 no-padder">
+                                      <div class="panel-heading b-b bg-info">
+                                        <ul class="nav nav-pills pull-right">
+                                          <li>
+                                            <div class="btn-group padder-v2">
+                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-user"></i> New</button>
+                                              <ul class="dropdown-menu pull-right">
+                                                <li><a href="#">Other menu items</a></li>
+                                              </ul>
+                                            </div>
+                                          </li>
+                                          <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                        </ul>
+                                        <a href="#" class="font-bold">Complaintant</a> </div>
+                                      <div class="panel-body no-padder">
+                                      
+                                      
                                         <table class="table table-striped th-sortable table-hover" >
                                           <thead>
                                             <tr>
+                                              <th width="14%">Entities</th>
+                                              <th>Title</th>
                                               <th>First Name</th>
                                               <th>Last Name</th>
                                               <th>Type</th>
-                                              <th>Phone</th>
-                                              <th>Address</th>
-                                              <th>City</th>
-                                              <th>State</th>
-                                              <th>ZIP</th>
-                                              <th width="3%">Edit</th>
-                                              <th width="4%">Delete</th>
+                                              <th width="9%">Action</th>
                                             </tr>
                                           </thead>
                                           <tbody>
                                             <tr class="odd gradeA">
-                                              <td>[First]</td>
-                                              <td>[Last]</td>
+                                              <td><a href="#communicationDevices1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-phone"></i></a>
+                                              <a href="#organizations1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-book"></i></a>
+                                              <a href="#locations1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-map-marker"></i></a>
+                                              <a href="#aliases1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-users"></i></a></td>
+                                              <td>[Title]</td>
+                                              <td>[First Name]</td>
+                                              <td>[Last Name]</td>
                                               <td>[Type]</td>
-                                              <td>[Phone]</td>
-                                              <td>[Address]</td>
-                                              <td>[City]</td>
-                                              <td>[State]</td>
-                                              <td>[ZIP]</td>
-                                              <td><a href="javascript:;" class="edit">Edit</a></td>
-                                              <td><a href="javascript:;" class="delete">Delete</a></td>
+                                              <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                              <td colspan="6" class=" no-padder"><section id="communicationDevices1" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-phone"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Communication Devices</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                <section id="organizations1" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-book"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Organizations</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                 <section id="locations1" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-map-marker"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Locations</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Address</th>
+                                                          <th>City</th>
+                                                          <th>State</th>
+                                                          <th>ZIP</th>
+                                                          <th>Country</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Address]</td>
+                                                          <td>[City]</td>
+                                                          <td>[State]</td>
+                                                          <td>[ZIP]</td>
+                                                          <td>[Country]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                 <section id="aliases1" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-users"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Aliases</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                </td>
                                             </tr>
                                           </tbody>
                                         </table>
@@ -300,35 +486,217 @@
                                 <div class="row">
                                   <div class="col-md-12">
                                     <section class="panel b-a">
-                                      <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span> <a href="#" class="font-bold">People</a> </div>
-                                      <div class="panel-body max-200 no-padder">
-                                        <table class="table table-striped th-sortable table-hover" >
+                                      <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
+                                          <li>
+                                            <div class="btn-group padder-v2">
+                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-user"></i> New</button>
+                                              <ul class="dropdown-menu pull-right">
+                                                <li><a href="#">Other menu items</a></li>
+                                              </ul>
+                                            </div>
+                                          </li>
+                                          <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                        </ul> <a href="#" class="font-bold">People</a> </div>
+                                      <div class="panel-body no-padder">
+                                         <table class="table table-striped th-sortable table-hover" >
                                           <thead>
                                             <tr>
+                                              <th width="14%">Entities</th>
+                                              <th>Title</th>
                                               <th>First Name</th>
                                               <th>Last Name</th>
                                               <th>Type</th>
-                                              <th>Phone</th>
-                                              <th>Address</th>
-                                              <th>City</th>
-                                              <th>State</th>
-                                              <th>ZIP</th>
-                                              <th width="3%">Edit</th>
-                                              <th width="4%">Delete</th>
+                                              <th width="9%">Action</th>
                                             </tr>
                                           </thead>
                                           <tbody>
                                             <tr class="odd gradeA">
-                                              <td>[First]</td>
-                                              <td>[Last]</td>
+                                              <td><a href="#communicationDevices2" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-phone"></i></a>
+                                              <a href="#organizations2" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-book"></i></a>
+                                              <a href="#locations2" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-map-marker"></i></a>
+                                              <a href="#aliases2" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-users"></i></a></td>
+                                              <td>[Title]</td>
+                                              <td>[First Name]</td>
+                                              <td>[Last Name]</td>
                                               <td>[Type]</td>
-                                              <td>[Phone]</td>
-                                              <td>[Address]</td>
-                                              <td>[City]</td>
-                                              <td>[State]</td>
-                                              <td>[ZIP]</td>
-                                              <td><a href="javascript:;" class="edit">Edit</a></td>
-                                              <td><a href="javascript:;" class="delete">Delete</a></td>
+                                              <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                              <td colspan="6" class=" no-padder"><section id="communicationDevices2" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-phone"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Communication Devices</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                <section id="organizations2" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-book"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Organizations</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                 <section id="locations2" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-map-marker"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Locations</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Address</th>
+                                                          <th>City</th>
+                                                          <th>State</th>
+                                                          <th>ZIP</th>
+                                                          <th>Country</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Address]</td>
+                                                          <td>[City]</td>
+                                                          <td>[State]</td>
+                                                          <td>[ZIP]</td>
+                                                          <td>[Country]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                 <section id="aliases2" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-users"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Aliases</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                </td>
                                             </tr>
                                           </tbody>
                                         </table>
@@ -339,7 +707,17 @@
                                 <div class="row">
                                   <div class="col-md-12">
                                     <section class="panel b-a">
-                                      <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span> <a href="#" class="font-bold">Notes</a> </div>
+                                      <div class="panel-heading b-b bg-info"> <ul class="nav nav-pills pull-right">
+                                          <li>
+                                            <div class="btn-group padder-v2">
+                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-comments-o"></i> New</button>
+                                              <ul class="dropdown-menu pull-right">
+                                                <li><a href="#">Other menu items</a></li>
+                                              </ul>
+                                            </div>
+                                          </li>
+                                          <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                        </ul> <a href="#" class="font-bold">Notes</a> </div>
                                       <div class="panel-body max-200">
                                         <ul class="list-group list-group-lg no-bg auto">
                                           <a href="#" class="list-group-item clearfix"> <span class="pull-left thumb-sm avatar m-r"> <img src="resources/images/a4.png" alt="John said"> <i class="on b-white bottom"></i> </span> <span class="clear"> <small class="text-muted pull-right">5m ago</small> <span>Judy Hsu</span> <small class="text-muted clear text-ellipsis">Sample notes go here.</small> </span> </a>

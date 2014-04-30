@@ -8,6 +8,7 @@
         <property name="dataSource" ref="acmDataSource" />
         <property name="transactionManager" ref="transactionManager" />
         <property name="databaseSchemaUpdate" value="true" />
+        <property name="transactionsExternallyManaged" value="true"/>
     </bean>
 
     <bean id="activitiProcessEngine" class="org.activiti.spring.ProcessEngineFactoryBean">

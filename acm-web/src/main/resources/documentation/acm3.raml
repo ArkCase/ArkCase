@@ -189,3 +189,13 @@ securitySchemes:
                   [ "Low", "Medium", "High" ]
                 
           
+    /file:
+      description: Manage complaint files.
+      post:
+        description: Add a file to the complaint.  Submitted form must include a complaintId element, and a file[] element with the files to be uploaded.  Returns JSON suitable for consumption by the jQuery File Upload plugin.
+          
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+        body:
+          multipart/form-data:
+            
+            

@@ -42,6 +42,7 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
                 messageProperties.put("EVENT_TYPE", acmEvent.getEventType());
                 messageProperties.put("EVENT_DATE", acmEvent.getEventDate());
                 messageProperties.put("IP_ADDRESS", acmEvent.getIpAddress());
+                messageProperties.put("EVENT_SUCCEEDED", acmEvent.isSucceeded());
                 messageProperties.putAll(response.getParameters());
                 try
                 {

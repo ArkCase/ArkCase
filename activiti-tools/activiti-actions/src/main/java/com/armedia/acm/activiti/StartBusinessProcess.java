@@ -1,6 +1,5 @@
 package com.armedia.acm.activiti;
 
-import com.armedia.acm.activiti.com.armedia.acm.activiti.BusinessProcessStartedEvent;
 import com.armedia.acm.event.AcmEvent;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -25,6 +24,15 @@ public class StartBusinessProcess implements ApplicationEventPublisherAware
             @Payload AcmEvent acmEvent,
             @InboundHeaders("*") Map<String, Object> muleHeaders)
     {
+
+        Boolean eventWasSuccessful = (Boolean) muleHeaders.get("EVENT_SUCCEEDED");
+
+        // only launch the process if the parent object was actually created...
+        if ( ! eventWasSuccessful.booleanValue() )
+        {
+            return;
+        }
+
         String businessProcessKey = (String) muleHeaders.get("processDefinitionKey");
         if ( businessProcessKey == null )
         {
