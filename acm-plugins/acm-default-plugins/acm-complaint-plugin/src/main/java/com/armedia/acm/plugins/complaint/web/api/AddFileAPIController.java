@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -24,7 +24,7 @@ public class AddFileAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private ComplaintDao complaintDao;
-    private EcmFileTransaction ecmFileTransaction;
+    private EcmFileService ecmFileService;
 
     @RequestMapping(value = "/file", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     public ResponseEntity<? extends Object> uploadFile(
@@ -43,7 +43,7 @@ public class AddFileAPIController
 
         String contextPath = request.getServletContext().getContextPath();
 
-        return getEcmFileTransaction().upload(file, acceptType, contextPath, authentication, folderId, objectType, objectId, objectName);
+        return getEcmFileService().upload(file, acceptType, contextPath, authentication, folderId, objectType, objectId, objectName);
     }
 
 
@@ -59,13 +59,13 @@ public class AddFileAPIController
         this.complaintDao = complaintDao;
     }
 
-    public EcmFileTransaction getEcmFileTransaction()
+    public EcmFileService getEcmFileService()
     {
-        return ecmFileTransaction;
+        return ecmFileService;
     }
 
-    public void setEcmFileTransaction(EcmFileTransaction ecmFileTransaction)
+    public void setEcmFileService(EcmFileService ecmFileService)
     {
-        this.ecmFileTransaction = ecmFileTransaction;
+        this.ecmFileService = ecmFileService;
     }
 }

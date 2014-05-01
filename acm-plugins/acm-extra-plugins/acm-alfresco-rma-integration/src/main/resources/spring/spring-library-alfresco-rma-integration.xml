@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <context:property-placeholder
+            properties-ref="alfrescoRmaPluginProperties"
+            ignore-unresolvable="true"
+            local-override="false"
+            order="5"/>
+
+    <bean id="alfrescoRmaPluginProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/alfrescoRmaPlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="alfresco.host">localhost</prop>
+                <prop key="alfresco.port">8080</prop>
+                <prop key="alfresco.user">admin</prop>
+                <prop key="alfresco.password">AdM!n</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>
