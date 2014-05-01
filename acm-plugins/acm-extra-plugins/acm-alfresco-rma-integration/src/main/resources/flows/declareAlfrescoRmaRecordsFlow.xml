@@ -4,17 +4,45 @@
       xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:context="http://www.springframework.org/schema/context"
       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
       xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+      xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
 http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <context:property-placeholder
+            properties-ref="alfrescoRmaPluginProperties"
+            ignore-unresolvable="true"
+            local-override="false"
+            order="5"/>
+
+
     <spring:beans>
         <spring:bean id="memoryObjectStore" class="org.mule.util.store.SimpleMemoryObjectStore"/>
+
+        <spring:bean id="alfrescoRmaPluginProperties"
+              class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+            <!-- note: must leave "file:" at the start of the file name for spring
+            to be able to read the file; otherwise it will try to read from the
+            classpath -->
+            <spring:property name="location" value="file:${user.home}/.acm/alfrescoRmaPlugin.properties"/>
+            <spring:property name="ignoreResourceNotFound" value="true"/>
+            <spring:property name="localOverride" value="false"/>
+            <spring:property name="properties">
+                <spring:props>
+                    <spring:prop key="alfresco.host">localhost</spring:prop>
+                    <spring:prop key="alfresco.port">8080</spring:prop>
+                    <spring:prop key="alfresco.user">admin</spring:prop>
+                    <spring:prop key="alfresco.password">AdM!n</spring:prop>
+                </spring:props>
+            </spring:property>
+        </spring:bean>
     </spring:beans>
 
     <http:endpoint name="alfresco-ticket"
@@ -31,7 +59,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
     </http:endpoint>
     <!-- TODO: the record location is hard-coded below but it should be a business rule -->
     <http:endpoint name="alfresco-move-to-record-folder"
-                   address="http://${alfresco.host}:${alfresco.port}/alfresco/s/slingshot/doclib/action/move-to/site/rm/documentLibrary/Complaints/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]?alf_ticket=#[flowVars['alfTicket']]"
+                   address="http://${alfresco.host}:${alfresco.port}/alfresco/s/slingshot/doclib/action/move-to/site/rm/documentLibrary/ACM/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]?alf_ticket=#[flowVars['alfTicket']]"
                    doc:name="alf-move-to-record-folder" exchange-pattern="request-response" method="POST">
         <reconnect/>
     </http:endpoint>
@@ -46,8 +74,26 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <reconnect/>
     </http:endpoint>
 
+    <flow name="jms-create-record-folder" doc:name="JMS Create Record Folder">
+        <jms:inbound-endpoint queue="rmaFolder.in" exchange-pattern="one-way" connector-ref="ActiveMQ-ACM"
+                doc:name="JMS"/>
+        <timer-interceptor/>
+
+        <set-variable variableName="record-folder-name" value="#[message.payload.folderName]" doc:name="Rec Folder"/>
+        <set-variable variableName="category-folder-name" value="Complaints" doc:name="Category Folder"/>
+        <set-variable variableName="record-folder-rma-id" value="#[flowVars['record-folder-name']]_#[flowVars['category-folder-name']]" doc:name="Rec Folder RMA ID"/>
+
+        <flow-ref name="get-alfresco-ticket" doc:name="Get Ticket"/>
+        <flow-ref name="find-category-folder" doc:name="Find Category Folder"/>
+        <flow-ref name="create-or-find-record-folder" doc:name="Create Record Folder"/>
+
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Category folder id: #[flowVars['category-folder-id']]"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Record folder id: #[flowVars['record-folder-id']]"/>
+
+    </flow>
+
     <flow name="jms-declare-and-complete-record" doc:name="jms-declare-and-complete-record" doc:description="The JMS endpoint for declaring a record.  The record declaration is done via a subflow.  This allows us to setup other inbound endpoints for declaring a record, all of which delegate to the same declare-record subflow.">
-        <jms:inbound-endpoint queue="recordQueue" exchange-pattern="request-response"
+        <jms:inbound-endpoint queue="rmaRecord.in" exchange-pattern="request-response"
                               connector-ref="ActiveMQ-ACM" doc:name="JMS" />
         <timer-interceptor/>
         <echo-component doc:name="Echo"/>
@@ -103,12 +149,12 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
     </sub-flow>
 
     <sub-flow name="set-rma-params" doc:name="set-rma-params">
-        <component doc:name="Category Folder">
-            <method-entry-point-resolver>
-                <include-entry-point method="applyRulesToInvestigativeFile"/>
-            </method-entry-point-resolver>
-            <spring-object bean="rmaEprpBusinessRules"/>
-        </component>
+        <!--<component doc:name="Category Folder">-->
+            <!--<method-entry-point-resolver>-->
+                <!--<include-entry-point method="applyRulesToInvestigativeFile"/>-->
+            <!--</method-entry-point-resolver>-->
+            <!--<spring-object bean="rmaEprpBusinessRules"/>-->
+        <!--</component>-->
         <set-variable variableName="category-folder-name" value="#[message.payload.categoryFolder]" doc:name="Cat. Folder"/>
         <set-variable variableName="record-folder-name" value="#[message.payload.recordFolder]" doc:name="Rec Folder"/>
         <set-variable variableName="alf-rma-publication-date" value="#[org.mule.util.DateUtils.formatTimeStamp(message.payload.publishedDate,&quot;yyyy-MM-dd'T'11:00:00.000-05:00&quot;)]" doc:name="Pub. Date"/>
@@ -150,7 +196,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
                 </when>
                 <otherwise>
                     <processor-chain doc:name="Folder Lookup">
-                        <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/Investigations/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]"/>
+                        <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/ACM/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]"/>
                         <set-variable variableName="record-folder-id" value="#[message.payload.id]" doc:name="Variable"/>
                     </processor-chain>
                 </otherwise>
@@ -163,7 +209,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
     <sub-flow name="find-category-folder" doc:name="find-category-folder">
 
         <enricher doc:name="get category folder id" source="#[message.payload.id]" target="#[flowVars['category-folder-id']]">
-            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/Investigations/#[flowVars['category-folder-name']]"/>
+            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/ACM/#[flowVars['category-folder-name']]"/>
         </enricher>
         <logger level="DEBUG" doc:name="Log category folder ID" message="Category folder results - #[flowVars['category-folder-id']]"/>
 
@@ -172,9 +218,9 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
     <sub-flow name="get-parent-folder" doc:name="get-parent-folder">
         <enricher doc:name="get parent folder id" source="#[message.payload]" target="#[flowVars['invest-folder-id']]">
-            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/Investigations"/>
+            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/ACM"/>
         </enricher>
-        <logger level="DEBUG" doc:name="Log investigations folder id" message="Investigations folder id - #[flowVars['invest-folder-id'].id]"/>
+        <logger level="DEBUG" doc:name="Log acm folder id" message="ACM folder id - #[flowVars['invest-folder-id'].id]"/>
     </sub-flow>
 
 

@@ -10,6 +10,7 @@ import java.util.Date;
 public abstract class ComplaintPersistenceEvent extends AcmEvent
 {
     private static final String OBJECT_TYPE = "COMPLAINT";
+    private String complaintNumber;
 
     public ComplaintPersistenceEvent(Complaint source)
     {
@@ -17,11 +18,22 @@ public abstract class ComplaintPersistenceEvent extends AcmEvent
         setObjectId(source.getComplaintId());
         setEventDate(new Date());
         setUserId(source.getModifier());
+        setComplaintNumber(source.getComplaintNumber());
     }
 
     @Override
     public String getObjectType()
     {
         return OBJECT_TYPE;
+    }
+
+    public String getComplaintNumber()
+    {
+        return complaintNumber;
+    }
+
+    public void setComplaintNumber(String complaintNumber)
+    {
+        this.complaintNumber = complaintNumber;
     }
 }

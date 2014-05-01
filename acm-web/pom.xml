@@ -108,6 +108,11 @@
             <artifactId>cmis-spring-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
+            <artifactId>acm-alfresco-rma-integration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>

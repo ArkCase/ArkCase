@@ -15,6 +15,7 @@ public class EcmFileAddedEvent extends AcmEvent
     private String parentObjectType;
     private Long parentObjectId;
     private String parentObjectName;
+    private String ecmFileId;
 
 
 
@@ -27,6 +28,7 @@ public class EcmFileAddedEvent extends AcmEvent
         setObjectId(uploaded.getFileId());
         setEventDate(new Date());
         setUserId(uploaded.getModifier());
+        setEcmFileId(uploaded.getEcmFileId());
 
         if ( uploaded.getParentObjects() != null && !uploaded.getParentObjects().isEmpty() )
         {
@@ -72,5 +74,15 @@ public class EcmFileAddedEvent extends AcmEvent
     public void setParentObjectName(String parentObjectName)
     {
         this.parentObjectName = parentObjectName;
+    }
+
+    public String getEcmFileId()
+    {
+        return ecmFileId;
+    }
+
+    public void setEcmFileId(String ecmFileId)
+    {
+        this.ecmFileId = ecmFileId;
     }
 }
