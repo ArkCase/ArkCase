@@ -39,9 +39,10 @@
     <script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>
 
     <!-- File Manager -->
+    <script type="text/javascript" src="<c:url value='/resources/js/jquery.knob.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/upload/js/jquery.fileupload.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/upload/js/jquery.iframe-transport.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/upload/js/file-uploads-custom.js'/>"></script>
+<!--    <script type="text/javascript" src="<c:url value='/resources/js/upload/js/file-uploads-custom.js'/>"></script>     -->
 
     <!-- Summernote WYSIWYG -->
     <link rel="stylesheet" href="<c:url value='/resources/js/summernote/summernote.css'/>" type="text/css"/>
@@ -245,7 +246,8 @@
     <div id="upload">
         <div id="drop"> Drop Here <br />
             <a>Browse</a>
-            <input type="file" name="upl" multiple />
+            <!-- <input type="file" name="upl" multiple /> -->
+            <input type="file" name="files[]" multiple />
         </div>
         <ul>
             <!-- The file uploads will be shown here -->

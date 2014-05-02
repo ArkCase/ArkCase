@@ -21,5 +21,12 @@ var ComplaintWizard = ComplaintWizard || {
     ,Rule: {}
     ,Service: {}
     ,Callback: {}
-};
 
+    ,_complaintId : undefined
+    ,getComplaintId : function() {
+        return this._complaintId;
+    }
+    ,setComplaintId : function(id) {
+        this._complaintId = id;
+    }
+};

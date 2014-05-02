@@ -49,8 +49,8 @@ ComplaintWizard.Event = {
         };
 
         var data = ComplaintWizard.Object.getComplaintData();
-        //ComplaintWizard.Service.createComplaint(data);
-        alert("saeve");
+        ComplaintWizard.Service.createComplaint(data);
+        //alert("saeve");
         e.preventDefault();
     }
 

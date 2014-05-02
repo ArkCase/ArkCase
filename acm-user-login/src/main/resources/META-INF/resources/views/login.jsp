@@ -53,11 +53,6 @@
             </p>
         </div>
     </footer>
-    <!-- / footer -->
-    <script src="<c:url value='/resources/js/jquery.min.js'/>"></script>
-    <!-- Bootstrap -->
-    <script src="<c:url value='/resources/js/bootstrap.js'/>"></script>
-    <!-- App -->
     <script src="<c:url value='/resources/js/app.js'/>"></script>
     <script src="<c:url value='/resources/js/slimscroll/jquery.slimscroll.min.js'/>"></script>
     <script src="<c:url value='/resources/js/app.plugin.js'/>"></script>
