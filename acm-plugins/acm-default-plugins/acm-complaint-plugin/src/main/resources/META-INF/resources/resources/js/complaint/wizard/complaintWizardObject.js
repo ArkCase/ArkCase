@@ -71,6 +71,9 @@ ComplaintWizard.Object = {
         var data = {};
 
         data.originator = {};
+        if (Acm.isNotEmpty(ComplaintWizard.getComplaintId())) {
+            data.complaintId = ComplaintWizard.getComplaintId();
+        }
         data.originator.title = this.getValueSelPersonTitle();
         data.originator.givenName = this.getValueEdtFname();
         data.originator.familyName = this.getValueEdtLname();
