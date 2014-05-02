@@ -15,6 +15,7 @@
     <modules>
         <module>acm-plugins-samples</module>
         <module>acm-default-plugins</module>
+        <module>acm-extra-plugins</module>
     </modules>
 
 
