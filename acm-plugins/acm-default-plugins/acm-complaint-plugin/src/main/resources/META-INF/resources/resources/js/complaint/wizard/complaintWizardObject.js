@@ -19,7 +19,13 @@ ComplaintWizard.Object = {
         this.$selApprovers           = $(".choose-approvers");         //"#approvers"
         this.$selCollab              = $(".choose-collab");            //""
         this.$selNotifications       = $(".choose-notifications");     //"#notifications"
+        this.$edtIncidentDate        = $("#incidentDate");
+        this.$selComplaintType       = $("#complaintType");
 
+        this.$uppload                = $('#upload');
+        this.$upploadDrop            = $('#drop');
+        this.$upploadList            = $('#upload ul');
+        this.$upploadClick           = $('#drop a');
 
         this.$lnkSave.click(function(e) {ComplaintWizard.Event.onClickLnkSave(e);});
         this.$lnkSubmit.click(function(e) {ComplaintWizard.Event.onClickLnkSubmit(e);});
@@ -34,7 +40,8 @@ ComplaintWizard.Object = {
         this.$selCollab.chosen();
         this.$selNotifications.chosen();
 
-        this._useFileUpload($('#upload'));
+
+        this._useFileUpload(this.$uppload, this.$upploadDrop, this.$upploadList, this.$upploadClick);
     }
 
 
@@ -57,15 +64,26 @@ ComplaintWizard.Object = {
         return Acm.Object.getSelectValue(this.$selPersonTitle);
     }
     ,getHtmlDivComplaintDetails: function() {
-        return Acm.Object.getHtml(this.$divComplaintDetails);
+        return Acm.Object.getSummernote(this.$divComplaintDetails);
     }
-    ,getValueDivComplaintDetails: function() {
-        return Acm.Object.getValue(this.$divComplaintDetails);
+    ,getValueEdtIncidentDate: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtIncidentDate);
     }
-    ,getTextDivComplaintDetails: function() {
-        return Acm.Object.getText(this.$divComplaintDetails);
+    ,getSelectValuesSelIntiatorFlags: function() {
+        return Acm.Object.getSelectValues(this.$selIntiatorFlags);
     }
-
+    ,getSelectValuesSelComplaintFlags: function() {
+        return Acm.Object.getSelectValues(this.$selComplaintFlags);
+    }
+    ,getSelectValuesSelApprovers: function() {
+        return Acm.Object.getSelectValues(this.$selApprovers);
+    }
+    ,getSelectValuesSelCollab: function() {
+        return Acm.Object.getSelectValues(this.$selCollab);
+    }
+    ,getSelectValuesSelNotifications: function() {
+        return Acm.Object.getSelectValues(this.$selNotifications);
+    }
 
     ,getComplaintData : function() {
         var data = {};
@@ -74,14 +92,24 @@ ComplaintWizard.Object = {
         if (Acm.isNotEmpty(ComplaintWizard.getComplaintId())) {
             data.complaintId = ComplaintWizard.getComplaintId();
         }
-        data.originator.title = this.getValueSelPersonTitle();
         data.originator.givenName = this.getValueEdtFname();
         data.originator.familyName = this.getValueEdtLname();
         data.originator.company = this.getValueEdtCompany();
+
+        //$selComplaintType
+        data.originator.title = this.getValueSelPersonTitle();
+
         //data.details
         var a1 = this.getHtmlDivComplaintDetails();
-        var a2 = this.getValueDivComplaintDetails();
-        var a3 = this.getTextDivComplaintDetails();
+
+        //incidentDate
+        var d1 = this.getValueEdtIncidentDate();
+
+        //"securityTags": ["Anonymous", "Confidential", "Top Secret"]
+        var b6 = this.getSelectValuesSelApprovers();
+
+
+
         var z = 1;
 
 //        term.docType = ComplaintWizard.Object._getValueSelDocType();
@@ -106,13 +134,14 @@ ComplaintWizard.Object = {
         return data;
     }
 
+
     ,_jqXHR : undefined
-    ,_useFileUpload: function($s) {
+    ,_useFileUpload: function($upload, $drop, $ul, $click) {
         $(function(){
 
-            var ul = $('#upload ul');
+            //var ul = $ul;
 
-            $('#drop a').click(function(){
+            $click.click(function(){
                 // Simulate a click on the file input button
                 // to show the file browser dialog
                 $(this).parent().find('input').click();
@@ -120,7 +149,7 @@ ComplaintWizard.Object = {
 
             // Initialize the jQuery File Upload plugin
             //jwu $('#upload').fileupload({
-            _jqXHR = $('#upload').fileupload({
+            _jqXHR = $upload.fileupload({
                 //To Explore:
                 //redirect : to complaintList
                 //redirectParamName:
@@ -162,7 +191,7 @@ ComplaintWizard.Object = {
                 },
 
                 // This element will accept file drag/drop uploading
-                dropZone: $('#drop'),
+                dropZone: $drop,
 
                 // This function is called when a file is added to the queue;
                 // either via the browse button, or via drag/drop:
@@ -176,7 +205,7 @@ ComplaintWizard.Object = {
                         .append('<i>' + formatFileSize(data.files[0].size) + '</i>');
 
                     // Add the HTML to the UL element
-                    data.context = tpl.appendTo(ul);
+                    data.context = tpl.appendTo($ul);
 
                     // Initialize the knob plugin
                     tpl.find('input').knob();

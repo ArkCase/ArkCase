@@ -104,7 +104,7 @@
                 <option value="Mr.">Mr.</option>
                 <option value="Mrs.">Mrs.</option>
                 <option value="Ms.">Ms.</option>
-                <option value="Ms.">Dr.</option>
+                <option value="Dr.">Dr.</option>
             </select>
             <label for="address1"  class="label">Address</label>
             <input id="address1" type="text" class="form-control" placeholder="Address">
