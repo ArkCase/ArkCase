@@ -1,14 +1,10 @@
 package com.armedia.acm.plugins.ecm.web;
 
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.FileUpload;
-import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,18 +17,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 @RequestMapping("/file")
 public class FileUploadController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private EcmFileTransaction ecmFileTransaction;
+    private EcmFileService ecmFileService;
 
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<String> uploadFile(
+    public ResponseEntity<? extends Object> uploadFile(
             @RequestParam("files[]") MultipartFile file,
             @RequestParam("cmisFolderId") String cmisFolderId,
             @RequestParam("parentObjectType") String parentObjectType,
@@ -42,46 +37,10 @@ public class FileUploadController
             HttpServletRequest request,
             Authentication authentication)
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Single files");
-            log.debug("Accept header: '" + acceptType + "'");
-        }
-
-        if ( log.isInfoEnabled() )
-        {
-            log.info("The user '" + authentication.getName() + "' uploaded file: '" + file.getOriginalFilename() + "'");
-            log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
-        }
-
-        HttpHeaders responseHeaders = getEcmFileTransaction().contentTypeFromAcceptHeader(acceptType);
 
         String contextPath = request.getServletContext().getContextPath();
-        log.debug("context path: '" + contextPath + "'");
-
-        try
-        {
-            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
-                    authentication,
-                    file.getInputStream(),
-                    file.getContentType(),
-                    file.getOriginalFilename(),
-                    cmisFolderId,
-                    parentObjectType,
-                    parentObjectId,
-                    parentObjectName);
-
-            FileUpload fileUpload = getEcmFileTransaction().fileUploadFromEcmFile(file, contextPath, uploaded);
-
-            String json = getEcmFileTransaction().constructJqueryFileUploadJson(fileUpload);
-
-
-            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-        } catch (IOException | MuleException e)
-        {
-            log.error("Could not upload file: " + e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
+        return getEcmFileService().upload(file, acceptType, contextPath, authentication, cmisFolderId,
+                parentObjectType, parentObjectId, parentObjectName);
 
     }
 
@@ -112,13 +71,13 @@ public class FileUploadController
 
     }
 
-    public EcmFileTransaction getEcmFileTransaction()
+    public EcmFileService getEcmFileService()
     {
-        return ecmFileTransaction;
+        return ecmFileService;
     }
 
-    public void setEcmFileTransaction(EcmFileTransaction ecmFileTransaction)
+    public void setEcmFileService(EcmFileService ecmFileService)
     {
-        this.ecmFileTransaction = ecmFileTransaction;
+        this.ecmFileService = ecmFileService;
     }
 }

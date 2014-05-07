@@ -7,20 +7,43 @@
  */
 ComplaintWizard.Object = {
     initialize : function() {
-        this.$btnSave           = $("#btnSave");
-        this.$edtFname          = $("#fname");
-        this.$edtLname          = $("#lname");
-        this.$edtCompany        = $("#company");
-        this.$selPersonTitle    = $("#personTitle");
+        this.$lnkSave                = $("#lnkSave");
+        this.$lnkSubmit              = $("#lnkSubmit");
+        this.$edtFname               = $("#fname");
+        this.$edtLname               = $("#lname");
+        this.$edtCompany             = $("#company");
+        this.$selPersonTitle         = $("#personTitle");
+        this.$divComplaintDetails    = $('.complaintDetails');
+        this.$selIntiatorFlags       = $(".choose-intitiatorFlags");   //"#intiatorFlags"
+        this.$selComplaintFlags      = $(".choose-complaintFlags");    //"#intiatorFlags"
+        this.$selApprovers           = $(".choose-approvers");         //"#approvers"
+        this.$selCollab              = $(".choose-collab");            //""
+        this.$selNotifications       = $(".choose-notifications");     //"#notifications"
+        this.$edtIncidentDate        = $("#incidentDate");
+        this.$selComplaintType       = $("#complaintType");
 
-        this.$btnSave.click(function() {ComplaintWizard.Event.onClickBtnSave(this);});
+        this.$uppload                = $('#upload');
+        this.$upploadDrop            = $('#drop');
+        this.$upploadList            = $('#upload ul');
+        this.$upploadClick           = $('#drop a');
+
+        this.$lnkSave.click(function(e) {ComplaintWizard.Event.onClickLnkSave(e);});
+        this.$lnkSubmit.click(function(e) {ComplaintWizard.Event.onClickLnkSubmit(e);});
+
+        this.$divComplaintDetails.summernote({
+            height: 300
+        });
+
+        this.$selIntiatorFlags.chosen();
+        this.$selComplaintFlags.chosen();
+        this.$selApprovers.chosen();
+        this.$selCollab.chosen();
+        this.$selNotifications.chosen();
+
+
+        this._useFileUpload(this.$uppload, this.$upploadDrop, this.$upploadList, this.$upploadClick);
     }
 
-    ,$btnSave                   : undefined
-    ,$edtFname                  : undefined
-    ,$edtLname                  : undefined
-    ,$edtCompany                : undefined
-    ,$selPersonTitle            : undefined
 
     ,setEnableBtnSave: function(enable) {
         Acm.Object.setEnable(this.$btnSave, enable);
@@ -40,15 +63,54 @@ ComplaintWizard.Object = {
     ,getValueSelPersonTitle: function() {
         return Acm.Object.getSelectValue(this.$selPersonTitle);
     }
+    ,getHtmlDivComplaintDetails: function() {
+        return Acm.Object.getSummernote(this.$divComplaintDetails);
+    }
+    ,getValueEdtIncidentDate: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtIncidentDate);
+    }
+    ,getSelectValuesSelIntiatorFlags: function() {
+        return Acm.Object.getSelectValues(this.$selIntiatorFlags);
+    }
+    ,getSelectValuesSelComplaintFlags: function() {
+        return Acm.Object.getSelectValues(this.$selComplaintFlags);
+    }
+    ,getSelectValuesSelApprovers: function() {
+        return Acm.Object.getSelectValues(this.$selApprovers);
+    }
+    ,getSelectValuesSelCollab: function() {
+        return Acm.Object.getSelectValues(this.$selCollab);
+    }
+    ,getSelectValuesSelNotifications: function() {
+        return Acm.Object.getSelectValues(this.$selNotifications);
+    }
 
     ,getComplaintData : function() {
         var data = {};
 
         data.originator = {};
-        data.originator.title = this.getValueSelPersonTitle();
+        if (Acm.isNotEmpty(ComplaintWizard.getComplaintId())) {
+            data.complaintId = ComplaintWizard.getComplaintId();
+        }
         data.originator.givenName = this.getValueEdtFname();
         data.originator.familyName = this.getValueEdtLname();
         data.originator.company = this.getValueEdtCompany();
+
+        //$selComplaintType
+        data.originator.title = this.getValueSelPersonTitle();
+
+        //data.details
+        var a1 = this.getHtmlDivComplaintDetails();
+
+        //incidentDate
+        var d1 = this.getValueEdtIncidentDate();
+
+        //"securityTags": ["Anonymous", "Confidential", "Top Secret"]
+        var b6 = this.getSelectValuesSelApprovers();
+
+
+
+        var z = 1;
 
 //        term.docType = ComplaintWizard.Object._getValueSelDocType();
 //        term.subjectLastName = ComplaintWizard.Object._getValueEdtLastName();
@@ -72,6 +134,147 @@ ComplaintWizard.Object = {
         return data;
     }
 
+
+    ,_jqXHR : undefined
+    ,_useFileUpload: function($upload, $drop, $ul, $click) {
+        $(function(){
+
+            //var ul = $ul;
+
+            $click.click(function(){
+                // Simulate a click on the file input button
+                // to show the file browser dialog
+                $(this).parent().find('input').click();
+            });
+
+            // Initialize the jQuery File Upload plugin
+            //jwu $('#upload').fileupload({
+            _jqXHR = $upload.fileupload({
+                //To Explore:
+                //redirect : to complaintList
+                //redirectParamName:
+                //
+//check if complaintId not created, create it first
+//                submit: function (e, data) {
+//                    var input = $('#input');
+//                    data.formData = {example: input.val()};
+//                    if (!data.formData.example) {
+//                        data.context.find('button').prop('disabled', false);
+//                        input.focus();
+//                        return false;
+//                    }
+//                },
+                done: function (e, data) {
+                    var a1 = data.result
+                    var a2 = data.textStatus;
+                    var a3 = data.jqXHR;
+                    var z = 1;
+                    //alert("done");
+                },
+//                always: function (e, data) {
+//                    // data.result
+//                    // data.textStatus;
+//                    // data.jqXHR;
+//                },
+                //autoUpload: false
+                //sequentialUploads: true
+
+
+
+                url: Acm.getContextPath() + ComplaintWizard.Service.API_UPLOAD_COMPLAINT_FILE,
+
+                formData: function(form) {
+                    var fd = [{}];
+                    fd[0].name = "complaintId";
+                    fd[0].value = ComplaintWizard.getComplaintId();
+                    return fd;
+                },
+
+                // This element will accept file drag/drop uploading
+                dropZone: $drop,
+
+                // This function is called when a file is added to the queue;
+                // either via the browse button, or via drag/drop:
+                add: function (e, data) {
+
+                    var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
+                        ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
+
+                    // Append the file name and file size
+                    tpl.find('p').text(data.files[0].name)
+                        .append('<i>' + formatFileSize(data.files[0].size) + '</i>');
+
+                    // Add the HTML to the UL element
+                    data.context = tpl.appendTo($ul);
+
+                    // Initialize the knob plugin
+                    tpl.find('input').knob();
+
+                    // Listen for clicks on the cancel icon
+                    tpl.find('span').click(function(){
+
+                        if(tpl.hasClass('working')){
+                            //jwu jqXHR.abort();
+                            _jqXHR.abort();
+                        }
+
+                        tpl.fadeOut(function(){
+                            tpl.remove();
+                        });
+
+                    });
+
+                    // Automatically upload the file once it is added to the queue
+                    //var jqXHR = data.submit();
+                    _jqXHR = data.submit();
+                },
+
+                progress: function(e, data){
+
+                    // Calculate the completion percentage of the upload
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+
+                    // Update the hidden input field and trigger a change
+                    // so that the jQuery knob plugin knows to update the dial
+                    data.context.find('input').val(progress).change();
+
+                    if(progress == 100){
+                        data.context.removeClass('working');
+                    }
+                },
+
+                fail:function(e, data){
+                    // Something has gone wrong!
+                    data.context.addClass('error');
+                }
+
+            });
+
+
+            // Prevent the default action when a file is dropped on the window
+            $(document).on('drop dragover', function (e) {
+                e.preventDefault();
+            });
+
+            // Helper function that formats the file sizes
+            function formatFileSize(bytes) {
+                if (typeof bytes !== 'number') {
+                    return '';
+                }
+
+                if (bytes >= 1000000000) {
+                    return (bytes / 1000000000).toFixed(2) + ' GB';
+                }
+
+                if (bytes >= 1000000) {
+                    return (bytes / 1000000).toFixed(2) + ' MB';
+                }
+
+                return (bytes / 1000).toFixed(2) + ' KB';
+            }
+
+        });
+    }
 
     ,usePagination: function(totalItems, itemsPerPage, callback) {
         Acm.Object.usePagination(this.$jPaginate, totalItems, itemsPerPage, callback)

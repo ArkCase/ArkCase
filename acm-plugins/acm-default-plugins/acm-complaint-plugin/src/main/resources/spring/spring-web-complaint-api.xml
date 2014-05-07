@@ -23,6 +23,6 @@
 
     <bean id="addComplaintFileController" class="com.armedia.acm.plugins.complaint.web.api.AddFileAPIController">
         <property name="complaintDao" ref="acmComplaintDao"/>
-        <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 </beans>

@@ -33,13 +33,13 @@ Acm.Object = {
     }
 
     ,getValue : function($s) {
-        return $s.val();;
+        return $s.val();
     }
     ,setValue : function($s, value) {
         $s.val(value);
     }
     ,getText : function($s) {
-        return $s.val();;
+        return $s.val();
     }
     ,setText : function($s, value) {
     	$s.text(value);
@@ -73,6 +73,18 @@ Acm.Object = {
         //}).prop('selected', true); //for jQuery v1.6+
     	}).attr('selected', true);
     }
+    ,getSelectValues: function($s) {
+        var mv = [];
+        $s.find("option:selected").each(function(i, selected) {
+            mv[i]  = $(selected).val();
+        });
+        return mv;
+    }
+    ,getSelectValuesAsString: function($s, sep) {
+        return $s.find("option:selected").map(function(){
+            return this.value;
+        }).get().join(sep);
+    }
     ,getPlaceHolderInput : function($s) {
         var v;
         v = $s.val();
@@ -104,10 +116,16 @@ Acm.Object = {
         }
     }
     ,getHtml : function($s) {
-        return $s.html();;
+        return $s.html();
     }
     ,setHtml : function($s, value) {
         $s.html(value);
+    }
+    ,getSummernote : function($s) {
+        return $s.code();
+    }
+    ,setSummernote : function($s, value) {
+        $s.code(value);
     }
     ,setEnable : function($s, value) {
         if (value == "true" || value == true) {
