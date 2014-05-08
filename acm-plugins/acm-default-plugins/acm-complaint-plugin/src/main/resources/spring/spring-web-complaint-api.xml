@@ -25,4 +25,11 @@
         <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
+
+    <bean id="findComplaintAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintAPIController">
+        <property name="findComplaintService" ref="findComplaintService"/>
+    </bean>
+
+
+
 </beans>

@@ -39,7 +39,7 @@ Acm.Object = {
         $s.val(value);
     }
     ,getText : function($s) {
-        return $s.val();
+        return $s.text();
     }
     ,setText : function($s, value) {
     	$s.text(value);

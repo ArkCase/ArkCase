@@ -70,4 +70,7 @@
         <property name="ruleSpreadsheetFilename" value="drools-complaint-number-rules.xlsx"/>
     </bean>
 
+    <bean id="findComplaintService" class="com.armedia.acm.plugins.complaint.service.FindComplaintService">
+    </bean>
+
 </beans>

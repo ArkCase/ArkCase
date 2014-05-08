@@ -89,8 +89,8 @@ ComplaintWizard.Object = {
         var data = {};
 
         data.originator = {};
-        if (Acm.isNotEmpty(ComplaintWizard.getComplaintId())) {
-            data.complaintId = ComplaintWizard.getComplaintId();
+        if (Acm.isNotEmpty(Complaint.getComplaintId())) {
+            data.complaintId = Complaint.getComplaintId();
         }
         data.originator.givenName = this.getValueEdtFname();
         data.originator.familyName = this.getValueEdtLname();
@@ -186,7 +186,7 @@ ComplaintWizard.Object = {
                 formData: function(form) {
                     var fd = [{}];
                     fd[0].name = "complaintId";
-                    fd[0].value = ComplaintWizard.getComplaintId();
+                    fd[0].value = Complaint.getComplaintId();
                     return fd;
                 },
 

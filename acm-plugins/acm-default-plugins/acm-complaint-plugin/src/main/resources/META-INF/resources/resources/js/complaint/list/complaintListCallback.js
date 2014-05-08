@@ -7,18 +7,26 @@
  */
 ComplaintList.Callback = {
     initialize : function() {
-//        Acm.Dispatcher.addCallbackListener(this.CallbackResultReceived, this.onResultReceived);
+        Acm.Dispatcher.addEventListener(this.EVENT_LIST_RETURNED, this.onListReturned);
     }
 
-    ,CALLBACK_SOME		: "complaint-wizard-result-received"
+    ,EVENT_LIST_RETURNED		: "complaint-list-list-returned"
 
-    ,onResultReceived : function(Callback, response) {
+    ,onListReturned : function(Callback, response) {
+        var success = false;
         if (response) {
-            if(response.success) {
-                if (response.data) {
-//                    doSomething();
-                }
-            }
+            //if (Acm.isNotEmpty(response.complaintId)) {
+            //ComplaintWizard.setComplaintId(response.complaintId);
+
+            ComplaintList.setComplaintList(response);
+
+            ComplaintList.Page.buildComplaintList(response);
+            success = true;
+            //}
+        }
+
+        if (!success) {
+            Acm.Dialog.showError("Failed to retrieve complaint list");
         }
     }
 };

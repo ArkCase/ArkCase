@@ -7,24 +7,48 @@
  */
 ComplaintList.Object = {
     initialize : function() {
-        this.$btnSave = jQuery("#btnSave");
+        this.$ulComplaints = $("#ulComplaints");
+        this.$lnkTitle = $("#caseTitle");
 
-        this.$btnSave.click(function() {ComplaintList.Event.onClickBtnSave(this);});
-    }
-
-    ,$btnSave : undefined
-
-    ,readPermissions: function() {
-        this.$hidPermissions.each (function(i, e) {
-            var val = jQuery(e).val();
-            var key = jQuery(e).attr("id");
-            ComplaintList.permissions[key] = ("true" === val);
-        });
 
     }
-    ,usePagination: function(totalItems, itemsPerPage, callback) {
-        Acm.Object.usePagination(this.$jPaginate, totalItems, itemsPerPage, callback)
+
+    ,get$ulComplaints : function() {
+        return this.$ulComplaints;
     }
+
+    ,getHtmlUlComplaints: function() {
+        return Acm.Object.getHtml(this.$ulComplaints);
+    }
+    ,setHtmlUlComplaints: function(val) {
+        return Acm.Object.setHtml(this.$ulComplaints, val);
+    }
+    ,registerClickListItemEvents: function() {
+        this.$ulComplaints.find("a.thumb-sm").click(function(e) {ComplaintList.Event.onClickLnkListItemImage(this);});
+        this.$ulComplaints.find("a.text-ellipsis").click(function(e) {ComplaintList.Event.onClickLnkListItem(this);});
+    }
+    ,getHiddenComplaintId: function(e) {
+        var $hidden = $(e).siblings("input[type='hidden']");
+        return $hidden.val();
+    }
+    ,updateDetail: function(c) {
+        this.setTextTitle(c.complaintTitle);
+
+
+        var a1 = c.created;
+        var a2 = ComplaintList.getDateFromDatetime(c.created);
+        var z = 1;
+    }
+    ,setTextTitle: function(txt) {
+        Acm.Object.setText(this.$lnkTitle, txt);
+    }
+
+
+
+
+
+
+
     ,setEnableBtnPrint: function(enable) {
         Acm.Object.setEnable(this.$btnPrint, enable);
     }

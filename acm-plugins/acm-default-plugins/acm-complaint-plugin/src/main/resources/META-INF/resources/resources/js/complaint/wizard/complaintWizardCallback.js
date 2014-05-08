@@ -17,7 +17,7 @@ ComplaintWizard.Callback = {
         if (response) {
             if (Acm.isNotEmpty(response.complaintId)) {
                 //Acm.Dialog.showError("onCreateReturned:" + response.complaintId);
-                ComplaintWizard.setComplaintId(response.complaintId);
+                Complaint.setComplaintId(response.complaintId);
                 success = true;
             }
         }

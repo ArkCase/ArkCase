@@ -9,13 +9,27 @@ ComplaintList.Event = {
     initialize : function() {
     }
 
-    ,onClickBtnSave : function(btn) {
-//        ComplaintList.Object.doSomething(chkSelectAll.checked);
-//        ComplaintList.Event.fireSomething();
+    ,onClickLnkListItemImage : function(e) {
+        var complaintId = ComplaintList.Object.getHiddenComplaintId(e);
+        if (Complaint.getComplaintId() == complaintId) {
+            return;
+        }
+        alert("onClickLnkListItemImage, complaintId=" + complaintId);
+        Complaint.setComplaintId(complaintId);
+    }
+    ,onClickLnkListItem : function(e) {
+        var complaintId = ComplaintList.Object.getHiddenComplaintId(e);
+        if (Complaint.getComplaintId() == complaintId) {
+            return;
+        }
 
-        alert("save");
+        var c = ComplaintList.findComplaint(complaintId);
+        ComplaintList.Object.updateDetail(c);
+
+        Complaint.setComplaintId(complaintId);
     }
 
     ,onPostInit: function() {
+        //ComplaintList.Service.listComplaint();
     }
 };

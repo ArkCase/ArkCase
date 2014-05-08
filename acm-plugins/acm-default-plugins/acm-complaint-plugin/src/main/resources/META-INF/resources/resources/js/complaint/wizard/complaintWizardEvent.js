@@ -10,7 +10,8 @@ ComplaintWizard.Event = {
     }
 
     ,onClickLnkSubmit : function(e) {
-        alert("submit2");
+        alert("submit");
+        ComplaintWizard.Service.listComplaints();
         e.preventDefault();
 
     }

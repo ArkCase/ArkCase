@@ -129,7 +129,8 @@
             </div>
         </header>
         <section class="scrollable hover">
-            <ul class="list-group auto no-radius m-b-none m-t-n-xxs list-group-lg">
+            <ul class="list-group auto no-radius m-b-none m-t-n-xxs list-group-lg" id="ulComplaints">
+<!--
                 <li class="list-group-item active"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a0.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
                 <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
                 <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
@@ -141,6 +142,7 @@
                 <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
                 <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
                 <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
+-->
             </ul>
             <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Lead More...</a> </section>
         <footer class="footer dk clearfix">
