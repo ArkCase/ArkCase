@@ -114,14 +114,15 @@
               <div class="col-sm-12">
                 <form id="wizardform" method="get" action="">
                   <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <ul class="nav nav-tabs font-bold">
+                    <div class="panel-heading text-right">
+                      <ul class="nav nav-tabs pull-left font-bold">
                         <li><a href="#step1" data-toggle="tab">Step 1: Contact</a></li>
                         <li><a href="#step2" data-toggle="tab">Step 2: Incident</a></li>
                         <li><a href="#step3" data-toggle="tab">Step 3: People</a></li>
                         <li><a href="#step4" data-toggle="tab">Step 4: Attachments</a></li>
                         <li><a href="#step5" data-toggle="tab">Step 5: Assignment</a></li>
                       </ul>
+                      <span class="hidden-sm"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i> Save</button> <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Submit"><i class="fa fa-check"></i> Submit</button></span>
                     </div>
                     <div class="panel-body">
                       <div class="progress progress-xs m-t-sm">
@@ -136,17 +137,10 @@
                                     <section class="panel b-a">
                                       <div class="panel-heading b-b bg-info">
                                         <ul class="nav nav-pills pull-right">
-                                          <li>
-                                            <div class="btn-group padder-v2">
-                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-user"></i> New</button>
-                                              <ul class="dropdown-menu pull-right">
-                                                <li><a href="#">Other menu items</a></li>
-                                              </ul>
-                                            </div>
-                                          </li>
+                                          
                                           <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                         </ul>
-                                        <a href="#" class="font-bold">Complaintant</a> </div>
+                                        <a href="#" class="font-bold">Initiator</a> </div>
                                       <div class="panel-body no-padder">
                                       
                                       
@@ -370,12 +364,23 @@
                           <h4>Incident Information</h4>
                           <p>Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.</p>
                           <section class="row m-b-md">
-                            <div class="col-sm-6">
+                            <div class="col-sm-3">
                               <label for="incidentDate" class="label">Incident Date</label>
                               <input id="incidentDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="12-02-2013" data-date-format="dd-mm-yyyy" >
-                              <label for="complaintType"  class="label">Complaint Type</label>
+                              
+                              </div>
+                              
+                               <div class="col-sm-3">
+                            <label for="duration" class="label">Duration</label>
+                              <input id="duration" type="text" class="form-control" placeholder="Duration"   >
+                              
+                              </div>
+                              
+                               <div class="col-sm-3">
+                               
+                              <label for="complaintType"  class="label">Subject Type</label>
                               <select name="complaintType" class="form-control m-b">
-                                <option>Choose Complaint Type</option>
+                                <option>Choose Subject Type</option>
                                 <option>Domestic Dispute</option>
                                 <option>Arson</option>
                                 <option>Better Business Dispute</option>
@@ -385,9 +390,9 @@
                                 <option>Pollution </option>
                               </select>
                             </div>
-                            <div class="col-sm-6">
-                            <label for="duration" class="label">Duration</label>
-                              <input id="duration" type="text" class="form-control" placeholder="Duration"   >
+                           
+                              
+                               <div class="col-sm-3">
                               <label for="priority"  class="label">Priority</label>
                               <select name="priority" class="form-control m-b">
                                 <option>Choose Priority</option>
@@ -453,6 +458,7 @@
                                               <th>First Name</th>
                                               <th>Last Name</th>
                                               <th>Type</th>
+                                              <th>Description</th>
                                               <th width="9%">Action</th>
                                             </tr>
                                           </thead>
@@ -466,6 +472,7 @@
                                               <td>[First Name]</td>
                                               <td>[Last Name]</td>
                                               <td>[Type]</td>
+                                               <td>[Description]</td>
                                               <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
                                                 <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
                                             </tr>
@@ -656,6 +663,95 @@
                         </div>
                         <div class="tab-pane" id="step4">
                           <h4>Attachments</h4>
+<<<<<<< HEAD
+                          <p>Please add any attachments that you find pertinent to your complaint.  Examples could included, scanned documents, notes, photographs, videos, emails, etc.</p>
+                          
+                          
+                         
+    <!-- Redirect browsers with JavaScript disabled to the origin page -->
+    <noscript><input type="hidden" name="redirect" value="http://blueimp.github.io/jQuery-File-Upload/"></noscript>
+    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+    <div class="fileupload-buttonbar">
+        <div class="fileupload-buttons">
+            <!-- The fileinput-button span is used to style the file input field as button -->
+            <span class="fileinput-button">
+                <span>Add files...</span>
+                <input type="file" name="files[]" multiple>
+            </span>
+            <button type="submit" class="start">Start upload</button>
+            <button type="reset" class="cancel">Cancel upload</button>
+            <button type="button" class="delete">Delete</button>
+            <input type="checkbox" class="toggle">
+            <!-- The global file processing state -->
+            <span class="fileupload-process"></span>
+        </div>
+        <!-- The global progress state -->
+        <div class="fileupload-progress fade" style="display:none">
+            <!-- The global progress bar -->
+            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+            <!-- The extended global progress state -->
+            <div class="progress-extended">&nbsp;</div>
+        </div>
+    </div>
+    <!-- The table listing the files available for upload/download -->
+    <table role="presentation"><tbody class="files"></tbody></table>
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress"></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="start" disabled>Start</button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="cancel">Cancel</button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+            </p>
+            {% if (file.error) { %}
+                <div><span class="error">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            <button class="delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>Delete</button>
+            <input type="checkbox" name="delete" value="1" class="toggle">
+        </td>
+    </tr>
+{% } %}
+</script>
+                          
+                          
+=======
                           <p>Please drag/drop any attachments that you find pertinent to your complaint.  Examples could included, scanned documents, notes, photographs, videos, emails, etc.</p>
                           <div id="upload">
                           <div id="drop"> Drop Here <br />
@@ -666,6 +762,7 @@
                             <!-- The file uploads will be shown here -->
                           </ul>
                           </div>
+>>>>>>> FETCH_HEAD
                         </div>
                         <div class="tab-pane" id="step5">
                           <h4>Assignment</h4>
@@ -696,16 +793,54 @@
                                 <option value="AJ McClary">AJ McClary</option>
                                 <option value="Jim Nasr">Jim Nasr</option>
                          </select>
+                         
+                         <hr/>
+                          <label for="notifications" class="label">Alerts</label>
+                         <section id="communicationDevices4" class="panel b-a">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-phone"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Communication Devices</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
                           
                           
                         </div>
                         <ul class="pager wizard m-b-sm">
-                          <li class="previous first" style="display:none;"><a href="#">First</a></li>
                           <li class="previous"><a href="#"><i class="fa fa-arrow-left"></i> Previous</a></li>
                           
                           <li class="next"><a href="#">Next <i class="fa fa-arrow-right"></i> </a></li>
-                           <li class="submit"><a href="#">Submit</i> </a></li>
-                          <li class="save"><a href="#"><i class="fa fa-floppy-o"></i> Save</a></li>
                          
                           
                           
@@ -739,9 +874,27 @@
 
 <!-- File Manager --> 
 
-<script src="resources/js/upload/js/jquery.fileupload.js"></script> 
-<script src="resources/js/upload/js/jquery.iframe-transport.js"></script> 
-<script src="resources/js/upload/js/file-uploads-custom.js"></script> 
+
+
+<!-- The basic File Upload plugin -->
+<script src="resources/js/upload/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-image.js"></script>
+<!-- The File Upload audio preview plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-audio.js"></script>
+<!-- The File Upload video preview plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-video.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-validate.js"></script>
+<!-- The File Upload user interface plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-ui.js"></script>
+<!-- The File Upload jQuery UI plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-jquery-ui.js"></script>
+<!-- The main application script -->
+<script src="resources/js/upload/js/main.js"></script>
+
 
 <!-- Summernote WYSIWYG -->
 
