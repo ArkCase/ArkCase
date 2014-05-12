@@ -3,6 +3,7 @@ package com.armedia.acm.pluginmanager;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AcmPlugin implements Serializable
@@ -15,6 +16,7 @@ public class AcmPlugin implements Serializable
     private String homeUrl;
     private boolean enabled;
     private Map<String, Object> pluginProperties = new HashMap<>();
+    private List<AcmPluginPrivilege> privileges;
 
 
 
@@ -76,5 +78,15 @@ public class AcmPlugin implements Serializable
     public void setPluginProperties(Map<String, Object> pluginProperties)
     {
         this.pluginProperties = pluginProperties;
+    }
+
+    public List<AcmPluginPrivilege> getPrivileges()
+    {
+        return privileges;
+    }
+
+    public void setPrivileges(List<AcmPluginPrivilege> privileges)
+    {
+        this.privileges = privileges;
     }
 }

@@ -6,6 +6,7 @@ import com.armedia.acm.pluginmanager.AcmPluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import javax.servlet.ServletException;
@@ -13,7 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler
 {
@@ -66,6 +69,30 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         session.setAttribute("acm_navigator_plugins", plugins);
     }
 
+    public void addPrivilegesToSession(HttpServletRequest request, Authentication authentication)
+    {
+        List<String> allPrivileges = new ArrayList<>();
+
+        if ( authentication.getAuthorities() != null )
+        {
+            for ( GrantedAuthority authority : authentication.getAuthorities() )
+            {
+                List<String> privileges = getAcmPluginManager().getPrivilegesForRole(authority.getAuthority());
+                allPrivileges.addAll(privileges);
+            }
+        }
+
+        HttpSession session = request.getSession(true);
+
+        session.setAttribute("acm_privileges", allPrivileges);
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Added " + allPrivileges.size() + " privileges to user session.");
+        }
+
+    }
+
     public AcmPluginManager getAcmPluginManager()
     {
         return acmPluginManager;
@@ -75,4 +102,6 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
     {
         this.acmPluginManager = acmPluginManager;
     }
+
+
 }

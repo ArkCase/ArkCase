@@ -10,14 +10,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 /**
  * Created by dmiller on 3/18/14.
  */
 public class AcmPluginManagerTest extends EasyMockSupport
 {
+
+
     private AcmPluginManager unit;
 
     private AcmPlugin enabledNavigatorPlugin;
@@ -25,6 +27,10 @@ public class AcmPluginManagerTest extends EasyMockSupport
     private AcmPlugin nonNavigatorPlugin;
 
     private ApplicationContext mockContext;
+
+    private final String roleAdd = "role_add";
+    private final String roleAdmin = "role_admin";
+    private final String privilegeAdd = "add";
 
     @Before
     public void setUp() throws Exception
@@ -74,6 +80,36 @@ public class AcmPluginManagerTest extends EasyMockSupport
 
     }
 
+    @Test
+    public void getPrivilegesForRole() throws Exception
+    {
+        AcmPlugin plugin = createPlugin(true, false, "test plugin");
+        unit.registerPlugin(plugin);
+
+        List<String> privileges = unit.getPrivilegesForRole(roleAdd);
+
+        assertEquals(1, privileges.size());
+
+        assertEquals(privilegeAdd, privileges.get(0));
+
+
+    }
+
+    @Test
+    public void getPrivilegesForRole_noPrivileges() throws Exception
+    {
+        AcmPlugin plugin = createPlugin(true, false, "test plugin");
+        plugin.setPrivileges(null);
+        unit.registerPlugin(plugin);
+
+        List<String> privileges = unit.getPrivilegesForRole(roleAdd);
+
+        assertEquals(0, privileges.size());
+
+
+    }
+
+
     private Map<String, AcmPlugin> asMap(List<AcmPlugin> pluginList)
     {
         Map<String, AcmPlugin> beans = new HashMap<>();
@@ -93,6 +129,13 @@ public class AcmPluginManagerTest extends EasyMockSupport
         retval.setNavigatorTabName(tabName);
         retval.setHomeUrl(tabName);
         retval.setPluginName(tabName);
+
+        AcmPluginPrivilege add = new AcmPluginPrivilege();
+        add.setPrivilegeName(privilegeAdd);
+
+        add.setApplicationRolesWithPrivilege(Arrays.asList(roleAdd, roleAdmin));
+
+        retval.setPrivileges(Arrays.asList(add));
 
         return retval;
     }

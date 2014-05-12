@@ -62,6 +62,39 @@
         <property name="navigatorTabName" value="Complaints"/>
         <property name="pluginName" value="Complaint Plugin"/>
         <property name="pluginProperties" ref="complaintPluginProperties"/>
+        <property name="privileges">
+            <list>
+                <bean class="com.armedia.acm.pluginmanager.AcmPluginPrivilege">
+                    <property name="privilegeName" value="acm-complaint-create"/>
+                    <property name="applicationRolesWithPrivilege">
+                        <list>
+                            <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                            <value>ROLE_CALLCENTER</value>
+                        </list>
+                    </property>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.AcmPluginPrivilege">
+                    <property name="privilegeName" value="acm-complaint-save"/>
+                    <property name="applicationRolesWithPrivilege">
+                        <list>
+                            <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                            <value>ROLE_CALLCENTER</value>
+                            <value>ROLE_INVESTIGATOR</value>
+                        </list>
+                    </property>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.AcmPluginPrivilege">
+                    <property name="privilegeName" value="acm-complaint-list"/>
+                    <property name="applicationRolesWithPrivilege">
+                        <list>
+                            <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                            <value>ROLE_CALLCENTER</value>
+                            <value>ROLE_INVESTIGATOR</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
     </bean>
 
     <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher"/>
