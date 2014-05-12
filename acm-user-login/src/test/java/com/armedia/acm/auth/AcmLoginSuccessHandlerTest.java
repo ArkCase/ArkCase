@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 
@@ -83,16 +85,19 @@ public class AcmLoginSuccessHandlerTest extends EasyMockSupport
     {
         String roleAdd = "ROLE_ADD";
         String privilege = "privilege";
-        List<String> privileges = Arrays.asList(privilege);
+        Map<String, Boolean> privilegeMap = new HashMap<>();
+        privilegeMap.put(privilege, Boolean.TRUE);
+
+        List<String> privilegeList = Arrays.asList(privilege);
 
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
         expect((List<AcmGrantedAuthority>) mockAuthentication.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
 
-        expect(mockPluginManager.getPrivilegesForRole(roleAdd)).andReturn(privileges);
+        expect(mockPluginManager.getPrivilegesForRole(roleAdd)).andReturn(privilegeList);
 
         expect(mockRequest.getSession(true)).andReturn(mockSession);
 
-        mockSession.setAttribute("acm_privileges", privileges);
+        mockSession.setAttribute("acm_privileges", privilegeMap);
 
         replayAll();
 
