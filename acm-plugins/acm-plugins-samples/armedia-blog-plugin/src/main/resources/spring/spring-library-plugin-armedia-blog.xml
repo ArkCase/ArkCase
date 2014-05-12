@@ -9,6 +9,7 @@
         <property name="navigatorTabName" value="Armedia Blog"/>
         <property name="homeUrl" value="/plugin/sample/armediaBlog"/>
         <property name="enabled" value="true"/>
+        <property name="pluginImage" value="i-pencil"/>
     </bean>
 
 </beans>

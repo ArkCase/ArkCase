@@ -35,6 +35,7 @@
         <property name="navigatorTabName" value="Dashboard"/>
         <property name="pluginName" value="Dashboard Plugin"/>
         <property name="pluginProperties" ref="dashboardPluginProperties"/>
+        <property name="pluginImage" value="i-statistics"/>
     </bean>
 
 

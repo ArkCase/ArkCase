@@ -10,6 +10,7 @@
         <property name="navigatorTab" value="true"/>
         <property name="navigatorTabName" value="Home"/>
         <property name="homeUrl" value="home"/>
+        <property name="pluginImage" value="i-statistics"/>
     </bean>
 
 </beans>

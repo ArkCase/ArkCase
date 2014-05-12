@@ -62,6 +62,7 @@
         <property name="navigatorTabName" value="Complaints"/>
         <property name="pluginName" value="Complaint Plugin"/>
         <property name="pluginProperties" ref="complaintPluginProperties"/>
+        <property name="pluginImage" value="i-notice"/>
     </bean>
 
     <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher"/>

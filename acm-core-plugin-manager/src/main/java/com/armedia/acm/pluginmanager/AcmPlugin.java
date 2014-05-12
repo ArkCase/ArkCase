@@ -15,6 +15,7 @@ public class AcmPlugin implements Serializable
     private String homeUrl;
     private boolean enabled;
     private Map<String, Object> pluginProperties = new HashMap<>();
+    private String pluginImage;
 
 
 
@@ -76,5 +77,13 @@ public class AcmPlugin implements Serializable
     public void setPluginProperties(Map<String, Object> pluginProperties)
     {
         this.pluginProperties = pluginProperties;
+    }
+
+    public String getPluginImage() {
+        return pluginImage;
+    }
+
+    public void setPluginImage(String pluginImage) {
+        this.pluginImage = pluginImage;
     }
 }

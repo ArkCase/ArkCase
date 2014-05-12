@@ -9,6 +9,8 @@
         <property name="navigatorTabName" value="Hello World"/>
         <property name="homeUrl" value="/plugin/sample/helloWorld"/>
         <property name="enabled" value="true"/>
+        <property name="pluginImage" value="i-world"/>
+
     </bean>
 
 </beans>

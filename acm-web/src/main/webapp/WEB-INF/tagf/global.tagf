@@ -33,5 +33,6 @@
 <script type="text/javascript" src="<c:url value='/resources/js/jquery.microdata.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/bootstrap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/issueCollector/jiraIssueCollector.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/js/bootbox.min.js'/>"></script>
 
 
