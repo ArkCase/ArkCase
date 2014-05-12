@@ -19,7 +19,10 @@
                     <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Navigation</div>
                     <ul class="nav nav-main" data-ride="collapse" id="ulPlugin">
                         <c:forEach var="plugin" items="${sessionScope.acm_navigator_plugins}">
+                            <li class=""> <a href="<c:url value='${plugin.homeUrl}' />" class="auto"> <i class="i <c:url value='${plugin.pluginImage}' /> icon"> </i> <span class="font-bold">${plugin.navigatorTabName}</span> </a> </li>
+                            <!--
                             <li class=""> <a href="<c:url value='${plugin.homeUrl}' />" class="auto"> <i class="i i-statistics icon"> </i> <span class="font-bold">${plugin.navigatorTabName}</span> </a> </li>
+                            -->
                         </c:forEach>
                         <%--<li class="active"> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>--%>
                     </ul>

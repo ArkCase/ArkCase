@@ -937,6 +937,15 @@ div.h4.font-bold {
 
 /* @end */
 
+
+#wizardform div.panel.panel-default div.panel-heading.text-right  {
+	padding-bottom: 0px;
+}
+#wizardform div.panel.panel-default div.panel-heading.text-right button {
+	position: relative;
+	bottom: 5px;
+}
+
 div.panel-body.max-200 {
 	max-height: 200px;
 	overflow-y: auto;

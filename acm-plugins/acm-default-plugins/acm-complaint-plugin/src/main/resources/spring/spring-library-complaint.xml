@@ -95,6 +95,7 @@
                 </bean>
             </list>
         </property>
+        <property name="pluginImage" value="i-notice"/>
     </bean>
 
     <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher"/>

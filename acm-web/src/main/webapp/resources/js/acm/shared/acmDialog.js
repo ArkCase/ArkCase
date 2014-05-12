@@ -1,67 +1,98 @@
 /**
  * Acm.Dialog is used to display Dialog/confirm/error messages to the user
  *
- * Capabilities:
+ * Current implementation is to use bootbox
  *
- *   + showDialogDialog - show an Dialog message to the user
- *   + showConfirmDialog - show an Dialog message to the user and get back confirmation
- *   + showErrorDialog - show an error message to the user
- *
- * @author dmcclure
+ * @author jwu
  */
 Acm.Dialog = {
     initialize : function() {
     }
 
-    ,show: function(msgTop, msgBottom, callback, title){
-        if(undefined === title) {
-            title = 'Dialog'
+    ,DEFAULT_NO_TITLE:    undefined
+    ,DEFAULT_NO_CALLBACK: undefined
+
+    //
+    //callback = function() {
+    //    alert("callback");
+    //}
+    //
+    ,info: function(msg, callback, title){
+        var opt = {
+            message: msg
         }
-        if(undefined === msgBottom) {
-            msgBottom = '';
+        if(Acm.isNotEmpty(title)) {
+            opt.title = title;
+        } else {
+            opt.title = "Info";
         }
-        jDialog("<strong>" + msgTop + "</strong>\n\n" + msgBottom, title, callback);
+        if (Acm.isNotEmpty(callback)) {
+            opt.callback = callback;
+        }
+
+        bootbox.alert(opt);
+    }
+    ,alert: function(msg, callback, title){
+        if(Acm.isEmpty(title)) {
+            title = "Alert";
+        }
+        this.info(msg, callback, title);
+    }
+    ,error: function(msg, callback, title){
+        if(Acm.isEmpty(title)) {
+            title = "Error";
+        }
+        this.info(msg, callback, title);
     }
 
-    ,showNotice: function(msgTop, msgBottom, callback, title){
-        if(undefined === title) {
-            title = 'Notice'
+    //
+    // callback example:
+    // function(result) {
+    //    alert("callback result:" + result);
+    //}
+    //
+    ,confirm: function(msg, callback, title){
+        var opt = {
+            message: msg
         }
-        if(undefined === msgBottom) {
-            msgBottom = '';
+        if(Acm.isNotEmpty(title)) {
+            opt.title = title;
+        } else {
+            opt.title = "Confirm";
         }
-        jNotify("<strong>" + msgTop + "</strong>\n\n" + msgBottom, title, callback);
+        if (Acm.isNotEmpty(callback)) {
+            opt.callback = callback;
+        }
+
+        bootbox.confirm(opt);
     }
 
-    ,showConfirm: function(msgTop, msgBottom, callback, title){
-        if(undefined === title) {
-            title = 'Confirm';
+    //
+    // callback example:
+    // function(result) {
+    //    if (null === result) {
+    //        alert("Prompt dismissed");
+    //    } else {
+    //        alert("Prompt result:" + result);
+    //    }
+    //}
+    //
+    ,prompt: function(msg, callback, title){
+        if (Acm.isEmpty(callback)) {
+            console.log("Prompt dialog needs callback");
+            return;
         }
-        if(undefined === msgBottom) {
-            msgBottom = '';
+        var opt = {
+            message: msg
+            ,callback: callback
         }
-        jConfirm("<strong>" + msgTop + "</strong>\n\n" + msgBottom, title, callback);
-    }
+        if(Acm.isNotEmpty(title)) {
+            opt.title = title;
+        } else {
+            opt.title = "Prompt";
+        }
 
-    ,showError: function(msgTop, msgBottom, title){
-        if(undefined === title) {
-            title = 'Error';
-        }
-        if(undefined === msgBottom) {
-            msgBottom = '';
-        }
-        //jDialog("<strong>" + msgTop + "</strong>\n\n" + msgBottom, title);
-        alert("<strong>" + msgTop + "</strong>\n\n" + msgBottom, title);
-    }
-
-    ,showErrorPositioned: function(msgTop, msgBottom, title, pos){
-        if(undefined === title) {
-            title = 'Error';
-        }
-        if(undefined === msgBottom) {
-            msgBottom = '';
-        }
-        jPosDialog("<strong>" + msgTop + "</strong>\n\n" + msgBottom, title, pos);
+        bootbox.prompt(opt);
     }
 
 }

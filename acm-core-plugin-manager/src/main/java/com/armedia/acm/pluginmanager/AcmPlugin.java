@@ -17,6 +17,7 @@ public class AcmPlugin implements Serializable
     private boolean enabled;
     private Map<String, Object> pluginProperties = new HashMap<>();
     private List<AcmPluginPrivilege> privileges;
+    private String pluginImage;
 
 
 
@@ -88,5 +89,13 @@ public class AcmPlugin implements Serializable
     public void setPrivileges(List<AcmPluginPrivilege> privileges)
     {
         this.privileges = privileges;
+    }
+
+    public String getPluginImage() {
+        return pluginImage;
+    }
+
+    public void setPluginImage(String pluginImage) {
+        this.pluginImage = pluginImage;
     }
 }
