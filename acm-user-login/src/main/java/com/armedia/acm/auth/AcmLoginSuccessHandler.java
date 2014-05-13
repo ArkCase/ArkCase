@@ -6,6 +6,7 @@ import com.armedia.acm.pluginmanager.AcmPluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import javax.servlet.ServletException;
@@ -13,7 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler
 {
@@ -35,6 +40,7 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         }
         addUserIdToSession(request, authentication);
         addNavigatorPluginsToSession(request, authentication);
+        addPrivilegesToSession(request, authentication);
 
         super.onAuthenticationSuccess(request, response, authentication);
     }
@@ -66,6 +72,38 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         session.setAttribute("acm_navigator_plugins", plugins);
     }
 
+    public void addPrivilegesToSession(HttpServletRequest request, Authentication authentication)
+    {
+        List<String> allPrivileges = new ArrayList<>();
+
+        if ( authentication.getAuthorities() != null )
+        {
+            for ( GrantedAuthority authority : authentication.getAuthorities() )
+            {
+                List<String> privileges = getAcmPluginManager().getPrivilegesForRole(authority.getAuthority());
+                allPrivileges.addAll(privileges);
+            }
+        }
+
+        // we have to put a map in the session because of how JSTL works.  It's easier to check for
+        // a map entry than to see if an element exists in a list.
+        Map<String, Boolean> privilegeMap = new HashMap<>();
+        for ( String privilege : allPrivileges )
+        {
+            privilegeMap.put(privilege, Boolean.TRUE);
+        }
+
+        HttpSession session = request.getSession(true);
+
+        session.setAttribute("acm_privileges", privilegeMap);
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Added " + privilegeMap.size() + " privileges to user session.");
+        }
+
+    }
+
     public AcmPluginManager getAcmPluginManager()
     {
         return acmPluginManager;
@@ -75,4 +113,6 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
     {
         this.acmPluginManager = acmPluginManager;
     }
+
+
 }

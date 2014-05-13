@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 
 /**
  * Created by dmiller on 3/18/14.
@@ -73,6 +75,33 @@ public class AcmLoginSuccessHandlerTest extends EasyMockSupport
         replayAll();
 
         unit.addNavigatorPluginsToSession(mockRequest, mockAuthentication);
+
+        verifyAll();
+
+    }
+
+    @Test
+    public void addUserPrivilegesToSession() throws Exception
+    {
+        String roleAdd = "ROLE_ADD";
+        String privilege = "privilege";
+        Map<String, Boolean> privilegeMap = new HashMap<>();
+        privilegeMap.put(privilege, Boolean.TRUE);
+
+        List<String> privilegeList = Arrays.asList(privilege);
+
+        AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
+        expect((List<AcmGrantedAuthority>) mockAuthentication.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
+
+        expect(mockPluginManager.getPrivilegesForRole(roleAdd)).andReturn(privilegeList);
+
+        expect(mockRequest.getSession(true)).andReturn(mockSession);
+
+        mockSession.setAttribute("acm_privileges", privilegeMap);
+
+        replayAll();
+
+        unit.addPrivilegesToSession(mockRequest, mockAuthentication);
 
         verifyAll();
 

@@ -9,6 +9,8 @@ import org.springframework.context.ApplicationContextAware;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AcmPluginManager implements ApplicationContextAware
@@ -16,8 +18,9 @@ public class AcmPluginManager implements ApplicationContextAware
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private Collection<AcmPlugin> acmPlugins;
-    private Collection<AcmPlugin> enabledNavigatorPlugins;
+    private Collection<AcmPlugin> acmPlugins = new ArrayList<>();
+    private Collection<AcmPlugin> enabledNavigatorPlugins = new ArrayList<>();
+    private Map<String, List<String>> privilegesByRole = new HashMap<>();
 
     public synchronized Collection<AcmPlugin> getAcmPlugins()
     {
@@ -28,6 +31,47 @@ public class AcmPluginManager implements ApplicationContextAware
     {
         acmPlugins.add(plugin);
 
+        checkForNavigatorTab(plugin);
+
+        addPluginPrivileges(plugin);
+    }
+
+    private void addPluginPrivileges(AcmPlugin plugin)
+    {
+        if ( plugin.getPrivileges() != null )
+        {
+            for ( AcmPluginPrivilege privilege : plugin.getPrivileges() )
+            {
+                if ( privilege.getApplicationRolesWithPrivilege() != null )
+                {
+                    mapRolesToPrivileges(privilege);
+                }
+            }
+        }
+    }
+
+    private void mapRolesToPrivileges(AcmPluginPrivilege privilege)
+    {
+        for ( String role : privilege.getApplicationRolesWithPrivilege() )
+        {
+            List<String> rolePrivileges = privilegesByRole.get(role);
+            rolePrivileges = rolePrivileges == null ? new ArrayList<String>() : rolePrivileges;
+            String privilegeName = privilege.getPrivilegeName();
+            addPrivilegeIfNecessary(role, rolePrivileges, privilegeName);
+        }
+    }
+
+    private void addPrivilegeIfNecessary(String role, List<String> rolePrivileges, String privilegeName)
+    {
+        if ( ! rolePrivileges.contains(privilegeName) )
+        {
+            rolePrivileges.add(privilegeName);
+            privilegesByRole.put(role, rolePrivileges);
+        }
+    }
+
+    private void checkForNavigatorTab(AcmPlugin plugin)
+    {
         if ( plugin.isNavigatorTab() && plugin.isEnabled() )
         {
             if ( log.isDebugEnabled() )
@@ -44,9 +88,6 @@ public class AcmPluginManager implements ApplicationContextAware
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
     {
-        acmPlugins = new ArrayList<>();
-        enabledNavigatorPlugins = new ArrayList<>();
-
         Map<String, AcmPlugin> plugins = applicationContext.getBeansOfType(AcmPlugin.class);
 
         if ( log.isInfoEnabled() )
@@ -72,4 +113,15 @@ public class AcmPluginManager implements ApplicationContextAware
     }
 
 
+    public List<String> getPrivilegesForRole(String role)
+    {
+        if ( privilegesByRole.containsKey(role) )
+        {
+            return Collections.unmodifiableList(privilegesByRole.get(role));
+        }
+        else
+        {
+            return Collections.emptyList();
+        }
+    }
 }
