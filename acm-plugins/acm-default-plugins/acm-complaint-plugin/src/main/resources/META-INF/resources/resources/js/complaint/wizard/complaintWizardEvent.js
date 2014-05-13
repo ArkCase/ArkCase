@@ -10,35 +10,6 @@ ComplaintWizard.Event = {
     }
 
     ,onClickLnkSubmit : function(e) {
-//        Acm.Dialog.alert("Acm.Dialog.Alert1");
-//        Acm.Dialog.alert("Acm.Dialog.Alert2", function() {
-//            alert("cb: great success");
-//        });
-//        Acm.Dialog.alert("Acm.Dialog.Alert3", Acm.Dialog.DEFAULT_NO_CALLBACK, "My Dialog3");
-
-//        Acm.Dialog.error("Acm.Dialog.Error1");
-//        Acm.Dialog.error("Acm.Dialog.Error2", function() {
-//            alert("cb: great success");
-//        });
-//        Acm.Dialog.error("Acm.Dialog.Error3", Acm.Dialog.DEFAULT_NO_CALLBACK, "My Dialog3");
-
-
-        Acm.Dialog.prompt("Acm.Dialog.Prompt1", function(result) {
-            if (null === result) {
-                alert("Prompt dismissed");
-            } else {
-                alert("Prompt result:" + result);
-            }
-        });
-//        Acm.Dialog.prompt("Acm.Dialog.Prompt2", function(result) {
-//            if (null === result) {
-//                alert("Prompt dismissed");
-//            } else {
-//                alert("Prompt result:" + result);
-//            }
-//        }, "My Dialog3");
-
-//        alert("after");
 
         e.preventDefault();
 

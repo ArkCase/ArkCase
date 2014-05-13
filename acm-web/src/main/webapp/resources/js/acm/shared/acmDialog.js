@@ -52,19 +52,12 @@ Acm.Dialog = {
     //}
     //
     ,confirm: function(msg, callback, title){
-        var opt = {
-            message: msg
-        }
-        if(Acm.isNotEmpty(title)) {
-            opt.title = title;
-        } else {
-            opt.title = "Confirm";
-        }
-        if (Acm.isNotEmpty(callback)) {
-            opt.callback = callback;
+        if (Acm.isEmpty(callback)) {
+            console.log("Confirm dialog needs callback");
+            return;
         }
 
-        bootbox.confirm(opt);
+        bootbox.confirm(msg, callback);
     }
 
     //
@@ -82,17 +75,8 @@ Acm.Dialog = {
             console.log("Prompt dialog needs callback");
             return;
         }
-        var opt = {
-            message: msg
-            ,callback: callback
-        }
-        if(Acm.isNotEmpty(title)) {
-            opt.title = title;
-        } else {
-            opt.title = "Prompt";
-        }
 
-        bootbox.prompt(opt);
+        bootbox.prompt(msg, callback);
     }
 
 }
