@@ -55,7 +55,7 @@
         <property name="muleClient" ref="muleClient"/>
     </bean>
     
-    <bean id="complaintPlugin" class="com.armedia.acm.pluginmanager.AcmPlugin">
+    <bean id="complaintPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="enabled" value="true"/>
         <property name="homeUrl" value="/plugin/complaint"/>
         <property name="navigatorTab" value="true"/>
@@ -65,35 +65,59 @@
         <property name="pluginImage" value="i-notice"/>
         <property name="privileges">
             <list>
-                <bean class="com.armedia.acm.pluginmanager.AcmPluginPrivilege">
-                    <property name="privilegeName" value="acm-complaint-create"/>
-                    <property name="applicationRolesWithPrivilege">
-                        <list>
-                            <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                            <value>ROLE_CALLCENTER</value>
-                        </list>
-                    </property>
+                <ref bean="acmComplaintCreatePrivilege"/>
+                <ref bean="acmComplaintSavePrivilege"/>
+                <ref bean="acmComplaintListPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/complaint"/>
+                    <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
                 </bean>
-                <bean class="com.armedia.acm.pluginmanager.AcmPluginPrivilege">
-                    <property name="privilegeName" value="acm-complaint-save"/>
-                    <property name="applicationRolesWithPrivilege">
-                        <list>
-                            <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                            <value>ROLE_CALLCENTER</value>
-                            <value>ROLE_INVESTIGATOR</value>
-                        </list>
-                    </property>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/complaint/wizard"/>
+                    <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
                 </bean>
-                <bean class="com.armedia.acm.pluginmanager.AcmPluginPrivilege">
-                    <property name="privilegeName" value="acm-complaint-list"/>
-                    <property name="applicationRolesWithPrivilege">
-                        <list>
-                            <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                            <value>ROLE_CALLCENTER</value>
-                            <value>ROLE_INVESTIGATOR</value>
-                        </list>
-                    </property>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/complaint"/>
+                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
                 </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmComplaintListPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-complaint-list"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_INVESTIGATOR</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="acmComplaintSavePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-complaint-save"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_INVESTIGATOR</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmComplaintCreatePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-complaint-create"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
             </list>
         </property>
     </bean>

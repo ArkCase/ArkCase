@@ -1,5 +1,8 @@
-package com.armedia.acm.pluginmanager;
+package com.armedia.acm.pluginmanager.service;
 
+import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
+import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -21,6 +24,7 @@ public class AcmPluginManager implements ApplicationContextAware
     private Collection<AcmPlugin> acmPlugins = new ArrayList<>();
     private Collection<AcmPlugin> enabledNavigatorPlugins = new ArrayList<>();
     private Map<String, List<String>> privilegesByRole = new HashMap<>();
+    private List<AcmPluginUrlPrivilege> urlPrivileges = new ArrayList<>();
 
     public synchronized Collection<AcmPlugin> getAcmPlugins()
     {
@@ -34,6 +38,16 @@ public class AcmPluginManager implements ApplicationContextAware
         checkForNavigatorTab(plugin);
 
         addPluginPrivileges(plugin);
+
+        addPluginUrlPrivileges(plugin);
+    }
+
+    private void addPluginUrlPrivileges(AcmPlugin plugin)
+    {
+        if ( plugin.getUrlPrivileges() != null )
+        {
+            urlPrivileges.addAll(plugin.getUrlPrivileges());
+        }
     }
 
     private void addPluginPrivileges(AcmPlugin plugin)
@@ -123,5 +137,10 @@ public class AcmPluginManager implements ApplicationContextAware
         {
             return Collections.emptyList();
         }
+    }
+
+    public List<AcmPluginUrlPrivilege> getUrlPrivileges()
+    {
+        return Collections.unmodifiableList(urlPrivileges);
     }
 }

@@ -1,5 +1,7 @@
-package com.armedia.acm.pluginmanager;
+package com.armedia.acm.pluginmanager.service;
 
+import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;

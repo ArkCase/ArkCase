@@ -1,4 +1,4 @@
-package com.armedia.acm.pluginmanager;
+package com.armedia.acm.pluginmanager.model;
 
 
 import java.io.Serializable;
@@ -17,6 +17,7 @@ public class AcmPlugin implements Serializable
     private boolean enabled;
     private Map<String, Object> pluginProperties = new HashMap<>();
     private List<AcmPluginPrivilege> privileges;
+    private List<AcmPluginUrlPrivilege> urlPrivileges;
     private String pluginImage;
 
 
@@ -97,5 +98,15 @@ public class AcmPlugin implements Serializable
 
     public void setPluginImage(String pluginImage) {
         this.pluginImage = pluginImage;
+    }
+
+    public List<AcmPluginUrlPrivilege> getUrlPrivileges()
+    {
+        return urlPrivileges;
+    }
+
+    public void setUrlPrivileges(List<AcmPluginUrlPrivilege> urlPrivileges)
+    {
+        this.urlPrivileges = urlPrivileges;
     }
 }

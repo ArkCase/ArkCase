@@ -28,7 +28,7 @@
     </bean>
 
     
-    <bean id="dashboardPlugin" class="com.armedia.acm.pluginmanager.AcmPlugin">
+    <bean id="dashboardPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="enabled" value="true"/>
         <property name="homeUrl" value="/plugin/dashboard"/>
         <property name="navigatorTab" value="true"/>

@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="helloWorldPlugin" class="com.armedia.acm.pluginmanager.AcmPlugin">
+    <bean id="helloWorldPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="helloWorldPlugin"/>
         <property name="navigatorTab" value="true"/>
         <property name="navigatorTabName" value="Hello World"/>

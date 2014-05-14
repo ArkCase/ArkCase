@@ -1,8 +1,8 @@
 package com.armedia.acm.auth;
 
 
-import com.armedia.acm.pluginmanager.AcmPlugin;
-import com.armedia.acm.pluginmanager.AcmPluginManager;
+import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;

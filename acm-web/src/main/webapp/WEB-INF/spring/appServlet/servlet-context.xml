@@ -67,6 +67,14 @@
     <!--<context:spring-configured/>-->
     <!--<context:annotation-config/>-->
 
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/plugin/**"/>
+            <mvc:mapping path="/api/*/plugin/**"/>
+            <ref bean="acmPluginRoleBasedAccessInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
     <!--
         Enable serving of classpath with Spring 3 resource serving mechanism. For example:
         /webflow-primefaces-showcase/app/resources/styles/blueprint/print.css

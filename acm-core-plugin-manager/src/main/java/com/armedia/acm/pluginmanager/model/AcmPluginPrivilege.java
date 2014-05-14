@@ -1,4 +1,4 @@
-package com.armedia.acm.pluginmanager;
+package com.armedia.acm.pluginmanager.model;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * logical user groups. The acm-user-login module is responsible for translating actual LDAP user group names to
  * application roles (via the applicationRoleToUserGroup.properties file).
  *
- * Each privilege is associated with URLs via the AcmPluginUrl class.
+ * Each privilege is associated with URLs via the AcmPluginUrlPrivilege class.
  */
 public class AcmPluginPrivilege
 {

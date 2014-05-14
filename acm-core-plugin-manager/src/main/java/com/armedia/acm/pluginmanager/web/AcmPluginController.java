@@ -1,5 +1,7 @@
-package com.armedia.acm.pluginmanager;
+package com.armedia.acm.pluginmanager.web;
 
+import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;

@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.complaint.web;
 
-import com.armedia.acm.pluginmanager.AcmPlugin;
+import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
