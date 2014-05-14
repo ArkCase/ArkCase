@@ -206,7 +206,6 @@
         <module>acm-audit</module>
         <module>acm-event</module>
         <module>arm-file-tools</module>
-        <module>acm-case-plugin</module>
         <module>acm-core-plugin-manager</module>
         <module>acm-plugins</module>
         <module>mule-tools</module>
