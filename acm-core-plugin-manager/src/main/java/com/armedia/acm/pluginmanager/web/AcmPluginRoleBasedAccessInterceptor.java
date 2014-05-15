@@ -58,19 +58,38 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
         }
 
         List<AcmPluginUrlPrivilege> urlPrivileges = getAcmPluginManager().getUrlPrivileges();
+        boolean hasPrivilege = determinePrivilege(method, url, userPrivileges, urlPrivileges);
 
+        if ( ! hasPrivilege )
+        {
+            String message = "You do not have privileges for " + method + " " + url;
+            sendErrorResponse(HttpStatus.FORBIDDEN, message, response);
+        }
+
+        return hasPrivilege;
+    }
+
+    protected boolean determinePrivilege(
+            String method,
+            String url,
+            Map<String, Boolean> userPrivileges,
+            List<AcmPluginUrlPrivilege> urlPrivileges)
+    {
+        boolean hasPrivilege = false;
         for ( AcmPluginUrlPrivilege urlPrivilege : urlPrivileges )
         {
             if ( urlPrivilege.matches(url, method) )
             {
-                return true;
+                String requiredPrivilege = urlPrivilege.getRequiredPrivilege().getPrivilegeName();
+                if ( log.isDebugEnabled() )
+                {
+                    log.debug("Required privilege for " + method + " " + url + ": " + requiredPrivilege +
+                        "; user has privilege: " + userPrivileges.containsKey(requiredPrivilege));
+                }
+                hasPrivilege = userPrivileges.containsKey(requiredPrivilege) ? userPrivileges.get(requiredPrivilege) : false;
             }
         }
-
-        String message = "You do not have privileges for " + method + " " + url;
-        sendErrorResponse(HttpStatus.FORBIDDEN, message, response);
-
-        return false;
+        return hasPrivilege;
     }
 
     public void sendErrorResponse(HttpStatus httpStatus, String message, HttpServletResponse response) throws IOException

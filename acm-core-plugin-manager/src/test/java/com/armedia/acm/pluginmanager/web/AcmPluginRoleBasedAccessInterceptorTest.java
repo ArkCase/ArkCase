@@ -18,6 +18,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -87,7 +89,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
     }
 
     @Test
-    public void preHandle_insufficientPrivilege() throws Exception
+    public void preHandle_emptyPrivileges() throws Exception
     {
         expect(mockRequest.getSession(false)).andReturn(mockSession);
         expect(mockSession.getAttribute("acm_privileges")).andReturn(Collections.emptyMap());
@@ -106,14 +108,8 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
     }
 
     @Test
-    public void preHandle_hasPrivilege() throws Exception
+    public void preHandle_wrongPrivileges() throws Exception
     {
-        expect(mockRequest.getSession(false)).andReturn(mockSession);
-        expect(mockSession.getAttribute("acm_privileges")).andReturn(Collections.emptyMap());
-
-        expect(mockRequest.getServletPath()).andReturn("/url").atLeastOnce();
-        expect(mockRequest.getMethod()).andReturn(HttpMethod.GET.name());
-
         AcmPluginPrivilege privilege = new AcmPluginPrivilege();
         privilege.setPrivilegeName("privilegeName");
         AcmPluginUrlPrivilege urlPrivilege = new AcmPluginUrlPrivilege();
@@ -125,6 +121,50 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         plugin.setUrlPrivileges(Arrays.asList(urlPrivilege));
         acmPluginManager.registerPlugin(plugin);
 
+        expect(mockRequest.getSession(false)).andReturn(mockSession);
+
+        Map<String, Boolean> userPrivs = new HashMap<>();
+        userPrivs.put("anotherPrivilege", Boolean.TRUE);
+
+        expect(mockSession.getAttribute("acm_privileges")).andReturn(userPrivs);
+
+        expect(mockRequest.getServletPath()).andReturn("/url").atLeastOnce();
+        expect(mockRequest.getMethod()).andReturn(HttpMethod.GET.name());
+
+        insufficientPrivilegeExpectations();
+
+        replayAll();
+
+        boolean proceed = unit.preHandle(mockRequest, mockResponse, null);
+
+        verifyAll();
+
+        assertFalse(proceed);
+    }
+
+    @Test
+    public void preHandle_rightPrivileges() throws Exception
+    {
+        AcmPluginPrivilege privilege = new AcmPluginPrivilege();
+        privilege.setPrivilegeName("privilegeName");
+        AcmPluginUrlPrivilege urlPrivilege = new AcmPluginUrlPrivilege();
+        urlPrivilege.setHttpMethod(HttpMethod.GET);
+        urlPrivilege.setUrl("/url");
+        urlPrivilege.setRequiredPrivilege(privilege);
+
+        AcmPlugin plugin = new AcmPlugin();
+        plugin.setUrlPrivileges(Arrays.asList(urlPrivilege));
+        acmPluginManager.registerPlugin(plugin);
+
+        expect(mockRequest.getSession(false)).andReturn(mockSession);
+
+        Map<String, Boolean> userPrivs = new HashMap<>();
+        userPrivs.put("privilegeName", Boolean.TRUE);
+
+        expect(mockSession.getAttribute("acm_privileges")).andReturn(userPrivs);
+
+        expect(mockRequest.getServletPath()).andReturn("/url").atLeastOnce();
+        expect(mockRequest.getMethod()).andReturn(HttpMethod.GET.name());
 
         replayAll();
 
