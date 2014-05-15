@@ -23,18 +23,21 @@
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
+                <prop key="complaint.workflow.enabled">true</prop>
+                <prop key="complaint.workflow.activiti.name">cmComplaintWorkflow</prop>
+                <prop key="complaint.workflow.trigger.eventName">com.armedia.acm.complaint.created</prop>
             </props>
         </property>
     </bean>
 
     <!-- event handlers -->
     <bean id="startComplaintBusinessProcessAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.complaint.created"/>
+        <property name="eventName" value="${complaint.workflow.trigger.eventName}"/>
         <property name="action" ref="startBusinessProcessAction"/>
-        <property name="enabled" value="true"/>
+        <property name="enabled" value="${complaint.workflow.enabled}"/>
         <property name="parameters">
             <map>
-                <entry key="processDefinitionKey" value="cmComplaintWorkflow"/>
+                <entry key="processDefinitionKey" value="${complaint.workflow.activiti.name}"/>
             </map>
         </property>
     </bean>
