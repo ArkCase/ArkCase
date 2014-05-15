@@ -15,6 +15,7 @@
                 <ref bean="blogPrivilege"/>
             </list>
         </property>
+        <property name="navigatorTabPrivilegeRequired" ref="blogPrivilege"/>
         <property name="urlPrivileges">
             <list>
                 <bean id="dashboardUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

@@ -139,6 +139,40 @@ public class AcmPluginManager implements ApplicationContextAware
         }
     }
 
+    public List<AcmPlugin> findAccessiblePlugins(Map<String, Boolean> userPrivileges)
+    {
+        List<AcmPlugin> retval = new ArrayList<>();
+
+        for ( AcmPlugin plugin : getEnabledNavigatorPlugins() )
+        {
+            boolean hasPrivilege = checkUserPrivilege(userPrivileges, plugin);
+            if ( hasPrivilege )
+            {
+                retval.add(plugin);
+            }
+        }
+
+        return retval;
+    }
+
+    protected boolean checkUserPrivilege(Map<String, Boolean> userPrivileges, AcmPlugin plugin)
+    {
+        boolean hasPrivilege = false;
+        AcmPluginPrivilege requiredPrivilege = plugin.getNavigatorTabPrivilegeRequired();
+        if ( requiredPrivilege != null )
+        {
+            String privilegeName = requiredPrivilege.getPrivilegeName();
+            hasPrivilege = userPrivileges.containsKey(privilegeName) ? userPrivileges.get(privilegeName) : false;
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("Checking access to navigator tab '" + plugin.getNavigatorTabName() + ". " +
+                        "Required privilege: '" + privilegeName + "'. User has access: " + hasPrivilege + ".");
+            }
+        }
+        return hasPrivilege;
+    }
+
     public List<AcmPluginUrlPrivilege> getUrlPrivileges()
     {
         return Collections.unmodifiableList(urlPrivileges);

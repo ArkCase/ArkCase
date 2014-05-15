@@ -15,6 +15,7 @@
                 <ref bean="helloWorldPrivilege"/>
             </list>
         </property>
+        <property name="navigatorTabPrivilegeRequired" ref="helloWorldPrivilege"/>
         <property name="urlPrivileges">
             <list>
                 <bean id="dashboardUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

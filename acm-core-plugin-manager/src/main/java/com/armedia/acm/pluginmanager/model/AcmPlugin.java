@@ -10,17 +10,67 @@ public class AcmPlugin implements Serializable
 {
     private static final long serialVersionUID = -364262047493069587L;
 
+    /**
+     * Internal name.
+     */
     private String pluginName;
+
+    /**
+     * Whether this plugin is a navigator tab.
+     */
     private boolean navigatorTab;
+
+    /**
+     * Text to appear on the navigator tab.
+     */
     private String navigatorTabName;
+
+    /**
+     * URL to invoke when the navigator tab is clicked.
+     */
     private String homeUrl;
+
+    /**
+     * Whether the navigator tab should be enabled.  If false, the tab will not appear.
+     */
     private boolean enabled;
+
+    /**
+     * List of plugin-specific properties.
+     */
     private Map<String, Object> pluginProperties = new HashMap<>();
+
+    /**
+     * Privileges supported by the plugin.  Each plugin may have its own set of unique privileges.
+     */
     private List<AcmPluginPrivilege> privileges;
+
+    /**
+     * Privilege required to see the navigator tab.  For the navigator tab to appear, this plugin must be a
+     * navigator plugin (navigatorTab); it must be enabled (enabled); and the user must have this privilege.
+     */
+    private AcmPluginPrivilege navigatorTabPrivilegeRequired;
+
+    /**
+     * The privilege required to execute each URL exported by this plugin.  Each Spring MVC request mapping needs an
+     * entry in this list, to define the privilege required to call that URL.
+     */
     private List<AcmPluginUrlPrivilege> urlPrivileges;
+
+    /**
+     * Image name of the image to appear on the navigator tab.
+     */
     private String pluginImage;
 
+    public AcmPluginPrivilege getNavigatorTabPrivilegeRequired()
+    {
+        return navigatorTabPrivilegeRequired;
+    }
 
+    public void setNavigatorTabPrivilegeRequired(AcmPluginPrivilege navigatorTabPrivilegeRequired)
+    {
+        this.navigatorTabPrivilegeRequired = navigatorTabPrivilegeRequired;
+    }
 
     public String getPluginName()
     {

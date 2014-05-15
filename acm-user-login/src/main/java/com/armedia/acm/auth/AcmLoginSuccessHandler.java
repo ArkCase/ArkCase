@@ -39,8 +39,13 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
                     authentication.getDetails().getClass().getName()) );
         }
         addUserIdToSession(request, authentication);
-        addNavigatorPluginsToSession(request, authentication);
+
+        // need to add the privileges first, since we need to know the user's privileges to tell what navigator
+        // tabs he/she can access.
         addPrivilegesToSession(request, authentication);
+
+        Map<String, Boolean> privileges = (Map<String, Boolean>) request.getSession(true).getAttribute("acm_privileges");
+        addNavigatorPluginsToSession(request, privileges);
 
         super.onAuthenticationSuccess(request, response, authentication);
     }
@@ -58,9 +63,9 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         }
     }
 
-    protected void addNavigatorPluginsToSession(HttpServletRequest request, Authentication authentication)
+    protected void addNavigatorPluginsToSession(HttpServletRequest request, Map<String, Boolean> userPrivileges)
     {
-        Collection<AcmPlugin> plugins = getAcmPluginManager().getEnabledNavigatorPlugins();
+        Collection<AcmPlugin> plugins = getAcmPluginManager().findAccessiblePlugins(userPrivileges);
 
         if ( log.isDebugEnabled() )
         {

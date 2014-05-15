@@ -67,14 +67,16 @@ public class AcmLoginSuccessHandlerTest extends EasyMockSupport
         navPlugin.setNavigatorTab(true);
 
         List<AcmPlugin> plugins = Collections.singletonList(navPlugin);
+        Map<String, Boolean> userPrivileges = Collections.emptyMap();
 
-        expect(mockPluginManager.getEnabledNavigatorPlugins()).andReturn(Arrays.asList(navPlugin));
+
         expect(mockRequest.getSession(true)).andReturn(mockSession);
+        expect(mockPluginManager.findAccessiblePlugins(userPrivileges)).andReturn(Arrays.asList(navPlugin));
         mockSession.setAttribute("acm_navigator_plugins", plugins);
 
         replayAll();
 
-        unit.addNavigatorPluginsToSession(mockRequest, mockAuthentication);
+        unit.addNavigatorPluginsToSession(mockRequest, userPrivileges);
 
         verifyAll();
 

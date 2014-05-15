@@ -70,6 +70,7 @@
                 <ref bean="acmComplaintListPrivilege"/>
             </list>
         </property>
+        <property name="navigatorTabPrivilegeRequired" ref="acmComplaintListPrivilege"/>
         <property name="urlPrivileges">
             <list>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
