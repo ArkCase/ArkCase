@@ -47,6 +47,9 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         Map<String, Boolean> privileges = (Map<String, Boolean>) request.getSession(true).getAttribute("acm_privileges");
         addNavigatorPluginsToSession(request, privileges);
 
+
+        addIpAddressToSession(request, authentication);
+
         super.onAuthenticationSuccess(request, response, authentication);
     }
 
@@ -60,6 +63,25 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         if ( log.isDebugEnabled() )
         {
             log.debug("Session 'acm_username' set to '" + userId + "'");
+        }
+    }
+
+    protected void addIpAddressToSession(HttpServletRequest request, Authentication authentication)
+    {
+        String ipAddress = "";
+
+        HttpSession session = request.getSession(true);
+
+        if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        {
+            ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        }
+
+        session.setAttribute("acm_ip_address", ipAddress);
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Session 'acm_ip_address' set to '" + ipAddress + "'");
         }
     }
 
