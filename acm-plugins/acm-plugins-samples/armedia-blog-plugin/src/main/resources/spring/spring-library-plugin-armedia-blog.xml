@@ -10,6 +10,32 @@
         <property name="homeUrl" value="/plugin/sample/armediaBlog"/>
         <property name="enabled" value="true"/>
         <property name="pluginImage" value="i-pencil"/>
+        <property name="privileges">
+            <list>
+                <ref bean="blogPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="dashboardUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/sample/armediaBlog"/>
+                    <property name="requiredPrivilege" ref="blogPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="blogPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-blog"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_ANALYST</value>
+                <value>ROLE_CALLCENTER</value>
+            </list>
+        </property>
     </bean>
 
 </beans>

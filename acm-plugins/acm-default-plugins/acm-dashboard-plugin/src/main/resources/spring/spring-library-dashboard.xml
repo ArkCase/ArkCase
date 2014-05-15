@@ -36,6 +36,33 @@
         <property name="pluginName" value="Dashboard Plugin"/>
         <property name="pluginProperties" ref="dashboardPluginProperties"/>
         <property name="pluginImage" value="i-statistics"/>
+        <property name="privileges">
+            <list>
+                <ref bean="dashboardPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="dashboardUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/dashboard"/>
+                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
+                </bean>
+            </list>
+        </property>
+
+    </bean>
+
+    <bean id="dashboardPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-dashboard"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_ANALYST</value>
+                <value>ROLE_CALLCENTER</value>
+            </list>
+        </property>
     </bean>
 
 

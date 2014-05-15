@@ -10,7 +10,33 @@
         <property name="homeUrl" value="/plugin/sample/helloWorld"/>
         <property name="enabled" value="true"/>
         <property name="pluginImage" value="i-world"/>
+        <property name="privileges">
+            <list>
+                <ref bean="helloWorldPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="dashboardUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/sample/helloWorld"/>
+                    <property name="requiredPrivilege" ref="helloWorldPrivilege"/>
+                </bean>
+            </list>
+        </property>
 
+    </bean>
+
+    <bean id="helloWorldPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-hello-world"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_ANALYST</value>
+                <value>ROLE_CALLCENTER</value>
+            </list>
+        </property>
     </bean>
 
 </beans>
