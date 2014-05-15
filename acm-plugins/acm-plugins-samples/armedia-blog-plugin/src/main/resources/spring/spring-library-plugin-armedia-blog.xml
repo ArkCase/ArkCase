@@ -35,6 +35,7 @@
                 <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
                 <value>ROLE_ANALYST</value>
                 <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
             </list>
         </property>
     </bean>
