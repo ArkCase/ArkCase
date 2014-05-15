@@ -27,7 +27,7 @@
     </bean>
 
     <bean id="findComplaintAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintAPIController">
-        <property name="findComplaintService" ref="findComplaintService"/>
+        <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 
 

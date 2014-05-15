@@ -30,6 +30,6 @@ ComplaintList.Event = {
     }
 
     ,onPostInit: function() {
-        //ComplaintList.Service.listComplaint();
+        ComplaintList.Service.listComplaint();
     }
 };

@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
-import com.armedia.acm.plugins.complaint.service.FindComplaintService;
-import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
+import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,22 +14,24 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/complaint", "/api/latest/plugin/complaint" })
 public class FindComplaintAPIController
 {
-    private FindComplaintService findComplaintService;
+    private ComplaintDao complaintDao;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Complaint> retrieveListOfComplaints()
+    public List<ComplaintListView> retrieveListOfComplaints()
     {
-        List<Complaint> complaints = getFindComplaintService().listComplaint();
+        List<ComplaintListView> complaints = getComplaintDao().listAllComplaints();
         return complaints;
     }
 
 
-    public FindComplaintService getFindComplaintService() {
-        return findComplaintService;
+    public ComplaintDao getComplaintDao()
+    {
+        return complaintDao;
     }
 
-    public void setFindComplaintService(FindComplaintService findComplaintService) {
-        this.findComplaintService = findComplaintService;
+    public void setComplaintDao(ComplaintDao complaintDao)
+    {
+        this.complaintDao = complaintDao;
     }
 }

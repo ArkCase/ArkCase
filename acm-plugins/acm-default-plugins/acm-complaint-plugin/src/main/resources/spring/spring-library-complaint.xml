@@ -77,18 +77,27 @@
         <property name="urlPrivileges">
             <list>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- create complaint service -->
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/complaint"/>
                     <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- create complaint wizard -->
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/complaint/wizard"/>
                     <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- complaint navigator tab home page -->
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/complaint"/>
+                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- list of complaints -->
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/complaint/list"/>
                     <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
                 </bean>
             </list>
@@ -133,9 +142,6 @@
 
     <bean id="saveComplaintBusinessRule" class="com.armedia.acm.plugins.complaint.service.SaveComplaintBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-complaint-number-rules.xlsx"/>
-    </bean>
-
-    <bean id="findComplaintService" class="com.armedia.acm.plugins.complaint.service.FindComplaintService">
     </bean>
 
 </beans>

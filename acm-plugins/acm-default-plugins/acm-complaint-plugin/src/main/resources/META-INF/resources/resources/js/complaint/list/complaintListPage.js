@@ -24,8 +24,8 @@ ComplaintList.Page = {
                     + Acm.getContextPath() + "/resources/images/a0.png'" + "class='img-circle'> </a> "
                     + "<a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
                     + ComplaintList.getDateFromDatetime(c.created) + "</small><strong class='block'>"
-                    + c.complaintTitle + "</strong><small>"
-                    + c.details + "</small></a><input type='hidden' value='" + c.complaintId + "' /> </li>";
+                    + c.complaintNumber + "</strong><small>"
+                    + c.complaintTitle + "</small></a><input type='hidden' value='" + c.complaintId + "' /> </li>";
             }
         }
 
