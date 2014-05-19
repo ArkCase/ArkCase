@@ -9,12 +9,12 @@ ComplaintWizard.Event = {
     initialize : function() {
     }
 
-    ,onClickLnkSubmit : function(e) {
-
+    ,onClickBtnSubmit : function(e) {
+        Acm.Dialog.alert("Submit");
         e.preventDefault();
 
     }
-    ,onClickLnkSave : function(e) {
+    ,onClickBtnSave : function(e) {
         var data0 =
         {
             //"complaintId": null,

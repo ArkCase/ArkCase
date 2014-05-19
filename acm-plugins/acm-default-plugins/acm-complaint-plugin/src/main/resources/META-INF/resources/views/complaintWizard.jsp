@@ -50,6 +50,12 @@
 
     <!-- Multi-Select Field WYSIWYG -->
     <script type="text/javascript" charset="utf-8" src="<c:url value='/resources/js/chosen/chosen.js'/>"></script>
+
+
+    <!-- JTable -->
+    <link rel="stylesheet" href="<c:url value='/resources/js/jtable2.4.0/themes/lightcolor/blue/jtable.css" type="text/css'/>"/>
+    <script type="text/javascript" src="<c:url value='/resources/js/jtable2.4.0/jquery.jtable.js'/>"></script>
+
 </jsp:attribute>
 
 <jsp:body>
@@ -65,14 +71,15 @@
 <div class="col-sm-12">
 <form id="wizardform" method="get" action="">
 <div class="panel panel-default">
-<div class="panel-heading">
-    <ul class="nav nav-tabs font-bold">
+<div class="panel-heading text-right">
+    <ul class="nav nav-tabs pull-left font-bold">
         <li><a href="#step1" data-toggle="tab">Step 1: Contact</a></li>
         <li><a href="#step2" data-toggle="tab">Step 2: Incident</a></li>
         <li><a href="#step3" data-toggle="tab">Step 3: People</a></li>
         <li><a href="#step4" data-toggle="tab">Step 4: Attachments</a></li>
         <li><a href="#step5" data-toggle="tab">Step 5: Assignment</a></li>
     </ul>
+    <span class="hidden-sm"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i> Save</button> <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Submit"><i class="fa fa-check"></i> Submit</button></span>
 </div>
 <div class="panel-body">
 <div class="progress progress-xs m-t-sm">
@@ -80,64 +87,42 @@
 </div>
 <div class="tab-content">
 <div class="tab-pane" id="step1">
-    <h4>Contact Information</h4>
-    <p>Description</p>
-    <section class="row m-b-md">
-        <div class="col-sm-6">
-            <label for="fname" class="label">First Name</label>
-            <input id="fname" type="text" class="form-control" placeholder="Name">
-            <label for="lname" class="label">Last Name</label>
-            <input id="lname" type="text" class="form-control" placeholder="Name">
-            <label for="company" class="label">Company</label>
-            <input id="company" type="text" class="form-control" placeholder="Company">
-            <label for="email"  class="label">Email</label>
-            <input id="email" type="text" class="form-control" placeholder="Email">
-            <label for="phone"  class="label">Phone</label>
-            <input id="phone" type="text" class="form-control" placeholder="Phone">
-            <label for="altphone"  class="label">Alternative Phone</label>
-            <input id="altphone" type="text" class="form-control" placeholder="Alternative Phone">
-        </div>
-        <div class="col-sm-6">
-            <label for="personTitle" class="label">Title</label>
-            <select id="personTitle" class="form-control" >
-                <option value="">Choose Title</option>
-                <option value="Mr.">Mr.</option>
-                <option value="Mrs.">Mrs.</option>
-                <option value="Ms.">Ms.</option>
-                <option value="Dr.">Dr.</option>
-            </select>
-            <label for="address1"  class="label">Address</label>
-            <input id="address1" type="text" class="form-control" placeholder="Address">
-            <label for="address2"  class="label">Address 2</label>
-            <input id="address2" type="text" class="form-control" placeholder="Address 2">
-            <label for="city"  class="label">City</label>
-            <input id="city" type="text" class="form-control" placeholder="City">
-            <label for="state"  class="label">State</label>
-            <input id="state" type="text" class="form-control" placeholder="State">
-            <label for="zip"  class="label">ZIP</label>
-            <input id="zip" type="text" class="form-control" placeholder="ZIP">
-        </div>
-    </section>
+<h4>Contact Information</h4>
+<p>Enter the contact information of the initiator.</p>
+<section class="row m-b-md">
+    <div id="divInitiator" style="width:98%"></div>
+</section>
+<hr />
 
+<label for="intiatorFlags" class="label">Initiator Flags</label>
 
-    <label for="intiatorFlags" class="label">Initiator Flags</label>
-
-    <select data-placeholder="Choose Initiator Flags..." id="intiatorFlags" class="choose-intitiatorFlags form-control" multiple >
-        <option value=""></option>
-        <option value="Protected Source">Protected Source</option>
-    </select>
+<select data-placeholder="Choose Initiator Flags..." id="intiatorFlags" class="choose-intitiatorFlags form-control" multiple >
+    <option value=""></option>
+    <option value="Protected Source">Protected Source</option>
+</select>
 
 </div>
 <div class="tab-pane" id="step2">
     <h4>Incident Information</h4>
     <p>Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.</p>
     <section class="row m-b-md">
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <label for="incidentDate" class="label">Incident Date</label>
             <input id="incidentDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="12-02-2013" data-date-format="dd-mm-yyyy" >
-            <label for="complaintType"  class="label">Complaint Type</label>
+
+        </div>
+
+        <div class="col-sm-3">
+            <label for="duration" class="label">Duration</label>
+            <input id="duration" type="text" class="form-control" placeholder="Duration"   >
+
+        </div>
+
+        <div class="col-sm-3">
+
+            <label for="complaintType"  class="label">Subject Type</label>
             <select name="complaintType" class="form-control m-b">
-                <option>Choose Complaint Type</option>
+                <option>Choose Subject Type</option>
                 <option>Domestic Dispute</option>
                 <option>Arson</option>
                 <option>Better Business Dispute</option>
@@ -147,9 +132,9 @@
                 <option>Pollution </option>
             </select>
         </div>
-        <div class="col-sm-6">
-            <label for="duration" class="label">Duration</label>
-            <input id="duration" type="text" class="form-control" placeholder="Duration"   >
+
+
+        <div class="col-sm-3">
             <label for="priority"  class="label">Priority</label>
             <select name="priority" class="form-control m-b">
                 <option>Choose Priority</option>
@@ -186,59 +171,11 @@
 
 </div>
 <div class="tab-pane" id="step3">
-    <h4>People</h4>
+<h4>People</h4>
+<section class="row">
+    <div id="divPeople" style="width:98%"></div>
+</section>
 
-
-
-
-    <div class="table-tools">
-        <div class="row">
-            <div class="col-md-6">
-                <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;
-                    Add New
-                </button>
-            </div>
-
-            <div class="col-md-6 pull-right">
-                <div class="form-inline pull-right">
-                    <div class="form-group"><label class="control-label">Search:</label>&nbsp;<input
-                            type="text" class="form-control"/></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <table class="table table-striped table-bordered table-hover" style="margin-top:5px;">
-        <thead>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Type</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>State</th>
-            <th>ZIP</th>
-            <th width="3%">Edit</th>
-            <th width="4%">Delete</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="odd gradeA">
-            <td>[First]</td>
-            <td>[Last]</td>
-            <td>[Type]</td>
-            <td>[Phone]</td>
-            <td>[Address]</td>
-            <td>[City]</td>
-            <td>[State]</td>
-            <td>[ZIP]</td>
-            <td><a href="javascript:;" class="edit">Edit</a></td>
-            <td><a href="javascript:;" class="delete">Delete</a></td>
-        </tr>
-
-
-        </tbody>
-    </table>
 </div>
 <div class="tab-pane" id="step4">
     <h4>Attachments</h4>
@@ -246,12 +183,9 @@
     <div id="upload">
         <div id="drop"> Drop Here <br />
             <a>Browse</a>
-            <!-- <input type="file" name="upl" multiple /> -->
             <input type="file" name="files[]" multiple />
         </div>
-        <ul>
-            <!-- The file uploads will be shown here -->
-        </ul>
+        <ul/>
     </div>
 </div>
 <div class="tab-pane" id="step5">
@@ -284,15 +218,18 @@
         <option value="Jim Nasr">Jim Nasr</option>
     </select>
 
+    <hr/>
+    <label for="notifications" class="label">Alerts</label>
+    <section id="communicationDevices4" class="panel b-a">
+        <div id="divDevices" style="width:98%"></div>
+    </section>
+
 
 </div>
 <ul class="pager wizard m-b-sm">
-    <li class="previous first" style="display:none;"><a href="#">First</a></li>
     <li class="previous"><a href="#"><i class="fa fa-arrow-left"></i> Previous</a></li>
 
     <li class="next"><a href="#">Next <i class="fa fa-arrow-right"></i> </a></li>
-    <li class="submit"><a href="#" id="lnkSubmit">Submit</i> </a></li>
-    <li class="save"><a href="#" id="lnkSave"><i class="fa fa-floppy-o"></i> Save</a></li>
 
 
 

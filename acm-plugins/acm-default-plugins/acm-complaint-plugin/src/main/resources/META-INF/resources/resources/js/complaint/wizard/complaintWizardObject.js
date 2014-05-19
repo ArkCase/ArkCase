@@ -7,8 +7,8 @@
  */
 ComplaintWizard.Object = {
     initialize : function() {
-        this.$lnkSave                = $("#lnkSave");
-        this.$lnkSubmit              = $("#lnkSubmit");
+        this.$btnSave                = $("button[data-title='Save']");
+        this.$btnSubmit              = $("button[data-title='Submit']");
         this.$edtFname               = $("#fname");
         this.$edtLname               = $("#lname");
         this.$edtCompany             = $("#company");
@@ -22,13 +22,17 @@ ComplaintWizard.Object = {
         this.$edtIncidentDate        = $("#incidentDate");
         this.$selComplaintType       = $("#complaintType");
 
+        this.$divInitiator           = $("#divInitiator");
+        this.$divPeople              = $("#divPeople");
+        this.$divDevices             = $("#divDevices");
+
         this.$uppload                = $('#upload');
         this.$upploadDrop            = $('#drop');
         this.$upploadList            = $('#upload ul');
         this.$upploadClick           = $('#drop a');
 
-        this.$lnkSave.click(function(e) {ComplaintWizard.Event.onClickLnkSave(e);});
-        this.$lnkSubmit.click(function(e) {ComplaintWizard.Event.onClickLnkSubmit(e);});
+        this.$btnSave.click(function(e) {ComplaintWizard.Event.onClickBtnSave(e);});
+        this.$btnSubmit.click(function(e) {ComplaintWizard.Event.onClickBtnSubmit(e);});
 
         this.$divComplaintDetails.summernote({
             height: 300
@@ -40,10 +44,1033 @@ ComplaintWizard.Object = {
         this.$selCollab.chosen();
         this.$selNotifications.chosen();
 
-
+        this._createJTableInitiator(this.$divInitiator);
+        this._createJTablePeople(this.$divPeople);
+        this._createJTableDevices(this.$divDevices);
         this._useFileUpload(this.$uppload, this.$upploadDrop, this.$upploadList, this.$upploadClick);
     }
 
+
+
+    ,_toggleSubJTable: function($t, $row, fnOpen, fnClose, title) {
+        var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
+        var curTitle = $childRow.find("div.jtable-title-text").text();
+
+        var toClose;
+        if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
+            if (curTitle === title) {
+                toClose = true;
+            } else {
+                toClose = false;
+            }
+        } else {
+            toClose = false;
+        }
+
+        if (toClose) {
+            fnClose($t, $row);
+        } else {
+            fnOpen($t, $row);
+        }
+    }
+
+    //
+    // Initiator ------------------
+    //
+    ,_createJTableInitiator: function($s) {
+        $s.jtable({
+            title: 'Initiator'
+            ,paging: false
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "title": "Mr.", "firstName": "John", "lastName": "Garcia", "type": "Witness", "description": "123 do re mi" }
+                        ]
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "title": "Dr.", "firstName": "Joe", "lastName": "Lee", "type": "Witness", "description": "someone" }
+                    };
+                }
+            }
+            ,fields: {
+                personId: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                }
+                ,subTables: {
+                    title: 'Entities'
+                    ,width: '10%'
+                    ,sorting: false
+                    ,edit: false
+                    ,create: false
+                    ,openChildAsAccordion: true
+                    ,display: function (commData) {
+                        var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                        var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
+                        var $c = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-map-marker'></i></a>");
+                        var $d = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-users'></i></a>");
+
+                        $a.click(function (e) {
+                            ComplaintWizard.Object._toggleInitiatorDevices($s, $a);
+                            e.preventDefault();
+                        });
+                        $b.click(function (e) {
+                            ComplaintWizard.Object._toggleInitiatorOrganizations($s, $b);
+                            e.preventDefault();
+                        });
+                        $c.click(function (e) {
+                            ComplaintWizard.Object._toggleInitiatorLocations($s, $c);
+                            e.preventDefault();
+                        });
+                        $d.click(function (e) {
+                            ComplaintWizard.Object._toggleInitiatorAliases($s, $d);
+                            e.preventDefault();
+                        });
+                        return $a.add($b).add($c).add($d);
+                    }
+                }
+
+
+                ,title: {
+                    title: 'Title'
+                    ,width: '10%'
+                    ,options: Complaint.getPersonTitles()
+                }
+                ,firstName: {
+                    title: 'First Name'
+                    ,width: '15%'
+                }
+                ,lastName: {
+                    title: 'Last Name'
+                    ,width: '15%'
+                }
+                ,type: {
+                    title: 'Type'
+                    //,options: Acm.getContextPath() + '/api/latest/plugin/complaint/types'
+                    ,options: Complaint.getPersonTypes()
+                }
+                ,description: {
+                    title: 'Description'
+                    ,width: '30%'
+                }
+            }
+            ,recordAdded: function(event, data){
+                $s.jtable('load');
+            }
+            ,recordUpdated: function(event, data){
+                $s.jtable('load');
+            }
+        });
+
+        $s.jtable('load');
+    }
+    ,_toggleInitiatorDevices: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openInitiatorDevices, this._closeInitiatorDevices, Complaint.Initiator_SUBTABLE_TITLE_DEVICES);
+    }
+    ,_toggleInitiatorOrganizations: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openInitiatorOrganizations, this._closeInitiatorOrganizations, Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS);
+    }
+    ,_toggleInitiatorLocations: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openInitiatorLocations, this._closeInitiatorLocations, Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS);
+    }
+    ,_toggleInitiatorAliases: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openInitiatorAliases, this._closeInitiatorAliases, Complaint.PERSON_SUBTABLE_TITLE_ALIASES);
+    }
+    ,_closeInitiatorDevices: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openInitiatorDevices: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "id": "a", "type": "Phone", "value": "703-123-5678", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "personId": 2, "id": "b", "type": "Email", "value": "doe@gmail.com", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getDeviceTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+    }
+    ,_closeInitiatorOrganizations: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openInitiatorOrganizations: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "id": "a", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "personId": 2, "id": "b", "type": "gov", "value": "IRS", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "gov", "value": "IRS", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getOrganizationTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+    }
+    ,_closeInitiatorLocations: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openInitiatorLocations: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "id": "a", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "personId": 2, "id": "b", "type": "Office", "address": "999 Fairfax Blvd #201, Fairfax, VA 22030", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Hotel", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '8%'
+                    ,options: Complaint.getLocationTypes()
+                }
+                ,address: {
+                    title: 'Address'
+                    ,width: '30%'
+                }
+                ,city: {
+                    title: 'City'
+                    ,width: '12%'
+                }
+                ,state: {
+                    title: 'State'
+                    ,width: '5%'
+                }
+                ,zip: {
+                    title: 'Zip'
+                    ,width: '8%'
+                }
+                ,country: {
+                    title: 'Country'
+                    ,width: '8%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '15%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+    }
+    ,_closeInitiatorAliases: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openInitiatorAliases: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "id": "a", "type": "Nick Name", "value": "JJ", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "personId": 2, "id": "b", "type": "Some Name", "value": "Ice Man", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Nick Name", "value": "Ice Man", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Nick Name", "value": "Big Man", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getAliasTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+    }
+
+    //
+    // People ------------------
+    //
+    ,_togglePeopleDevices: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openPeopleDevices, this._closePeopleDevices, Complaint.PERSON_SUBTABLE_TITLE_DEVICES);
+    }
+    ,_togglePeopleOrganizations: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openPeopleOrganizations, this._closePeopleOrganizations, Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS);
+    }
+    ,_togglePeopleLocations: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openPeopleLocations, this._closePeopleLocations, Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS);
+    }
+    ,_togglePeopleAliases: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openPeopleAliases, this._closePeopleAliases, Complaint.PERSON_SUBTABLE_TITLE_ALIASES);
+    }
+
+    ,_createJTablePeople: function($s) {
+        $s.jtable({
+            title: 'People'
+            ,selecting: true
+            ,paging: true
+            ,pageSize: 10
+            ,sorting: true
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "title": "Mr.", "firstName": "John", "lastName": "Garcia", "type": "Witness", "description": "123 do re mi" }
+                            ,{ "personId": 2, "title": "Ms.", "firstName": "Jane", "lastName": "Doe", "type": "Subject", "description": "xyz abc" }
+                        ]
+                        ,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "title": "Dr.", "firstName": "Joe", "lastName": "Lee", "type": "Witness", "description": "someone" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "title": "Dr.", "firstName": "Joe", "lastName": "Lee", "type": "Witness", "description": "someone" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+            ,fields: {
+                personId: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                }
+                ,subTables: {
+                    title: 'Entities'
+                    ,width: '10%'
+                    ,sorting: false
+                    ,edit: false
+                    ,create: false
+                    ,openChildAsAccordion: true
+                    ,display: function (commData) {
+                        var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                        var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
+                        var $c = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-map-marker'></i></a>");
+                        var $d = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-users'></i></a>");
+
+                        $a.click(function (e) {
+                            ComplaintWizard.Object._togglePeopleDevices($s, $a);
+                            e.preventDefault();
+                        });
+                        $b.click(function (e) {
+                            ComplaintWizard.Object._togglePeopleOrganizations($s, $b);
+                            e.preventDefault();
+                        });
+                        $c.click(function (e) {
+                            ComplaintWizard.Object._togglePeopleLocations($s, $c);
+                            e.preventDefault();
+                        });
+                        $d.click(function (e) {
+                            ComplaintWizard.Object._togglePeopleAliases($s, $d);
+                            e.preventDefault();
+                        });
+                        return $a.add($b).add($c).add($d);
+                    }
+                }
+
+
+                ,title: {
+                    title: 'Title'
+                    ,width: '10%'
+                    ,options: Complaint.getPersonTitles()
+                }
+                ,firstName: {
+                    title: 'First Name'
+                    ,width: '15%'
+                }
+                ,lastName: {
+                    title: 'Last Name'
+                    ,width: '15%'
+                }
+                ,type: {
+                    title: 'Type'
+                    //,options: Acm.getContextPath() + '/api/latest/plugin/complaint/types'
+                    ,options: Complaint.getPersonTypes()
+                }
+                ,description: {
+                    title: 'Description'
+                    ,width: '30%'
+                }
+            }
+            ,recordAdded: function(event, data){
+                $s.jtable('load');
+            }
+            ,recordUpdated: function(event, data){
+                $s.jtable('load');
+            }
+        });
+
+        $s.jtable('load');
+    }
+    ,_closePeopleDevices: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openPeopleDevices: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "id": "a", "type": "Phone", "value": "703-123-5678", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "personId": 2, "id": "b", "type": "Email", "value": "doe@gmail.com", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getDeviceTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+    }
+    ,_closePeopleOrganizations: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openPeopleOrganizations: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Records": [
+                                { "personId":  1, "id": "a", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                                ,{ "personId": 2, "id": "b", "type": "gov", "value": "IRS", "createDate": "14-05-15", "createBy": "xyz abc" }
+                            ]
+                            //,"TotalRecordCount": 2
+                        };
+                    }
+                    ,createAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Record":
+                            { "personId": 3, "id": "c", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "test" }
+                        };
+                    }
+                    ,updateAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Record":
+                            { "personId": 3, "id": "c", "type": "gov", "value": "IRS", "createDate": "01-02-03", "createBy": "test" }
+                        };
+                    }
+                    ,deleteAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
+                }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getOrganizationTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+    }
+    ,_closePeopleLocations: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openPeopleLocations: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Records": [
+                                { "personId":  1, "id": "a", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                                ,{ "personId": 2, "id": "b", "type": "Office", "address": "999 Fairfax Blvd #201, Fairfax, VA 22030", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "14-05-15", "createBy": "xyz abc" }
+                            ]
+                            //,"TotalRecordCount": 2
+                        };
+                    }
+                    ,createAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Record":
+                            { "personId": 3, "id": "c", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
+                        };
+                    }
+                    ,updateAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Record":
+                            { "personId": 3, "id": "c", "type": "Hotel", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
+                        };
+                    }
+                    ,deleteAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
+                }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '8%'
+                    ,options: Complaint.getLocationTypes()
+                }
+                ,address: {
+                    title: 'Address'
+                    ,width: '30%'
+                }
+                ,city: {
+                    title: 'City'
+                    ,width: '12%'
+                }
+                ,state: {
+                    title: 'State'
+                    ,width: '5%'
+                }
+                ,zip: {
+                    title: 'Zip'
+                    ,width: '8%'
+                }
+                ,country: {
+                    title: 'Country'
+                    ,width: '8%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '15%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+    }
+    ,_closePeopleAliases: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openPeopleAliases: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "id": "a", "type": "Nick Name", "value": "JJ", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "personId": 2, "id": "b", "type": "Some Name", "value": "Ice Man", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Nick Name", "value": "Ice Man", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Nick Name", "value": "Big Man", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getAliasTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+    }
+
+
+    //
+    // Assignment-Communication Devices ------------------
+    //
+    ,_createJTableDevices: function($s) {
+        $s.jtable({
+            title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
+            ,selecting: true
+            ,paging: true
+            ,pageSize: 10
+            ,sorting: true
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "id": "a", "type": "Phone", "value": "703-123-5678", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "id": "b", "type": "Email", "value": "doe@gmail.com", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+            ,fields: {
+                id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getDeviceTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            ,recordAdded: function(event, data){
+                $s.jtable('load');
+            }
+            ,recordUpdated: function(event, data){
+                $s.jtable('load');
+            }
+        });
+
+        $s.jtable('load');
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////
 
     ,setEnableBtnSave: function(enable) {
         Acm.Object.setEnable(this.$btnSave, enable);
@@ -98,6 +1125,11 @@ ComplaintWizard.Object = {
 
         //$selComplaintType
         data.originator.title = this.getValueSelPersonTitle();
+
+//        ContactMethod contactMethods
+//        PostalAddress addresses
+//        organizations
+//        aliases
 
         //data.details
         var a1 = this.getHtmlDivComplaintDetails();
@@ -275,6 +1307,16 @@ ComplaintWizard.Object = {
 
         });
     }
+
+
+
+
+
+
+
+
+
+
 
     ,usePagination: function(totalItems, itemsPerPage, callback) {
         Acm.Object.usePagination(this.$jPaginate, totalItems, itemsPerPage, callback)

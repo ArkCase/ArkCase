@@ -4,6 +4,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 <!-- Bootstrap http://getbootstrap.com -->
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/js/jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.min.css'/>" type="text/css"/>
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/css/bootstrap.css'/>" />
 
 
@@ -29,7 +30,7 @@
 
 <!-- jquery must be first -->
 <script type="text/javascript" src="<c:url value='/resources/js/jquery-1.11.0.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/jquery-ui-1.10.3.custom.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.min.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/jquery.microdata.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/bootstrap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/issueCollector/jiraIssueCollector.js'/>" ></script>
