@@ -38,28 +38,28 @@
 <%--<script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
 
 
-<script type="text/javascript" src="<c:url value='/resources/js/acm/shared/acm.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/shared/acmDialog.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/shared/acmAjax.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/shared/acmDispatcher.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/shared/acmObject.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/shared/acmValidation.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/shared/acm.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/shared/acmDialog.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/shared/acmAjax.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/shared/acmDispatcher.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/shared/acmObject.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/shared/acmValidation.js'/>"></script>
 
-<script type="text/javascript" src="<c:url value='/resources/js/acm/topbar/topbar.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/topbar/topbarObject.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/topbar/topbarEvent.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/topbar/topbarPage.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/topbar/topbarRule.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/topbar/topbarService.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/topbar/topbarCallback.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/topbar/topbar.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/topbar/topbarObject.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/topbar/topbarEvent.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/topbar/topbarPage.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/topbar/topbarRule.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/topbar/topbarService.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/topbar/topbarCallback.js'/>"></script>
 
-<script type="text/javascript" src="<c:url value='/resources/js/acm/sidebar/sidebar.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/sidebar/sidebarObject.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/sidebar/sidebarEvent.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/sidebar/sidebarPage.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/sidebar/sidebarRule.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/sidebar/sidebarService.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/acm/sidebar/sidebarCallback.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/sidebar/sidebar.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/sidebar/sidebarObject.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/sidebar/sidebarEvent.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/sidebar/sidebarPage.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/sidebar/sidebarRule.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/sidebar/sidebarService.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/acm3.0/sidebar/sidebarCallback.js'/>"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {

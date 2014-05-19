@@ -54,8 +54,8 @@
 
 <!-- X-Editable -->
 
-<link href="resources/css/bootstrap-editable.css" rel="stylesheet">
-<script src="resources/js/bootstrap-editable.min.js"></script>
+<link href="resources/css/x-editable1.5.1/bootstrap-editable.css" rel="stylesheet">
+<script src="resources/js/x-editable1.5.1/bootstrap-editable.min.js"></script>
 <script src="resources/js/typeahead.js"></script>
 <script>
     $.fn.editable.defaults.url = '/post';

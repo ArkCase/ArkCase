@@ -39,17 +39,17 @@
     <script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>
 
     <!-- File Manager -->
-    <script type="text/javascript" src="<c:url value='/resources/js/jquery.knob.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/upload/js/jquery.fileupload.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/upload/js/jquery.iframe-transport.js'/>"></script>
-<!--    <script type="text/javascript" src="<c:url value='/resources/js/upload/js/file-uploads-custom.js'/>"></script>     -->
+    <script type="text/javascript" src="<c:url value='/resources/js/knob1.2.8/js/jquery.knob.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/upload5.40.1/js/jquery.fileupload.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/upload5.40.1/js/jquery.iframe-transport.js'/>"></script>
+<!--    <script type="text/javascript" src="<c:url value='/resources/js/upload5.40.1/js/file-uploads-custom.js'/>"></script>     -->
 
     <!-- Summernote WYSIWYG -->
-    <link rel="stylesheet" href="<c:url value='/resources/js/summernote/summernote.css'/>" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/resources/js/summernote/summernote.js'/>"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/js/summernote0.5.1/summernote.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/js/summernote0.5.1/summernote.js'/>"></script>
 
     <!-- Multi-Select Field WYSIWYG -->
-    <script type="text/javascript" charset="utf-8" src="<c:url value='/resources/js/chosen/chosen.js'/>"></script>
+    <script type="text/javascript" charset="utf-8" src="<c:url value='/resources/js/chosen1.1.0/chosen.js'/>"></script>
 
 
     <!-- JTable -->
