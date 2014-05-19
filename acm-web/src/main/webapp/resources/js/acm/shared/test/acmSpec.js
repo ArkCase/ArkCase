@@ -1,77 +1,79 @@
 /**
- * Test script for ACM.Dispatcher
+ * Test script for Acm.Dispatcher
  *
  * @author jwu
  */
-describe("ACM", function()
+describe("Acm", function()
 {
     beforeEach(function() {
     });
 
-    it("ACM.Initialize", function() {
-        spyOn(ACM.Dispatcher, "initialize");
-        spyOn(ACM.Ajax,       "initialize");
-        spyOn(ACM.Object,     "initialize");
-        spyOn(ACM.Validation, "initialize");
-        ACM.initialize();
-        expect(ACM.Dispatcher.initialize).toHaveBeenCalled();
-        expect(ACM.Ajax      .initialize).toHaveBeenCalled();
-        expect(ACM.Object    .initialize).toHaveBeenCalled();
-        expect(ACM.Validation.initialize).toHaveBeenCalled();
+    it("Acm.Initialize", function() {
+        spyOn(Acm.Dialog,     "initialize");
+        spyOn(Acm.Dispatcher, "initialize");
+        spyOn(Acm.Ajax,       "initialize");
+        spyOn(Acm.Object,     "initialize");
+        spyOn(Acm.Validation, "initialize");
+        Acm.initialize();
+        expect(Acm.Dialog    .initialize).toHaveBeenCalled();
+        expect(Acm.Dispatcher.initialize).toHaveBeenCalled();
+        expect(Acm.Ajax      .initialize).toHaveBeenCalled();
+        expect(Acm.Object    .initialize).toHaveBeenCalled();
+        expect(Acm.Validation.initialize).toHaveBeenCalled();
     });
 
-    it("Test ACM.isEmpty() function", function() {
+    it("Test Acm.isEmpty() function", function() {
         var varNotInitialized;
-        var varObject = ACM;
+        var varObject = Acm;
         var varJQuery = jQuery(".dummy");
 
-        //expect(ACM.isEmpty(varNosuch)).toBe(true);
-        expect(ACM.isEmpty(varNotInitialized)).toBe(true);
-        expect(ACM.isEmpty(undefined)).toBe(true);
-        expect(ACM.isEmpty("")).toBe(true);
-        expect(ACM.isEmpty(null)).toBe(true);
-        expect(ACM.isEmpty("null")).toBe(true);
+        //expect(Acm.isEmpty(varNosuch)).toBe(true);
+        expect(Acm.isEmpty(varNotInitialized)).toBe(true);
+        expect(Acm.isEmpty(undefined)).toBe(true);
+        expect(Acm.isEmpty("")).toBe(true);
+        expect(Acm.isEmpty(null)).toBe(true);
+        expect(Acm.isEmpty("null")).toBe(true);
 
-        expect(ACM.isEmpty(false)).toBe(false);
-        expect(ACM.isEmpty(0)).toBe(false);
-        expect(ACM.isEmpty("someEvent")).toBe(false);
-        expect(ACM.isEmpty(varObject)).toBe(false);
-        expect(ACM.isEmpty(varJQuery)).toBe(false);
+        expect(Acm.isEmpty(false)).toBe(false);
+        expect(Acm.isEmpty(0)).toBe(false);
+        expect(Acm.isEmpty("someEvent")).toBe(false);
+        expect(Acm.isEmpty(varObject)).toBe(false);
+        expect(Acm.isEmpty(varJQuery)).toBe(false);
     });
 
-    it("Test ACM.isNotEmpty() function", function() {
+    it("Test Acm.isNotEmpty() function", function() {
         var varNotInitialized;
-        var varObject = ACM;
+        var varObject = Acm;
         var varJQuery = jQuery(".dummy");
 
-        expect(ACM.isNotEmpty(varNotInitialized)).toBe(false);
-        expect(ACM.isNotEmpty(undefined)).toBe(false);
-        expect(ACM.isNotEmpty("")).toBe(false);
-        expect(ACM.isNotEmpty(null)).toBe(false);
-        expect(ACM.isNotEmpty("null")).toBe(false);
+        expect(Acm.isNotEmpty(varNotInitialized)).toBe(false);
+        expect(Acm.isNotEmpty(undefined)).toBe(false);
+        expect(Acm.isNotEmpty("")).toBe(false);
+        expect(Acm.isNotEmpty(null)).toBe(false);
+        expect(Acm.isNotEmpty("null")).toBe(false);
 
-        expect(ACM.isNotEmpty(false)).toBe(true);
-        expect(ACM.isNotEmpty(0)).toBe(true);
-        expect(ACM.isNotEmpty("some string")).toBe(true);
-        expect(ACM.isNotEmpty(varObject)).toBe(true);
-        expect(ACM.isNotEmpty(varJQuery)).toBe(true);
+        expect(Acm.isNotEmpty(false)).toBe(true);
+        expect(Acm.isNotEmpty(0)).toBe(true);
+        expect(Acm.isNotEmpty("some string")).toBe(true);
+        expect(Acm.isNotEmpty(varObject)).toBe(true);
+        expect(Acm.isNotEmpty(varJQuery)).toBe(true);
     });
 
-    it("Test ACM.goodValue() function", function() {
+    it("Test Acm.goodValue() function", function() {
         var varNotInitialized;
-        expect(ACM.goodValue("some value")).toBe("some value");
-        expect(ACM.goodValue("some value",      "should not be")).toBe("some value");
-        expect(ACM.goodValue("",                "dont be empty")) .toBe("dont be empty");
-        expect(ACM.goodValue("",                ""))             .toBe("");    //empty string really allowed
-        expect(ACM.goodValue(varNotInitialized, "good value"))   .toBe("good value");
+        expect(Acm.goodValue("some value")).toBe("some value");
+        expect(Acm.goodValue("some value",      "should not be")).toBe("some value");
+        expect(Acm.goodValue("",                "dont be empty")).toBe("dont be empty");
+        expect(Acm.goodValue("",                ""))             .toBe("");    //empty string really allowed
+        expect(Acm.goodValue(varNotInitialized, "good value"))   .toBe("good value");
 
-        expect(ACM.goodValue(null, "string")).toBe("string");
-        expect(ACM.goodValue(null, true))    .toBe(true);
-        expect(ACM.goodValue(null, false))   .toBe(false);
-        expect(ACM.goodValue(null, 123))     .toBe(123);
+        expect(Acm.goodValue(null, "string")).toBe("string");
+        expect(Acm.goodValue(null, true))    .toBe(true);
+        expect(Acm.goodValue(null, false))   .toBe(false);
+        expect(Acm.goodValue(null, 123))     .toBe(123);
 
-        expect(ACM.goodValue(false, true))   .toBe(false);  //false is a valid boolean value
-        expect(ACM.goodValue(0,    123))     .toBe(0);      //0 is a valid number
+        expect(Acm.goodValue(false, true))   .toBe(false);  //false is a valid boolean value
+        expect(Acm.goodValue(0,    123))     .toBe(0);      //0 is a valid number
     });
 
 

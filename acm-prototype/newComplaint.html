@@ -114,14 +114,15 @@
               <div class="col-sm-12">
                 <form id="wizardform" method="get" action="">
                   <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <ul class="nav nav-tabs font-bold">
+                    <div class="panel-heading text-right">
+                      <ul class="nav nav-tabs pull-left font-bold">
                         <li><a href="#step1" data-toggle="tab">Step 1: Contact</a></li>
                         <li><a href="#step2" data-toggle="tab">Step 2: Incident</a></li>
-                        <li><a href="#step3" data-toggle="tab">Step 3: Details</a></li>
+                        <li><a href="#step3" data-toggle="tab">Step 3: People</a></li>
                         <li><a href="#step4" data-toggle="tab">Step 4: Attachments</a></li>
                         <li><a href="#step5" data-toggle="tab">Step 5: Assignment</a></li>
                       </ul>
+                      <span class="hidden-sm"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i> Save</button> <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Submit"><i class="fa fa-check"></i> Submit</button></span>
                     </div>
                     <div class="panel-body">
                       <div class="progress progress-xs m-t-sm">
@@ -130,65 +131,256 @@
                       <div class="tab-content">
                         <div class="tab-pane" id="step1">
                           <h4>Contact Information</h4>
-                          <p>Description</p>
+                          <p>Enter the contact information of the initiator.</p>
                           <section class="row m-b-md">
-                            <div class="col-sm-6">
-                              <label for="fname" class="label">First Name</label>
-                              <input id="fname" type="text" class="form-control" placeholder="Name">
-                              <label for="lname" class="label">Last Name</label>
-                              <input id="lname" type="text" class="form-control" placeholder="Name">
-                              <label for="company" class="label">Company</label>
-                              <input id="company" type="text" class="form-control" placeholder="Company">
-                              <label for="email"  class="label">Email</label>
-                              <input id="email" type="text" class="form-control" placeholder="Email">
-                              <label for="phone"  class="label">Phone</label>
-                              <input id="phone" type="text" class="form-control" placeholder="Phone">
-                              <label for="altphone"  class="label">Alternative Phone</label>
-                              <input id="altphone" type="text" class="form-control" placeholder="Alternative Phone">
-                            </div>
-                            <div class="col-sm-6">
-                            <label for="personTitle" class="label">Title</label>
-                             <select id="personTitle" class="form-control" >
-                                <option value="">Choose Title</option>
-                                <option value="Mr.">Mr.</option>
-                                <option value="Mrs.">Mrs.</option>
-                                <option value="Ms.">Ms.</option>
-                                <option value="Ms.">Dr.</option>
-                         </select>
-                              <label for="address1"  class="label">Address</label>
-                              <input id="address1" type="text" class="form-control" placeholder="Address">
-                              <label for="address2"  class="label">Address 2</label>
-                              <input id="address2" type="text" class="form-control" placeholder="Address 2">
-                              <label for="city"  class="label">City</label>
-                              <input id="city" type="text" class="form-control" placeholder="City">
-                              <label for="state"  class="label">State</label>
-                              <input id="state" type="text" class="form-control" placeholder="State">
-                              <label for="zip"  class="label">ZIP</label>
-                              <input id="zip" type="text" class="form-control" placeholder="ZIP">
-                            </div>
+                            <div class="col-md-12">
+                                    <section class="panel b-a">
+                                      <div class="panel-heading b-b bg-info">
+                                        <ul class="nav nav-pills pull-right">
+                                          
+                                          <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                        </ul>
+                                        <a href="#" class="font-bold">Initiator</a> </div>
+                                      <div class="panel-body no-padder">
+                                      
+                                      
+                                        <table class="table table-striped th-sortable table-hover" >
+                                          <thead>
+                                            <tr>
+                                              <th width="14%">Entities</th>
+                                              <th>Title</th>
+                                              <th>First Name</th>
+                                              <th>Last Name</th>
+                                              <th>Type</th>
+                                              <th width="9%">Action</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr class="odd gradeA">
+                                              <td><a href="#communicationDevices1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-phone"></i></a>
+                                              <a href="#organizations1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-book"></i></a>
+                                              <a href="#locations1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-map-marker"></i></a>
+                                              <a href="#aliases1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-users"></i></a></td>
+                                              <td>[Title]</td>
+                                              <td>[First Name]</td>
+                                              <td>[Last Name]</td>
+                                              <td>[Type]</td>
+                                              <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                              <td colspan="6" class=" no-padder"><section id="communicationDevices1" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-phone"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Communication Devices</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                <section id="organizations1" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-book"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Organizations</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                 <section id="locations1" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-map-marker"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Locations</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Address</th>
+                                                          <th>City</th>
+                                                          <th>State</th>
+                                                          <th>ZIP</th>
+                                                          <th>Country</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Address]</td>
+                                                          <td>[City]</td>
+                                                          <td>[State]</td>
+                                                          <td>[ZIP]</td>
+                                                          <td>[Country]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                 <section id="aliases1" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-users"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Aliases</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </section>
+                                  </div>
                           </section>
+                          <hr />
                           
+                           <label for="intiatorFlags" class="label">Initiator Flags</label>
                           
-                           <label for="security" class="label">Security</label>
-                          
-                          <select data-placeholder="Choose Security..." id="security" class="choose-security form-control" multiple >
+                          <select data-placeholder="Choose Initiator Flags..." id="intiatorFlags" class="choose-intitiatorFlags form-control" multiple >
                                 <option value=""></option>
-                                <option value="Trade Secret">Anonymous</option>
-                                <option value="Confidential">Confidential</option>
-                                <option value="Trade Secret">Trade Secret</option>
+                                <option value="Protected Source">Protected Source</option>
                          </select>
                           
                         </div>
                         <div class="tab-pane" id="step2">
                           <h4>Incident Information</h4>
-                          <p>Description</p>
+                          <p>Enter in your overall concern and complaint. Please be very specific as to names, places, times, dates, reasons and outcomes.</p>
                           <section class="row m-b-md">
-                            <div class="col-sm-6">
+                            <div class="col-sm-3">
                               <label for="incidentDate" class="label">Incident Date</label>
                               <input id="incidentDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="12-02-2013" data-date-format="dd-mm-yyyy" >
-                              <label for="complaintType"  class="label">Complaint Type</label>
+                              
+                              </div>
+                              
+                               <div class="col-sm-3">
+                            <label for="duration" class="label">Duration</label>
+                              <input id="duration" type="text" class="form-control" placeholder="Duration"   >
+                              
+                              </div>
+                              
+                               <div class="col-sm-3">
+                               
+                              <label for="complaintType"  class="label">Subject Type</label>
                               <select name="complaintType" class="form-control m-b">
-                                <option>Choose Complaint Type</option>
+                                <option>Choose Subject Type</option>
                                 <option>Domestic Dispute</option>
                                 <option>Arson</option>
                                 <option>Better Business Dispute</option>
@@ -198,7 +390,9 @@
                                 <option>Pollution </option>
                               </select>
                             </div>
-                            <div class="col-sm-6">
+                           
+                              
+                               <div class="col-sm-3">
                               <label for="priority"  class="label">Priority</label>
                               <select name="priority" class="form-control m-b">
                                 <option>Choose Priority</option>
@@ -209,106 +403,369 @@
                               </select>
                             </div>
                           </section>
+                          <hr/>
                           
-                          
-                          <h4>People Involved</h4>
-                         
-                           <div class="table-tools">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;
-                                                Add New
-                                            </button>
-                                            <button type="button" class="btn btn-default"><i
-                                                    class="fa fa-print"></i>&nbsp; Print
-                                            </button>
-                                            <button type="button" class="btn btn-default"><i
-                                                    class="fa fa-file-text-o"></i>&nbsp; PDF
-                                            </button>
-                                            <button type="button" class="btn btn-default"><i class="fa fa-copy"></i>&nbsp;
-                                                Excel
-                                            </button>
-                                        </div>
-                                        
-                                        <div class="col-md-6 pull-right">
-                                            <div class="form-inline pull-right">
-                                                <div class="form-group"><label class="control-label">Search:</label>&nbsp;<input
-                                                        type="text" class="form-control"/></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                    <table class="table table-striped table-bordered table-hover" style="margin-top:5px;">
-                                        <thead>
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Type</th>
-                                            <th>Phone</th>
-                                            <th>Address</th>
-                                            <th>City</th>
-                                            <th>State</th>
-                                            <th>ZIP</th>
-                                            <th width="3%">Edit</th>
-                                            <th width="4%">Delete</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr class="odd gradeA">
-                                            <td>[First]</td>
-                                            <td>[Last]</td>
-                                            <td>[Type]</td>
-                                            <td>[Phone]</td>
-                                           <td>[Address]</td>
-                                           <td>[City]</td>
-                                           <td>[State]</td>
-                                           <td>[ZIP]</td>
-                                            <td><a href="javascript:;" class="edit">Edit</a></td>
-                                            <td><a href="javascript:;" class="delete">Delete</a></td>
-                                        </tr>
-                                       
-                                        
-                                        </tbody>
-                                    </table>
-                               
-                                
-                            
-                          
-                        </div>
-                        <div class="tab-pane" id="step3">
-                          <h4>Details</h4>
-                          <p>Description</p>
-                          <label for="title"  class="label">Complaint Title</label>
+                         <label for="title"  class="label">Complaint Title</label>
                           <input id="title" type="text" class="form-control" placeholder="Complaint Title">
                           <hr />
                           <div class="complaintDetails"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
 
 <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
 
-<p>Praesent vitae libero non libero bibendum molestie quis ut metus. Fusce condimentum ante vel risus eleifend, auctor vulputate nisl ultricies. Aenean non lorem sem. Sed blandit dictum luctus. Ut malesuada fermentum dictum. Donec eu eros in tortor tempor ultrices id nec ipsum. Fusce porttitor purus nec purus venenatis ullamcorper. Pellentesque vitae velit pulvinar leo volutpat convallis vel scelerisque nulla. Nam pulvinar quis augue id tempor. Curabitur consequat ante sed mollis pulvinar. Nunc ac placerat nisl. In sodales ligula nunc, id auctor enim adipiscing in. Nunc euismod dapibus nisi varius laoreet.</p>
-
-<p>Ut eget feugiat ante, vel fringilla nisl. Aliquam mollis est at faucibus faucibus. Nulla facilisi. Ut lacinia pretium odio, vitae pulvinar quam pretium vel. Quisque non pretium metus. Duis hendrerit tempus lacus at viverra. Donec nulla quam, facilisis eu neque vitae, vehicula laoreet leo. Etiam adipiscing vitae leo non volutpat.</p>
-
-<p>Duis a massa sed neque molestie pulvinar. Donec sed augue eu ligula volutpat pellentesque et sit amet augue. Quisque eleifend sapien et ipsum vestibulum, ac auctor dolor semper. Nulla sit amet augue feugiat, eleifend risus sit amet, tempor sem. In iaculis id magna ut porttitor. Curabitur laoreet aliquet varius. Nullam consequat metus ac dapibus fermentum. Mauris placerat a augue ut pellentesque. In accumsan nunc et magna placerat, vel commodo ligula suscipit. Cras volutpat tortor vitae nulla vehicula fermentum. Etiam vitae consequat lacus. Nulla odio neque, elementum non pellentesque vitae, luctus vel urna. Morbi dolor justo, viverra ut nisi quis, convallis ullamcorper orci. Nam dapibus consectetur tellus a pretium. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam convallis congue purus.</p>
-
 </div>
+
+ <hr />
+  <label for="complaintFlags" class="label">Complaint Flags</label>
+                          
+                          <select data-placeholder="Complaint Flags..." id="complaintFlags" class="choose-complaintFlags form-control" multiple >
+                                <option value=""></option>
+                                <option value="Trade Secret">Trade Secret</option>
+                                <option value="Confidential">Confidential</option>
+                         </select>
+                          
+                               
+                                
+                            
+                          
+                        </div>
+                        <div class="tab-pane" id="step3">
+                          <h4>People</h4>
+                          
+                          
+                          
+                          
+                           <section class="row">
+                           
+                           <div class="col-md-12">
+                                    <section class="panel b-a">
+                                      <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
+                                          <li>
+                                            <div class="btn-group padder-v2">
+                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-user"></i> New</button>
+                                              <ul class="dropdown-menu pull-right">
+                                                <li><a href="#">Other menu items</a></li>
+                                              </ul>
+                                            </div>
+                                          </li>
+                                          <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                        </ul> <a href="#" class="font-bold">People</a> </div>
+                                      <div class="panel-body no-padder">
+                                         <table class="table table-striped th-sortable table-hover" >
+                                          <thead>
+                                            <tr>
+                                              <th width="14%">Entities</th>
+                                              <th>Title</th>
+                                              <th>First Name</th>
+                                              <th>Last Name</th>
+                                              <th>Type</th>
+                                              <th>Description</th>
+                                              <th width="9%">Action</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr class="odd gradeA">
+                                              <td><a href="#communicationDevices2" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-phone"></i></a>
+                                              <a href="#organizations2" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-book"></i></a>
+                                              <a href="#locations2" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-map-marker"></i></a>
+                                              <a href="#aliases2" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-users"></i></a></td>
+                                              <td>[Title]</td>
+                                              <td>[First Name]</td>
+                                              <td>[Last Name]</td>
+                                              <td>[Type]</td>
+                                               <td>[Description]</td>
+                                              <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                            </tr>
+                                            <tr>
+                                              <td colspan="6" class=" no-padder"><section id="communicationDevices2" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-phone"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Communication Devices</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                <section id="organizations2" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-book"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Organizations</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                 <section id="locations2" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-map-marker"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Locations</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Address</th>
+                                                          <th>City</th>
+                                                          <th>State</th>
+                                                          <th>ZIP</th>
+                                                          <th>Country</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Address]</td>
+                                                          <td>[City]</td>
+                                                          <td>[State]</td>
+                                                          <td>[ZIP]</td>
+                                                          <td>[Country]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                 <section id="aliases2" class="panel b-a hide">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-users"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Aliases</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
+                                                
+                                                
+                                                </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </section>
+                                  </div>
+                           
+                           </section>
+                                    
                         </div>
                         <div class="tab-pane" id="step4">
                           <h4>Attachments</h4>
-                          <p>Description</p>
+<!-- new upload beginnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn -->
+                          <p>Please add any attachments that you find pertinent to your complaint.  Examples could included, scanned documents, notes, photographs, videos, emails, etc.</p>
+                          
+                          
+                         
+    <!-- Redirect browsers with JavaScript disabled to the origin page -->
+    <noscript><input type="hidden" name="redirect" value="http://blueimp.github.io/jQuery-File-Upload/"></noscript>
+    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+    <div class="fileupload-buttonbar">
+        <div class="fileupload-buttons">
+            <!-- The fileinput-button span is used to style the file input field as button -->
+            <span class="fileinput-button">
+                <span>Add files...</span>
+                <input type="file" name="files[]" multiple>
+            </span>
+            <button type="submit" class="start">Start upload</button>
+            <button type="reset" class="cancel">Cancel upload</button>
+            <button type="button" class="delete">Delete</button>
+            <input type="checkbox" class="toggle">
+            <!-- The global file processing state -->
+            <span class="fileupload-process"></span>
+        </div>
+        <!-- The global progress state -->
+        <div class="fileupload-progress fade" style="display:none">
+            <!-- The global progress bar -->
+            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+            <!-- The extended global progress state -->
+            <div class="progress-extended">&nbsp;</div>
+        </div>
+    </div>
+    <!-- The table listing the files available for upload/download -->
+    <table role="presentation"><tbody class="files"></tbody></table>
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress"></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="start" disabled>Start</button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="cancel">Cancel</button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+            </p>
+            {% if (file.error) { %}
+                <div><span class="error">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            <button class="delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>Delete</button>
+            <input type="checkbox" name="delete" value="1" class="toggle">
+        </td>
+    </tr>
+{% } %}
+</script>
+
+<!-- new upload endddddddddddddddddddddddddddddddddddddddd -->
+<!--
+                          <p>Please drag/drop any attachments that you find pertinent to your complaint.  Examples could included, scanned documents, notes, photographs, videos, emails, etc.</p>
                           <div id="upload">
                           <div id="drop"> Drop Here <br />
                             <a>Browse</a>
-                            <input type="file" name="upl" multiple />
+                            <input type="file" name="files[]" multiple />
                           </div>
                           <ul>
-                            <!-- The file uploads will be shown here -->
                           </ul>
                           </div>
+-->
                         </div>
                         <div class="tab-pane" id="step5">
                           <h4>Assignment</h4>
-                          <p>Description</p>
+                          <p>Associate users to this complaint.</p>
                           <label for="approvers" class="label">Approvers</label>
                           
                           <select data-placeholder="Choose Approvers..." id="approvers" class="choose-approvers form-control" multiple style="width:350px;" >
@@ -321,19 +778,7 @@
                                 <option value="Jim Nasr">Jim Nasr</option>
                          </select>
 
-                          <hr/>
-                          <label for="collab" class="label">Collaborators</label>
-                          
-                          
-                          <select data-placeholder="Choose Collaborators..." id="collab" class="choose-collab form-control" multiple style="width:350px;" >
-                                <option value=""></option>
-                                <option value="David Miller">David Miller</option>
-                                <option value="James Bailey">James Bailey</option>
-                                <option value="Judy Hsu">Judy Hsu</option>
-                                <option value="Ronda Ringo">Ronda Ringo</option>
-                                <option value="AJ McClary">AJ McClary</option>
-                                <option value="Jim Nasr">Jim Nasr</option>
-                         </select>
+                         
                           
                           <hr/>
                           <label for="notifications" class="label">Notifications</label>
@@ -347,13 +792,57 @@
                                 <option value="AJ McClary">AJ McClary</option>
                                 <option value="Jim Nasr">Jim Nasr</option>
                          </select>
+                         
+                         <hr/>
+                          <label for="notifications" class="label">Alerts</label>
+                         <section id="communicationDevices4" class="panel b-a">
+                                                  <div class="panel-heading b-b bg-light">
+                                                    <ul class="nav nav-pills pull-right">
+                                                      <li>
+                                                        <div class="btn-group padder-v2">
+                                                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-phone"></i> New</button>
+                                                          <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                          </ul>
+                                                        </div>
+                                                      </li>
+                                                      <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                    </ul>
+                                                    <a href="#" class="font-bold">Communication Devices</a> </div>
+                                                  <div class="panel-body no-padder">
+                                                    <table class="table table-striped th-sortable table-hover" width="100%">
+                                                      <thead>
+                                                        <tr>
+                                                          <th>Type</th>
+                                                          <th>Value</th>
+                                                          <th>Date Added</th>
+                                                          <th>Added By</th>
+                                                          <th width="9%">Action</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="odd gradeA">
+                                                          <td>[Type]</td>
+                                                          <td>[Value]</td>
+                                                          <td>[Date Added]</td>
+                                                          <td>[Added By]</td>
+                                                          <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>
+                                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                                </section>
                           
                           
                         </div>
                         <ul class="pager wizard m-b-sm">
-                          <li class="previous first" style="display:none;"><a href="#">First</a></li>
-                          <li class="previous"><a href="#">Previous</a></li>
-                          <li class="next"><a href="#">Next</a></li>
+                          <li class="previous"><a href="#"><i class="fa fa-arrow-left"></i> Previous</a></li>
+                          
+                          <li class="next"><a href="#">Next <i class="fa fa-arrow-right"></i> </a></li>
+                         
+                          
+                          
                         </ul>
                       </div>
                     </div>
@@ -384,9 +873,27 @@
 
 <!-- File Manager --> 
 
-<script src="resources/js/upload/js/jquery.fileupload.js"></script> 
-<script src="resources/js/upload/js/jquery.iframe-transport.js"></script> 
-<script src="resources/js/upload/js/file-uploads-custom.js"></script> 
+
+
+<!-- The basic File Upload plugin -->
+<script src="resources/js/upload/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-image.js"></script>
+<!-- The File Upload audio preview plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-audio.js"></script>
+<!-- The File Upload video preview plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-video.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-validate.js"></script>
+<!-- The File Upload user interface plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-ui.js"></script>
+<!-- The File Upload jQuery UI plugin -->
+<script src="resources/js/upload/js/jquery.fileupload-jquery-ui.js"></script>
+<!-- The main application script -->
+<script src="resources/js/upload/js/main.js"></script>
+
 
 <!-- Summernote WYSIWYG -->
 
@@ -406,7 +913,8 @@
 <script src="resources/js/chosen.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 var config = {
-  '.choose-security' : {}, 
+  '.choose-intitiatorFlags' : {}, 
+  '.choose-complaintFlags' : {}, 
   '.choose-approvers' : {}, 
   '.choose-collab' : {}, 
   '.choose-notifications' : {}

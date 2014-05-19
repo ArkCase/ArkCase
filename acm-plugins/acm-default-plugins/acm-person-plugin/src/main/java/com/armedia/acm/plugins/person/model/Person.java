@@ -164,6 +164,21 @@ public class Person implements Serializable
     public void setCreator(String creator)
     {
         this.creator = creator;
+        for ( PostalAddress address : getAddresses() )
+        {
+            if ( address.getCreator() == null )
+            {
+                address.setCreator(creator);
+            }
+        }
+
+        for ( ContactMethod contactMethod : getContactMethods() )
+        {
+            if ( contactMethod.getCreator() == null )
+            {
+                contactMethod.setCreator(creator);
+            }
+        }
     }
 
     public Date getModified()
@@ -183,7 +198,19 @@ public class Person implements Serializable
 
     public void setModifier(String modifier)
     {
+        log.info("setting person modifier to: '" + modifier + "'");
+
         this.modifier = modifier;
+
+        for ( PostalAddress address : getAddresses() )
+        {
+            address.setModifier(modifier);
+        }
+
+        for ( ContactMethod contactMethod : getContactMethods() )
+        {
+            contactMethod.setModifier(modifier);
+        }
     }
 
     public Long getId()

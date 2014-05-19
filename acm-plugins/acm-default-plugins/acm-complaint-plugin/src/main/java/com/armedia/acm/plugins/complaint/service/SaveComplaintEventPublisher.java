@@ -3,7 +3,9 @@ package com.armedia.acm.plugins.complaint.service;
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintSearchResultEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,5 +48,20 @@ public class SaveComplaintEventPublisher implements ApplicationEventPublisherAwa
         }
 
         eventPublisher.publishEvent(complaintPersistenceEvent);
+    }
+
+    public void publishComplaintSearchResultEvent(
+            ComplaintListView source,
+            Authentication authentication,
+            String userIpAddress)
+    {
+        ComplaintSearchResultEvent event = new ComplaintSearchResultEvent(source);
+
+        String user = authentication.getName();
+        event.setUserId(user);
+        event.setIpAddress(userIpAddress);
+
+        eventPublisher.publishEvent(event);
+
     }
 }

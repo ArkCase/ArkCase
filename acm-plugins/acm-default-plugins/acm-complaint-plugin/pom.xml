@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>1.5</version>
+        <version>1.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -77,6 +77,16 @@
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.default</groupId>
             <artifactId>acm-object-association-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-configuration-service</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <artifactId>acm-ecm-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -176,6 +186,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>junit</groupId>
@@ -198,13 +215,6 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>jdbc</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- servlet -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
             <scope>test</scope>
         </dependency>
 

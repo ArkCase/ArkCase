@@ -13,7 +13,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -52,14 +51,6 @@ public class ContactMethod implements Serializable
     @Column(name = "cm_contact_value")
     private String value;
 
-    /**
-     * Value to use for modifier if this object is saved.  This value may be set by containing objects
-     * even when this address object has not been modified.  If this object is actually updated,
-     * this value becomes the modifier.
-     */
-    @Transient
-    private String modifierToBe;
-
     @PrePersist
     protected void beforeInsert()
     {
@@ -77,13 +68,13 @@ public class ContactMethod implements Serializable
         {
             setModified(new Date());
         }
+
     }
 
     @PreUpdate
     protected void beforeUpdate()
     {
         setModified(new Date());
-        setModifier(getModifierToBe());
     }
 
     public Long getId()
@@ -146,13 +137,23 @@ public class ContactMethod implements Serializable
         this.status = status;
     }
 
-    public String getModifierToBe()
+    public String getType()
     {
-        return modifierToBe;
+        return type;
     }
 
-    public void setModifierToBe(String modifierToBe)
+    public void setType(String type)
     {
-        this.modifierToBe = modifierToBe;
+        this.type = type;
+    }
+
+    public String getValue()
+    {
+        return value;
+    }
+
+    public void setValue(String value)
+    {
+        this.value = value;
     }
 }

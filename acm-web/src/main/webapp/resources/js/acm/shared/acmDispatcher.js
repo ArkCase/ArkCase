@@ -1,5 +1,5 @@
 /**
- * ACM.Dispatcher
+ * Acm.Dispatcher
  *
  * Handles dispatching events that are triggered to configured listeners
  *
@@ -13,7 +13,7 @@
  *
  * @author dmcclure
  */
-ACM.Dispatcher = {
+Acm.Dispatcher = {
 
     // events mapped to listeners
     events:[],

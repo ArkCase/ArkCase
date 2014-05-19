@@ -20,5 +20,23 @@
 
     </changeSet>
 
+    <changeSet id="02-complaint-type-foreign-key" author="dmiller">
+        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_complaint_type"
+                                 constraintName="fk_cmpl_type"
+                                 referencedTableName="acm_complaint_type_lu"
+                                 referencedColumnNames="cm_value"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
+
+    <changeSet id="03-complaint-priority-foreign-key" author="dmiller">
+        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_complaint_priority"
+                                 constraintName="fk_cmpl_priority"
+                                 referencedTableName="acm_complaint_priority_lu"
+                                 referencedColumnNames="cm_value"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
+
 </databaseChangeLog>
 

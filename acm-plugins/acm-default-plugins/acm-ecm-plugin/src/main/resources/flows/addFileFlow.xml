@@ -34,7 +34,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <timer-interceptor/>
 
         <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
-        <scripting:transformer name="creatorModifierTransformer">
+        <scripting:transformer name="addFileCreatorModifierTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
                     String user = message.getInboundProperty("acmUser") == null ? null :

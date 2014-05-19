@@ -1,9 +1,11 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
 
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import com.armedia.acm.plugins.person.model.Person;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -52,6 +54,16 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         complaint.setComplaintId(500L);
         complaint.setComplaintType("complaintType");
 
+        Person person = new Person();
+        person.setFamilyName("Jones");
+        person.setGivenName("David");
+        PostalAddress address = new PostalAddress();
+        address.setCity("Falls Church");
+        address.setState("VA");
+        address.setStreetAddress("8221 Old Courthouse Road");
+        person.getAddresses().add(address);
+        complaint.setOriginator(person);
+
         Complaint saved = new Complaint();
         saved.setComplaintId(complaint.getComplaintId());
         saved.setComplaintNumber("testNumber");
@@ -73,7 +85,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-            post("/api/latest/complaint.json")
+            post("/api/latest/plugin/complaint")
                     .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(in))
@@ -103,7 +115,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/complaint.json")
+                post("/api/latest/plugin/complaint")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(notComplaintJson))
@@ -115,6 +127,10 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         log.info("result code: " + result.getResponse().getStatus());
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
+
+        log.info("failing results: " + result.getResponse().getContentAsString());
+
+
 
     }
 }

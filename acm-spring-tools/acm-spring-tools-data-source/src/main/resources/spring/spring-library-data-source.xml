@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
-
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="properties" ref="datasourceProperties"/>
-        <!-- placeholders changed due to maven using same type -->
-        <property name="placeholderPrefix" value="$["/>
-        <property name="placeholderSuffix" value="]"/>
-    </bean>
-
+    <context:property-placeholder
+            properties-ref="datasourceProperties"
+            ignore-unresolvable="true"
+            local-override="false"
+            ignore-resource-not-found="true"
+            order="3"/>
 
     <bean id="datasourceProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
@@ -65,22 +65,22 @@
 
     <bean id="acmDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
             destroy-method="close">
-        <property name="driverClass" value="$[acm.driverClassName]"/>
-        <property name="jdbcUrl" value="$[acm.url]"/>
+        <property name="driverClass" value="${acm.driverClassName}"/>
+        <property name="jdbcUrl" value="${acm.url}"/>
         <!--<property name="overrideDefaultUser" value="${acm.schema}"/>-->
-        <property name="user" value="$[acm.username]"/>
-        <property name="password" value="$[acm.password]"/>
-        <property name="initialPoolSize" value="$[acm.initialSize]"/>
-        <property name="maxPoolSize" value="$[acm.maxActive]"/>
-        <property name="minPoolSize" value="$[acm.minIdle]"/>
-        <property name="checkoutTimeout" value="$[acm.maxWait]"/>
-        <property name="testConnectionOnCheckout" value="$[acm.testOnBorrow]"/>
-        <property name="testConnectionOnCheckin" value="$[acm.testOnReturn]"/>
-        <property name="idleConnectionTestPeriod" value="$[acm.idleConnectionTestPeriodInSeconds]"/>
-        <property name="preferredTestQuery" value="$[acm.validationQuery]"/>
-        <property name="loginTimeout" value="$[acm.maxWait]"/>
-        <property name="acquireRetryAttempts" value="$[acm.acquireRetryAttempts]"/>
-        <property name="acquireRetryDelay" value="$[acm.acquireRetryDelay]"/>
+        <property name="user" value="${acm.username}"/>
+        <property name="password" value="${acm.password}"/>
+        <property name="initialPoolSize" value="${acm.initialSize}"/>
+        <property name="maxPoolSize" value="${acm.maxActive}"/>
+        <property name="minPoolSize" value="${acm.minIdle}"/>
+        <property name="checkoutTimeout" value="${acm.maxWait}"/>
+        <property name="testConnectionOnCheckout" value="${acm.testOnBorrow}"/>
+        <property name="testConnectionOnCheckin" value="${acm.testOnReturn}"/>
+        <property name="idleConnectionTestPeriod" value="${acm.idleConnectionTestPeriodInSeconds}"/>
+        <property name="preferredTestQuery" value="${acm.validationQuery}"/>
+        <property name="loginTimeout" value="${acm.maxWait}"/>
+        <property name="acquireRetryAttempts" value="${acm.acquireRetryAttempts}"/>
+        <property name="acquireRetryDelay" value="${acm.acquireRetryDelay}"/>
         <property name="autoCommitOnClose" value="false"/>
         <property name="dataSourceName" value="acmDataSource"/>
         <property name="breakAfterAcquireFailure" value="false"/>
@@ -94,18 +94,18 @@
         <property name="jpaPropertyMap">
             <props>
                 <prop key="eclipselink.weaving">false</prop>
-                <prop key="eclipselink.logging.level">$[eclipselink.logging.level]</prop>
+                <prop key="eclipselink.logging.level">${eclipselink.logging.level}</prop>
             </props>
         </property>
-        <property name="packagesToScan" value="$[jpa.model.packages]"/>
+        <property name="packagesToScan" value="${jpa.model.packages}"/>
     </bean>
 
     <bean id="eclipseLinkDialect" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect"/>
 
     <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
-        <property name="databasePlatform" value="$[database.platform]"/>
+        <property name="databasePlatform" value="${database.platform}"/>
         <property name="generateDdl" value="false"/>
-        <property name="showSql" value="$[database.platform.showSql]"/>
+        <property name="showSql" value="${database.platform.showSql}"/>
     </bean>
 
     <!-- Plain old JDBC transaction manager (use JtaTransactionManager for
@@ -121,11 +121,17 @@
     <!-- bean post-processor for JPA annotations -->
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
 
+    <!-- jdbc template for non-JPA resources e.g. lists of values -->
+    <bean id="acmJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg index="0" ref="acmDataSource"/>
+    </bean>
+
     <!-- generate the database structures -->
     <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
         <property name="dataSource" ref="acmDataSource" />
         <property name="changeLog" value="classpath:/ddl/acm-database-changelog.xml" />
-        <property name="shouldRun" value="$[schema.autoUpdate]"/>
+        <property name="shouldRun" value="${schema.autoUpdate}"/>
+        <!--<property name="dropFirst" value="true"/>-->
 
         <!--
         contexts specifies the runtime contexts to use.

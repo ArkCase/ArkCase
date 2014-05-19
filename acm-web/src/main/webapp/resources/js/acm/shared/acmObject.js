@@ -1,23 +1,45 @@
 /**
- * ACM.Object
+ * Acm.Object
  *
  * common function for screen object management
  * Argument $s must be a valid jQuery selector
  *
  * @author jwu
  */
-ACM.Object = {
+Acm.Object = {
     initialize : function() {
+        var items = $(document).items();
+        this._contextPath = items.properties("contextPath").itemValue();
+        this._pluginName = items.properties("pluginName").itemValue();
+        this._pluginUrl = items.properties("pluginUrl").itemValue();
+        this._pluginImage = items.properties("pluginImage").itemValue();
+    }
+
+    ,_contextPath: "/acm"
+    ,_pluginName: ""
+    ,_pluginUrl: ""
+    ,_pluginImage: ""
+    ,getContextPath: function() {
+        return this._contextPath;
+    }
+    ,getPluginName: function() {
+        return this._pluginName;
+    }
+    ,getPluginUrl: function() {
+        return this._pluginUrl;
+    }
+    ,getPluginImage: function() {
+        return this._pluginImage;
     }
 
     ,getValue : function($s) {
-        return $s.val();;
+        return $s.val();
     }
     ,setValue : function($s, value) {
         $s.val(value);
     }
     ,getText : function($s) {
-        return $s.val();;
+        return $s.text();
     }
     ,setText : function($s, value) {
     	$s.text(value);
@@ -51,6 +73,18 @@ ACM.Object = {
         //}).prop('selected', true); //for jQuery v1.6+
     	}).attr('selected', true);
     }
+    ,getSelectValues: function($s) {
+        var mv = [];
+        $s.find("option:selected").each(function(i, selected) {
+            mv[i]  = $(selected).val();
+        });
+        return mv;
+    }
+    ,getSelectValuesAsString: function($s, sep) {
+        return $s.find("option:selected").map(function(){
+            return this.value;
+        }).get().join(sep);
+    }
     ,getPlaceHolderInput : function($s) {
         var v;
         v = $s.val();
@@ -58,8 +92,8 @@ ACM.Object = {
         return v;
     }
     ,setPlaceHolderInput : function($s, val) {
-        //$s.val(ACM.Common.goodValue(val, ""));
-        $s.trigger('focus').val(ACM.Common.goodValue(val, "")).trigger('blur');
+        //$s.val(Acm.goodValue(val, ""));
+        $s.trigger('focus').val(Acm.goodValue(val, "")).trigger('blur');
     }
 
     ,changePlaceHolderSelect : function($s) {
@@ -82,10 +116,16 @@ ACM.Object = {
         }
     }
     ,getHtml : function($s) {
-        return $s.html();;
+        return $s.html();
     }
     ,setHtml : function($s, value) {
         $s.html(value);
+    }
+    ,getSummernote : function($s) {
+        return $s.code();
+    }
+    ,setSummernote : function($s, value) {
+        $s.code(value);
     }
     ,setEnable : function($s, value) {
         if (value == "true" || value == true) {
@@ -165,7 +205,7 @@ ACM.Object = {
 
     ,useSsnInput: function($s) {
 //        $s.keypress(function (keypressed) {
-//            return ACM.Callbacks.onSsnKeypress(this, keypressed);
+//            return Acm.Callbacks.onSsnKeypress(this, keypressed);
 //        });
 
         $s.keyup(function() {
@@ -194,7 +234,7 @@ ACM.Object = {
         return ssn;
     }
     ,getSsnDisplay: function (ssn) {
-        if (ACM.Common.isEmpty(ssn))
+        if (Acm.isEmpty(ssn))
             return "";
 
         var ssnDisplay = ssn.substring(0, 3) + '-' + ssn.substring(3, 5) + '-' + ssn.substring(5, 9);

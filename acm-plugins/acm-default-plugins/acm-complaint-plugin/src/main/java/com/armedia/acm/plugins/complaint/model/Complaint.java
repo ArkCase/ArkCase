@@ -307,6 +307,7 @@ public class Complaint implements Serializable
      */
     public void setModifier(String modifier)
     {
+        log.info("setting modifier to: '" + modifier + "'");
         this.modifier = modifier;
 
         if ( getOriginator() != null )

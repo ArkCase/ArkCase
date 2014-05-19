@@ -3,12 +3,42 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="helloWorldPlugin" class="com.armedia.acm.pluginmanager.AcmPlugin">
+    <bean id="helloWorldPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="helloWorldPlugin"/>
         <property name="navigatorTab" value="true"/>
         <property name="navigatorTabName" value="Hello World"/>
         <property name="homeUrl" value="/plugin/sample/helloWorld"/>
         <property name="enabled" value="true"/>
+        <property name="pluginImage" value="i-world"/>
+        <property name="privileges">
+            <list>
+                <ref bean="helloWorldPrivilege"/>
+            </list>
+        </property>
+        <property name="navigatorTabPrivilegeRequired" ref="helloWorldPrivilege"/>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="dashboardUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/sample/helloWorld"/>
+                    <property name="requiredPrivilege" ref="helloWorldPrivilege"/>
+                </bean>
+            </list>
+        </property>
+
+    </bean>
+
+    <bean id="helloWorldPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-hello-world"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_ANALYST</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
     </bean>
 
 </beans>

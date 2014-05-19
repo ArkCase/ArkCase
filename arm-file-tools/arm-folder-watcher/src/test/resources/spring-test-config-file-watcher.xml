@@ -6,4 +6,16 @@
 
     <bean id="configFileEventListener" class="com.armedia.acm.files.ConfigurationFileEventListener"/>
 
+    <!-- fake activitiProcessEngineConfiguration bean for testing.  Needed because the folder watcher has a
+         depends-on reference to activitiProcessEngineConfiguration -->
+    <bean id="activitiProcessEngineConfiguration" class="java.lang.String">
+        <constructor-arg value="Not really an activiti bean"/>
+    </bean>
+
+    <!-- fake drlDeployer bean for testing.  Needed because the folder watcher has a
+         depends-on reference to drlDeployer -->
+    <bean id="drlDeployer" class="java.lang.String">
+        <constructor-arg value="Not really a Drools bean"/>
+    </bean>
+
 </beans>

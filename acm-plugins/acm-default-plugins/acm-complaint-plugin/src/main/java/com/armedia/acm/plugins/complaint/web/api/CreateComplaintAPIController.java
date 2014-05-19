@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-@RequestMapping( { "/api/v1/complaint", "/api/latest/complaint"})
+@RequestMapping( { "/api/v1/plugin/complaint", "/api/latest/plugin/complaint"})
 public class CreateComplaintAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());

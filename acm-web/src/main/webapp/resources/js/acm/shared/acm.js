@@ -1,20 +1,26 @@
 /**
- * ACM serves as namespace for ACM application and also provides some frequent miscellaneous functions
+ * Acm serves as namespace for Acm application and also provides some frequent miscellaneous functions
  *
  * @author jwu
  */
-var ACM = ACM || {
+var Acm = Acm || {
     initialize : function() {
-        ACM.Dispatcher.initialize();
-        ACM.Ajax.initialize();
-        ACM.Object.initialize();
-        ACM.Validation.initialize();
+        Acm.Dialog.initialize();
+        Acm.Dispatcher.initialize();
+        Acm.Ajax.initialize();
+        Acm.Object.initialize();
+        Acm.Validation.initialize();
     }
 
+    ,Dialog : {}
     ,Dispatcher : {}
     ,Ajax : {}
     ,Object : {}
     ,Validation : {}
+
+    ,getContextPath: function() {
+        return Acm.Object.getContextPath();
+    }
 
 
 	,isEmpty: function (val) {
@@ -65,14 +71,14 @@ var ACM = ACM || {
 
 
 /**
- * initialize ACM
+ * initialize Acm
  */
 //
 // call it externally, from common/ready.js for example
 //
 //jQuery(document).ready(
 //    function() {
-//        ACM.initialize();
+//        Acm.initialize();
 //    }
 //);
 
