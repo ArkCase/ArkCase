@@ -23,6 +23,11 @@ var Complaint = Complaint || {
     ,Callback: {}
 
 
+    ,PERSON_SUBTABLE_TITLE_DEVICES:       "Communication Devices"
+    ,PERSON_SUBTABLE_TITLE_ORGANIZATIONS: "Organizations"
+    ,PERSON_SUBTABLE_TITLE_LOCATIONS:     "Locations"
+    ,PERSON_SUBTABLE_TITLE_ALIASES:       "Aliases"
+
     ,_complaintId : undefined
     ,getComplaintId : function() {
         return this._complaintId;
@@ -38,6 +43,65 @@ var Complaint = Complaint || {
     ,setComplaint : function(c) {
         this._complaint = c;
     }
+    ,constructComplaint : function() {
+        var c = {};
+        c.complaintId = 0;
+        //c.initiatorFlags = [];                //????need to be defined in POJO
+
+
+        c.originator = {};
+        c.originator.id = 0;
+        c.originator.title = "";
+        c.originator.givenName = "";
+        c.originator.familyName = "";
+        //c.originator.type = "";               //????need to be defined in POJO
+        //c.originator.description = "";        //????need to be defined in POJO
+
+        c.originator.contactMethods = [];
+        //c.originator.contactMethods.id = 0;
+        //c.originator.contactMethods.type = "";
+        //c.originator.contactMethods.value = "";
+        //c.originator.contactMethods.created = "";
+        //c.originator.contactMethods.creator = "";
+
+        //c.originator.organizations = [];            //????need to be defined in POJO
+
+        c.originator.addresses = [];
+        //c.originator.addresses.id = 0;
+        //c.originator.addresses.type = "";
+        //c.originator.addresses.streetAddress = "";  //what happends to streetAddress2 ?
+        //c.originator.addresses.city = "";
+        //c.originator.addresses.state = "";
+        //c.originator.addresses.zip = "";
+        //c.originator.addresses.country = "";
+        //c.originator.addresses.created = "";
+        //c.originator.addresses.creator = "";
+
+        //c.originator.aliases = [];                  //????need to be defined in POJO
+
+        c.incidentDate = "";
+        //c.duration = "";
+        c.complaintType = "";
+        c.priority = "";
+        c.complaintType = "";
+        c.details = "";
+        //c.complaintFlags = [];                //????need to be defined in POJO
+
+
+        c.originator.people = [];
+
+
+        c.attachments = [];
+
+
+        //c.approvers = [];                     //????need to be defined in POJO
+        //c.notifications = [];                 //????need to be defined in POJO
+        //c.alertDevices = [];                  //????need to be defined in POJO
+
+        this._complaint = c;
+        return c;
+    }
+
 
     ,_personTypes : ["Witness", "Subject", "Spouse"]
     ,getPersonTypes : function() {
@@ -69,9 +133,5 @@ var Complaint = Complaint || {
         return this._aliasTypes;
     }
 
-    ,PERSON_SUBTABLE_TITLE_DEVICES:       "Communication Devices"
-    ,PERSON_SUBTABLE_TITLE_ORGANIZATIONS: "Organizations"
-    ,PERSON_SUBTABLE_TITLE_LOCATIONS:     "Locations"
-    ,PERSON_SUBTABLE_TITLE_ALIASES:       "Aliases"
 };
 

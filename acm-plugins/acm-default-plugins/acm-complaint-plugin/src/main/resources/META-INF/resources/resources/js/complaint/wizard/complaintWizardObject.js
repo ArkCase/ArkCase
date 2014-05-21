@@ -51,6 +51,241 @@ ComplaintWizard.Object = {
     }
 
 
+    ,setEnableBtnSave: function(enable) {
+        Acm.Object.setEnable(this.$btnSave, enable);
+    }
+    ,getValueEdtFname: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtFname);
+    }
+//    ,setValueEdtFname: function(val) {
+//        return Acm.Object.setPlaceHolderInput(this.$edtFname, val);
+//    }
+    ,getValueEdtLname: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtLname);
+    }
+    ,getValueEdtCompany: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtCompany);
+    }
+    ,getValueSelPersonTitle: function() {
+        return Acm.Object.getSelectValue(this.$selPersonTitle);
+    }
+    ,getHtmlDivComplaintDetails: function() {
+        return Acm.Object.getSummernote(this.$divComplaintDetails);
+    }
+    ,getValueEdtIncidentDate: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtIncidentDate);
+    }
+    ,getSelectValuesSelIntiatorFlags: function() {
+        return Acm.Object.getSelectValues(this.$selIntiatorFlags);
+    }
+    ,getSelectValuesSelComplaintFlags: function() {
+        return Acm.Object.getSelectValues(this.$selComplaintFlags);
+    }
+    ,getSelectValuesSelApprovers: function() {
+        return Acm.Object.getSelectValues(this.$selApprovers);
+    }
+    ,getSelectValuesSelCollab: function() {
+        return Acm.Object.getSelectValues(this.$selCollab);
+    }
+    ,getSelectValuesSelNotifications: function() {
+        return Acm.Object.getSelectValues(this.$selNotifications);
+    }
+
+    ,getComplaintData : function() {
+        var data = {};
+
+        data.originator = {};
+        if (Acm.isNotEmpty(Complaint.getComplaintId())) {
+            data.complaintId = Complaint.getComplaintId();
+        }
+        data.originator.givenName = this.getValueEdtFname();
+        data.originator.familyName = this.getValueEdtLname();
+        data.originator.company = this.getValueEdtCompany();
+
+        //$selComplaintType
+        data.originator.title = this.getValueSelPersonTitle();
+
+//        ContactMethod contactMethods
+//        PostalAddress addresses
+//        organizations
+//        aliases
+
+        //data.details
+        var a1 = this.getHtmlDivComplaintDetails();
+
+        //incidentDate
+        var d1 = this.getValueEdtIncidentDate();
+
+        //"securityTags": ["Anonymous", "Confidential", "Top Secret"]
+        var b6 = this.getSelectValuesSelApprovers();
+
+
+
+        var z = 1;
+
+//        term.docType = ComplaintWizard.Object._getValueSelDocType();
+//        term.subjectLastName = ComplaintWizard.Object._getValueEdtLastName();
+//        term.subjectSSN = ComplaintWizard.Object._getValueEdtSsn();
+//        term.eqipRequestNumber = ComplaintWizard.Object._getValueEdtEQipRequest();
+//        term.soi = ComplaintWizard.Object._getValueEdtSoi();
+//        term.son = ComplaintWizard.Object._getValueEdtSon();
+//        term.assignee = ComplaintWizard.Object._getValueSelAssignee();
+//
+//        term.supervisorReviewFlag = ComplaintWizard.Object._isCheckedChkSupervisorReview();
+//        term.contractOversightReviewFlag = ComplaintWizard.Object._isCheckedChkContractOversight();
+//
+//        term.queues = [{},{},{}];
+//        term.queues[0].name = Unassigned.queueProcessing.name;
+//        term.queues[0].checked = ComplaintWizard.Object.isCheckedChkProcessing();
+//        term.queues[1].name = Unassigned.queueQa.name;
+//        term.queues[1].checked = ComplaintWizard.Object.isCheckedChkQa();
+//        term.queues[2].name = Unassigned.queueMailback.name;
+//        term.queues[2].checked = ComplaintWizard.Object.isCheckedChkMailback();
+
+        return data;
+    }
+
+
+    ,_jqXHR : undefined
+    ,_useFileUpload: function($upload, $drop, $ul, $click) {
+        $(function(){
+
+            //var ul = $ul;
+
+            $click.click(function(){
+                // Simulate a click on the file input button
+                // to show the file browser dialog
+                $(this).parent().find('input').click();
+            });
+
+            // Initialize the jQuery File Upload plugin
+            //jwu $('#upload').fileupload({
+            _jqXHR = $upload.fileupload({
+                //To Explore:
+                //redirect : to complaintList
+                //redirectParamName:
+                //
+//check if complaintId not created, create it first
+//                submit: function (e, data) {
+//                    var input = $('#input');
+//                    data.formData = {example: input.val()};
+//                    if (!data.formData.example) {
+//                        data.context.find('button').prop('disabled', false);
+//                        input.focus();
+//                        return false;
+//                    }
+//                },
+                done: function (e, data) {
+                    var a1 = data.result
+                    var a2 = data.textStatus;
+                    var a3 = data.jqXHR;
+                    var z = 1;
+                    //alert("done");
+                },
+//                always: function (e, data) {
+//                    // data.result
+//                    // data.textStatus;
+//                    // data.jqXHR;
+//                },
+                //autoUpload: false
+                //sequentialUploads: true
+
+
+
+                url: Acm.getContextPath() + ComplaintWizard.Service.API_UPLOAD_COMPLAINT_FILE,
+
+                formData: function(form) {
+                    var fd = [{}];
+                    fd[0].name = "complaintId";
+                    fd[0].value = Complaint.getComplaintId();
+                    return fd;
+                },
+
+                // This element will accept file drag/drop uploading
+                dropZone: $drop,
+
+                // This function is called when a file is added to the queue;
+                // either via the browse button, or via drag/drop:
+                add: function (e, data) {
+
+                    var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
+                        ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
+
+                    // Append the file name and file size
+                    tpl.find('p').text(data.files[0].name)
+                        .append('<i>' + formatFileSize(data.files[0].size) + '</i>');
+
+                    // Add the HTML to the UL element
+                    data.context = tpl.appendTo($ul);
+
+                    // Initialize the knob plugin
+                    tpl.find('input').knob();
+
+                    // Listen for clicks on the cancel icon
+                    tpl.find('span').click(function(){
+
+                        if(tpl.hasClass('working')){
+                            //jwu jqXHR.abort();
+                            _jqXHR.abort();
+                        }
+
+                        tpl.fadeOut(function(){
+                            tpl.remove();
+                        });
+
+                    });
+
+                    // Automatically upload the file once it is added to the queue
+                    //var jqXHR = data.submit();
+                    _jqXHR = data.submit();
+                },
+
+                progress: function(e, data){
+
+                    // Calculate the completion percentage of the upload
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+
+                    // Update the hidden input field and trigger a change
+                    // so that the jQuery knob plugin knows to update the dial
+                    data.context.find('input').val(progress).change();
+
+                    if(progress == 100){
+                        data.context.removeClass('working');
+                    }
+                },
+
+                fail:function(e, data){
+                    // Something has gone wrong!
+                    data.context.addClass('error');
+                }
+
+            });
+
+
+            // Prevent the default action when a file is dropped on the window
+            $(document).on('drop dragover', function (e) {
+                e.preventDefault();
+            });
+
+            // Helper function that formats the file sizes
+            function formatFileSize(bytes) {
+                if (typeof bytes !== 'number') {
+                    return '';
+                }
+
+                if (bytes >= 1000000000) {
+                    return (bytes / 1000000000).toFixed(2) + ' GB';
+                }
+
+                if (bytes >= 1000000) {
+                    return (bytes / 1000000).toFixed(2) + ' MB';
+                }
+
+                return (bytes / 1000).toFixed(2) + ' KB';
+            }
+
+        });
+    }
 
     ,_toggleSubJTable: function($t, $row, fnOpen, fnClose, title) {
         var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
@@ -83,23 +318,45 @@ ComplaintWizard.Object = {
             ,paging: false
             ,actions: {
                 listAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                        ,"Records": [
-                            { "personId":  1, "title": "Mr.", "firstName": "John", "lastName": "Garcia", "type": "Witness", "description": "123 do re mi" }
-                        ]
-                    };
+                    var c = Complaint.getComplaint();
+                    if (Acm.isEmpty(c.originator)) {
+                        c = Complaint.constructComplaint();
+                    }
+                    var rc = {"Result": "OK", "Records": [{}]};
+                    rc.Records[0].id = c.originator.id;
+                    rc.Records[0].title = c.originator.title;
+                    rc.Records[0].givenName = c.originator.givenName;
+                    rc.Records[0].familyName = c.originator.familyName;
+                    rc.Records[0].type = "";
+                    rc.Records[0].description = "";
+                    return rc;
+//                    return {
+//                        "Result": "OK"
+//                        ,"Records": [
+//                            { "personId":  1, "title": "Mr.", "firstName": "John", "lastName": "Garcia", "type": "Witness", "description": "123 do re mi" }
+//                        ]
+//                    };
                 }
                 ,updateAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                        ,"Record":
-                        { "personId": 3, "title": "Dr.", "firstName": "Joe", "lastName": "Lee", "type": "Witness", "description": "someone" }
-                    };
+                    var record = Acm.urlToJson(postData);
+                    var c = Complaint.getComplaint();
+                    var rc = {"Result": "OK", "Record": {}};
+                    rc.Record.id = c.originator.id = parseInt(record.id);
+                    rc.Record.title = c.originator.title = record.title;
+                    rc.Record.givenName = c.originator.givenName = record.givenName;
+                    rc.Record.familyName = c.originator.familyName = record.familyName;
+                    rc.Record.type = record.type;
+                    rc.Record.description = record.description;
+                    return rc;
+//                    return {
+//                        "Result": "OK"
+//                        ,"Record":
+//                        { "id": 3, "title": "Dr.", "givenName": "Joe", "familyName": "Lee", "type": "Witness", "description": "someone" }
+//                    };
                 }
             }
             ,fields: {
-                personId: {
+                id: {
                     title: 'ID'
                     ,key: true
                     ,list: false
@@ -145,11 +402,11 @@ ComplaintWizard.Object = {
                     ,width: '10%'
                     ,options: Complaint.getPersonTitles()
                 }
-                ,firstName: {
+                ,givenName: {
                     title: 'First Name'
                     ,width: '15%'
                 }
-                ,lastName: {
+                ,familyName: {
                     title: 'Last Name'
                     ,width: '15%'
                 }
@@ -174,7 +431,7 @@ ComplaintWizard.Object = {
         $s.jtable('load');
     }
     ,_toggleInitiatorDevices: function($t, $row) {
-        this._toggleSubJTable($t, $row, this._openInitiatorDevices, this._closeInitiatorDevices, Complaint.Initiator_SUBTABLE_TITLE_DEVICES);
+        this._toggleSubJTable($t, $row, this._openInitiatorDevices, this._closeInitiatorDevices, Complaint.PERSON_SUBTABLE_TITLE_DEVICES);
     }
     ,_toggleInitiatorOrganizations: function($t, $row) {
         this._toggleSubJTable($t, $row, this._openInitiatorOrganizations, this._closeInitiatorOrganizations, Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS);
@@ -189,77 +446,143 @@ ComplaintWizard.Object = {
         $t.jtable('closeChildTable', $row.closest('tr'));
     }
     ,_openInitiatorDevices: function($t, $row) {
-        $t.jtable('openChildTable',
-            $row.closest('tr'),
-            {
+        $t.jtable('openChildTable'
+            ,$row.closest('tr')
+            ,{
                 title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
-                //,paging: true
-                //,pageSize: 10
                 ,sorting: true
                 ,actions: {
-                listAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                        ,"Records": [
-                            { "personId":  1, "id": "a", "type": "Phone", "value": "703-123-5678", "createDate": "01-02-03", "createBy": "123 do re mi" }
-                            ,{ "personId": 2, "id": "b", "type": "Email", "value": "doe@gmail.com", "createDate": "14-05-15", "createBy": "xyz abc" }
-                        ]
-                        //,"TotalRecordCount": 2
-                    };
+                    listAction: function(postData, jtParams) {
+                        var c = Complaint.getComplaint();
+                        var contactMethods = c.originator.contactMethods;
+                        var cnt = contactMethods.length;;
+
+                        var rc = {"Result": "OK", "Records": []};
+                        for (i = 0; i < cnt; i++) {
+                            rc.Records.push({personId: c.originator.id
+                                ,id: contactMethods[i].id
+                                ,type: contactMethods[i].type
+                                ,value: contactMethods[i].value
+                                ,created: contactMethods[i].created
+                                ,creator: contactMethods[i].creator
+                            });
+                        }
+                        return rc;
+//                        return {
+//                            "Result": "OK"
+//                            ,"Records": [
+//                                { "personId":  1, "id": "a", "type": "Phone", "value": "703-123-5678", "created": "01-02-03", "creator": "123 do re mi" }
+//                                ,{ "personId": 2, "id": "b", "type": "Email", "value": "doe@gmail.com", "created": "14-05-15", "creator": "xyz abc" }
+//                            ]
+//                            //,"TotalRecordCount": 2
+//                        };
+
+                    }
+                    ,createAction: function(postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var c = Complaint.getComplaint();
+                        var rc = {"Result": "OK", "Record": {}};
+                        rc.Record.personId = c.originator.id;
+                        rc.Record.id = parseInt(record.id);
+                        rc.Record.type = record.type;
+                        rc.Record.value = record.value;
+                        rc.Record.created = record.created;
+                        rc.Record.creator = record.creator;
+                        return rc;
+//                        return {
+//                            "Result": "OK"
+//                            ,"Record":
+//                            { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "created": "01-02-03", "creator": "test" }
+//                        };
+                    }
+                    ,updateAction: function(postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var c = Complaint.getComplaint();
+                        var rc = {"Result": "OK", "Record": {}};
+                        rc.Record.personId = c.originator.id;
+                        //rc.Record.id = parseInt(record.id);           //no such field in postData, ignored
+                        rc.Record.type = record.type;
+                        rc.Record.value = record.value;
+                        rc.Record.created = record.created;
+                        rc.Record.creator = record.creator;
+                        return rc;
+//                        return {
+//                            "Result": "OK"
+//                            ,"Record":
+//                            { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "created": "01-02-03", "creator": "test" }
+//                        };
+
+                    }
+                    ,deleteAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
                 }
-                ,createAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                        ,"Record":
-                        { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
-                    };
-                }
-                ,updateAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                        ,"Record":
-                        { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
-                    };
-                }
-                ,deleteAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                    };
-                }
-            }
                 ,fields: {
-                personId: {
-                    type: 'hidden'
-                    ,defaultValue: 1 //commData.record.StudentId
+                    personId: {
+                        key: false
+                        ,create: false
+                        ,edit: false
+                        ,list: false
+                    }
+                    ,id: {
+                        key: false
+                        ,type: 'hidden'
+                        ,edit: false
+                        ,defaultValue: 0
+                    }
+                    ,type: {
+                        title: 'Type'
+                        ,width: '15%'
+                        ,options: Complaint.getDeviceTypes()
+                    }
+                    ,value: {
+                        title: 'Value'
+                        ,width: '30%'
+                    }
+                    ,created: {
+                        title: 'Date Added'
+                        ,width: '20%'
+                        //,type: 'date'
+                        //,displayFormat: 'yy-mm-dd'
+                    }
+                    ,creator: {
+                        title: 'Added By'
+                        ,width: '30%'
+                    }
                 }
-                ,id: {
-                    key: true
-                    ,create: false
-                    ,edit: false
-                    ,list: false
+                ,recordAdded : function (event, data) {
+                    var record = data.record;
+                    var c = Complaint.getComplaint();
+                    var contactMethods = c.originator.contactMethods;
+                    var contactMethod = {};
+                    contactMethod.personId = c.originator.id;
+                    contactMethod.id = parseInt(record.id);
+                    contactMethod.type = record.type;
+                    contactMethod.value = record.value;
+                    contactMethod.created = record.created;
+                    contactMethod.creator = record.creator;
+                    contactMethods.push(contactMethod);
                 }
-                ,type: {
-                    title: 'Type'
-                    ,width: '15%'
-                    ,options: Complaint.getDeviceTypes()
+                ,recordUpdated : function (event, data) {
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var c = Complaint.getComplaint();
+                    var contactMethods = c.originator.contactMethods;
+                    var contactMethod = contactMethods[whichRow];
+                    contactMethod.type = record.type;
+                    contactMethod.value = record.value;
+                    contactMethod.created = record.created;
+                    contactMethod.creator = record.creator;
                 }
-                ,value: {
-                    title: 'Value'
-                    ,width: '30%'
+                ,recordDeleted : function (event, data) {
+                    var r = data.row;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var c = Complaint.getComplaint();
+                    var contactMethods = c.originator.contactMethods;
+                    contactMethods.splice(whichRow, 1);
                 }
-                ,createDate: {
-                    title: 'Date Added'
-                    ,width: '20%'
-                    //,type: 'date'
-                    //,displayFormat: 'yy-mm-dd'
-                    ,create: false
-                    ,edit: false
-                }
-                ,createBy: {
-                    title: 'Added By'
-                    ,width: '30%'
-                }
-            }
             }
             ,function (data) { //opened handler
                 data.childTable.jtable('load');
@@ -1071,243 +1394,6 @@ ComplaintWizard.Object = {
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-
-    ,setEnableBtnSave: function(enable) {
-        Acm.Object.setEnable(this.$btnSave, enable);
-    }
-    ,getValueEdtFname: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtFname);
-    }
-//    ,setValueEdtFname: function(val) {
-//        return Acm.Object.setPlaceHolderInput(this.$edtFname, val);
-//    }
-    ,getValueEdtLname: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtLname);
-    }
-    ,getValueEdtCompany: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtCompany);
-    }
-    ,getValueSelPersonTitle: function() {
-        return Acm.Object.getSelectValue(this.$selPersonTitle);
-    }
-    ,getHtmlDivComplaintDetails: function() {
-        return Acm.Object.getSummernote(this.$divComplaintDetails);
-    }
-    ,getValueEdtIncidentDate: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtIncidentDate);
-    }
-    ,getSelectValuesSelIntiatorFlags: function() {
-        return Acm.Object.getSelectValues(this.$selIntiatorFlags);
-    }
-    ,getSelectValuesSelComplaintFlags: function() {
-        return Acm.Object.getSelectValues(this.$selComplaintFlags);
-    }
-    ,getSelectValuesSelApprovers: function() {
-        return Acm.Object.getSelectValues(this.$selApprovers);
-    }
-    ,getSelectValuesSelCollab: function() {
-        return Acm.Object.getSelectValues(this.$selCollab);
-    }
-    ,getSelectValuesSelNotifications: function() {
-        return Acm.Object.getSelectValues(this.$selNotifications);
-    }
-
-    ,getComplaintData : function() {
-        var data = {};
-
-        data.originator = {};
-        if (Acm.isNotEmpty(Complaint.getComplaintId())) {
-            data.complaintId = Complaint.getComplaintId();
-        }
-        data.originator.givenName = this.getValueEdtFname();
-        data.originator.familyName = this.getValueEdtLname();
-        data.originator.company = this.getValueEdtCompany();
-
-        //$selComplaintType
-        data.originator.title = this.getValueSelPersonTitle();
-
-//        ContactMethod contactMethods
-//        PostalAddress addresses
-//        organizations
-//        aliases
-
-        //data.details
-        var a1 = this.getHtmlDivComplaintDetails();
-
-        //incidentDate
-        var d1 = this.getValueEdtIncidentDate();
-
-        //"securityTags": ["Anonymous", "Confidential", "Top Secret"]
-        var b6 = this.getSelectValuesSelApprovers();
-
-
-
-        var z = 1;
-
-//        term.docType = ComplaintWizard.Object._getValueSelDocType();
-//        term.subjectLastName = ComplaintWizard.Object._getValueEdtLastName();
-//        term.subjectSSN = ComplaintWizard.Object._getValueEdtSsn();
-//        term.eqipRequestNumber = ComplaintWizard.Object._getValueEdtEQipRequest();
-//        term.soi = ComplaintWizard.Object._getValueEdtSoi();
-//        term.son = ComplaintWizard.Object._getValueEdtSon();
-//        term.assignee = ComplaintWizard.Object._getValueSelAssignee();
-//
-//        term.supervisorReviewFlag = ComplaintWizard.Object._isCheckedChkSupervisorReview();
-//        term.contractOversightReviewFlag = ComplaintWizard.Object._isCheckedChkContractOversight();
-//
-//        term.queues = [{},{},{}];
-//        term.queues[0].name = Unassigned.queueProcessing.name;
-//        term.queues[0].checked = ComplaintWizard.Object.isCheckedChkProcessing();
-//        term.queues[1].name = Unassigned.queueQa.name;
-//        term.queues[1].checked = ComplaintWizard.Object.isCheckedChkQa();
-//        term.queues[2].name = Unassigned.queueMailback.name;
-//        term.queues[2].checked = ComplaintWizard.Object.isCheckedChkMailback();
-
-        return data;
-    }
-
-
-    ,_jqXHR : undefined
-    ,_useFileUpload: function($upload, $drop, $ul, $click) {
-        $(function(){
-
-            //var ul = $ul;
-
-            $click.click(function(){
-                // Simulate a click on the file input button
-                // to show the file browser dialog
-                $(this).parent().find('input').click();
-            });
-
-            // Initialize the jQuery File Upload plugin
-            //jwu $('#upload').fileupload({
-            _jqXHR = $upload.fileupload({
-                //To Explore:
-                //redirect : to complaintList
-                //redirectParamName:
-                //
-//check if complaintId not created, create it first
-//                submit: function (e, data) {
-//                    var input = $('#input');
-//                    data.formData = {example: input.val()};
-//                    if (!data.formData.example) {
-//                        data.context.find('button').prop('disabled', false);
-//                        input.focus();
-//                        return false;
-//                    }
-//                },
-                done: function (e, data) {
-                    var a1 = data.result
-                    var a2 = data.textStatus;
-                    var a3 = data.jqXHR;
-                    var z = 1;
-                    //alert("done");
-                },
-//                always: function (e, data) {
-//                    // data.result
-//                    // data.textStatus;
-//                    // data.jqXHR;
-//                },
-                //autoUpload: false
-                //sequentialUploads: true
-
-
-
-                url: Acm.getContextPath() + ComplaintWizard.Service.API_UPLOAD_COMPLAINT_FILE,
-
-                formData: function(form) {
-                    var fd = [{}];
-                    fd[0].name = "complaintId";
-                    fd[0].value = Complaint.getComplaintId();
-                    return fd;
-                },
-
-                // This element will accept file drag/drop uploading
-                dropZone: $drop,
-
-                // This function is called when a file is added to the queue;
-                // either via the browse button, or via drag/drop:
-                add: function (e, data) {
-
-                    var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
-                        ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
-
-                    // Append the file name and file size
-                    tpl.find('p').text(data.files[0].name)
-                        .append('<i>' + formatFileSize(data.files[0].size) + '</i>');
-
-                    // Add the HTML to the UL element
-                    data.context = tpl.appendTo($ul);
-
-                    // Initialize the knob plugin
-                    tpl.find('input').knob();
-
-                    // Listen for clicks on the cancel icon
-                    tpl.find('span').click(function(){
-
-                        if(tpl.hasClass('working')){
-                            //jwu jqXHR.abort();
-                            _jqXHR.abort();
-                        }
-
-                        tpl.fadeOut(function(){
-                            tpl.remove();
-                        });
-
-                    });
-
-                    // Automatically upload the file once it is added to the queue
-                    //var jqXHR = data.submit();
-                    _jqXHR = data.submit();
-                },
-
-                progress: function(e, data){
-
-                    // Calculate the completion percentage of the upload
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
-
-                    // Update the hidden input field and trigger a change
-                    // so that the jQuery knob plugin knows to update the dial
-                    data.context.find('input').val(progress).change();
-
-                    if(progress == 100){
-                        data.context.removeClass('working');
-                    }
-                },
-
-                fail:function(e, data){
-                    // Something has gone wrong!
-                    data.context.addClass('error');
-                }
-
-            });
-
-
-            // Prevent the default action when a file is dropped on the window
-            $(document).on('drop dragover', function (e) {
-                e.preventDefault();
-            });
-
-            // Helper function that formats the file sizes
-            function formatFileSize(bytes) {
-                if (typeof bytes !== 'number') {
-                    return '';
-                }
-
-                if (bytes >= 1000000000) {
-                    return (bytes / 1000000000).toFixed(2) + ' GB';
-                }
-
-                if (bytes >= 1000000) {
-                    return (bytes / 1000000).toFixed(2) + ' MB';
-                }
-
-                return (bytes / 1000).toFixed(2) + ' KB';
-            }
-
-        });
-    }
-
 
 
 
