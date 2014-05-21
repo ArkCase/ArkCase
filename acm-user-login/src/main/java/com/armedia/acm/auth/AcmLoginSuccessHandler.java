@@ -1,6 +1,7 @@
 package com.armedia.acm.auth;
 
 
+import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private AcmPluginManager acmPluginManager;
+    private AcmApplication acmApplication;
 
     @Override
     public void onAuthenticationSuccess(
@@ -49,6 +51,8 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
 
 
         addIpAddressToSession(request, authentication);
+
+        addAcmApplicationToSession(request);
 
         super.onAuthenticationSuccess(request, response, authentication);
     }
@@ -131,6 +135,18 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
 
     }
 
+    public void addAcmApplicationToSession(HttpServletRequest request)
+    {
+        HttpSession session = request.getSession(true);
+
+        session.setAttribute("acm_application", getAcmApplication());
+
+        if ( log.isTraceEnabled() )
+        {
+            log.trace("Added ACM application named '" + getAcmApplication().getApplicationName() + "' to user session.");
+        }
+
+    }
     public AcmPluginManager getAcmPluginManager()
     {
         return acmPluginManager;
@@ -139,6 +155,17 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
     public void setAcmPluginManager(AcmPluginManager acmPluginManager)
     {
         this.acmPluginManager = acmPluginManager;
+    }
+
+
+    public void setAcmApplication(AcmApplication acmApplication)
+    {
+        this.acmApplication = acmApplication;
+    }
+
+    public AcmApplication getAcmApplication()
+    {
+        return acmApplication;
     }
 
 

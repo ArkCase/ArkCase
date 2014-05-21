@@ -1,5 +1,6 @@
 package com.armedia.acm.auth;
 
+import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import org.easymock.EasyMockSupport;
@@ -40,6 +41,23 @@ public class AcmLoginSuccessHandlerTest extends EasyMockSupport
         mockPluginManager = createMock(AcmPluginManager.class);
 
         unit.setAcmPluginManager(mockPluginManager);
+    }
+
+    @Test
+    public void addAcmApplicationObjectToSession() throws Exception
+    {
+        AcmApplication app = new AcmApplication();
+        unit.setAcmApplication(app);
+
+        expect(mockRequest.getSession(true)).andReturn(mockSession);
+        mockSession.setAttribute("acm_application", app);
+
+        replayAll();
+
+        unit.addAcmApplicationToSession(mockRequest);
+
+        verifyAll();
+
     }
 
     @Test
