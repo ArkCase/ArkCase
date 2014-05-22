@@ -17,7 +17,7 @@
         // Register as an anonymous AMD module:
         define([
             'jquery',
-            './jquery.fileupload-process'
+            './jquery.fileupload-process.js'
         ], factory);
     } else {
         // Browser globals:
