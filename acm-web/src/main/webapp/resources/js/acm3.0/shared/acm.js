@@ -67,7 +67,14 @@ var Acm = Acm || {
         url += 'rand=' + Math.floor((Math.random()*10000000000));
         return url;
     }
+
+    //convert URL parameters to JSON
+    //ex) "abc=foo&def=%5Basf%5D&xyz=5&foo=b%3Dar" to {abc: "foo", def: "[asf]", xyz: "5", foo: "b=ar"}
+    ,urlToJson: function(param) {
+        return JSON.parse('{"' + decodeURI(param).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+    }
 };
+
 
 
 /**
