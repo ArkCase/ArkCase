@@ -59,13 +59,8 @@
     </bean>
     
     <bean id="complaintPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
-        <property name="enabled" value="true"/>
-        <property name="homeUrl" value="/plugin/complaint"/>
-        <property name="navigatorTab" value="true"/>
-        <property name="navigatorTabName" value="Complaints"/>
         <property name="pluginName" value="Complaint Plugin"/>
         <property name="pluginProperties" ref="complaintPluginProperties"/>
-        <property name="pluginImage" value="i-notice"/>
         <property name="privileges">
             <list>
                 <ref bean="acmComplaintCreatePrivilege"/>
@@ -73,7 +68,6 @@
                 <ref bean="acmComplaintListPrivilege"/>
             </list>
         </property>
-        <property name="navigatorTabPrivilegeRequired" ref="acmComplaintListPrivilege"/>
         <property name="urlPrivileges">
             <list>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

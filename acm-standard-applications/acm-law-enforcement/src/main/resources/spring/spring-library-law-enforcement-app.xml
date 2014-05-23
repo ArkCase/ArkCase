@@ -7,13 +7,49 @@
         <property name="applicationName" value="Law Enforcement Application"/>
         <property name="topbarActions">
             <list>
-                <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
-                    <property name="actionName" value="Complaint"/>
-                    <property name="iconName" value="i-notice"/>
-                    <property name="url" value="/plugin/complaint/wizard"/>
-                    <property name="requiredPrivilege" value="acm-complaint-create"/>
-                </bean>
+                <ref bean="createComplaintAction"/>
+            </list>
+        </property>
+        <property name="navigatorTabs">
+            <list>
+                <ref bean="dashboardNavigatorAction"/>
+                <ref bean="complaintNavigatorAction"/>
+                <ref bean="armediaBlogNavigatorAction"/>
+                <ref bean="helloWorldNavigatorAction"/>
             </list>
         </property>
     </bean>
+
+    <!-- Actions -->
+    <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Complaint"/>
+        <property name="iconName" value="i-notice"/>
+        <property name="url" value="/plugin/complaint/wizard"/>
+        <property name="requiredPrivilege" value="acm-complaint-create"/>
+    </bean>
+    <bean id="complaintNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Complaints"/>
+        <property name="iconName" value="i-notice"/>
+        <property name="url" value="/plugin/complaint"/>
+        <property name="requiredPrivilege" value="acm-complaint-list"/>
+    </bean>
+    <bean id="dashboardNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Dashboard"/>
+        <property name="iconName" value="i-statistics"/>
+        <property name="url" value="/plugin/dashboard"/>
+        <property name="requiredPrivilege" value="acm-dashboard"/>
+    </bean>
+    <bean id="helloWorldNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Hello World"/>
+        <property name="iconName" value="i-world"/>
+        <property name="url" value="/plugin/sample/helloWorld"/>
+        <property name="requiredPrivilege" value="acm-hello-world"/>
+    </bean>
+    <bean id="armediaBlogNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Armedia Blog"/>
+        <property name="iconName" value="i-pencil"/>
+        <property name="url" value="/plugin/sample/armediaBlog"/>
+        <property name="requiredPrivilege" value="acm-blog"/>
+    </bean>
+    <!-- end of actions -->
 </beans>

@@ -45,6 +45,7 @@
     <bean id="acmLoginSuccessListener" class="com.armedia.acm.auth.AcmLoginSuccessEventListener"/>
     <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">
         <property name="acmPluginManager" ref="acmPluginManager"/>
+        <property name="acmApplication" ref="acmApplication"/>
     </bean>
     <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>
     <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">

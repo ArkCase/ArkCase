@@ -22,7 +22,6 @@ public class AcmPluginManager implements ApplicationContextAware
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private Collection<AcmPlugin> acmPlugins = new ArrayList<>();
-    private Collection<AcmPlugin> enabledNavigatorPlugins = new ArrayList<>();
     private Map<String, List<String>> privilegesByRole = new HashMap<>();
     private List<AcmPluginUrlPrivilege> urlPrivileges = new ArrayList<>();
 
@@ -34,8 +33,6 @@ public class AcmPluginManager implements ApplicationContextAware
     public synchronized void registerPlugin(AcmPlugin plugin)
     {
         acmPlugins.add(plugin);
-
-        checkForNavigatorTab(plugin);
 
         addPluginPrivileges(plugin);
 
@@ -84,18 +81,6 @@ public class AcmPluginManager implements ApplicationContextAware
         }
     }
 
-    private void checkForNavigatorTab(AcmPlugin plugin)
-    {
-        if ( plugin.isNavigatorTab() && plugin.isEnabled() )
-        {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug("Adding navigator plugin " + plugin.getPluginName());
-            }
-            enabledNavigatorPlugins.add(plugin);
-        }
-    }
-
     /**
      * Scan for bundled plugins at application start time.
      */
@@ -120,13 +105,6 @@ public class AcmPluginManager implements ApplicationContextAware
         }
     }
 
-
-    public synchronized Collection<AcmPlugin> getEnabledNavigatorPlugins()
-    {
-        return Collections.unmodifiableCollection(enabledNavigatorPlugins);
-    }
-
-
     public List<String> getPrivilegesForRole(String role)
     {
         if ( privilegesByRole.containsKey(role) )
@@ -137,40 +115,6 @@ public class AcmPluginManager implements ApplicationContextAware
         {
             return Collections.emptyList();
         }
-    }
-
-    public List<AcmPlugin> findAccessiblePlugins(Map<String, Boolean> userPrivileges)
-    {
-        List<AcmPlugin> retval = new ArrayList<>();
-
-        for ( AcmPlugin plugin : getEnabledNavigatorPlugins() )
-        {
-            boolean hasPrivilege = checkUserPrivilege(userPrivileges, plugin);
-            if ( hasPrivilege )
-            {
-                retval.add(plugin);
-            }
-        }
-
-        return retval;
-    }
-
-    protected boolean checkUserPrivilege(Map<String, Boolean> userPrivileges, AcmPlugin plugin)
-    {
-        boolean hasPrivilege = false;
-        AcmPluginPrivilege requiredPrivilege = plugin.getNavigatorTabPrivilegeRequired();
-        if ( requiredPrivilege != null )
-        {
-            String privilegeName = requiredPrivilege.getPrivilegeName();
-            hasPrivilege = userPrivileges.containsKey(privilegeName) ? userPrivileges.get(privilegeName) : false;
-
-            if ( log.isDebugEnabled() )
-            {
-                log.debug("Checking access to navigator tab '" + plugin.getNavigatorTabName() + ". " +
-                        "Required privilege: '" + privilegeName + "'. User has access: " + hasPrivilege + ".");
-            }
-        }
-        return hasPrivilege;
     }
 
     public List<AcmPluginUrlPrivilege> getUrlPrivileges()

@@ -18,13 +18,12 @@
                 <nav class="nav-primary hidden-xs">
                     <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Navigation</div>
                     <ul class="nav nav-main" data-ride="collapse" id="ulPlugin">
-                        <c:forEach var="plugin" items="${sessionScope.acm_navigator_plugins}">
-                            <li class=""> <a href="<c:url value='${plugin.homeUrl}' />" class="auto"> <i class="i <c:url value='${plugin.pluginImage}' /> icon"> </i> <span class="font-bold">${plugin.navigatorTabName}</span> </a> </li>
-                            <!--
-                            <li class=""> <a href="<c:url value='${plugin.homeUrl}' />" class="auto"> <i class="i i-statistics icon"> </i> <span class="font-bold">${plugin.navigatorTabName}</span> </a> </li>
-                            -->
+                        <c:forEach var="navTab" items="${acm_application.navigatorTabs}">
+                            <c:set var="requiredPrivilege" value="${navTab.requiredPrivilege}" scope="page"/>
+                            <c:if test="${acm_privileges[requiredPrivilege]}">
+                                <li class=""> <a href="<c:url value='${navTab.url}' />" class="auto"> <i class="i <c:url value='${navTab.iconName}' /> icon"> </i> <span class="font-bold">${navTab.actionName}</span> </a> </li>
+                            </c:if>
                         </c:forEach>
-                        <%--<li class="active"> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>--%>
                     </ul>
                 </nav>
                 <!-- / nav -->

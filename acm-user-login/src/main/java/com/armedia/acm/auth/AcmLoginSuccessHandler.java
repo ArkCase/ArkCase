@@ -2,7 +2,6 @@ package com.armedia.acm.auth;
 
 
 import com.armedia.acm.core.AcmApplication;
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,13 +40,7 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         }
         addUserIdToSession(request, authentication);
 
-        // need to add the privileges first, since we need to know the user's privileges to tell what navigator
-        // tabs he/she can access.
         addPrivilegesToSession(request, authentication);
-
-        Map<String, Boolean> privileges = (Map<String, Boolean>) request.getSession(true).getAttribute("acm_privileges");
-        addNavigatorPluginsToSession(request, privileges);
-
 
         addIpAddressToSession(request, authentication);
 
@@ -89,20 +81,6 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         }
     }
 
-    protected void addNavigatorPluginsToSession(HttpServletRequest request, Map<String, Boolean> userPrivileges)
-    {
-        Collection<AcmPlugin> plugins = getAcmPluginManager().findAccessiblePlugins(userPrivileges);
-
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Adding " + plugins.size() + " plugins to user session.");
-        }
-
-        HttpSession session = request.getSession(true);
-
-        session.setAttribute("acm_navigator_plugins", plugins);
-    }
-
     public void addPrivilegesToSession(HttpServletRequest request, Authentication authentication)
     {
         List<String> allPrivileges = new ArrayList<>();
@@ -141,9 +119,9 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
 
         session.setAttribute("acm_application", getAcmApplication());
 
-        if ( log.isTraceEnabled() )
+        if ( log.isDebugEnabled() )
         {
-            log.trace("Added ACM application named '" + getAcmApplication().getApplicationName() + "' to user session.");
+            log.debug("Added ACM application named '" + getAcmApplication().getApplicationName() + "' to user session.");
         }
 
     }

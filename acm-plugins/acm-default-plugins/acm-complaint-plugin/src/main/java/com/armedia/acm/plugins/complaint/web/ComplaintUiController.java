@@ -38,8 +38,6 @@ public class ComplaintUiController
         retval.addObject("complaint", new Complaint());
 
         retval.addObject("pluginName",  getAcmPlugin().getPluginName());
-        retval.addObject("pluginUrl",   getAcmPlugin().getHomeUrl());
-        retval.addObject("pluginImage", getAcmPlugin().getPluginImage());
 
 
         return retval;
@@ -56,8 +54,6 @@ public class ComplaintUiController
         retval.setViewName("complaintWizard");
 
         retval.addObject("pluginName",  getAcmPlugin().getPluginName());
-        retval.addObject("pluginUrl",   getAcmPlugin().getHomeUrl());
-        retval.addObject("pluginImage", getAcmPlugin().getPluginImage());
 
         boolean isInsert = complaint.getComplaintId() == null;
 

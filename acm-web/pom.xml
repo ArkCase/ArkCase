@@ -14,6 +14,11 @@
     <dependencies>
         <!-- acm -->
         <dependency>
+            <groupId>com.armedia.acm.application.lawenforcement</groupId>
+            <artifactId>acm-law-enforcement</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.armedia</groupId>
             <artifactId>acm-user-login</artifactId>
             <version>${acm.version}</version>
