@@ -17,7 +17,7 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:/spring/spring-library-*.xml,
-                     WEB-INF/spring/spring-security-*.xml</param-value>
+            classpath:/spring/spring-security-config.xml</param-value>
     </context-param>
 
     <!--
@@ -53,7 +53,7 @@
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>
-                /WEB-INF/spring/appServlet/servlet-context.xml
+                classpath:/spring/appServlet/servlet-context.xml
                 classpath*:spring/spring-web-*.xml
             </param-value>
         </init-param>

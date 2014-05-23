@@ -9,10 +9,10 @@
 
 
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/css/font-awesome4.1.0/css/font-awesome.min.css'/>" />
-<link rel="stylesheet" media="screen" href="<c:url value='/META-INF/resources/resources/css/animate.css'/>" />
-<link rel="stylesheet" media="screen" href="<c:url value='/META-INF/resources/resources/css/icon.css'/>" />
-<link rel="stylesheet" media="screen" href="<c:url value='/META-INF/resources/resources/css/font.css'/>" />
-<link rel="stylesheet" media="screen" href="<c:url value='/META-INF/resources/resources/css/app.css'/>" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/css/animate.css'/>" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/css/icon.css'/>" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/css/font.css'/>" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/css/app.css'/>" />
 
 <!--[if lt IE 8]>
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/js/ie/css/ie.css'/>" />
@@ -29,9 +29,9 @@
 
 
 <!-- jquery must be first -->
-<script type="text/javascript" src="<c:url value='/META-INF/resources/resources/js/jquery-1.11.0.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-1.11.0.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.min.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/META-INF/resources/resources/js/jquery.microdata.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/jquery.microdata.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/bootstrap-3.1.1/js/bootstrap.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/issueCollector/jiraIssueCollector.js'/>" ></script>
 <script type="text/javascript" src="<c:url value='/resources/js/bootbox2.4.0/bootbox.min.js'/>"></script>

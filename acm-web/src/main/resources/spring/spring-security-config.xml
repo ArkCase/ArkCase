@@ -43,7 +43,7 @@
             auto-config="true"
             use-expressions="true"
             authentication-manager-ref="acmAuthenticationManager"  >
-        <intercept-url pattern="/META-INF/resources/resources/js/test/complaint" access="isAuthenticated()" />
+        <intercept-url pattern="/**" access="isAuthenticated()" />
 		<form-login 
                 login-page="/login"
                 authentication-details-source-ref="acmAuthenticationDetailsFactory"

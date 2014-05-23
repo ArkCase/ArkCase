@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <%@include file="/src/main/webapp/WEB-INF/tagf/global.tagf" %>
+    <%@include file="/WEB-INF/tagf/global.tagf" %>
 
     <div id="acmData" itemscope="true" style="display: none">
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
@@ -22,16 +22,16 @@
 </head>
 <body class="">
 <section class="vbox">
-    <%@include file="/src/main/webapp/WEB-INF/tagf/topbar.tagf"%>
+    <%@include file="/WEB-INF/tagf/topbar.tagf"%>
 
     <section>
         <section class="hbox stretch">
-            <%@include file="/src/main/webapp/WEB-INF/tagf/sidebar.tagf"%>
+            <%@include file="/WEB-INF/tagf/sidebar.tagf"%>
 
             <jsp:doBody/>
         </section>
     </section>
-    <%@include file="/src/main/webapp/WEB-INF/tagf/footer.tagf"%>
+    <%@include file="/WEB-INF/tagf/footer.tagf"%>
 </section>
 
 <%--<script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>--%>
