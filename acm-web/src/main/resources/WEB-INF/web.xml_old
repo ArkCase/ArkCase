@@ -85,7 +85,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- springsecurity.taglib.xml
+    <!-- springsecurity.taglib.xml_old
   		Spring Security Facelets tag library declaration
   	-->
 
