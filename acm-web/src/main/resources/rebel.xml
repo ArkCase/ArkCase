@@ -6,11 +6,4 @@
 		</dir>
 	</classpath>
 
-	<web>
-		<link target="/">
-            <dir name="${workspace.home}/ACM3/acm-web/src/main/webapp">
-			</dir>
-		</link>
-	</web>
-
 </application>
