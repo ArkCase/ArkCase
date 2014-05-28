@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:ldap="http://www.mulesoft.org/schema/mule/ldap"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.4.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/ldap http://www.mulesoft.org/schema/mule/ldap/current/mule-ldap.xsd">
+    
+    <ldap:config
+            url="ldap://ad_vm:389"
+            authDn="CN=Administrator,CN=Users,dc=opm,dc=gov"
+            authPassword="AcMd3v$"
+            referral="FOLLOW"/>
+    
+    <flow name="ldapGroupsForUser">
+        <vm:inbound-endpoint
+                address="vm://ldapGroupsForUser.in"
+                exchange-pattern="request-response"/>
+        
+        <ldap:search
+                baseDn="OU=Groups,OU=QA,OU=OPIS,DC=opm,DC=gov"
+                filter="member=#[payload]"/>
+
+    </flow>
+
+    <flow name="ldap.findAllGroups">
+        <vm:inbound-endpoint
+                address="vm://ldap.findAllGroups.in"
+                exchange-pattern="request-response"/>
+
+        <ldap:search
+                baseDn="OU=Groups,OU=QA,OU=OPIS,DC=opm,DC=gov"
+                filter="(|(objectclass=group)(objectclass=groupofnames))">
+            <ldap:attributes>
+                <ldap:attribute>member</ldap:attribute>
+            </ldap:attributes>
+        </ldap:search>
+    </flow>
+
+    <flow name="ldap.findGroupMembers">
+        <vm:inbound-endpoint
+                address="vm://ldap.findGroupMembers.in"
+                exchange-pattern="request-response"/>
+
+        <ldap:search
+                baseDn="OU=Groups,OU=QA,OU=OPIS,DC=opm,DC=gov"
+                filter="cn=#[payload]"/>
+    </flow>
+
+    <flow name="findUserById">
+        <vm:inbound-endpoint
+                address="vm://findUserById.in"
+                exchange-pattern="request-response"/>
+
+        <ldap:search-one
+                baseDn="OU=OPIS,DC=opm,DC=gov"
+                filter="sAMAccountName=#[payload]"
+                scope="SUB_TREE">
+                <ldap:attributes>
+                    <ldap:attribute>dn</ldap:attribute>
+                    <ldap:attribute>cn</ldap:attribute>
+                    <ldap:attribute>givenName</ldap:attribute>
+                    <ldap:attribute>sn</ldap:attribute>
+
+                </ldap:attributes>
+        </ldap:search-one>
+
+    </flow>
+
+    <flow name="findUserByDn">
+        <vm:inbound-endpoint
+                address="vm://findUserByDn.in"
+                exchange-pattern="request-response"/>
+
+        <ldap:search-one
+                baseDn="OU=OPIS,DC=opm,DC=gov"
+                filter="distinguishedname=#[payload]"
+                scope="SUB_TREE">
+            <ldap:attributes>
+                <ldap:attribute>samAccountName</ldap:attribute>
+                <ldap:attribute>cn</ldap:attribute>
+                <ldap:attribute>givenName</ldap:attribute>
+                <ldap:attribute>sn</ldap:attribute>
+
+            </ldap:attributes>
+        </ldap:search-one>
+
+    </flow>
+
+
+
+</mule>
