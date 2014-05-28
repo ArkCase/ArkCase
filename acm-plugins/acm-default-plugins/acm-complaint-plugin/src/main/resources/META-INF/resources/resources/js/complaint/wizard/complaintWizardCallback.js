@@ -16,14 +16,13 @@ ComplaintWizard.Callback = {
         var success = false;
         if (response) {
             if (Acm.isNotEmpty(response.complaintId)) {
-                //Acm.Dialog.showError("onCreateReturned:" + response.complaintId);
-                Complaint.setComplaintId(response.complaintId);
+                ComplaintWizard.Object.setComplaintData(response);
                 success = true;
             }
         }
 
         if (!success) {
-            Acm.Dialog.showError("Failed to create new complaint");
+            Acm.Dialog.error("Failed to create new complaint");
         }
     }
 };

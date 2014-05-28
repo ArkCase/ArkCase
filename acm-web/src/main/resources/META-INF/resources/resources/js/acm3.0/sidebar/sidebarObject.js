@@ -10,8 +10,6 @@ Sidebar.Object = {
         this.$ulPlugin = jQuery("#ulPlugin");
     }
 
-    ,$ulPlugin : undefined
-
     ,hiliteActivePlugin: function() {
         //
         //looking for href url that pathname begins with to hilite.

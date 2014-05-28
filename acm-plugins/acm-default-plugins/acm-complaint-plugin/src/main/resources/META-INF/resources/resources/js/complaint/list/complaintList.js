@@ -12,7 +12,7 @@ var ComplaintList = ComplaintList || {
         ComplaintList.Service.initialize();
         ComplaintList.Callback.initialize();
 
-        ComplaintList.Event.onPostInit();
+        Acm.deferred(ComplaintList.Event.onPostInit);
     }
 
     ,Object: {}

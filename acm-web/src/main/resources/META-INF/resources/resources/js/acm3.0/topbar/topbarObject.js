@@ -12,8 +12,6 @@ Topbar.Object = {
         this.$lnkNewComponent.click(function() {Topbar.Event.onClickLnkNewComponent(this);});
     }
 
-    ,$lnkNewComponent              : undefined
-
 };
 
 

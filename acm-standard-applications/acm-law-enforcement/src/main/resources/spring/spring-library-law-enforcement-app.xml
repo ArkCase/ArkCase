@@ -21,6 +21,7 @@
     </bean>
 
     <!-- Actions -->
+    <!--
     <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Complaint"/>
         <property name="iconName" value="i-notice"/>
@@ -33,6 +34,23 @@
         <property name="url" value="/plugin/complaint"/>
         <property name="requiredPrivilege" value="acm-complaint-list"/>
     </bean>
+    -->
+    <!-- temporary for demo -->
+    <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Case"/>
+        <property name="iconName" value="i-notice"/>
+        <property name="url" value="/plugin/complaint/wizard"/>
+        <property name="requiredPrivilege" value="acm-complaint-create"/>
+    </bean>
+    <bean id="complaintNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Cases"/>
+        <property name="iconName" value="i-notice"/>
+        <property name="url" value="/plugin/complaint"/>
+        <property name="requiredPrivilege" value="acm-complaint-list"/>
+    </bean>
+
+
+
     <bean id="dashboardNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Dashboard"/>
         <property name="iconName" value="i-statistics"/>
@@ -52,4 +70,30 @@
         <property name="requiredPrivilege" value="acm-blog"/>
     </bean>
     <!-- end of actions -->
+
+    <!-- Page Descriptors -->
+    <!--
+    <bean id="complaintListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Complaints | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Complaints"/>
+        <property name="descLong" value="Complaints"/>
+    </bean>
+    <bean id="complaintWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Complaint | ACM | Armedia Case Management"/>
+        <property name="descShort" value="New Complaint"/>
+        <property name="descLong" value="New Complaint"/>
+    </bean>
+    -->
+    <!-- temporary for demo -->
+    <bean id="complaintListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Cases | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Cases"/>
+        <property name="descLong" value="Cases"/>
+    </bean>
+    <bean id="complaintWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Case | ACM | Armedia Case Management"/>
+        <property name="descShort" value="New Case"/>
+        <property name="descLong" value="New Case"/>
+    </bean>
+    <!-- end of Descriptors -->
 </beans>

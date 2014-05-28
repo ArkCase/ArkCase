@@ -73,6 +73,10 @@ var Acm = Acm || {
     ,urlToJson: function(param) {
         return JSON.parse('{"' + decodeURI(param).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     }
+
+    ,deferred: function(fcn) {
+        setTimeout(fcn, 200);
+    }
 };
 
 

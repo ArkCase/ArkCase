@@ -12,7 +12,7 @@ var Complaint = Complaint || {
         Complaint.Service.initialize();
         Complaint.Callback.initialize();
 
-        Complaint.Event.onPostInit();
+        Acm.deferred(Complaint.Event.onPostInit);
     }
 
     ,Object: {}
@@ -131,6 +131,11 @@ var Complaint = Complaint || {
     ,_aliasTypes : ['Nick Name', 'Other Name']
     ,getAliasTypes : function() {
         return this._aliasTypes;
+    }
+
+    ,_participants : ["David Miller", "James Bailey", "Judy Hsu", "Ronda Ringo", "AJ McClary", "Jim Nasr"]
+    ,getParticipants : function() {
+        return this._participants;
     }
 
 };

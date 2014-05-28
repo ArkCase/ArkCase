@@ -14,9 +14,6 @@
     <div id="acmData" itemscope="true" style="display: none">
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
         <span itemprop="userName">${sessionScope.acm_username}</span>
-        <span itemprop="pluginName">${pluginName}</span>
-        <span itemprop="pluginUrl">${pluginUrl}</span>
-        <span itemprop="pluginImage">${pluginImage}</span>
     </div>
     <jsp:invoke fragment="endOfHead"/>
 </head>

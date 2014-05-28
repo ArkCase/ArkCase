@@ -9,7 +9,8 @@ ComplaintList.Object = {
     initialize : function() {
         this.$ulComplaints = $("#ulComplaints");
         this.$lnkTitle = $("#caseTitle");
-
+        this.$h4TitleDate = $("#caseTitle").parent();
+        this.$divDetails = $(".complaintDetails");
 
     }
 
@@ -33,14 +34,36 @@ ComplaintList.Object = {
     }
     ,updateDetail: function(c) {
         this.setTextTitle(c.complaintTitle);
+        this.setTextTitleDate(" (" + ComplaintList.getDateFromDatetime(c.created) + ")");
+        this.setHtmlDetails(c.details);
 
 
-        var a1 = c.created;
-        var a2 = ComplaintList.getDateFromDatetime(c.created);
-        var z = 1;
+//        var $c = $("<h4>beg<a>mid</a>end</h4>");
+//        var c1 = Acm.Object.getTextNodeText($c);
+//        var c2 = Acm.Object.getTextNodeText($c, 0);
+//        var c3 = Acm.Object.getTextNodeText($c, 1);
+//        Acm.Object.setTextNodeText($c, "last", -1);
+//        var c4 = Acm.Object.getTextNodeText($c);
     }
     ,setTextTitle: function(txt) {
         Acm.Object.setText(this.$lnkTitle, txt);
+    }
+    ,setTextTitleDate: function(txt) {
+        Acm.Object.setTextNodeText(this.$h4TitleDate, txt, 1);
+    }
+    ,setHtmlDetails: function(html) {
+        Acm.Object.setHtml(this.$divDetails, html);
+    }
+    ,hiliteSelectedItem: function() {
+        var cur = Complaint.getComplaintId();
+        this.$ulComplaints.find("li").each(function(index) {
+            var cid = $(this).find("input[type='hidden']").val();
+            if (cid == cur) {
+                $(this).addClass("active");
+            } else {
+                $(this).removeClass("active");
+            }
+        });
     }
 
 

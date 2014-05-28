@@ -5,7 +5,8 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>Complaints | ACM | Armedia Case Management</title>
+    <title>${pageDescriptor.title}</title>
+
     <script type="text/javascript">
         $(document).ready(function () {
             ComplaintWizard.initialize();
@@ -64,7 +65,7 @@
 <section class="scrollable padder">
 <section class="row m-b-md">
     <div class="col-sm-12">
-        <h3 class="m-b-xs text-black">New Complaint</h3>
+        <h3 class="m-b-xs text-black">${pageDescriptor.descShort}</h3>
     </div>
 </section>
 <div class="row">
@@ -79,7 +80,7 @@
         <li><a href="#step4" data-toggle="tab">Step 4: Attachments</a></li>
         <li><a href="#step5" data-toggle="tab">Step 5: Assignment</a></li>
     </ul>
-    <span class="hidden-sm"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i> Save</button> <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Submit"><i class="fa fa-check"></i> Submit</button></span>
+    <span class="hidden-sm"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i> Save As Draft</button> <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Submit"><i class="fa fa-check"></i> Submit</button></span>
 </div>
 <div class="panel-body">
 <div class="progress progress-xs m-t-sm">
@@ -148,13 +149,9 @@
     <hr/>
 
     <label for="title"  class="label">Complaint Title</label>
-    <input id="title" type="text" class="form-control" placeholder="Complaint Title">
+    <input id="edtComplaintTitle" type="text" class="form-control" placeholder="Complaint Title">
     <hr />
-    <div class="complaintDetails"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
-
-        <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
-
-    </div>
+    <div class="complaintDetails"></div>
 
     <hr />
     <label for="complaintFlags" class="label">Complaint Flags</label>

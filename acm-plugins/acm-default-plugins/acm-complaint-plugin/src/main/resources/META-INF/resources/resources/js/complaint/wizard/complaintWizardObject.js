@@ -9,10 +9,7 @@ ComplaintWizard.Object = {
     initialize : function() {
         this.$btnSave                = $("button[data-title='Save']");
         this.$btnSubmit              = $("button[data-title='Submit']");
-        this.$edtFname               = $("#fname");
-        this.$edtLname               = $("#lname");
-        this.$edtCompany             = $("#company");
-        this.$selPersonTitle         = $("#personTitle");
+
         this.$divComplaintDetails    = $('.complaintDetails');
         this.$selIntiatorFlags       = $(".choose-intitiatorFlags");   //"#intiatorFlags"
         this.$selComplaintFlags      = $(".choose-complaintFlags");    //"#intiatorFlags"
@@ -20,7 +17,8 @@ ComplaintWizard.Object = {
         this.$selCollab              = $(".choose-collab");            //""
         this.$selNotifications       = $(".choose-notifications");     //"#notifications"
         this.$edtIncidentDate        = $("#incidentDate");
-        this.$selComplaintType       = $("#complaintType");
+        this.$edtComplaintTitle      = $("#edtComplaintTitle");
+        this.$selPriority            = $("select[name='priority']");
 
         this.$divInitiator           = $("#divInitiator");
         this.$divPeople              = $("#divPeople");
@@ -54,26 +52,16 @@ ComplaintWizard.Object = {
     ,setEnableBtnSave: function(enable) {
         Acm.Object.setEnable(this.$btnSave, enable);
     }
-    ,getValueEdtFname: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtFname);
-    }
-//    ,setValueEdtFname: function(val) {
-//        return Acm.Object.setPlaceHolderInput(this.$edtFname, val);
-//    }
-    ,getValueEdtLname: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtLname);
-    }
-    ,getValueEdtCompany: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtCompany);
-    }
-    ,getValueSelPersonTitle: function() {
-        return Acm.Object.getSelectValue(this.$selPersonTitle);
-    }
+
     ,getHtmlDivComplaintDetails: function() {
         return Acm.Object.getSummernote(this.$divComplaintDetails);
     }
+
     ,getValueEdtIncidentDate: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtIncidentDate);
+    }
+    ,getValueEdtComplaintTitle: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtComplaintTitle);
     }
     ,getSelectValuesSelIntiatorFlags: function() {
         return Acm.Object.getSelectValues(this.$selIntiatorFlags);
@@ -90,57 +78,80 @@ ComplaintWizard.Object = {
     ,getSelectValuesSelNotifications: function() {
         return Acm.Object.getSelectValues(this.$selNotifications);
     }
+    ,getSelectValueSelPriority: function() {
+        return Acm.Object.getSelectValue(this.$selPriority);
+    }
 
+    ,setComplaintData : function(data) {
+        var c = Complaint.getComplaint();
+        c.complaintId = data.complaintId;
+
+        c.complaintTitle = data.complaintTitle;
+        c.priority = data.priority;
+//        c.complaintNumber = data.complaintNumber;
+//        c.complaintType = data.complaintType;
+//        c.created = data.created;
+//        c.creator = data.creator;
+//        c.details = data.details;
+//        c.incidentDate = data.incidentDate;   //need date convert
+//        c.modified = data.modified;
+//        c.modifier = data.modifier;
+//        c.status = data.status;
+
+        c.originator.id = data.originator.id;
+        c.originator.title = data.originator.title;
+        c.originator.givenName = data.originator.givenName;
+        c.originator.familyName = data.originator.familyName;
+//        c.originator.created = data.originator.created;
+//        c.originator.creator = data.originator.creator;
+//        c.originator.modified = data.originator.modified;
+//        c.originator.modifier = data.originator.modifier;
+//        c.originator.status = data.originator.status;
+
+//        c.originator.addresses[...] = data.originator.addresses;
+//        c.originator.contactMethods[] = data.originator.contactMethods;
+//        c.originator.devices[] = data.originator.devices;
+//        c.originator.aliases[] = data.originator.aliases;
+//        c.originator.ecmFolderId[] = data.originator.ecmFolderId;
+//        c.originator.ecmFolderPath[] = data.originator.ecmFolderPath;
+    }
     ,getComplaintData : function() {
         var data = {};
+        var c = Complaint.getComplaint();
+//        var complaintId = Complaint.getComplaintId();
+//        //data.complaintId = (Acm.isEmpty(complaintId))?  0 : complaintId;
+//        if (Acm.isNotEmpty(complaintId)) {
+//            data.complaintId = complaintId;
+//        }
+
+        data.complaintId = c.complaintId;
 
         data.originator = {};
-        if (Acm.isNotEmpty(Complaint.getComplaintId())) {
-            data.complaintId = Complaint.getComplaintId();
-        }
-        data.originator.givenName = this.getValueEdtFname();
-        data.originator.familyName = this.getValueEdtLname();
-        data.originator.company = this.getValueEdtCompany();
+        data.originator.id = c.originator.id;
+        data.originator.title = c.originator.title;
+        data.originator.givenName = c.originator.givenName;
+        data.originator.familyName = c.originator.familyName;
+
 
         //$selComplaintType
-        data.originator.title = this.getValueSelPersonTitle();
 
 //        ContactMethod contactMethods
 //        PostalAddress addresses
 //        organizations
 //        aliases
 
-        //data.details
-        var a1 = this.getHtmlDivComplaintDetails();
+        data.details = this.getHtmlDivComplaintDetails();
+        //data.incidentDate = this.getValueEdtIncidentDate();
+        //need to parse date "12-02-2013": to forms ("yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd"))
 
-        //incidentDate
-        var d1 = this.getValueEdtIncidentDate();
+        data.complaintTitle = this.getValueEdtComplaintTitle();
+        data.priority = this.getSelectValueSelPriority();
 
         //"securityTags": ["Anonymous", "Confidential", "Top Secret"]
         var b6 = this.getSelectValuesSelApprovers();
 
 
-
         var z = 1;
-
-//        term.docType = ComplaintWizard.Object._getValueSelDocType();
-//        term.subjectLastName = ComplaintWizard.Object._getValueEdtLastName();
-//        term.subjectSSN = ComplaintWizard.Object._getValueEdtSsn();
-//        term.eqipRequestNumber = ComplaintWizard.Object._getValueEdtEQipRequest();
-//        term.soi = ComplaintWizard.Object._getValueEdtSoi();
-//        term.son = ComplaintWizard.Object._getValueEdtSon();
-//        term.assignee = ComplaintWizard.Object._getValueSelAssignee();
-//
-//        term.supervisorReviewFlag = ComplaintWizard.Object._isCheckedChkSupervisorReview();
-//        term.contractOversightReviewFlag = ComplaintWizard.Object._isCheckedChkContractOversight();
-//
-//        term.queues = [{},{},{}];
-//        term.queues[0].name = Unassigned.queueProcessing.name;
-//        term.queues[0].checked = ComplaintWizard.Object.isCheckedChkProcessing();
-//        term.queues[1].name = Unassigned.queueQa.name;
-//        term.queues[1].checked = ComplaintWizard.Object.isCheckedChkQa();
-//        term.queues[2].name = Unassigned.queueMailback.name;
-//        term.queues[2].checked = ComplaintWizard.Object.isCheckedChkMailback();
 
         return data;
     }
