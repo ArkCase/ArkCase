@@ -2,6 +2,7 @@ package com.armedia.acm.ldap;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
@@ -18,6 +19,7 @@ import java.util.List;
 /**
  * Created by armdev on 5/27/14.
  */
+@Ignore
 public class LdapFlowsTest
 {
     private String muleConfigFile = "flows/ldapSyncFlow.xml";
