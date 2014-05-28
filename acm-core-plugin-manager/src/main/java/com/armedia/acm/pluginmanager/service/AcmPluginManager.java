@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -120,5 +121,22 @@ public class AcmPluginManager implements ApplicationContextAware
     public List<AcmPluginUrlPrivilege> getUrlPrivileges()
     {
         return Collections.unmodifiableList(urlPrivileges);
+    }
+
+    public List<String> getRolesForPrivileges(String privilege)
+    {
+        // iterate over the role-to-privileges map; if the value list includes this privilege, the role (i.e. the
+        // map key) is included in the return list.
+        List<String> retval = new LinkedList<>();
+
+        for ( Map.Entry<String, List<String>> roleToPrivileges : privilegesByRole.entrySet() )
+        {
+            if ( roleToPrivileges.getValue() != null && roleToPrivileges.getValue().contains(privilege))
+            {
+                retval.add(roleToPrivileges.getKey());
+            }
+        }
+
+        return retval;
     }
 }
