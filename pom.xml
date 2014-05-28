@@ -60,6 +60,7 @@
 
         <mule.version>3.4.0</mule.version>
         <mule-cmis-connector.version>1.13</mule-cmis-connector.version>
+        <mule-module-ldap.version>1.1.4</mule-module-ldap.version>
         <oracle.jdbc.version>6</oracle.jdbc.version>
         <org.json.version>20140107</org.json.version>
         <rome.version>1.0</rome.version>
@@ -216,6 +217,8 @@
         <module>acm-configuration-service</module>
         <module>acm-core-object-model</module>
         <module>acm-standard-applications</module>
+        <module>repository-interfaces</module>
+        <module>acm-services</module>
     </modules>
 
     <scm>
@@ -709,6 +712,17 @@
                 <groupId>org.mule.modules</groupId>
                 <artifactId>mule-module-annotations</artifactId>
                 <version>${mule.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-devkit-support</artifactId>
+                <version>${mule.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.modules</groupId>
+                <artifactId>mule-module-ldap</artifactId>
+                <version>${mule-module-ldap.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mule.modules</groupId>
