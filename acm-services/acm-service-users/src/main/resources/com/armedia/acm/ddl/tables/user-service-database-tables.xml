@@ -1,0 +1,61 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-user-service-tables" author="dmiller">
+        <createTable tableName="acm_user">
+            <column name="cm_user_id" type="VARCHAR(1024)">
+                <constraints nullable="false" />
+            </column>
+            <column name="cm_user_directory_name" type="VARCHAR(1024)">
+                <constraints nullable="false" />
+            </column>
+            <column name="cm_full_name" type="VARCHAR(1024)"/>
+            <column name="cm_user_created" type="DATE">
+            </column>
+            <column name="cm_user_modified" type="DATE">
+                <constraints nullable="false" />
+            </column>
+            <column name="cm_user_state" type="VARCHAR(256)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createTable tableName="acm_user_role">
+            <column name="cm_user_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_role_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_role_state" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="acm_role">
+            <column name="cm_role_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+                tableName="acm_user"
+                columnNames="cm_user_id, cm_user_directory_name"
+                constraintName="pk_acm_user_id"/>
+        <addPrimaryKey
+                tableName="acm_user_role"
+                columnNames="cm_role_name, cm_user_id"
+                constraintName="pk_acm_user_role"/>
+        <addPrimaryKey
+                tableName="acm_role"
+                columnNames="cm_role_name"
+                constraintName="pk_acm_role_name"/>
+    </changeSet>
+
+    <changeSet id="02-user-service-drop-directory-name" author="dmiller">
+        <dropPrimaryKey tableName="acm_user"/>
+        <addPrimaryKey tableName="acm_user" columnNames="cm_user_id" constraintName="pk_acm_user"/>
+    </changeSet>
+
+</databaseChangeLog>

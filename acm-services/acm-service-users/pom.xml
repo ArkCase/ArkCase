@@ -30,6 +30,12 @@
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
 
+        <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>org.springframework</groupId>
