@@ -12,7 +12,7 @@ var Sidebar = Sidebar || {
         Sidebar.Service.initialize();
         Sidebar.Callback.initialize();
 
-        Sidebar.Event.onPostInit();
+        Acm.deferred(Sidebar.Event.onPostInit);
     }
 
     ,Object: {}

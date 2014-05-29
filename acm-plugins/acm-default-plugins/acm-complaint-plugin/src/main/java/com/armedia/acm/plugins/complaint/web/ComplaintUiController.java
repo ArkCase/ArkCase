@@ -4,6 +4,7 @@ import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import com.armedia.acm.web.AcmPageDescriptor;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,20 +15,18 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.validation.Valid;
 import java.util.Arrays;
 
 @RequestMapping("/plugin/complaint")
 public class ComplaintUiController
 {
-
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private SaveComplaintTransaction complaintTransaction;
     private SaveComplaintEventPublisher eventPublisher;
-    private AcmPlugin acmPlugin;
+    private AcmPageDescriptor pageDescriptorWizard;
+    private AcmPageDescriptor pageDescriptorList;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -36,8 +35,7 @@ public class ComplaintUiController
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintList");
         retval.addObject("complaint", new Complaint());
-
-        retval.addObject("pluginName",  getAcmPlugin().getPluginName());
+        retval.addObject("pageDescriptor",  getPageDescriptorList());
 
 
         return retval;
@@ -52,8 +50,7 @@ public class ComplaintUiController
         // auditing and exception handling are handled here; transactions must be handled in the service layer.
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintWizard");
-
-        retval.addObject("pluginName",  getAcmPlugin().getPluginName());
+        retval.addObject("pageDescriptor",  getPageDescriptorWizard());
 
         boolean isInsert = complaint.getComplaintId() == null;
 
@@ -115,11 +112,19 @@ public class ComplaintUiController
         this.eventPublisher = eventPublisher;
     }
 
-    public AcmPlugin getAcmPlugin() {
-        return acmPlugin;
+    public AcmPageDescriptor getPageDescriptorWizard() {
+        return pageDescriptorWizard;
     }
 
-    public void setAcmPlugin(AcmPlugin acmPlugin) {
-        this.acmPlugin = acmPlugin;
+    public void setPageDescriptorWizard(AcmPageDescriptor pageDescriptorWizard) {
+        this.pageDescriptorWizard = pageDescriptorWizard;
+    }
+
+    public AcmPageDescriptor getPageDescriptorList() {
+        return pageDescriptorList;
+    }
+
+    public void setPageDescriptorList(AcmPageDescriptor pageDescriptorList) {
+        this.pageDescriptorList = pageDescriptorList;
     }
 }

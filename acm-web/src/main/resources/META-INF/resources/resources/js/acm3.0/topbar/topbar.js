@@ -12,7 +12,7 @@ var Topbar = Topbar || {
         Topbar.Service.initialize();
         Topbar.Callback.initialize();
 
-        Topbar.Event.onPostInit();
+        Acm.deferred(Topbar.Event.onPostInit);
     }
 
     ,Object: {}

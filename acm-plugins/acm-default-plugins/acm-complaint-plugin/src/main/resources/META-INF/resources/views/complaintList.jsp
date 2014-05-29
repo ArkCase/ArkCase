@@ -5,7 +5,7 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>Complaints | ACM | Armedia Case Management</title>
+    <title>${pageDescriptor.title}</title>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -38,8 +38,8 @@
 
 <!-- Summernote WYSIWYG -->
 
-<link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>
-<script src="resources/js/summernote/summernote.js"></script>
+<link rel="stylesheet" href="<c:url value='/resources/js/summernote0.5.1/summernote.css'/>" type="text/css"/>
+<script src="<c:url value='/resources/js/summernote0.5.1/summernote.js'/>"></script>
 <script>
 
     var edit = function() {
@@ -54,9 +54,9 @@
 
 <!-- X-Editable -->
 
-<link href="resources/css/x-editable1.5.1/bootstrap-editable.css" rel="stylesheet">
-<script src="resources/js/x-editable1.5.1/bootstrap-editable.min.js"></script>
-<script src="resources/js/typeahead.js"></script>
+<link href="<c:url value='/resources/js/x-editable1.5.1/css/bootstrap-editable.css" rel="stylesheet'/>">
+<script src="<c:url value='/resources/js/x-editable1.5.1/js/bootstrap-editable.min.js'/>"></script>
+<script src="<c:url value='/resources/js/typeahead.js'/>"></script>
 <script>
     $.fn.editable.defaults.url = '/post';
     $(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); });
@@ -103,7 +103,7 @@
 <aside class="aside-lg" id="email-list">
     <section class="vbox">
         <header class="dker header clearfix">
-            <h3 class="m-b-xs text-black pull-left">Complaints</h3>
+            <h3 class="m-b-xs text-black pull-left">${pageDescriptor.descShort}</h3>
             <div class="btn-toolbar">
                 <div class="btn-group inline select pull-right">
                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
@@ -130,19 +130,6 @@
         </header>
         <section class="scrollable hover">
             <ul class="list-group auto no-radius m-b-none m-t-n-xxs list-group-lg" id="ulComplaints">
-<!--
-                <li class="list-group-item active"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a0.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
-                <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
-                <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
-                <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
-                <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
-                <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
-                <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
-                <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
-                <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
-                <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
-                <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Description]</small> </a> </li>
--->
             </ul>
             <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Lead More...</a> </section>
         <footer class="footer dk clearfix">
@@ -175,7 +162,7 @@
             </ul>
         </div>
         <a href="#nav, #chat" class="inline animated btn btn-default btn-sm " data-toggle="class:nav-xs, show"><i class="fa  fa-columns"></i></a> </div>
-    <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> (2014-03-12321)</h4>
+    <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title">...</a> (...)</h4>
 </div>
 <div>
 <div class="wrapper">
@@ -246,10 +233,7 @@
                     </ul>
                     </span> <a href="#" class="font-bold">Details</a> </div>
                 <div class="panel-body">
-                    <div class="complaintDetails">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
-                        <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
-                    </div>
+                    <div class="complaintDetails"></div>
                 </div>
             </section>
         </div>
@@ -338,7 +322,7 @@
                 <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span> <a href="#" class="font-bold">Notes</a> </div>
                 <div class="panel-body max-200">
                     <ul class="list-group list-group-lg no-bg auto">
-                        <a href="#" class="list-group-item clearfix"> <span class="pull-left thumb-sm avatar m-r"> <img src="resources/images/a4.png" alt="John said"> <i class="on b-white bottom"></i> </span> <span class="clear"> <small class="text-muted pull-right">5m ago</small> <span>Judy Hsu</span> <small class="text-muted clear text-ellipsis">Sample notes go here.</small> </span> </a>
+                        <a href="#" class="list-group-item clearfix"> <span class="pull-left thumb-sm avatar m-r"> <img src="<c:url value='/resources/images/a4.png'/>" alt="John said"> <i class="on b-white bottom"></i> </span> <span class="clear"> <small class="text-muted pull-right">5m ago</small> <span>Judy Hsu</span> <small class="text-muted clear text-ellipsis">Sample notes go here.</small> </span> </a>
                     </ul>
                 </div>
             </section>

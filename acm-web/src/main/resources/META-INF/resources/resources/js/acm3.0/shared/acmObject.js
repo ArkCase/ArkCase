@@ -10,27 +10,40 @@ Acm.Object = {
     initialize : function() {
         var items = $(document).items();
         this._contextPath = items.properties("contextPath").itemValue();
-        this._pluginName = items.properties("pluginName").itemValue();
-        this._pluginUrl = items.properties("pluginUrl").itemValue();
-        this._pluginImage = items.properties("pluginImage").itemValue();
+        this._userName = items.properties("userName").itemValue();
+
+//        this._pluginName = items.properties("pluginName").itemValue();
+//        this._pluginUrl = items.properties("pluginUrl").itemValue();
+//        this._pluginImage = items.properties("pluginImage").itemValue();
+//        this._pluginDesc = items.properties("pluginDesc").itemValue();
     }
 
     ,_contextPath: "/acm"
-    ,_pluginName: ""
-    ,_pluginUrl: ""
-    ,_pluginImage: ""
     ,getContextPath: function() {
         return this._contextPath;
     }
-    ,getPluginName: function() {
-        return this._pluginName;
+    ,_userName: ""
+    ,getUserName: function() {
+        return this._userName;
     }
-    ,getPluginUrl: function() {
-        return this._pluginUrl;
-    }
-    ,getPluginImage: function() {
-        return this._pluginImage;
-    }
+
+//    ,_pluginName: ""
+//    ,_pluginUrl: ""
+//    ,_pluginImage: ""
+//    ,_pluginDesc: ""
+//    ,getPluginName: function() {
+//        return this._pluginName;
+//    }
+//    ,getPluginUrl: function() {
+//        return this._pluginUrl;
+//    }
+//    ,getPluginImage: function() {
+//        return this._pluginImage;
+//    }
+//    ,getPluginDesc: function() {
+//        return this._pluginDesc;
+//    }
+
 
     ,getValue : function($s) {
         return $s.val();
@@ -44,16 +57,38 @@ Acm.Object = {
     ,setText : function($s, value) {
     	$s.text(value);
     }
-    ,getTextNodeText : function($s) {
-        var textNode = $s.contents()
-            .filter(function() {return this.nodeType == 3;});
-        return textNode.text();
+
+    //
+    //i is zero based index to indeicate which text node to use
+    //i not specified -- return all text nodes as whole
+    //i = -1          -- return last text node
+    //
+    ,getTextNodeText : function($s, i) {
+        var textNodes = $s.contents().filter(function() {return this.nodeType == 3;});
+
+        if (0 >= textNodes.length) {
+            return "";
+        } else if (undefined === i) {
+            return textNodes.text();
+        } else if (-1 === i) {
+            i = textNodes.length - 1;
+        }
+
+        return textNodes[i].nodeValue;
     }
-    ,setTextNodeText : function($s, value) {
-        var textNode = $s.contents()
-            .filter(function() {return this.nodeType == 3;});
-//    	textNode[0].data = value;
-        textNode[0].nodeValue = value;
+    ,setTextNodeText : function($s, value, i) {
+        var textNodes = $s.contents().filter(function() {return this.nodeType == 3;});
+
+        if (0 >= textNodes.length) {
+            return;
+        } else if (undefined === i) {
+            i = 0;
+        } else if (-1 === i) {
+            i = textNodes.length - 1;
+        }
+
+        textNodes[i].nodeValue = value;
+//    	textNodes[0].data = value;
     }
 //    ,getSelectValue : function($s) {
 //    	return $s.attr('value');

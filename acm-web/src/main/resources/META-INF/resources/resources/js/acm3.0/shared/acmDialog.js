@@ -13,9 +13,10 @@ Acm.Dialog = {
     ,DEFAULT_NO_CALLBACK: undefined
 
     //
-    //callback = function() {
+    // callback example:
+    // function() {
     //    alert("callback");
-    //}
+    // }
     //
     ,info: function(msg, callback, title){
         var opt = {
@@ -49,7 +50,7 @@ Acm.Dialog = {
     // callback example:
     // function(result) {
     //    alert("callback result:" + result);
-    //}
+    // }
     //
     ,confirm: function(msg, callback, title){
         if (Acm.isEmpty(callback)) {
@@ -68,7 +69,7 @@ Acm.Dialog = {
     //    } else {
     //        alert("Prompt result:" + result);
     //    }
-    //}
+    // }
     //
     ,prompt: function(msg, callback, title){
         if (Acm.isEmpty(callback)) {

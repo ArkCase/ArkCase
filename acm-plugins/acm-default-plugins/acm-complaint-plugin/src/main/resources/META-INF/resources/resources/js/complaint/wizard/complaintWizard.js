@@ -12,7 +12,7 @@ var ComplaintWizard = ComplaintWizard || {
         ComplaintWizard.Service.initialize();
         ComplaintWizard.Callback.initialize();
 
-        ComplaintWizard.Event.onPostInit();
+        Acm.deferred(ComplaintWizard.Event.onPostInit);
     }
 
     ,Object: {}
