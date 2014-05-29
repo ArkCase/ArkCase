@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="springLdapDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapDao"/>
+
+    <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.ldap.UserDao"/>
+
+    <bean id="userDatabaseHelper" class="com.armedia.acm.services.users.service.ldap.LdapSyncDatabaseHelper">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="ldapSyncService" class="com.armedia.acm.services.users.service.ldap.LdapSyncService"
+            init-method="ldapSync">
+        <property name="configFileWatcher" ref="configFileListener"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="ldapDao" ref="springLdapDao"/>
+        <property name="ldapSyncDatabaseHelper" ref="userDatabaseHelper"/>
+    </bean>
+
+</beans>

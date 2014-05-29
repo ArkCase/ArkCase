@@ -217,7 +217,6 @@
         <module>acm-configuration-service</module>
         <module>acm-core-object-model</module>
         <module>acm-standard-applications</module>
-        <module>repository-interfaces</module>
         <module>acm-services</module>
     </modules>
 

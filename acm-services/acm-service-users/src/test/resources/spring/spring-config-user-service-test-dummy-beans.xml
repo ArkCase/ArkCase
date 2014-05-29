@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <!-- the file watcher depends on some beans we don't want or need to pull into our integration tests here. -->
+
+    <!-- dummy bean for the activiti engine. -->
+    <bean id="activitiProcessEngineConfiguration" class="java.lang.String">
+        <constructor-arg value="This is a dummy bean.  Don't expect anything real in here."/>
+    </bean>
+
+    <!-- dummy bean for the drools deployer -->
+    <bean id="drlDeployer" class="java.lang.String">
+        <constructor-arg value="This is a dummy bean.  Don't expect anything real in here."/>
+    </bean>
+
+</beans>

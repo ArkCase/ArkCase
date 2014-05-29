@@ -33,7 +33,7 @@ public class FindUsersWithPrivilegeAPIControllerTest
     public void withPrivilege() throws Exception
     {
         MvcResult result =
-                mockMvc.perform(get("/api/latest/users/withPrivilege/{privilege}", "approveComplaint")
+                mockMvc.perform(get("/api/latest/users/withPrivilege/{privilege}", "acm-complaint-approve")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)).andReturn();
 

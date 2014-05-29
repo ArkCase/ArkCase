@@ -58,4 +58,14 @@
         <addPrimaryKey tableName="acm_user" columnNames="cm_user_id" constraintName="pk_acm_user"/>
     </changeSet>
 
+    <changeSet id="03-add-first-and-last-name" author="dmiller">
+        <addColumn tableName="acm_user">
+            <column name="cm_first_name" type="VARCHAR(1024)"/>
+            <column name="cm_last_name" type="VARCHAR(1024)"/>
+        </addColumn>
+        <createIndex tableName="acm_user" indexName="idx_user_last_name">
+            <column name="cm_last_name"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
