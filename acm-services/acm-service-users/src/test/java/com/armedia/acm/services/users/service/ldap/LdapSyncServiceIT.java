@@ -36,7 +36,9 @@ public class LdapSyncServiceIT
     @Test
     public void ldapSync()
     {
-        ldapSyncService.ldapSync();
+        // the sync is done via init-bean so we don't even have to call it here.  Just starting the Sprign
+        // context makes the sync run.
+//        ldapSyncService.ldapSync();
 
         List<AcmRole> roles = userDao.findAllRoles();
 

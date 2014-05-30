@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,14 +39,16 @@ public class LdapSyncService
             log.info("# of LDAP configs to sync: " + configMap.size());
         }
 
-        // all the ldap work first, then all the database work
+        // all the ldap work first, then all the database work; because the ldap queries could be very timeconsuming.
+        // If we opened up a database transaction, then spend a minute or so querying LDAP, the database transaction
+        // could time out.  So we query every LDAP sync target first, then do all the database operations all at once.
         Set<String> allRoles = new HashSet<>();
         Map<String, List<AcmUser>> usersByDirectoryName = new HashMap<>();
         Map<String, List<AcmUser>> usersByRole = new HashMap<>();
 
         queryLdapUsers(configMap, allRoles, usersByDirectoryName, usersByRole);
 
-        // ldap work is done.  Mark all users invalid... users still in LDAP will change to valid during the sync
+        // ldap work is done.  now for the database work.
         getLdapSyncDatabaseHelper().updateDatabase(allRoles, usersByDirectoryName, usersByRole);
     }
 
@@ -59,8 +62,14 @@ public class LdapSyncService
     {
         for ( Map.Entry<String, AcmLdapSyncConfig> config : configMap.entrySet() )
         {
+
             AcmLdapSyncConfig syncConfig = config.getValue();
             String directoryName = config.getKey();
+
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("querying users from directory '" + directoryName + "'");
+            }
 
             LdapTemplate template = getLdapDao().buildLdapTemplate(syncConfig);
 
@@ -80,14 +89,12 @@ public class LdapSyncService
 
     private void addUsersToMap(Map<String, List<AcmUser>> userMap, String mapKey, List<AcmUser> users)
     {
-        if ( userMap.containsKey(mapKey) )
+        // ensure to initialize the map entry with an empty list, then copy from the incoming list into the new list.
+        if ( ! userMap.containsKey(mapKey) )
         {
-            userMap.get(mapKey).addAll(users);
+            userMap.put(mapKey, new ArrayList<AcmUser>());
         }
-        else
-        {
-            userMap.put(mapKey, users);
-        }
+        userMap.get(mapKey).addAll(users);
     }
 
     public SpringContextHolder getSpringContextHolder()
