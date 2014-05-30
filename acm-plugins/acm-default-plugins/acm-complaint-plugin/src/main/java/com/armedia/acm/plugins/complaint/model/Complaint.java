@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -104,6 +105,13 @@ public class Complaint implements Serializable
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_parent_id")
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
+
+    /**
+     * These approvers are added by the web application and they become the assignees of the Activiti business process.
+     * They are not persisted to the database.
+     */
+    @Transient
+    private List<String> approvers;
 
 
 
@@ -386,5 +394,13 @@ public class Complaint implements Serializable
         childObject.setParentId(getComplaintId());
     }
 
+    public List<String> getApprovers()
+    {
+        return approvers;
+    }
 
+    public void setApprovers(List<String> approvers)
+    {
+        this.approvers = approvers;
+    }
 }

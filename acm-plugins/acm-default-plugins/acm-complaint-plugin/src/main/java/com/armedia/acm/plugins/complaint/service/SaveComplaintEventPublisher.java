@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.model.ComplaintApprovalWorkflowRequestedEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
@@ -49,6 +50,18 @@ public class SaveComplaintEventPublisher implements ApplicationEventPublisherAwa
 
         eventPublisher.publishEvent(complaintPersistenceEvent);
     }
+
+    public void publishComplaintWorkflowEvent(
+            Complaint source,
+            Authentication authentication,
+            String userIpAddress)
+    {
+        ComplaintApprovalWorkflowRequestedEvent requestEvent = new ComplaintApprovalWorkflowRequestedEvent(source);
+        requestEvent.setIpAddress(userIpAddress);
+        requestEvent.setUserId(authentication.getName());
+        eventPublisher.publishEvent(requestEvent);
+    }
+
 
     public void publishComplaintSearchResultEvent(
             ComplaintListView source,

@@ -3,6 +3,7 @@ package com.armedia.acm.event;
 import org.springframework.context.ApplicationEvent;
 
 import java.util.Date;
+import java.util.Map;
 
 public abstract class AcmEvent extends ApplicationEvent
 {
@@ -13,6 +14,7 @@ public abstract class AcmEvent extends ApplicationEvent
     private String ipAddress;
     private String objectType;
     private Long objectId;
+    private Map<String, Object> eventProperties;
 
     public AcmEvent(Object source)
     {
@@ -77,5 +79,15 @@ public abstract class AcmEvent extends ApplicationEvent
     public void setObjectId(Long objectId)
     {
         this.objectId = objectId;
+    }
+
+    public Map<String, Object> getEventProperties()
+    {
+        return eventProperties;
+    }
+
+    public void setEventProperties(Map<String, Object> eventProperties)
+    {
+        this.eventProperties = eventProperties;
     }
 }

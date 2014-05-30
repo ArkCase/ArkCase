@@ -48,6 +48,11 @@ public class CreateComplaintAPIController
 
             getEventPublisher().publishComplaintEvent(saved, auth, isInsert, true);
 
+            // since the approver list is not persisted to the database, we want to send them back to the caller...
+            // the approver list is only here to send to the Activiti engine.  After the workflow is started the
+            // approvers are stored in Activiti.
+            saved.setApprovers(in.getApprovers());
+
             return saved;
 
         } catch ( MuleException | TransactionException e)
