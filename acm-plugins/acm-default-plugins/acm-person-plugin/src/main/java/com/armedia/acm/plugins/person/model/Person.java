@@ -46,7 +46,7 @@ public class Person implements Serializable
     @Column(name = "cm_person_company_name")
     private String company;
 
-    @Column(name = "cm_person_status")
+    @Column(name = "cm_person_status", insertable = true, updatable = false)
     private String status;
 
     @Column(name = "cm_given_name")
