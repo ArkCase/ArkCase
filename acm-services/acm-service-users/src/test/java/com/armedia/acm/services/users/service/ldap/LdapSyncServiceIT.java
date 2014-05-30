@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -52,5 +53,14 @@ public class LdapSyncServiceIT
 
             log.info("Found " + usersWithRole.size() + " users with role " + firstRole);
         }
+
+        List<String> roleNames = new ArrayList<>(roles.size());
+        for ( AcmRole role : roles )
+        {
+            roleNames.add(role.getRoleName());
+        }
+
+        List<AcmUser> usersWithAnyRole = userDao.findUsersWithRoles(roleNames);
+        log.info("Found " + usersWithAnyRole.size() + " users with any role.");
     }
 }

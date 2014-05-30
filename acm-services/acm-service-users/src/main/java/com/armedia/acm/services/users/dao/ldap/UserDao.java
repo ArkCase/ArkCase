@@ -35,6 +35,24 @@ public class UserDao
         return retval;
     }
 
+    public List<AcmUser> findUsersWithRoles(List<String> roles)
+    {
+        Query usersWithRole = getEntityManager().createQuery(
+                "SELECT user FROM AcmUser user, AcmUserRole role " +
+                        "WHERE user.userId = role.userId " +
+                        "AND user.userState = :userState " +
+                        "AND role.userRoleState = :userRoleState " +
+                        "AND role.roleName IN :roleNames " +
+                        "ORDER BY user.lastName, user.firstName");
+        usersWithRole.setParameter("userState", "VALID");
+        usersWithRole.setParameter("roleNames", roles);
+        usersWithRole.setParameter("userRoleState", "VALID");
+
+        List<AcmUser> retval = usersWithRole.getResultList();
+
+        return retval;
+    }
+
     public List<AcmUser> findUserWithRole(String role)
     {
         Query usersWithRole = getEntityManager().createQuery(

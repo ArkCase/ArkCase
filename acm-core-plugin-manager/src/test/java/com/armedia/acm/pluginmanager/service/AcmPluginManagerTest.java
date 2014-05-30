@@ -86,7 +86,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
         AcmPlugin plugin = createPlugin("test plugin");
         unit.registerPlugin(plugin);
 
-        List<String> roles = unit.getRolesForPrivileges(privilegeAdd);
+        List<String> roles = unit.getRolesForPrivilege(privilegeAdd);
 
         assertEquals(2, roles.size());
 

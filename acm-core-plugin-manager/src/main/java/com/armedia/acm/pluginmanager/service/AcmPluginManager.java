@@ -123,7 +123,7 @@ public class AcmPluginManager implements ApplicationContextAware
         return Collections.unmodifiableList(urlPrivileges);
     }
 
-    public List<String> getRolesForPrivileges(String privilege)
+    public List<String> getRolesForPrivilege(String privilege)
     {
         // iterate over the role-to-privileges map; if the value list includes this privilege, the role (i.e. the
         // map key) is included in the return list.
@@ -131,7 +131,9 @@ public class AcmPluginManager implements ApplicationContextAware
 
         for ( Map.Entry<String, List<String>> roleToPrivileges : privilegesByRole.entrySet() )
         {
-            if ( roleToPrivileges.getValue() != null && roleToPrivileges.getValue().contains(privilege))
+            if ( roleToPrivileges.getValue() != null
+                    && roleToPrivileges.getValue().contains(privilege)
+                    && !retval.contains(roleToPrivileges.getKey()))
             {
                 retval.add(roleToPrivileges.getKey());
             }
