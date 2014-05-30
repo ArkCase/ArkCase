@@ -4,7 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="findUsersWithPrivilegeAPIController" class="com.armedia.acm.services.users.web.api.FindUsersWithPrivilegeAPIController">
-
+        <property name="pluginManager" ref="acmPluginManager"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
 </beans>

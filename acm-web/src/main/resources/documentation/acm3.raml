@@ -199,3 +199,17 @@ securitySchemes:
           multipart/form-data:
             
             
+/users:
+  /withPrivilege/{privilege}:
+    securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+    get:
+      description: Get a list of users with the specified privilege.  Used to obtain a list of users who are authorized to perform a certain action.
+      responses:
+        200:
+          description: expected response containing the list of users with the requested privilege.
+          body:
+            application/json: 
+              example: |
+                [{"userId":"OPIS_Admin","fullName":"OPIS Admin","firstName":"OPIS","lastName":"Admin"},
+                 {"userId":"ann-acm","fullName":"Ann Administrator","firstName":"Ann","lastName":"Administrator"}]
+  

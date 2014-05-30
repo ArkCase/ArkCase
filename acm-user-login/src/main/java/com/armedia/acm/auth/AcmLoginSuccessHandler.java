@@ -3,6 +3,8 @@ package com.armedia.acm.auth;
 
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
 
     private AcmPluginManager acmPluginManager;
     private AcmApplication acmApplication;
+    private UserDao userDao;
 
     @Override
     public void onAuthenticationSuccess(
@@ -45,6 +48,8 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         addIpAddressToSession(request, authentication);
 
         addAcmApplicationToSession(request);
+
+        addAcmUserToSession(request, authentication);
 
         super.onAuthenticationSuccess(request, response, authentication);
     }
@@ -125,6 +130,19 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
         }
 
     }
+
+    public void addAcmUserToSession(HttpServletRequest request, Authentication authentication)
+    {
+        String userId = authentication.getName();
+
+        AcmUser user = getUserDao().findByUserId(userId);
+
+        HttpSession session = request.getSession(true);
+
+        session.setAttribute("acm_user", user);
+
+    }
+
     public AcmPluginManager getAcmPluginManager()
     {
         return acmPluginManager;
@@ -144,6 +162,17 @@ public class AcmLoginSuccessHandler extends SavedRequestAwareAuthenticationSucce
     public AcmApplication getAcmApplication()
     {
         return acmApplication;
+    }
+
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
     }
 
 

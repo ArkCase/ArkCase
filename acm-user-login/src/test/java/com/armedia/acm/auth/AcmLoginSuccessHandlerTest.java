@@ -2,6 +2,8 @@ package com.armedia.acm.auth;
 
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +29,7 @@ public class AcmLoginSuccessHandlerTest extends EasyMockSupport
     private Authentication mockAuthentication;
     private HttpServletRequest mockRequest;
     private AcmPluginManager mockPluginManager;
+    private UserDao mockUserDao;
 
     @Before
     public void setUp()
@@ -37,8 +40,28 @@ public class AcmLoginSuccessHandlerTest extends EasyMockSupport
         mockRequest = createMock(HttpServletRequest.class);
         mockAuthentication = createMock(Authentication.class);
         mockPluginManager = createMock(AcmPluginManager.class);
+        mockUserDao = createMock(UserDao.class);
 
         unit.setAcmPluginManager(mockPluginManager);
+        unit.setUserDao(mockUserDao);
+    }
+
+    @Test
+    public void addAcmUserToSession() throws Exception
+    {
+        String userId = "userId";
+        AcmUser theUser = new AcmUser();
+
+        expect(mockAuthentication.getName()).andReturn(userId);
+        expect(mockRequest.getSession(true)).andReturn(mockSession);
+        expect(mockUserDao.findByUserId(userId)).andReturn(theUser);
+        mockSession.setAttribute("acm_user", theUser);
+
+        replayAll();
+
+        unit.addAcmUserToSession(mockRequest, mockAuthentication);
+
+        verifyAll();
     }
 
     @Test
