@@ -46,6 +46,7 @@
     <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">
         <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="acmApplication" ref="acmApplication"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
     <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>
     <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">

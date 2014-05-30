@@ -21,6 +21,11 @@ public class UserDao
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    public AcmUser findByUserId(String userId)
+    {
+        return getEntityManager().find(AcmUser.class, userId);
+    }
+
     public List<AcmRole> findAllRoles()
     {
         Query roleQuery = getEntityManager().createQuery("SELECT role FROM AcmRole role");
