@@ -15,6 +15,7 @@
     <modules>
         <module>acm-dashboard-plugin</module>
         <module>acm-complaint-plugin</module>
+        <module>acm-task-plugin</module>
         <module>acm-object-association-plugin</module>
         <module>acm-addressable-plugin</module>
         <module>acm-person-plugin</module>

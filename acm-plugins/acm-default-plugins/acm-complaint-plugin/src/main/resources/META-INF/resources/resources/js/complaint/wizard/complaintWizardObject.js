@@ -38,7 +38,7 @@ ComplaintWizard.Object = {
 
         this.$selIntiatorFlags.chosen();
         this.$selComplaintFlags.chosen();
-        this.$selApprovers.chosen();
+        //this.$selApprovers.chosen();
         this.$selCollab.chosen();
         this.$selNotifications.chosen();
 
@@ -48,15 +48,23 @@ ComplaintWizard.Object = {
         this._useFileUpload(this.$uppload, this.$upploadDrop, this.$upploadList, this.$upploadClick);
     }
 
-
+    ,initApprovers: function(data) {
+        $.each(data, function(idx, val) {
+            ComplaintWizard.Object.appendApprovers(val.userId, val.fullName);
+        });
+        this.$selApprovers.chosen();
+    }
+    ,appendApprovers: function(key, val) {
+        this.$selApprovers.append($("<option></option>")
+                .attr("value",key)
+                .text(val));
+    }
     ,setEnableBtnSave: function(enable) {
         Acm.Object.setEnable(this.$btnSave, enable);
     }
-
     ,getHtmlDivComplaintDetails: function() {
         return Acm.Object.getSummernote(this.$divComplaintDetails);
     }
-
     ,getValueEdtIncidentDate: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtIncidentDate);
     }

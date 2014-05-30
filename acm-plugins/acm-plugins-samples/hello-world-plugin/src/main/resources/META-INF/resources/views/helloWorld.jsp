@@ -6,7 +6,7 @@
 
 <t:layout>
     <jsp:attribute name="endOfHead">
-        <title>Hello World | ACM | Armedia Case Management</title>
+        <title>${pageDescriptor.title}</title>
         <script type="text/javascript">
             $(document).ready(function () {
                 HelloWorld.initialize();

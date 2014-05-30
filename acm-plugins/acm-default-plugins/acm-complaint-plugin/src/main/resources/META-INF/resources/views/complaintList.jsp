@@ -9,6 +9,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            Complaint.initialize();
             ComplaintList.initialize();
         });
     </script>

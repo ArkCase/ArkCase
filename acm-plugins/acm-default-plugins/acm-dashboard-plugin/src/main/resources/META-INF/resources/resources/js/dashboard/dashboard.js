@@ -12,7 +12,7 @@ var Dashboard = Dashboard || {
         Dashboard.Service.initialize();
         Dashboard.Callback.initialize();
 
-        Dashboard.Event.onPostInit();
+        Acm.deferred(Dashboard.Event.onPostInit);
     }
 
     ,Object: {}

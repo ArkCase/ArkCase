@@ -8,12 +8,14 @@
         <property name="topbarActions">
             <list>
                 <ref bean="createComplaintAction"/>
+                <ref bean="createTaskAction"/>
             </list>
         </property>
         <property name="navigatorTabs">
             <list>
                 <ref bean="dashboardNavigatorAction"/>
                 <ref bean="complaintNavigatorAction"/>
+                <ref bean="taskNavigatorAction"/>
                 <ref bean="armediaBlogNavigatorAction"/>
                 <ref bean="helloWorldNavigatorAction"/>
             </list>
@@ -50,6 +52,18 @@
     </bean>
 
 
+    <bean id="createTaskAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Task"/>
+        <property name="iconName" value="i-checkmark"/>
+        <property name="url" value="/plugin/task/wizard"/>
+        <property name="requiredPrivilege" value="acm-complaint-create"/>
+    </bean>
+    <bean id="taskNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Tasks"/>
+        <property name="iconName" value="i-checkmark"/>
+        <property name="url" value="/plugin/task"/>
+        <property name="requiredPrivilege" value="acm-complaint-list"/>
+    </bean>
 
     <bean id="dashboardNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Dashboard"/>
@@ -72,6 +86,11 @@
     <!-- end of actions -->
 
     <!-- Page Descriptors -->
+    <bean id="dashboardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Dashboard | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Dashboard"/>
+        <property name="descLong" value="Dashboard"/>
+    </bean>
     <!--
     <bean id="complaintListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
         <property name="title" value="Complaints | ACM | Armedia Case Management"/>
@@ -94,6 +113,28 @@
         <property name="title" value="Case | ACM | Armedia Case Management"/>
         <property name="descShort" value="New Case"/>
         <property name="descLong" value="New Case"/>
+    </bean>
+
+    <bean id="taskListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Tasks | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Tasks"/>
+        <property name="descLong" value="Tasks"/>
+    </bean>
+    <bean id="taskWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Task | ACM | Armedia Case Management"/>
+        <property name="descShort" value="New Task"/>
+        <property name="descLong" value="New Task"/>
+    </bean>
+
+    <bean id="armdiaBlogPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Armedia Blog | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Aremedia Blog"/>
+        <property name="descLong" value="Aremedia Blog"/>
+    </bean>
+    <bean id="helloWorldPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Hello World | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Hello World"/>
+        <property name="descLong" value="Hello World"/>
     </bean>
     <!-- end of Descriptors -->
 </beans>

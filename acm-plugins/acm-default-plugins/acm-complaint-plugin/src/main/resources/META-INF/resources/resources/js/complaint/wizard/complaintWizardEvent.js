@@ -129,5 +129,6 @@ ComplaintWizard.Event = {
     }
 
     ,onPostInit: function() {
+        ComplaintWizard.Service.getApprovers();
     }
 };

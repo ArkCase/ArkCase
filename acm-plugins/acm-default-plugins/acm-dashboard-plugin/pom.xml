@@ -86,6 +86,11 @@
             <artifactId>acm-ecm-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-web</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- date time -->
         <dependency>

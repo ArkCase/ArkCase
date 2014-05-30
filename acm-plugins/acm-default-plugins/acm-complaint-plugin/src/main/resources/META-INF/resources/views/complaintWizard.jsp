@@ -9,6 +9,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            Complaint.initialize();
             ComplaintWizard.initialize();
         });
     </script>
@@ -192,12 +193,14 @@
 
     <select data-placeholder="Choose Approvers..." id="approvers" class="choose-approvers form-control" multiple style="width:350px;" >
         <option value=""></option>
+        <!--
         <option value="David Miller">David Miller</option>
         <option value="James Bailey">James Bailey</option>
         <option value="Judy Hsu">Judy Hsu</option>
         <option value="Ronda Ringo">Ronda Ringo</option>
         <option value="AJ McClary">AJ McClary</option>
         <option value="Jim Nasr">Jim Nasr</option>
+        -->
     </select>
 
 

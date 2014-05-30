@@ -5,6 +5,7 @@
 
     <bean id="helloWorldController" class="com.armedia.acm.plugins.sample.HelloWorldController">
         <property name="name" value="World"/>
+        <property name="pageDescriptor" ref="helloWorldPageDescriptor"/>
     </bean>
 
 </beans>
