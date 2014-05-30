@@ -713,6 +713,137 @@
                         </div>
                     </div>
                 
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 id="_users" class="panel-title">/users</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            
+
+                            <div class="panel-group">
+                                <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__users">
+                
+                <span class="parent"></span>/users
+            </a>
+        </h4>
+    </div>
+    <div id="panel__users" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__users_withPrivilege__privilege_">
+                
+                    <span class="badge badge_get">get</span>
+                
+                <span class="parent">/users</span>/withPrivilege/{privilege}
+            </a>
+        </h4>
+    </div>
+    <div id="panel__users_withPrivilege__privilege_" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_users_withPrivilege__privilege__get" class="list-group-item">
+                        <span class="badge badge_get">get</span>
+                        Get a list of users with the specified privilege.  Used to obtain a list of users who are authorized to perform a certain action.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_users_withPrivilege__privilege__get">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_get">get</span>
+                            <span class="parent">/users</span>/withPrivilege/{privilege}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Get a list of users with the specified privilege.  Used to obtain a list of users who are authorized to perform a certain action.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_users_withPrivilege__privilege__get_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_users_withPrivilege__privilege__get_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_users_withPrivilege__privilege__get_request">
+                                
+                                    <h3>URI Parameters</h3>
+                                    <ul>
+                                        
+                                            <li><strong>privilege</strong>: string</li>
+                                        
+                                    </ul>
+                                
+
+                                
+
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_users_withPrivilege__privilege__get_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>expected response containing the list of users with the requested privilege.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>[{&quot;userId&quot;:&quot;OPIS_Admin&quot;,&quot;fullName&quot;:&quot;OPIS Admin&quot;,&quot;firstName&quot;:&quot;OPIS&quot;,&quot;lastName&quot;:&quot;Admin&quot;},
+ {&quot;userId&quot;:&quot;ann-acm&quot;,&quot;fullName&quot;:&quot;Ann Administrator&quot;,&quot;firstName&quot;:&quot;Ann&quot;,&quot;lastName&quot;:&quot;Administrator&quot;}]
+</pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                
             </div>
 
             <div class="col-md-3">
@@ -720,6 +851,8 @@
                     <ul class="nav nav-pills nav-stacked">
                         
                             <li><a href="#_plugin">/plugin</a></li>
+                        
+                            <li><a href="#_users">/users</a></li>
                         
                     </ul>
                 </div>
