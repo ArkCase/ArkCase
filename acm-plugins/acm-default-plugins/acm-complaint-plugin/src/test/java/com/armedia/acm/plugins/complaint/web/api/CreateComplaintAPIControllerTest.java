@@ -20,6 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Arrays;
+
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -64,6 +66,8 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         person.getAddresses().add(address);
         complaint.setOriginator(person);
 
+        complaint.setApprovers(Arrays.asList("user1", "user2"));
+
         Complaint saved = new Complaint();
         saved.setComplaintId(complaint.getComplaintId());
         saved.setComplaintNumber("testNumber");
@@ -103,6 +107,8 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         Complaint mapped = objectMapper.readValue(returned, Complaint.class);
         assertEquals(saved.getComplaintNumber(), mapped.getComplaintNumber());
+
+        assertEquals(complaint.getApprovers(), saved.getApprovers());
 
     }
 
