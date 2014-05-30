@@ -95,6 +95,12 @@
                     <property name="url" value="/api/{version}/plugin/complaint/list"/>
                     <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
                 </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- attach a file to the complaint -->
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/complaint/file"/>
+                    <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
