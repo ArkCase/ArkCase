@@ -11,14 +11,20 @@
 
         <sequenceFlow id="initiatedToApproval" sourceRef="complaintSubmittedForApproval" targetRef="approveComplaint" />
 
-        <userTask id="approveComplaint" name="Approve Complaint ${complaintNumber}" activiti:assignee="${xyz}">
+        <userTask id="approveComplaint" name="Approve Complaint ${complaintNumber}"
+                activiti:assignee="${currentApprover}"
+                activiti:dueDate="P3D"
+                activiti:priority="50">
+            <!-- note: "P3D" above = "Period of 3 days from now". Any valid ISO801 duration expression will work. -->
+            <!-- note: intellij does not like the activiti:priority attribute, but it works anyway.  50 is the default
+                 value. -->
             <documentation>
                 Approve the complaint; it will become part of a new case file.
             </documentation>
             <multiInstanceLoopCharacteristics
                     isSequential="false"
                     activiti:collection="approvers"
-                    activiti:elementVariable="xyz"/>
+                    activiti:elementVariable="currentApprover"/>
         </userTask>
 
         <sequenceFlow id="approvalToEnd" sourceRef="approveComplaint" targetRef="done" />
