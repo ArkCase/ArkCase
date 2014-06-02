@@ -9,7 +9,7 @@
         properties-ref="taskPluginProperties"
         ignore-unresolvable="true"
         local-override="false"
-        order="1"/>
+        order="178"/>
 
 
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
@@ -43,7 +43,6 @@
                 <ref bean="acmTaskCreatePrivilege"/>
                 <ref bean="acmTaskSavePrivilege"/>
                 <ref bean="acmTaskListPrivilege"/>
-                <ref bean="acmTaskApprovePrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
@@ -78,7 +77,7 @@
     </bean>
 
     <bean id="acmTaskListPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-list"/>
+        <property name="privilegeName" value="acm-task-list"/>
         <property name="applicationRolesWithPrivilege">
             <list>
                 <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
@@ -89,7 +88,7 @@
         </property>
     </bean>
     <bean id="acmTaskSavePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-save"/>
+        <property name="privilegeName" value="acm-task-save"/>
         <property name="applicationRolesWithPrivilege">
             <list>
                 <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
@@ -101,7 +100,7 @@
     </bean>
 
     <bean id="acmTaskCreatePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-create"/>
+        <property name="privilegeName" value="acm-task-create"/>
         <property name="applicationRolesWithPrivilege">
             <list>
                 <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
@@ -110,15 +109,9 @@
             </list>
         </property>
     </bean>
-
-    <bean id="acmTaskApprovePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-approve"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
+    
+    <bean id="acmTaskDao" class="com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao">
+        <property name="activitiTaskService" ref="activitiTaskService"/>
     </bean>
 
 
