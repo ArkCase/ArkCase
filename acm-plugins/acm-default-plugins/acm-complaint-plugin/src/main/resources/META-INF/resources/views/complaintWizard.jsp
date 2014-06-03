@@ -81,7 +81,10 @@
         <li><a href="#step4" data-toggle="tab">Step 4: Attachments</a></li>
         <li><a href="#step5" data-toggle="tab">Step 5: Assignment</a></li>
     </ul>
-    <span class="hidden-sm"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i> Save As Draft</button> <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Submit"><i class="fa fa-check"></i> Submit</button></span>
+    <span class="hidden-sm">
+        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i> Save As Draft</button>
+        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Submit"><i class="fa fa-check"></i> Submit For Approval</button>
+    </span>
 </div>
 <div class="panel-body">
 <div class="progress progress-xs m-t-sm">

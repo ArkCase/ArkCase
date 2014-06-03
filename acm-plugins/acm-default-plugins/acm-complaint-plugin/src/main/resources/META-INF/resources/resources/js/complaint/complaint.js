@@ -28,14 +28,19 @@ var Complaint = Complaint || {
     ,PERSON_SUBTABLE_TITLE_LOCATIONS:     "Locations"
     ,PERSON_SUBTABLE_TITLE_ALIASES:       "Aliases"
 
-    ,_complaintId : undefined
+//    ,_complaintId : undefined
+//    ,getComplaintId : function() {
+//        return this._complaintId;
+//    }
+//    ,setComplaintId : function(id) {
+//        this._complaintId = id;
+//    }
     ,getComplaintId : function() {
-        return this._complaintId;
+        return this._complaint.complaintId;
     }
     ,setComplaintId : function(id) {
-        this._complaintId = id;
+        this._complaint.complaintId = id;
     }
-
     ,_complaint : {}
     ,getComplaint : function() {
         return this._complaint;
