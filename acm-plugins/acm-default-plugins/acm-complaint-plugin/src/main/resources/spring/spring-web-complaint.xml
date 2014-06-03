@@ -8,5 +8,6 @@
         <property name="eventPublisher" ref="complaintEventPublisher"/>
         <property name="pageDescriptorWizard" ref="complaintWizardPageDescriptor"/>
         <property name="pageDescriptorList" ref="complaintListPageDescriptor"/>
+        <property name="pageDescriptorDetail" ref="complaintDetailPageDescriptor"/>
     </bean>
 </beans>

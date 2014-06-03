@@ -21,23 +21,6 @@
                             </div>
                         </c:if>
                     </c:forEach>
-                    <%--<c:if test="${acm_privileges['acm-complaint-create']}">--%>
-                        <%--<div class="col-xs-3">--%>
-                            <%--<div class="padder-v2">--%>
-                                <%--<a href="<c:url value='/plugin/complaint/wizard'/>">--%>
-                                <%--<!-- <a href="#" id="lnkNewComponent"> -->--%>
-                                <%--<span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>--%>
-                        <%--</div>--%>
-                    <%--</c:if>--%>
-                    <%--<div class="col-xs-3">--%>
-                        <%--<div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>--%>
-                    <%--</div>--%>
-                    <%--<div class="col-xs-3">--%>
-                        <%--<div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>--%>
-                    <%--</div>--%>
-                    <%--<div class="col-xs-3">--%>
-                        <%--<div class="padder-v2"> <a href="newDocument.html"> <span class="m-b-xs block"> <i class="i i-file i-2x text-info-lt"></i> </span> <small class="text-muted">Document</small> </a> </div>--%>
-                    <%--</div>--%>
                 </div>
             </section>
         </li>

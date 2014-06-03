@@ -10,7 +10,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             Task.initialize();
-            TaskList.initialize();
+            TaskDetail.initialize();
         });
     </script>
 </jsp:attribute>
@@ -24,13 +24,13 @@
     <script type="text/javascript" src="<c:url value='/resources/js/task/taskService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/taskCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskList.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/detail/taskDetail.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/detail/taskDetailObject.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/detail/taskDetailEvent.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/detail/taskDetailPage.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/detail/taskDetailRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/detail/taskDetailService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/detail/taskDetailCallback.js'/>"></script>
 
     <script src="<c:url value='/resources/js/app.js'/>"></script>
     <script src="<c:url value='/resources/js/slimscroll/jquery.slimscroll.min.js'/>"></script>
@@ -101,6 +101,7 @@
 <section class="vbox">
 <section class="scrollable">
 <section class="hbox stretch">
+<!--
 <aside class="aside-lg" id="email-list">
     <section class="vbox">
         <header class="dker header clearfix">
@@ -145,6 +146,7 @@
         </footer>
     </section>
 </aside>
+-->
 <!-- /.aside -->
 <!-- .aside -->
 <aside id="email-content" class="bg-light lter">

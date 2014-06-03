@@ -20,10 +20,10 @@ public class TaskUiController
 
     private AcmPageDescriptor pageDescriptorWizard;
     private AcmPageDescriptor pageDescriptorList;
+    private AcmPageDescriptor pageDescriptorDetail;
 
 
     @RequestMapping(method = RequestMethod.GET)
-    //@RequestMapping(value = "/list", method = RequestMethod.GET)
     public ModelAndView listTask()
     {
         ModelAndView retval = new ModelAndView();
@@ -33,15 +33,12 @@ public class TaskUiController
     }
 
     @RequestMapping(value = "/{taskId}", method = RequestMethod.GET)
-    //@RequestMapping(value = "/detail/{taskId}", method = RequestMethod.GET)
     public ModelAndView showTask(@PathVariable(value = "taskId") Long taskId)
-//    @RequestMapping(value = "/detail", method = RequestMethod.GET)
-//    public ModelAndView showTask()
     {
-        Long a = taskId;
         ModelAndView retval = new ModelAndView();
         retval.setViewName("taskDetail");
-        retval.addObject("pageDescriptor",  getPageDescriptorList());
+        retval.addObject("taskId",  taskId);
+        retval.addObject("pageDescriptor",  getPageDescriptorDetail());
         return retval;
     }
 
@@ -72,5 +69,13 @@ public class TaskUiController
 
     public void setPageDescriptorList(AcmPageDescriptor pageDescriptorList) {
         this.pageDescriptorList = pageDescriptorList;
+    }
+
+    public AcmPageDescriptor getPageDescriptorDetail() {
+        return pageDescriptorDetail;
+    }
+
+    public void setPageDescriptorDetail(AcmPageDescriptor pageDescriptorDetail) {
+        this.pageDescriptorDetail = pageDescriptorDetail;
     }
 }

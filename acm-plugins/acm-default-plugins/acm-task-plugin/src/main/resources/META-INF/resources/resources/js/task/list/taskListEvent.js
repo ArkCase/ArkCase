@@ -32,11 +32,11 @@ TaskList.Event = {
     ,doClickLnkListItem: function() {
         var taskId = Task.getTaskId();
         var c = TaskList.findTask(taskId);
-        TaskList.Object.updateDetail(c);
-
-        Task.settaskId(taskId);
-
-        TaskList.Object.hiliteSelectedItem(taskId);
+        if (null != c) {
+            TaskList.Object.updateDetail(c);
+            Task.setTaskId(taskId);
+            TaskList.Object.hiliteSelectedItem(taskId);
+        }
     }
 
     ,onPostInit: function() {

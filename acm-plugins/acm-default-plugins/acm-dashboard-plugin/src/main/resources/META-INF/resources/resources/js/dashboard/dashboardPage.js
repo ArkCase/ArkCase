@@ -11,6 +11,7 @@ Dashboard.Page = {
 
     ,fillMyTasks: function(data) {
         Dashboard.Object.resetTableMyTasks();
+        var urlBase = Acm.getContextPath() + "/plugin/task/";
         $.each(data, function(idx, val) {
             if (10 == idx) {
                 return false;
@@ -19,7 +20,7 @@ Dashboard.Page = {
             var z = 1;
 
             var row = "<tr>"
-                + "<td>" + val.complaintId + "</td>"
+                + "<td><a href='" + urlBase + val.complaintId + "'>" + val.complaintId  + "</a></td>"
                 + "<td>" + val.complaintTitle + "</td>"
                 + "<td>" + val.priority + "</td>"
                 + "<td>" + "due" + idx + "</td>"

@@ -91,6 +91,11 @@
         <property name="descShort" value="Dashboard"/>
         <property name="descLong" value="Dashboard"/>
     </bean>
+    <bean id="simpleSearchPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Search | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Search"/>
+        <property name="descLong" value="Simple Search"/>
+    </bean>
     <!--
     <bean id="complaintListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
         <property name="title" value="Complaints | ACM | Armedia Case Management"/>
@@ -109,6 +114,11 @@
         <property name="descShort" value="Cases"/>
         <property name="descLong" value="Cases"/>
     </bean>
+    <bean id="complaintDetailPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Case | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Case"/>
+        <property name="descLong" value="Case"/>
+    </bean>
     <bean id="complaintWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
         <property name="title" value="Case | ACM | Armedia Case Management"/>
         <property name="descShort" value="New Case"/>
@@ -119,6 +129,11 @@
         <property name="title" value="Tasks | ACM | Armedia Case Management"/>
         <property name="descShort" value="Tasks"/>
         <property name="descLong" value="Tasks"/>
+    </bean>
+    <bean id="taskDetailPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Task | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Task"/>
+        <property name="descLong" value="Task"/>
     </bean>
     <bean id="taskWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
         <property name="title" value="Task | ACM | Armedia Case Management"/>

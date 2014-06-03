@@ -45,7 +45,7 @@
 <section class="row m-b-md">
     <div class="col-sm-12">
         <h3 class="m-b-xs text-black">${pageDescriptor.descShort}</h3>
-        <small>Welcome back, David Miller</small> </div>
+        <small>Welcome back, ${acm_user.fullName}</small> </div>
 </section>
 <div class="row">
     <div class="col-sm-12">

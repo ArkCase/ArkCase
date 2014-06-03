@@ -32,11 +32,11 @@ ComplaintList.Event = {
     ,doClickLnkListItem: function() {
         var complaintId = Complaint.getComplaintId();
         var c = ComplaintList.findComplaint(complaintId);
-        ComplaintList.Object.updateDetail(c);
-
-        Complaint.setComplaintId(complaintId);
-
-        ComplaintList.Object.hiliteSelectedItem(complaintId);
+        if (null != c) {
+            ComplaintList.Object.updateDetail(c);
+            Complaint.setComplaintId(complaintId);
+            ComplaintList.Object.hiliteSelectedItem(complaintId);
+        }
     }
 
     ,onPostInit: function() {

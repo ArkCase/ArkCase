@@ -68,6 +68,24 @@ var Acm = Acm || {
         return url;
     }
 
+    ,getUrlParameter : function(param) {
+        var url = window.location.search.substring(1);
+        var urlVariables = url.split('&');
+        for (var i = 0; i < urlVariables.length; i++)
+        {
+            var paramName = urlVariables[i].split('=');
+            if (paramName[0] == param)
+            {
+                return paramName[1];
+            }
+        }
+    }
+
+    ,getUrlParameter2: function(name){
+        var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+        return results[1] || 0;
+    }
+
     //convert URL parameters to JSON
     //ex) "abc=foo&def=%5Basf%5D&xyz=5&foo=b%3Dar" to {abc: "foo", def: "[asf]", xyz: "5", foo: "b=ar"}
     ,urlToJson: function(param) {
@@ -76,6 +94,36 @@ var Acm = Acm || {
 
     ,deferred: function(fcn) {
         setTimeout(fcn, 200);
+    }
+
+//    ,_foobar_cont: function (){
+//        console.log("finished.");
+//    }
+//    ,sleep: function (millis) {
+//        setTimeout(
+//            function(){
+//                this._foobar_cont();
+//            }
+//            ,millis);
+//    }
+
+//    ,_timer: null
+//    ,sleep: function (milliseconds) {
+//        //this._timer.start();
+//        setTimeout(this._wake, milliseconds);
+//    }
+//
+//    ,_wake: function () {
+//        //this._timer.stop;
+//    }
+
+    ,sleep: function(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds){
+                break;
+            }
+        }
     }
 };
 

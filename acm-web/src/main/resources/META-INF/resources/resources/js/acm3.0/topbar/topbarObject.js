@@ -7,9 +7,16 @@
  */
 Topbar.Object = {
     initialize : function() {
-        this.$lnkNewComponent      = jQuery("#lnkNewComponent");
+        this.$formSearch = $("form[role='search']");
+        this.$formSearch.attr("method", "get");
+        var url = Acm.getContextPath() + "/plugin/search"
+        var term = localStorage.getItem("AcmSearchTerm");
+        if (Acm.isNotEmpty(term)) {
+            url += "?term=" + term;
+        }
+        this.$formSearch.attr("action", url);
 
-        this.$lnkNewComponent.click(function() {Topbar.Event.onClickLnkNewComponent(this);});
+        this.$formSearch.submit(function() {Topbar.Event.onSubmitFormSearch(this);});
     }
 
 };

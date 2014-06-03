@@ -38,6 +38,7 @@ ComplaintList.Object = {
         this.setHtmlDetails(c.details);
 
 
+//todo: jasmine test
 //        var $c = $("<h4>beg<a>mid</a>end</h4>");
 //        var c1 = Acm.Object.getTextNodeText($c);
 //        var c2 = Acm.Object.getTextNodeText($c, 0);
