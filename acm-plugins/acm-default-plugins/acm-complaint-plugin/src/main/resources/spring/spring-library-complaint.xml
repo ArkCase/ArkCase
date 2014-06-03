@@ -25,7 +25,7 @@
             <props>
                 <prop key="complaint.workflow.enabled">true</prop>
                 <prop key="complaint.workflow.activiti.name">cmComplaintWorkflow</prop>
-                <prop key="complaint.workflow.trigger.eventName">com.armedia.acm.complaint.submitted-for-review</prop>
+                <prop key="complaint.workflow.trigger.eventName">com.armedia.acm.complaint.submittedForReview</prop>
             </props>
         </property>
     </bean>

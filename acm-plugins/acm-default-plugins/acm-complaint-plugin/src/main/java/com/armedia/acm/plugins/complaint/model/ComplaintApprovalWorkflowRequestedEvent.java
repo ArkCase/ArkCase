@@ -25,5 +25,7 @@ public class ComplaintApprovalWorkflowRequestedEvent extends AcmEvent
         props.put("approvers", source.getApprovers());
         props.put("complaintNumber", source.getComplaintNumber());
         setEventProperties(props);
+
+        setSucceeded(true);
     }
 }
