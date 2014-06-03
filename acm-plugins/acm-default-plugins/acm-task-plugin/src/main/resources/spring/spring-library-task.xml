@@ -43,6 +43,7 @@
                 <ref bean="acmTaskCreatePrivilege"/>
                 <ref bean="acmTaskSavePrivilege"/>
                 <ref bean="acmTaskListPrivilege"/>
+                <ref bean="acmTaskCompletePrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
