@@ -78,6 +78,11 @@
                     <property name="url" value="/api/{version}/plugin/task/completeTask/{taskId}"/>
                     <property name="requiredPrivilege" ref="acmTaskCompletePrivilege"/>
                 </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/task/adHocTask"/>
+                    <property name="requiredPrivilege" ref="acmTaskCreatePrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>

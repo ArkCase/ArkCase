@@ -28,6 +28,28 @@ class ActivitiTaskDao implements TaskDao
 
     @Override
     @Transactional
+    public AcmTask createAdHocTask(AcmTask in) throws AcmTaskException
+    {
+        Task activitiTask = getActivitiTaskService().newTask();
+        activitiTask.setAssignee(in.getAssignee());
+        activitiTask.setPriority(in.getPriority());
+        activitiTask.setDueDate(in.getDueDate());
+        activitiTask.setName(in.getTitle());
+
+        try
+        {
+            getActivitiTaskService().saveTask(activitiTask);
+            in.setTaskId(Long.valueOf(activitiTask.getId()));
+            return in;
+        }
+        catch (ActivitiException e)
+        {
+            throw new AcmTaskException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    @Transactional
     public AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId) throws AcmTaskException
     {
         verifyCompleteTaskArgs(userThatCompletedTheTask, taskId);

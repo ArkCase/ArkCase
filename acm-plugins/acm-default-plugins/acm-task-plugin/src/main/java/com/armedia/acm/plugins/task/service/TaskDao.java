@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.task.service;
 
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.List;
@@ -11,6 +12,9 @@ import java.util.List;
  */
 public interface TaskDao
 {
+    @Transactional
+    AcmTask createAdHocTask(AcmTask in) throws AcmTaskException;
+
     /**
      * Complete a task on behalf of the given user.  Returns an AcmTask including historical information
      * (task start date, task duration in milliseconds, etc).
