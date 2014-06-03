@@ -46,7 +46,7 @@ public class ListTasksAPIController
         for ( AcmTask task : retval )
         {
             AcmTaskSearchResultEvent event = new AcmTaskSearchResultEvent(task);
-            getTaskEventPublisher().publishTaskSearchResultEvent(event, authentication, ipAddress);
+            getTaskEventPublisher().publishTaskEvent(event, authentication, ipAddress);
         }
 
         return retval;

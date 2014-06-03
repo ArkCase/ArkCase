@@ -13,6 +13,11 @@ public class AcmTask
     private String assignee;
     private String businessProcessName;
     private boolean adhocTask;
+    private boolean completed;
+
+    private Date taskStartDate;
+    private Date taskFinishedDate;
+    private Long taskDurationInMillis;
 
     public Long getTaskId()
     {
@@ -102,5 +107,45 @@ public class AcmTask
     public void setAdhocTask(boolean adhocTask)
     {
         this.adhocTask = adhocTask;
+    }
+
+    public boolean isCompleted()
+    {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed)
+    {
+        this.completed = completed;
+    }
+
+    public Date getTaskStartDate()
+    {
+        return taskStartDate;
+    }
+
+    public void setTaskStartDate(Date taskStartDate)
+    {
+        this.taskStartDate = taskStartDate;
+    }
+
+    public Date getTaskFinishedDate()
+    {
+        return taskFinishedDate;
+    }
+
+    public void setTaskFinishedDate(Date taskFinishedDate)
+    {
+        this.taskFinishedDate = taskFinishedDate;
+    }
+
+    public Long getTaskDurationInMillis()
+    {
+        return taskDurationInMillis;
+    }
+
+    public void setTaskDurationInMillis(Long taskDurationInMillis)
+    {
+        this.taskDurationInMillis = taskDurationInMillis;
     }
 }

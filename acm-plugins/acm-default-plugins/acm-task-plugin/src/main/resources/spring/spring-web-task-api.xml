@@ -8,4 +8,10 @@
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
     </bean>
 
+    <bean id="completeTaskAPIController" class="com.armedia.acm.plugins.task.web.api.CompleteTaskAPIController">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
+        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
+    </bean>
+
 </beans>

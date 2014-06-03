@@ -5,6 +5,7 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.junit.Before;
@@ -69,6 +70,16 @@ public class TaskActivitiIT
         ts.saveTask(task);
 
         verifyUserTask(user);
+
+        ts.complete(task.getId());
+
+        Task afterComplete = ts.createTaskQuery().taskId(task.getId()).singleResult();
+        assertNull(afterComplete);
+
+        HistoricTaskInstance hti = hs.createHistoricTaskInstanceQuery().taskId(task.getId()).singleResult();
+        assertNotNull(hti);
+
+        assertEquals(task.getId(), hti.getId());
     }
 
 
