@@ -19,38 +19,30 @@ public class ComplaintUiController
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView listComplaint()
+    public ModelAndView openComplaintList()
     {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintList");
-        //retval.addObject("complaint", new Complaint());
         retval.addObject("pageDescriptor",  getPageDescriptorList());
-
-
         return retval;
     }
 
     @RequestMapping(value = "/{complaintId}", method = RequestMethod.GET)
-    public ModelAndView showComplaint(@PathVariable(value = "complaintId") Long complaintId)
+    public ModelAndView openComplaintDetail(@PathVariable(value = "complaintId") Long complaintId)
     {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintDetail");
-        //retval.addObject("complaint", new Complaint());
         retval.addObject("complaintId", complaintId);
         retval.addObject("pageDescriptor",  getPageDescriptorDetail());
-
-
         return retval;
     }
 
     @RequestMapping(value = "/wizard", method = RequestMethod.GET)
     public ModelAndView openComplaintWizard()
     {
-        // auditing and exception handling are handled here; transactions must be handled in the service layer.
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintWizard");
         retval.addObject("pageDescriptor",  getPageDescriptorWizard());
-
         return retval;
 
     }

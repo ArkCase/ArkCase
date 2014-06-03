@@ -18,7 +18,6 @@ ComplaintWizard.Event = {
     ,onClickBtnSave : function(e) {
         var data = ComplaintWizard.Object.getComplaintData();
         ComplaintWizard.Service.saveComplaint(data);
-
         e.preventDefault();
     }
 
