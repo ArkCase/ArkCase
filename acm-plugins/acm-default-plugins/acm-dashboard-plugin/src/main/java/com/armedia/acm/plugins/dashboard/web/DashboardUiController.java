@@ -14,7 +14,7 @@ public class DashboardUiController
     private AcmPageDescriptor pageDescriptor;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView complaint()
+    public ModelAndView showHomePage()
     {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("home");
