@@ -5,6 +5,7 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +57,20 @@ public class TaskActivitiIT
 
     }
 
+    @Test
+    public void adhocTask() throws Exception
+    {
+        String user = "user";
+
+        Task task = ts.newTask();
+        task.setDueDate(new Date());
+        task.setAssignee(user);
+
+        ts.saveTask(task);
+
+        verifyUserTask(user);
+    }
+
 
     @Test
     public void findTasks() throws Exception
@@ -76,7 +92,13 @@ public class TaskActivitiIT
 
     protected void verifyUserTask(String user)
     {
-        List<Task> userTasks = ts.createTaskQuery().taskAssignee(user).includeProcessVariables().orderByDueDate().desc().list();
+        List<Task> userTasks = ts.
+                createTaskQuery().
+                taskAssignee(user).
+                includeProcessVariables().
+                orderByDueDate().
+                desc().
+                list();
 
         assertEquals(1, userTasks.size());
 
@@ -84,7 +106,18 @@ public class TaskActivitiIT
         assertNotNull(first.getDueDate());
         assertEquals(ACTIVITI_DEFAULT_PRIORITY, first.getPriority());
 
+        String pid = first.getProcessDefinitionId();
+        if ( pid != null )
+        {
+            ProcessDefinition pd = repo.createProcessDefinitionQuery().processDefinitionId(pid).singleResult();
+            log.info("process name: " + pd.getName());
+            log.info("process id: " + pd.getId());
+        }
+
+
         log.info("Task due date: " + first.getDueDate());
         log.info("Priority: " + first.getPriority());
+
+
     }
 }

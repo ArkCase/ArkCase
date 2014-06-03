@@ -1,7 +1,10 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.plugins.task.model.AcmTask;
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 import org.easymock.EasyMockSupport;
@@ -23,8 +26,11 @@ import static org.junit.Assert.*;
 public class ActivitiTaskDaoTest extends EasyMockSupport
 {
     private TaskService mockTaskService;
+    private RepositoryService mockRepositoryService;
     private Task mockTask;
     private TaskQuery mockTaskQuery;
+    private ProcessDefinitionQuery mockProcessDefinitionQuery;
+    private ProcessDefinition mockProcessDefinition;
 
     private ActivitiTaskDao unit;
 
@@ -34,10 +40,14 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService = createMock(TaskService.class);
         mockTask = createMock(Task.class);
         mockTaskQuery = createMock(TaskQuery.class);
+        mockRepositoryService = createMock(RepositoryService.class);
+        mockProcessDefinitionQuery = createMock(ProcessDefinitionQuery.class);
+        mockProcessDefinition = createMock(ProcessDefinition.class);
 
         unit = new ActivitiTaskDao();
 
         unit.setActivitiTaskService(mockTaskService);
+        unit.setActivitiRepositoryService(mockRepositoryService);
     }
 
     @Test
@@ -49,6 +59,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         Date dueDate = new Date();
         int priority = 22;
         String title = "task Title";
+        String processId = "processId";
+        String processName = "processName";
 
         Long objectId = 250L;
         String objectType = "objectType";
@@ -70,6 +82,13 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getName()).andReturn(title);
         expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
         expect(mockTask.getAssignee()).andReturn(user);
+        expect(mockTask.getProcessDefinitionId()).andReturn(processId);
+
+        expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
+
+        expect(mockProcessDefinition.getName()).andReturn(processName);
 
         replayAll();
 
@@ -88,6 +107,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(objectId, found.getAttachedToObjectId());
         assertEquals(objectType, found.getAttachedToObjectType());
         assertEquals(user, found.getAssignee());
+        assertEquals(processName, found.getBusinessProcessName());
+        assertFalse(found.isAdhocTask());
 
     }
 }

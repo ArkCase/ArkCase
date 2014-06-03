@@ -3,7 +3,9 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import java.util.List;
 class ActivitiTaskDao implements TaskDao
 {
     private TaskService activitiTaskService;
+    private RepositoryService activitiRepositoryService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -55,11 +58,9 @@ class ActivitiTaskDao implements TaskDao
         acmTask.setTitle(activitiTask.getName());
         acmTask.setAssignee(activitiTask.getAssignee());
 
-        if ( activitiTask.getProcessVariables() != null )
-        {
-            acmTask.setAttachedToObjectId((Long) activitiTask.getProcessVariables().get("OBJECT_ID"));
-            acmTask.setAttachedToObjectType((String) activitiTask.getProcessVariables().get("OBJECT_TYPE"));
-        }
+        extractProcessVariables(activitiTask, acmTask);
+
+        findBusinessProcessName(activitiTask, acmTask);
 
         if ( log.isTraceEnabled() )
         {
@@ -72,6 +73,31 @@ class ActivitiTaskDao implements TaskDao
         return acmTask;
     }
 
+    protected void findBusinessProcessName(Task activitiTask, AcmTask acmTask)
+    {
+        String pid = activitiTask.getProcessDefinitionId();
+        if ( pid != null )
+        {
+            ProcessDefinition pd =
+                    getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(pid).singleResult();
+            acmTask.setBusinessProcessName(pd.getName());
+            acmTask.setAdhocTask(false);
+        }
+        else
+        {
+            acmTask.setAdhocTask(true);
+        }
+    }
+
+    protected void extractProcessVariables(Task activitiTask, AcmTask acmTask)
+    {
+        if ( activitiTask.getProcessVariables() != null )
+        {
+            acmTask.setAttachedToObjectId((Long) activitiTask.getProcessVariables().get("OBJECT_ID"));
+            acmTask.setAttachedToObjectType((String) activitiTask.getProcessVariables().get("OBJECT_TYPE"));
+        }
+    }
+
     public TaskService getActivitiTaskService()
     {
         return activitiTaskService;
@@ -80,5 +106,15 @@ class ActivitiTaskDao implements TaskDao
     public void setActivitiTaskService(TaskService activitiTaskService)
     {
         this.activitiTaskService = activitiTaskService;
+    }
+
+    public RepositoryService getActivitiRepositoryService()
+    {
+        return activitiRepositoryService;
+    }
+
+    public void setActivitiRepositoryService(RepositoryService activitiRepositoryService)
+    {
+        this.activitiRepositoryService = activitiRepositoryService;
     }
 }

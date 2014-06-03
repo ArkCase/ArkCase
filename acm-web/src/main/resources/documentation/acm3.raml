@@ -199,6 +199,30 @@ securitySchemes:
           multipart/form-data:
             
             
+  /task:
+    /forUser/{user}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      get:
+        description: Get a list of active tasks for the specified user.
+        responses:
+          200: 
+            description: expected response containing a list of tasks.
+            body:
+              application/json:
+                example: |
+                 [
+                   {
+                     "taskId":500,
+                     "priority":0,
+                     "title":"Example Task Title",
+                     "dueDate":"2014-06-03",
+                     "attachedToObjectType":"COMPLAINT",
+                     "attachedToObjectId":495, 
+                     "assignee":"ann-acm",
+                     "businessProcessName":"cmComplaintWorkflow",
+                     "adhocTask":false
+                   }
+                  ]
 /users:
   /withPrivilege/{privilege}:
     securedBy: [ spring_security_form_auth, spring_security_basic_auth ]

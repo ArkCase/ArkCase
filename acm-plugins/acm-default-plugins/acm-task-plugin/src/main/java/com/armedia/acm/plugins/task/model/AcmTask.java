@@ -11,6 +11,8 @@ public class AcmTask
     private String attachedToObjectType;
     private Long attachedToObjectId;
     private String assignee;
+    private String businessProcessName;
+    private boolean adhocTask;
 
     public Long getTaskId()
     {
@@ -80,5 +82,25 @@ public class AcmTask
     public void setAssignee(String assignee)
     {
         this.assignee = assignee;
+    }
+
+    public String getBusinessProcessName()
+    {
+        return businessProcessName;
+    }
+
+    public void setBusinessProcessName(String businessProcessName)
+    {
+        this.businessProcessName = businessProcessName;
+    }
+
+    public boolean isAdhocTask()
+    {
+        return adhocTask;
+    }
+
+    public void setAdhocTask(boolean adhocTask)
+    {
+        this.adhocTask = adhocTask;
     }
 }
