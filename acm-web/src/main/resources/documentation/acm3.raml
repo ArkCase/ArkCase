@@ -223,6 +223,39 @@ securitySchemes:
                      "adhocTask":false
                    }
                   ]
+    /completeTask/{taskId}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      post:
+        description: Complete a task.  Must be called by the task's current assignee.
+        responses:
+          200:
+            description: Task was successfully completed.  JSON represents the historical task instance, with information as to when the task was started and completed.
+            body:
+              application/json:
+                example: |
+                  {
+                  "taskId":500,
+                  "priority":50,
+                  "title":"The Task Title",
+                  "dueDate":"2014-06-03",
+                  "attachedToObjectType":"COMPLAINT",
+                  "attachedToObjectId":250,
+                  "assignee":"ann-acm",
+                  "businessProcessName":"Complaint Approval",
+                  "adhocTask":false,
+                  "completed":true,
+                  "taskStartDate":"2014-06-02",
+                  "taskFinishedDate":"2014-06-03",
+                  "taskDurationInMillis":298392
+                  }
+            
+      
+          400:
+            description: The task could not be completed.  Either the task ID does not represent an active task (task does not exist or is already closed), or the authenticated user is not the task assignee.  T
+            body:
+              text/plain:
+                example: |
+                  Task '500' does not exist or has already been completed.
 /users:
   /withPrivilege/{privilege}:
     securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
