@@ -27,7 +27,7 @@ public class ActivitiProcessEventHandler implements ApplicationEventPublisherAwa
         Map<String, Object> processVariables = getRuntimeService().getVariables(execution.getId());
 
         AcmBusinessProcessEvent event = new AcmBusinessProcessEvent(execution);
-        event.setEventType("com.armedia.acm.activiti.business-process." + eventName);
+        event.setEventType("com.armedia.acm.activiti.businessProcess." + eventName);
         event.setProcessVariables(processVariables);
 
         applicationEventPublisher.publishEvent(event);

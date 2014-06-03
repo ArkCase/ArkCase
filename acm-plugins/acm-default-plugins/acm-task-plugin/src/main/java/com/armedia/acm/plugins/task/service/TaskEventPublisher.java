@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.task.service;
 
-import com.armedia.acm.plugins.task.model.AcmTaskSearchResultEvent;
+import com.armedia.acm.plugins.task.model.AcmTaskEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -12,8 +12,8 @@ public class TaskEventPublisher implements ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public void publishTaskSearchResultEvent(
-            AcmTaskSearchResultEvent event,
+    public void publishTaskEvent(
+            AcmTaskEvent event,
             Authentication authentication,
             String ipAddress)
     {

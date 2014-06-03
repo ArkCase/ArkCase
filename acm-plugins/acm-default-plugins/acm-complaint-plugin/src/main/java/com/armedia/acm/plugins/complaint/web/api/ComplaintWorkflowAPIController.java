@@ -35,10 +35,10 @@ public class ComplaintWorkflowAPIController
             HttpSession session
     ) throws IOException
     {
-        if (log.isTraceEnabled())
+        if (log.isDebugEnabled())
         {
-            log.trace("Got a complaint: " + in + "; complaint ID: '" + in.getComplaintId() + "'");
-            log.trace("complaint type: " + in.getComplaintType());
+            log.debug("Got a complaint: " + in + "; complaint ID: '" + in.getComplaintId() + "'");
+            log.debug("complaint type: " + in.getComplaintType());
         }
 
          Long complaintId = in.getComplaintId();

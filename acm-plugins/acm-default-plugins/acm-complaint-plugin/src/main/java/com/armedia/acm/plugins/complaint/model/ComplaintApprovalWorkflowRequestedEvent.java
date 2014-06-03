@@ -16,7 +16,7 @@ public class ComplaintApprovalWorkflowRequestedEvent extends AcmEvent
     {
         super(source);
 
-        setEventType("com.armedia.acm.complaint.submitted-for-review");
+        setEventType("com.armedia.acm.complaint.submittedForReview");
         setObjectId(source.getComplaintId());
         setEventDate(new Date());
         setObjectType("COMPLAINT");
@@ -25,5 +25,7 @@ public class ComplaintApprovalWorkflowRequestedEvent extends AcmEvent
         props.put("approvers", source.getApprovers());
         props.put("complaintNumber", source.getComplaintNumber());
         setEventProperties(props);
+
+        setSucceeded(true);
     }
 }

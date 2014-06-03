@@ -1,15 +1,21 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 
+import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
+import org.activiti.engine.ActivitiException;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +24,97 @@ class ActivitiTaskDao implements TaskDao
     private TaskService activitiTaskService;
     private RepositoryService activitiRepositoryService;
     private Logger log = LoggerFactory.getLogger(getClass());
+    private HistoryService activitiHistoryService;
+
+    @Override
+    @Transactional
+    public AcmTask createAdHocTask(AcmTask in) throws AcmTaskException
+    {
+        Task activitiTask = getActivitiTaskService().newTask();
+        activitiTask.setAssignee(in.getAssignee());
+        activitiTask.setPriority(in.getPriority());
+        activitiTask.setDueDate(in.getDueDate());
+        activitiTask.setName(in.getTitle());
+
+        try
+        {
+            getActivitiTaskService().saveTask(activitiTask);
+            in.setTaskId(Long.valueOf(activitiTask.getId()));
+            return in;
+        }
+        catch (ActivitiException e)
+        {
+            throw new AcmTaskException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId) throws AcmTaskException
+    {
+        verifyCompleteTaskArgs(userThatCompletedTheTask, taskId);
+
+        String user = userThatCompletedTheTask.getName();
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info("Completing task '" + taskId + "' for user '" + user + "'");
+        }
+
+        String strTaskId = String.valueOf(taskId);
+
+        Task existingTask = getActivitiTaskService().createTaskQuery().taskId(strTaskId).singleResult();
+
+        verifyTaskExists(taskId, existingTask);
+
+        verifyUserIsTheAssignee(taskId, user, existingTask);
+
+        AcmTask retval = acmTaskFromActivitiTask(existingTask);
+
+        try
+        {
+            getActivitiTaskService().complete(strTaskId);
+
+            HistoricTaskInstance hti =
+                    getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
+
+            retval.setTaskStartDate(hti.getStartTime());
+            retval.setTaskFinishedDate(hti.getEndTime());
+            retval.setTaskDurationInMillis(hti.getDurationInMillis());
+            retval.setCompleted(true);
+
+            return retval;
+        }
+        catch (ActivitiException e)
+        {
+            log.error("Could not close task '" + taskId + "' for user '" + user + "': " + e.getMessage(), e);
+            throw new AcmTaskException(e);
+        }
+    }
+
+    protected void verifyCompleteTaskArgs(Principal userThatCompletedTheTask, Long taskId)
+    {
+        if ( userThatCompletedTheTask == null || taskId == null )
+        {
+            throw new IllegalArgumentException("userThatCompletedTheTask and taskId must be specified");
+        }
+    }
+
+    protected void verifyUserIsTheAssignee(Long taskId, String user, Task existingTask) throws AcmTaskException
+    {
+        if ( existingTask.getAssignee() == null || !existingTask.getAssignee().equals(user))
+        {
+            throw new AcmTaskException("Task '" + taskId + "' can only be closed by the assignee.");
+        }
+    }
+
+    protected void verifyTaskExists(Long taskId, Task existingTask) throws AcmTaskException
+    {
+        if ( existingTask == null )
+        {
+            throw new AcmTaskException("Task '" + taskId + "' does not exist or has already been completed.");
+        }
+    }
 
     @Override
     public List<AcmTask> tasksForUser(String user)
@@ -116,5 +213,15 @@ class ActivitiTaskDao implements TaskDao
     public void setActivitiRepositoryService(RepositoryService activitiRepositoryService)
     {
         this.activitiRepositoryService = activitiRepositoryService;
+    }
+
+    public void setActivitiHistoryService(HistoryService activitiHistoryService)
+    {
+        this.activitiHistoryService = activitiHistoryService;
+    }
+
+    public HistoryService getActivitiHistoryService()
+    {
+        return activitiHistoryService;
     }
 }
