@@ -18,12 +18,9 @@ import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 
-/**
- * Created by dmiller on 3/18/14.
- */
-public class AcmLoginSuccessHandlerTest extends EasyMockSupport
+public class AcmLoginSuccessOperationsTest extends EasyMockSupport
 {
-    private AcmLoginSuccessHandler unit;
+    private AcmLoginSuccessOperations unit;
 
     private HttpSession mockSession;
     private Authentication mockAuthentication;
@@ -34,7 +31,7 @@ public class AcmLoginSuccessHandlerTest extends EasyMockSupport
     @Before
     public void setUp()
     {
-        unit = new AcmLoginSuccessHandler();
+        unit = new AcmLoginSuccessOperations();
 
         mockSession = createMock(HttpSession.class);
         mockRequest = createMock(HttpServletRequest.class);
