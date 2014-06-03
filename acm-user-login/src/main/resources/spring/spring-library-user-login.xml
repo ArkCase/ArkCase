@@ -43,6 +43,10 @@
     <bean id="acmAuthenticationDetailsFactory" class="com.armedia.acm.auth.AcmAuthenticationDetailsFactory"/>
 
     <bean id="acmLoginSuccessListener" class="com.armedia.acm.auth.AcmLoginSuccessEventListener"/>
+
+    <bean id="acmBasicAuthenticationFilter" class="com.armedia.acm.auth.AcmBasicAuthenticationFilter">
+        <constructor-arg ref="acmAuthenticationManager"/>
+    </bean>
     <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">
         <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="acmApplication" ref="acmApplication"/>
