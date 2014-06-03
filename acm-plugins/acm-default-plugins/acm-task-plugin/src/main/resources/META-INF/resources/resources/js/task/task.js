@@ -28,14 +28,19 @@ var Task = Task || {
     ,PERSON_SUBTABLE_TITLE_LOCATIONS:     "Locations"
     ,PERSON_SUBTABLE_TITLE_ALIASES:       "Aliases"
 
-    ,_taskId : undefined
+//    ,_taskId : undefined
+//    ,getTaskId : function() {
+//        return this._taskId;
+//    }
+//    ,setTaskId : function(id) {
+//        this._taskId = id;
+//    }
     ,getTaskId : function() {
-        return this._taskId;
+        return this._task.taskId;
     }
     ,setTaskId : function(id) {
-        this._taskId = id;
+        this._task.taskId = id;
     }
-
     ,_task : {}
     ,getTask : function() {
         return this._task;

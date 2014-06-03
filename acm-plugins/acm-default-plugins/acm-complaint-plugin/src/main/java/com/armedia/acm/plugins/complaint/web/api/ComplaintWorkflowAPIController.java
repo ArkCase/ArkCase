@@ -39,9 +39,10 @@ public class ComplaintWorkflowAPIController
             log.trace("complaint type: " + in.getComplaintType());
         }
 
-        boolean isNew = in.getComplaintId() == null;
 
-        if ( !isNew )
+        Long complaintId = in.getComplaintId();
+        boolean isNew = (null == complaintId) || (0 == complaintId);
+        if ( isNew )
         {
             sendErrorResponse(HttpStatus.BAD_REQUEST, "You must save the complaint first.", response);
         }

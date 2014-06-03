@@ -122,6 +122,8 @@ ComplaintWizard.Object = {
 //        c.originator.aliases[] = data.originator.aliases;
 //        c.originator.ecmFolderId[] = data.originator.ecmFolderId;
 //        c.originator.ecmFolderPath[] = data.originator.ecmFolderPath;
+
+        c.approvers = data.approvers;
     }
     ,getComplaintData : function() {
         var data = {};
@@ -156,7 +158,7 @@ ComplaintWizard.Object = {
         data.priority = this.getSelectValueSelPriority();
 
         //"securityTags": ["Anonymous", "Confidential", "Top Secret"]
-        var b6 = this.getSelectValuesSelApprovers();
+        data.approvers = this.getSelectValuesSelApprovers();
 
 
         var z = 1;

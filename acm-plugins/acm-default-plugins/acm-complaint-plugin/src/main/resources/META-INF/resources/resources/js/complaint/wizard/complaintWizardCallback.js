@@ -8,11 +8,13 @@
 ComplaintWizard.Callback = {
     initialize : function() {
         Acm.Dispatcher.addEventListener(this.EVENT_APPROVERS_RETRIEVED, this.onApproversRetrieved);
-        Acm.Dispatcher.addEventListener(this.EVENT_CREATE_RETURNED, this.onCreateReturned);
+        Acm.Dispatcher.addEventListener(this.EVENT_COMPLAIN_SAVED, this.onComplaintSaved);
+        Acm.Dispatcher.addEventListener(this.EVENT_COMPLAIN_SUBMITTED, this.onComplaintSubmitted);
     }
 
-    ,EVENT_APPROVERS_RETRIEVED  : "complaint-wizard-get-approvers"
-    ,EVENT_CREATE_RETURNED		: "complaint-wizard-create-returned"
+    ,EVENT_APPROVERS_RETRIEVED  : "complaint-wizard-approvers-retrieved"
+    ,EVENT_COMPLAIN_SAVED		: "complaint-wizard-complaint-saved"
+    ,EVENT_COMPLAIN_SUBMITTED    : "complaint-wizard-complaint-submitted"
 
 
     ,onApproversRetrieved : function(Callback, response) {
@@ -26,7 +28,7 @@ ComplaintWizard.Callback = {
             Acm.Dialog.error("Failed to retrieve approvers");
         }
     }
-    ,onCreateReturned : function(Callback, response) {
+    ,onComplaintSaved : function(Callback, response) {
         var success = false;
         if (response) {
             if (Acm.isNotEmpty(response.complaintId)) {
@@ -36,7 +38,18 @@ ComplaintWizard.Callback = {
         }
 
         if (!success) {
-            Acm.Dialog.error("Failed to create new complaint");
+            Acm.Dialog.error("Failed to create or save complaint");
+        }
+    }
+    ,onComplaintSubmitted : function(Callback, response) {
+        var success = false;
+        if (response) {
+                //validate response.length == Complaint.getComplaint().approvers.length
+                success = true;
+        }
+
+        if (!success) {
+            Acm.Dialog.error("Error occurred for complaint approval submission");
         }
     }
 };
