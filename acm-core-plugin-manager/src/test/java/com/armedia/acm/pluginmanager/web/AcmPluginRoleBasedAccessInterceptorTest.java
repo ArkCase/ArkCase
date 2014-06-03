@@ -4,12 +4,12 @@ import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +33,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
     private HttpServletRequest mockRequest;
     private HttpSession mockSession;
     private ServletOutputStream mockOutputStream;
+    private AcmSpringMvcErrorManager mockErrorManager;
 
     private AcmPluginRoleBasedAccessInterceptor unit;
     private AcmPluginManager acmPluginManager;
@@ -44,11 +45,13 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         mockRequest = createMock(HttpServletRequest.class);
         mockSession = createMock(HttpSession.class);
         mockOutputStream = createMock(ServletOutputStream.class);
+        mockErrorManager = createMock(AcmSpringMvcErrorManager.class);
 
         unit = new AcmPluginRoleBasedAccessInterceptor();
 
         acmPluginManager = new AcmPluginManager();
         unit.setAcmPluginManager(acmPluginManager);
+        unit.setErrorManager(mockErrorManager);
     }
 
     @Test
@@ -177,11 +180,6 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
 
     protected void insufficientPrivilegeExpectations() throws IOException
     {
-        mockResponse.setStatus(HttpStatus.FORBIDDEN.value());
-        mockResponse.setContentType(MediaType.TEXT_PLAIN_VALUE);
-        mockResponse.setContentLength(anyInt());
-        expect(mockResponse.getOutputStream()).andReturn(mockOutputStream).atLeastOnce();
-        mockOutputStream.write(anyObject(byte[].class));
-        mockOutputStream.flush();
+        mockErrorManager.sendErrorResponse(eq(HttpStatus.FORBIDDEN), anyObject(String.class), eq(mockResponse));
     }
 }

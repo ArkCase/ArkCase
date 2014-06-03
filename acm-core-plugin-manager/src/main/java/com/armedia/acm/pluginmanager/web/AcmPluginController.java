@@ -2,6 +2,7 @@ package com.armedia.acm.pluginmanager.web;
 
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.AcmUserAction;
+import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class AcmPluginController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+    private AcmSpringMvcErrorManager errorManager;
 
     /**
      * REST service to get the list of accessible navigator tabs.  It is NOT used by the ACM webapp (the webapp uses
@@ -47,7 +49,7 @@ public class AcmPluginController
 
         if ( userPrivileges == null || acmApplication == null )
         {
-            sendErrorResponse(HttpStatus.BAD_REQUEST, "Invalid ACM session: no user privileges set", response);
+            getErrorManager().sendErrorResponse(HttpStatus.BAD_REQUEST, "Invalid ACM session: no user privileges set", response);
         }
 
         List<AcmUserAction> tabs = acmApplication.getNavigatorTabs();
@@ -64,16 +66,13 @@ public class AcmPluginController
         return userAccessibleTabs;
     }
 
-    public void sendErrorResponse(HttpStatus httpStatus, String message, HttpServletResponse response) throws IOException
+    public AcmSpringMvcErrorManager getErrorManager()
     {
-        response.setStatus(httpStatus.value());
-        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-
-        byte[] bytes = message.getBytes();
-        response.setContentLength(bytes.length);
-        response.getOutputStream().write(bytes);
-        response.getOutputStream().flush();
+        return errorManager;
     }
 
-
+    public void setErrorManager(AcmSpringMvcErrorManager errorManager)
+    {
+        this.errorManager = errorManager;
+    }
 }

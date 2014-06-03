@@ -33,6 +33,7 @@
 
     <bean id="complaintWorkflowAPIController" class="com.armedia.acm.plugins.complaint.web.api.ComplaintWorkflowAPIController">
         <property name="eventPublisher" ref="complaintEventPublisher"/>
+        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
     </bean>
 
 

@@ -19,6 +19,11 @@
             <artifactId>acm-core-object-model</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-web</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>

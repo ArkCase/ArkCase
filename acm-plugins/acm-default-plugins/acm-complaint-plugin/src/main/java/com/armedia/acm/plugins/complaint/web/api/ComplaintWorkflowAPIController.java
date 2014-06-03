@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
+import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class ComplaintWorkflowAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private SaveComplaintEventPublisher eventPublisher;
+    private AcmSpringMvcErrorManager errorManager;
 
     @RequestMapping(method = RequestMethod.POST, value = "/workflow", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -41,9 +43,9 @@ public class ComplaintWorkflowAPIController
 
         boolean isNew = in.getComplaintId() == null;
 
-        if ( !isNew )
+        if ( isNew )
         {
-            sendErrorResponse(HttpStatus.BAD_REQUEST, "You must save the complaint first.", response);
+            getErrorManager().sendErrorResponse(HttpStatus.BAD_REQUEST, "You must save the complaint first.", response);
         }
 
         String ipAddress = (String) session.getAttribute("acm_ip_address");
@@ -54,16 +56,7 @@ public class ComplaintWorkflowAPIController
     }
 
 
-    public void sendErrorResponse(HttpStatus httpStatus, String message, HttpServletResponse response) throws IOException
-    {
-        response.setStatus(httpStatus.value());
-        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
 
-        byte[] bytes = message.getBytes();
-        response.setContentLength(bytes.length);
-        response.getOutputStream().write(bytes);
-        response.getOutputStream().flush();
-    }
 
     public SaveComplaintEventPublisher getEventPublisher()
     {
@@ -73,5 +66,15 @@ public class ComplaintWorkflowAPIController
     public void setEventPublisher(SaveComplaintEventPublisher eventPublisher)
     {
         this.eventPublisher = eventPublisher;
+    }
+
+    public AcmSpringMvcErrorManager getErrorManager()
+    {
+        return errorManager;
+    }
+
+    public void setErrorManager(AcmSpringMvcErrorManager errorManager)
+    {
+        this.errorManager = errorManager;
     }
 }
