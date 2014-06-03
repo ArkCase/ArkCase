@@ -46,11 +46,19 @@
 
     <bean id="acmBasicAuthenticationFilter" class="com.armedia.acm.auth.AcmBasicAuthenticationFilter">
         <constructor-arg ref="acmAuthenticationManager"/>
+        <property name="loginSuccessOperations" ref="acmLoginSuccessOperations"/>
+        <property name="authenticationDetailsSource" ref="acmAuthenticationDetailsFactory"/>
+        <property name="loginSuccessEventListener" ref="acmLoginSuccessListener"/>
     </bean>
-    <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">
+    
+    <bean id="acmLoginSuccessOperations" class="com.armedia.acm.auth.AcmLoginSuccessOperations">
         <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="acmApplication" ref="acmApplication"/>
         <property name="userDao" ref="userJpaDao"/>
+    </bean>
+    
+    <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">
+        <property name="loginSuccessOperations" ref="acmLoginSuccessOperations"/>
     </bean>
     <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>
     <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">

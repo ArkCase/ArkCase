@@ -3,6 +3,7 @@ package com.armedia.acm.auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -16,6 +17,8 @@ import java.io.IOException;
 public class AcmBasicAuthenticationFilter extends BasicAuthenticationFilter
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+    private AcmLoginSuccessOperations loginSuccessOperations;
+    private AcmLoginSuccessEventListener loginSuccessEventListener;
 
     public AcmBasicAuthenticationFilter(AuthenticationManager authenticationManager)
     {
@@ -34,6 +37,31 @@ public class AcmBasicAuthenticationFilter extends BasicAuthenticationFilter
         {
             log.debug(authResult.getName() + " has logged in via basic authentication.");
         }
+
+        getLoginSuccessOperations().onSuccessfulAuthentication(request, authResult);
+
+        InteractiveAuthenticationSuccessEvent event = new InteractiveAuthenticationSuccessEvent(authResult, getClass());
+        getLoginSuccessEventListener().onApplicationEvent(event);
+
     }
 
+    public void setLoginSuccessOperations(AcmLoginSuccessOperations loginSuccessOperations)
+    {
+        this.loginSuccessOperations = loginSuccessOperations;
+    }
+
+    public AcmLoginSuccessOperations getLoginSuccessOperations()
+    {
+        return loginSuccessOperations;
+    }
+
+    public AcmLoginSuccessEventListener getLoginSuccessEventListener()
+    {
+        return loginSuccessEventListener;
+    }
+
+    public void setLoginSuccessEventListener(AcmLoginSuccessEventListener loginSuccessEventListener)
+    {
+        this.loginSuccessEventListener = loginSuccessEventListener;
+    }
 }
