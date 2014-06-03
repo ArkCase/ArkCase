@@ -54,7 +54,7 @@ public class ComplaintWorkflowIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/DefaultComplaintWorkflow_v3.bpmn20.xml")
+                .addClasspathResource("activiti/DefaultComplaintWorkflow_v4.bpmn20.xml")
                 .deploy();
 
     }
@@ -83,7 +83,6 @@ public class ComplaintWorkflowIT
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("approvers", approvers);
         processVariables.put("complaintNumber", complaintNumber);
-        processVariables.put("sequentialApproval", Boolean.FALSE);
 
         assertNotNull(rt);
 

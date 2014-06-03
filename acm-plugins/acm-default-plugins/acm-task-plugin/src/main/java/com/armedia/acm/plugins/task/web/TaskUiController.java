@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.task.web;
 
+import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.web.AcmPageDescriptor;
-import com.armedia.acm.plugins.complaint.model.Complaint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.validation.Valid;
 
 @RequestMapping("/plugin/task")
@@ -43,7 +44,7 @@ public class TaskUiController
 
     @RequestMapping(value = "/wizard", method = RequestMethod.GET)
     public ModelAndView createTask(
-            @Valid Complaint complaint,
+            @Valid AcmTask task,
             BindingResult bindingResult,
             Authentication authentication)
     {

@@ -9,7 +9,7 @@
         properties-ref="taskPluginProperties"
         ignore-unresolvable="true"
         local-override="false"
-        order="1"/>
+        order="178"/>
 
 
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
@@ -43,7 +43,6 @@
                 <ref bean="acmTaskCreatePrivilege"/>
                 <ref bean="acmTaskSavePrivilege"/>
                 <ref bean="acmTaskListPrivilege"/>
-                <ref bean="acmTaskApprovePrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
@@ -70,7 +69,7 @@
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/task/list"/>
+                    <property name="url" value="api/{version}/plugin/task/forUser/{user}"/>
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
                 </bean>
             </list>
@@ -78,48 +77,49 @@
     </bean>
 
     <bean id="acmTaskListPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-list"/>
+        <property name="privilegeName" value="acm-task-list"/>
         <property name="applicationRolesWithPrivilege">
             <list>
                 <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
                 <value>ROLE_CALLCENTER</value>
                 <value>ROLE_INVESTIGATOR</value>
                 <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_ANALYST</value>
             </list>
         </property>
     </bean>
     <bean id="acmTaskSavePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-save"/>
+        <property name="privilegeName" value="acm-task-save"/>
         <property name="applicationRolesWithPrivilege">
             <list>
                 <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
                 <value>ROLE_CALLCENTER</value>
                 <value>ROLE_INVESTIGATOR</value>
                 <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_ANALYST</value>
             </list>
         </property>
     </bean>
 
     <bean id="acmTaskCreatePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-create"/>
+        <property name="privilegeName" value="acm-task-create"/>
         <property name="applicationRolesWithPrivilege">
             <list>
                 <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
                 <value>ROLE_CALLCENTER</value>
                 <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_ANALYST</value>
+                <value>ROLE_INVESTIGATOR</value>
             </list>
         </property>
+    </bean>
+    
+    <bean id="acmTaskDao" class="com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao">
+        <property name="activitiTaskService" ref="activitiTaskService"/>
+        <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
     </bean>
 
-    <bean id="acmTaskApprovePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-approve"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
-    </bean>
+    <bean id="taskEventPublisher" class="com.armedia.acm.plugins.task.service.TaskEventPublisher"/>
 
 
 </beans>
