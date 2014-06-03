@@ -69,7 +69,7 @@
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="api/{version}/plugin/task/forUser/{user}"/>
+                    <property name="url" value="/api/{version}/plugin/task/forUser/{user}"/>
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
                 </bean>
             </list>
