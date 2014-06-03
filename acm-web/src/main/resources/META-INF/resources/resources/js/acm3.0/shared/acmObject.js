@@ -108,6 +108,13 @@ Acm.Object = {
         //}).prop('selected', true); //for jQuery v1.6+
     	}).attr('selected', true);
     }
+
+    //ignore first option, which is instruction
+    ,getSelectValueIgnoreFirst: function($s) {
+        var selected = Acm.Object.getSelectValue($s);
+        var firstOpt = $s.find("option:first").val();
+        return (selected == firstOpt)? null : selected;
+    }
     ,getSelectValues: function($s) {
         var mv = [];
         $s.find("option:selected").each(function(i, selected) {

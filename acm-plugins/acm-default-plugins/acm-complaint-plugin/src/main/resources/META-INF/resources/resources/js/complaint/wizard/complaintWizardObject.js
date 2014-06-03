@@ -18,7 +18,9 @@ ComplaintWizard.Object = {
         this.$selNotifications       = $(".choose-notifications");     //"#notifications"
         this.$edtIncidentDate        = $("#incidentDate");
         this.$edtComplaintTitle      = $("#edtComplaintTitle");
+        this.$selComplaintType       = $("select[name='complaintType']");
         this.$selPriority            = $("select[name='priority']");
+
 
         this.$divInitiator           = $("#divInitiator");
         this.$divPeople              = $("#divPeople");
@@ -87,54 +89,87 @@ ComplaintWizard.Object = {
         return Acm.Object.getSelectValues(this.$selNotifications);
     }
     ,getSelectValueSelPriority: function() {
-        return Acm.Object.getSelectValue(this.$selPriority);
+        return Acm.Object.getSelectValueIgnoreFirst(this.$selPriority);
+    }
+    ,getSelectValueSelComplaintType: function() {
+        return Acm.Object.getSelectValueIgnoreFirst(this.$selComplaintType);
     }
 
     ,setComplaintData : function(data) {
         var c = Complaint.getComplaint();
-        c.complaintId = data.complaintId;
+        //c.complaintTitle = data.complaintTitle;
+        //c.priority = data.priority;
+        //c.complaintType = data.complaintType;
+        //c.details = data.details;
+        //c.incidentDate = data.incidentDate;   //need date convert
 
-        c.complaintTitle = data.complaintTitle;
-        c.priority = data.priority;
-//        c.complaintNumber = data.complaintNumber;
-//        c.complaintType = data.complaintType;
-//        c.created = data.created;
-//        c.creator = data.creator;
-//        c.details = data.details;
-//        c.incidentDate = data.incidentDate;   //need date convert
-//        c.modified = data.modified;
-//        c.modifier = data.modifier;
-//        c.status = data.status;
+        c.complaintId = data.complaintId;
+        c.complaintNumber = data.complaintNumber;
+        c.created = data.created;
+        c.creator = data.creator;
+        c.modified = data.modified;
+        c.modifier = data.modifier;
+        c.status = data.status;
 
         c.originator.id = data.originator.id;
-        c.originator.title = data.originator.title;
-        c.originator.givenName = data.originator.givenName;
-        c.originator.familyName = data.originator.familyName;
-//        c.originator.created = data.originator.created;
-//        c.originator.creator = data.originator.creator;
-//        c.originator.modified = data.originator.modified;
-//        c.originator.modifier = data.originator.modifier;
-//        c.originator.status = data.originator.status;
+        //c.originator.title = data.originator.title;
+        //c.originator.givenName = data.originator.givenName;
+        //c.originator.familyName = data.originator.familyName;
+        c.originator.company = data.originator.company;
+        c.originator.created = data.originator.created;
+        c.originator.creator = data.originator.creator;
+        c.originator.modified = data.originator.modified;
+        c.originator.modifier = data.originator.modifier;
+        c.originator.status = data.originator.status;
+        c.originator.securityTags = data.originator.securityTags;   //[]
 
-//        c.originator.addresses[...] = data.originator.addresses;
-//        c.originator.contactMethods[] = data.originator.contactMethods;
-//        c.originator.devices[] = data.originator.devices;
+        //c.originator.addresses = data.originator.addresses;
+        //c.originator.contactMethods = data.originator.contactMethods; //=devices[]
+
 //        c.originator.aliases[] = data.originator.aliases;
+//        c.originator.organizations[] = data.originator.organizations;
 //        c.originator.ecmFolderId[] = data.originator.ecmFolderId;
 //        c.originator.ecmFolderPath[] = data.originator.ecmFolderPath;
 
-        c.approvers = data.approvers;
+        //c.approvers = data.approvers;
+
+        c.childObjects = data.childObjects
+        c.ecmFolderId = data.ecmFolderId
+        c.ecmFolderPath = data.ecmFolderPath
+
+    }
+
+    //convert date format from "dd-MM-yyyy" to "yyyy-MM-dd")
+    ,_dateFmtDmy2Ymd: function(dmy) {
+        if (Acm.isEmpty(dmy)) {
+            return null;
+        }
+
+        var arr = dmy.split('-');
+        if (3 != arr.length) {
+            return null;
+        }
+
+        var ymd = arr[2] + "-" + arr[1] + "-" + arr[0];
+        return ymd;
     }
     ,getComplaintData : function() {
-        var data = {};
         var c = Complaint.getComplaint();
-//        var complaintId = Complaint.getComplaintId();
-//        //data.complaintId = (Acm.isEmpty(complaintId))?  0 : complaintId;
-//        if (Acm.isNotEmpty(complaintId)) {
-//            data.complaintId = complaintId;
-//        }
+
+        var data = {};
+        data.complaintTitle = this.getValueEdtComplaintTitle();
+        data.priority = this.getSelectValueSelPriority();
+        data.complaintType = this.getSelectValueSelComplaintType();
+        data.details = this.getHtmlDivComplaintDetails();
+        data.incidentDate = this._dateFmtDmy2Ymd(this.getValueEdtIncidentDate());
 
         data.complaintId = c.complaintId;
+        data.complaintNumber = c.complaintNumber;
+        data.created = c.created;
+        data.creator = c.creator;
+        data.modified = c.modified;
+        data.modifier = c.modifier;
+        data.status = c.status;
 
         data.originator = {};
         data.originator.id = c.originator.id;
@@ -142,26 +177,22 @@ ComplaintWizard.Object = {
         data.originator.givenName = c.originator.givenName;
         data.originator.familyName = c.originator.familyName;
 
+        data.originator.company = c.originator.company;
+        data.originator.created = c.originator.created;
+        data.originator.creator = c.originator.creator;
+        data.originator.modified = c.originator.modified;
+        data.originator.modifier = c.originator.modifier;
+        data.originator.status = c.originator.status;
+        data.originator.addresses = c.originator.addresses;
+        data.originator.contactMethods = c.originator.contactMethods;
 
-        //$selComplaintType
-
-//        ContactMethod contactMethods
-//        PostalAddress addresses
 //        organizations
 //        aliases
 
-        data.details = this.getHtmlDivComplaintDetails();
-        //data.incidentDate = this.getValueEdtIncidentDate();
-        //need to parse date "12-02-2013": to forms ("yyyy-MM-dd'T'HH:mm:ss.SSSZ", "yyyy-MM-dd"))
 
-        data.complaintTitle = this.getValueEdtComplaintTitle();
-        data.priority = this.getSelectValueSelPriority();
 
-        //"securityTags": ["Anonymous", "Confidential", "Top Secret"]
+        data.originator.securityTags = c.originator.securityTags;   //[], "securityTags": ["Anonymous", "Confidential", "Top Secret"]
         data.approvers = this.getSelectValuesSelApprovers();
-
-
-        var z = 1;
 
         return data;
     }
@@ -362,7 +393,7 @@ ComplaintWizard.Object = {
                     var record = Acm.urlToJson(postData);
                     var c = Complaint.getComplaint();
                     var rc = {"Result": "OK", "Record": {}};
-                    rc.Record.id = c.originator.id = parseInt(record.id);
+                    rc.Record.id = c.originator.id;    // (record.id) is empty, do not assign;
                     rc.Record.title = c.originator.title = record.title;
                     rc.Record.givenName = c.originator.givenName = record.givenName;
                     rc.Record.familyName = c.originator.familyName = record.familyName;
