@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class CreateComplaintAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private SaveComplaintTransaction complaintTransaction;
-    private SaveComplaintEventPublisher eventPublisher;
+    private ComplaintEventPublisher eventPublisher;
     private ComplaintDao complaintDao;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -82,12 +82,12 @@ public class CreateComplaintAPIController
         this.complaintTransaction = complaintTransaction;
     }
 
-    public SaveComplaintEventPublisher getEventPublisher()
+    public ComplaintEventPublisher getEventPublisher()
     {
         return eventPublisher;
     }
 
-    public void setEventPublisher(SaveComplaintEventPublisher eventPublisher)
+    public void setEventPublisher(ComplaintEventPublisher eventPublisher)
     {
         this.eventPublisher = eventPublisher;
     }

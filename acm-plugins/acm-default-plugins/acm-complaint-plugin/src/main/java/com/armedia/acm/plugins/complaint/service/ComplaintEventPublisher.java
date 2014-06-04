@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintSearchResultEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
+import com.armedia.acm.plugins.complaint.model.FindComplaintByIdEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -17,7 +18,7 @@ import org.springframework.security.core.Authentication;
 /**
  * Created by armdev on 4/10/14.
  */
-public class SaveComplaintEventPublisher implements ApplicationEventPublisherAware
+public class ComplaintEventPublisher implements ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher eventPublisher;
 
@@ -76,5 +77,21 @@ public class SaveComplaintEventPublisher implements ApplicationEventPublisherAwa
 
         eventPublisher.publishEvent(event);
 
+    }
+
+    public void publishFindComplaintByIdEvent(
+            Complaint source,
+            Authentication authentication,
+            String ipAddress,
+            boolean succeeded)
+    {
+        FindComplaintByIdEvent event = new FindComplaintByIdEvent(source);
+
+        String user = authentication.getName();
+        event.setUserId(user);
+        event.setIpAddress(ipAddress);
+        event.setSucceeded(succeeded);
+
+        eventPublisher.publishEvent(event);
     }
 }

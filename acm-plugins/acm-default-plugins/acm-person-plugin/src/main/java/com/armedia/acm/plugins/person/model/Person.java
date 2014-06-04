@@ -88,8 +88,9 @@ public class Person implements Serializable
     @ElementCollection
     @CollectionTable(
             name = "acm_person_security_tag",
-            joinColumns = @JoinColumn(name = "cm_person_id" )
+            joinColumns = @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")
     )
+    @Column(name = "cm_security_tag")
     private List<String> securityTags = new ArrayList<>();
 
     @PrePersist

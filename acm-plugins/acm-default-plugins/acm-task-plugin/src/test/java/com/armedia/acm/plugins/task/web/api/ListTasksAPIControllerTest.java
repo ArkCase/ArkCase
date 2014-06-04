@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.task.web.api.com.armedia.acm.plugins.task.web.api;
+package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.AcmTaskSearchResultEvent;

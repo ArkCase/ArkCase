@@ -3,7 +3,7 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.person.model.Person;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -32,7 +32,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
     private CreateComplaintAPIController unit;
     private SaveComplaintTransaction mockSaveTransaction;
-    private SaveComplaintEventPublisher mockEventPublisher;
+    private ComplaintEventPublisher mockEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -43,7 +43,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
 
         mockSaveTransaction = createMock(SaveComplaintTransaction.class);
-        mockEventPublisher = createMock(SaveComplaintEventPublisher.class);
+        mockEventPublisher = createMock(ComplaintEventPublisher.class);
 
         unit.setComplaintTransaction(mockSaveTransaction);
         unit.setEventPublisher(mockEventPublisher);
