@@ -342,6 +342,37 @@ securitySchemes:
           
           400:
             description: Task could not be created; perhaps the request body was invalid.
+    /byId/{taskId}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      get:
+        description: Get task details by the task ID.
+        responses:
+          200:
+            description: Normal response; body includes the task details.
+            body:
+              application/json:
+                example: |
+                  {
+                    "taskId":2801,
+                    "priority":50,
+                    "title":"The Task Title",
+                    "dueDate":"2014-06-03T00:00:00.000+0000",
+                    "attachedToObjectType":null,
+                    "attachedToObjectId":null,
+                    "assignee":"ebmillar",
+                    "businessProcessName":null,
+                    "adhocTask":true,
+                    "completed":true,
+                    "taskStartDate":"2014-06-04T14:46:46.472+0000",
+                    "taskFinishedDate":"2014-06-04T17:45:49.822+0000",
+                    "taskDurationInMillis":10743350
+                  }
+          
+          500:
+            description: Could not get the task details; task does not exist, or an Activiti error
+            body:
+              text/plain:
+                example: Task with ID '92838' does not exist.
 /users:
   /withPrivilege/{privilege}:
     securedBy: [ spring_security_form_auth, spring_security_basic_auth ]

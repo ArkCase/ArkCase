@@ -59,6 +59,14 @@ public class TaskActivitiIT
     }
 
     @Test
+    public void taskNotFound() throws Exception
+    {
+        Task found = ts.createTaskQuery().taskId("NoSuchTask").singleResult();
+
+        assertNull(found);
+    }
+
+    @Test
     public void adhocTask() throws Exception
     {
         String user = "user";
