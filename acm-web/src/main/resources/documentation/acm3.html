@@ -1223,6 +1223,129 @@
 
 
 
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task_byId__taskId_">
+                
+                    <span class="badge badge_get">get</span>
+                
+                <span class="parent">/plugin/task</span>/byId/{taskId}
+            </a>
+        </h4>
+    </div>
+    <div id="panel__plugin_task_byId__taskId_" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_plugin_task_byId__taskId__get" class="list-group-item">
+                        <span class="badge badge_get">get</span>
+                        Get task details by the task ID.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_plugin_task_byId__taskId__get">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_get">get</span>
+                            <span class="parent">/plugin/task</span>/byId/{taskId}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Get task details by the task ID.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_plugin_task_byId__taskId__get_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_plugin_task_byId__taskId__get_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_plugin_task_byId__taskId__get_request">
+                                
+                                    <h3>URI Parameters</h3>
+                                    <ul>
+                                        
+                                            <li><strong>taskId</strong>: string</li>
+                                        
+                                    </ul>
+                                
+
+                                
+
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_plugin_task_byId__taskId__get_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>Normal response; body includes the task details.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>{
+  &quot;taskId&quot;:2801,
+  &quot;priority&quot;:50,
+  &quot;title&quot;:&quot;The Task Title&quot;,
+  &quot;dueDate&quot;:&quot;2014-06-03T00:00:00.000+0000&quot;,
+  &quot;attachedToObjectType&quot;:null,
+  &quot;attachedToObjectId&quot;:null,
+  &quot;assignee&quot;:&quot;ebmillar&quot;,
+  &quot;businessProcessName&quot;:null,
+  &quot;adhocTask&quot;:true,
+  &quot;completed&quot;:true,
+  &quot;taskStartDate&quot;:&quot;2014-06-04T14:46:46.472+0000&quot;,
+  &quot;taskFinishedDate&quot;:&quot;2014-06-04T17:45:49.822+0000&quot;,
+  &quot;taskDurationInMillis&quot;:10743350
+}
+</pre>
+                                            
+                                        
+                                    
+                                        <h2>HTTP status code 500</h2>
+                                        <p>Could not get the task details; task does not exist, or an Activiti error</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: text/plain</strong></p>
+                                                <pre>Task with ID &#x27;92838&#x27; does not exist.</pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+
 
 
 

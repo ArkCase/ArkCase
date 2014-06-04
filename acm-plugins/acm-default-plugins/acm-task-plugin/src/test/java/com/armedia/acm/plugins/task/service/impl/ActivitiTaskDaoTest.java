@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.task.service.impl;
 
+import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
@@ -124,6 +125,159 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertNotNull(completed);
         assertEquals(taskId, completed.getTaskId());
         assertTrue(completed.isCompleted());
+    }
+
+    @Test
+    public void findById() throws Exception
+    {
+        String user = "user";
+        Long taskId = 500L;
+        Date dueDate = new Date();
+        int priority = 22;
+        String title = "task Title";
+        String processId = "processId";
+        String processName = "processName";
+
+        Long objectId = 250L;
+        String objectType = "objectType";
+
+        Map<String, Object> pvars = new HashMap<>();
+        pvars.put("OBJECT_ID", objectId);
+        pvars.put("OBJECT_TYPE", objectType);
+
+        expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.taskId(String.valueOf(taskId))).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.includeProcessVariables()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.singleResult()).andReturn(mockTask);
+
+        expect(mockTask.getId()).andReturn(taskId.toString());
+        expect(mockTask.getDueDate()).andReturn(dueDate);
+        expect(mockTask.getPriority()).andReturn(priority);
+        expect(mockTask.getName()).andReturn(title);
+        expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
+        expect(mockTask.getAssignee()).andReturn(user);
+        expect(mockTask.getProcessDefinitionId()).andReturn(processId);
+
+        expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
+
+        expect(mockProcessDefinition.getName()).andReturn(processName);
+
+        replayAll();
+
+        AcmTask task = unit.findById(taskId);
+
+        verifyAll();
+
+        assertEquals(taskId, task.getTaskId());
+        assertEquals(dueDate, task.getDueDate());
+        assertEquals(priority, task.getPriority());
+        assertEquals(title, task.getTitle());
+        assertEquals(objectId, task.getAttachedToObjectId());
+        assertEquals(objectType, task.getAttachedToObjectType());
+        assertEquals(user, task.getAssignee());
+        assertEquals(processName, task.getBusinessProcessName());
+        assertFalse(task.isAdhocTask());
+        assertFalse(task.isCompleted());
+    }
+
+    @Test
+    public void findById_completedTask() throws Exception
+    {
+        String user = "user";
+        Long taskId = 500L;
+        Date dueDate = new Date();
+        int priority = 22;
+        Date started = new Date();
+        Date ended = new Date();
+        long taskDuration = 9876543L;
+        String title = "task Title";
+        String processId = "processId";
+        String processName = "processName";
+
+        Long objectId = 250L;
+        String objectType = "objectType";
+
+        Map<String, Object> pvars = new HashMap<>();
+        pvars.put("OBJECT_ID", objectId);
+        pvars.put("OBJECT_TYPE", objectType);
+
+        expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.taskId(String.valueOf(taskId))).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.includeProcessVariables()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.singleResult()).andReturn(null);
+
+        expect(mockHistoryService.createHistoricTaskInstanceQuery()).andReturn(mockHistoricTaskInstanceQuery);
+        expect(mockHistoricTaskInstanceQuery.taskId(String.valueOf(taskId))).andReturn(mockHistoricTaskInstanceQuery);
+        expect(mockHistoricTaskInstanceQuery.includeProcessVariables()).andReturn(mockHistoricTaskInstanceQuery);
+        expect(mockHistoricTaskInstanceQuery.singleResult()).andReturn(mockHistoricTaskInstance);
+
+        expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
+        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended);
+        expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
+
+        expect(mockHistoricTaskInstance.getId()).andReturn(taskId.toString());
+        expect(mockHistoricTaskInstance.getDueDate()).andReturn(dueDate);
+        expect(mockHistoricTaskInstance.getPriority()).andReturn(priority);
+        expect(mockHistoricTaskInstance.getName()).andReturn(title);
+        expect(mockHistoricTaskInstance.getProcessVariables()).andReturn(pvars).atLeastOnce();
+        expect(mockHistoricTaskInstance.getAssignee()).andReturn(user);
+        expect(mockHistoricTaskInstance.getProcessDefinitionId()).andReturn(processId);
+
+        expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
+
+        expect(mockProcessDefinition.getName()).andReturn(processName);
+
+        replayAll();
+
+        AcmTask task = unit.findById(taskId);
+
+        verifyAll();
+
+        assertEquals(taskId, task.getTaskId());
+        assertEquals(dueDate, task.getDueDate());
+        assertEquals(priority, task.getPriority());
+        assertEquals(title, task.getTitle());
+        assertEquals(objectId, task.getAttachedToObjectId());
+        assertEquals(objectType, task.getAttachedToObjectType());
+        assertEquals(user, task.getAssignee());
+        assertEquals(processName, task.getBusinessProcessName());
+        assertFalse(task.isAdhocTask());
+        assertTrue(task.isCompleted());
+    }
+
+    @Test
+    public void findById_noSuchTask() throws Exception
+    {
+        Long taskId = 500L;
+
+        expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.taskId(String.valueOf(taskId))).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.includeProcessVariables()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.singleResult()).andReturn(null);
+
+        expect(mockHistoryService.createHistoricTaskInstanceQuery()).andReturn(mockHistoricTaskInstanceQuery);
+        expect(mockHistoricTaskInstanceQuery.taskId(String.valueOf(taskId))).andReturn(mockHistoricTaskInstanceQuery);
+        expect(mockHistoricTaskInstanceQuery.includeProcessVariables()).andReturn(mockHistoricTaskInstanceQuery);
+        expect(mockHistoricTaskInstanceQuery.singleResult()).andReturn(null);
+
+        replayAll();
+
+        try
+        {
+            unit.findById(taskId);
+            fail("Should have exception since task was not found");
+        }
+        catch (AcmTaskException ate)
+        {
+            // expected, so test passes
+        }
+
+        verifyAll();
+
     }
 
     @Test

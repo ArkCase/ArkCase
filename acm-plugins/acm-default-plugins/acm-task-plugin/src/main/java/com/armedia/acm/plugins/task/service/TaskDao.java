@@ -32,4 +32,6 @@ public interface TaskDao
      * @return
      */
     List<AcmTask> tasksForUser(String user);
+
+    AcmTask findById(Long taskId) throws AcmTaskException;
 }

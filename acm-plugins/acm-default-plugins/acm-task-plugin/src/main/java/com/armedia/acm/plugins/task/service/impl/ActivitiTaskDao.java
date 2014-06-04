@@ -145,6 +145,86 @@ class ActivitiTaskDao implements TaskDao
         return retval;
     }
 
+    @Override
+    public AcmTask findById(Long taskId) throws AcmTaskException
+    {
+        if ( log.isInfoEnabled() )
+        {
+            log.info("Finding task with ID '" + taskId + "'");
+        }
+
+        AcmTask retval;
+
+        Task activitiTask =
+                getActivitiTaskService().createTaskQuery().taskId(String.valueOf(taskId)).includeProcessVariables().singleResult();
+        if ( activitiTask != null )
+        {
+            retval = acmTaskFromActivitiTask(activitiTask);
+            return retval;
+        }
+        else
+        {
+            HistoricTaskInstance hti =
+                    getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(String.valueOf(taskId)).
+                            includeProcessVariables().singleResult();
+
+            if ( hti != null )
+            {
+                retval = acmTaskFromHistoricActivitiTask(hti);
+
+                return retval;
+            }
+        }
+
+        throw new AcmTaskException("Task with ID '" + taskId + "' does not exist.");
+
+    }
+
+    protected AcmTask acmTaskFromHistoricActivitiTask(HistoricTaskInstance hti)
+    {
+        AcmTask retval;
+        retval = new AcmTask();
+        retval.setTaskStartDate(hti.getStartTime());
+        retval.setTaskFinishedDate(hti.getEndTime());
+        retval.setTaskDurationInMillis(hti.getDurationInMillis());
+        retval.setCompleted(true);
+
+        retval.setTaskId(Long.valueOf(hti.getId()));
+        retval.setDueDate(hti.getDueDate());
+        retval.setPriority(hti.getPriority());
+        retval.setTitle(hti.getName());
+        retval.setAssignee(hti.getAssignee());
+
+        if ( hti.getProcessVariables() != null )
+        {
+            retval.setAttachedToObjectId((Long) hti.getProcessVariables().get("OBJECT_ID"));
+            retval.setAttachedToObjectType((String) hti.getProcessVariables().get("OBJECT_TYPE"));
+        }
+
+        String pid = hti.getProcessDefinitionId();
+        if ( pid != null )
+        {
+            ProcessDefinition pd =
+                    getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(pid).singleResult();
+            retval.setBusinessProcessName(pd.getName());
+            retval.setAdhocTask(false);
+        }
+        else
+        {
+            retval.setAdhocTask(true);
+        }
+
+        if ( log.isTraceEnabled() )
+        {
+            log.trace("Activiti task id '" + retval.getTaskId() + "' for object type '" +
+                    retval.getAttachedToObjectType() + "'" +
+                    ", object id '" + retval.getAttachedToObjectId() + "' found for user '" + retval.getAssignee()
+                    + "'");
+        }
+
+        return retval;
+    }
+
     protected AcmTask acmTaskFromActivitiTask(Task activitiTask)
     {
         AcmTask acmTask = new AcmTask();
