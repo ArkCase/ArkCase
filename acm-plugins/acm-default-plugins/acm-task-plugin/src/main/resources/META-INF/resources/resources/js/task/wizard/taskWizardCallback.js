@@ -7,26 +7,26 @@
  */
 TaskWizard.Callback = {
     initialize : function() {
-        Acm.Dispatcher.addEventListener(this.EVENT_APPROVERS_RETRIEVED, this.onApproversRetrieved);
-        Acm.Dispatcher.addEventListener(this.EVENT_CREATE_RETURNED, this.onCreateReturned);
+        Acm.Dispatcher.addEventListener(this.EVENT_ASSIGNEES_RETRIEVED, this.onAssigneesRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_TASK_CREATED, this.onTaskCreated);
     }
 
-    ,EVENT_APPROVERS_RETRIEVED  : "task-wizard-get-approvers"
-    ,EVENT_CREATE_RETURNED		: "task-wizard-create-returned"
+    ,EVENT_ASSIGNEES_RETRIEVED  : "task-wizard-get-assignees"
+    ,EVENT_TASK_CREATED		    : "task-wizard-task-created"
 
 
-    ,onApproversRetrieved : function(Callback, response) {
+    ,onAssigneesRetrieved : function(Callback, response) {
         var success = false;
         if (response) {
-            TaskWizard.Object.initApprovers(response);
+            TaskWizard.Object.initAssignees(response);
             success = true;
         }
 
         if (!success) {
-            Acm.Dialog.error("Failed to retrieve approvers");
+            Acm.Dialog.error("Failed to retrieve assignees");
         }
     }
-    ,onCreateReturned : function(Callback, response) {
+    ,onTaskCreated : function(Callback, response) {
         var success = false;
         if (response) {
             if (Acm.isNotEmpty(response.taskId)) {

@@ -18,13 +18,13 @@ public class TaskUiController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private AcmPageDescriptor pageDescriptorWizard;
     private AcmPageDescriptor pageDescriptorList;
+    private AcmPageDescriptor pageDescriptorWizard;
     private AcmPageDescriptor pageDescriptorDetail;
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView listTask()
+    public ModelAndView openTaskList()
     {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("taskList");
@@ -33,7 +33,7 @@ public class TaskUiController
     }
 
     @RequestMapping(value = "/{taskId}", method = RequestMethod.GET)
-    public ModelAndView showTask(@PathVariable(value = "taskId") Long taskId)
+    public ModelAndView openTaskDetail(@PathVariable(value = "taskId") Long taskId)
     {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("taskDetail");
@@ -43,17 +43,14 @@ public class TaskUiController
     }
 
     @RequestMapping(value = "/wizard", method = RequestMethod.GET)
-    public ModelAndView createTask(
-            @Valid AcmTask task,
-            BindingResult bindingResult,
-            Authentication authentication)
+    public ModelAndView openTaskWizard()
     {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("taskWizard");
         retval.addObject("pageDescriptor",  getPageDescriptorWizard());
         return retval;
-    }
 
+    }
 
     public AcmPageDescriptor getPageDescriptorWizard() {
         return pageDescriptorWizard;

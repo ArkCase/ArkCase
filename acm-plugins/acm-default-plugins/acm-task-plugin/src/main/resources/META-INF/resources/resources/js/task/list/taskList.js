@@ -34,10 +34,9 @@ var TaskList = TaskList || {
         if (Acm.isNotEmpty(this._taskList)) {
             var len = this._taskList.length;
             for (var i = 0; i < len; i++) {
-                var c = this._taskList[i];
-                //if (taskId == c.taskId) {
-                if (taskId == c.complaintId) {
-                    found = c;
+                var t = this._taskList[i];
+                if (taskId == t.taskId) {
+                    found = t;
                     break;
                 }
             }//end for
@@ -45,13 +44,5 @@ var TaskList = TaskList || {
         return found;
     }
 
-    //datetime format: "2014-04-30T16:51:33.914+0000"
-    ,getDateFromDatetime: function(dt) {
-        var d = "";
-        if (Acm.isNotEmpty(dt)) {
-            d = dt.substr(0, 10);
-        }
-        return d;
-    }
 };
 

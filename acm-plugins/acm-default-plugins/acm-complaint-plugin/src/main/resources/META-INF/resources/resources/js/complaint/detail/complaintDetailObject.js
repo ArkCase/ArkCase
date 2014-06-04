@@ -19,7 +19,7 @@ ComplaintDetail.Object = {
 
     ,updateDetail: function(c) {
         this.setTextTitle(c.complaintTitle);
-        this.setTextTitleDate(" (" + ComplaintDetail.getDateFromDatetime(c.created) + ")");
+        this.setTextTitleDate(" (" + Acm.getDateFromDatetime(c.created) + ")");
         this.setHtmlDetails(c.details);
     }
     ,setTextTitle: function(txt) {

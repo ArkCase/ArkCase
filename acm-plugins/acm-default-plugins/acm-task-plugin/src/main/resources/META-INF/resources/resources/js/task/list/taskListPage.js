@@ -14,17 +14,14 @@ TaskList.Page = {
         if (Acm.isNotEmpty(arr)) {
             var len = arr.length;
             for (var i = 0; i < len; i++) {
-                var c = arr[i];
+                var t = arr[i];
                 if (0 == i) {
-                    Task.setTaskId(c.complaintId);
+                    Task.setTaskId(t.taskId);
                 }
 
-                html += "<li class='list-group-item'> <a href='#' class='thumb-sm pull-left m-r-sm'> <img src='"
-                    + Acm.getContextPath() + "/resources/images/a0.png'" + "class='img-circle'> </a> "
-                    + "<a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
-                    + TaskList.getDateFromDatetime(c.created) + "</small><strong class='block'>"
-                    + c.complaintNumber + "</strong><small>"
-                    + c.complaintTitle + "</small></a><input type='hidden' value='" + c.complaintId + "' /> </li>";
+                html += "<li class='list-group-item'><a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
+                    + Acm.getDateFromDatetime(t.dueDate) + "</small><small>"
+                    + t.title + "</small></a><input type='hidden' value='" + t.taskId + "' /> </li>";
             }
         }
 

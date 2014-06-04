@@ -9,13 +9,11 @@ ComplaintDetail.Service = {
     initialize : function() {
     }
 
-    ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/complaint/list"
+    ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/complaint/byId/"
 
 
     ,retrieveDetail : function(complaintId) {
-        var a = complaintId;
-
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_RETRIEVE_DETAIL
+        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_RETRIEVE_DETAIL + complaintId
             ,ComplaintDetail.Callback.EVENT_DETAIL_RETRIEVED
         );
     }

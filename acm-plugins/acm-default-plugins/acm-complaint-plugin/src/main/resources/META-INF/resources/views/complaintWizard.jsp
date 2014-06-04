@@ -17,13 +17,6 @@
 
 <jsp:attribute name="endOfBody">
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaint.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>
-
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizard.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizardObject.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizardEvent.js'/>"></script>
@@ -113,7 +106,7 @@
     <section class="row m-b-md">
         <div class="col-sm-3">
             <label for="incidentDate" class="label">Incident Date</label>
-            <input id="incidentDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="12-02-2013" data-date-format="dd-mm-yyyy" >
+            <input id="incidentDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="2014-12-02" data-date-format="yyyy-mm-dd" >
 
         </div>
 

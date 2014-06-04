@@ -9,14 +9,19 @@ TaskDetail.Service = {
     initialize : function() {
     }
 
-    ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/complaint/list"
+    ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/task/byId/"
+    ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask/"
 
 
-    ,retrieveDetail : function(complaintId) {
-        var a = complaintId;
-
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_RETRIEVE_DETAIL
+    ,retrieveDetail : function(taskId) {
+        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_RETRIEVE_DETAIL + taskId
             ,TaskDetail.Callback.EVENT_DETAIL_RETRIEVED
+        );
+    }
+    ,completeTask : function(taskId) {
+        Acm.Ajax.asyncPost(Acm.getContextPath() + this.API_COMPLETE_TASK + taskId
+            ,"{}"
+            ,TaskDetail.Callback.EVENT_TASK_COMPLETED
         );
     }
 };

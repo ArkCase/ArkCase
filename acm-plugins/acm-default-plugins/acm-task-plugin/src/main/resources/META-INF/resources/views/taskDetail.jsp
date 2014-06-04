@@ -7,6 +7,10 @@
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
 
+    <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="taskId">${taskId}</span>
+    </div>
+
     <script type="text/javascript">
         $(document).ready(function () {
             Task.initialize();
@@ -17,13 +21,6 @@
 
 <jsp:attribute name="endOfBody">
     <script type="text/javascript" src="<c:url value='/resources/js/task/task.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/taskObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/taskEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/taskPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/taskRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/taskService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/taskCallback.js'/>"></script>
-
     <script type="text/javascript" src="<c:url value='/resources/js/task/detail/taskDetail.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/detail/taskDetailObject.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/detail/taskDetailEvent.js'/>"></script>
@@ -171,40 +168,42 @@
 <div class="wrapper">
 <div class="row">
 
-    <%--<div class="col-xs-6">--%>
-    <%--<label for="taskId" class="label">TaskId</label>--%>
-    <%--<input id="taskId" type="text" class="form-control" placeholder="Duration"   >--%>
-    <%--</div>--%>
-    <div class="col-sm-4">
-        <label for="taskId" class="label">Task ID</label>
-        <input id="taskId" type="text" class="form-control" placeholder="Task ID">
+        <div class="col-sm-4">
+            <label for="taskId" class="label">Task ID</label>
+            <input id="taskId" type="text" class="form-control" placeholder="Task ID">
 
-        <label for="priority" class="label">Priority</label>
-        <input id="priority" type="text" class="form-control" placeholder="Priority">
+            <label for="priority" class="label">Priority</label>
+            <input id="priority" type="text" class="form-control" placeholder="Priority">
 
-        <label for="title" class="label">Title</label>
-        <input id="title" type="text" class="form-control" placeholder="Title">
+            <label for="title" class="label">Title</label>
+            <input id="title" type="text" class="form-control" placeholder="Title">
 
-        <label for="dueDate" class="label">Due Date</label>
-        <input id="dueDate" type="text" class="form-control" placeholder="Due Date">
+            <label for="dueDate" class="label">Due Date</label>
+            <input id="dueDate" type="text" class="form-control" placeholder="Due Date">
 
-        <label for="assignee" class="label">Assignee</label>
-        <input id="assignee" type="text" class="form-control" placeholder="Assignee">
+            <label for="assignee" class="label">Assignee</label>
+            <input id="assignee" type="text" class="form-control" placeholder="Assignee">
 
-        <label for="adhocTask" class="label">Ad-hoc Task</label>
-        <input id="adhocTask" type="text" class="form-control" placeholder="Ad-hoc Task">
-    </div>
+            <label for="adhocTask" class="label">Adhoc Task</label>
+            <input id="adhocTask" type="text" class="form-control" placeholder="Is Adhoc Task?">
+            </br>
+                <%--<label class="checkbox m-n i-checks">--%>
+                <%--<input id="adhocTask" type="checkbox" name="adhocTask"><i></i>Adhoc Task--%>
+                <%--</label>--%>
+        </div>
 
-    <div class="col-sm-4">
-        <label for="businessProcessName" class="label">Business Process Name</label>
-        <input id="businessProcessName" type="text" class="form-control" placeholder="Business Process Name">
+        <div class="col-sm-4" id="divExtra" style="display:none">
+            <label for="businessProcessName" class="label">Business Process Name</label>
+            <input id="businessProcessName" type="text" class="form-control" placeholder="Business Process Name">
 
-        <label for="attachedToObjectType" class="label">Attached To Object Type</label>
-        <input id="attachedToObjectType" type="text" class="form-control" placeholder="Attached To Object Type">
+                <%--<label for="attachedToObjectType" class="label">Attached To Object Type</label>--%>
+                <%--<input id="attachedToObjectType" type="text" class="form-control" placeholder="Attached To Object Type">--%>
 
-        <label for="attachedToObjectId" class="label">Attached To Object ID</label>
-        <input id="attachedToObjectId" type="text" class="form-control" placeholder="Attached To Object ID">
-    </div>
+                <%--<label for="attachedToObjectId" class="label">Attached To Object ID</label>--%>
+                <%--<input id="attachedToObjectId" type="text" class="form-control" placeholder="Attached To Object ID">--%>
+            <br/>
+            <a href="#">&nbsp;&nbsp;Go to: <scan id="attachedToObjectType">COMPLAINT</scan>&nbsp;<scan id="attachedToObjectId">1234</scan></a>
+        </div>
 
 </div>
 <div class="row">
@@ -213,6 +212,7 @@
         <span class="hidden-sm"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete"><i class="fa fa-check"></i> Complete</button></span>
     </div>
 </div>
+
 
 </div>
 </div>

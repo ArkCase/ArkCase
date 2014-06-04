@@ -14,10 +14,6 @@ ComplaintList.Object = {
 
     }
 
-    ,get$ulComplaints : function() {
-        return this.$ulComplaints;
-    }
-
     ,getHtmlUlComplaints: function() {
         return Acm.Object.getHtml(this.$ulComplaints);
     }
@@ -34,7 +30,7 @@ ComplaintList.Object = {
     }
     ,updateDetail: function(c) {
         this.setTextTitle(c.complaintTitle);
-        this.setTextTitleDate(" (" + ComplaintList.getDateFromDatetime(c.created) + ")");
+        this.setTextTitleDate(" (" + Acm.getDateFromDatetime(c.created) + ")");
         this.setHtmlDetails(c.details);
 
 

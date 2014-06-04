@@ -11,6 +11,7 @@ Dashboard.Event = {
 
 
     ,onPostInit: function() {
-        Dashboard.Service.retrieveMyTasks();
+        var user = Acm.Object.getUserName();
+        Dashboard.Service.retrieveMyTasks(user);
     }
 };

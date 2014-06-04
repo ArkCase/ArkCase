@@ -26,7 +26,7 @@ ComplaintList.Callback = {
         }
 
         if (!success) {
-            Acm.Dialog.showError("Failed to retrieve complaint list");
+            Acm.Dialog.error("Failed to retrieve complaint list");
         }
     }
 };

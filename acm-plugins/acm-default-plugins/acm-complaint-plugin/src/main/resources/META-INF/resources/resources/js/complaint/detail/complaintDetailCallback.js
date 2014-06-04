@@ -15,14 +15,16 @@ ComplaintDetail.Callback = {
     ,onDetailRetrieved : function(Callback, response) {
         var success = false;
         if (response) {
-            var complaint = response[0];
-            Complaint.setComplaint(complaint);
-            ComplaintDetail.Object.updateDetail(complaint);
-            success = true;
+            if (Acm.isNotEmpty(response.complaintId)) {
+                var complaint = response;
+                Complaint.setComplaint(complaint);
+                ComplaintDetail.Object.updateDetail(complaint);
+                success = true;
+            }
         }
 
         if (!success) {
-            Acm.Dialog.showError("Failed to retrieve complaint detail");
+            Acm.Dialog.error("Failed to retrieve complaint detail");
         }
     }
 };

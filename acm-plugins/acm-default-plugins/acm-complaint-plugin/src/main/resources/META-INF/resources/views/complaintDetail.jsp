@@ -21,13 +21,6 @@
 
 <jsp:attribute name="endOfBody">
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaint.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>
-
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/detail/complaintDetail.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/detail/complaintDetailObject.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/detail/complaintDetailEvent.js'/>"></script>

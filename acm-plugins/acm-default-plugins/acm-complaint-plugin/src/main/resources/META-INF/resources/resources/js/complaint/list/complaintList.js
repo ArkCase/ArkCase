@@ -44,13 +44,5 @@ var ComplaintList = ComplaintList || {
         return found;
     }
 
-    //datetime format: "2014-04-30T16:51:33.914+0000"
-    ,getDateFromDatetime: function(dt) {
-        var d = "";
-        if (Acm.isNotEmpty(dt)) {
-            d = dt.substr(0, 10);
-        }
-        return d;
-    }
 };
 

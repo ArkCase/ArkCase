@@ -22,7 +22,6 @@ var Acm = Acm || {
         return Acm.Object.getContextPath();
     }
 
-
 	,isEmpty: function (val) {
 //        if (typeof val == "undefined") {
 //            return true;
@@ -94,6 +93,15 @@ var Acm = Acm || {
 
     ,deferred: function(fcn) {
         setTimeout(fcn, 200);
+    }
+
+    //datetime format: "2014-04-30T16:51:33.914+0000"
+    ,getDateFromDatetime: function(dt) {
+        var d = "";
+        if (Acm.isNotEmpty(dt)) {
+            d = dt.substr(0, 10);
+        }
+        return d;
     }
 
 //    ,_foobar_cont: function (){

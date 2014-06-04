@@ -9,20 +9,19 @@ TaskWizard.Service = {
     initialize : function() {
     }
 
-    ,API_GET_APPROVERS        : "/api/latest/users/withPrivilege/acm-complaint-approve"
-    ,API_CREATE_TASK          : "/api/latest/plugin/complaint"
-    ,API_UPLOAD_TASK_FILE     : "/api/latest/plugin/complaint/file"
+    ,API_GET_ASSIGNEES              : "/api/latest/users/withPrivilege/acm-complaint-approve"
+    ,API_CREATE_ADHOC_TASK          : "/api/latest/plugin/task/adHocTask"
 
 
-    ,getApprovers : function() {
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_GET_APPROVERS
-            ,TaskWizard.Callback.EVENT_APPROVERS_RETRIEVED
+    ,getAssignees : function() {
+        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_GET_ASSIGNEES
+            ,TaskWizard.Callback.EVENT_ASSIGNEES_RETRIEVED
         );
     }
-    ,createTask : function(data) {
-        Acm.Ajax.asyncPost(Acm.getContextPath() + this.API_CREATE_TASK
+    ,createAdhocTask : function(data) {
+        Acm.Ajax.asyncPost(Acm.getContextPath() + this.API_CREATE_ADHOC_TASK
             ,JSON.stringify(data)
-            ,TaskWizard.Callback.EVENT_CREATE_RETURNED
+            ,TaskWizard.Callback.EVENT_TASK_CREATED
         );
     }
 };

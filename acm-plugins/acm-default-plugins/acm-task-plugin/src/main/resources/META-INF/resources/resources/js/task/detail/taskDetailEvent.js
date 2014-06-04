@@ -9,8 +9,13 @@ TaskDetail.Event = {
     initialize : function() {
     }
 
+    ,onClickBtnComplete : function(e) {
+        var taskId = Task.getTaskId();
+        TaskDetail.Service.completeTask(taskId);
+    }
+
     ,onPostInit: function() {
-        var complaintId = Task.getTaskId();
-        TaskDetail.Service.retrieveDetail(complaintId);
+        var taskId = Task.getTaskId();
+        TaskDetail.Service.retrieveDetail(taskId);
     }
 };

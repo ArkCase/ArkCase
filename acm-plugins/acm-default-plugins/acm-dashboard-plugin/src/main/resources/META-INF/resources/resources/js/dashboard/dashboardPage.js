@@ -13,21 +13,18 @@ Dashboard.Page = {
         Dashboard.Object.resetTableMyTasks();
         var urlBase = Acm.getContextPath() + "/plugin/task/";
         $.each(data, function(idx, val) {
-            if (10 == idx) {
-                return false;
-            }
-            var a = val;
-            var z = 1;
-
+            var dueDate =  Acm.getDateFromDatetime(val.dueDate);
+            var status = (val.completed == true)? "Completed": "Active";
             var row = "<tr>"
-                + "<td><a href='" + urlBase + val.complaintId + "'>" + val.complaintId  + "</a></td>"
-                + "<td>" + val.complaintTitle + "</td>"
+                + "<td><a href='" + urlBase + val.taskId + "'>" + val.taskId  + "</a></td>"
+                + "<td>" + val.title + "</td>"
                 + "<td>" + val.priority + "</td>"
-                + "<td>" + "due" + idx + "</td>"
-                + "<td>" + val.status + "</td>"
+                + "<td>" + dueDate + "</td>"
+                + "<td>" + status + "</td>"
                 + "</tr>";
             Dashboard.Object.addRowTableMyTasks(row);
         })
     }
+
 };
 

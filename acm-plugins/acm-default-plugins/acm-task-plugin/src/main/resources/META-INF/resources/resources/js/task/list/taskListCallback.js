@@ -10,23 +10,18 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_RETURNED, this.onListReturned);
     }
 
-    ,EVENT_LIST_RETURNED		: "task-list-list-returned"
+    ,EVENT_LIST_RETURNED		: "task-list-returned"
 
     ,onListReturned : function(Callback, response) {
         var success = false;
         if (response) {
-            //if (Acm.isNotEmpty(response.taskId)) {
-            //TaskWizard.setTaskId(response.taskId);
-
             TaskList.setTaskList(response);
-
             TaskList.Page.buildTaskList(response);
             success = true;
-            //}
         }
 
         if (!success) {
-            Acm.Dialog.showError("Failed to retrieve task list");
+            Acm.Dialog.error("Failed to retrieve task list");
         }
     }
 };
