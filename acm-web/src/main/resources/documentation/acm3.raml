@@ -304,6 +304,44 @@ securitySchemes:
               text/plain:
                 example: |
                   Task '500' does not exist or has already been completed.
+    /adHocTask:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      post:
+        description: Create a standalone task (not tied to a workflow or business process)
+        body:
+          application/json:
+            example: |
+              {
+                "priority":50,
+                "title":"The Task Title",
+                "dueDate":"2014-06-03",
+                "assignee":"ebmillar",
+              }
+        responses:
+          200: 
+            description: Task created successfully. The response includes the new tasks's ID.
+            body:
+              application/json:
+                example: |
+                  {
+                    "taskId":2801,
+                    "priority":50,
+                    "title":"The Task Title",
+                    "dueDate":"2014-06-03T00:00:00.000+0000",
+                    "attachedToObjectType":null,
+                    "attachedToObjectId":null,
+                    "assignee":"ebmillar",
+                    "businessProcessName":null,
+                    "adhocTask":false,
+                    "completed":false,
+                    "taskStartDate":null,
+                    "taskFinishedDate":null,
+                    "taskDurationInMillis":null
+                  }
+            
+          
+          400:
+            description: Task could not be created; perhaps the request body was invalid.
 /users:
   /withPrivilege/{privilege}:
     securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
