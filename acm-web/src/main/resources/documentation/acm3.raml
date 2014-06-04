@@ -199,6 +199,54 @@ securitySchemes:
           multipart/form-data:
             
             
+    /byId/{complaintId}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      get:
+        description: Lookup complaint details by complaint ID.
+        responses:
+          200:
+            description: expected response containing the desired complaint details
+            body:
+              application/json:
+                example: |
+                  {
+                  "complaintId":739,
+                  "complaintNumber":"20140603_739",
+                  "complaintType":"Domestic Dispute",
+                  "priority":"Medium",
+                  "complaintTitle":null,
+                  "details":"<p><br></p>",
+                  "incidentDate":"2013-02-12T00:00:00.000+0000",
+                  "created":"2014-06-03T21:16:56.090+0000",
+                  "creator":"ebmillar",
+                  "modified":"2014-06-03T21:17:05.315+0000",
+                  "modifier":"ebmillar",
+                  "status":"DRAFT",
+                  "originator":{
+                    "id":740,
+                    "title":"Mr.",
+                    "company":null,
+                    "status":"ACTIVE",
+                    "givenName":"Bob",
+                    "familyName":"Weir",
+                    "created":"2014-06-03T21:16:56.090+0000",
+                    "creator":"ebmillar",
+                    "modified":"2014-06-03T21:16:56.090+0000",
+                    "modifier":"ebmillar",
+                    "addresses":[],
+                    "contactMethods":[],
+                    "securityTags":[]
+                  },
+                  "ecmFolderPath":null,
+                  "ecmFolderId":"workspace://SpacesStore/7d240f67-023a-4059-b653-6bc06b2d58ab",
+                  "childObjects":[],
+                  "approvers":null
+                  }
+          400:
+            description: Usually means the requested complaint does not exist.
+            body:
+              text/plain:
+                example: Complaint ID 2739 not found.
   /task:
     /forUser/{user}:
       securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
