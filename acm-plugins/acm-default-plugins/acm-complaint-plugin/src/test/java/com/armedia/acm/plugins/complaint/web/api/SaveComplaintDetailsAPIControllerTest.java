@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -35,7 +35,7 @@ public class SaveComplaintDetailsAPIControllerTest extends EasyMockSupport
     private MockMvc mockMvc;
 
     private SaveComplaintDetailsAPIController unit;
-    private SaveComplaintEventPublisher mockEventPublisher;
+    private ComplaintEventPublisher mockEventPublisher;
     private ComplaintDao mockComplaintDao;
     private SaveComplaintTransaction mockSaveComplaintTransaction;
 
@@ -54,7 +54,7 @@ public class SaveComplaintDetailsAPIControllerTest extends EasyMockSupport
         messageConverter.setObjectMapper(dateMapper);
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setMessageConverters(messageConverter).build();
 
-        mockEventPublisher = createMock(SaveComplaintEventPublisher.class);
+        mockEventPublisher = createMock(ComplaintEventPublisher.class);
         mockComplaintDao = createMock(ComplaintDao.class);
         mockSaveComplaintTransaction = createMock(SaveComplaintTransaction.class);
 

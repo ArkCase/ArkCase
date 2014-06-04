@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class ComplaintWorkflowAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
-    private SaveComplaintEventPublisher mockEventPublisher;
+    private ComplaintEventPublisher mockEventPublisher;
     private AcmSpringMvcErrorManager mockErrorManager;
 
     private ComplaintWorkflowAPIController unit;
@@ -41,7 +41,7 @@ public class ComplaintWorkflowAPIControllerTest extends EasyMockSupport
     @Before
     public void setUp() throws Exception
     {
-        mockEventPublisher = createMock(SaveComplaintEventPublisher.class);
+        mockEventPublisher = createMock(ComplaintEventPublisher.class);
         mockErrorManager = createMock(AcmSpringMvcErrorManager.class);
 
         unit = new ComplaintWorkflowAPIController();

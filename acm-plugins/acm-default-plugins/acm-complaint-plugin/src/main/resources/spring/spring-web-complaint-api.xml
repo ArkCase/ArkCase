@@ -26,12 +26,18 @@
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
-    <bean id="findComplaintAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintAPIController">
+    <bean id="findComplaintAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindAllComplaintsAPIController">
         <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="eventPublisher" ref="complaintEventPublisher"/>
     </bean>
 
     <bean id="complaintWorkflowAPIController" class="com.armedia.acm.plugins.complaint.web.api.ComplaintWorkflowAPIController">
+        <property name="eventPublisher" ref="complaintEventPublisher"/>
+        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
+    </bean>
+
+    <bean id="findComplaintByIdAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintByIdAPIController">
+        <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="eventPublisher" ref="complaintEventPublisher"/>
         <property name="errorManager" ref="acmSpringMvcErrorManager"/>
     </bean>

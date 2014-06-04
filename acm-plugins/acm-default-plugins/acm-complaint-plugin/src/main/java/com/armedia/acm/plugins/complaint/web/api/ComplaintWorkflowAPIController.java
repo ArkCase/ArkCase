@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import java.io.IOException;
 public class ComplaintWorkflowAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private SaveComplaintEventPublisher eventPublisher;
+    private ComplaintEventPublisher eventPublisher;
     private AcmSpringMvcErrorManager errorManager;
 
     @RequestMapping(method = RequestMethod.POST, value = "/workflow", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -58,12 +58,12 @@ public class ComplaintWorkflowAPIController
 
 
 
-    public SaveComplaintEventPublisher getEventPublisher()
+    public ComplaintEventPublisher getEventPublisher()
     {
         return eventPublisher;
     }
 
-    public void setEventPublisher(SaveComplaintEventPublisher eventPublisher)
+    public void setEventPublisher(ComplaintEventPublisher eventPublisher)
     {
         this.eventPublisher = eventPublisher;
     }

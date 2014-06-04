@@ -1,11 +1,11 @@
-package com.armedia.acm.plugins.task.web.api.com.armedia.acm.plugins.task.web.api;
+package com.armedia.acm.plugins.task.web.api;
 
-import com.armedia.acm.plugins.task.model.AcmAdHocTaskCreatedEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.AcmTaskCompletedEvent;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
-import com.armedia.acm.plugins.task.web.api.CreateAdHocTaskAPIController;
-import org.easymock.Capture;
+import com.armedia.acm.plugins.task.web.api.CompleteTaskAPIController;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,12 +26,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 /**
  * Created by armdev on 6/3/14.
  */
-public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
+public class CompleteTaskAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
 
-    private CreateAdHocTaskAPIController unit;
+    private CompleteTaskAPIController unit;
 
     private TaskDao mockTaskDao;
     private TaskEventPublisher mockTaskEventPublisher;
@@ -45,7 +45,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);
         mockHttpSession = new MockHttpSession();
 
-        unit = new CreateAdHocTaskAPIController();
+        unit = new CompleteTaskAPIController();
 
         unit.setTaskDao(mockTaskDao);
         unit.setTaskEventPublisher(mockTaskEventPublisher);
@@ -54,39 +54,28 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
     }
 
     @Test
-    public void createAdHocTask() throws Exception
+    public void completeTask() throws Exception
     {
         Long taskId = 500L;
         String ipAddress = "ipAddress";
 
-        AcmTask adHoc = new AcmTask();
-        adHoc.setAssignee("assignee");
-
         AcmTask found = new AcmTask();
-        found.setAssignee(adHoc.getAssignee());
         found.setTaskId(taskId);
-
-        Capture<AcmTask> taskSentToDao = new Capture<>();
-
-        org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
-        String inJson = objectMapper.writeValueAsString(adHoc);
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-        expect(mockTaskDao.createAdHocTask(capture(taskSentToDao))).andReturn(found);
+        expect(mockTaskDao.completeTask(isNull(Authentication.class), eq(taskId))).andReturn(found);
         mockTaskEventPublisher.publishTaskEvent(
-                anyObject(AcmAdHocTaskCreatedEvent.class),
+                anyObject(AcmTaskCompletedEvent.class),
                 isNull(Authentication.class),
                 eq(ipAddress));
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/v1/plugin/task/adHocTask")
+                post("/api/v1/plugin/task/completeTask/{taskId}", taskId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .session(mockHttpSession)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(inJson))
+                        .session(mockHttpSession))
                 .andReturn();
 
         verifyAll();
@@ -94,19 +83,16 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
 
-        AcmTask sentToDao = taskSentToDao.getValue();
-        assertNull(sentToDao.getTaskId());
-        assertEquals(adHoc.getAssignee(), sentToDao.getAssignee());
-
         String returned = result.getResponse().getContentAsString();
 
         log.info("results: " + returned);
 
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        AcmTask newTask = objectMapper.readValue(returned, AcmTask.class);
+        AcmTask completedTask = objectMapper.readValue(returned, AcmTask.class);
 
-        assertNotNull(newTask);
-        assertEquals(newTask.getTaskId(), found.getTaskId());
+        assertNotNull(completedTask);
+        assertEquals(completedTask.getTaskId(), taskId);
     }
 
 }

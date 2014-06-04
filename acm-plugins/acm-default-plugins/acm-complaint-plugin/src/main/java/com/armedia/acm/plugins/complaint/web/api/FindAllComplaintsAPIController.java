@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
-import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,10 +15,10 @@ import java.util.List;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/complaint", "/api/latest/plugin/complaint" })
-public class FindComplaintAPIController
+public class FindAllComplaintsAPIController
 {
     private ComplaintDao complaintDao;
-    private SaveComplaintEventPublisher eventPublisher;
+    private ComplaintEventPublisher eventPublisher;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -49,12 +49,12 @@ public class FindComplaintAPIController
         this.complaintDao = complaintDao;
     }
 
-    public SaveComplaintEventPublisher getEventPublisher()
+    public ComplaintEventPublisher getEventPublisher()
     {
         return eventPublisher;
     }
 
-    public void setEventPublisher(SaveComplaintEventPublisher eventPublisher)
+    public void setEventPublisher(ComplaintEventPublisher eventPublisher)
     {
         this.eventPublisher = eventPublisher;
     }
