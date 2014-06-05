@@ -29,14 +29,12 @@ ComplaintWizard.Object = {
         this.$selNotifications.chosen();
 
         this.$edtIncidentDate        = $("#incidentDate");
-        this._createJTableInitiator(this.$divInitiator);
-
         this.$edtComplaintTitle      = $("#edtComplaintTitle");
         this.$selComplaintType       = $("select[name='complaintType']");
         this.$selPriority            = $("select[name='priority']");
 
-
         this.$divInitiator           = $("#divInitiator");
+        this._createJTableInitiator(this.$divInitiator);
 
         this.$divPeople              = $("#divPeople");
         this._createJTablePeople(this.$divPeople);
