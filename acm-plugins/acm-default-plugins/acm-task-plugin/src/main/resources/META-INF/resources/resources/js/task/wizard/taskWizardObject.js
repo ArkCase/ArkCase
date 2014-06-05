@@ -40,6 +40,9 @@ TaskWizard.Object = {
     ,getValueEdtDueDate: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtDueDate);
     }
+    ,setValueEdtDueDate: function(val) {
+        return Acm.Object.setPlaceHolderInput(this.$edtDueDate, val);
+    }
     ,getSelectValueSelAssignee: function() {
         return Acm.Object.getSelectValue(this.$selAssignees);
     }

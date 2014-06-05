@@ -125,7 +125,7 @@
         <section class="scrollable hover">
             <ul class="list-group auto no-radius m-b-none m-t-n-xxs list-group-lg" id="ulTasks">
             </ul>
-            <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Lead More...</a> </section>
+            <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Load More...</a> </section>
         <footer class="footer dk clearfix">
             <form class="m-t-sm">
                 <div class="input-group">

@@ -67,7 +67,7 @@
                         <form id="wizardform" method="get" action="">
                             <div class="panel panel-default">
                                 <div class="panel-heading text-right">
-                                    <span class="hidden-sm"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i> Creat Task</button></span>
+                                    <span class="hidden-sm"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i> Create Task</button></span>
                                 </div>
                                 <div class="panel-body">
                                     <div class="tab-content">
@@ -79,8 +79,8 @@
                                                 <label for="title" class="label">Title</label>
                                                 <input id="title" type="text" class="form-control" placeholder="Title">
 
-                                                <label for="dueDate" class="label">Incident Date</label>
-                                                <input id="dueDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="2014-12-02" data-date-format="yyyy-mm-dd" >
+                                                <label for="dueDate" class="label">Due Date</label>
+                                                <input id="dueDate" type="text" class="datepicker-input form-control" placeholder="Due Date"  value="2014-12-02" data-date-format="yyyy-mm-dd" >
 
                                                 <label for="assignees"  class="label">Assignee</label>
                                                 <select id="assignees" name="assignees" class="form-control m-b">

@@ -7,9 +7,16 @@
  */
 ComplaintList.Object = {
     initialize : function() {
-        this.$ulComplaints = $("#ulComplaints");
-        this.$lnkTitle = $("#caseTitle");
-        this.$h4TitleDate = $("#caseTitle").parent();
+        this.$ulComplaints      = $("#ulComplaints");
+        this.$lnkTitle          = $("#caseTitle");
+        this.$h4ComplaintNumber = $("#caseTitle").parent();
+
+        this.$lnkIncident       = $("#incident");
+        this.$lnkPriority       = $("#priority");
+        this.$lnkAssigned       = $("#assigned");
+        this.$lnkComplaintType  = $("#type");
+        this.$lnkStatus         = $("#status");
+
         this.$divDetails = $(".complaintDetails");
 
     }
@@ -29,8 +36,14 @@ ComplaintList.Object = {
         return $hidden.val();
     }
     ,updateDetail: function(c) {
-        this.setTextTitle(c.complaintTitle);
-        this.setTextTitleDate(" (" + Acm.getDateFromDatetime(c.created) + ")");
+        this.setTextLnkTitle(c.complaintTitle);
+        this.setTextH4ComplaintNumber(" (" + c.complaintNumber + ")");
+        this.setTextLnkIncident(Acm.getDateFromDatetime(c.created));
+        this.setTextLnkPriority(c.priority);
+        this.setTextLnkAssigned(c.assignee);
+        this.setTextLnkComplaintType(c.complaintType);
+        this.setTextLnkStatus(c.status);
+
         this.setHtmlDetails(c.details);
 
 
@@ -41,13 +54,35 @@ ComplaintList.Object = {
 //        var c3 = Acm.Object.getTextNodeText($c, 1);
 //        Acm.Object.setTextNodeText($c, "last", -1);
 //        var c4 = Acm.Object.getTextNodeText($c);
+//
+//todo:
+// test Acm.setXxx (null, undefined, ""),
+//
     }
-    ,setTextTitle: function(txt) {
+    ,setTextLnkTitle: function(txt) {
         Acm.Object.setText(this.$lnkTitle, txt);
     }
-    ,setTextTitleDate: function(txt) {
-        Acm.Object.setTextNodeText(this.$h4TitleDate, txt, 1);
+    ,setTextH4ComplaintNumber: function(txt) {
+        Acm.Object.setTextNodeText(this.$h4ComplaintNumber, txt, 1);
     }
+
+    ,setTextLnkIncident: function(txt) {
+        Acm.Object.setText(this.$lnkIncident, txt);
+    }
+    ,setTextLnkPriority: function(txt) {
+        Acm.Object.setText(this.$lnkPriority, txt);
+    }
+    ,setTextLnkAssigned: function(txt) {
+        Acm.Object.setText(this.$lnkAssigned, txt);
+    }
+    ,setTextLnkComplaintType: function(txt) {
+        Acm.Object.setText(this.$lnkComplaintType, txt);
+    }
+    ,setTextLnkStatus: function(txt) {
+        Acm.Object.setText(this.$lnkStatus, txt);
+    }
+
+
     ,setHtmlDetails: function(html) {
         Acm.Object.setHtml(this.$divDetails, html);
     }

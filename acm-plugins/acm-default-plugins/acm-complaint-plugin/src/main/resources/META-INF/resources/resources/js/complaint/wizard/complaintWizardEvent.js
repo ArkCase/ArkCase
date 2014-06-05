@@ -21,6 +21,15 @@ ComplaintWizard.Event = {
         e.preventDefault();
     }
 
+
+    ,onPostInit: function() {
+        ComplaintWizard.Service.getApprovers();
+
+        var curDate = Acm.getCurrentDay();
+        ComplaintWizard.Object.setValueEdtIncidentDate(curDate);
+    }
+
+    //-------------------------------------------------
     ,test : function(btn) {
         var data0 =
         {
@@ -124,9 +133,5 @@ ComplaintWizard.Event = {
             }
         });
 
-    }
-
-    ,onPostInit: function() {
-        ComplaintWizard.Service.getApprovers();
     }
 };

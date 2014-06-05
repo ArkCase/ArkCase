@@ -23,8 +23,8 @@ ComplaintList.Page = {
                     + Acm.getContextPath() + "/resources/images/a0.png'" + "class='img-circle'> </a> "
                     + "<a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
                     + Acm.getDateFromDatetime(c.created) + "</small><strong class='block'>"
-                    + c.complaintNumber + "</strong><small>"
-                    + c.complaintTitle + "</small></a><input type='hidden' value='" + c.complaintId + "' /> </li>";
+                    + c.complaintTitle + "</strong><small>"
+                    + c.creator + "</small></a><input type='hidden' value='" + c.complaintId + "' /> </li>";
             }
         }
 

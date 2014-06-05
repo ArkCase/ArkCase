@@ -125,7 +125,7 @@
         <section class="scrollable hover">
             <ul class="list-group auto no-radius m-b-none m-t-n-xxs list-group-lg" id="ulComplaints">
             </ul>
-            <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Lead More...</a> </section>
+            <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Load More...</a> </section>
         <footer class="footer dk clearfix">
             <form class="m-t-sm">
                 <div class="input-group">
@@ -165,13 +165,13 @@
         <div class="panel b-a  bg-gradient">
             <div class="padder-v text-center clearfix">
                 <div class="col-xs-4 b-r">
-                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
+                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>
                     <small class="text-muted">Incident Date</small> </div>
                 <div class="col-xs-4 b-r">
-                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
+                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>
                     <small class="text-muted">Priority</small> </div>
                 <div class="col-xs-4">
-                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">AJ McClary</a></div>
+                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>
                     <small class="text-muted">Assigned To</small> </div>
             </div>
         </div>
@@ -180,7 +180,7 @@
         <div class="panel b-a  bg-gradient">
             <div class="padder-v text-center clearfix">
                 <div class="col-xs-12">
-                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
+                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>
                     <small class="text-muted">Subject Type</small> </div>
             </div>
         </div>
@@ -189,7 +189,7 @@
         <div class="panel b-a bg-gradient">
             <div class="padder-v text-center clearfix">
                 <div class="col-xs-12">
-                    <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
+                    <div class="h4 font-bold"><a href="#" id="status" ></a></div>
                     <small class="text-muted">Status</small> </div>
             </div>
         </div>
@@ -235,7 +235,7 @@
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a">
-                <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Complaintant</a> </div>
+                <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Initiator</a> </div>
                 <div class="panel-body max-200 no-padder">
                     <table class="table table-striped th-sortable table-hover" >
                         <thead>

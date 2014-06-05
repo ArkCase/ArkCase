@@ -103,6 +103,17 @@ var Acm = Acm || {
         }
         return d;
     }
+    //get today in "yyyy-mm-dd" format
+    ,getCurrentDay: function() {
+        var d = new Date();
+        var month = d.getMonth()+1;
+        var day = d.getDate();
+        var yyyyMmDd = d.getFullYear()
+            + '-' + (10>month ? '0' : '') + month
+            + '-' + (10>day   ? '0' : '') + day;
+        return yyyyMmDd;
+    }
+
 
 //    ,_foobar_cont: function (){
 //        console.log("finished.");

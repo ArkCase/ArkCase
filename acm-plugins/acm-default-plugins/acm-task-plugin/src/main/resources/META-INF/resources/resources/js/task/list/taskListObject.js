@@ -8,6 +8,10 @@
 TaskList.Object = {
     initialize : function() {
         this.$ulTasks     = $("#ulTasks");
+
+        this.$btnComplete               = $("button[data-title='Complete']");
+        this.$btnComplete.click(function(e) {TaskList.Event.onClickBtnComplete(e);});
+
         this.$lnkTitle    = $("#caseTitle");
         this.$h4TitleDate = $("#caseTitle").parent();
         this.$divDetails  = $(".taskDetails");

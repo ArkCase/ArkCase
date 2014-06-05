@@ -29,6 +29,11 @@ TaskList.Event = {
         }
     }
 
+    ,onClickBtnComplete : function(e) {
+        var taskId = Task.getTaskId();
+        TaskList.Service.completeTask(taskId);
+    }
+
     ,onPostInit: function() {
         var user = Acm.Object.getUserName()
         TaskList.Service.listTask(user);

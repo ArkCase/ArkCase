@@ -49,12 +49,18 @@ Acm.Object = {
         return $s.val();
     }
     ,setValue : function($s, value) {
+        if (null == value) {
+            value = "";
+        }
         $s.val(value);
     }
     ,getText : function($s) {
         return $s.text();
     }
     ,setText : function($s, value) {
+        if (null == value) {
+            value = "";
+        }
     	$s.text(value);
     }
 
@@ -77,6 +83,10 @@ Acm.Object = {
         return textNodes[i].nodeValue;
     }
     ,setTextNodeText : function($s, value, i) {
+        if (null == value) {
+            value = "";
+        }
+
         var textNodes = $s.contents().filter(function() {return this.nodeType == 3;});
 
         if (0 >= textNodes.length) {

@@ -18,5 +18,7 @@ TaskWizard.Event = {
 
     ,onPostInit: function() {
         TaskWizard.Service.getAssignees();
+
+        TaskWizard.Object.setValueEdtDueDate(Acm.getCurrentDay());
     }
 };

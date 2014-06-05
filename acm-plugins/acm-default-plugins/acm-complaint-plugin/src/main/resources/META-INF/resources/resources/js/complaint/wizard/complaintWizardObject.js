@@ -74,6 +74,9 @@ ComplaintWizard.Object = {
     ,getValueEdtIncidentDate: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtIncidentDate);
     }
+    ,setValueEdtIncidentDate: function(val) {
+        return Acm.Object.setPlaceHolderInput(this.$edtIncidentDate, val);
+    }
     ,getValueEdtComplaintTitle: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtComplaintTitle);
     }
