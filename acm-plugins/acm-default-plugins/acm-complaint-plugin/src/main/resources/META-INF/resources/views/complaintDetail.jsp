@@ -231,7 +231,7 @@
                         </li>
                         <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                     </ul>
-                    </span> <a href="#" class="font-bold">Details</a> </div>
+                    </span> <a href="#" class="font-bold"></a> </div>
                 <div class="panel-body">
                     <div class="complaintDetails"></div>
                 </div>
@@ -332,6 +332,31 @@
 <div class="tab-pane " id="documents">
     <div class="row">
         <div class="col-md-12">
+            <section class="panel b-a" id='secDocDocuments'>
+                <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span> <a href="#" class="font-bold">Documents</a> </div>
+                <div class="panel-body max-200 no-padder">
+                    <table class="table table-striped th-sortable table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Created</th>
+                            <th>Creator</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="odd gradeA">
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+<!--
+    <div class="row">
+        <div class="col-md-12">
             <section class="panel b-a">
                 <div class="panel-heading b-b bg-info"><a href="#" class="font-bold">Pending</a> </div>
                 <div class="panel-body max-200 no-padder">
@@ -393,6 +418,7 @@
         </div>
     </div>
 </div>
+-->
 <div class="tab-pane" id="tasks">
     <div class="row">
         <div class="col-md-12">
@@ -570,7 +596,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <section class="panel b-a">
+            <section class="panel b-a" id='secRefDocuments'>
                 <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span> <a href="#" class="font-bold">Documents</a> </div>
                 <div class="panel-body max-200 no-padder">
                     <table class="table table-striped th-sortable table-hover">

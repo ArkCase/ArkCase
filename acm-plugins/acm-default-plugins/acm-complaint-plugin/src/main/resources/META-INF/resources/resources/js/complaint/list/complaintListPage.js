@@ -34,45 +34,27 @@ ComplaintList.Page = {
         ComplaintList.Event.doClickLnkListItem();
     }
 
-    ,buildTableIncident: function(c) {
-        ComplaintList.Object.resetTableIncident();
-        var originator = c.originator;
-        if (Acm.isEmpty(originator)) {
-            return;
+    ,buildTableDocDocuments: function(c) {
+        ComplaintList.Object.resetTableDocDocuments();
+
+        var childObjects = c.childObjects;
+        if (Acm.isNotEmpty(childObjects)) {
+            var len = childObjects.length;
+            for (var i = 0; i < len; i++) {
+                var obj = childObjects[i];
+                if (obj.targetType == "FILE") {
+                    var row = "<tr class='odd gradeA'>"
+                        + "<td>" + obj.targetId + "</td>"
+                        + "<td>" + obj.targetName + "</td>"
+                        + "<td>" + Acm.getDateFromDatetime(obj.created) + "</td>"
+                        + "<td>" + obj.creator + "</td>"
+                        + "<td>" + obj.status + "</td>"
+                        + "</tr>";
+                    ComplaintList.Object.addRowTableDocDocuments(row);
+                }
+            } //for
         }
-        var contactMethods = originator.contactMethods;
-        if (Acm.isEmpty(contactMethods)) {
-            contactMethods = {};
-        }
-        var addresses = originator.addresses;
-        if (Acm.isEmpty(addresses)) {
-            addresses = {};
-        }
-        var row = "<tr class='odd gradeA'>"
-            + "<td><input type='hidden' value='" + originator.id + "' />" + originator.givenName + "</td>"
-            + "<td>" + originator.familyName + "</td>"
-            + "<td>" + addresses.type + "</td>"
-            + "<td>" + contactMethods.value + "</td>"
-//            + "<td>" + addresses. + "</td>"
-//            + "<td>" + addresses. + "</td>"
-//            + "<td>" + addresses. + "</td>"
-//            + "<td>" + addresses. + "</td>"
-            + "<td><a href='javascript:;' class='edit'>Edit</a></td>"
-            + "<td><a href='javascript:;' class='edit'>Delete</a></td>"
-            + "</tr>";
-        ComplaintList.Object.addRowTableMyTasks(row);
     }
-//<tr class="odd gradeA">
-//    <td>[First]</td>
-//    <td>[Last]</td>
-//    <td>[Type]</td>
-//    <td>[Phone]</td>
-//    <td>[Address]</td>
-//    <td>[City]</td>
-//    <td>[State]</td>
-//    <td>[ZIP]</td>
-//    <td><a href="javascript:;" class="edit">Edit</a></td>
-//    <td><a href="javascript:;" class="delete">Delete</a></td>
-//</tr>
+
 };
 

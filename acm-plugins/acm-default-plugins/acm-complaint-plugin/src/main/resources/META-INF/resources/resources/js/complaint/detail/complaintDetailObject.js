@@ -20,8 +20,13 @@ ComplaintDetail.Object = {
         this.$lnkComplaintType  = $("#type");
         this.$lnkStatus         = $("#status");
 
-        this.$divDetails = $(".complaintDetails");
+        this.$divDetails        = $(".complaintDetails");
+        this.$secIncident       = $("#secIncident");
+        this.$tableIncident     = $("#secIncident>div>table");
 
+        this.$tableDocDocuments     = $("#secDocDocuments>div>table");
+
+        this.$tableRefDocuments     = $("#secRefDocuments>div>table");
     }
 
     ,updateDetail: function(c) {
@@ -34,6 +39,12 @@ ComplaintDetail.Object = {
         this.setTextLnkStatus(c.status);
 
         this.setHtmlDetails(c.details);
+
+
+        //ComplaintDetail.Page.buildTableIncident(c);
+        ComplaintDetail.Page.buildTableDocDocuments(c);
+        //ComplaintDetail.Page.buildTableRefDocuments(c);
+
     }
     ,setTextLnkTitle: function(txt) {
         Acm.Object.setText(this.$lnkTitle, txt);
@@ -62,6 +73,19 @@ ComplaintDetail.Object = {
         Acm.Object.setHtml(this.$divDetails, html);
     }
 
+    ,resetTableDocDocuments: function() {
+        this.$tableDocDocuments.find("tbody > tr").remove();
+    }
+    ,addRowTableDocDocuments: function(row) {
+        this.$tableDocDocuments.find("tbody:last").append(row);
+    }
+
+    ,resetTableRefDocuments: function() {
+        this.$tableRefDocuments.find("tbody > tr").remove();
+    }
+    ,addRowTableRefDocuments: function(row) {
+        this.$tableRefDocuments.find("tbody:last").append(row);
+    }
 };
 
 

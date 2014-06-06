@@ -108,7 +108,8 @@ ComplaintWizard.Object = {
         //c.priority = data.priority;
         //c.complaintType = data.complaintType;
         //c.details = data.details;
-        //c.incidentDate = data.incidentDate;   //need date convert
+        //c.incidentDate = data.incidentDate;
+        //c.approvers = data.approvers;
 
         c.complaintId = data.complaintId;
         c.complaintNumber = data.complaintNumber;
@@ -130,15 +131,16 @@ ComplaintWizard.Object = {
         c.originator.status = data.originator.status;
         c.originator.securityTags = data.originator.securityTags;   //[]
 
-        //c.originator.addresses = data.originator.addresses;
-        //c.originator.contactMethods = data.originator.contactMethods; //=devices[]
+        c.originator.addresses = data.originator.addresses;
+        c.originator.contactMethods = data.originator.contactMethods; //=devices[]
 
 //        c.originator.aliases[] = data.originator.aliases;
 //        c.originator.organizations[] = data.originator.organizations;
 //        c.originator.ecmFolderId[] = data.originator.ecmFolderId;
 //        c.originator.ecmFolderPath[] = data.originator.ecmFolderPath;
 
-        //c.approvers = data.approvers;
+//        organizations
+//        aliases
 
         c.childObjects = data.childObjects
         c.ecmFolderId = data.ecmFolderId
@@ -190,13 +192,12 @@ ComplaintWizard.Object = {
         data.originator.modified = c.originator.modified;
         data.originator.modifier = c.originator.modifier;
         data.originator.status = c.originator.status;
-        data.originator.addresses = c.originator.addresses;
-        data.originator.contactMethods = c.originator.contactMethods;
+//jwu: contact list not working <<<<<<<<<<<<<<<<<<<<<<<<<
+//        data.originator.addresses = c.originator.addresses;
+//        data.originator.contactMethods = c.originator.contactMethods;
 
 //        organizations
 //        aliases
-
-
 
         data.originator.securityTags = c.originator.securityTags;   //[], "securityTags": ["Anonymous", "Confidential", "Top Secret"]
         data.approvers = this.getSelectValuesSelApprovers();
