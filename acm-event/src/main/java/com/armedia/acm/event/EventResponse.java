@@ -1,5 +1,7 @@
 package com.armedia.acm.event;
 
+import org.apache.commons.collections.Predicate;
+
 import java.util.Map;
 
 /**
@@ -15,6 +17,7 @@ public class EventResponse
     private AcmAction action;
     private Map<String, Object> parameters;
     private boolean enabled;
+    private Predicate respondPredicate;
 
     public String getEventName()
     {
@@ -54,5 +57,15 @@ public class EventResponse
     public void setEnabled(boolean enabled)
     {
         this.enabled = enabled;
+    }
+
+    public Predicate getRespondPredicate()
+    {
+        return respondPredicate;
+    }
+
+    public void setRespondPredicate(Predicate respondPredicate)
+    {
+        this.respondPredicate = respondPredicate;
     }
 }
