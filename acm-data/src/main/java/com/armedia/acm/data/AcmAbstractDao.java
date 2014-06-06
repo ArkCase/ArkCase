@@ -1,6 +1,8 @@
 package com.armedia.acm.data;
 
 
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -16,10 +18,11 @@ public abstract class AcmAbstractDao<T>
         return saved;
     }
 
+    @Transactional
     public T find(Class<? extends T> cls, Long id)
     {
         T found = em.find(cls, id);
-//        em.refresh(found);
+        em.refresh(found);
 
         return found;
     }
