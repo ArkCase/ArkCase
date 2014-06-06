@@ -31,6 +31,8 @@ ComplaintList.Event = {
     }
     ,doClickLnkListItem: function() {
         var complaintId = Complaint.getComplaintId();
+        ComplaintList.Service.retrieveDetail(complaintId);
+
         var c = ComplaintList.findComplaint(complaintId);
         if (null != c) {
             ComplaintList.Object.updateDetail(c);

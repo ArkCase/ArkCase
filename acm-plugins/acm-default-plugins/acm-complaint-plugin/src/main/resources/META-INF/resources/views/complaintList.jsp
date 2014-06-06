@@ -234,7 +234,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <section class="panel b-a">
+            <section class="panel b-a" id="secIncident">
                 <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Initiator</a> </div>
                 <div class="panel-body max-200 no-padder">
                     <table class="table table-striped th-sortable table-hover" >

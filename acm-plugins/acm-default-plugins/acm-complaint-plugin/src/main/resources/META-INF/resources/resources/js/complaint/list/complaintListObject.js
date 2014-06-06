@@ -17,7 +17,11 @@ ComplaintList.Object = {
         this.$lnkComplaintType  = $("#type");
         this.$lnkStatus         = $("#status");
 
-        this.$divDetails = $(".complaintDetails");
+        this.$divDetails        = $(".complaintDetails");
+        this.$secIncident       = $("#secIncident");
+        this.$tableIncident     = $("#secIncident div table");
+        //this.$tableIncident     = $("#secIncident>div>table");
+
 
     }
 
@@ -46,6 +50,7 @@ ComplaintList.Object = {
 
         this.setHtmlDetails(c.details);
 
+        //ComplaintList.Page.buildTableIncident(c);
 
 //todo: jasmine test
 //        var $c = $("<h4>beg<a>mid</a>end</h4>");
@@ -86,6 +91,16 @@ ComplaintList.Object = {
     ,setHtmlDetails: function(html) {
         Acm.Object.setHtml(this.$divDetails, html);
     }
+
+
+    ,resetTableIncident: function() {
+        this.$tableIncident.find("tbody > tr").remove();
+    }
+    ,addRowTableIncident: function(row) {
+        this.$tableIncident.find("tbody:last").append(row);
+    }
+
+
     ,hiliteSelectedItem: function() {
         var cur = Complaint.getComplaintId();
         this.$ulComplaints.find("li").each(function(index) {
