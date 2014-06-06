@@ -106,7 +106,7 @@
     <section class="row m-b-md">
         <div class="col-sm-3">
             <label for="incidentDate" class="label">Incident Date</label>
-            <input id="incidentDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="2014-01-31" data-date-format="yyyy-mm-dd" >
+            <input id="incidentDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="" data-date-format="yyyy-mm-dd" >
 
         </div>
 

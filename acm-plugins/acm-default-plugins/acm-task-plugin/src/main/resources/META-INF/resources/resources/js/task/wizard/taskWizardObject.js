@@ -37,6 +37,9 @@ TaskWizard.Object = {
     ,getValueEdtPriority: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtPriority);
     }
+    ,setValueEdtPriority: function(val) {
+        return Acm.Object.setPlaceHolderInput(this.$edtPriority, val);
+    }
     ,getValueEdtDueDate: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtDueDate);
     }

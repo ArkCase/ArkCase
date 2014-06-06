@@ -20,5 +20,6 @@ TaskWizard.Event = {
         TaskWizard.Service.getAssignees();
 
         TaskWizard.Object.setValueEdtDueDate(Acm.getCurrentDay());
+        TaskWizard.Object.setValueEdtPriority(50);
     }
 };

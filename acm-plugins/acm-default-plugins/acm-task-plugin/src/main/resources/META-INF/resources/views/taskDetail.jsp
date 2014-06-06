@@ -172,11 +172,11 @@
             <label for="taskId" class="label">Task ID</label>
             <input id="taskId" type="text" class="form-control" placeholder="Task ID">
 
-            <label for="priority" class="label">Priority</label>
-            <input id="priority" type="text" class="form-control" placeholder="Priority">
-
             <label for="title" class="label">Title</label>
             <input id="title" type="text" class="form-control" placeholder="Title">
+
+            <label for="priority" class="label">Priority</label>
+            <input id="priority" type="text" class="form-control" placeholder="Priority">
 
             <label for="dueDate" class="label">Due Date</label>
             <input id="dueDate" type="text" class="form-control" placeholder="Due Date">

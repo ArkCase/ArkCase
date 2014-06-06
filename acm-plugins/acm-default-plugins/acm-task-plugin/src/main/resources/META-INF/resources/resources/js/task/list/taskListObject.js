@@ -84,7 +84,7 @@ TaskList.Object = {
 
         this.setValueEdtTitle(t.title);
         this.setValueEdtPriority(t.priority);
-        this.setValueEdtDueDate(t.dueDate);
+        this.setValueEdtDueDate(Acm.getDateFromDatetime(t.dueDate));
         this.setValueEdtAssignee(t.assignee);
         this.setValueEdtTaskId(t.taskId);
 

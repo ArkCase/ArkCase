@@ -73,14 +73,14 @@
                                     <div class="tab-content">
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <label for="priority" class="label">Priority</label>
-                                                <input id="priority" type="text" class="form-control" placeholder="Priority">
-
                                                 <label for="title" class="label">Title</label>
                                                 <input id="title" type="text" class="form-control" placeholder="Title">
 
+                                                <label for="priority" class="label">Priority</label>
+                                                <input id="priority" type="text" class="form-control" placeholder="Priority">
+
                                                 <label for="dueDate" class="label">Due Date</label>
-                                                <input id="dueDate" type="text" class="datepicker-input form-control" placeholder="Due Date"  value="2014-12-02" data-date-format="yyyy-mm-dd" >
+                                                <input id="dueDate" type="text" class="datepicker-input form-control" placeholder="Due Date" value="" data-date-format="yyyy-mm-dd" >
 
                                                 <label for="assignees"  class="label">Assignee</label>
                                                 <select id="assignees" name="assignees" class="form-control m-b">
