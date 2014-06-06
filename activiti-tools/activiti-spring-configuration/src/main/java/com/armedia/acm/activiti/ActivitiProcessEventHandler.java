@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,10 +27,9 @@ public class ActivitiProcessEventHandler implements ApplicationEventPublisherAwa
         log.info("Got an Activiti event; eventName: " + eventName + "; " +
             "process instance id: " + execution.getProcessInstanceId());
 
-
-        String acmUser = findLastUserToCompleteATask(execution.getProcessInstanceId());
-
         Map<String, Object> processVariables = getRuntimeService().getVariables(execution.getId());
+
+        String acmUser = findUserThatInitiatedThisEvent(eventName, execution, processVariables);
 
         AcmBusinessProcessEvent event = new AcmBusinessProcessEvent(execution);
         event.setEventType("com.armedia.acm.activiti.businessProcess." + eventName);
@@ -41,19 +41,42 @@ public class ActivitiProcessEventHandler implements ApplicationEventPublisherAwa
 
     }
 
+    protected String findUserThatInitiatedThisEvent(String eventName, ProcessInstance execution, Map<String, Object> processVariables)
+    {
+        String acmUser = "ACTIVITI_SYSTEM";
+        if ( "start".equals(eventName) )
+        {
+            // when the process is started, the ACM_USER pvar is set to the user who started the process.
+            if (processVariables != null && processVariables.containsKey("ACM_USER"))
+            {
+                acmUser = (String) processVariables.get("ACM_USER");
+            }
+        }
+        else
+        {
+            acmUser = findLastUserToCompleteATask(execution.getProcessInstanceId());
+        }
+        return acmUser;
+    }
+
     protected String findLastUserToCompleteATask(String processInstanceId)
     {
-        HistoricTaskInstance lastCompletedTask = getHistoryService().createHistoricTaskInstanceQuery()
+        List<HistoricTaskInstance> completedTasks = getHistoryService().createHistoricTaskInstanceQuery()
                 .processInstanceId(processInstanceId)
                 .orderByHistoricTaskInstanceEndTime()
                 .desc()
-                .singleResult();
+                .listPage(0, 1);
         String acmUser = "ACTIVITI_SYSTEM";
-        if ( lastCompletedTask != null && lastCompletedTask.getAssignee() != null && lastCompletedTask.getEndTime() != null )
+        if ( !completedTasks.isEmpty() )
         {
-            log.debug("Found the last assignee to complete a task: " + lastCompletedTask.getAssignee() +
-                "; task end time: " + lastCompletedTask.getEndTime());
-            acmUser = lastCompletedTask.getAssignee();
+            HistoricTaskInstance lastCompletedTask = completedTasks.get(0);
+
+            if (lastCompletedTask.getAssignee() != null && lastCompletedTask.getEndTime() != null)
+            {
+                log.debug("Found the last assignee to complete a task: " + lastCompletedTask.getAssignee() +
+                        "; task end time: " + lastCompletedTask.getEndTime());
+                acmUser = lastCompletedTask.getAssignee();
+            }
         }
         return acmUser;
     }
