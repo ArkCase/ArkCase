@@ -5,10 +5,11 @@
 
     <bean id="eventRaisingActivitiListener" class="com.armedia.acm.activiti.ActivitiProcessEventHandler">
         <property name="runtimeService" ref="activitiRuntimeService"/>
+        <property name="historyService" ref="activitiHistoryService"/>
     </bean>
 
     <bean id="acmActivitiListener_processStart" class="com.armedia.acm.activiti.AcmActivitiListener">
-        <property name="event" value="all"/>
+        <property name="event" value="start"/>
         <property name="implementationType" value="expression"/>
         <property name="implementation" value="eventRaisingActivitiListener.handleProcessEvent(execution.eventName, execution)"/>
     </bean>

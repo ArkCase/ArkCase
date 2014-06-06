@@ -6,6 +6,7 @@
 
     <bean id="eventRaisingActivitiListener" class="com.armedia.acm.activiti.ActivitiProcessEventHandler">
         <property name="runtimeService" ref="runtimeService"/>
+        <property name="historyService" ref="historyService"/>
     </bean>
 
     <bean id="acmActivitiListener_processStart" class="com.armedia.acm.activiti.AcmActivitiListener">
