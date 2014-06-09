@@ -22,7 +22,10 @@ public abstract class AcmAbstractDao<T>
     public T find(Class<? extends T> cls, Long id)
     {
         T found = em.find(cls, id);
-        em.refresh(found);
+        if ( found != null )
+        {
+            em.refresh(found);
+        }
 
         return found;
     }

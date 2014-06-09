@@ -16,8 +16,6 @@
                 <ref bean="dashboardNavigatorAction"/>
                 <ref bean="complaintNavigatorAction"/>
                 <ref bean="taskNavigatorAction"/>
-                <ref bean="armediaBlogNavigatorAction"/>
-                <ref bean="helloWorldNavigatorAction"/>
             </list>
         </property>
     </bean>
