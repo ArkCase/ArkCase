@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
@@ -43,13 +44,15 @@ public class FileDownloadAPIController
     {
         if (log.isInfoEnabled())
         {
-            log.info("Downloading file by ID '" + fileId + "'");
+            log.info("Downloading file by ID '" + fileId + "' for user '" + authentication.getName() + "'");
         }
 
         EcmFile ecmFile = getFileDao().find(EcmFile.class, fileId);
 
         if ( ecmFile != null )
         {
+            EcmFileDownloadedEvent event = new EcmFileDownloadedEvent(ecmFile);
+            event.setIpAddress((String) httpSession.getAttribute("acm_ip_address"));
             download(ecmFile.getEcmFileId(), response);
         }
         else
