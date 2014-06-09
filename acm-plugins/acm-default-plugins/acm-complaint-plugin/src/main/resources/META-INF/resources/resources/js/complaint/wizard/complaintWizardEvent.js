@@ -24,6 +24,8 @@ ComplaintWizard.Event = {
 
     ,onPostInit: function() {
         ComplaintWizard.Service.getApprovers();
+        ComplaintWizard.Service.getComplaintTypes();
+        ComplaintWizard.Service.getPriorities();
 
         var curDate = Acm.getCurrentDay();
         ComplaintWizard.Object.setValueEdtIncidentDate(curDate);

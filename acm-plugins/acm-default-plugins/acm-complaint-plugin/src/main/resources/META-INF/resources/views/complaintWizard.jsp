@@ -121,13 +121,15 @@
             <label for="complaintType"  class="label">Subject Type</label>
             <select name="complaintType" class="form-control m-b">
                 <option>Choose Subject Type</option>
+<!--
                 <option>Domestic Dispute</option>
                 <option>Arson</option>
                 <option>Better Business Dispute</option>
                 <option>Government</option>
                 <option>Local</option>
                 <option>Agricultural</option>
-                <option>Pollution </option>
+                <option>Pollution</option>
+-->
             </select>
         </div>
 
@@ -135,11 +137,13 @@
         <div class="col-sm-3">
             <label for="priority"  class="label">Priority</label>
             <select name="priority" class="form-control m-b">
+<!--
                 <option>Choose Priority</option>
                 <option selected>Low</option>
                 <option>Medium</option>
                 <option>High</option>
                 <option>Expedited</option>
+-->
             </select>
         </div>
     </section>
