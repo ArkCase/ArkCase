@@ -203,9 +203,9 @@ ComplaintWizard.Object = {
         data.originator.modified = c.originator.modified;
         data.originator.modifier = c.originator.modifier;
         data.originator.status = c.originator.status;
-//jwu: contact list not working <<<<<<<<<<<<<<<<<<<<<<<<<
+
 //        data.originator.addresses = c.originator.addresses;
-//        data.originator.contactMethods = c.originator.contactMethods;
+        data.originator.contactMethods = c.originator.contactMethods;
 
 //        organizations
 //        aliases
@@ -488,6 +488,7 @@ ComplaintWizard.Object = {
                 }
                 ,description: {
                     title: 'Description'
+                    ,type: 'textarea'
                     ,width: '30%'
                 }
             }
@@ -557,7 +558,7 @@ ComplaintWizard.Object = {
                         rc.Record.id = parseInt(record.id);
                         rc.Record.type = record.type;
                         rc.Record.value = record.value;
-                        rc.Record.created = record.created;
+                        rc.Record.created = Acm.getCurrentDay(); //record.created;
                         rc.Record.creator = record.creator;
                         return rc;
 //                        return {
@@ -615,6 +616,8 @@ ComplaintWizard.Object = {
                     ,created: {
                         title: 'Date Added'
                         ,width: '20%'
+                        ,create: false
+                        ,edit: false
                         //,type: 'date'
                         //,displayFormat: 'yy-mm-dd'
                     }
@@ -628,11 +631,10 @@ ComplaintWizard.Object = {
                     var c = Complaint.getComplaint();
                     var contactMethods = c.originator.contactMethods;
                     var contactMethod = {};
-                    contactMethod.personId = c.originator.id;
                     contactMethod.id = parseInt(record.id);
                     contactMethod.type = record.type;
                     contactMethod.value = record.value;
-                    contactMethod.created = record.created;
+                    //contactMethod.created = record.created;   //created is readonly
                     contactMethod.creator = record.creator;
                     contactMethods.push(contactMethod);
                 }
@@ -644,7 +646,7 @@ ComplaintWizard.Object = {
                     var contactMethod = contactMethods[whichRow];
                     contactMethod.type = record.type;
                     contactMethod.value = record.value;
-                    contactMethod.created = record.created;
+                    //contactMethod.created = record.created;   //created is readonly
                     contactMethod.creator = record.creator;
                 }
                 ,recordDeleted : function (event, data) {
@@ -1032,6 +1034,7 @@ ComplaintWizard.Object = {
                 }
                 ,description: {
                     title: 'Description'
+                    ,type: 'textarea'
                     ,width: '30%'
                 }
             }
