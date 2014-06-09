@@ -26,6 +26,8 @@
                 <prop key="complaint.workflow.enabled">true</prop>
                 <prop key="complaint.workflow.activiti.name">cmComplaintWorkflow</prop>
                 <prop key="complaint.workflow.trigger.eventName">com.armedia.acm.complaint.submittedForReview</prop>
+                <prop key="complaint.workflow.activiti.inApproval.stateName">IN APPROVAL</prop>
+                <prop key="complaint.workflow.activiti.approved.stateName">ACTIVE</prop>
             </props>
         </property>
     </bean>
@@ -51,7 +53,7 @@
         <property name="enabled" value="true"/>
         <property name="parameters">
             <map>
-                <entry key="newStatus" value="IN APPROVAL"/>
+                <entry key="newStatus" value="${complaint.workflow.activiti.inApproval.stateName}"/>
             </map>
         </property>
         <property name="respondPredicate">
@@ -65,7 +67,7 @@
         <property name="enabled" value="true"/>
         <property name="parameters">
             <map>
-                <entry key="newStatus" value="APPROVED"/>
+                <entry key="newStatus" value="${complaint.workflow.activiti.approved.stateName}"/>
             </map>
         </property>
         <property name="respondPredicate">
