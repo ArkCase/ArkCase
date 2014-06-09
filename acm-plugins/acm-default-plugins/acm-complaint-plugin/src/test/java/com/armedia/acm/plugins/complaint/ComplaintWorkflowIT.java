@@ -78,11 +78,13 @@ public class ComplaintWorkflowIT
         String user = "Test User";
         String user2 = "Another User";
         String complaintNumber = "20140530_001";
+        String complaintTitle = "complaintTitle";
 
         List<String> approvers = Arrays.asList(user, user2);
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("approvers", approvers);
         processVariables.put("complaintNumber", complaintNumber);
+        processVariables.put("complaintTitle", complaintTitle);
 
         assertNotNull(rt);
 
