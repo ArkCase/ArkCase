@@ -24,6 +24,7 @@ public class ComplaintApprovalWorkflowRequestedEvent extends AcmEvent
         Map<String, Object> props = new HashMap<>();
         props.put("approvers", source.getApprovers());
         props.put("complaintNumber", source.getComplaintNumber());
+        props.put("complaintTitle", source.getComplaintTitle());
         setEventProperties(props);
 
         setSucceeded(true);

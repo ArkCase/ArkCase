@@ -54,7 +54,7 @@ public class ComplaintWorkflowIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/DefaultComplaintWorkflow_v4.bpmn20.xml")
+                .addClasspathResource("activiti/DefaultComplaintWorkflow_v5.bpmn20.xml")
                 .deploy();
 
     }
