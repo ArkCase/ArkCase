@@ -54,17 +54,28 @@ ComplaintWizard.Object = {
         });
     }
 
+    ,_appendSelect: function($s, key, val) {
+        $s.append($("<option></option>")
+            .attr("value",key)
+            .text(val));
+    }
     ,initApprovers: function(data) {
         $.each(data, function(idx, val) {
-            ComplaintWizard.Object.appendApprovers(val.userId, val.fullName);
+            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selApprovers, val.userId, val.fullName);
         });
         this.$selApprovers.chosen();
     }
-    ,appendApprovers: function(key, val) {
-        this.$selApprovers.append($("<option></option>")
-                .attr("value",key)
-                .text(val));
+    ,initComplaintTypes: function(data) {
+        $.each(data, function(idx, val) {
+            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selComplaintType, val, val);
+        });
     }
+    ,initPriorities: function(data) {
+        $.each(data, function(idx, val) {
+            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selPriority, val, val);
+        });
+    }
+
     ,setEnableBtnSave: function(enable) {
         Acm.Object.setEnable(this.$btnSave, enable);
     }

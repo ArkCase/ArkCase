@@ -80,7 +80,7 @@
                                                 <input id="priority" type="text" class="form-control" placeholder="Priority">
 
                                                 <label for="dueDate" class="label">Due Date</label>
-                                                <input id="dueDate" type="text" class="datepicker-input form-control" placeholder="Due Date" value="" data-date-format="yyyy-mm-dd" >
+                                                <input id="dueDate" type="text" class="datepicker-input form-control" placeholder="Due Date" value="" data-date-format="yyyy-mm-dd" style="display:none">
 
                                                 <label for="assignees"  class="label">Assignee</label>
                                                 <select id="assignees" name="assignees" class="form-control m-b">

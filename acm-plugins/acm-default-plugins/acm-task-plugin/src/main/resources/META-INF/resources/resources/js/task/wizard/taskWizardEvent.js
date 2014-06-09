@@ -20,6 +20,8 @@ TaskWizard.Event = {
         TaskWizard.Service.getAssignees();
 
         TaskWizard.Object.setValueEdtDueDate(Acm.getCurrentDay());
+        TaskWizard.Object.showEdtDueDate(true);     //temp fix: show a non-display due date to get rid of initial popup
+
         TaskWizard.Object.setValueEdtPriority(50);
     }
 };

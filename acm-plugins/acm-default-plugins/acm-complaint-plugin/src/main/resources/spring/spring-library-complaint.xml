@@ -147,6 +147,16 @@
                     <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/complaint/types"/>
+                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/complaint/priorities"/>
+                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <!-- attach a file to the complaint -->
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/complaint/file"/>
