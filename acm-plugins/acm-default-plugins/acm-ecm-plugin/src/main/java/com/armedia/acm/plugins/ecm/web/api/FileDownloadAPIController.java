@@ -10,6 +10,8 @@ import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,13 +25,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
-public class FileDownloadAPIController
+public class FileDownloadAPIController implements ApplicationEventPublisherAware
 {
     private AcmSpringMvcErrorManager errorManager;
 
     private MuleClient muleClient;
 
     private EcmFileDao fileDao;
+
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -53,6 +57,11 @@ public class FileDownloadAPIController
         {
             EcmFileDownloadedEvent event = new EcmFileDownloadedEvent(ecmFile);
             event.setIpAddress((String) httpSession.getAttribute("acm_ip_address"));
+            event.setUserId(authentication.getName());
+            event.setSucceeded(true);
+
+            getApplicationEventPublisher().publishEvent(event);
+
             download(ecmFile.getEcmFileId(), response);
         }
         else
@@ -180,5 +189,16 @@ public class FileDownloadAPIController
     public void setFileDao(EcmFileDao fileDao)
     {
         this.fileDao = fileDao;
+    }
+
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }
