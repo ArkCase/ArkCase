@@ -11,7 +11,7 @@
 
         <sequenceFlow id="initiatedToApproval" sourceRef="complaintSubmittedForApproval" targetRef="approveComplaint" />
 
-        <userTask id="approveComplaint" name="Approve Complaint ${complaintNumber}"
+        <userTask id="approveComplaint" name="Approve Complaint '${complaintTitle}'"
                 activiti:assignee="${currentApprover}"
                 activiti:dueDate="P3D"
                 activiti:priority="50">
