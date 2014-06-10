@@ -33,22 +33,14 @@
     <script src="<c:url value='/resources/js/slimscroll/jquery.slimscroll.min.js'/>"></script>
     <script src="<c:url value='/resources/js/app.plugin.js'/>"></script>
 
+    <!-- Summernote WYSIWYG -->
+    <link rel="stylesheet" href="<c:url value='/resources/js/summernote0.5.1/summernote.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/js/summernote0.5.1/summernote.js'/>"></script>
 
-<!-- Summernote WYSIWYG -->
+    <!-- JTable -->
+    <link rel="stylesheet" href="<c:url value='/resources/js/jtable2.4.0/themes/lightcolor/blue/jtable.css" type="text/css'/>"/>
+    <script type="text/javascript" src="<c:url value='/resources/js/jtable2.4.0/jquery.jtable.js'/>"></script>
 
-<link rel="stylesheet" href="<c:url value='/resources/js/summernote0.5.1/summernote.css'/>" type="text/css"/>
-<script src="<c:url value='/resources/js/summernote0.5.1/summernote.js'/>"></script>
-<script>
-
-    var edit = function() {
-        $('.complaintDetails').summernote({focus: true});
-    };
-    var save = function() {
-        var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
-        $('.complaintDetails').destroy();
-    };
-
-</script>
 
 <!-- X-Editable -->
 
@@ -231,7 +223,7 @@
                         </li>
                         <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                     </ul>
-                    </span> <a href="#" class="font-bold"></a> </div>
+                    </span> <a href="#" class="font-bold">Details</a> </div>
                 <div class="panel-body">
                     <div class="complaintDetails"></div>
                 </div>
@@ -241,39 +233,7 @@
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a">
-                <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Initiator</a> </div>
-                <div class="panel-body max-200 no-padder">
-                    <table class="table table-striped th-sortable table-hover" >
-                        <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Type</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th>City</th>
-                            <th>State</th>
-                            <th>ZIP</th>
-                            <th width="3%">Edit</th>
-                            <th width="4%">Delete</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="odd gradeA">
-                            <td>[First]</td>
-                            <td>[Last]</td>
-                            <td>[Type]</td>
-                            <td>[Phone]</td>
-                            <td>[Address]</td>
-                            <td>[City]</td>
-                            <td>[State]</td>
-                            <td>[ZIP]</td>
-                            <td><a href="javascript:;" class="edit">Edit</a></td>
-                            <td><a href="javascript:;" class="delete">Delete</a></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div id="divInitiator" style="width:100%"></div>
             </section>
         </div>
     </div>

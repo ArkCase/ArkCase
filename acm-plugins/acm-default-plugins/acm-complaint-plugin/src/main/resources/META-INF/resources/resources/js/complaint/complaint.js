@@ -28,7 +28,6 @@ var Complaint = Complaint || {
     }
     ,constructComplaint : function() {
         var c = {};
-        c.complaintId = 0;
         //c.initiatorFlags = [];                //????need to be defined in POJO
 
 
@@ -71,15 +70,16 @@ var Complaint = Complaint || {
         //c.complaintFlags = [];                //????need to be defined in POJO
 
 
-        c.originator.people = [];
-
-
-        c.attachments = [];
+        //c.originator.people = [];
+        //c.attachments = [];
 
 
         //c.approvers = [];                     //????need to be defined in POJO
         //c.notifications = [];                 //????need to be defined in POJO
         //c.alertDevices = [];                  //????need to be defined in POJO
+
+        //preserve existing complaintId if it has one
+        c.complaintId = (Acm.isNotEmpty(this._complaint.complaintId))? this._complaint.complaintId : 0;
 
         this._complaint = c;
         return c;

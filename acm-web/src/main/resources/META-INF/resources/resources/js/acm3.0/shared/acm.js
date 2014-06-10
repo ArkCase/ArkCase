@@ -21,6 +21,9 @@ var Acm = Acm || {
     ,getContextPath: function() {
         return Acm.Object.getContextPath();
     }
+    ,getUserName: function() {
+        return Acm.Object.getUserName();
+    }
 
 	,isEmpty: function (val) {
 //        if (typeof val == "undefined") {

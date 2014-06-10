@@ -35,7 +35,6 @@ TaskList.Event = {
     }
 
     ,onPostInit: function() {
-        var user = Acm.Object.getUserName()
-        TaskList.Service.listTask(user);
+        TaskList.Service.listTask(Acm.getUserName());
     }
 };
