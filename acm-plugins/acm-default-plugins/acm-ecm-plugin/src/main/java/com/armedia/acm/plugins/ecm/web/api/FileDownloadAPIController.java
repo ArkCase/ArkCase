@@ -139,19 +139,39 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         String mimeType = filePayload.getMimeType();
         String fileName = filePayload.getFileName();
 
-        InputStream fileIs = filePayload.getStream();
+        InputStream fileIs = null;
 
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-        response.setContentType(mimeType);
-        byte[] buffer = new byte[1024];
-        int read;
-        do {
-            read = fileIs.read(buffer, 0, buffer.length);
-            if (read > 0) {
-                response.getOutputStream().write(buffer, 0, read);
+        try
+        {
+            fileIs = filePayload.getStream();
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            response.setContentType(mimeType);
+            byte[] buffer = new byte[1024];
+            int read;
+            do
+            {
+                read = fileIs.read(buffer, 0, buffer.length);
+                if (read > 0)
+                {
+                    response.getOutputStream().write(buffer, 0, read);
+                }
+            } while (read > 0);
+            response.getOutputStream().flush();
+        }
+        finally
+        {
+            if ( fileIs != null )
+            {
+                try
+                {
+                    fileIs.close();
+                }
+                catch (IOException e)
+                {
+                    log.error("Could not close CMIS content stream: " + e.getMessage(), e);
+                }
             }
-        } while (read > 0);
-        response.getOutputStream().flush();
+        }
     }
 
     // called when the file was not found.

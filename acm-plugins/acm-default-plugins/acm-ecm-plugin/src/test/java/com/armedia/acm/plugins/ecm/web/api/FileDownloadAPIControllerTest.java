@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 
 import static org.easymock.EasyMock.*;
@@ -42,7 +41,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
     private EcmFileDao mockFileDao;
     private Authentication mockAuthentication;
-    private AcmSpringMvcErrorManager mockErrorManager;
+    private AcmSpringMvcErrorManager errorManager;
     private ApplicationEventPublisher mockEventPublisher;
     private MuleClient mockMuleClient;
     private MuleMessage mockMuleMessage;
@@ -57,7 +56,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         mockFileDao = createMock(EcmFileDao.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
-        mockErrorManager = createMock(AcmSpringMvcErrorManager.class);
+        errorManager = new AcmSpringMvcErrorManager();
         mockEventPublisher = createMock(ApplicationEventPublisher.class);
         mockMuleClient = createMock(MuleClient.class);
         mockMuleMessage = createMock(MuleMessage.class);
@@ -67,7 +66,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         unit = new FileDownloadAPIController();
 
         unit.setFileDao(mockFileDao);
-        unit.setErrorManager(mockErrorManager);
+        unit.setErrorManager(errorManager);
         unit.setApplicationEventPublisher(mockEventPublisher);
         unit.setMuleClient(mockMuleClient);
 
@@ -137,19 +136,18 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockFileDao.find(EcmFile.class, ecmFileId)).andReturn(null);
-        mockErrorManager.sendErrorResponse(
-                eq(HttpStatus.BAD_REQUEST),
-                eq("File not found."),
-                anyObject(HttpServletResponse.class));
+
 
         replayAll();
 
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/ecm/download/byId/{ecmFileId}", ecmFileId)
                         .principal(mockAuthentication)
                         .session(mockHttpSession))
                 .andReturn();
 
         verifyAll();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
     }
 }
