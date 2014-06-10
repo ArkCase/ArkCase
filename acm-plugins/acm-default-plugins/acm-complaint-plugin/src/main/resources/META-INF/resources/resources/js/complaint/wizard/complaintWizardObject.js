@@ -559,7 +559,7 @@ ComplaintWizard.Object = {
                         rc.Record.type = record.type;
                         rc.Record.value = record.value;
                         rc.Record.created = Acm.getCurrentDay(); //record.created;
-                        rc.Record.creator = record.creator;
+                        rc.Record.creator = Acm.getUserName();   //record.creator;
                         return rc;
 //                        return {
 //                            "Result": "OK"
@@ -624,6 +624,8 @@ ComplaintWizard.Object = {
                     ,creator: {
                         title: 'Added By'
                         ,width: '30%'
+                        ,create: false
+                        ,edit: false
                     }
                 }
                 ,recordAdded : function (event, data) {
@@ -634,8 +636,8 @@ ComplaintWizard.Object = {
                     contactMethod.id = parseInt(record.id);
                     contactMethod.type = record.type;
                     contactMethod.value = record.value;
-                    //contactMethod.created = record.created;   //created is readonly
-                    contactMethod.creator = record.creator;
+                    //contactMethod.created = record.created;   //created,creator is readonly
+                    //contactMethod.creator = record.creator;
                     contactMethods.push(contactMethod);
                 }
                 ,recordUpdated : function (event, data) {
@@ -646,8 +648,8 @@ ComplaintWizard.Object = {
                     var contactMethod = contactMethods[whichRow];
                     contactMethod.type = record.type;
                     contactMethod.value = record.value;
-                    //contactMethod.created = record.created;   //created is readonly
-                    contactMethod.creator = record.creator;
+                    //contactMethod.created = record.created;   //created,creator is readonly
+                    //contactMethod.creator = record.creator;
                 }
                 ,recordDeleted : function (event, data) {
                     var r = data.row;

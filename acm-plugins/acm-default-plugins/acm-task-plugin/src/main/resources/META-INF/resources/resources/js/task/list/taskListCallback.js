@@ -32,7 +32,7 @@ TaskList.Callback = {
             if (Acm.isNotEmpty(response.taskId)) {
 
                 //todo: remove from local copy, no need to call service
-                TaskList.Service.listTask(Acm.Object.getUserName());
+                TaskList.Service.listTask(Acm.getUserName());
 
                 success = true;
             }
