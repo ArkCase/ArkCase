@@ -2,16 +2,15 @@ package com.armedia.acm.pluginmanager.web;
 
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +21,7 @@ import java.util.Map;
 public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapter
 {
     private AcmPluginManager acmPluginManager;
+    private AcmSpringMvcErrorManager errorManager;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -51,7 +51,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
             // privileges in the user session.  Somehow the login success handler did not run.  This is an
             // anomalous situation.  Better return HTTP 403.
             String message = "Unknown user privileges; you do not have access to " + request.getServletPath();
-            sendErrorResponse(HttpStatus.FORBIDDEN, message, response);
+            getErrorManager().sendErrorResponse(HttpStatus.FORBIDDEN, message, response);
 
             return false;
 
@@ -63,7 +63,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
         if ( ! hasPrivilege )
         {
             String message = "You do not have privileges for " + method + " " + url;
-            sendErrorResponse(HttpStatus.FORBIDDEN, message, response);
+            getErrorManager().sendErrorResponse(HttpStatus.FORBIDDEN, message, response);
         }
 
         return hasPrivilege;
@@ -92,17 +92,6 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
         return hasPrivilege;
     }
 
-    public void sendErrorResponse(HttpStatus httpStatus, String message, HttpServletResponse response) throws IOException
-    {
-        response.setStatus(httpStatus.value());
-        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-
-        byte[] bytes = message.getBytes();
-        response.setContentLength(bytes.length);
-        response.getOutputStream().write(bytes);
-        response.getOutputStream().flush();
-    }
-
     public AcmPluginManager getAcmPluginManager()
     {
         return acmPluginManager;
@@ -111,5 +100,15 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
     public void setAcmPluginManager(AcmPluginManager acmPluginManager)
     {
         this.acmPluginManager = acmPluginManager;
+    }
+
+    public AcmSpringMvcErrorManager getErrorManager()
+    {
+        return errorManager;
+    }
+
+    public void setErrorManager(AcmSpringMvcErrorManager errorManager)
+    {
+        this.errorManager = errorManager;
     }
 }

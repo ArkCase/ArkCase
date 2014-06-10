@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="listTasksAPIController" class="com.armedia.acm.plugins.task.web.api.ListTasksAPIController">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
+    </bean>
+
+    <bean id="completeTaskAPIController" class="com.armedia.acm.plugins.task.web.api.CompleteTaskAPIController">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
+        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
+    </bean>
+
+    <bean id="createAdHocTaskAPIController" class="com.armedia.acm.plugins.task.web.api.CreateAdHocTaskAPIController">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
+        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
+    </bean>
+
+    <bean id="findTaskByIdAPIController" class="com.armedia.acm.plugins.task.web.api.FindTaskByIdAPIController">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
+        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
+    </bean>
+
+</beans>

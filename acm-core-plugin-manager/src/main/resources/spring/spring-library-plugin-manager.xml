@@ -5,12 +5,4 @@
 
     <bean id="acmPluginManager" class="com.armedia.acm.pluginmanager.service.AcmPluginManager"/>
 
-    <bean id="acmTestPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
-        <property name="pluginName" value="homePlugin"/>
-        <property name="navigatorTab" value="true"/>
-        <property name="navigatorTabName" value="Home"/>
-        <property name="homeUrl" value="home"/>
-        <property name="pluginImage" value="i-statistics"/>
-    </bean>
-
 </beans>

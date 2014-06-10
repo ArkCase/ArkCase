@@ -5,20 +5,14 @@
 
     <bean id="helloWorldPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="helloWorldPlugin"/>
-        <property name="navigatorTab" value="true"/>
-        <property name="navigatorTabName" value="Hello World"/>
-        <property name="homeUrl" value="/plugin/sample/helloWorld"/>
-        <property name="enabled" value="true"/>
-        <property name="pluginImage" value="i-world"/>
         <property name="privileges">
             <list>
                 <ref bean="helloWorldPrivilege"/>
             </list>
         </property>
-        <property name="navigatorTabPrivilegeRequired" ref="helloWorldPrivilege"/>
         <property name="urlPrivileges">
             <list>
-                <bean id="dashboardUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="helloWorldUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/sample/helloWorld"/>
                     <property name="requiredPrivilege" ref="helloWorldPrivilege"/>

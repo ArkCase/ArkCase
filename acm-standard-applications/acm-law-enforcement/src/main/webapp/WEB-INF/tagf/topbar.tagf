@@ -1,0 +1,48 @@
+<header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
+    <div class="navbar-header aside dk text-center">
+        <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a>
+        <a href="portal.html" class="navbar-brand"><img src="<c:url value='/resources/images/armedia.png'/>" class="m-r-sm"></a></div>
+    <ul class="nav navbar-nav hidden-xs">
+        <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
+            <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
+                <div class="row m-l-none m-r-none m-t m-b text-center">
+                    <c:forEach items="${acm_application.topbarActions}" var="topbarAction">
+                        <c:set var="requiredPrivilege" value="${topbarAction.requiredPrivilege}" scope="page"/>
+                        <c:if test="${acm_privileges[requiredPrivilege]}">
+                            <div class="col-xs-3">
+                                <div class="padder-v2">
+                                    <a href="<c:url value='${topbarAction.url}'/>">
+                                        <span class="m-b-xs block">
+                                            <i class="i ${topbarAction.iconName} i-2x text-primary-lt"></i>
+                                        </span>
+                                        <small class="text-muted">${topbarAction.actionName}</small>
+                                    </a>
+                                </div>
+                            </div>
+                        </c:if>
+                    </c:forEach>
+                </div>
+            </section>
+        </li>
+    </ul>
+    <form class="navbar-form navbar-right input-s-lg m-t m-l-n-xs hidden-xs" role="search">
+        <div class="form-group">
+            <div class="input-group"> <span class="input-group-btn">
+          <button type="submit" class="btn btn-sm bg-white b-white btn-icon"><i class="fa fa-search"></i></button>
+          </span>
+                <input type="text" class="form-control input-sm no-border" placeholder="Search complaints, cases...">
+            </div>
+        </div>
+    </form>
+    <ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user user">
+        <li class="hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-chat3"></i> <span class="badge badge-sm up bg-danger count">0</span> </a>
+            <section class="dropdown-menu aside-xl animated flipInY">
+                <section class="panel bg-white">
+                    <header class="panel-heading b-light bg-light"> <strong>You have <span class="count">0</span> notifications</strong> </header>
+                    <div class="list-group list-group-alt"> </div>
+                    <footer class="panel-footer text-sm"> <a href="#" class="pull-right"><i class="fa fa-cog"></i></a> <a href="#notes" data-toggle="class:show animated fadeInRight">See all acitivity</a> </footer>
+                </section>
+            </section>
+        </li>
+    </ul>
+</header>

@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,7 +65,7 @@ public class EcmFileTransactionIT
 
     @Test
     @Transactional
-    public void muleAddFileFlow() throws Exception
+    public void muleAddAndRetrieveFile() throws Exception
     {
         assertNotNull(testFolderId);
 
@@ -103,7 +104,18 @@ public class EcmFileTransactionIT
         assertNotNull(persisted);
         entityManager.refresh(persisted);
 
+        MuleMessage downloadedFile = muleClient.send("vm://downloadFileFlow.in", ecmFile.getEcmFileId(), null);
+        ContentStream filePayload = (ContentStream) downloadedFile.getPayload();
+
+        assertNotNull(filePayload);
+
+        log.debug("Download file: " + filePayload.getFileName() + "; " + filePayload.getMimeType() + "; " + filePayload.getBigLength());
+
     }
+
+
+
+
 
 
 }

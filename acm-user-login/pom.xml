@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>1.6</version>
+        <version>1.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,6 +14,11 @@
 
     <dependencies>
         <!-- acm -->
+        <dependency>
+            <groupId>com.armedia.services</groupId>
+            <artifactId>acm-service-users</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.armedia.acm.spring-tools</groupId>
             <artifactId>acm-spring-tools-context-holder</artifactId>
@@ -27,6 +32,11 @@
         <dependency>
             <groupId>com.armedia.acm</groupId>
             <artifactId>acm-core-plugin-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-core-object-model</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

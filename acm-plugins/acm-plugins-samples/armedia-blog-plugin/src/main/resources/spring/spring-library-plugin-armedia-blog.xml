@@ -5,17 +5,11 @@
 
     <bean id="acmSampleBlogPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="armediaBlogPlugin"/>
-        <property name="navigatorTab" value="true"/>
-        <property name="navigatorTabName" value="Armedia Blog"/>
-        <property name="homeUrl" value="/plugin/sample/armediaBlog"/>
-        <property name="enabled" value="true"/>
-        <property name="pluginImage" value="i-pencil"/>
         <property name="privileges">
             <list>
                 <ref bean="blogPrivilege"/>
             </list>
         </property>
-        <property name="navigatorTabPrivilegeRequired" ref="blogPrivilege"/>
         <property name="urlPrivileges">
             <list>
                 <bean id="dashboardUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

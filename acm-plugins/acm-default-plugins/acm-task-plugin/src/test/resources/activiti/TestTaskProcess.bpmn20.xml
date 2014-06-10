@@ -1,0 +1,36 @@
+<definitions targetNamespace="http://activiti.org/bpmn20"
+             xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL
+                    http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+
+    <process id="testTaskProcess" name="Parallel Approval Tasks">
+
+        <startEvent id="start" />
+
+        <sequenceFlow id="approvals" sourceRef="start" targetRef="approvalTasks" />
+
+        <userTask id="approvalTasks" name="Approve Task"
+                activiti:assignee="${currentApprover}"
+                activiti:dueDate="P3D"
+                activiti:priority="50">
+            <!-- note: "P3D" above = "Period of 3 days from now". Any valid ISO801 duration expression will work. -->
+            <!-- note: intellij does not like the activiti:priority attribute, but it works anyway.  50 is the default
+                 value. -->
+            <documentation>
+                Approve the Task
+            </documentation>
+            <multiInstanceLoopCharacteristics
+                    isSequential="false"
+                    activiti:collection="approvers"
+                    activiti:elementVariable="currentApprover"/>
+        </userTask>
+
+        <sequenceFlow id="approvalTasksToEnd" sourceRef="approvalTasks" targetRef="done" />
+
+        <endEvent id="done" />
+
+    </process>
+
+</definitions>

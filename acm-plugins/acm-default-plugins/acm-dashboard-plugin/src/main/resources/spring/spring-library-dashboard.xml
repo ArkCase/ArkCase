@@ -29,19 +29,13 @@
 
     
     <bean id="dashboardPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
-        <property name="enabled" value="true"/>
-        <property name="homeUrl" value="/plugin/dashboard"/>
-        <property name="navigatorTab" value="true"/>
-        <property name="navigatorTabName" value="Dashboard"/>
-        <property name="pluginName" value="Dashboard Plugin"/>
+         <property name="pluginName" value="Dashboard Plugin"/>
         <property name="pluginProperties" ref="dashboardPluginProperties"/>
-        <property name="pluginImage" value="i-statistics"/>
         <property name="privileges">
             <list>
                 <ref bean="dashboardPrivilege"/>
             </list>
         </property>
-        <property name="navigatorTabPrivilegeRequired" ref="dashboardPrivilege"/>
         <property name="urlPrivileges">
             <list>
                 <bean id="dashboardUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

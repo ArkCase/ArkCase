@@ -1,0 +1,21 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="02-user-service-constraints" author="dmiller">
+        <addForeignKeyConstraint baseTableName="acm_user_role" baseColumnNames="cm_user_id"
+                                 constraintName="fk_user_role_user_id"
+                                 referencedTableName="acm_user"
+                                 referencedColumnNames="cm_user_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+        <addForeignKeyConstraint baseTableName="acm_user_role" baseColumnNames="cm_role_name"
+                                 constraintName="fk_user_role_role_name"
+                                 referencedTableName="acm_role"
+                                 referencedColumnNames="cm_role_name"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
+</databaseChangeLog>

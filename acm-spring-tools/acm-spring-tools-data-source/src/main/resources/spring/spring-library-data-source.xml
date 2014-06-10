@@ -108,7 +108,7 @@
         <property name="showSql" value="${database.platform.showSql}"/>
     </bean>
 
-    <!-- Plain old JDBC transaction manager (use JtaTransactionManager for
+    <!-- JPA transaction manager (use JtaTransactionManager for
          global tx) -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="dataSource" ref="acmDataSource"/>

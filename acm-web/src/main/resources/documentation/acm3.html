@@ -706,6 +706,777 @@
 
 
 
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_complaint_byId__complaintId_">
+                
+                    <span class="badge badge_get">get</span>
+                
+                <span class="parent">/plugin/complaint</span>/byId/{complaintId}
+            </a>
+        </h4>
+    </div>
+    <div id="panel__plugin_complaint_byId__complaintId_" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_plugin_complaint_byId__complaintId__get" class="list-group-item">
+                        <span class="badge badge_get">get</span>
+                        Lookup complaint details by complaint ID.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_plugin_complaint_byId__complaintId__get">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_get">get</span>
+                            <span class="parent">/plugin/complaint</span>/byId/{complaintId}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Lookup complaint details by complaint ID.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_plugin_complaint_byId__complaintId__get_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_plugin_complaint_byId__complaintId__get_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_plugin_complaint_byId__complaintId__get_request">
+                                
+                                    <h3>URI Parameters</h3>
+                                    <ul>
+                                        
+                                            <li><strong>complaintId</strong>: string</li>
+                                        
+                                    </ul>
+                                
+
+                                
+
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_plugin_complaint_byId__complaintId__get_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>expected response containing the desired complaint details</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>{
+&quot;complaintId&quot;:739,
+&quot;complaintNumber&quot;:&quot;20140603_739&quot;,
+&quot;complaintType&quot;:&quot;Domestic Dispute&quot;,
+&quot;priority&quot;:&quot;Medium&quot;,
+&quot;complaintTitle&quot;:null,
+&quot;details&quot;:&quot;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&quot;,
+&quot;incidentDate&quot;:&quot;2013-02-12T00:00:00.000+0000&quot;,
+&quot;created&quot;:&quot;2014-06-03T21:16:56.090+0000&quot;,
+&quot;creator&quot;:&quot;ebmillar&quot;,
+&quot;modified&quot;:&quot;2014-06-03T21:17:05.315+0000&quot;,
+&quot;modifier&quot;:&quot;ebmillar&quot;,
+&quot;status&quot;:&quot;DRAFT&quot;,
+&quot;originator&quot;:{
+  &quot;id&quot;:740,
+  &quot;title&quot;:&quot;Mr.&quot;,
+  &quot;company&quot;:null,
+  &quot;status&quot;:&quot;ACTIVE&quot;,
+  &quot;givenName&quot;:&quot;Bob&quot;,
+  &quot;familyName&quot;:&quot;Weir&quot;,
+  &quot;created&quot;:&quot;2014-06-03T21:16:56.090+0000&quot;,
+  &quot;creator&quot;:&quot;ebmillar&quot;,
+  &quot;modified&quot;:&quot;2014-06-03T21:16:56.090+0000&quot;,
+  &quot;modifier&quot;:&quot;ebmillar&quot;,
+  &quot;addresses&quot;:[],
+  &quot;contactMethods&quot;:[],
+  &quot;securityTags&quot;:[]
+},
+&quot;ecmFolderPath&quot;:null,
+&quot;ecmFolderId&quot;:&quot;workspace://SpacesStore/7d240f67-023a-4059-b653-6bc06b2d58ab&quot;,
+&quot;childObjects&quot;:[],
+&quot;approvers&quot;:null
+}
+</pre>
+                                            
+                                        
+                                    
+                                        <h2>HTTP status code 400</h2>
+                                        <p>Usually means the requested complaint does not exist.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: text/plain</strong></p>
+                                                <pre>Complaint ID 2739 not found.</pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+
+
+
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task">
+                
+                <span class="parent">/plugin</span>/task
+            </a>
+        </h4>
+    </div>
+    <div id="panel__plugin_task" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task_forUser__user_">
+                
+                    <span class="badge badge_get">get</span>
+                
+                <span class="parent">/plugin/task</span>/forUser/{user}
+            </a>
+        </h4>
+    </div>
+    <div id="panel__plugin_task_forUser__user_" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_plugin_task_forUser__user__get" class="list-group-item">
+                        <span class="badge badge_get">get</span>
+                        Get a list of active tasks for the specified user.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_plugin_task_forUser__user__get">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_get">get</span>
+                            <span class="parent">/plugin/task</span>/forUser/{user}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Get a list of active tasks for the specified user.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_plugin_task_forUser__user__get_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_plugin_task_forUser__user__get_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_plugin_task_forUser__user__get_request">
+                                
+                                    <h3>URI Parameters</h3>
+                                    <ul>
+                                        
+                                            <li><strong>user</strong>: string</li>
+                                        
+                                    </ul>
+                                
+
+                                
+
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_plugin_task_forUser__user__get_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>expected response containing a list of tasks.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>[
+  {
+    &quot;taskId&quot;:500,
+    &quot;priority&quot;:0,
+    &quot;title&quot;:&quot;Example Task Title&quot;,
+    &quot;dueDate&quot;:&quot;2014-06-03&quot;,
+    &quot;attachedToObjectType&quot;:&quot;COMPLAINT&quot;,
+    &quot;attachedToObjectId&quot;:495, 
+    &quot;assignee&quot;:&quot;ann-acm&quot;,
+    &quot;businessProcessName&quot;:&quot;cmComplaintWorkflow&quot;,
+    &quot;adhocTask&quot;:false
+  }
+ ]
+</pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task_completeTask__taskId_">
+                
+                    <span class="badge badge_post">post</span>
+                
+                <span class="parent">/plugin/task</span>/completeTask/{taskId}
+            </a>
+        </h4>
+    </div>
+    <div id="panel__plugin_task_completeTask__taskId_" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_plugin_task_completeTask__taskId__post" class="list-group-item">
+                        <span class="badge badge_post">post</span>
+                        Complete a task.  Must be called by the task&#x27;s current assignee.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_plugin_task_completeTask__taskId__post">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_post">post</span>
+                            <span class="parent">/plugin/task</span>/completeTask/{taskId}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Complete a task.  Must be called by the task&#39;s current assignee.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_plugin_task_completeTask__taskId__post_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_plugin_task_completeTask__taskId__post_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_plugin_task_completeTask__taskId__post_request">
+                                
+                                    <h3>URI Parameters</h3>
+                                    <ul>
+                                        
+                                            <li><strong>taskId</strong>: string</li>
+                                        
+                                    </ul>
+                                
+
+                                
+
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_plugin_task_completeTask__taskId__post_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>Task was successfully completed.  JSON represents the historical task instance, with information as to when the task was started and completed.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>{
+&quot;taskId&quot;:500,
+&quot;priority&quot;:50,
+&quot;title&quot;:&quot;The Task Title&quot;,
+&quot;dueDate&quot;:&quot;2014-06-03&quot;,
+&quot;attachedToObjectType&quot;:&quot;COMPLAINT&quot;,
+&quot;attachedToObjectId&quot;:250,
+&quot;assignee&quot;:&quot;ann-acm&quot;,
+&quot;businessProcessName&quot;:&quot;Complaint Approval&quot;,
+&quot;adhocTask&quot;:false,
+&quot;completed&quot;:true,
+&quot;taskStartDate&quot;:&quot;2014-06-02&quot;,
+&quot;taskFinishedDate&quot;:&quot;2014-06-03&quot;,
+&quot;taskDurationInMillis&quot;:298392
+}
+</pre>
+                                            
+                                        
+                                    
+                                        <h2>HTTP status code 400</h2>
+                                        <p>The task could not be completed.  Either the task ID does not represent an active task (task does not exist or is already closed), or the authenticated user is not the task assignee.  T</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: text/plain</strong></p>
+                                                <pre>Task &#x27;500&#x27; does not exist or has already been completed.
+</pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task_adHocTask">
+                
+                    <span class="badge badge_post">post</span>
+                
+                <span class="parent">/plugin/task</span>/adHocTask
+            </a>
+        </h4>
+    </div>
+    <div id="panel__plugin_task_adHocTask" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_plugin_task_adHocTask_post" class="list-group-item">
+                        <span class="badge badge_post">post</span>
+                        Create a standalone task (not tied to a workflow or business process)
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_plugin_task_adHocTask_post">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_post">post</span>
+                            <span class="parent">/plugin/task</span>/adHocTask
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Create a standalone task (not tied to a workflow or business process)</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_plugin_task_adHocTask_post_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_plugin_task_adHocTask_post_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_plugin_task_adHocTask_post_request">
+                                
+
+                                
+
+                                
+                                    <h3>Body</h3>
+                                    
+                                        <p><strong>Type: application/json</strong></p>
+                                        <pre>{
+  &quot;priority&quot;:50,
+  &quot;title&quot;:&quot;The Task Title&quot;,
+  &quot;dueDate&quot;:&quot;2014-06-03&quot;,
+  &quot;assignee&quot;:&quot;ebmillar&quot;,
+}
+</pre>
+                                    
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_plugin_task_adHocTask_post_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>Task created successfully. The response includes the new tasks&#39;s ID.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>{
+  &quot;taskId&quot;:2801,
+  &quot;priority&quot;:50,
+  &quot;title&quot;:&quot;The Task Title&quot;,
+  &quot;dueDate&quot;:&quot;2014-06-03T00:00:00.000+0000&quot;,
+  &quot;attachedToObjectType&quot;:null,
+  &quot;attachedToObjectId&quot;:null,
+  &quot;assignee&quot;:&quot;ebmillar&quot;,
+  &quot;businessProcessName&quot;:null,
+  &quot;adhocTask&quot;:false,
+  &quot;completed&quot;:false,
+  &quot;taskStartDate&quot;:null,
+  &quot;taskFinishedDate&quot;:null,
+  &quot;taskDurationInMillis&quot;:null
+}
+</pre>
+                                            
+                                        
+                                    
+                                        <h2>HTTP status code 400</h2>
+                                        <p>Task could not be created; perhaps the request body was invalid.</p>
+
+
+                                        
+
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task_byId__taskId_">
+                
+                    <span class="badge badge_get">get</span>
+                
+                <span class="parent">/plugin/task</span>/byId/{taskId}
+            </a>
+        </h4>
+    </div>
+    <div id="panel__plugin_task_byId__taskId_" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_plugin_task_byId__taskId__get" class="list-group-item">
+                        <span class="badge badge_get">get</span>
+                        Get task details by the task ID.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_plugin_task_byId__taskId__get">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_get">get</span>
+                            <span class="parent">/plugin/task</span>/byId/{taskId}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Get task details by the task ID.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_plugin_task_byId__taskId__get_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_plugin_task_byId__taskId__get_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_plugin_task_byId__taskId__get_request">
+                                
+                                    <h3>URI Parameters</h3>
+                                    <ul>
+                                        
+                                            <li><strong>taskId</strong>: string</li>
+                                        
+                                    </ul>
+                                
+
+                                
+
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_plugin_task_byId__taskId__get_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>Normal response; body includes the task details.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>{
+  &quot;taskId&quot;:2801,
+  &quot;priority&quot;:50,
+  &quot;title&quot;:&quot;The Task Title&quot;,
+  &quot;dueDate&quot;:&quot;2014-06-03T00:00:00.000+0000&quot;,
+  &quot;attachedToObjectType&quot;:null,
+  &quot;attachedToObjectId&quot;:null,
+  &quot;assignee&quot;:&quot;ebmillar&quot;,
+  &quot;businessProcessName&quot;:null,
+  &quot;adhocTask&quot;:true,
+  &quot;completed&quot;:true,
+  &quot;taskStartDate&quot;:&quot;2014-06-04T14:46:46.472+0000&quot;,
+  &quot;taskFinishedDate&quot;:&quot;2014-06-04T17:45:49.822+0000&quot;,
+  &quot;taskDurationInMillis&quot;:10743350
+}
+</pre>
+                                            
+                                        
+                                    
+                                        <h2>HTTP status code 500</h2>
+                                        <p>Could not get the task details; task does not exist, or an Activiti error</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: text/plain</strong></p>
+                                                <pre>Task with ID &#x27;92838&#x27; does not exist.</pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 id="_users" class="panel-title">/users</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            
+
+                            <div class="panel-group">
+                                <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__users">
+                
+                <span class="parent"></span>/users
+            </a>
+        </h4>
+    </div>
+    <div id="panel__users" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__users_withPrivilege__privilege_">
+                
+                    <span class="badge badge_get">get</span>
+                
+                <span class="parent">/users</span>/withPrivilege/{privilege}
+            </a>
+        </h4>
+    </div>
+    <div id="panel__users_withPrivilege__privilege_" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_users_withPrivilege__privilege__get" class="list-group-item">
+                        <span class="badge badge_get">get</span>
+                        Get a list of users with the specified privilege.  Used to obtain a list of users who are authorized to perform a certain action.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_users_withPrivilege__privilege__get">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_get">get</span>
+                            <span class="parent">/users</span>/withPrivilege/{privilege}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Get a list of users with the specified privilege.  Used to obtain a list of users who are authorized to perform a certain action.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_users_withPrivilege__privilege__get_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_users_withPrivilege__privilege__get_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_users_withPrivilege__privilege__get_request">
+                                
+                                    <h3>URI Parameters</h3>
+                                    <ul>
+                                        
+                                            <li><strong>privilege</strong>: string</li>
+                                        
+                                    </ul>
+                                
+
+                                
+
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_users_withPrivilege__privilege__get_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>expected response containing the list of users with the requested privilege.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>[{&quot;userId&quot;:&quot;OPIS_Admin&quot;,&quot;fullName&quot;:&quot;OPIS Admin&quot;,&quot;firstName&quot;:&quot;OPIS&quot;,&quot;lastName&quot;:&quot;Admin&quot;},
+ {&quot;userId&quot;:&quot;ann-acm&quot;,&quot;fullName&quot;:&quot;Ann Administrator&quot;,&quot;firstName&quot;:&quot;Ann&quot;,&quot;lastName&quot;:&quot;Administrator&quot;}]
+</pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
 
 
 
@@ -720,6 +1491,8 @@
                     <ul class="nav nav-pills nav-stacked">
                         
                             <li><a href="#_plugin">/plugin</a></li>
+                        
+                            <li><a href="#_users">/users</a></li>
                         
                     </ul>
                 </div>

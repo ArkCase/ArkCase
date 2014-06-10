@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.4.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+
+
+    <flow name="updateComplaintStatus" doc:name="Update Complaint Status">
+        <jms:inbound-endpoint connector-ref="ActiveMQ-ACM" queue="updateComplaintStatusQueue"/>
+
+        <logger category="com.armedia.acm.plugin.complaint" level="DEBUG"/>
+
+        <timer-interceptor/>
+
+        <expression-component>
+            app.registry.acmComplaintDao.updateComplaintStatus(
+                message.inboundProperties["COMPLAINT"],
+                message.inboundProperties["newStatus"],
+                message.inboundProperties["ACM_USER"]);
+        </expression-component>
+    </flow>
+
+</mule>

@@ -4,10 +4,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="acmPluginController" class="com.armedia.acm.pluginmanager.web.AcmPluginController">
-        <property name="acmPluginManager" ref="acmPluginManager"/>
+        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
     </bean>
 
     <bean id="acmPluginRoleBasedAccessInterceptor" class="com.armedia.acm.pluginmanager.web.AcmPluginRoleBasedAccessInterceptor">
         <property name="acmPluginManager" ref="acmPluginManager"/>
+        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
     </bean>
 </beans>

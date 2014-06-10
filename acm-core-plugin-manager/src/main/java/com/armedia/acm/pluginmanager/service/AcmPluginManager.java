@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,6 @@ public class AcmPluginManager implements ApplicationContextAware
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private Collection<AcmPlugin> acmPlugins = new ArrayList<>();
-    private Collection<AcmPlugin> enabledNavigatorPlugins = new ArrayList<>();
     private Map<String, List<String>> privilegesByRole = new HashMap<>();
     private List<AcmPluginUrlPrivilege> urlPrivileges = new ArrayList<>();
 
@@ -34,8 +34,6 @@ public class AcmPluginManager implements ApplicationContextAware
     public synchronized void registerPlugin(AcmPlugin plugin)
     {
         acmPlugins.add(plugin);
-
-        checkForNavigatorTab(plugin);
 
         addPluginPrivileges(plugin);
 
@@ -84,18 +82,6 @@ public class AcmPluginManager implements ApplicationContextAware
         }
     }
 
-    private void checkForNavigatorTab(AcmPlugin plugin)
-    {
-        if ( plugin.isNavigatorTab() && plugin.isEnabled() )
-        {
-            if ( log.isDebugEnabled() )
-            {
-                log.debug("Adding navigator plugin " + plugin.getPluginName());
-            }
-            enabledNavigatorPlugins.add(plugin);
-        }
-    }
-
     /**
      * Scan for bundled plugins at application start time.
      */
@@ -120,13 +106,6 @@ public class AcmPluginManager implements ApplicationContextAware
         }
     }
 
-
-    public synchronized Collection<AcmPlugin> getEnabledNavigatorPlugins()
-    {
-        return Collections.unmodifiableCollection(enabledNavigatorPlugins);
-    }
-
-
     public List<String> getPrivilegesForRole(String role)
     {
         if ( privilegesByRole.containsKey(role) )
@@ -139,42 +118,27 @@ public class AcmPluginManager implements ApplicationContextAware
         }
     }
 
-    public List<AcmPlugin> findAccessiblePlugins(Map<String, Boolean> userPrivileges)
+    public List<AcmPluginUrlPrivilege> getUrlPrivileges()
     {
-        List<AcmPlugin> retval = new ArrayList<>();
+        return Collections.unmodifiableList(urlPrivileges);
+    }
 
-        for ( AcmPlugin plugin : getEnabledNavigatorPlugins() )
+    public List<String> getRolesForPrivilege(String privilege)
+    {
+        // iterate over the role-to-privileges map; if the value list includes this privilege, the role (i.e. the
+        // map key) is included in the return list.
+        List<String> retval = new LinkedList<>();
+
+        for ( Map.Entry<String, List<String>> roleToPrivileges : privilegesByRole.entrySet() )
         {
-            boolean hasPrivilege = checkUserPrivilege(userPrivileges, plugin);
-            if ( hasPrivilege )
+            if ( roleToPrivileges.getValue() != null
+                    && roleToPrivileges.getValue().contains(privilege)
+                    && !retval.contains(roleToPrivileges.getKey()))
             {
-                retval.add(plugin);
+                retval.add(roleToPrivileges.getKey());
             }
         }
 
         return retval;
-    }
-
-    protected boolean checkUserPrivilege(Map<String, Boolean> userPrivileges, AcmPlugin plugin)
-    {
-        boolean hasPrivilege = false;
-        AcmPluginPrivilege requiredPrivilege = plugin.getNavigatorTabPrivilegeRequired();
-        if ( requiredPrivilege != null )
-        {
-            String privilegeName = requiredPrivilege.getPrivilegeName();
-            hasPrivilege = userPrivileges.containsKey(privilegeName) ? userPrivileges.get(privilegeName) : false;
-
-            if ( log.isDebugEnabled() )
-            {
-                log.debug("Checking access to navigator tab '" + plugin.getNavigatorTabName() + ". " +
-                        "Required privilege: '" + privilegeName + "'. User has access: " + hasPrivilege + ".");
-            }
-        }
-        return hasPrivilege;
-    }
-
-    public List<AcmPluginUrlPrivilege> getUrlPrivileges()
-    {
-        return Collections.unmodifiableList(urlPrivileges);
     }
 }

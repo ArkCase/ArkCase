@@ -6,8 +6,6 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ExecutionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -22,7 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -53,7 +54,7 @@ public class ComplaintWorkflowIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/DefaultComplaintWorkflow_v1.bpmn20.xml")
+                .addClasspathResource("activiti/DefaultComplaintWorkflow_v5.bpmn20.xml")
                 .deploy();
 
     }
@@ -75,59 +76,55 @@ public class ComplaintWorkflowIT
         Long complaintId = 12345L;
         Long badId = 54321L;
         String user = "Test User";
+        String user2 = "Another User";
+        String complaintNumber = "20140530_001";
+        String complaintTitle = "complaintTitle";
+
+        List<String> approvers = Arrays.asList(user, user2);
+        Map<String, Object> processVariables = new HashMap<>();
+        processVariables.put("approvers", approvers);
+        processVariables.put("complaintNumber", complaintNumber);
+        processVariables.put("complaintTitle", complaintTitle);
 
         assertNotNull(rt);
 
-        Execution found = createWorkflowProcess(complaintId, badId);
+        ProcessInstance found = createWorkflowProcess(complaintId, badId, processVariables);
+        assertFalse(found.isEnded());
 
-        Task approval = ts.createTaskQuery().executionId(found.getId()).singleResult();
+        List<Task> approvals = ts.createTaskQuery().processInstanceId(found.getProcessInstanceId()).list();
 
-        assertNotNull(approval);
+        log.debug("Found " + approvals.size() + " approval tasks.");
 
-        log.debug("Found task id '" + approval.getId() + "'");
+        assertEquals(approvers.size(), approvals.size());
 
-        ts.claim(approval.getId(), user);
+        for ( int a = 0; a < approvals.size(); ++a )
+        {
+            Task task = approvals.get(a);
+            ts.complete(task.getId());
 
-        log.debug("claimed task");
+            ProcessInstance current = rt.createProcessInstanceQuery().processInstanceId(found.getProcessInstanceId()).singleResult();
+            boolean shouldBeComplete = a == approvals.size() - 1;
 
-        Task afterClaim = ts.createTaskQuery().executionId(found.getId()).singleResult();
+            // when all approvers have finished the process will be complete and the runtime service query
+            // will not find it.
+            if ( shouldBeComplete )
+            {
+                assertNull(current);
+            }
+            else
+            {
+                assertFalse(current.isEnded());
+            }
 
-        assertEquals(user, afterClaim.getAssignee());
-
-        completeWorkflow(afterClaim);
-
-        // runtime service should not find the process anymore since it should be ended
-        ExecutionQuery eqEnded = rt.createExecutionQuery().variableValueEquals("cmComplaintId", complaintId);
-        Execution ended = eqEnded.singleResult();
-        assertNull(ended);
-
-        // historical query should find it
-        HistoricProcessInstanceQuery hq = hs.createHistoricProcessInstanceQuery().processInstanceId(found.getProcessInstanceId());
-        HistoricProcessInstance hpi = hq.singleResult();
-        assertNotNull(hpi);
-        assertNotNull(hpi.getEndTime());
-
-
+        }
 
     }
 
-    private void completeWorkflow(Task afterClaim)
-    {
-        ExecutionQuery eqInApproval = rt.createExecutionQuery().activityId("approveComplaint");
-        List<Execution> approvals = eqInApproval.list();
-        assertEquals(1, approvals.size());
 
-        ts.complete(afterClaim.getId());
-
-        eqInApproval = rt.createExecutionQuery().activityId("approveComplaint");
-        approvals = eqInApproval.list();
-        assertEquals(0, approvals.size());
-    }
-
-    private Execution createWorkflowProcess(Long complaintId, Long badId)
+    private ProcessInstance createWorkflowProcess(Long complaintId, Long badId, Map<String, Object> processVariables)
     {
         // start a process
-        ProcessInstance pi = rt.startProcessInstanceByKey("cmComplaintWorkflow");
+        ProcessInstance pi = rt.startProcessInstanceByKey("cmComplaintWorkflow", processVariables);
         rt.setVariable(pi.getId(), "cmComplaintId", complaintId);
 
         ExecutionQuery eq = rt.createExecutionQuery().variableValueEquals("cmComplaintId", complaintId);
@@ -139,8 +136,7 @@ public class ComplaintWorkflowIT
         assertNotNull(found);
         assertNull(notFound);
 
-        log.debug("Found item of type '" + found.getClass().getName() + "'");
-        return found;
+        return pi;
     }
 
 }

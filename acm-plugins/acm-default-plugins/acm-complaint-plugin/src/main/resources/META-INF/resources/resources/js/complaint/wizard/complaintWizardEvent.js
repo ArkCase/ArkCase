@@ -9,12 +9,30 @@ ComplaintWizard.Event = {
     initialize : function() {
     }
 
-    ,onClickLnkSubmit : function(e) {
-
+    ,onClickBtnSubmit : function(e) {
+        var data = ComplaintWizard.Object.getComplaintData();
+        ComplaintWizard.Service.submitForApproval(data);
         e.preventDefault();
 
     }
-    ,onClickLnkSave : function(e) {
+    ,onClickBtnSave : function(e) {
+        var data = ComplaintWizard.Object.getComplaintData();
+        ComplaintWizard.Service.saveComplaint(data);
+        e.preventDefault();
+    }
+
+
+    ,onPostInit: function() {
+        ComplaintWizard.Service.getApprovers();
+        ComplaintWizard.Service.getComplaintTypes();
+        ComplaintWizard.Service.getPriorities();
+
+        var curDate = Acm.getCurrentDay();
+        ComplaintWizard.Object.setValueEdtIncidentDate(curDate);
+    }
+
+    //-------------------------------------------------
+    ,test : function(btn) {
         var data0 =
         {
             //"complaintId": null,
@@ -47,15 +65,6 @@ ComplaintWizard.Event = {
 //                "securityTags": ["Anonymous", "Confidential", "Top Secret"]
             }
         };
-
-        var data = ComplaintWizard.Object.getComplaintData();
-        ComplaintWizard.Service.createComplaint(data);
-
-        e.preventDefault();
-    }
-
-    ,test : function(btn) {
-
 
         var url = "/acm" + "/api/latest/plugin/complaint";
         var param =
@@ -126,8 +135,5 @@ ComplaintWizard.Event = {
             }
         });
 
-    }
-
-    ,onPostInit: function() {
     }
 };

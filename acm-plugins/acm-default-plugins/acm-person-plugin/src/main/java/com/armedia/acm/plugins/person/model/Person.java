@@ -46,7 +46,7 @@ public class Person implements Serializable
     @Column(name = "cm_person_company_name")
     private String company;
 
-    @Column(name = "cm_person_status")
+    @Column(name = "cm_person_status", insertable = true, updatable = false)
     private String status;
 
     @Column(name = "cm_given_name")
@@ -88,8 +88,9 @@ public class Person implements Serializable
     @ElementCollection
     @CollectionTable(
             name = "acm_person_security_tag",
-            joinColumns = @JoinColumn(name = "cm_person_id" )
+            joinColumns = @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")
     )
+    @Column(name = "cm_security_tag")
     private List<String> securityTags = new ArrayList<>();
 
     @PrePersist

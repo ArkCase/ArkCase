@@ -12,7 +12,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 
     <flow name="activiti-flow" doc:name="Test flow for Activiti execution listeners">
         <vm:inbound-endpoint address="vm://activiti-flow" exchange-pattern="request-response" doc:name="VM"/>
-        <logger level="INFO" message="Got message id #[message.id]"/>
+        <logger level="INFO" />
         <logger level="INFO" message="Activiti process id: #[message.inboundProperties.processInstanceId]"/>
         <set-payload value="activiti flow completed: #[message.payload]"/>
     </flow>

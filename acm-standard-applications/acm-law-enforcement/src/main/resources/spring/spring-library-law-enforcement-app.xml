@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication">
+        <property name="applicationName" value="Law Enforcement Application"/>
+        <property name="topbarActions">
+            <list>
+                <ref bean="createComplaintAction"/>
+                <ref bean="createTaskAction"/>
+            </list>
+        </property>
+        <property name="navigatorTabs">
+            <list>
+                <ref bean="dashboardNavigatorAction"/>
+                <ref bean="complaintNavigatorAction"/>
+                <ref bean="taskNavigatorAction"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Actions -->
+    <!--
+    <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Complaint"/>
+        <property name="iconName" value="i-notice"/>
+        <property name="url" value="/plugin/complaint/wizard"/>
+        <property name="requiredPrivilege" value="acm-complaint-create"/>
+    </bean>
+    <bean id="complaintNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Complaints"/>
+        <property name="iconName" value="i-notice"/>
+        <property name="url" value="/plugin/complaint"/>
+        <property name="requiredPrivilege" value="acm-complaint-list"/>
+    </bean>
+    -->
+    <!-- temporary for demo -->
+    <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Case"/>
+        <property name="iconName" value="i-notice"/>
+        <property name="url" value="/plugin/complaint/wizard"/>
+        <property name="requiredPrivilege" value="acm-complaint-create"/>
+    </bean>
+    <bean id="complaintNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Cases"/>
+        <property name="iconName" value="i-notice"/>
+        <property name="url" value="/plugin/complaint"/>
+        <property name="requiredPrivilege" value="acm-complaint-list"/>
+    </bean>
+
+
+    <bean id="createTaskAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Task"/>
+        <property name="iconName" value="i-checkmark"/>
+        <property name="url" value="/plugin/task/wizard"/>
+        <property name="requiredPrivilege" value="acm-complaint-create"/>
+    </bean>
+    <bean id="taskNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Tasks"/>
+        <property name="iconName" value="i-checkmark"/>
+        <property name="url" value="/plugin/task"/>
+        <property name="requiredPrivilege" value="acm-complaint-list"/>
+    </bean>
+
+    <bean id="dashboardNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Dashboard"/>
+        <property name="iconName" value="i-statistics"/>
+        <property name="url" value="/plugin/dashboard"/>
+        <property name="requiredPrivilege" value="acm-dashboard"/>
+    </bean>
+    <bean id="helloWorldNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Hello World"/>
+        <property name="iconName" value="i-world"/>
+        <property name="url" value="/plugin/sample/helloWorld"/>
+        <property name="requiredPrivilege" value="acm-hello-world"/>
+    </bean>
+    <bean id="armediaBlogNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Armedia Blog"/>
+        <property name="iconName" value="i-pencil"/>
+        <property name="url" value="/plugin/sample/armediaBlog"/>
+        <property name="requiredPrivilege" value="acm-blog"/>
+    </bean>
+    <!-- end of actions -->
+
+    <!-- Page Descriptors -->
+    <bean id="dashboardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Dashboard | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Dashboard"/>
+        <property name="descLong" value="Dashboard"/>
+    </bean>
+    <bean id="simpleSearchPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Search | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Search"/>
+        <property name="descLong" value="Simple Search"/>
+    </bean>
+    <!--
+    <bean id="complaintListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Complaints | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Complaints"/>
+        <property name="descLong" value="Complaints"/>
+    </bean>
+    <bean id="complaintWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Complaint | ACM | Armedia Case Management"/>
+        <property name="descShort" value="New Complaint"/>
+        <property name="descLong" value="New Complaint"/>
+    </bean>
+    -->
+    <!-- temporary for demo -->
+    <bean id="complaintListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Cases | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Cases"/>
+        <property name="descLong" value="Cases"/>
+    </bean>
+    <bean id="complaintDetailPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Case | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Case"/>
+        <property name="descLong" value="Case"/>
+    </bean>
+    <bean id="complaintWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Case | ACM | Armedia Case Management"/>
+        <property name="descShort" value="New Case"/>
+        <property name="descLong" value="New Case"/>
+    </bean>
+
+    <bean id="taskListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Tasks | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Tasks"/>
+        <property name="descLong" value="Tasks"/>
+    </bean>
+    <bean id="taskDetailPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Task | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Task"/>
+        <property name="descLong" value="Task"/>
+    </bean>
+    <bean id="taskWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Task | ACM | Armedia Case Management"/>
+        <property name="descShort" value="New Task"/>
+        <property name="descLong" value="New Task"/>
+    </bean>
+
+    <bean id="armdiaBlogPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Armedia Blog | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Aremedia Blog"/>
+        <property name="descLong" value="Aremedia Blog"/>
+    </bean>
+    <bean id="helloWorldPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Hello World | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Hello World"/>
+        <property name="descLong" value="Hello World"/>
+    </bean>
+    <!-- end of Descriptors -->
+</beans>

@@ -3,7 +3,7 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.person.model.Person;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -20,6 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Arrays;
+
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,7 +32,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
     private CreateComplaintAPIController unit;
     private SaveComplaintTransaction mockSaveTransaction;
-    private SaveComplaintEventPublisher mockEventPublisher;
+    private ComplaintEventPublisher mockEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -41,7 +43,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
 
         mockSaveTransaction = createMock(SaveComplaintTransaction.class);
-        mockEventPublisher = createMock(SaveComplaintEventPublisher.class);
+        mockEventPublisher = createMock(ComplaintEventPublisher.class);
 
         unit.setComplaintTransaction(mockSaveTransaction);
         unit.setEventPublisher(mockEventPublisher);
@@ -63,6 +65,8 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         address.setStreetAddress("8221 Old Courthouse Road");
         person.getAddresses().add(address);
         complaint.setOriginator(person);
+
+        complaint.setApprovers(Arrays.asList("user1", "user2"));
 
         Complaint saved = new Complaint();
         saved.setComplaintId(complaint.getComplaintId());
@@ -103,6 +107,8 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         Complaint mapped = objectMapper.readValue(returned, Complaint.class);
         assertEquals(saved.getComplaintNumber(), mapped.getComplaintNumber());
+
+        assertEquals(complaint.getApprovers(), saved.getApprovers());
 
     }
 

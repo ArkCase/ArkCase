@@ -24,9 +24,9 @@ public class AcmPluginManagerTest extends EasyMockSupport
 
     private AcmPluginManager unit;
 
-    private AcmPlugin enabledNavigatorPlugin;
-    private AcmPlugin disabledNavigatorPlugin;
-    private AcmPlugin nonNavigatorPlugin;
+    private AcmPlugin pluginOne;
+    private AcmPlugin pluginTwo;
+    private AcmPlugin pluginThree;
 
     private ApplicationContext mockContext;
 
@@ -41,32 +41,15 @@ public class AcmPluginManagerTest extends EasyMockSupport
 
         unit = new AcmPluginManager();
 
-        enabledNavigatorPlugin = createPlugin(true, true, "enabledNavigatorPlugin");
-        disabledNavigatorPlugin = createPlugin(false, true, "disabledNavigatorPlugin");
-        nonNavigatorPlugin = createPlugin(true, false, "nonNavigatorPlugin");
-    }
-
-    @Test
-    public void getNavigatorPlugins_returnOnlyEnabledNavigatorPlugins()
-    {
-        List<AcmPlugin> plugins = Arrays.asList(enabledNavigatorPlugin, disabledNavigatorPlugin, nonNavigatorPlugin);
-        Map<String, AcmPlugin> beans = asMap(plugins);
-
-        expect(mockContext.getBeansOfType(AcmPlugin.class)).andReturn(beans);
-
-        replayAll();
-
-        unit.setApplicationContext(mockContext);
-
-        verifyAll();
-
-        assertEquals(1, unit.getEnabledNavigatorPlugins().size());
+        pluginOne = createPlugin("pluginOne");
+        pluginTwo = createPlugin("pluginTwo");
+        pluginThree = createPlugin("pluginThree");
     }
 
     @Test
     public void setApplicationContext_registerAllPlugins()
     {
-        List<AcmPlugin> plugins = Arrays.asList(enabledNavigatorPlugin, disabledNavigatorPlugin, nonNavigatorPlugin);
+        List<AcmPlugin> plugins = Arrays.asList(pluginOne, pluginTwo, pluginThree);
         Map<String, AcmPlugin> beans = asMap(plugins);
 
         expect(mockContext.getBeansOfType(AcmPlugin.class)).andReturn(beans);
@@ -85,7 +68,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
     @Test
     public void getPrivilegesForRole() throws Exception
     {
-        AcmPlugin plugin = createPlugin(true, false, "test plugin");
+        AcmPlugin plugin = createPlugin("test plugin");
         unit.registerPlugin(plugin);
 
         List<String> privileges = unit.getPrivilegesForRole(roleAdd);
@@ -98,9 +81,21 @@ public class AcmPluginManagerTest extends EasyMockSupport
     }
 
     @Test
+    public void getRolesForPrivilege() throws Exception
+    {
+        AcmPlugin plugin = createPlugin("test plugin");
+        unit.registerPlugin(plugin);
+
+        List<String> roles = unit.getRolesForPrivilege(privilegeAdd);
+
+        assertEquals(2, roles.size());
+
+    }
+
+    @Test
     public void getPrivilegesForRole_noPrivileges() throws Exception
     {
-        AcmPlugin plugin = createPlugin(true, false, "test plugin");
+        AcmPlugin plugin = createPlugin("test plugin");
         plugin.setPrivileges(null);
         unit.registerPlugin(plugin);
 
@@ -123,14 +118,10 @@ public class AcmPluginManagerTest extends EasyMockSupport
         return beans;
     }
 
-    private AcmPlugin createPlugin(boolean enabled, boolean navigatorTab, String tabName)
+    private AcmPlugin createPlugin(String pluginName)
     {
         AcmPlugin retval = new AcmPlugin();
-        retval.setEnabled(enabled);
-        retval.setNavigatorTab(navigatorTab);
-        retval.setNavigatorTabName(tabName);
-        retval.setHomeUrl(tabName);
-        retval.setPluginName(tabName);
+        retval.setPluginName(pluginName);
 
         AcmPluginPrivilege add = new AcmPluginPrivilege();
         add.setPrivilegeName(privilegeAdd);
