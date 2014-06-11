@@ -34,6 +34,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
 
     private TaskDao mockTaskDao;
     private TaskEventPublisher mockTaskEventPublisher;
+    private Authentication mockAuthentication;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -43,6 +44,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         mockTaskDao = createMock(TaskDao.class);
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);
         mockHttpSession = new MockHttpSession();
+        mockAuthentication = createMock(Authentication.class);
 
         unit = new CreateAdHocTaskAPIController();
 
@@ -75,8 +77,11 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         expect(mockTaskDao.createAdHocTask(capture(taskSentToDao))).andReturn(found);
         mockTaskEventPublisher.publishTaskEvent(
                 anyObject(AcmAdHocTaskCreatedEvent.class),
-                isNull(Authentication.class),
+                eq(mockAuthentication),
                 eq(ipAddress));
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
 
@@ -84,6 +89,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
                 post("/api/v1/plugin/task/adHocTask")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
+                        .principal(mockAuthentication)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(inJson))
                 .andReturn();

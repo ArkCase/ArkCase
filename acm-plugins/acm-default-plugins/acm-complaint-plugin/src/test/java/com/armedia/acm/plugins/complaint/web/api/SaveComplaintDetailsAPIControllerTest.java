@@ -38,6 +38,7 @@ public class SaveComplaintDetailsAPIControllerTest extends EasyMockSupport
     private ComplaintEventPublisher mockEventPublisher;
     private ComplaintDao mockComplaintDao;
     private SaveComplaintTransaction mockSaveComplaintTransaction;
+    private Authentication mockAuthentication;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -57,6 +58,7 @@ public class SaveComplaintDetailsAPIControllerTest extends EasyMockSupport
         mockEventPublisher = createMock(ComplaintEventPublisher.class);
         mockComplaintDao = createMock(ComplaintDao.class);
         mockSaveComplaintTransaction = createMock(SaveComplaintTransaction.class);
+        mockAuthentication = createMock(Authentication.class);
 
         unit.setComplaintDao(mockComplaintDao);
         unit.setEventPublisher(mockEventPublisher);
@@ -99,9 +101,10 @@ public class SaveComplaintDetailsAPIControllerTest extends EasyMockSupport
         Capture<Complaint> found = new Capture<>();
 
         expect(mockComplaintDao.find(Complaint.class, complaintId)).andReturn(fromDao);
-        // cannot get Spring MVC test support to bind an authentication to the request, so the auth will be null.
-        expect(mockSaveComplaintTransaction.saveComplaint(capture(found), isNull(Authentication.class))).andReturn(toMuleFlow);
-        mockEventPublisher.publishComplaintEvent(eq(toMuleFlow), isNull(Authentication.class), eq(false), eq(true));
+        expect(mockSaveComplaintTransaction.saveComplaint(capture(found), eq(mockAuthentication))).andReturn(toMuleFlow);
+        mockEventPublisher.publishComplaintEvent(eq(toMuleFlow), eq(mockAuthentication), eq(false), eq(true));
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
 
@@ -114,6 +117,7 @@ public class SaveComplaintDetailsAPIControllerTest extends EasyMockSupport
         MvcResult result = mockMvc.perform(
                 post("/api/latest/plugin/complaint/details/" + complaintId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .principal(mockAuthentication)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(inJson))
                 .andReturn();

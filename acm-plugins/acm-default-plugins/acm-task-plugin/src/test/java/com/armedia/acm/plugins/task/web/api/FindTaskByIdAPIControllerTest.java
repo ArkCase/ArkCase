@@ -39,6 +39,7 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
 
     private TaskDao mockTaskDao;
     private TaskEventPublisher mockTaskEventPublisher;
+    private Authentication mockAuthentication;
     private AcmSpringMvcErrorManager mockErrorManager;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -50,6 +51,7 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);
         mockHttpSession = new MockHttpSession();
         mockErrorManager = createMock(AcmSpringMvcErrorManager.class);
+        mockAuthentication = createMock(Authentication.class);
 
         unit = new FindTaskByIdAPIController();
 
@@ -76,14 +78,18 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         expect(mockTaskDao.findById(taskId)).andReturn(returned);
 
         Capture<AcmFindTaskByIdEvent> eventRaised = new Capture<>();
-        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised), isNull(Authentication.class), eq(ipAddress));
+        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised), eq(mockAuthentication), eq(ipAddress));
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/task/byId/{taskId}", taskId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .session(mockHttpSession))
+                        .session(mockHttpSession)
+                        .principal(mockAuthentication))
                 .andReturn();
 
         verifyAll();
@@ -116,17 +122,21 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         expect(mockTaskDao.findById(taskId)).andThrow(new AcmTaskException());
 
         Capture<AcmFindTaskByIdEvent> eventRaised = new Capture<>();
-        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised), isNull(Authentication.class), eq(ipAddress));
+        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised), eq(mockAuthentication), eq(ipAddress));
         mockErrorManager.sendErrorResponse(
                 eq(HttpStatus.INTERNAL_SERVER_ERROR),
                 anyObject(String.class),
                 anyObject(HttpServletResponse.class));
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
 
         mockMvc.perform(
                 get("/api/v1/plugin/task/byId/{taskId}", taskId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .principal(mockAuthentication)
                         .session(mockHttpSession));
 
         verifyAll();

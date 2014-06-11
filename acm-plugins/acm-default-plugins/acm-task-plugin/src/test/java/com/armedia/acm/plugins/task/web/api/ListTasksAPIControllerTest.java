@@ -4,7 +4,6 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.AcmTaskSearchResultEvent;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
-import com.armedia.acm.plugins.task.web.api.ListTasksAPIController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -39,6 +38,7 @@ public class ListTasksAPIControllerTest extends EasyMockSupport
 
     private TaskDao mockTaskDao;
     private TaskEventPublisher mockTaskEventPublisher;
+    private Authentication mockAuthentication;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -48,6 +48,7 @@ public class ListTasksAPIControllerTest extends EasyMockSupport
         mockTaskDao = createMock(TaskDao.class);
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);
         mockHttpSession = new MockHttpSession();
+        mockAuthentication = createMock(Authentication.class);
 
         unit = new ListTasksAPIController();
 
@@ -70,16 +71,20 @@ public class ListTasksAPIControllerTest extends EasyMockSupport
         expect(mockTaskDao.tasksForUser(user)).andReturn(Arrays.asList(userTask));
         mockTaskEventPublisher.publishTaskEvent(
                 anyObject(AcmTaskSearchResultEvent.class),
-                isNull(Authentication.class),
+                eq(mockAuthentication),
                 eq(ipAddress));
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/task/forUser/{user}", user)
                 .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                .principal(mockAuthentication)
                 .session(mockHttpSession))
                 .andReturn();
 

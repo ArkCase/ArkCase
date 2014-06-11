@@ -33,6 +33,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
     private CreateComplaintAPIController unit;
     private SaveComplaintTransaction mockSaveTransaction;
     private ComplaintEventPublisher mockEventPublisher;
+    private Authentication mockAuthentication;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -44,6 +45,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         mockSaveTransaction = createMock(SaveComplaintTransaction.class);
         mockEventPublisher = createMock(ComplaintEventPublisher.class);
+        mockAuthentication = createMock(Authentication.class);
 
         unit.setComplaintTransaction(mockSaveTransaction);
         unit.setEventPublisher(mockEventPublisher);
@@ -79,12 +81,11 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         Capture<Complaint> found = new Capture<>();
 
-        // in a standalone mock MVC test we have no way to configure the request such that Spring MVC
-        // will find the Authentication in the request, so as to call the controller method with a non-null
-        // Authentication parameter; although I believe we could do it with a full webapp context test.
-        // so we will just assume a null authentication.
-        expect(mockSaveTransaction.saveComplaint(capture(found), isNull(Authentication.class))).andReturn(saved);
-        mockEventPublisher.publishComplaintEvent(capture(found), isNull(Authentication.class), eq(false), eq(true));
+        expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication))).andReturn(saved);
+        mockEventPublisher.publishComplaintEvent(capture(found), eq(mockAuthentication), eq(false), eq(true));
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
 
@@ -92,6 +93,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
             post("/api/latest/plugin/complaint")
                     .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                     .contentType(MediaType.APPLICATION_JSON)
+                    .principal(mockAuthentication)
                     .content(in))
                 .andReturn();
 
@@ -117,6 +119,9 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
     {
         String notComplaintJson = "{ \"user\": \"dmiller\" }";
 
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user");
+
         // should not be any calls made to our services
         replayAll();
 
@@ -124,6 +129,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
                 post("/api/latest/plugin/complaint")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
+                        .principal(mockAuthentication)
                         .content(notComplaintJson))
                 .andReturn();
 
