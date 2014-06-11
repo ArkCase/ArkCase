@@ -31,7 +31,7 @@ public class ComplaintWorkflowAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
     private ComplaintEventPublisher mockEventPublisher;
-    private AcmSpringMvcErrorManager mockErrorManager;
+    private AcmSpringMvcErrorManager errorManager;
     private Authentication mockAuthentication;
 
     private ComplaintWorkflowAPIController unit;
@@ -42,12 +42,12 @@ public class ComplaintWorkflowAPIControllerTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         mockEventPublisher = createMock(ComplaintEventPublisher.class);
-        mockErrorManager = createMock(AcmSpringMvcErrorManager.class);
+        errorManager = new AcmSpringMvcErrorManager();
         mockAuthentication = createMock(Authentication.class);
 
         unit = new ComplaintWorkflowAPIController();
         unit.setEventPublisher(mockEventPublisher);
-        unit.setErrorManager(mockErrorManager);
+        unit.setErrorManager(errorManager);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
 

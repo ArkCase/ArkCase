@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpServletResponse;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -37,7 +36,7 @@ public class FindComplaintByIdAPIControllerTest extends EasyMockSupport
 
     private ComplaintDao mockComplaintDao;
     private ComplaintEventPublisher mockComplaintEventPublisher;
-    private AcmSpringMvcErrorManager mockErrorManager;
+    private AcmSpringMvcErrorManager errorManager;
     private Authentication mockAuthentication;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -48,14 +47,14 @@ public class FindComplaintByIdAPIControllerTest extends EasyMockSupport
         mockComplaintDao = createMock(ComplaintDao.class);
         mockComplaintEventPublisher = createMock(ComplaintEventPublisher.class);
         mockHttpSession = new MockHttpSession();
-        mockErrorManager = createMock(AcmSpringMvcErrorManager.class);
+        errorManager = new AcmSpringMvcErrorManager();
         mockAuthentication = createMock(Authentication.class);
 
         unit = new FindComplaintByIdAPIController();
 
         unit.setComplaintDao(mockComplaintDao);
         unit.setEventPublisher(mockComplaintEventPublisher);
-        unit.setErrorManager(mockErrorManager);
+        unit.setErrorManager(errorManager);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
     }
@@ -122,17 +121,13 @@ public class FindComplaintByIdAPIControllerTest extends EasyMockSupport
                 eq(mockAuthentication),
                 eq(ipAddress),
                 eq(false));
-        mockErrorManager.sendErrorResponse(
-                eq(HttpStatus.BAD_REQUEST),
-                eq("Complaint ID '" + complaintId + "' not found."),
-                anyObject(HttpServletResponse.class));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
 
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/complaint/byId/{complaintId}", complaintId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
@@ -140,6 +135,9 @@ public class FindComplaintByIdAPIControllerTest extends EasyMockSupport
                 .andReturn();
 
         verifyAll();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType().startsWith("text/plain"));
 
     }
 

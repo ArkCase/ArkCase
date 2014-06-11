@@ -16,7 +16,7 @@ public class AcmSpringMvcErrorManager
         response.setStatus(httpStatus.value());
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
 
-        byte[] bytes = message.getBytes();
+        byte[] bytes = message == null ? "Unknown Error...".getBytes() : message.getBytes();
         response.setContentLength(bytes.length);
         response.getOutputStream().write(bytes);
         response.getOutputStream().flush();
