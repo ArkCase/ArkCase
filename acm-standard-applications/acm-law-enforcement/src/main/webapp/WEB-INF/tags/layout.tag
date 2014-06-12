@@ -58,6 +58,10 @@
 <script type="text/javascript" src="<c:url value='/resources/js/acm3.0/sidebar/sidebarService.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/acm3.0/sidebar/sidebarCallback.js'/>"></script>
 
+<script type="text/javascript" src="<c:url value='/resources/js/typeahead0.10.2/typeahead.js'/>"></script>
+<%--<script type="text/javascript" src="<c:url value='/resources/js/typeahead0.10.2/typeahead.jquery.js'/>"></script>--%>
+<%--<script type="text/javascript" src="<c:url value='/resources/js/typeahead0.10.2/bloodhound.js'/>"></script>--%>
+
 <script type="text/javascript">
     $(document).ready(function () {
         Acm.initialize();

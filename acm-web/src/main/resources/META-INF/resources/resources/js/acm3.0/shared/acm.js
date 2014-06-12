@@ -91,7 +91,54 @@ var Acm = Acm || {
     //convert URL parameters to JSON
     //ex) "abc=foo&def=%5Basf%5D&xyz=5&foo=b%3Dar" to {abc: "foo", def: "[asf]", xyz: "5", foo: "b=ar"}
     ,urlToJson: function(param) {
-        return JSON.parse('{"' + decodeURI(param).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+        var decoded = decodeURI(param)
+            .replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"')
+            .replace(/\n/g,"\\n").replace(/\r/g,"\\r")
+            .replace(/\+/g, " ");
+
+
+        var parsed = JSON.parse('{"' + decoded + '"}');
+
+        //todo: make a function to tranvers json object; loop for now
+        for (var key in parsed) {
+            parsed[key] = parsed[key].replace(/\\r/g, "\r").replace(/\\n/g, "\n");
+        }
+        return parsed;
+
+
+        var a1 = param;
+        var a1a = param.replace(/%0D/g, '_0D_');
+        var a1b = a1a.replace(/%0A/g, '_0A_');
+        a1b = a1;
+        var a2 = decodeURI(param);
+        //var a3 = a2.replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"');
+        var a3 = a2.replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"').replace(/\n/g,"\\n").replace(/\r/g,"\\r").replace(/\+/g, " ");
+
+        var a3a = a3.replace(/\+/g, " ");
+        var a3b = a3a.replace(/"_0D_"/g, '%0D');
+        var a3c = a3b.replace(/"_0A_"/g, '%0A');
+        a3c = a3;
+        var a4a = '{"' + a3c + '"}';
+        var a5 = JSON.parse(a4a);
+
+        var str = "Visit W3Schools.\nLearn \\nJavaScript.";
+        var d1 = str.replace(/\\n/g,"\n");
+        var d2 = str.replace(/\n/g,"\n");
+
+        //todo: make a function to tranvers json object; loop for now
+        for (var key in a5) {
+            var c1 = key;
+            var c2 = a5[key];
+            var c3 = c2.replace(/\\r/g, "\r");
+            var c4 = c3.replace(/\\n/g, "\n");
+
+            a5[key] = a5[key].replace(/\\r/g, "\r").replace(/\\n/g, "\n");
+            var z = 1;
+        }
+
+        var z = 1;
+        return a5;
+        //return JSON.parse('{"' + decodeURI(param).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     }
 
     ,deferred: function(fcn) {

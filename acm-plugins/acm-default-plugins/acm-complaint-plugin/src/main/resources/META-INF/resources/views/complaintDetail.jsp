@@ -46,7 +46,6 @@
 
 <link href="<c:url value='/resources/js/x-editable1.5.1/css/bootstrap-editable.css" rel="stylesheet'/>">
 <script src="<c:url value='/resources/js/x-editable1.5.1/js/bootstrap-editable.min.js'/>"></script>
-<script src="<c:url value='/resources/js/typeahead.js'/>"></script>
 <script>
     $.fn.editable.defaults.url = '/post';
     $(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); });

@@ -116,10 +116,10 @@ var Complaint = Complaint || {
         return this._aliasTypes;
     }
 
-    ,_participants : ["David Miller", "James Bailey", "Judy Hsu", "Ronda Ringo", "AJ McClary", "Jim Nasr"]
-    ,getParticipants : function() {
-        return this._participants;
-    }
+//    ,_participants : ["David Miller", "James Bailey", "Judy Hsu", "Ronda Ringo", "AJ McClary", "Jim Nasr"]
+//    ,getParticipants : function() {
+//        return this._participants;
+//    }
 
 };
 
