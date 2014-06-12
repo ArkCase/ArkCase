@@ -1,14 +1,13 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.AcmTaskCompletedEvent;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
-import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,14 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class CompleteTaskAPIController
 {
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
-    private AcmSpringMvcErrorManager errorManager;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -36,7 +33,7 @@ public class CompleteTaskAPIController
             Authentication authentication,
             HttpSession httpSession,
             HttpServletResponse response
-    ) throws IOException
+    ) throws AcmUserActionFailedException
     {
         if ( log.isInfoEnabled() )
         {
@@ -47,23 +44,29 @@ public class CompleteTaskAPIController
         {
             AcmTask completed = getTaskDao().completeTask(authentication, taskId);
 
-            publishTaskCompletedEvent(authentication, httpSession, completed);
+            publishTaskCompletedEvent(authentication, httpSession, completed, true);
 
             return completed;
         }
         catch (AcmTaskException e)
         {
-            getErrorManager().sendErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage(), response);
-        }
+            // gen up a fake task so we can audit the failure
+            AcmTask fakeTask = new AcmTask();
+            fakeTask.setTaskId(taskId);
+            publishTaskCompletedEvent(authentication, httpSession, fakeTask, false);
 
-        // Spring MVC has already flushed the response output stream during sendErrorResponse, but Java
-        // makes us return something.
-        return null;
+            throw new AcmUserActionFailedException("complete", "task", taskId, e.getMessage(), e);
+        }
     }
 
-    protected void publishTaskCompletedEvent(Authentication authentication, HttpSession httpSession, AcmTask completed)
+    protected void publishTaskCompletedEvent(
+            Authentication authentication,
+            HttpSession httpSession,
+            AcmTask completed,
+            boolean succeeded)
     {
         AcmTaskCompletedEvent event = new AcmTaskCompletedEvent(completed);
+        event.setSucceeded(succeeded);
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         getTaskEventPublisher().publishTaskEvent(event, authentication, ipAddress);
     }
@@ -89,13 +92,4 @@ public class CompleteTaskAPIController
         this.taskEventPublisher = taskEventPublisher;
     }
 
-    public AcmSpringMvcErrorManager getErrorManager()
-    {
-        return errorManager;
-    }
-
-    public void setErrorManager(AcmSpringMvcErrorManager errorManager)
-    {
-        this.errorManager = errorManager;
-    }
 }

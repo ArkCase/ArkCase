@@ -1,10 +1,13 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.AcmTaskCompletedEvent;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.util.NestedServletException;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -63,11 +67,13 @@ public class CompleteTaskAPIControllerTest extends EasyMockSupport
         AcmTask found = new AcmTask();
         found.setTaskId(taskId);
 
+        Capture<AcmTaskCompletedEvent> capturedEvent = new Capture<>();
+
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockTaskDao.completeTask(eq(mockAuthentication), eq(taskId))).andReturn(found);
         mockTaskEventPublisher.publishTaskEvent(
-                anyObject(AcmTaskCompletedEvent.class),
+                capture(capturedEvent),
                 eq(mockAuthentication),
                 eq(ipAddress));
         // MVC test classes must call getName() somehow
@@ -97,6 +103,65 @@ public class CompleteTaskAPIControllerTest extends EasyMockSupport
 
         assertNotNull(completedTask);
         assertEquals(completedTask.getTaskId(), taskId);
+
+        AcmTaskCompletedEvent event = capturedEvent.getValue();
+        assertEquals(taskId, event.getObjectId());
+        assertEquals("TASK", event.getObjectType());
+        assertTrue(event.isSucceeded());
+    }
+
+    @Test
+    public void completeTask_exception() throws Exception
+    {
+        Long taskId = 500L;
+        String ipAddress = "ipAddress";
+
+        AcmTask found = new AcmTask();
+        found.setTaskId(taskId);
+
+        Capture<AcmTaskCompletedEvent> capturedEvent = new Capture<>();
+
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+
+        expect(mockTaskDao.completeTask(eq(mockAuthentication), eq(taskId))).andThrow(new AcmTaskException("testException"));
+        mockTaskEventPublisher.publishTaskEvent(
+                capture(capturedEvent),
+                eq(mockAuthentication),
+                eq(ipAddress));
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user");
+
+        replayAll();
+
+        // Our controller should throw an exception. When the full dispatcher servlet is running, an
+        // @ExceptionHandler will send the right HTTP response code to the browser.  In this test, we just have to
+        // make sure the right exception is thrown.
+        try
+        {
+            mockMvc.perform(
+                    post("/api/v1/plugin/task/completeTask/{taskId}", taskId)
+                            .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                            .session(mockHttpSession)
+                            .principal(mockAuthentication));
+        }
+        catch (NestedServletException e)
+        {
+            // Spring MVC wraps the real exception with a NestedServletException
+            assertNotNull(e.getCause());
+            assertEquals(AcmUserActionFailedException.class, e.getCause().getClass());
+        }
+        catch (Exception e)
+        {
+            fail("Threw the wrong exception! " + e.getClass().getName());
+        }
+
+
+    verifyAll();
+
+        AcmTaskCompletedEvent event = capturedEvent.getValue();
+        assertEquals(taskId, event.getObjectId());
+        assertEquals("TASK", event.getObjectType());
+        assertFalse(event.isSucceeded());
     }
 
 }

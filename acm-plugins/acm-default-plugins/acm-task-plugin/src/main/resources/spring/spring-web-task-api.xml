@@ -23,7 +23,6 @@
     <bean id="findTaskByIdAPIController" class="com.armedia.acm.plugins.task.web.api.FindTaskByIdAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
-        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
     </bean>
 
 </beans>

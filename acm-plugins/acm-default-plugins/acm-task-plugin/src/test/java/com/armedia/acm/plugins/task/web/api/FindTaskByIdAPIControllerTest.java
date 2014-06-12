@@ -1,11 +1,11 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmFindTaskByIdEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
-import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -20,14 +20,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.util.NestedServletException;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-/**
- * Created by armdev on 6/4/14.
- */
 public class FindTaskByIdAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -38,7 +36,6 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
     private TaskDao mockTaskDao;
     private TaskEventPublisher mockTaskEventPublisher;
     private Authentication mockAuthentication;
-    private AcmSpringMvcErrorManager errorManager;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -48,20 +45,18 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         mockTaskDao = createMock(TaskDao.class);
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);
         mockHttpSession = new MockHttpSession();
-        errorManager = new AcmSpringMvcErrorManager();
         mockAuthentication = createMock(Authentication.class);
 
         unit = new FindTaskByIdAPIController();
 
         unit.setTaskDao(mockTaskDao);
         unit.setTaskEventPublisher(mockTaskEventPublisher);
-        unit.setErrorManager(errorManager);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
     }
 
     @Test
-    public void findComplaintById() throws Exception
+    public void findTaskById() throws Exception
     {
         String ipAddress = "ipAddress";
         String title = "The Test Title";
@@ -110,7 +105,7 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
     }
 
     @Test
-    public void findComplaintById_notFound() throws Exception
+    public void findTaskById_exception() throws Exception
     {
         Long taskId = 500L;
         String ipAddress = "ipAddress";
@@ -122,17 +117,32 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         Capture<AcmFindTaskByIdEvent> eventRaised = new Capture<>();
         mockTaskEventPublisher.publishTaskEvent(capture(eventRaised), eq(mockAuthentication), eq(ipAddress));
 
-        // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/task/byId/{taskId}", taskId)
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .principal(mockAuthentication)
-                        .session(mockHttpSession))
-                .andReturn();
+        // Our controller should throw an exception. When the full dispatcher servlet is running, an
+        // @ExceptionHandler will send the right HTTP response code to the browser.  In this test, we just have to
+        // make sure the right exception is thrown.
+        try
+        {
+            mockMvc.perform(
+                    get("/api/v1/plugin/task/byId/{taskId}", taskId)
+                            .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                            .principal(mockAuthentication)
+                            .session(mockHttpSession));
+            fail("should have thrown an exception");
+        }
+        catch (NestedServletException e)
+        {
+            // Spring MVC wraps the real exception with a NestedServletException
+            assertNotNull(e.getCause());
+            assertEquals(AcmObjectNotFoundException.class, e.getCause().getClass());
+        }
+        catch (Exception e)
+        {
+            fail("Threw the wrong exception! " + e.getClass().getName());
+        }
 
         verifyAll();
 
@@ -140,6 +150,5 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         assertFalse(event.isSucceeded());
         assertEquals(taskId, event.getObjectId());
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), result.getResponse().getStatus());
     }
 }
