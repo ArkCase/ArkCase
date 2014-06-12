@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.AcmTaskSearchResultEvent;
 import com.armedia.acm.plugins.task.service.TaskDao;
@@ -32,7 +33,7 @@ public class ListTasksAPIController
             @PathVariable("user") String user,
             Authentication authentication,
             HttpSession session
-    )
+    ) throws AcmListObjectsFailedException
     {
         if ( log.isInfoEnabled() )
         {
@@ -41,15 +42,22 @@ public class ListTasksAPIController
 
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
-        List<AcmTask> retval = getTaskDao().tasksForUser(user);
-
-        for ( AcmTask task : retval )
+        try
         {
-            AcmTaskSearchResultEvent event = new AcmTaskSearchResultEvent(task);
-            getTaskEventPublisher().publishTaskEvent(event, authentication, ipAddress);
-        }
+            List<AcmTask> retval = getTaskDao().tasksForUser(user);
 
-        return retval;
+            for ( AcmTask task : retval )
+            {
+                AcmTaskSearchResultEvent event = new AcmTaskSearchResultEvent(task);
+                getTaskEventPublisher().publishTaskEvent(event, authentication, ipAddress);
+            }
+
+            return retval;
+        }
+        catch (Exception e)
+        {
+            throw new AcmListObjectsFailedException("task", e.getMessage(), e);
+        }
 
     }
 

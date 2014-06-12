@@ -1,6 +1,7 @@
 package com.armedia.acm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import org.slf4j.Logger;
@@ -36,6 +37,13 @@ public class AcmSpringMvcErrorManager
     @ExceptionHandler(AcmCreateObjectFailedException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public void handleCreateObjectFailed(HttpServletResponse response, AcmCreateObjectFailedException e)
+    {
+        sendResponse(response, e.getMessage());
+    }
+
+    @ExceptionHandler(AcmListObjectsFailedException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public void handleListObjectsFailed(HttpServletResponse response, AcmListObjectsFailedException e)
     {
         sendResponse(response, e.getMessage());
     }
