@@ -57,10 +57,10 @@ public class AcmUserActionFailedException extends Exception
         }
         if ( super.getMessage() != null )
         {
-            message += "Server encountered exception: " + super.getMessage() + ".\n";
+            message += "Server encountered exception: " + super.getMessage() + "\n";
         }
 
-        message += "Exception type was: '" + getClass().getName() + ".";
+        message += "Exception type was: '" + getClass().getName() + "'.";
 
         return message;
     }

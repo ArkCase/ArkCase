@@ -32,6 +32,15 @@ public class AcmSpringMvcErrorManager
         sendResponse(response, e.getMessage());
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public void lastChanceHandler(HttpServletResponse response, Exception e)
+    {
+        sendResponse(response, e.getMessage());
+    }
+
+
+
     protected void sendResponse(HttpServletResponse response, String message)
     {
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
