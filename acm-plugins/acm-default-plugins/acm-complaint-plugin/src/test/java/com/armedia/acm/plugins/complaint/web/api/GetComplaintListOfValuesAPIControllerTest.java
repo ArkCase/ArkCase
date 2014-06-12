@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
+    private Authentication mockAuthentication;
 
     private GetComplaintListOfValuesAPIController unit;
 
@@ -44,6 +46,7 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
         mockListOfValuesService = createMock(ListOfValuesService.class);
+        mockAuthentication = createMock(Authentication.class);
 
         priorityDescriptor.setTableName("priorityTable");
         typeDescriptor.setTableName("typeTable");
@@ -60,11 +63,15 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         expect(mockListOfValuesService.lookupListOfStringValues(typeDescriptor)).andReturn(typeList);
 
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user");
+
         replayAll();
 
         MvcResult result = mockMvc.perform(
                 get("/api/latest/plugin/complaint/types")
-                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                .principal(mockAuthentication))
                 .andReturn();
 
         verifyAll();
@@ -92,11 +99,15 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         expect(mockListOfValuesService.lookupListOfStringValues(priorityDescriptor)).andReturn(priorityList);
 
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user");
+
         replayAll();
 
         MvcResult result = mockMvc.perform(
                 get("/api/latest/plugin/complaint/priorities")
-                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                .principal(mockAuthentication))
                 .andReturn();
 
         verifyAll();

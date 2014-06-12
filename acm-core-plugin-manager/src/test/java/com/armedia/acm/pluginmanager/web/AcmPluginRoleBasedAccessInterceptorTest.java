@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -32,7 +31,6 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
     private HttpServletResponse mockResponse;
     private HttpServletRequest mockRequest;
     private HttpSession mockSession;
-    private ServletOutputStream mockOutputStream;
     private AcmSpringMvcErrorManager mockErrorManager;
 
     private AcmPluginRoleBasedAccessInterceptor unit;
@@ -44,7 +42,6 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         mockResponse = createMock(HttpServletResponse.class);
         mockRequest = createMock(HttpServletRequest.class);
         mockSession = createMock(HttpSession.class);
-        mockOutputStream = createMock(ServletOutputStream.class);
         mockErrorManager = createMock(AcmSpringMvcErrorManager.class);
 
         unit = new AcmPluginRoleBasedAccessInterceptor();

@@ -16,13 +16,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 /**
@@ -32,7 +31,8 @@ public class ComplaintWorkflowAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
     private ComplaintEventPublisher mockEventPublisher;
-    private AcmSpringMvcErrorManager mockErrorManager;
+    private AcmSpringMvcErrorManager errorManager;
+    private Authentication mockAuthentication;
 
     private ComplaintWorkflowAPIController unit;
 
@@ -42,11 +42,12 @@ public class ComplaintWorkflowAPIControllerTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         mockEventPublisher = createMock(ComplaintEventPublisher.class);
-        mockErrorManager = createMock(AcmSpringMvcErrorManager.class);
+        errorManager = new AcmSpringMvcErrorManager();
+        mockAuthentication = createMock(Authentication.class);
 
         unit = new ComplaintWorkflowAPIController();
         unit.setEventPublisher(mockEventPublisher);
-        unit.setErrorManager(mockErrorManager);
+        unit.setErrorManager(errorManager);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
 
@@ -82,18 +83,22 @@ public class ComplaintWorkflowAPIControllerTest extends EasyMockSupport
 
         mockEventPublisher.publishComplaintWorkflowEvent(
                 capture(capturedComplaint),
-                isNull(Authentication.class),
+                eq(mockAuthentication),
                 eq("acm_ip_address"));
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
 
         MockHttpSession mockSession = new MockHttpSession();
         mockSession.setAttribute("acm_ip_address", "acm_ip_address");
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 post("/api/latest/plugin/complaint/workflow")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .session(mockSession)
+                        .principal(mockAuthentication)
                         .content(in))
                 .andReturn();
 
