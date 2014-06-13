@@ -49,9 +49,10 @@ public class AcmSpringMvcErrorManager
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public void lastChanceHandler(HttpServletResponse response, Exception e)
     {
+        log.error("General exception from controller: " + e.getMessage(), e);
         sendResponse(response, e.getMessage());
     }
 
@@ -61,7 +62,9 @@ public class AcmSpringMvcErrorManager
     {
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
 
-        byte[] bytes = "".equals(message) ? "Unknown Error...".getBytes() : message.getBytes();
+        boolean empty = message == null || message.trim().isEmpty();
+
+        byte[] bytes = empty ? "Unknown Error...".getBytes() : message.getBytes();
         response.setContentLength(bytes.length);
         try
         {

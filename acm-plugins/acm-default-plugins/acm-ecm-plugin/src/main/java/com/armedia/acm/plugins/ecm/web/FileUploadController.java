@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.web;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,7 +36,7 @@ public class FileUploadController
             @RequestParam("parentObjectName") String parentObjectName,
             @RequestHeader("Accept") String acceptType,
             HttpServletRequest request,
-            Authentication authentication)
+            Authentication authentication) throws AcmCreateObjectFailedException
     {
 
         String contextPath = request.getServletContext().getContextPath();
