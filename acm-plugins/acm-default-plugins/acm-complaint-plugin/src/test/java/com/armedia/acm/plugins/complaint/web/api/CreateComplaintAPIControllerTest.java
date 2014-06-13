@@ -149,7 +149,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication)
                         .content(notComplaintJson))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.TEXT_PLAIN));
 
         verifyAll();
