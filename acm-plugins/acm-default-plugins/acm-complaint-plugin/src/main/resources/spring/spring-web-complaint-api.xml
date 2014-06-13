@@ -37,7 +37,6 @@
     <bean id="findComplaintByIdAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintByIdAPIController">
         <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="eventPublisher" ref="complaintEventPublisher"/>
-        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
     </bean>
 
 

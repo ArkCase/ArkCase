@@ -3,30 +3,37 @@ package com.armedia.acm.plugins.complaint.web.api;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
-import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import javax.persistence.PersistenceException;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * Created by armdev on 6/4/14.
- */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {
+        "classpath:/spring/spring-web-acm-web.xml",
+        "classpath:/spring/spring-library-complaint-plugin-test.xml"
+})
 public class FindComplaintByIdAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -36,8 +43,10 @@ public class FindComplaintByIdAPIControllerTest extends EasyMockSupport
 
     private ComplaintDao mockComplaintDao;
     private ComplaintEventPublisher mockComplaintEventPublisher;
-    private AcmSpringMvcErrorManager errorManager;
     private Authentication mockAuthentication;
+
+    @Autowired
+    private ExceptionHandlerExceptionResolver exceptionResolver;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -47,16 +56,14 @@ public class FindComplaintByIdAPIControllerTest extends EasyMockSupport
         mockComplaintDao = createMock(ComplaintDao.class);
         mockComplaintEventPublisher = createMock(ComplaintEventPublisher.class);
         mockHttpSession = new MockHttpSession();
-        errorManager = new AcmSpringMvcErrorManager();
         mockAuthentication = createMock(Authentication.class);
 
         unit = new FindComplaintByIdAPIController();
 
         unit.setComplaintDao(mockComplaintDao);
         unit.setEventPublisher(mockComplaintEventPublisher);
-        unit.setErrorManager(errorManager);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
     @Test
@@ -127,18 +134,15 @@ public class FindComplaintByIdAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 get("/api/v1/plugin/complaint/byId/{complaintId}", complaintId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
                         .principal(mockAuthentication))
-                .andReturn();
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
 
         verifyAll();
-
-        assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
-        assertTrue(result.getResponse().getContentType().startsWith("text/plain"));
-
     }
 
 }
