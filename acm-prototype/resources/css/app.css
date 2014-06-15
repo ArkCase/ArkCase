@@ -1,5 +1,7 @@
 /* @override http://localhost/~aj/acm3/resources/css/app.css */
 
+/* @override http://localhost/~aj/acm3/resources/css/app.css */
+
 /* @override http://localhost/~aj/acm3/css/app.css */
 
 /* @override http://localhost/~aj/acm3/css/app.css */
@@ -3443,6 +3445,21 @@ div.panel-body.no-padder table {
 .block {
   display: block;
 }
+
+#email-list section.vbox ul.list-group a.clear.text-ellipsis strong.block {
+	width: 130px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	
+}
+
+
+
+
+
+
+
+
 .block.hide {
   display: none;
 }
