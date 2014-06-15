@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+	<!--
+		DispatcherServlet Context: defines this servlet's request-processing infrastructure
+	-->
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/views/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!-- Imports user-defined @Controller beans that process client requests -->
+	<!--<import resource="controllers.xml" />-->
+    <mvc:view-controller path="/" view-name="home"/>
+    <mvc:view-controller path="/home" view-name="home"/>
+    <mvc:view-controller path="/login" view-name="login"/>
+    <mvc:view-controller path="/login.html" view-name="login"/>
+    <mvc:view-controller path="/portal.html" view-name="home"/>
+    <mvc:view-controller path="/overview.html" view-name="home"/>
+
+	<!-- Scan for Spring beans declared via annotations. -->
+	<!--<context:component-scan base-package="com.armedia.acm.web"/>-->
+
+    <!-- set JSON date format to ISO-8601 e.g. 1970-01-01T00:00:00.000+0000 -->
+    <bean id="sourceObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+    <bean id="acmObjectMapper" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="sourceObjectMapper"/>
+        <property name="targetMethod" value="disable"/>
+        <property name="arguments" value="WRITE_DATES_AS_TIMESTAMPS"/>
+    </bean>
+    <bean id="acmJacksonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="objectMapper" ref="acmObjectMapper"/>
+    </bean>
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven>
+        <mvc:message-converters>
+            <!-- We configure the Jackson mapper to output dates in ISO801 format. This requires adding our
+            customized Jackson mapper to the list of Spring MVC message converters. But, if we just add our bean here
+            all by itself, it will handle requests it should not handle, e.g. encoding strings.  So we need to add the
+            other standard message converters here too, and make sure to put the customized Jackson converter AFTER the
+            string converter. -->
+
+            <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter"/>
+            <ref bean="acmJacksonConverter"/>
+            <bean class="org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter"/>
+            <!-- atom feed requires com.sun.syndication package ...   -->
+            <!--<bean class="org.springframework.http.converter.feed.AtomFeedHttpMessageConverter"/>-->
+            <bean class="org.springframework.http.converter.BufferedImageHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.FormHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.xml.Jaxb2CollectionHttpMessageConverter"/>
+            <!-- marshalling converter requires spring oxm -->
+            <!--<bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"/>-->
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!--<context:spring-configured/>-->
+    <!--<context:annotation-config/>-->
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/plugin/**"/>
+            <mvc:mapping path="/api/*/plugin/**"/>
+            <ref bean="acmPluginRoleBasedAccessInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--
+        Enable serving of classpath with Spring 3 resource serving mechanism. For example:
+        /webflow-primefaces-showcase/app/resources/styles/blueprint/print.css
+    -->
+	<mvc:resources mapping="/resources/**" location="/resources/"  />
+
+    <!-- Saves a locale change using a cookie -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/>
+
+    <!-- File upload support -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+
+
+
+</beans>

@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
-import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -24,15 +24,14 @@ public class CreateComplaintAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private SaveComplaintTransaction complaintTransaction;
-    private SaveComplaintEventPublisher eventPublisher;
-    private ComplaintDao complaintDao;
+    private ComplaintEventPublisher eventPublisher;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Complaint createComplaint(
             @RequestBody Complaint in,
             Authentication auth
-    )
+    ) throws AcmCreateObjectFailedException
     {
         if ( log.isTraceEnabled() )
         {
@@ -48,6 +47,11 @@ public class CreateComplaintAPIController
 
             getEventPublisher().publishComplaintEvent(saved, auth, isInsert, true);
 
+            // since the approver list is not persisted to the database, we want to send them back to the caller...
+            // the approver list is only here to send to the Activiti engine.  After the workflow is started the
+            // approvers are stored in Activiti.
+            saved.setApprovers(in.getApprovers());
+
             return saved;
 
         } catch ( MuleException | TransactionException e)
@@ -55,14 +59,7 @@ public class CreateComplaintAPIController
             log.error("Could not save complaint: " + e.getMessage(), e);
             getEventPublisher().publishComplaintEvent(in, auth, isInsert, false);
 
-            if ( !isInsert )
-            {
-                Complaint existing = getComplaintDao().find(Complaint.class, in.getComplaintId());
-                // TODO: REST-based exception handling (e.g. send a proper http response code)
-                return existing;
-            }
-
-            return in;
+            throw new AcmCreateObjectFailedException("complaint", e.getMessage(), e);
         }
 
     }
@@ -77,23 +74,14 @@ public class CreateComplaintAPIController
         this.complaintTransaction = complaintTransaction;
     }
 
-    public SaveComplaintEventPublisher getEventPublisher()
+    public ComplaintEventPublisher getEventPublisher()
     {
         return eventPublisher;
     }
 
-    public void setEventPublisher(SaveComplaintEventPublisher eventPublisher)
+    public void setEventPublisher(ComplaintEventPublisher eventPublisher)
     {
         this.eventPublisher = eventPublisher;
     }
 
-    public ComplaintDao getComplaintDao()
-    {
-        return complaintDao;
-    }
-
-    public void setComplaintDao(ComplaintDao complaintDao)
-    {
-        this.complaintDao = complaintDao;
-    }
 }

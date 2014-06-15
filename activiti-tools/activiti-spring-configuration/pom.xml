@@ -3,7 +3,7 @@
     <parent>
         <artifactId>activiti-tools</artifactId>
         <groupId>com.armedia</groupId>
-        <version>1.6-SNAPSHOT</version>
+        <version>1.8-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,6 +15,11 @@
     </description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-event</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.armedia.acm.spring-tools</groupId>
             <artifactId>acm-spring-tools-data-source</artifactId>

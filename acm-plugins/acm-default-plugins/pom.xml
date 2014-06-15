@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-plugins</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>1.6-SNAPSHOT</version>
+        <version>1.8-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,7 +14,9 @@
     <description>Parent project for default plugins.</description>
     <modules>
         <module>acm-dashboard-plugin</module>
+        <module>acm-search-plugin</module>
         <module>acm-complaint-plugin</module>
+        <module>acm-task-plugin</module>
         <module>acm-object-association-plugin</module>
         <module>acm-addressable-plugin</module>
         <module>acm-person-plugin</module>

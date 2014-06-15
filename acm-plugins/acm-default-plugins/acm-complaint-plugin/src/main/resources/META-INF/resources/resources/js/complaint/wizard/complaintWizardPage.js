@@ -8,5 +8,6 @@
 ComplaintWizard.Page = {
     initialize : function() {
     }
+
 };
 

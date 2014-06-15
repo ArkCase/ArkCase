@@ -4,5 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="dashboardUiController" class="com.armedia.acm.plugins.dashboard.web.DashboardUiController">
+        <property name="pageDescriptor" ref="dashboardPageDescriptor"/>
     </bean>
 </beans>
+

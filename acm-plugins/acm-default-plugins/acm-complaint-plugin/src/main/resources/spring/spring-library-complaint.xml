@@ -23,21 +23,72 @@
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
+                <prop key="complaint.workflow.enabled">true</prop>
+                <prop key="complaint.workflow.activiti.name">cmComplaintWorkflow</prop>
+                <prop key="complaint.workflow.trigger.eventName">com.armedia.acm.complaint.submittedForReview</prop>
+                <prop key="complaint.workflow.activiti.inApproval.stateName">IN APPROVAL</prop>
+                <prop key="complaint.workflow.activiti.approved.stateName">ACTIVE</prop>
             </props>
         </property>
     </bean>
 
     <!-- event handlers -->
     <bean id="startComplaintBusinessProcessAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.complaint.created"/>
+        <property name="eventName" value="${complaint.workflow.trigger.eventName}"/>
         <property name="action" ref="startBusinessProcessAction"/>
+        <property name="enabled" value="${complaint.workflow.enabled}"/>
+        <property name="parameters">
+            <map>
+                <entry key="processDefinitionKey" value="${complaint.workflow.activiti.name}"/>
+            </map>
+        </property>
+        <property name="respondPredicate">
+            <bean class="org.apache.commons.collections.functors.TruePredicate" factory-method="getInstance"/>
+        </property>
+    </bean>
+
+    <bean id="updateComplaintStatus_inApproval" class="com.armedia.acm.event.EventResponse">
+        <property name="eventName" value="com.armedia.acm.activiti.businessProcess.start"/>
+        <property name="action" ref="updateComplaintStatusAction"/>
         <property name="enabled" value="true"/>
         <property name="parameters">
             <map>
-                <entry key="processDefinitionKey" value="cmComplaintWorkflow"/>
+                <entry key="newStatus" value="${complaint.workflow.activiti.inApproval.stateName}"/>
             </map>
         </property>
+        <property name="respondPredicate">
+            <bean class="com.armedia.acm.plugins.complaint.service.ComplaintUpdateStatusPredicate"/>
+        </property>
     </bean>
+
+    <bean id="updateComplaintStatus_approved" class="com.armedia.acm.event.EventResponse">
+        <property name="eventName" value="com.armedia.acm.activiti.businessProcess.end"/>
+        <property name="action" ref="updateComplaintStatusAction"/>
+        <property name="enabled" value="true"/>
+        <property name="parameters">
+            <map>
+                <entry key="newStatus" value="${complaint.workflow.activiti.approved.stateName}"/>
+            </map>
+        </property>
+        <property name="respondPredicate">
+            <bean class="com.armedia.acm.plugins.complaint.service.ComplaintUpdateStatusPredicate"/>
+        </property>
+    </bean>
+    <!-- end of event responses -->
+
+    <!-- event action handlers -->
+    <bean id="updateComplaintStatusAction" class="com.armedia.acm.event.AcmAction">
+        <property name="actionId" value="UPDATE_COMPLAINT_STATUS"/>
+        <property name="actionName" value="Update Complaint Status"/>
+        <property name="targetMuleEndpoint" value="jms://updateComplaintStatusQueue"/>
+        <property name="parameters">
+            <list>
+                <value>newStatus</value>
+            </list>
+        </property>
+
+    </bean>
+    <!-- end of action handlers -->
 
     <!-- lookup tables -->
     <bean id="complaintPriorityTable" class="com.armedia.acm.configuration.LookupTableDescriptor">
@@ -55,16 +106,125 @@
         <property name="muleClient" ref="muleClient"/>
     </bean>
     
-    <bean id="complaintPlugin" class="com.armedia.acm.pluginmanager.AcmPlugin">
-        <property name="enabled" value="true"/>
-        <property name="homeUrl" value="/plugin/complaint"/>
-        <property name="navigatorTab" value="true"/>
-        <property name="navigatorTabName" value="Complaints"/>
+    <bean id="complaintPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Complaint Plugin"/>
         <property name="pluginProperties" ref="complaintPluginProperties"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmComplaintCreatePrivilege"/>
+                <ref bean="acmComplaintSavePrivilege"/>
+                <ref bean="acmComplaintListPrivilege"/>
+                <ref bean="acmComplaintApprovePrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- create complaint service -->
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/complaint"/>
+                    <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- create complaint wizard -->
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/complaint/wizard"/>
+                    <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- complaint navigator tab home page -->
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/complaint"/>
+                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/complaint/{complaintId}"/>
+                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- list of complaints -->
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/complaint/list"/>
+                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/complaint/types"/>
+                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/complaint/priorities"/>
+                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- attach a file to the complaint -->
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/complaint/file"/>
+                    <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- attach a file to the complaint -->
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/complaint/workflow"/>
+                    <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!-- attach a file to the complaint -->
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/complaint/byId/{complaintId}"/>
+                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
+                </bean>
+            </list>
+        </property>
     </bean>
 
-    <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.SaveComplaintEventPublisher"/>
+    <bean id="acmComplaintListPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-complaint-list"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="acmComplaintSavePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-complaint-save"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmComplaintCreatePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-complaint-create"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmComplaintApprovePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-complaint-approve"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="complaintEventPublisher" class="com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher"/>
 
     <bean id="saveComplaintBusinessRule" class="com.armedia.acm.plugins.complaint.service.SaveComplaintBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-complaint-number-rules.xlsx"/>

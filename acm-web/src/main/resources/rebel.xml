@@ -8,7 +8,7 @@
 
 	<web>
 		<link target="/">
-            <dir name="${workspace.home}/ACM3/acm-web/src/main/webapp">
+            <dir name="${workspace.home}/ACM3/acm-web/src/main/resources/META-INF/resources">
 			</dir>
 		</link>
 	</web>

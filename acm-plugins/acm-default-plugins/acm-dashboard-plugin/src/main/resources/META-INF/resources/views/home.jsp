@@ -4,7 +4,13 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>Dashboard | ACM | Armedia Case Management</title>
+    <title>${pageDescriptor.title}</title>
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        Dashboard.initialize();
+    });
+</script>
 </jsp:attribute>
 
 
@@ -38,8 +44,8 @@
 <section class="scrollable padder">
 <section class="row m-b-md">
     <div class="col-sm-12">
-        <h3 class="m-b-xs text-black">Dashboard</h3>
-        <small>Welcome back, David Miller</small> </div>
+        <h3 class="m-b-xs text-black">${pageDescriptor.descShort}</h3>
+        <small>Welcome back, ${acm_user.fullName}</small> </div>
 </section>
 <div class="row">
     <div class="col-sm-12">
@@ -53,67 +59,69 @@
         </div>
     </div>
 </div>
+<!-- jwu commented out temporarily for demo
 <div class="row">
-    <div class="col-md-6">
-        <section class="panel b-a">
-            <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="complaints.html" class="font-bold">My Complaints</a> </div>
-            <div class="panel-body max-200 no-padder">
-                <table class="table table-striped th-sortable table-hover">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Priority</th>
-                        <th>Due</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="odd gradeA">
-                        <td>[ID]</td>
-                        <td>[Title]</td>
-                        <td>[Priority]</td>
-                        <td>[Due]</td>
-                        <td>[Status]</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
-    <div class="col-md-6">
-        <section class="panel b-a">
-            <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="cases.html" class="font-bold">My Cases</a> </div>
-            <div class="panel-body max-200 no-padder">
-                <table class="table table-striped th-sortable table-hover">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Priority</th>
-                        <th>Due</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="odd gradeA">
-                        <td>[ID]</td>
-                        <td>[Title]</td>
-                        <td>[Priority]</td>
-                        <td>[Due]</td>
-                        <td>[Status]</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
-
+<div class="col-md-6">
+    <section class="panel b-a">
+        <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="complaints.html" class="font-bold">My Complaints</a> </div>
+        <div class="panel-body max-200 no-padder">
+            <table class="table table-striped th-sortable table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Priority</th>
+                    <th>Due</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="odd gradeA">
+                    <td>[ID]</td>
+                    <td>[Title]</td>
+                    <td>[Priority]</td>
+                    <td>[Due]</td>
+                    <td>[Status]</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+<div class="col-md-6">
+    <section class="panel b-a">
+        <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="cases.html" class="font-bold">My Cases</a> </div>
+        <div class="panel-body max-200 no-padder">
+            <table class="table table-striped th-sortable table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Priority</th>
+                    <th>Due</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="odd gradeA">
+                    <td>[ID]</td>
+                    <td>[Title]</td>
+                    <td>[Priority]</td>
+                    <td>[Due]</td>
+                    <td>[Status]</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </div>
 
+</div>
+-->
 
 
 <div class="row">
+    <!-- jwu commented out temporarily for demo
     <div class="col-md-6">
         <section class="panel b-a">
             <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="documents.html" class="font-bold">My Documents</a> </div>
@@ -141,11 +149,12 @@
             </div>
         </section>
     </div>
+    -->
     <div class="col-md-6">
         <section class="panel b-a">
             <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="tasks.html" class="font-bold">My Tasks</a> </div>
             <div class="panel-body max-200 no-padder">
-                <table class="table table-striped th-sortable table-hover">
+                <table class="table table-striped th-sortable table-hover" id="tabMyTasks">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -156,6 +165,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <!--
                     <tr class="odd gradeA">
                         <td>[ID]</td>
                         <td>[Title]</td>
@@ -163,6 +173,7 @@
                         <td>[Due]</td>
                         <td>[Status]</td>
                     </tr>
+                    -->
                     </tbody>
                 </table>
             </div>

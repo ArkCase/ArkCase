@@ -6,7 +6,7 @@
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:context="http://www.springframework.org/schema/context"
       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
-      xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.5.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
@@ -40,36 +40,37 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                     <spring:prop key="alfresco.port">8080</spring:prop>
                     <spring:prop key="alfresco.user">admin</spring:prop>
                     <spring:prop key="alfresco.password">AdM!n</spring:prop>
+                    <spring:prop key="alfresco.contextRoot">alfresco</spring:prop>
                 </spring:props>
             </spring:property>
         </spring:bean>
     </spring:beans>
 
     <http:endpoint name="alfresco-ticket"
-                   address="http://${alfresco.host}:${alfresco.port}/alfresco/s/api/login?u=${alfresco.user}&amp;pw=${alfresco.password}" doc:name="http-decl-recrd">
+                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/api/login?u=${alfresco.user}&amp;pw=${alfresco.password}" doc:name="http-decl-recrd">
     </http:endpoint>
     <http:endpoint name="alfresco-declare-record"
-                   address="http://${alfresco.host}:${alfresco.port}/alfresco/s/api/actionQueue?alf_ticket=#[flowVars['alfTicket']]" doc:name="http-get-ticket" exchange-pattern="request-response" method="POST">
+                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/api/actionQueue?alf_ticket=#[flowVars['alfTicket']]" doc:name="http-get-ticket" exchange-pattern="request-response" method="POST">
         <reconnect/>
     </http:endpoint>
     <http:endpoint name="alfresco-set-record-data"
-                   address="http://${alfresco.host}:${alfresco.port}/alfresco/s/api/node/#[flowVars['alfNamespace']]/#[flowVars['alfStore']]//formprocessor?alf_ticket=#[flowVars['alfTicket']]"
+                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/api/node/#[flowVars['alfNamespace']]/#[flowVars['alfStore']]//formprocessor?alf_ticket=#[flowVars['alfTicket']]"
                    doc:name="http-set-data" exchange-pattern="request-response" method="POST">
         <reconnect/>
     </http:endpoint>
     <!-- TODO: the record location is hard-coded below but it should be a business rule -->
     <http:endpoint name="alfresco-move-to-record-folder"
-                   address="http://${alfresco.host}:${alfresco.port}/alfresco/s/slingshot/doclib/action/move-to/site/rm/documentLibrary/ACM/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]?alf_ticket=#[flowVars['alfTicket']]"
+                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/slingshot/doclib/action/move-to/site/rm/documentLibrary/ACM/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]?alf_ticket=#[flowVars['alfTicket']]"
                    doc:name="alf-move-to-record-folder" exchange-pattern="request-response" method="POST">
         <reconnect/>
     </http:endpoint>
     <http:endpoint name="alfresco-create-record-folder"
-                   address="http://${alfresco.host}:${alfresco.port}/alfresco/s/api/type/rma%3arecordFolder/formprocessor?alf_ticket=#[flowVars['alfTicket']]"
+                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/api/type/rma%3arecordFolder/formprocessor?alf_ticket=#[flowVars['alfTicket']]"
                    doc:name="alf-create-record-folder" exchange-pattern="request-response" method="POST">
         <reconnect/>
     </http:endpoint>
     <http:endpoint name="alfresco-complete-record"
-                   address="http://${alfresco.host}:${alfresco.port}/alfresco/s/api/rma/actions/ExecutionQueue?alf_ticket=#[flowVars['alfTicket']]"
+                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/api/rma/actions/ExecutionQueue?alf_ticket=#[flowVars['alfTicket']]"
                    doc:name="alf-complete-record" exchange-pattern="request-response" method="POST">
         <reconnect/>
     </http:endpoint>
@@ -149,12 +150,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     </sub-flow>
 
     <sub-flow name="set-rma-params" doc:name="set-rma-params">
-        <!--<component doc:name="Category Folder">-->
-            <!--<method-entry-point-resolver>-->
-                <!--<include-entry-point method="applyRulesToInvestigativeFile"/>-->
-            <!--</method-entry-point-resolver>-->
-            <!--<spring-object bean="rmaEprpBusinessRules"/>-->
-        <!--</component>-->
         <set-variable variableName="category-folder-name" value="#[message.payload.categoryFolder]" doc:name="Cat. Folder"/>
         <set-variable variableName="record-folder-name" value="#[message.payload.recordFolder]" doc:name="Rec Folder"/>
         <set-variable variableName="alf-rma-publication-date" value="#[org.mule.util.DateUtils.formatTimeStamp(message.payload.publishedDate,&quot;yyyy-MM-dd'T'11:00:00.000-05:00&quot;)]" doc:name="Pub. Date"/>

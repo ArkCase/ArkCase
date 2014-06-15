@@ -95,6 +95,12 @@
             <props>
                 <prop key="eclipselink.weaving">false</prop>
                 <prop key="eclipselink.logging.level">${eclipselink.logging.level}</prop>
+                <!-- The EclipseLink shared cache causes unusual things to happen unless every single database
+                     update is through EclipseLink.  For ACM this mostly will not be true; most customers will have
+                     batch feeds and other processes that modify the share database without using the application
+                     code.  May have to find another way around this if performance testing turns into an issue.
+                     But for now we'll err on the side of correctness (i.e. accurate database info) -->
+                <prop key="eclipselink.cache.shared.default">false</prop>
             </props>
         </property>
         <property name="packagesToScan" value="${jpa.model.packages}"/>
@@ -108,7 +114,7 @@
         <property name="showSql" value="${database.platform.showSql}"/>
     </bean>
 
-    <!-- Plain old JDBC transaction manager (use JtaTransactionManager for
+    <!-- JPA transaction manager (use JtaTransactionManager for
          global tx) -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="dataSource" ref="acmDataSource"/>

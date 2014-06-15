@@ -1,6 +1,7 @@
 package com.armedia.acm.activiti;
 
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
+import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.slf4j.Logger;
@@ -47,7 +48,7 @@ public class BpmnFileAddedMonitor implements ApplicationListener<ConfigurationFi
                     log.debug("... finished deploying from: " + eventFile.getCanonicalPath());
                 }
             }
-            catch (IOException e)
+            catch (IOException | ActivitiException e)
             {
                 log.error("Could not deploy Activiti definition file: " + e.getMessage(), e);
             }

@@ -3,12 +3,35 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="acmSampleBlogPlugin" class="com.armedia.acm.pluginmanager.AcmPlugin">
+    <bean id="acmSampleBlogPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="armediaBlogPlugin"/>
-        <property name="navigatorTab" value="true"/>
-        <property name="navigatorTabName" value="Armedia Blog"/>
-        <property name="homeUrl" value="/plugin/sample/armediaBlog"/>
-        <property name="enabled" value="true"/>
+        <property name="privileges">
+            <list>
+                <ref bean="blogPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="dashboardUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/sample/armediaBlog"/>
+                    <property name="requiredPrivilege" ref="blogPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="blogPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-blog"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_ANALYST</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
     </bean>
 
 </beans>

@@ -12,7 +12,7 @@ var ComplaintList = ComplaintList || {
         ComplaintList.Service.initialize();
         ComplaintList.Callback.initialize();
 
-        ComplaintList.Event.onPostInit();
+        Acm.deferred(ComplaintList.Event.onPostInit);
     }
 
     ,Object: {}
@@ -21,5 +21,28 @@ var ComplaintList = ComplaintList || {
     ,Rule: {}
     ,Service: {}
     ,Callback: {}
+
+    ,_complaintList: []
+    ,getComplaintList: function() {
+        return this._complaintList;
+    }
+    ,setComplaintList: function(list) {
+        return this._complaintList = list;
+    }
+    ,findComplaint: function(complaintId) {
+        var found = null;
+        if (Acm.isNotEmpty(this._complaintList)) {
+            var len = this._complaintList.length;
+            for (var i = 0; i < len; i++) {
+                var c = this._complaintList[i];
+                if (complaintId == c.complaintId) {
+                    found = c;
+                    break;
+                }
+            }//end for
+        }
+        return found;
+    }
+
 };
 

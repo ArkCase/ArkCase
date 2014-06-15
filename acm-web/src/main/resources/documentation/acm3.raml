@@ -98,71 +98,6 @@ securitySchemes:
       
         400:
           description: Usually means the request body was invalid (did not match the expected JSON format).  The response body will be empty.
-    /details/{complaintId}:
-      post:
-        description: Update complaint details, including title, description text, type, etc.
-        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
-        body:
-          application/json:
-            example: |
-              {
-                "incidentDate": "2014-04-28",
-                // complaintType must be a value from the "GET types" service
-                "complaintType": "Agricultural",
-                // complaintPriority must be a value from the "GET priorities" service
-                "priority": "expedite",
-                "complaintTitle": "Sample Title",
-                "details": "<strong>Sample Text, properly encoding HTML within JSON</strong>"
-              }
-        responses:
-          200:
-            description: Indicates the details were saved.  Response is the complete Complaint JSON.
-            body:
-              application/json:
-                example: |
-                  {
-                    "complaintId": 555,
-                    "complaintNumber": "20140424_555",
-                    "complaintStatus": "DRAFT",
-                    "incidentDate": "2014-04-28",
-                    "complaintType": "Agricultural",
-                    "priority": "expedite",
-                    "complaintTitle": "Sample Title",
-                    "details": "<strong>Sample Text, properly encoding HTML within JSON</strong>"
-                    "originator": {
-                      "id": 556,
-                      "status": "ACTIVE",
-                      "title": "Mr.",
-                      "givenName": "John",
-                      "familyName": "Doe",
-                      "company": "Contoso",
-                      "addresses": [
-                        {
-                          "id": 557,
-                          "type": "home",
-                          "streetAddress": "123 Main St.",
-                          "streetAddress2": null,
-                          "city": "Peoria",
-                          "state": "IL",
-                          "zip": "12345"
-                        }
-                      ],
-                      "contactMethods": [
-                        {
-                          "id": 558,
-                          "type": "Mobile Phone",
-                          "value": "123-456-7890"
-                        },
-                        {
-                          "id": 559,
-                          "type": "Personal E-mail",
-                          "value": "john.doe@gmail.com"
-                        }
-                      ],
-                      "securityTags": ["Anonymous", "Confidential", "Top Secret"]
-                    }
-                  }
-    
     /types:
       description: Manage the list of complaint types.
       get:
@@ -199,3 +134,191 @@ securitySchemes:
           multipart/form-data:
             
             
+    /byId/{complaintId}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      get:
+        description: Lookup complaint details by complaint ID.
+        responses:
+          200:
+            description: expected response containing the desired complaint details
+            body:
+              application/json:
+                example: |
+                  {
+                  "complaintId":739,
+                  "complaintNumber":"20140603_739",
+                  "complaintType":"Domestic Dispute",
+                  "priority":"Medium",
+                  "complaintTitle":null,
+                  "details":"<p><br></p>",
+                  "incidentDate":"2013-02-12T00:00:00.000+0000",
+                  "created":"2014-06-03T21:16:56.090+0000",
+                  "creator":"ebmillar",
+                  "modified":"2014-06-03T21:17:05.315+0000",
+                  "modifier":"ebmillar",
+                  "status":"DRAFT",
+                  "originator":{
+                    "id":740,
+                    "title":"Mr.",
+                    "company":null,
+                    "status":"ACTIVE",
+                    "givenName":"Bob",
+                    "familyName":"Weir",
+                    "created":"2014-06-03T21:16:56.090+0000",
+                    "creator":"ebmillar",
+                    "modified":"2014-06-03T21:16:56.090+0000",
+                    "modifier":"ebmillar",
+                    "addresses":[],
+                    "contactMethods":[],
+                    "securityTags":[]
+                  },
+                  "ecmFolderPath":null,
+                  "ecmFolderId":"workspace://SpacesStore/7d240f67-023a-4059-b653-6bc06b2d58ab",
+                  "childObjects":[],
+                  "approvers":null
+                  }
+          400:
+            description: Usually means the requested complaint does not exist.
+            body:
+              text/plain:
+                example: Complaint ID 2739 not found.
+  /task:
+    /forUser/{user}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      get:
+        description: Get a list of active tasks for the specified user.
+        responses:
+          200: 
+            description: expected response containing a list of tasks.
+            body:
+              application/json:
+                example: |
+                 [
+                   {
+                     "taskId":500,
+                     "priority":0,
+                     "title":"Example Task Title",
+                     "dueDate":"2014-06-03",
+                     "attachedToObjectType":"COMPLAINT",
+                     "attachedToObjectId":495, 
+                     "assignee":"ann-acm",
+                     "businessProcessName":"cmComplaintWorkflow",
+                     "adhocTask":false
+                   }
+                  ]
+    /completeTask/{taskId}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      post:
+        description: Complete a task.  Must be called by the task's current assignee.
+        responses:
+          200:
+            description: Task was successfully completed.  JSON represents the historical task instance, with information as to when the task was started and completed.
+            body:
+              application/json:
+                example: |
+                  {
+                  "taskId":500,
+                  "priority":50,
+                  "title":"The Task Title",
+                  "dueDate":"2014-06-03",
+                  "attachedToObjectType":"COMPLAINT",
+                  "attachedToObjectId":250,
+                  "assignee":"ann-acm",
+                  "businessProcessName":"Complaint Approval",
+                  "adhocTask":false,
+                  "completed":true,
+                  "taskStartDate":"2014-06-02",
+                  "taskFinishedDate":"2014-06-03",
+                  "taskDurationInMillis":298392
+                  }
+            
+      
+          400:
+            description: The task could not be completed.  Either the task ID does not represent an active task (task does not exist or is already closed), or the authenticated user is not the task assignee.  T
+            body:
+              text/plain:
+                example: |
+                  Task '500' does not exist or has already been completed.
+    /adHocTask:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      post:
+        description: Create a standalone task (not tied to a workflow or business process)
+        body:
+          application/json:
+            example: |
+              {
+                "priority":50,
+                "title":"The Task Title",
+                "dueDate":"2014-06-03",
+                "assignee":"ebmillar",
+              }
+        responses:
+          200: 
+            description: Task created successfully. The response includes the new tasks's ID.
+            body:
+              application/json:
+                example: |
+                  {
+                    "taskId":2801,
+                    "priority":50,
+                    "title":"The Task Title",
+                    "dueDate":"2014-06-03T00:00:00.000+0000",
+                    "attachedToObjectType":null,
+                    "attachedToObjectId":null,
+                    "assignee":"ebmillar",
+                    "businessProcessName":null,
+                    "adhocTask":false,
+                    "completed":false,
+                    "taskStartDate":null,
+                    "taskFinishedDate":null,
+                    "taskDurationInMillis":null
+                  }
+            
+          
+          400:
+            description: Task could not be created; perhaps the request body was invalid.
+    /byId/{taskId}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      get:
+        description: Get task details by the task ID.
+        responses:
+          200:
+            description: Normal response; body includes the task details.
+            body:
+              application/json:
+                example: |
+                  {
+                    "taskId":2801,
+                    "priority":50,
+                    "title":"The Task Title",
+                    "dueDate":"2014-06-03T00:00:00.000+0000",
+                    "attachedToObjectType":null,
+                    "attachedToObjectId":null,
+                    "assignee":"ebmillar",
+                    "businessProcessName":null,
+                    "adhocTask":true,
+                    "completed":true,
+                    "taskStartDate":"2014-06-04T14:46:46.472+0000",
+                    "taskFinishedDate":"2014-06-04T17:45:49.822+0000",
+                    "taskDurationInMillis":10743350
+                  }
+          
+          500:
+            description: Could not get the task details; task does not exist, or an Activiti error
+            body:
+              text/plain:
+                example: Task with ID '92838' does not exist.
+/users:
+  /withPrivilege/{privilege}:
+    securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+    get:
+      description: Get a list of users with the specified privilege.  Used to obtain a list of users who are authorized to perform a certain action.
+      responses:
+        200:
+          description: expected response containing the list of users with the requested privilege.
+          body:
+            application/json: 
+              example: |
+                [{"userId":"OPIS_Admin","fullName":"OPIS Admin","firstName":"OPIS","lastName":"Admin"},
+                 {"userId":"ann-acm","fullName":"Ann Administrator","firstName":"Ann","lastName":"Administrator"}]
+  

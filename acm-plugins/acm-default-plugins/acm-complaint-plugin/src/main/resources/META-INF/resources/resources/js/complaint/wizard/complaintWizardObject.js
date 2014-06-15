@@ -7,67 +7,89 @@
  */
 ComplaintWizard.Object = {
     initialize : function() {
-        this.$lnkSave                = $("#lnkSave");
-        this.$lnkSubmit              = $("#lnkSubmit");
-        this.$edtFname               = $("#fname");
-        this.$edtLname               = $("#lname");
-        this.$edtCompany             = $("#company");
-        this.$selPersonTitle         = $("#personTitle");
-        this.$divComplaintDetails    = $('.complaintDetails');
+        this.$btnSave                = $("button[data-title='Save']");
+        this.$btnSave.click(function(e) {ComplaintWizard.Event.onClickBtnSave(e);});
+
+        this.$btnSubmit              = $("button[data-title='Submit']");
+        this.$btnSubmit.click(function(e) {ComplaintWizard.Event.onClickBtnSubmit(e);});
+
         this.$selIntiatorFlags       = $(".choose-intitiatorFlags");   //"#intiatorFlags"
+        this.$selIntiatorFlags.chosen();
+
         this.$selComplaintFlags      = $(".choose-complaintFlags");    //"#intiatorFlags"
+        this.$selComplaintFlags.chosen();
+
         this.$selApprovers           = $(".choose-approvers");         //"#approvers"
+        //this.$selApprovers.chosen();
+
         this.$selCollab              = $(".choose-collab");            //""
+        this.$selCollab.chosen();
+
         this.$selNotifications       = $(".choose-notifications");     //"#notifications"
+        this.$selNotifications.chosen();
+
         this.$edtIncidentDate        = $("#incidentDate");
-        this.$selComplaintType       = $("#complaintType");
+        this.$edtComplaintTitle      = $("#edtComplaintTitle");
+        this.$selComplaintType       = $("select[name='complaintType']");
+        this.$selPriority            = $("select[name='priority']");
+
+        this.$divInitiator           = $("#divInitiator");
+        this._createJTableInitiator(this.$divInitiator);
+
+        this.$divPeople              = $("#divPeople");
+        this._createJTablePeople(this.$divPeople);
+
+        this.$divDevices             = $("#divDevices");
+        this._createJTableDevices(this.$divDevices);
 
         this.$uppload                = $('#upload');
         this.$upploadDrop            = $('#drop');
         this.$upploadList            = $('#upload ul');
         this.$upploadClick           = $('#drop a');
+        this._useFileUpload(this.$uppload, this.$upploadDrop, this.$upploadList, this.$upploadClick);
 
-        this.$lnkSave.click(function(e) {ComplaintWizard.Event.onClickLnkSave(e);});
-        this.$lnkSubmit.click(function(e) {ComplaintWizard.Event.onClickLnkSubmit(e);});
-
+        this.$divComplaintDetails    = $('.complaintDetails');
         this.$divComplaintDetails.summernote({
             height: 300
         });
-
-        this.$selIntiatorFlags.chosen();
-        this.$selComplaintFlags.chosen();
-        this.$selApprovers.chosen();
-        this.$selCollab.chosen();
-        this.$selNotifications.chosen();
-
-
-        this._useFileUpload(this.$uppload, this.$upploadDrop, this.$upploadList, this.$upploadClick);
     }
 
+    ,_appendSelect: function($s, key, val) {
+        $s.append($("<option></option>")
+            .attr("value",key)
+            .text(val));
+    }
+    ,initApprovers: function(data) {
+        $.each(data, function(idx, val) {
+            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selApprovers, val.userId, val.fullName);
+        });
+        this.$selApprovers.chosen();
+    }
+    ,initComplaintTypes: function(data) {
+        $.each(data, function(idx, val) {
+            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selComplaintType, val, val);
+        });
+    }
+    ,initPriorities: function(data) {
+        $.each(data, function(idx, val) {
+            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selPriority, val, val);
+        });
+    }
 
     ,setEnableBtnSave: function(enable) {
         Acm.Object.setEnable(this.$btnSave, enable);
-    }
-    ,getValueEdtFname: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtFname);
-    }
-//    ,setValueEdtFname: function(val) {
-//        return Acm.Object.setPlaceHolderInput(this.$edtFname, val);
-//    }
-    ,getValueEdtLname: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtLname);
-    }
-    ,getValueEdtCompany: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtCompany);
-    }
-    ,getValueSelPersonTitle: function() {
-        return Acm.Object.getSelectValue(this.$selPersonTitle);
     }
     ,getHtmlDivComplaintDetails: function() {
         return Acm.Object.getSummernote(this.$divComplaintDetails);
     }
     ,getValueEdtIncidentDate: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtIncidentDate);
+    }
+    ,setValueEdtIncidentDate: function(val) {
+        return Acm.Object.setPlaceHolderInput(this.$edtIncidentDate, val);
+    }
+    ,getValueEdtComplaintTitle: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtComplaintTitle);
     }
     ,getSelectValuesSelIntiatorFlags: function() {
         return Acm.Object.getSelectValues(this.$selIntiatorFlags);
@@ -84,52 +106,112 @@ ComplaintWizard.Object = {
     ,getSelectValuesSelNotifications: function() {
         return Acm.Object.getSelectValues(this.$selNotifications);
     }
+    ,getSelectValueSelPriority: function() {
+        return Acm.Object.getSelectValueIgnoreFirst(this.$selPriority);
+    }
+    ,getSelectValueSelComplaintType: function() {
+        return Acm.Object.getSelectValueIgnoreFirst(this.$selComplaintType);
+    }
 
+    ,setComplaintData : function(data) {
+        var c = Complaint.getComplaint();
+        //c.complaintTitle = data.complaintTitle;
+        //c.priority = data.priority;
+        //c.complaintType = data.complaintType;
+        //c.details = data.details;
+        //c.incidentDate = data.incidentDate;
+        //c.approvers = data.approvers;
+
+        c.complaintId = data.complaintId;
+        c.complaintNumber = data.complaintNumber;
+        c.created = data.created;
+        c.creator = data.creator;
+        c.modified = data.modified;
+        c.modifier = data.modifier;
+        c.status = data.status;
+
+        c.originator.id = data.originator.id;
+        //c.originator.title = data.originator.title;
+        //c.originator.givenName = data.originator.givenName;
+        //c.originator.familyName = data.originator.familyName;
+        c.originator.company = data.originator.company;
+        c.originator.created = data.originator.created;
+        c.originator.creator = data.originator.creator;
+        c.originator.modified = data.originator.modified;
+        c.originator.modifier = data.originator.modifier;
+        c.originator.status = data.originator.status;
+        c.originator.securityTags = data.originator.securityTags;   //[]
+
+        c.originator.addresses = data.originator.addresses;
+        c.originator.contactMethods = data.originator.contactMethods; //=devices[]
+
+//        c.originator.aliases[] = data.originator.aliases;
+//        c.originator.organizations[] = data.originator.organizations;
+//        c.originator.ecmFolderId[] = data.originator.ecmFolderId;
+//        c.originator.ecmFolderPath[] = data.originator.ecmFolderPath;
+
+//        organizations
+//        aliases
+
+        c.childObjects = data.childObjects
+        c.ecmFolderId = data.ecmFolderId
+        c.ecmFolderPath = data.ecmFolderPath
+
+    }
+
+    //convert date format from "dd-MM-yyyy" to "yyyy-MM-dd")
+//    ,_dateFmtDmy2Ymd: function(dmy) {
+//        if (Acm.isEmpty(dmy)) {
+//            return null;
+//        }
+//
+//        var arr = dmy.split('-');
+//        if (3 != arr.length) {
+//            return null;
+//        }
+//
+//        var ymd = arr[2] + "-" + arr[1] + "-" + arr[0];
+//        return ymd;
+//    }
     ,getComplaintData : function() {
+        var c = Complaint.getComplaint();
+
         var data = {};
+        data.complaintTitle = this.getValueEdtComplaintTitle();
+        data.priority = this.getSelectValueSelPriority();
+        data.complaintType = this.getSelectValueSelComplaintType();
+        data.details = this.getHtmlDivComplaintDetails();
+        data.incidentDate = this.getValueEdtIncidentDate();
+
+        data.complaintId = c.complaintId;
+        data.complaintNumber = c.complaintNumber;
+        data.created = c.created;
+        data.creator = c.creator;
+        data.modified = c.modified;
+        data.modifier = c.modifier;
+        data.status = c.status;
 
         data.originator = {};
-        if (Acm.isNotEmpty(ComplaintWizard.getComplaintId())) {
-            data.complaintId = ComplaintWizard.getComplaintId();
-        }
-        data.originator.givenName = this.getValueEdtFname();
-        data.originator.familyName = this.getValueEdtLname();
-        data.originator.company = this.getValueEdtCompany();
+        data.originator.id = c.originator.id;
+        data.originator.title = c.originator.title;
+        data.originator.givenName = c.originator.givenName;
+        data.originator.familyName = c.originator.familyName;
 
-        //$selComplaintType
-        data.originator.title = this.getValueSelPersonTitle();
+        data.originator.company = c.originator.company;
+        data.originator.created = c.originator.created;
+        data.originator.creator = c.originator.creator;
+        data.originator.modified = c.originator.modified;
+        data.originator.modifier = c.originator.modifier;
+        data.originator.status = c.originator.status;
 
-        //data.details
-        var a1 = this.getHtmlDivComplaintDetails();
+//        data.originator.addresses = c.originator.addresses;
+        data.originator.contactMethods = c.originator.contactMethods;
 
-        //incidentDate
-        var d1 = this.getValueEdtIncidentDate();
+//        organizations
+//        aliases
 
-        //"securityTags": ["Anonymous", "Confidential", "Top Secret"]
-        var b6 = this.getSelectValuesSelApprovers();
-
-
-
-        var z = 1;
-
-//        term.docType = ComplaintWizard.Object._getValueSelDocType();
-//        term.subjectLastName = ComplaintWizard.Object._getValueEdtLastName();
-//        term.subjectSSN = ComplaintWizard.Object._getValueEdtSsn();
-//        term.eqipRequestNumber = ComplaintWizard.Object._getValueEdtEQipRequest();
-//        term.soi = ComplaintWizard.Object._getValueEdtSoi();
-//        term.son = ComplaintWizard.Object._getValueEdtSon();
-//        term.assignee = ComplaintWizard.Object._getValueSelAssignee();
-//
-//        term.supervisorReviewFlag = ComplaintWizard.Object._isCheckedChkSupervisorReview();
-//        term.contractOversightReviewFlag = ComplaintWizard.Object._isCheckedChkContractOversight();
-//
-//        term.queues = [{},{},{}];
-//        term.queues[0].name = Unassigned.queueProcessing.name;
-//        term.queues[0].checked = ComplaintWizard.Object.isCheckedChkProcessing();
-//        term.queues[1].name = Unassigned.queueQa.name;
-//        term.queues[1].checked = ComplaintWizard.Object.isCheckedChkQa();
-//        term.queues[2].name = Unassigned.queueMailback.name;
-//        term.queues[2].checked = ComplaintWizard.Object.isCheckedChkMailback();
+        data.originator.securityTags = c.originator.securityTags;   //[], "securityTags": ["Anonymous", "Confidential", "Top Secret"]
+        data.approvers = this.getSelectValuesSelApprovers();
 
         return data;
     }
@@ -186,7 +268,7 @@ ComplaintWizard.Object = {
                 formData: function(form) {
                     var fd = [{}];
                     fd[0].name = "complaintId";
-                    fd[0].value = ComplaintWizard.getComplaintId();
+                    fd[0].value = Complaint.getComplaintId();
                     return fd;
                 },
 
@@ -276,384 +358,1128 @@ ComplaintWizard.Object = {
         });
     }
 
-    ,usePagination: function(totalItems, itemsPerPage, callback) {
-        Acm.Object.usePagination(this.$jPaginate, totalItems, itemsPerPage, callback)
-    }
-    ,setEnableBtnPrint: function(enable) {
-        Acm.Object.setEnable(this.$btnPrint, enable);
-    }
-    ,setEnableBtnAssign: function(enable) {
-        Acm.Object.setEnable(this.$btnAssign, enable);
-    }
-    ,setEnableBtnDelete: function(enable) {
-        Acm.Object.setEnable(this.$btnDelete, enable);
-    }
-    ,showBtnPrint: function(show) {
-        Acm.Object.show(this.$btnPrint, show);
-    }
-    ,setEnableBtnFingerPrint: function(enable) {
-        Acm.Object.setEnable(this.$btnFingerPrint, enable);
-    }
-    ,showBtnFingerPrint: function(show) {
-        Acm.Object.show(this.$btnFingerPrint, show);
-    }
-    ,showBtnAssign: function(show) {
-        Acm.Object.show(this.$btnAssign, show);
-    }
-    ,showBtnDelete: function(show) {
-        Acm.Object.show(this.$btnDelete, show);
-    }
-    ,showLnkNextItems: function() {
-        alert("showLnkNextItem depleted");
-//        var checked = ComplaintWizard.Object.isCheckedChkQa();
-//        ComplaintWizard.Object.showLnkNextItemQa(checked);
-//        checked = ComplaintWizard.Object.isCheckedChkMailback();
-//        ComplaintWizard.Object.showLnkNextItemMb(checked);
-    }
-    ,showLnkNextItemQa: function(show) {
-        Acm.Object.showParent(this.$lnkNextItemQa, show);
-    }
-    ,showLnkNextItemMb: function(show) {
-        Acm.Object.showParent(this.$lnkNextItemMb, show);
-    }
-	,putUnassignedDoc: function(unassignedTaskId, unassignedDoc) {
-        var selected = false;
-        var prevUnassignedDoc = ComplaintWizard.Object.getUnassignedDoc(unassignedTaskId);
-        if (prevUnassignedDoc) {
-            selected = prevUnassignedDoc.selected;
+    ,_toggleSubJTable: function($t, $row, fnOpen, fnClose, title) {
+        var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
+        var curTitle = $childRow.find("div.jtable-title-text").text();
+
+        var toClose;
+        if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
+            if (curTitle === title) {
+                toClose = true;
+            } else {
+                toClose = false;
+            }
+        } else {
+            toClose = false;
         }
-        unassignedDoc.selected = selected;
-		window.unassignedDocs[unassignedTaskId] = unassignedDoc;
-	}
-	,getUnassignedDoc: function(unassignedTaskId) {
-		return window.unassignedDocs[unassignedTaskId];
-	}
-	,getUnassignedDocs: function() {
-		return window.unassignedDocs;
-	}
-    ,resetUnassignedDocs: function() {
-        window.unassignedDocs = {};
+
+        if (toClose) {
+            fnClose($t, $row);
+        } else {
+            fnOpen($t, $row);
+        }
     }
-    ,getSelectedDocs : function(e) {
-        var selectedDocs = {};
-        var unassignedDocs = ComplaintWizard.Object.getUnassignedDocs();
-        for (unassignedTaskId in unassignedDocs) {
-            var unassignedDoc = ComplaintWizard.Object.getUnassignedDoc(unassignedTaskId);
-            if (unassignedDoc) {
-                if (unassignedDoc.selected) {
-                    selectedDocs[unassignedTaskId] = unassignedDoc;
+
+    //
+    // Initiator ------------------
+    //
+    ,_createJTableInitiator: function($s) {
+        $s.jtable({
+            title: 'Initiator'
+            ,paging: false
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var c = Complaint.getComplaint();
+                    if (Acm.isEmpty(c.originator)) {
+                        c = Complaint.constructComplaint();
+                    }
+                    var rc = {"Result": "OK", "Records": [{}]};
+                    rc.Records[0].id = c.originator.id;
+                    rc.Records[0].title = c.originator.title;
+                    rc.Records[0].givenName = c.originator.givenName;
+                    rc.Records[0].familyName = c.originator.familyName;
+                    rc.Records[0].type = "";
+                    //rc.Records[0].description = "";
+                    rc.Records[0].description = "first init line\r\nsecond init line";
+                    //rc.Records[0].description = "first line line%0D%0Asecond line line";
+                    return rc;
+//                    return {
+//                        "Result": "OK"
+//                        ,"Records": [
+//                            { "personId":  1, "title": "Mr.", "firstName": "John", "lastName": "Garcia", "type": "Witness", "description": "123 do re mi" }
+//                        ]
+//                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var c = Complaint.getComplaint();
+                    var rc = {"Result": "OK", "Record": {}};
+                    rc.Record.id = c.originator.id;    // (record.id) is empty, do not assign;
+                    rc.Record.title = c.originator.title = record.title;
+                    rc.Record.givenName = c.originator.givenName = record.givenName;
+                    rc.Record.familyName = c.originator.familyName = record.familyName;
+                    rc.Record.type = record.type;
+                    rc.Record.description = record.description;
+
+                    if (record.description === "first init line\r\nsecond init line") {
+                        var z = 1;
+                    } else {
+                        var z = 1
+                    }
+                    var z = 1;
+                    //rc.Record.description = "first popup line\r\nsecond popup line";
+                    //rc.Record.description = "first popup line%0D%0Asecond popup line";
+                    return rc;
+//                    return {
+//                        "Result": "OK"
+//                        ,"Record":
+//                        { "id": 3, "title": "Dr.", "givenName": "Joe", "familyName": "Lee", "type": "Witness", "description": "someone" }
+//                    };
                 }
             }
-        }
-        return selectedDocs;
-    }
-    ,getSelectedTaskIds : function(e) {
-        var taskIds = [];
-        var unassignedDocs = ComplaintWizard.Object.getUnassignedDocs();
-        for (unassignedTaskId in unassignedDocs) {
-            var unassignedDoc = ComplaintWizard.Object.getUnassignedDoc(unassignedTaskId);
-            if (unassignedDoc) {
-                if (unassignedDoc.selected) {
-                    taskIds.push(unassignedTaskId);
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                }
+                ,subTables: {
+                    title: 'Entities'
+                    ,width: '10%'
+                    ,sorting: false
+                    ,edit: false
+                    ,create: false
+                    ,openChildAsAccordion: true
+                    ,display: function (commData) {
+                        var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                        var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
+                        var $c = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-map-marker'></i></a>");
+                        var $d = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-users'></i></a>");
+
+                        $a.click(function (e) {
+                            ComplaintWizard.Object._toggleInitiatorDevices($s, $a);
+                            e.preventDefault();
+                        });
+                        $b.click(function (e) {
+                            ComplaintWizard.Object._toggleInitiatorOrganizations($s, $b);
+                            e.preventDefault();
+                        });
+                        $c.click(function (e) {
+                            ComplaintWizard.Object._toggleInitiatorLocations($s, $c);
+                            e.preventDefault();
+                        });
+                        $d.click(function (e) {
+                            ComplaintWizard.Object._toggleInitiatorAliases($s, $d);
+                            e.preventDefault();
+                        });
+                        return $a.add($b).add($c).add($d);
+                    }
+                }
+
+
+                ,title: {
+                    title: 'Title'
+                    ,width: '10%'
+                    ,options: Complaint.getPersonTitles()
+                }
+                ,givenName: {
+                    title: 'First Name'
+                    ,width: '15%'
+                }
+                ,familyName: {
+                    title: 'Last Name'
+                    ,width: '15%'
+                }
+                ,type: {
+                    title: 'Type'
+                    //,options: Acm.getContextPath() + '/api/latest/plugin/complaint/types'
+                    ,options: Complaint.getPersonTypes()
+                }
+                ,description: {
+                    title: 'Description'
+                    ,type: 'textarea'
+                    ,width: '30%'
                 }
             }
-        }
-        return taskIds;
-    }
-	,setCheckChkSelectOne : function(checked) {
-		jQuery("input[type=checkbox]" + ComplaintWizard.Object.clsChkSelectOne).each(function(i, item) {
-			item.checked = checked;
-            ComplaintWizard.Object.selectUnassignedDoc(item);
-		});
-	}
-	,regClickChkSelectOne: function() {
-		jQuery("input[type=checkbox]" + ComplaintWizard.Object.clsChkSelectOne).click(function() {
-            ComplaintWizard.Callbacks.onClickChkSelectOne(this);
+            ,recordAdded: function(event, data){
+                $s.jtable('load');
+            }
+            ,recordUpdated: function(event, data){
+                $s.jtable('load');
+            }
         });
-	}
-	,getTaskIdClicked: function(checkBox) {
-		return jQuery(checkBox).next().val();
-	}
-    ,selectUnassignedDoc : function(checkBox) {
-        var unassignedTaskId = ComplaintWizard.Object.getTaskIdClicked(checkBox);
-        var unassignedDoc  = ComplaintWizard.Object.getUnassignedDoc(unassignedTaskId);
-        if (unassignedDoc) {
-            unassignedDoc.selected = checkBox.checked;
-        }
+
+        $s.jtable('load');
     }
-	,getContextPath: function() {
-        return ComplaintWizard.contextPath;
-	}
-    ,getTicket: function() {
-        return ComplaintWizard.ticket;
+    ,_toggleInitiatorDevices: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openInitiatorDevices, this._closeInitiatorDevices, Complaint.PERSON_SUBTABLE_TITLE_DEVICES);
     }
-    ,showLabAssigneeProgress: function(show) {
-    	Acm.Object.show(this.$labAssigneeProgress, show);
-	}
-    ,setTextLabTotalCount: function(value) {
-    	Acm.Object.setText(this.$labTotalCount, value);
+    ,_toggleInitiatorOrganizations: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openInitiatorOrganizations, this._closeInitiatorOrganizations, Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS);
     }
-    ,setHtmlDivResultList : function(html) {
-    	Acm.Object.setHtml(this.$divResultList, html);
+    ,_toggleInitiatorLocations: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openInitiatorLocations, this._closeInitiatorLocations, Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS);
     }
-    ,setHtmlDivResultGrid: function(html) {
-    	Acm.Object.setHtml(this.$divResultGrid, html);
+    ,_toggleInitiatorAliases: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openInitiatorAliases, this._closeInitiatorAliases, Complaint.PERSON_SUBTABLE_TITLE_ALIASES);
     }
-    ,emptySelAssignee: function() {
-    	Acm.Object.empty(this.$selAssignee);
+    ,_closeInitiatorDevices: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
     }
-    ,setHtmlSelAssignee : function(html) {
-    	Acm.Object.setHtml(this.$selAssignee, html);
+    ,_openInitiatorDevices: function($t, $row) {
+        $t.jtable('openChildTable'
+            ,$row.closest('tr')
+            ,{
+                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
+                ,sorting: true
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        var c = Complaint.getComplaint();
+                        var contactMethods = c.originator.contactMethods;
+                        var cnt = contactMethods.length;;
+
+                        var rc = {"Result": "OK", "Records": []};
+                        for (i = 0; i < cnt; i++) {
+                            rc.Records.push({personId: c.originator.id
+                                ,id: contactMethods[i].id
+                                ,type: contactMethods[i].type
+                                ,value: contactMethods[i].value
+                                ,created: contactMethods[i].created
+                                ,creator: contactMethods[i].creator
+                            });
+                        }
+                        return rc;
+//                        return {
+//                            "Result": "OK"
+//                            ,"Records": [
+//                                { "personId":  1, "id": "a", "type": "Phone", "value": "703-123-5678", "created": "01-02-03", "creator": "123 do re mi" }
+//                                ,{ "personId": 2, "id": "b", "type": "Email", "value": "doe@gmail.com", "created": "14-05-15", "creator": "xyz abc" }
+//                            ]
+//                            //,"TotalRecordCount": 2
+//                        };
+
+                    }
+                    ,createAction: function(postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var c = Complaint.getComplaint();
+                        var rc = {"Result": "OK", "Record": {}};
+                        rc.Record.personId = c.originator.id;
+                        rc.Record.id = parseInt(record.id);
+                        rc.Record.type = record.type;
+                        rc.Record.value = record.value;
+                        rc.Record.created = Acm.getCurrentDay(); //record.created;
+                        rc.Record.creator = Acm.getUserName();   //record.creator;
+                        return rc;
+//                        return {
+//                            "Result": "OK"
+//                            ,"Record":
+//                            { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "created": "01-02-03", "creator": "test" }
+//                        };
+                    }
+                    ,updateAction: function(postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var c = Complaint.getComplaint();
+                        var rc = {"Result": "OK", "Record": {}};
+                        rc.Record.personId = c.originator.id;
+                        //rc.Record.id = parseInt(record.id);           //no such field in postData, ignored
+                        rc.Record.type = record.type;
+                        rc.Record.value = record.value;
+                        rc.Record.created = record.created;
+                        rc.Record.creator = record.creator;
+                        return rc;
+//                        return {
+//                            "Result": "OK"
+//                            ,"Record":
+//                            { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "created": "01-02-03", "creator": "test" }
+//                        };
+
+                    }
+                    ,deleteAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
+                }
+                ,fields: {
+                    personId: {
+                        key: false
+                        ,create: false
+                        ,edit: false
+                        ,list: false
+                    }
+                    ,id: {
+                        key: false
+                        ,type: 'hidden'
+                        ,edit: false
+                        ,defaultValue: 0
+                    }
+                    ,type: {
+                        title: 'Type'
+                        ,width: '15%'
+                        ,options: Complaint.getDeviceTypes()
+                    }
+                    ,value: {
+                        title: 'Value'
+                        ,width: '30%'
+                    }
+                    ,created: {
+                        title: 'Date Added'
+                        ,width: '20%'
+                        ,create: false
+                        ,edit: false
+                        //,type: 'date'
+                        //,displayFormat: 'yy-mm-dd'
+                    }
+                    ,creator: {
+                        title: 'Added By'
+                        ,width: '30%'
+                        ,create: false
+                        ,edit: false
+                    }
+                }
+                ,recordAdded : function (event, data) {
+                    var record = data.record;
+                    var c = Complaint.getComplaint();
+                    var contactMethods = c.originator.contactMethods;
+                    var contactMethod = {};
+                    contactMethod.id = parseInt(record.id);
+                    contactMethod.type = record.type;
+                    contactMethod.value = record.value;
+                    //contactMethod.created = record.created;   //created,creator is readonly
+                    //contactMethod.creator = record.creator;
+                    contactMethods.push(contactMethod);
+                }
+                ,recordUpdated : function (event, data) {
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var c = Complaint.getComplaint();
+                    var contactMethods = c.originator.contactMethods;
+                    var contactMethod = contactMethods[whichRow];
+                    contactMethod.type = record.type;
+                    contactMethod.value = record.value;
+                    //contactMethod.created = record.created;   //created,creator is readonly
+                    //contactMethod.creator = record.creator;
+                }
+                ,recordDeleted : function (event, data) {
+                    var r = data.row;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var c = Complaint.getComplaint();
+                    var contactMethods = c.originator.contactMethods;
+                    contactMethods.splice(whichRow, 1);
+                }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
     }
-    ,emptySelWidAssignee: function() {
-        Acm.Object.empty(this.$selWidAssignee);
+    ,_closeInitiatorOrganizations: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
     }
-    ,setHtmlSelWidAssignee : function(html) {
-        Acm.Object.setHtml(this.$selWidAssignee, html);
+    ,_openInitiatorOrganizations: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "id": "a", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "personId": 2, "id": "b", "type": "gov", "value": "IRS", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "gov", "value": "IRS", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getOrganizationTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
     }
-    ,getValueSelWidAssignee: function() {
-        return Acm.Object.getSelectValue(this.$selWidAssignee);
+    ,_closeInitiatorLocations: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
     }
-    ,showSelWidAssignee: function(show) {
-        return Acm.Object.show(this.$selWidAssignee, show);
+    ,_openInitiatorLocations: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "id": "a", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "personId": 2, "id": "b", "type": "Office", "address": "999 Fairfax Blvd #201, Fairfax, VA 22030", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Hotel", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '8%'
+                    ,options: Complaint.getLocationTypes()
+                }
+                ,address: {
+                    title: 'Address'
+                    ,width: '30%'
+                }
+                ,city: {
+                    title: 'City'
+                    ,width: '12%'
+                }
+                ,state: {
+                    title: 'State'
+                    ,width: '5%'
+                }
+                ,zip: {
+                    title: 'Zip'
+                    ,width: '8%'
+                }
+                ,country: {
+                    title: 'Country'
+                    ,width: '8%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '15%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
     }
-    ,getTextDivAssigneeSelf: function() {
-        return Acm.Object.getTextNodeText(this.$divAssigneeSelf);
+    ,_closeInitiatorAliases: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
     }
-    ,setTextDivAssigneeSelf: function() {
-        Acm.Object.setTextNodeText(this.$divAssigneeSelf);
-    }
-    ,showDivAssigneeSelf: function(show) {
-        Acm.Object.show(this.$divAssigneeSelf, show);
-    }
-    ,isVisibleDivAssigneeSelf: function() {
-        return Acm.Object.isVisible(this.$divAssigneeSelf);
-    }
-    ,getWidAssign: function() {
-	    return this.$widAssign;
-	}
-    ,getValueTxtAssignComment: function() {
-        return Acm.Object.getValue(this.$txtAssignComment);
-    }
-    ,setValueTxtAssignComment: function(value) {
-        Acm.Object.setValue(this.$txtAssignComment, value);
-    }
-    ,showInvalidAssign: function(show) {
-        Acm.Object.showParent(this.$spanInvalidAssign, show);
-    }
-    ,closeFrmWidAssign: function() {
-        this.$btnWidAssignCancel.click();
-    }
-    ,clearFrmWidAssign: function() {
-        ComplaintWizard.Object.setValueTxtAssignComment("");
-        ComplaintWizard.Object.showInvalidAssign(false);
-    }
-    ,getWidDelete: function() {
-    	return jQuery(this.idWidDelete);
-	}
-    ,getValueTxtDeleteComment: function() {
-        return Acm.Object.getValue(jQuery(this.idTxtDeleteComment));
-    }
-    ,setValueTxtDeleteComment: function(value) {
-        Acm.Object.setValue(this.$txtDeleteComment, value);
-    }
-    ,showInvalidDelete: function(show) {
-        Acm.Object.showParent(this.$spanInvalidDelete, show);
-    }
-    ,closeFrmWidDelete: function() {
-        jQuery(ComplaintWizard.Object.idBtnWidDeleteCancel).click();
-    }
-    ,clearFrmWidDelete: function() {
-        ComplaintWizard.Object.setValueTxtDeleteComment("");
-        ComplaintWizard.Object.showInvalidDelete(false);
-    }
-	,getWidFingerPrint: function() {
-	    return this.$widFingerPrint;
-	}
-    ,getValueTxtFingerPrintName: function() {
-        return Acm.Object.getValue(this.$txtFingerPrintName);
-    }
-    ,setValueTxtFingerPrintName: function(value) {
-        Acm.Object.setValue(this.$txtFingerPrintName, value);
-    }
-    ,showInvalidFingerPrint: function(show) {
-        Acm.Object.showParent(this.$spanInvalidFingerPrint, show);
-    }
-    ,closeFrmWidFingerPrint: function() {
-        this.$btnWidFingerPrintCancel.click();
-    }
-    ,clearFrmWidFingerPrint: function() {
-        ComplaintWizard.Object.setValueTxtFingerPrintName("");
-        ComplaintWizard.Object.showInvalidFingerPrint(false);
+    ,_openInitiatorAliases: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "id": "a", "type": "Nick Name", "value": "JJ", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "personId": 2, "id": "b", "type": "Some Name", "value": "Ice Man", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Nick Name", "value": "Ice Man", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Nick Name", "value": "Big Man", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getAliasTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
     }
 
-    ,showResultList: function() {
-    	ComplaintWizard.Object._showDivResultList(true);
-    	ComplaintWizard.Object._showDivResultGrid(false);
-    	ComplaintWizard.Object._showLnkViewList(false);
-    	ComplaintWizard.Object._showLnkViewGrid(true);
+    //
+    // People ------------------
+    //
+    ,_togglePeopleDevices: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openPeopleDevices, this._closePeopleDevices, Complaint.PERSON_SUBTABLE_TITLE_DEVICES);
     }
-    ,showResultGrid: function() {
-    	ComplaintWizard.Object._showDivResultList(false);
-    	ComplaintWizard.Object._showDivResultGrid(true);
-    	ComplaintWizard.Object._showLnkViewList(true);
-    	ComplaintWizard.Object._showLnkViewGrid(false);
+    ,_togglePeopleOrganizations: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openPeopleOrganizations, this._closePeopleOrganizations, Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS);
     }
-	,getSearchTerm : function() {
-		var term = {};
-
-		term.docType = ComplaintWizard.Object._getValueSelDocType();
-		term.subjectLastName = ComplaintWizard.Object._getValueEdtLastName();
-		term.subjectSSN = ComplaintWizard.Object._getValueEdtSsn();
-		term.eqipRequestNumber = ComplaintWizard.Object._getValueEdtEQipRequest();
-		term.soi = ComplaintWizard.Object._getValueEdtSoi();
-		term.son = ComplaintWizard.Object._getValueEdtSon();
-		term.assignee = ComplaintWizard.Object._getValueSelAssignee();
-
-		term.supervisorReviewFlag = ComplaintWizard.Object._isCheckedChkSupervisorReview();
-		term.contractOversightReviewFlag = ComplaintWizard.Object._isCheckedChkContractOversight();
-
-		term.queues = [{},{},{}];
-		term.queues[0].name = Unassigned.queueProcessing.name;
-		term.queues[0].checked = ComplaintWizard.Object.isCheckedChkProcessing();
-		term.queues[1].name = Unassigned.queueQa.name;
-		term.queues[1].checked = ComplaintWizard.Object.isCheckedChkQa();
-		term.queues[2].name = Unassigned.queueMailback.name;
-		term.queues[2].checked = ComplaintWizard.Object.isCheckedChkMailback();
-
-		return term;
-	}
-    ,clearSearchTerm : function() {
-        ComplaintWizard.Object._setValueSelDocType("placeholder");
-        ComplaintWizard.Object._setValueEdtLastName("");
-        ComplaintWizard.Object._setValueEdtSsn("");
-        ComplaintWizard.Object._setValueEdtEQipRequest("");
-        ComplaintWizard.Object._setValueEdtSoi("");
-        ComplaintWizard.Object._setValueEdtSon("");
-        ComplaintWizard.Object._setValueSelAssignee("placeholder");
-
-        ComplaintWizard.Object._setCheckedChkSupervisorReview(false);
-        ComplaintWizard.Object._setCheckedChkContractOversight(false);
-
-        ComplaintWizard.Object._setCheckedChkProcessing(false);
-        ComplaintWizard.Object._setCheckedChkQa(true);
-        ComplaintWizard.Object._setCheckedChkMailback(false);
+    ,_togglePeopleLocations: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openPeopleLocations, this._closePeopleLocations, Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS);
+    }
+    ,_togglePeopleAliases: function($t, $row) {
+        this._toggleSubJTable($t, $row, this._openPeopleAliases, this._closePeopleAliases, Complaint.PERSON_SUBTABLE_TITLE_ALIASES);
     }
 
-    ,getSelectedQueueNames : function () {
-    	var queueNames = "";
-    	if (ComplaintWizard.Object.isCheckedChkProcessing()) {
-    		queueNames += "," + Unassigned.queueProcessing.name;
-    	}
-    	if (ComplaintWizard.Object.isCheckedChkQa()) {
-    		queueNames += "," + Unassigned.queueQa.name;
-    	}
-    	if (ComplaintWizard.Object.isCheckedChkMailback()) {
-    		queueNames += "," + Unassigned.queueMailback.name;
-    	}
+    ,_createJTablePeople: function($s) {
+        $s.jtable({
+            title: 'People'
+            ,selecting: true
+            ,paging: true
+            ,pageSize: 10
+            ,sorting: true
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "title": "Mr.", "firstName": "John", "lastName": "Garcia", "type": "Witness", "description": "123 do re mi" }
+                            ,{ "personId": 2, "title": "Ms.", "firstName": "Jane", "lastName": "Doe", "type": "Subject", "description": "xyz abc" }
+                        ]
+                        ,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "title": "Dr.", "firstName": "Joe", "lastName": "Lee", "type": "Witness", "description": "someone" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "title": "Dr.", "firstName": "Joe", "lastName": "Lee", "type": "Witness", "description": "someone" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+            ,fields: {
+                personId: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                }
+                ,subTables: {
+                    title: 'Entities'
+                    ,width: '10%'
+                    ,sorting: false
+                    ,edit: false
+                    ,create: false
+                    ,openChildAsAccordion: true
+                    ,display: function (commData) {
+                        var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                        var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
+                        var $c = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-map-marker'></i></a>");
+                        var $d = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-users'></i></a>");
 
-    	if (Acm.Common.isNotEmpty(queueNames)) {
-    		queueNames = queueNames.substring(1, queueNames.length); //discard extra leading ','
-    	}
-    	return queueNames;
-    }
-//    ,getSelectedQueue : function () {
-//        if (ComplaintWizard.Object.isCheckedChkProcessing()) {
-//            return Unassigned.queueProcessing;
-//        } else if (ComplaintWizard.Object.isCheckedChkQa()) {
-//            return Unassigned.queueQa;
-//        } else if (ComplaintWizard.Object.isCheckedChkMailback()) {
-//            return Unassigned.queueMailback;
-//        } else {
-//            return null;
-//        }
-//    }
+                        $a.click(function (e) {
+                            ComplaintWizard.Object._togglePeopleDevices($s, $a);
+                            e.preventDefault();
+                        });
+                        $b.click(function (e) {
+                            ComplaintWizard.Object._togglePeopleOrganizations($s, $b);
+                            e.preventDefault();
+                        });
+                        $c.click(function (e) {
+                            ComplaintWizard.Object._togglePeopleLocations($s, $c);
+                            e.preventDefault();
+                        });
+                        $d.click(function (e) {
+                            ComplaintWizard.Object._togglePeopleAliases($s, $d);
+                            e.preventDefault();
+                        });
+                        return $a.add($b).add($c).add($d);
+                    }
+                }
 
-    ,_showLnkViewList: function(show) {
-        Acm.Object.show(this.$lnkViewList).closest('li', show);
+
+                ,title: {
+                    title: 'Title'
+                    ,width: '10%'
+                    ,options: Complaint.getPersonTitles()
+                }
+                ,firstName: {
+                    title: 'First Name'
+                    ,width: '15%'
+                }
+                ,lastName: {
+                    title: 'Last Name'
+                    ,width: '15%'
+                }
+                ,type: {
+                    title: 'Type'
+                    //,options: Acm.getContextPath() + '/api/latest/plugin/complaint/types'
+                    ,options: Complaint.getPersonTypes()
+                }
+                ,description: {
+                    title: 'Description'
+                    ,type: 'textarea'
+                    ,width: '30%'
+                }
+            }
+            ,recordAdded: function(event, data){
+                $s.jtable('load');
+            }
+            ,recordUpdated: function(event, data){
+                $s.jtable('load');
+            }
+        });
+
+        $s.jtable('load');
     }
-    ,_showLnkViewGrid: function(show) {
-        Acm.Object.show(this.$lnkViewGrid).closest('li', show);
+    ,_closePeopleDevices: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
     }
-    ,_showDivResultList: function(show) {
-        Acm.Object.show(this.$divResultList, show);
+    ,_openPeopleDevices: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "id": "a", "type": "Phone", "value": "703-123-5678", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "personId": 2, "id": "b", "type": "Email", "value": "doe@gmail.com", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getDeviceTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
     }
-    ,_showDivResultGrid: function(show) {
-        Acm.Object.show(this.$divResultGrid, show);
+    ,_closePeopleOrganizations: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
     }
-    ,_getValueSelDocType : function() {
-        return Acm.Object.getSelectValue(this.$selDocType);
+    ,_openPeopleOrganizations: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Records": [
+                                { "personId":  1, "id": "a", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                                ,{ "personId": 2, "id": "b", "type": "gov", "value": "IRS", "createDate": "14-05-15", "createBy": "xyz abc" }
+                            ]
+                            //,"TotalRecordCount": 2
+                        };
+                    }
+                    ,createAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Record":
+                            { "personId": 3, "id": "c", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "test" }
+                        };
+                    }
+                    ,updateAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Record":
+                            { "personId": 3, "id": "c", "type": "gov", "value": "IRS", "createDate": "01-02-03", "createBy": "test" }
+                        };
+                    }
+                    ,deleteAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
+                }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getOrganizationTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
     }
-    ,_setValueSelDocType : function(val) {
-        Acm.Object.setSelectValue(this.$selDocType, val);
+    ,_closePeopleLocations: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
     }
-    ,_getValueEdtLastName: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtLastName);
+    ,_openPeopleLocations: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Records": [
+                                { "personId":  1, "id": "a", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                                ,{ "personId": 2, "id": "b", "type": "Office", "address": "999 Fairfax Blvd #201, Fairfax, VA 22030", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "14-05-15", "createBy": "xyz abc" }
+                            ]
+                            //,"TotalRecordCount": 2
+                        };
+                    }
+                    ,createAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Record":
+                            { "personId": 3, "id": "c", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
+                        };
+                    }
+                    ,updateAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                            ,"Record":
+                            { "personId": 3, "id": "c", "type": "Hotel", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
+                        };
+                    }
+                    ,deleteAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
+                }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '8%'
+                    ,options: Complaint.getLocationTypes()
+                }
+                ,address: {
+                    title: 'Address'
+                    ,width: '30%'
+                }
+                ,city: {
+                    title: 'City'
+                    ,width: '12%'
+                }
+                ,state: {
+                    title: 'State'
+                    ,width: '5%'
+                }
+                ,zip: {
+                    title: 'Zip'
+                    ,width: '8%'
+                }
+                ,country: {
+                    title: 'Country'
+                    ,width: '8%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '15%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
     }
-    ,_setValueEdtLastName: function(val) {
-        Acm.Object.setPlaceHolderInput(this.$edtLastName, val);
+    ,_closePeopleAliases: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
     }
-    ,_getValueEdtSsn: function() {
-    	var display = Acm.Object.getPlaceHolderInput(this.$edtSsn);
-        return Acm.Object.getSsnValue(display);
+    ,_openPeopleAliases: function($t, $row) {
+        $t.jtable('openChildTable',
+            $row.closest('tr'),
+            {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
+                //,paging: true
+                //,pageSize: 10
+                ,sorting: true
+                ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "personId":  1, "id": "a", "type": "Nick Name", "value": "JJ", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "personId": 2, "id": "b", "type": "Some Name", "value": "Ice Man", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Nick Name", "value": "Ice Man", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "personId": 3, "id": "c", "type": "Nick Name", "value": "Big Man", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+                ,fields: {
+                personId: {
+                    type: 'hidden'
+                    ,defaultValue: 1 //commData.record.StudentId
+                }
+                ,id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getAliasTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
     }
-    ,_setValueEdtSsn: function(val) {
-        Acm.Object.setPlaceHolderInput(this.$edtSsn, val);
+
+
+    //
+    // Assignment-Communication Devices ------------------
+    //
+    ,_createJTableDevices: function($s) {
+        $s.jtable({
+            title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
+            ,selecting: true
+            ,paging: true
+            ,pageSize: 10
+            ,sorting: true
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Records": [
+                            { "id": "a", "type": "Phone", "value": "703-123-5678", "createDate": "01-02-03", "createBy": "123 do re mi" }
+                            ,{ "id": "b", "type": "Email", "value": "doe@gmail.com", "createDate": "14-05-15", "createBy": "xyz abc" }
+                        ]
+                        //,"TotalRecordCount": 2
+                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,updateAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record":
+                        { "id": "c", "type": "Phone", "value": "703-123-9999", "createDate": "01-02-03", "createBy": "test" }
+                    };
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+            ,fields: {
+                id: {
+                    key: true
+                    ,create: false
+                    ,edit: false
+                    ,list: false
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '15%'
+                    ,options: Complaint.getDeviceTypes()
+                }
+                ,value: {
+                    title: 'Value'
+                    ,width: '30%'
+                }
+                ,createDate: {
+                    title: 'Date Added'
+                    ,width: '20%'
+                    //,type: 'date'
+                    //,displayFormat: 'yy-mm-dd'
+                    ,create: false
+                    ,edit: false
+                }
+                ,createBy: {
+                    title: 'Added By'
+                    ,width: '30%'
+                }
+            }
+            ,recordAdded: function(event, data){
+                $s.jtable('load');
+            }
+            ,recordUpdated: function(event, data){
+                $s.jtable('load');
+            }
+        });
+
+        $s.jtable('load');
     }
-    ,_getValueEdtEQipRequest: function() {
-    	return Acm.Object.getPlaceHolderInput(this.$edtEQipRequest);
-    }
-    ,_setValueEdtEQipRequest: function(val) {
-        Acm.Object.setPlaceHolderInput(this.$edtEQipRequest, val);
-    }
-    ,_getValueEdtSoi: function() {
-    	return Acm.Object.getPlaceHolderInput(this.$edtSoi);
-    }
-    ,_setValueEdtSoi: function(val) {
-        Acm.Object.setPlaceHolderInput(this.$edtSoi, val);
-    }
-    ,_getValueEdtSon: function() {
-    	return Acm.Object.getPlaceHolderInput(this.$edtSon);
-    }
-    ,_setValueEdtSon: function(val) {
-        Acm.Object.setPlaceHolderInput(this.$edtSon, val);
-    }
-    ,_getValueSelAssignee: function() {
-    	return Acm.Object.getSelectValue(this.$selAssignee);
-    }
-    ,_setValueSelAssignee : function(val) {
-        Acm.Object.setSelectValue(this.$selAssignee, val);
-    }
-    ,_isCheckedChkSupervisorReview: function() {
-    	return Acm.Object.isChecked(this.$chkSupervisorReview);
-    }
-    ,_setCheckedChkSupervisorReview: function(val) {
-        Acm.Object.setChecked(this.$chkSupervisorReview, val);
-    }
-    ,_isCheckedChkContractOversight: function() {
-    	return Acm.Object.isChecked(this.$chkContractOversight);
-    }
-    ,_setCheckedChkContractOversight: function(val) {
-        Acm.Object.setChecked(this.$chkContractOversight, val);
-    }
-    ,isCheckedChkProcessing: function() {
-    	return Acm.Object.isChecked(this.$chkProcessing);
-    }
-    ,_setCheckedChkProcessing: function(val) {
-        Acm.Object.setChecked(this.$chkProcessing, val);
-    }
-    ,isCheckedChkQa: function() {
-    	return Acm.Object.isChecked(this.$chkQa);
-    }
-    ,_setCheckedChkQa: function(val) {
-        Acm.Object.setChecked(this.$chkQa, val);
-    }
-    ,isCheckedChkMailback: function() {
-    	return Acm.Object.isChecked(this.$chkMailback);
-    }
-    ,_setCheckedChkMailback: function(val) {
-        Acm.Object.setChecked(this.$chkMailback, val);
-    }
+
 
 };
 

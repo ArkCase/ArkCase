@@ -32,6 +32,12 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
         {
             if ( response.getEventName().equals(eventName) && response.isEnabled() )
             {
+                if ( response.getRespondPredicate() != null &&
+                        !response.getRespondPredicate().evaluate(acmEvent) )
+                {
+                    log.info("Event response predicate returned false - we will not launch the event response.");
+                    continue;
+                }
                 log.info("Launching event response '" + response.getAction().getActionName() + "'...");
 
                 Map<String, Object> messageProperties = new HashMap<>();
@@ -41,8 +47,12 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
                 messageProperties.put("OBJECT_ID", acmEvent.getObjectId());
                 messageProperties.put("EVENT_TYPE", acmEvent.getEventType());
                 messageProperties.put("EVENT_DATE", acmEvent.getEventDate());
-                messageProperties.put("IP_ADDRESS", acmEvent.getIpAddress());
+                if ( acmEvent.getIpAddress() != null )
+                {
+                    messageProperties.put("IP_ADDRESS", acmEvent.getIpAddress());
+                }
                 messageProperties.put("EVENT_SUCCEEDED", acmEvent.isSucceeded());
+                addExtraMessageProperties(acmEvent, messageProperties);
                 messageProperties.putAll(response.getParameters());
                 try
                 {
@@ -53,6 +63,20 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
                 }
 
 
+            }
+        }
+    }
+
+    protected void addExtraMessageProperties(AcmEvent acmEvent, Map<String, Object> messageProperties)
+    {
+        if ( acmEvent.getEventProperties() != null && ! acmEvent.getEventProperties().isEmpty() )
+        {
+            for ( Map.Entry<String, Object> eventProp : acmEvent.getEventProperties().entrySet() )
+            {
+                if ( ! messageProperties.containsKey(eventProp.getKey()) )
+                {
+                    messageProperties.put(eventProp.getKey(), eventProp.getValue());
+                }
             }
         }
     }
