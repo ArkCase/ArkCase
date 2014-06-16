@@ -25,13 +25,14 @@
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizardService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/wizard/complaintWizardCallback.js'/>"></script>
 
+    <script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_datepicker}/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_parsley}/parsley.min.js"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_wizard}/jquery.bootstrap.wizard.js"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_wizard}/demo.js"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>
 
     <!-- File Manager -->
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_knob}/js/jquery.knob.js"></script>

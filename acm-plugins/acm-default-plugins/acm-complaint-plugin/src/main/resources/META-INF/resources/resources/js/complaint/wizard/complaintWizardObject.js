@@ -399,9 +399,8 @@ ComplaintWizard.Object = {
                     rc.Records[0].givenName = c.originator.givenName;
                     rc.Records[0].familyName = c.originator.familyName;
                     rc.Records[0].type = "";
-                    //rc.Records[0].description = "";
-                    rc.Records[0].description = "first init line\r\nsecond init line";
-                    //rc.Records[0].description = "first line line%0D%0Asecond line line";
+                    rc.Records[0].description = "";
+                    //rc.Records[0].description = "first init line\r\nsecond init line";
                     return rc;
 //                    return {
 //                        "Result": "OK"
@@ -420,15 +419,6 @@ ComplaintWizard.Object = {
                     rc.Record.familyName = c.originator.familyName = record.familyName;
                     rc.Record.type = record.type;
                     rc.Record.description = record.description;
-
-                    if (record.description === "first init line\r\nsecond init line") {
-                        var z = 1;
-                    } else {
-                        var z = 1
-                    }
-                    var z = 1;
-                    //rc.Record.description = "first popup line\r\nsecond popup line";
-                    //rc.Record.description = "first popup line%0D%0Asecond popup line";
                     return rc;
 //                    return {
 //                        "Result": "OK"

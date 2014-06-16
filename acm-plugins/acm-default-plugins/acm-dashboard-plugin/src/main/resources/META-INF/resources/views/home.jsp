@@ -7,10 +7,10 @@
     <title>${pageDescriptor.title}</title>
 
     <script type="text/javascript">
-    $(document).ready(function () {
-        Dashboard.initialize();
-    });
-</script>
+        $(document).ready(function () {
+            Dashboard.initialize();
+        });
+    </script>
 </jsp:attribute>
 
 
