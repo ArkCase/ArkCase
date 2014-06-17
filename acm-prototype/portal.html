@@ -2,7 +2,7 @@
 <html lang="en" class="app">
 <head>
 <meta charset="utf-8" />
-<title>Portal | ACM | Armedia Case Management</title>
+<title>Dashboard | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
@@ -20,69 +20,33 @@
 <section class="vbox">
   <header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
     <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
-    
     <ul class="nav navbar-nav hidden-xs">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="i i-plus"></i> New
-          </a>
-          <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
-         
-            <div class="row m-l-none m-r-none m-t m-b text-center">
-              <div class="col-xs-3">
-                <div class="padder-v2">
-                  <a href="newComplaint.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-notice i-2x text-primary-lt"></i>
-                    </span>
-                    <small class="text-muted">Complaint</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-3">
-                <div class="padder-v2">
-                  <a href="newCase.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-folder i-2x text-danger-lt"></i>
-                    </span>
-                    <small class="text-muted">Case</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-3">
-                <div class="padder-v2">
-                  <a href="newTask.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-checkmark i-2x text-success-lt"></i>
-                    </span>
-                    <small class="text-muted">Task</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-3">
-                <div class="padder-v2">
-                  <a href="newDocument.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-file i-2x text-info-lt"></i>
-                    </span>
-                    <small class="text-muted">Document</small>
-                  </a>
-                </div>
-              </div>
-             
+      <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
+        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
+          <div class="row m-l-none m-r-none m-t m-b text-center">
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newComplaint.html"> <span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>
             </div>
-          </section>
-        </li>
-      </ul>
-    
-    
-   
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>
+            </div>
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>
+            </div>
+            <div class="col-xs-3">
+              <div class="padder-v2"> <a href="newDocument.html"> <span class="m-b-xs block"> <i class="i i-file i-2x text-info-lt"></i> </span> <small class="text-muted">Document</small> </a> </div>
+            </div>
+          </div>
+        </section>
+      </li>
+    </ul>
     <form class="navbar-form navbar-right input-s-lg m-t m-l-n-xs hidden-xs" role="search">
       <div class="form-group">
         <div class="input-group"> <span class="input-group-btn">
           <button type="submit" class="btn btn-sm bg-white b-white btn-icon"><i class="fa fa-search"></i></button>
           </span>
-          <input type="text" class="form-control input-sm no-border" placeholder="Search complaints, cases...">
+          <input type="text" class="form-control input-sm no-border typeahead" autocomplete="off" data-provide="typeahead" placeholder="Search complaints, cases...">
+          <input type="hidden" class="span1" title="ctrId" id="ctrId" value="" />
         </div>
       </div>
     </form>
@@ -110,7 +74,7 @@
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
-<li> <a href="#">Switch User</a> </li>
+                    <li> <a href="#">Switch User</a> </li>
                     <li class="divider"></li>
                     <li> <a href="index.html">Logout</a> </li>
                   </ul>
@@ -129,7 +93,7 @@
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
-<li class=""> <a href="admin.html" class="auto"> <i class="i i-settings icon"> </i> <span class="font-bold">Admin</span> </a> </li>
+                  <li class=""> <a href="admin.html" class="auto"> <i class="i i-settings icon"> </i> <span class="font-bold">Admin</span> </a> </li>
                 </ul>
               </nav>
               <!-- / nav --> 
@@ -143,9 +107,18 @@
         <section class="vbox">
           <section class="scrollable padder">
             <section class="row m-b-md">
-              <div class="col-sm-12">
+              <div class="col-sm-6">
                 <h3 class="m-b-xs text-black">Dashboard</h3>
                 <small>Welcome back, David Miller</small> </div>
+              <div class="col-sm-6 text-right text-left-xs m-t-md">
+                <div class="btn-group"> <a class="btn btn-rounded btn-default b-2x dropdown-toggle" data-toggle="dropdown">Add Widgets <span class="caret"></span></a>
+                  <ul class="dropdown-menu text-left pull-right">
+                    <li><a href="#">Widget 1</a></li>
+                    <li><a href="#">Widget 2</a></li>
+                    <li><a href="#">Widget 3</a></li>
+                  </ul>
+                </div>
+              </div>
             </section>
             <div class="row">
               <div class="col-sm-12">
@@ -162,130 +135,190 @@
             <div class="row">
               <div class="col-md-6">
                 <section class="panel b-a">
-                  <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="complaints.html" class="font-bold">My Complaints</a> </div>
+                  <div class="panel-heading b-b">
+                    <div class="pull-right">
+                      <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Filter</span> <span class="caret"></span> </button>
+                        <ul class="dropdown-menu dropdown-select">
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 1</a></li>
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 2</a></li>
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 3</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <a href="complaints.html" class="font-bold">My Complaints</a> </div>
                   <div class="panel-body max-200 no-padder">
-                                        <table class="table table-striped th-sortable table-hover">
-                                          <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>Title</th>
-                                              <th>Priority</th>
-                                              <th>Due</th>
-                                              <th>Status</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr class="odd gradeA">
-                                              <td>[ID]</td>
-                                              <td>[Title]</td>
-                                              <td>[Priority]</td>
-                                              <td>[Due]</td>
-                                              <td>[Status]</td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </div>
+                    <table class="table table-striped th-sortable table-hover">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Title</th>
+                          <th>Priority</th>
+                          <th>Due</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="odd gradeA">
+                          <td>[ID]</td>
+                          <td>[Title]</td>
+                          <td>[Priority]</td>
+                          <td>[Due]</td>
+                          <td>[Status]</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </section>
               </div>
               <div class="col-md-6">
                 <section class="panel b-a">
-                  <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="cases.html" class="font-bold">My Cases</a> </div>
+                  <div class="panel-heading b-b">
+                    <div class="pull-right">
+                      <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Filter</span> <span class="caret"></span> </button>
+                        <ul class="dropdown-menu dropdown-select">
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 1</a></li>
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 2</a></li>
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 3</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <a href="cases.html" class="font-bold">My Cases</a> </div>
                   <div class="panel-body max-200 no-padder">
-                                        <table class="table table-striped th-sortable table-hover">
-                                          <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>Title</th>
-                                              <th>Priority</th>
-                                              <th>Due</th>
-                                              <th>Status</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr class="odd gradeA">
-                                              <td>[ID]</td>
-                                              <td>[Title]</td>
-                                              <td>[Priority]</td>
-                                              <td>[Due]</td>
-                                              <td>[Status]</td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </div>
+                    <table class="table table-striped th-sortable table-hover">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Title</th>
+                          <th>Priority</th>
+                          <th>Due</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="odd gradeA">
+                          <td>[ID]</td>
+                          <td>[Title]</td>
+                          <td>[Priority]</td>
+                          <td>[Due]</td>
+                          <td>[Status]</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </section>
               </div>
-          
             </div>
-            
-            
-            
-             <div class="row">
+            <div class="row">
               <div class="col-md-6">
                 <section class="panel b-a">
-                  <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="documents.html" class="font-bold">My Documents</a> </div>
+                  <div class="panel-heading b-b">
+                    <div class="pull-right">
+                      <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Filter</span> <span class="caret"></span> </button>
+                        <ul class="dropdown-menu dropdown-select">
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 1</a></li>
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 2</a></li>
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 3</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <a href="documents.html" class="font-bold">My Documents</a> </div>
                   <div class="panel-body max-200 no-padder">
-                                        <table class="table table-striped th-sortable table-hover">
-                                          <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>Title</th>
-                                              <th>Priority</th>
-                                              <th>Due</th>
-                                              <th>Status</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr class="odd gradeA">
-                                              <td>[ID]</td>
-                                              <td>[Title]</td>
-                                              <td>[Priority]</td>
-                                              <td>[Due]</td>
-                                              <td>[Status]</td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </div>
+                    <table class="table table-striped th-sortable table-hover">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Title</th>
+                          <th>Priority</th>
+                          <th>Due</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="odd gradeA">
+                          <td>[ID]</td>
+                          <td>[Title]</td>
+                          <td>[Priority]</td>
+                          <td>[Due]</td>
+                          <td>[Status]</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </section>
               </div>
               <div class="col-md-6">
                 <section class="panel b-a">
-                  <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="tasks.html" class="font-bold">My Tasks</a> </div>
+                  <div class="panel-heading b-b">
+                    <div class="pull-right">
+                      <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Filter</span> <span class="caret"></span> </button>
+                        <ul class="dropdown-menu dropdown-select">
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 1</a></li>
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 2</a></li>
+                          <li><a href="#">
+                            <input type="radio" name="b">
+                            Filter 3</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <a href="tasks.html" class="font-bold">My Tasks</a> </div>
                   <div class="panel-body max-200 no-padder">
-                                        <table class="table table-striped th-sortable table-hover">
-                                          <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>Title</th>
-                                              <th>Priority</th>
-                                              <th>Due</th>
-                                              <th>Status</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr class="odd gradeA">
-                                              <td>[ID]</td>
-                                              <td>[Title]</td>
-                                              <td>[Priority]</td>
-                                              <td>[Due]</td>
-                                              <td>[Status]</td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </div>
+                    <table class="table table-striped th-sortable table-hover">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Title</th>
+                          <th>Priority</th>
+                          <th>Due</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="odd gradeA">
+                          <td>[ID]</td>
+                          <td>[Title]</td>
+                          <td>[Priority]</td>
+                          <td>[Due]</td>
+                          <td>[Status]</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </section>
               </div>
-         
             </div>
-            
-            
-            
             <div class="row bg-light dk m-b">
               <div class="col-md-6 dker">
                 <section>
                   <header class="font-bold padder-v">
                     <div class="pull-right">
                       <div class="btn-group">
-                        <button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Week</span> <span class="caret"></span> </button>
+                        <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Week</span> <span class="caret"></span> </button>
                         <ul class="dropdown-menu dropdown-select">
                           <li><a href="#">
                             <input type="radio" name="b">
@@ -298,7 +331,7 @@
                             Day</a></li>
                         </ul>
                       </div>
-                      <a href="#" class="btn btn-default btn-icon btn-rounded btn-sm">Go</a> </div>
+                    </div>
                     Documents In Workflow </header>
                   <div class="panel-body">
                     <div id="flot-sp1ine" style="height:210px"></div>
@@ -314,7 +347,7 @@
               <div class="col-md-6">
                 <header class="font-bold padder-v">
                   <div class="btn-group pull-right">
-                    <button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Last 24 Hours</span> <span class="caret"></span> </button>
+                    <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Last 24 Hours</span> <span class="caret"></span> </button>
                     <ul class="dropdown-menu dropdown-select">
                       <li><a href="#">
                         <input type="radio" name="a">
@@ -370,6 +403,95 @@
 <script src="resources/js/charts/flot/jquery.flot.pie.min.js"></script> 
 <script src="resources/js/charts/flot/jquery.flot.resize.js"></script> 
 <script src="resources/js/charts/flot/jquery.flot.grow.js"></script> 
-<script src="resources/js/charts/flot/demo.js"></script>
+<script src="resources/js/charts/flot/demo.js"></script> 
+
+<!-- Simple Search --> 
+<script src="//underscorejs.org/underscore-min.js"></script> 
+<script src="resources/js/typeahead.js"></script> 
+<script type="text/javascript">
+		$(function(){
+
+			var ctrObjs = {};
+			var ctrtitles = [];
+
+			//get the data to populate the typeahead (plus an id value)
+			var throttledRequest = _.debounce(function(query, process){
+				//get the data to populate the typeahead (plus an id value)
+				$.ajax({
+					url: 'ctrs.json'
+					,cache: false
+					,success: function(data){
+						//reset these ctrs every time the user searches
+						//because we're potentially getting entirely different results from the api
+						ctrObjs = {};
+						ctrtitles = [];
+
+						//Using underscore.js for a functional approach at looping over the returned data.
+						_.each( data, function(item, ix, list){
+
+							//for each iteration of this loop the "item" argument contains
+							//1 ctr object from the array in our json, such as:
+							// { "id":7, "title":"Pierce Brosnan" }
+
+							//add the label to the display array
+							ctrtitles.push( item.title );
+
+							//also store a hashmap so that when bootstrap gives us the selected
+							//title we can map that back to an id value
+							ctrObjs[ item.title ] = item;
+						});
+
+						//send the array of results to bootstrap for display
+						process( ctrtitles );
+					}
+				});
+			}, 300);
+
+
+			$(".typeahead").typeahead({
+				source: function ( query, process ) {
+
+					//here we pass the query (search) and process callback arguments to the throttled function
+					throttledRequest( query, process );
+
+				}
+        ,highlighter: function( item ){
+          var ctr = ctrObjs[ item ];
+		  var icon = ""; 
+		  
+		  if (ctr.type == "Complaint") {
+			icon = '<i class="i i-notice i-2x"></i>';  
+		  } else if (ctr.type == "Case") {
+			icon = '<i class="i i-folder i-2x"></i>';  
+		  } else if (ctr.type == "Task") {
+			icon = '<i class="i i-checkmark i-2x"></i>';  
+		  } else if (ctr.type == "Document") {
+			icon = '<i class="i i-file i-2x"></i>';  
+		  } else {
+			icon = '<i class="i i-circle i-2x"></i>';  
+		  }
+          
+          return '<div class="ctr">'
+				  +'<div class="icontype">' + icon + '</div>'
+                +'<div class="title">' + ctr.title + '</div>'
+				 +'<div class="identifier">' + ctr.identifier + ' ('+ ctr.type + ')' + '</div>'
+				  +'<div class="author">By ' + ctr.author  + '  on '+ ctr.date + '</div>'
+                +'</div>';
+        }
+				, updater: function ( selectedtitle ) {
+          
+          //note that the "selectedtitle" has nothing to do with the markup provided
+          //by the highlighter function. It corresponds to the array of titles
+          //that we sent from the source function.
+
+					//save the id value into the hidden field
+					$( "#ctrId" ).val( ctrObjs[ selectedtitle ].id );
+
+					//return the string you want to go into the textbox (the title)
+					return selectedtitle;
+				}
+			});
+		});
+	</script>
 </body>
 </html>

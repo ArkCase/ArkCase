@@ -1,5 +1,7 @@
 /* @override http://localhost/~aj/acm3/resources/css/app.css */
 
+/* @override http://localhost/~aj/acm3/resources/css/app.css */
+
 /* @override http://localhost/~aj/acm3/css/app.css */
 
 /* @override http://localhost/~aj/acm3/css/app.css */
@@ -343,6 +345,34 @@ a.list-group-item:focus {
   border: 1px solid #ddd;
   border: 1px solid rgba(0,0,0,0.1);
 }
+
+ul.typeahead.dropdown-menu {
+	width: 220px;
+	margin-left: -30px;
+}
+
+ul.typeahead.dropdown-menu div.title {
+	font-weight: bold;
+	width: 155px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+ul.typeahead.dropdown-menu div.identifier  {
+	font-style: italic;
+	font-size: 12px;
+}
+
+ul.typeahead.dropdown-menu div.author {
+	font-size: 12px;
+}
+
+ul.typeahead.dropdown-menu  div.icontype {
+	float: right;
+}
+
+
+
+
 .dropdown-menu.pull-left {
   left: 100%;
 }
@@ -3443,6 +3473,21 @@ div.panel-body.no-padder table {
 .block {
   display: block;
 }
+
+#email-list section.vbox ul.list-group a.clear.text-ellipsis strong.block {
+	width: 130px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	
+}
+
+
+
+
+
+
+
+
 .block.hide {
   display: none;
 }
