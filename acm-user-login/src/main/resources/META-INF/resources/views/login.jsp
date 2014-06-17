@@ -54,8 +54,8 @@
         </div>
     </footer>
     <script src="<c:url value='/resources/js/app.js'/>"></script>
-    <script src="<c:url value='/resources/js/slimscroll/jquery.slimscroll.min.js'/>"></script>
     <script src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+    <script src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
 </body>
 </html>

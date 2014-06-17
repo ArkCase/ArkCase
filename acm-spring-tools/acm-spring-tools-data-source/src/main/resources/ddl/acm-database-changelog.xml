@@ -9,7 +9,7 @@
     -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/drops" relativeToChangelogFile="false"/>
 
-    <!-- sequences are shared objects with no dependencies, so they should be next. -->
+    <!-- sequences are core objects with no dependencies, so they should be next. -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/sequences" relativeToChangelogFile="false"/>
 
     <!-- tables next... The table changelogs can include indexes and primary keys,

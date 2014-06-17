@@ -16,24 +16,23 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/task/task.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskList.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/task/task.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskList.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListObject.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListEvent.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListPage.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListRule.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListService.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>
 
-    <script src="<c:url value='/resources/js/app.js'/>"></script>
-    <script src="<c:url value='/resources/js/slimscroll/jquery.slimscroll.min.js'/>"></script>
-    <script src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+<script src="<c:url value='/resources/js/app.js'/>"></script>
+<script src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
 
 <!-- Summernote WYSIWYG -->
-
-<link rel="stylesheet" href="<c:url value='/resources/js/summernote0.5.1/summernote.css'/>" type="text/css"/>
-<script src="<c:url value='/resources/js/summernote0.5.1/summernote.js'/>"></script>
+<link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
 <script>
 
     var edit = function() {
@@ -48,8 +47,8 @@
 
 <!-- X-Editable -->
 
-<link href="<c:url value='/resources/js/x-editable1.5.1/css/bootstrap-editable.css" rel="stylesheet'/>">
-<script src="<c:url value='/resources/js/x-editable1.5.1/js/bootstrap-editable.min.js'/>"></script>
+<link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
+<script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
 <script>
     $.fn.editable.defaults.url = '/post';
     $(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); });
