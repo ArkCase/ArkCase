@@ -7,22 +7,22 @@
  */
 Topbar.Callback = {
     initialize : function() {
-        Acm.Dispatcher.addEventListener(this.EVENT_SEARCH_TERMS_RETRIEVED, this.onSearchTermsRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_TYPEAHEAD_TERMS_RETRIEVED, this.onTypeAheadTermsRetrieved);
     }
 
-    ,EVENT_SEARCH_TERMS_RETRIEVED  : "topbar-search-terms-retrieved"
+    ,EVENT_TYPEAHEAD_TERMS_RETRIEVED  : "topbar-typeahead-terms-retrieved"
 
-    ,onSearchTermsRetrieved : function(Callback, response) {
+    ,onTypeAheadTermsRetrieved : function(Callback, response) {
         var success = false;
         if (response) {
-            var searchTerms = response;
-            Topbar.Object.setSearchTerms(searchTerms);
-            Topbar.Object.useTypeAheadSearch(searchTerms);
+            var typeAheadTerms = response;
+            Topbar.Object.setTypeAheadTerms(typeAheadTerms);
+            Topbar.Object.useTypeAheadSearch(typeAheadTerms);
             success = true;
         }
 
         if (!success) {
-            Acm.Dialog.error("Failed to retrieve search terms");
+            Acm.Dialog.error("Failed to retrieve typeAhead terms");
         }
     }
 };
