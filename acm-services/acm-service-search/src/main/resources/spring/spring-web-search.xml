@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="searchUiController" class="com.armedia.acm.plugins.search.web.SearchUiController">
-        <property name="pageDescriptorSimple" ref="simpleSearchPageDescriptor"/>
+        <property name="pageDescriptor" ref="searchPageDescriptor"/>
     </bean>
 </beans>
 
