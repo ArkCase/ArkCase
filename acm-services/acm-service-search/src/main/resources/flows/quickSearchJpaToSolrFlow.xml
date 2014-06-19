@@ -22,7 +22,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             properties-ref="solrProperties"
             ignore-unresolvable="true"
             local-override="false"
-            order="5"/>
+            order="8970"/>
 
     <spring:beans>
         <spring:bean id="memoryObjectStore" class="org.mule.util.store.SimpleMemoryObjectStore"/>
@@ -40,7 +40,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                     <spring:prop key="solr.host">localhost</spring:prop>
                     <spring:prop key="solr.port">8983</spring:prop>
                     <spring:prop key="solr.contextRoot">solr</spring:prop>
-                    <spring:prop key="solr.core">acmQuickSearch</spring:prop>
+                    <spring:prop key="solr.quicksearch.core">acmQuickSearch</spring:prop>
                     <spring:prop key="solr.updateHandler">update</spring:prop>
                 </spring:props>
             </spring:property>
@@ -48,7 +48,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     </spring:beans>
 
     <http:endpoint name="submitQuicksearchDocuments"
-                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.core}/${solr.updateHandler}?commit=true&amp;overwrite=true"
+                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.quicksearch.core}/${solr.updateHandler}?commit=true&amp;overwrite=true"
                    contentType="application/json; charset=UTF-8"
                    mimeType="application/json"
                    encoding="UTF-8"

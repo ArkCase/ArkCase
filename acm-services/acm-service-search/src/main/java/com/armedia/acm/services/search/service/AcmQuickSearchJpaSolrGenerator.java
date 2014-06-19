@@ -51,6 +51,7 @@ public class AcmQuickSearchJpaSolrGenerator
      * The SOLR field name to store the ACM object type.
      */
     public static final String SOLR_OBJECT_TYPE_FIELD_NAME = "object_type_s";
+    public static final String SOLR_ID_PROPERTY = "id";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -274,8 +275,9 @@ public class AcmQuickSearchJpaSolrGenerator
      *                        arrays, and the values must be in the same order as the values in the quickSearchFields
      *                        list.  These conditions will be met for for lists of object arrays from the
      *                        getBusinessObjects method.
-     * @return Map of quick search objects.  Each map will have one more than the number of entries in the input object
-     *         arrays.  The extra entry is to hold the object type.  The map keys are the quick search index field
+     * @return Map of quick search objects.  Each map will have two more than the number of entries in the input object
+     *         arrays.  The extra entries hold the object type and the SOLR unique ID.  The SOLR unique ID is the
+     *         concatenation of the object_id_s and the object type.  The other map keys are the quick search index field
      *         names (from the quickSearchFields list).
      */
     protected List<Map<String, Object>> businessObjectsToMaps(List<Object[]> businessObjects)
@@ -286,9 +288,10 @@ public class AcmQuickSearchJpaSolrGenerator
 
         for ( Object[] properties : businessObjects )
         {
-            // allocate an extra map entry for the object type.
-            Map<String, Object> objectMap = new HashMap<>(properties.length + 1);
+            // allocate two extra map entries: one for object type, one for ID
+            Map<String, Object> objectMap = new HashMap<>(properties.length + 2);
             objectMap.put(SOLR_OBJECT_TYPE_FIELD_NAME, objectType);
+
 
             int fieldPosition = 0;
             for ( String quickSearchKey : quickSearchFields )
@@ -303,6 +306,8 @@ public class AcmQuickSearchJpaSolrGenerator
 
                 objectMap.put(quickSearchKey, value);
             }
+
+            objectMap.put(SOLR_ID_PROPERTY, objectMap.get("object_id_s") + "-" + getObjectType());
             retval.add(objectMap);
         }
 
