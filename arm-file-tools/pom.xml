@@ -15,6 +15,7 @@
     
     <modules>
         <module>arm-folder-watcher</module>
+        <module>arm-property-file-manager</module>
     </modules>
 
 

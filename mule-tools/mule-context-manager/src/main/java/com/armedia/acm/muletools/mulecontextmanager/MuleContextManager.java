@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -27,6 +28,7 @@ public class MuleContextManager implements ApplicationContextAware
     private MuleContext muleContext;
     private transient Logger log = LoggerFactory.getLogger(getClass());
     private String muleConfigFilePattern;
+    private List<String> specificConfigFiles;
 
     public MuleClient getMuleClient()
     {
@@ -77,6 +79,34 @@ public class MuleContextManager implements ApplicationContextAware
             log.debug("Finding Mule flow XML configuration files.");
         }
 
+        if ( getMuleConfigFilePattern() != null )
+        {
+            return loadConfigFromPattern();
+        }
+        else if ( getSpecificConfigFiles() != null )
+        {
+            return loadSpecificConfigFiles();
+        }
+        else
+        {
+            throw new IllegalStateException("Either a muleConfigFilePattern or specificConfigFiles must be specified");
+        }
+    }
+
+    private ConfigResource[] loadSpecificConfigFiles() throws IOException
+    {
+        ConfigResource[] configs = new ConfigResource[getSpecificConfigFiles().size()];
+        for ( int a = 0; a < getSpecificConfigFiles().size(); a++ )
+        {
+            Resource configResource = new ClassPathResource(getSpecificConfigFiles().get(a));
+            configs[a] = new ConfigResource(configResource.getURL());
+        }
+
+        return configs;
+    }
+
+    private ConfigResource[] loadConfigFromPattern() throws IOException
+    {
         PathMatchingResourcePatternResolver pathResolver = new PathMatchingResourcePatternResolver();
         Resource[] muleConfigs = pathResolver.getResources(getMuleConfigFilePattern());
         ConfigResource[] configs = new ConfigResource[muleConfigs.length];
@@ -151,5 +181,15 @@ public class MuleContextManager implements ApplicationContextAware
     public void setMuleConfigFilePattern(String muleConfigFilePattern)
     {
         this.muleConfigFilePattern = muleConfigFilePattern;
+    }
+
+    public List<String> getSpecificConfigFiles()
+    {
+        return specificConfigFiles;
+    }
+
+    public void setSpecificConfigFiles(List<String> specificConfigFiles)
+    {
+        this.specificConfigFiles = specificConfigFiles;
     }
 }

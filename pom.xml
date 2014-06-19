@@ -20,6 +20,7 @@
         <acm.version>${project.version}</acm.version>
         <activemq.version>5.10.0</activemq.version>
         <activiti.version>5.15.1</activiti.version>
+        <apache-commons-beanutils.version>1.9.2</apache-commons-beanutils.version>
         <apache-commons-file-upload.version>1.3.1</apache-commons-file-upload.version>
         <apache-commons-io.version>2.4</apache-commons-io.version>
         <apache-commons-lang.version>2.6</apache-commons-lang.version>
@@ -115,6 +116,17 @@
             <name>James Wu</name>
             <email>james.wu@armedia.com</email>
             <id>jwu</id>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <name>Tsedalu Gebeyehu</name>
+            <email>tsedalu.gebeyehu@armedia.com</email>
+            <id>tsedalu.gebeyehu</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
@@ -755,6 +767,11 @@
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${apache-commons-lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${apache-commons-beanutils.version}</version>
             </dependency>
 
             <!-- json -->
