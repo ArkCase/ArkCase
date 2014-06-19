@@ -48,7 +48,8 @@
 
         <jstl.version>1.2</jstl.version>
         <junit.version>4.11</junit.version>
-        <liquibase.version>3.2.0</liquibase.version>
+        <!-- do not update Liquibase past 3.1.1 until https://liquibase.jira.com/browse/CORE-1920 is closed -->
+        <liquibase.version>3.1.1</liquibase.version>
 
         <maven.changes.version>2.9</maven.changes.version>
         <maven.javadoc.version>2.9.1</maven.javadoc.version>
@@ -381,7 +382,7 @@
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>${liquibase.version}</version>
                 <configuration>
                     <driver>${acm.driverClassName}</driver>
                     <url>${acm.url}</url>
@@ -390,6 +391,13 @@
                     <changeLogFile>ddl/acm-database-changelog.xml</changeLogFile>
                     <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.oracle</groupId>
+                        <artifactId>jdbc</artifactId>
+                        <version>${oracle.jdbc.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
