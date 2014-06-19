@@ -144,13 +144,80 @@
        <section class="hbox stretch">
             <aside class="aside-md bg-light dker b-r" id="subNav">
               <div class="wrapper b-b header">Advanced Search</div>
-             tests
+       
+       <div class="wrapper">
+
+        <div class="input-group">
+                        <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
+                        <span class="input-group-btn">
+                          <button class="btn btn-sm btn-default" type="button">Go!</button>
+                        </span>
+                      
+       </div>
+       
+        <div class="line line-dashed b-b line-lg pull-in"></div>
+       <div class="form-group">
+                      <label class="col-sm-6 control-label">Complaints</label>
+                      <div class="col-sm-4">
+                        <label class="switch">
+                          <input type="checkbox">
+                          <span></span>
+                        </label>
+                      </div>
+                    </div>
+                    
+                     <div class="line line-dashed b-b line-lg pull-in"></div>
+                     
+                      <div class="form-group">
+                      <label class="col-sm-6 control-label">Cases</label>
+                      <div class="col-sm-4">
+                        <label class="switch">
+                          <input type="checkbox">
+                          <span></span>
+                        </label>
+                      </div>
+                    </div>
+                    
+                     <div class="line line-dashed b-b line-lg pull-in"></div>
+                     
+                      <div class="form-group">
+                      <label class="col-sm-6 control-label">Tasks</label>
+                      <div class="col-sm-4">
+                        <label class="switch">
+                          <input type="checkbox">
+                          <span></span>
+                        </label>
+                      </div>
+                    </div>
+                    
+                     <div class="line line-dashed b-b line-lg pull-in"></div>
+                     
+                     
+                      <div class="form-group">
+                      <label class="col-sm-6 control-label">Documents</label>
+                      <div class="col-sm-4">
+                        <label class="switch">
+                          <input type="checkbox">
+                          <span></span>
+                        </label>
+                      </div>
+                    </div>
+                    
+                     <div class="line line-dashed b-b line-lg pull-in"></div>
+       
+       
+       </div>
+       
+       
+       
+       
+       
             </aside>
             <aside>
               <section class="vbox">
                 <header class="header bg-white b-b clearfix">
                   <div class="row m-t-sm">
-                    <div class="col-sm-8 m-b-xs">
+                    <div class="col-sm-12 m-b-xs">
                       <a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default active"><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>
                       <div class="btn-group">
                         <button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
@@ -163,14 +230,7 @@
                       </div>
                       
                     </div>
-                    <div class="col-sm-4 m-b-xs">
-                      <div class="input-group">
-                        <input type="text" class="input-sm form-control" placeholder="Search">
-                        <span class="input-group-btn">
-                          <button class="btn btn-sm btn-default" type="button">Go!</button>
-                        </span>
-                      </div>
-                    </div>
+                   
                   </div>
                 </header>
                 <section class="scrollable wrapper w-f">
@@ -181,6 +241,7 @@
                           <tr>
                             <th width="20"><label class="checkbox m-n i-checks"><input type="checkbox"><i></i></label></th>
                             <th width="20"></th>
+                            <th width="20">ID</th>
                             <th class="th-sortable" data-toggle="class">Type
                               <span class="th-sort">
                                 <i class="fa fa-sort-down text"></i>
@@ -188,24 +249,34 @@
                                 <i class="fa fa-sort"></i>
                               </span>
                             </th>
-                            <th>Task</th>
-                            <th>Date</th>
+                           <th class="th-sortable" data-toggle="class">Title
+                              <span class="th-sort">
+                                <i class="fa fa-sort-down text"></i>
+                                <i class="fa fa-sort-up text-active"></i>
+                                <i class="fa fa-sort"></i>
+                              </span>
+                            <th>Owner</th>
+                            <th>Created</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
                             <td><label class="checkbox m-n i-checks"><input type="checkbox" name="ids[]"><i></i></label></td>
                             <td><a href="#modal" data-toggle="modal"><i class="fa fa-search-plus text-muted"></i></a></td>
-                            <td>Idrawfast</td>
-                            <td>4c</td>
-                            <td>Jul 25, 2013</td>
+                            <td>[ID]</td>
+                            <td>[Type]</td>
+                            <td>[Title]</td>
+                            <td>[Owner]</td>
+                            <td>[Date Created]</td>
                           </tr>
                           <tr class="bg-primary-ltest">
                             <td><label class="checkbox m-n i-checks"><input type="checkbox" name="ids[]"><i></i></label></td>
                             <td><a href="#modal" data-toggle="modal"><i class="fa fa-search-plus text-muted"></i></a></td>
-                            <td>Formasa</td>
-                            <td>8c</td>
-                            <td>Jul 22, 2013</td>
+                            <td>[ID]</td>
+                            <td>[Type]</td>
+                            <td>[Title]</td>
+                            <td>[Owner]</td>
+                            <td>[Date Created]</td>
                           </tr>
                         </tbody>
                       </table>

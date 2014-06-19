@@ -454,8 +454,8 @@
 					//here we pass the query (search) and process callback arguments to the throttled function
 					throttledRequest( query, process );
 
-				}
-        ,highlighter: function( item ){
+				},
+				highlighter: function( item ){
           var ctr = ctrObjs[ item ];
 		  var icon = ""; 
 		  
@@ -478,7 +478,7 @@
 				  +'<div class="author">By ' + ctr.author  + '  on '+ ctr.date + '</div>'
                 +'</div>';
         }
-				, updater: function ( selectedtitle ) {
+				, updater: function ( selecedtitle ) {
           
           //note that the "selectedtitle" has nothing to do with the markup provided
           //by the highlighter function. It corresponds to the array of titles
