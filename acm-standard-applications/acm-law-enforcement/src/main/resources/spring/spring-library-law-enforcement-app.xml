@@ -16,6 +16,7 @@
                 <ref bean="dashboardNavigatorAction"/>
                 <ref bean="complaintNavigatorAction"/>
                 <ref bean="taskNavigatorAction"/>
+                <ref bean="searchNavigatorAction"/>
             </list>
         </property>
     </bean>
@@ -62,6 +63,12 @@
         <property name="url" value="/plugin/task"/>
         <property name="requiredPrivilege" value="acm-complaint-list"/>
     </bean>
+    <bean id="searchNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Search"/>
+        <property name="iconName" value="i-search2"/>
+        <property name="url" value="/plugin/search"/>
+        <property name="requiredPrivilege" value="acm-search"/>
+    </bean>
 
     <bean id="dashboardNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Dashboard"/>
@@ -89,10 +96,10 @@
         <property name="descShort" value="Dashboard"/>
         <property name="descLong" value="Dashboard"/>
     </bean>
-    <bean id="simpleSearchPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+    <bean id="searchPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
         <property name="title" value="Search | ACM | Armedia Case Management"/>
         <property name="descShort" value="Search"/>
-        <property name="descLong" value="Simple Search"/>
+        <property name="descLong" value="Search"/>
     </bean>
     <!--
     <bean id="complaintListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">

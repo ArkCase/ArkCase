@@ -11,12 +11,13 @@ Topbar.Event = {
 
 
     ,onSubmitFormSearch : function(e) {
+        var term2 = Topbar.Object.getValueEdtSearch();
         var term = $(e).find("#acmQuickSearch").val();
         localStorage.setItem("AcmSearchTerm", term);
         return false;
     }
 
     ,onPostInit: function() {
-        Topbar.Service.getSearchTerms();
+        //Topbar.Service.getTypeAheadTerms();
     }
 };

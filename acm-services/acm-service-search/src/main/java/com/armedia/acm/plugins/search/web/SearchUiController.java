@@ -11,23 +11,22 @@ import com.armedia.acm.web.AcmPageDescriptor;
 public class SearchUiController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private AcmPageDescriptor pageDescriptorSimple;
+    private AcmPageDescriptor pageDescriptor;
 
-    //@RequestMapping(value = "/simple", method = RequestMethod.GET)
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView simpleSearch()
+    public ModelAndView search()
     {
         ModelAndView retval = new ModelAndView();
-        retval.setViewName("simpleSearch");
-        retval.addObject("pageDescriptor", getPageDescriptorSimple());
+        retval.setViewName("search");
+        retval.addObject("pageDescriptor", getPageDescriptor());
         return retval;
     }
 
-    public AcmPageDescriptor getPageDescriptorSimple() {
-        return pageDescriptorSimple;
+    public AcmPageDescriptor getPageDescriptor() {
+        return pageDescriptor;
     }
 
-    public void setPageDescriptorSimple(AcmPageDescriptor pageDescriptorSimple) {
-        this.pageDescriptorSimple = pageDescriptorSimple;
+    public void setPageDescriptor(AcmPageDescriptor pageDescriptor) {
+        this.pageDescriptor = pageDescriptor;
     }
 }
