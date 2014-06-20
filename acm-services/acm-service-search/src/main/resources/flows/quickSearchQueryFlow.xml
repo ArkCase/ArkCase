@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+
+    <http:endpoint name="http.quickSearchQuery"
+                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.quicksearch.core}/${solr.searchHandler}?q=#[message.inboundProperties['query']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;indent=true"
+                   contentType="application/json; charset=UTF-8"
+                   mimeType="application/json"
+                   encoding="UTF-8"
+                   method="GET"
+                   exchange-pattern="request-response"
+                   doc:name="Issue a quick search request to SOLR">
+    </http:endpoint>
+
+    <flow name="quickSearchQuery" doc:name="Quick Search Query Flow">
+        <vm:inbound-endpoint
+                address="vm://quickSearchQuery.in"
+                exchange-pattern="request-response"
+                doc:name="VM"/>
+
+        <timer-interceptor/>
+
+        <logger category="com.armedia.acm.plugins.search" level="DEBUG" />
+
+        <http:outbound-endpoint ref="http.quickSearchQuery">
+            <response>
+                <object-to-string-transformer/>
+            </response>
+
+        </http:outbound-endpoint>
+
+    </flow>
+
+</mule>
