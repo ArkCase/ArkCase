@@ -18,7 +18,7 @@ Acm.Object = {
 //        this._pluginDesc = items.properties("pluginDesc").itemValue();
     }
 
-    ,_contextPath: "/acm"
+    ,_contextPath: ""
     ,getContextPath: function() {
         return this._contextPath;
     }

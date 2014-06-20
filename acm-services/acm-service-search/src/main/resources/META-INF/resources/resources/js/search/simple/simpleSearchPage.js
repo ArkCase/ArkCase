@@ -10,7 +10,7 @@ SimpleSearch.Page = {
     }
 
     ,fillResults: function(data) {
-        SimpleSearch.Object.resetTableMyTasks();
+        SimpleSearch.Object.resetTableResults();
         $.each(data, function(idx, val) {
             if (10 == idx) {
                 return false;
@@ -23,7 +23,7 @@ SimpleSearch.Page = {
                 + "<td style='width:20%'><a href='" + urlBase + val.complaintId + "'>" + val.complaintId  + "</a></td>"
                 + "<td>" + val.complaintTitle + "</td>"
                 + "</tr>";
-            SimpleSearch.Object.addRowTableMyTasks(row);
+            SimpleSearch.Object.addRowTableResults(row);
         })
     }
 };

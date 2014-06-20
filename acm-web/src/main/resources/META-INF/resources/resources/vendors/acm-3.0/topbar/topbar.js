@@ -21,5 +21,22 @@ var Topbar = Topbar || {
     ,Rule: {}
     ,Service: {}
     ,Callback: {}
+
+
+    ,getQuickSearchTerm: function() {
+        var term = localStorage.getItem("AcmQuickSearchTerm");
+        if (term === "null") {
+            console.log("null term in getQuickSearchTerm!")
+            return null;
+        }
+        return term;
+    }
+    ,setQuickSearchTerm: function(term) {
+        if (term === "null") {
+            console.log("null term in ssssssssssssssetQuickSearchTerm!")
+            //todo: remove from localStorage???
+        }
+        localStorage.setItem("AcmQuickSearchTerm", term);
+    }
 };
 

@@ -12,7 +12,7 @@ Topbar.Object = {
 
         this.$formSearch.attr("method", "get");
         var url = Acm.getContextPath() + "/plugin/search"
-        var term = localStorage.getItem("AcmSearchTerm");
+        var term = Topbar.getQuickSearchTerm();
         if (Acm.isNotEmpty(term)) {
             url += "?term=" + term;
         }
@@ -20,6 +20,10 @@ Topbar.Object = {
 
         this.$edtSearch = this.$formSearch.find("input.typeahead");
         this.useTypeAhead2();
+    }
+
+    ,getValueEdtSearch: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtSearch);
     }
 ///////////////////////////////////////
     ,_ctrObjs: {}
@@ -119,9 +123,6 @@ Topbar.Object = {
     }
     ,setTypeAheadTerms: function(typeAheadTerms) {
         localStorage.setItem("AcmTypeAheadTerms", typeAheadTerms);
-    }
-    ,getValueEdtSearch: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtSearch);
     }
     ,useTypeAheadSearch: function(typeAheadTerms) {
         this._useTypeAhead(this.$edtSearch, typeAheadTerms);

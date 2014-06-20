@@ -6,13 +6,6 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            Complaint.initialize();
-            ComplaintList.initialize();
-        });
-    </script>
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">

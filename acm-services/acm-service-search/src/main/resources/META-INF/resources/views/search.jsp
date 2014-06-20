@@ -5,11 +5,6 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
-
-    <script type="text/javascript">
-    $(document).ready(function () {
-        SimpleSearch.initialize();
-    });
 </script>
 </jsp:attribute>
 
@@ -36,6 +31,10 @@
     <script src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.resize.js"></script>
     <script src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.grow.js"></script>
     <script src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/demo.js"></script>
+
+    <!-- JTable -->
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -109,6 +108,8 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <div id="divResults" style="width:98%"></div>
                     </section>
                 </section>
                 <footer class="footer bg-white b-t">

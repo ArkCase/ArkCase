@@ -13,6 +13,7 @@ var SimpleSearch = SimpleSearch || {
         SimpleSearch.Callback.initialize();
 
         Acm.deferred(SimpleSearch.Event.onPostInit);
+        //SimpleSearch.Event.onPostInit();
     }
 
     ,Object: {}
@@ -21,5 +22,6 @@ var SimpleSearch = SimpleSearch || {
     ,Rule: {}
     ,Service: {}
     ,Callback: {}
+
 };
 
