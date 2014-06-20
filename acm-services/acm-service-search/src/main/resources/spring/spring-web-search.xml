@@ -6,5 +6,9 @@
     <bean id="searchUiController" class="com.armedia.acm.plugins.search.web.SearchUiController">
         <property name="pageDescriptor" ref="searchPageDescriptor"/>
     </bean>
+
+    <bean id="quickSearchAPIController" class="com.armedia.acm.plugins.search.web.api.QuickSearchAPIController">
+        <property name="muleClient" ref="muleClient"/>
+    </bean>
 </beans>
 

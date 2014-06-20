@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         "/spring/spring-library-search-plugin-test.xml",
         "/spring/spring-library-activemq.xml"
 })
-public class SearchDocumentFactoryIT
+public class AcmQuickSearchJpaSolrGeneratorIT
 {
 
     @Autowired

@@ -33,6 +33,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                     <spring:prop key="solr.contextRoot">solr</spring:prop>
                     <spring:prop key="solr.quicksearch.core">acmQuickSearch</spring:prop>
                     <spring:prop key="solr.updateHandler">update</spring:prop>
+                    <spring:prop key="solr.searchHandler">select</spring:prop>
                 </spring:props>
             </spring:property>
         </spring:bean>
