@@ -1,8 +1,8 @@
 {
     "Result": "OK"
     ,"Records": [
-    { "personId":  9, "title": "Mr.", "firstName": "John9", "lastName": "Garcia", "type": "Witness", "description": "123 do re mi" }
-    ,{ "personId": 10, "title": "Ms.", "firstName": "Jane10", "lastName": "Doe", "type": "Subject", "description": "xyz abc" }
-]
+        { "id":  9, "type": "Task", "title": "John9", "lastName": "Garcia", "created": "123 do re mi" }
+        ,{ "id": 10, "type": "Task", "title": "Jane10", "lastName": "Doe", "created": "xyz abc" }
+    ]
     ,"TotalRecordCount": 10
 }

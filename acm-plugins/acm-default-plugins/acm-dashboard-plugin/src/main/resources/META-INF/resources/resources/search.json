@@ -1,10 +1,10 @@
 {
     "Result": "OK"
     ,"Records": [
-    { "personId":  1, "title": "Mr.", "firstName": "John1", "lastName": "Garcia", "type": "Witness", "description": "123 do re mi" }
-    ,{ "personId": 2, "title": "Ms.", "firstName": "Jane2", "lastName": "Doe", "type": "Subject", "description": "xyz abc" }
-    ,{ "personId": 3, "title": "Ms.", "firstName": "Jane3", "lastName": "Doe", "type": "Subject", "description": "xyz abc" }
-    ,{ "personId": 4, "title": "Ms.", "firstName": "Jane4", "lastName": "Doe", "type": "Subject", "description": "xyz abc" }
-]
+        { "id":  1, "type": "Case", "title": "1 2 3 do re me", "owner": "ann-acm", "created": "2014-06-20" }
+        ,{ "id": 2, "type": "Complaint", "title": "2abc", "owner": "Garcia", "created": "2014-06-20" }
+        ,{ "id": 3, "type": "Task", "title": "3xyz", "owner": "Doe", "created": "2014-06-20" }
+        ,{ "id": 4, "type": "Document", "title": "4", "owner": "Doe", "created": "2014-06-20" }
+    ]
     ,"TotalRecordCount": 10
 }

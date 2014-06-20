@@ -43,10 +43,17 @@ SimpleSearch.Object = {
         var $s = this.$divResults;
         $s.jtable({
             title: 'Search Results'
-            ,selecting: true
+            //,selecting: false
             ,paging: true
             ,pageSize: 4
             ,sorting: true
+
+            //,defaultSorting: 'Name ASC'
+            ,selecting: true //Enable selecting
+            ,multiselect: true //Allow multiple selecting
+            ,selectingCheckboxes: true //Show checkboxes on first column
+            //,selectOnRowClick: false //Enable this to only select using checkboxes
+
             ,actions: {
                 listAction: function (postData, jtParams) {
                     if (Acm.isEmpty(Acm.getContextPath())) {
@@ -93,35 +100,44 @@ SimpleSearch.Object = {
 //                }
             }
             ,fields: {
-                personId: {
+//                RowCheckbox: {
+//                    title: 'Status',
+//                    width: '12%',
+//                    type: 'checkbox',
+//                    values: { 'false': 'Passive', 'true': 'Active' },
+//                    defaultValue: 'true'
+//                },
+                id: {
                     title: 'ID'
                     ,key: true
-                    ,list: false
+                    ,list: true
                     ,create: false
                     ,edit: false
-                }
-
-                ,title: {
-                    title: 'Title'
-                    ,width: '10%'
-                    ,options: ['Mr.', 'Mrs.', 'Ms.', 'Dr.']
-                }
-                ,firstName: {
-                    title: 'First Name'
-                    ,width: '15%'
-                }
-                ,lastName: {
-                    title: 'Last Name'
-                    ,width: '15%'
+                    ,sorting: false
+                    ,display: function(data) {
+                        var $lnk = $("<a href='" + "http://www.google.com" + "'>" + data.record.id + "</a>");
+                        $lnk.click(function(){alert("click" + data.record.id)});
+                        return $lnk;
+                    }
                 }
                 ,type: {
                     title: 'Type'
-                    ,options: ["Witness", "Subject", "Spouse"]
+                    ,options: ["Case", "Complaint", "Task", "Document"]
                 }
-                ,description: {
-                    title: 'Description'
-                    ,type: 'textarea'
+                ,title: {
+                    title: 'Title'
                     ,width: '30%'
+                }
+                ,owner: {
+                    title: 'Owner'
+                    ,width: '15%'
+                    ,sorting: false
+                }
+                ,created: {
+                    title: 'Created'
+                    ,type: 'textarea'
+                    ,width: '20%'
+                    ,sorting: false
                 }
             }
             ,recordAdded: function(event, data){
