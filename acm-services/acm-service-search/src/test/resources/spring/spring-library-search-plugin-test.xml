@@ -45,6 +45,7 @@
             <list>
                 <value>/flows/quickSearchJpaToSolrFlow.xml</value>
                 <value>/flows/MuleActiveMqConnectorFlow.xml</value>
+                <value>/flows/solrConfigurationFlow.xml</value>
             </list>
         </property>
     </bean>
