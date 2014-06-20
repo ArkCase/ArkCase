@@ -45,7 +45,7 @@
 <section class="row m-b-md">
     <div class="col-sm-6">
         <h3 class="m-b-xs text-black">${pageDescriptor.descShort}</h3>
-        <small>TTTTWelcome back, ${acm_user.fullName}</small> </div>
+        <small>Welcome back, ${acm_user.fullName}</small> </div>
     <div class="col-sm-6 text-right text-left-xs m-t-md">
         <div class="btn-group"> <a class="btn btn-rounded btn-default b-2x dropdown-toggle" data-toggle="dropdown">Add Widgets <span class="caret"></span></a>
             <ul class="dropdown-menu text-left pull-right">
