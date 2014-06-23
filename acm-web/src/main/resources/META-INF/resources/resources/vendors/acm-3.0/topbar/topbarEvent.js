@@ -12,8 +12,7 @@ Topbar.Event = {
 
     ,onSubmitFormSearch : function(e) {
         var term = Topbar.Object.getValueEdtSearch();
-        var term1 = $(e).find("#acmQuickSearch").val();
-        Topbar.setQuickSearchTerm(term);
+        Topbar.Object.setQuickSearchTerm(term);
         return false;
     }
 

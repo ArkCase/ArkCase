@@ -11,19 +11,41 @@ Topbar.Object = {
         this.$formSearch.submit(function() {Topbar.Event.onSubmitFormSearch(this);});
 
         this.$formSearch.attr("method", "get");
+        this.$edtSearch = this.$formSearch.find("input.typeahead");
+
         var url = Acm.getContextPath() + "/plugin/search"
-        var term = Topbar.getQuickSearchTerm();
+        var term = this.getQuickSearchTerm();
         if (Acm.isNotEmpty(term)) {
             url += "?term=" + term;
+            this.setValueEdtSearch(term);
+            this.setQuickSearchTerm(null);
         }
         this.$formSearch.attr("action", url);
 
-        this.$edtSearch = this.$formSearch.find("input.typeahead");
         this.useTypeAhead2();
     }
 
+
+    ,getQuickSearchTerm: function() {
+        var term = localStorage.getItem("AcmQuickSearchTerm");
+        if (term === "null") {
+            console.log("null term in getQuickSearchTerm!")
+            return null;
+        }
+        return term;
+    }
+    ,setQuickSearchTerm: function(term) {
+        if (term === "null") {
+            console.log("null term in ssssssssssssssetQuickSearchTerm!")
+            localStorage.removeItem("AcmQuickSearchTerm");
+        }
+        localStorage.setItem("AcmQuickSearchTerm", term);
+    }
     ,getValueEdtSearch: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtSearch);
+    }
+    ,setValueEdtSearch: function(val) {
+        return Acm.Object.setPlaceHolderInput(this.$edtSearch, val);
     }
 ///////////////////////////////////////
     ,_ctrObjs: {}

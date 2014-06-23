@@ -1,8 +1,0 @@
-{
-    "Result": "OK"
-    ,"Records": [
-        { "id":  9, "type": "Task", "title": "John9", "lastName": "Garcia", "created": "123 do re mi" }
-        ,{ "id": 10, "type": "Task", "title": "Jane10", "lastName": "Doe", "created": "xyz abc" }
-    ]
-    ,"TotalRecordCount": 10
-}

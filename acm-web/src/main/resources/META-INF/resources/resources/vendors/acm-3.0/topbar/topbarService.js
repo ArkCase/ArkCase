@@ -20,7 +20,7 @@ Topbar.Service = {
                 ,Topbar.Callback.EVENT_TYPEAHEAD_TERMS_RETRIEVED
             );
         } else {
-            Topbar.Callback.onTypeAheadTermsRetrieved(Acm.Dispatcher, searchTerms);
+            Topbar.Callback.onTypeAheadTermsRetrieved(Acm.Dispatcher, typeAheadTerms);
         }
 
     }

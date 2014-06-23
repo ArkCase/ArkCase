@@ -10,13 +10,13 @@
 
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/search/simple/simpleSearch.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/simple/simpleSearchObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/simple/simpleSearchEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/simple/simpleSearchPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/simple/simpleSearchRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/simple/simpleSearchService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/simple/simpleSearchCallback.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/Search.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchObject.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchEvent.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchPage.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchCallback.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>
@@ -133,6 +133,9 @@
                 </header>
                 <section class="scrollable wrapper w-f">
                     <section class="panel panel-default">
+                        <div id="divResults" style="width:98%"></div>
+
+                        </br></br>
                         <div class="table-responsive">
                             <table class="table table-striped m-b-none">
                                 <thead>
@@ -179,9 +182,6 @@
                                 </tbody>
                             </table>
                         </div>
-
-
-                        <div id="divResults" style="width:98%"></div>
                     </section>
                 </section>
                 <footer class="footer bg-white b-t">

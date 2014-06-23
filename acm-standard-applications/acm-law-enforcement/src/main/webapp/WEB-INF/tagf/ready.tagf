@@ -31,8 +31,8 @@ jQuery(document).ready(function() {
     if (typeof TaskList != "undefined") {
         TaskList.initialize();
     }
-    if (typeof SimpleSearch != "undefined") {
-        SimpleSearch.initialize();
+    if (typeof Search != "undefined") {
+        Search.initialize();
     }
 
 

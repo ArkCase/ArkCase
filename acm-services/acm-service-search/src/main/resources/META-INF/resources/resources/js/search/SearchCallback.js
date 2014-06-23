@@ -1,11 +1,11 @@
 /**
- * SimpleSearch.Callback
+ * Search.Callback
  *
  * Callback handlers for server responses
  *
  * @author jwu
  */
-SimpleSearch.Callback = {
+Search.Callback = {
     initialize : function() {
         Acm.Dispatcher.addEventListener(this.EVENT_RESULT_RETRIEVED, this.onResultRetrieved);
     }
@@ -17,7 +17,7 @@ SimpleSearch.Callback = {
         var success = false;
         if (response) {
             var data = [response];
-            SimpleSearch.Page.fillResults(data);
+            Search.Page.fillResults(data);
             success = true;
         }
 
@@ -28,7 +28,7 @@ SimpleSearch.Callback = {
     ,onResultRetrieved_save : function(Callback, response) {
         var success = false;
         if (response) {
-            SimpleSearch.Page.fillResults(response);
+            Search.Page.fillResults(response);
             success = true;
         }
 
