@@ -66,5 +66,12 @@
         </property>
     </bean>
 
+    <bean id="jmsSender" class="com.armedia.acm.services.search.service.JmsSender"/>
+
+    <bean id="acmQuickSearchActivitiTaskEventListener"
+          class="com.armedia.acm.services.search.service.AcmQuickSearchActivitiTaskEventListener">
+        <property name="jmsSender" ref="jmsSender"/>
+    </bean>
+
 
 </beans>
