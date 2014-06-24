@@ -142,7 +142,11 @@
        
        
        <section class="hbox stretch">
+      
             <aside class="aside-md bg-light dker b-r" id="subNav">
+            
+             <section class="scrollable">
+             
               <div class="wrapper b-b header">Advanced Search</div>
        
        <div class="wrapper">
@@ -157,50 +161,217 @@
        
         <div class="line line-dashed b-b line-lg pull-in"></div>
        <div class="form-group">
-                      <label class="col-sm-6 control-label">Complaints</label>
+                      <label class="col-sm-6 control-label"><strong>Complaints</strong></label>
                       <div class="col-sm-4">
                         <label class="switch">
-                          <input type="checkbox">
+                          <input type="checkbox" href="#complaintFields" data-toggle="class:show">
                           <span></span>
                         </label>
                       </div>
+                      
+                      
+                      <div class="col-sm-12 hide" id="complaintFields">
+                      	 <label class="label">Complaint Title</label>
+                         <input type="text" class="form-control" placeholder="Enter Complaint Title">
+                         <label class="label">Complaint ID</label>
+               			 <input type="text" class="form-control" placeholder="Enter Complaint ID">
+                         <label class="label">Incident Date</label>
+                         <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                         <label for="priority"  class="label">Priority</label>
+                              <select name="priority" class="form-control">
+                                <option>Choose Priority</option>
+                                <option selected>Low</option>
+                                <option>Medium</option>
+                                <option>High</option>
+                                <option>Expedited</option>
+                              </select>
+                              <label class="label">Assigned To</label>
+                         <input type="text" class="form-control" placeholder="Enter Assigned To">
+                         <label for="subjectType"  class="label">Subject Type</label>
+                              <select name="subjectType" class="form-control">
+                                <option>Choose Subject Type</option>
+                              </select>
+                              <label for="comnplaintStatus"  class="label">Status</label>
+                              <select name="comnplaintStatus" class="form-control">
+                                <option>Choose Status</option>
+                              </select>
+                      </div>
+                      
                     </div>
                     
                      <div class="line line-dashed b-b line-lg pull-in"></div>
                      
                       <div class="form-group">
-                      <label class="col-sm-6 control-label">Cases</label>
+                      <label class="col-sm-6 control-label"><strong>Cases</strong></label>
                       <div class="col-sm-4">
                         <label class="switch">
-                          <input type="checkbox">
+                          <input type="checkbox" href="#caseFields" data-toggle="class:show">
                           <span></span>
                         </label>
                       </div>
+                      
+                      
+                      <div class="col-sm-12 hide" id="caseFields">
+                      	 <label class="label">Case Title</label>
+                         <input type="text" class="form-control" placeholder="Enter Case Title">
+                         <label class="label">Case ID</label>
+               			 <input type="text" class="form-control" placeholder="Enter Case ID">
+                         <label class="label">Incident Date</label>
+                         <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                         <label for="priority"  class="label">Priority</label>
+                              <select name="priority" class="form-control">
+                                <option>Choose Priority</option>
+                                <option selected>Low</option>
+                                <option>Medium</option>
+                                <option>High</option>
+                                <option>Expedited</option>
+                              </select>
+                              <label class="label">Assigned To</label>
+                         <input type="text" class="form-control" placeholder="Enter Assigned To">
+                         <label for="subjectType"  class="label">Subject Type</label>
+                              <select name="subjectType" class="form-control">
+                                <option>Choose Subject Type</option>
+                              </select>
+                              <label for="comnplaintStatus"  class="label">Status</label>
+                              <select name="comnplaintStatus" class="form-control">
+                                <option>Choose Status</option>
+                              </select>
+                      </div>
+                      
                     </div>
                     
                      <div class="line line-dashed b-b line-lg pull-in"></div>
                      
                       <div class="form-group">
-                      <label class="col-sm-6 control-label">Tasks</label>
+                      <label class="col-sm-6 control-label"><strong>Tasks</strong></label>
                       <div class="col-sm-4">
                         <label class="switch">
-                          <input type="checkbox">
+                          <input type="checkbox" href="#taskFields" data-toggle="class:show">
                           <span></span>
                         </label>
                       </div>
+                      
+                       <div class="col-sm-12 hide" id="taskFields">
+                      	 <label class="label">Task Title</label>
+                         <input type="text" class="form-control" placeholder="Enter Task Title">
+                         <label class="label">Task ID</label>
+               			 <input type="text" class="form-control" placeholder="Enter Task ID">
+                         <label class="label">Due Date</label>
+                         <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                         <label for="priority"  class="label">Priority</label>
+                              <select name="priority" class="form-control">
+                                <option>Choose Priority</option>
+                                <option selected>Low</option>
+                                <option>Medium</option>
+                                <option>High</option>
+                                <option>Expedited</option>
+                              </select>
+                              <label class="label">Assigned To</label>
+                         <input type="text" class="form-control" placeholder="Enter Assigned To">
+                         <label for="subjectType"  class="label">Subject Type</label>
+                              <select name="subjectType" class="form-control">
+                                <option>Choose Subject Type</option>
+                              </select>
+                              <label for="comnplaintStatus"  class="label">Status</label>
+                              <select name="comnplaintStatus" class="form-control">
+                                <option>Choose Status</option>
+                              </select>
+                      </div>
+                      
+                      
+                      
                     </div>
                     
                      <div class="line line-dashed b-b line-lg pull-in"></div>
                      
                      
                       <div class="form-group">
-                      <label class="col-sm-6 control-label">Documents</label>
+                      <label class="col-sm-6 control-label"><strong>Documents</strong></label>
                       <div class="col-sm-4">
                         <label class="switch">
-                          <input type="checkbox">
+                          <input type="checkbox" href="#docFields" data-toggle="class:show">
                           <span></span>
                         </label>
                       </div>
+                      
+                      
+                      
+                       <div class="col-sm-12 hide" id="docFields">
+                      	 <label class="label">Document Title</label>
+                         <input type="text" class="form-control" placeholder="Enter Document Title">
+                         <label class="label">Document ID</label>
+               			 <input type="text" class="form-control" placeholder="Enter Document ID">
+                         <label class="label">Due Date</label>
+                         <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                         <label for="priority"  class="label">Priority</label>
+                              <select name="priority" class="form-control">
+                                <option>Choose Priority</option>
+                                <option selected>Low</option>
+                                <option>Medium</option>
+                                <option>High</option>
+                                <option>Expedited</option>
+                              </select>
+                              <label class="label">Assigned To</label>
+                         <input type="text" class="form-control" placeholder="Enter Assigned To">
+                         <label for="subjectType"  class="label">Document Type</label>
+                              <select name="subjectType" class="form-control">
+                                <option>Choose Document Type</option>
+                              </select>
+                              <label for="comnplaintStatus"  class="label">Status</label>
+                              <select name="comnplaintStatus" class="form-control">
+                                <option>Choose Status</option>
+                              </select>
+                      </div>
+                      
+                    </div>
+                    
+                     
+                     
+                       <div class="line line-dashed b-b line-lg pull-in"></div>
+                     
+                     
+                      <div class="form-group">
+                      <label class="col-sm-6 control-label"><strong>People</strong></label>
+                      <div class="col-sm-4">
+                        <label class="switch">
+                          <input type="checkbox" href="#peopleFields" data-toggle="class:show">
+                          <span></span>
+                        </label>
+                      </div>
+                      
+                      
+                      
+                       <div class="col-sm-12 hide" id="peopleFields">
+                      	<label class="label">Title</label>
+                         <input type="text" class="form-control" placeholder="Enter Title">
+                         <label class="label">First Name</label>
+                         <input type="text" class="form-control" placeholder="Enter First Name">
+                         <label class="label">Last Name</label>
+                         <input type="text" class="form-control" placeholder="Enter Last Name">
+                        <label for="priority"  class="label">Type</label>
+                      <select name="priority" class="form-control">
+                        <option>Choose Type</option>
+                      </select>
+                      <label class="label">Phone</label>
+                          <input type="text" class="form-control" data-type="phone" placeholder="(XXX) XXXX XXX" data-required="true">
+                          
+                          <label class="label">Organization</label>
+                         <input type="text" class="form-control" placeholder="Enter Organization">
+                         
+                         <label class="label">Address</label>
+                         <input type="text" class="form-control" placeholder="Enter Address">
+                         <label class="label">City</label>
+                         <input type="text" class="form-control" placeholder="Enter City">
+                         
+                         <label for="state"  class="label">State</label>
+                      <select name="state" class="form-control">
+                        <option>Choose State</option>
+                      </select>
+                      <label class="label">ZIP</label>
+                         <input type="text" class="form-control" placeholder="Enter ZIP">
+                      
+                      </div>
+                      
                     </div>
                     
                      <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -209,7 +380,7 @@
        </div>
        
        
-       
+       </section>
        
        
             </aside>
@@ -313,7 +484,12 @@
     </section>
   </section>
 </section>
+
 <script src="resources/js/jquery.min.js"></script> 
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="resources/js/datepicker/bootstrap-datepicker.js"></script>
+
+
 <!-- Bootstrap --> 
 <script src="resources/js/bootstrap.js"></script> 
 <!-- App --> 
