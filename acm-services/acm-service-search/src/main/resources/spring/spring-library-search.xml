@@ -66,11 +66,68 @@
         </property>
     </bean>
 
-    <bean id="jmsSender" class="com.armedia.acm.services.search.service.JmsSender"/>
+    <bean id="taskToQuickSearchJsonConverter"
+          class="com.armedia.acm.services.search.service.TaskToQuickSearchJsonConverter"/>
 
-    <bean id="acmQuickSearchActivitiTaskEventListener"
-          class="com.armedia.acm.services.search.service.AcmQuickSearchActivitiTaskEventListener">
-        <property name="jmsSender" ref="jmsSender"/>
+    <!-- event handlers -->
+    <bean id="sendAdHocTaskCreateToSolrAction" class="com.armedia.acm.event.EventResponse">
+        <property name="eventName" value="com.armedia.acm.app.task.create"/>
+        <property name="action" ref="sendQuickSearchTaskRecordsToSolrAction"/>
+        <property name="enabled" value="true"/>
+        <property name="parameters">
+            <map/>
+        </property>
+        <property name="respondPredicate" ref="eventSucceededPredicate"/>
+    </bean>
+
+    <bean id="sendAdHocTaskCompleteToSolrAction" class="com.armedia.acm.event.EventResponse">
+        <property name="eventName" value="com.armedia.acm.app.task.complete"/>
+        <property name="action" ref="sendQuickSearchTaskRecordsToSolrAction"/>
+        <property name="enabled" value="true"/>
+        <property name="parameters">
+            <map/>
+        </property>
+        <property name="respondPredicate" ref="eventSucceededPredicate"/>
+    </bean>
+
+    <bean id="sendActivitiTaskCompleteToSolrAction" class="com.armedia.acm.event.EventResponse">
+        <property name="eventName" value="com.armedia.acm.activiti.task.complete"/>
+        <property name="action" ref="sendQuickSearchTaskRecordsToSolrAction"/>
+        <property name="enabled" value="true"/>
+        <property name="parameters">
+            <map/>
+        </property>
+        <property name="respondPredicate" ref="eventSucceededPredicate"/>
+    </bean>
+
+    <bean id="sendActivitiTaskCreateToSolrAction" class="com.armedia.acm.event.EventResponse">
+        <property name="eventName" value="com.armedia.acm.activiti.task.create"/>
+        <property name="action" ref="sendQuickSearchTaskRecordsToSolrAction"/>
+        <property name="enabled" value="true"/>
+        <property name="parameters">
+            <map/>
+        </property>
+        <property name="respondPredicate" ref="eventSucceededPredicate"/>
+    </bean>
+
+    <bean id="sendActivitiTaskAssignmentToSolrAction" class="com.armedia.acm.event.EventResponse">
+        <property name="eventName" value="com.armedia.acm.activiti.task.assignment"/>
+        <property name="action" ref="sendQuickSearchTaskRecordsToSolrAction"/>
+        <property name="enabled" value="true"/>
+        <property name="parameters">
+            <map/>
+        </property>
+        <property name="respondPredicate" ref="eventSucceededPredicate"/>
+    </bean>
+
+    <bean id="sendActivitiTaskDeleteToSolrAction" class="com.armedia.acm.event.EventResponse">
+        <property name="eventName" value="com.armedia.acm.activiti.task.delete"/>
+        <property name="action" ref="sendQuickSearchTaskRecordsToSolrAction"/>
+        <property name="enabled" value="true"/>
+        <property name="parameters">
+            <map/>
+        </property>
+        <property name="respondPredicate" ref="eventSucceededPredicate"/>
     </bean>
 
 

@@ -24,7 +24,9 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
     <flow name="jmsSendToQuickSearchSolr"
           doc:name="Send to SOLR"
-          doc:description="Send documents to the SOLR quick search collection.">
+          doc:description="Send documents to the SOLR quick search collection.  Payload must be a JSON-formatted
+                           string consisting of an array of documents.  Each element of the array must be a JSON
+                           object with property names corresponding to valid SOLR field names.">
 
         <jms:inbound-endpoint
                 queue="solrQuickSearch.in"
@@ -35,6 +37,27 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <timer-interceptor/>
 
         <echo-component doc:name="Echo"/>
+
+        <http:outbound-endpoint ref="submitQuicksearchDocuments"/>
+    </flow>
+
+    <flow name="jmsSendTaskEventToQuickSearchSolr"
+          doc:name="Send Tasks to SOLR"
+          doc:description="Send tasks to the SOLR quick search collection.  Payload must be an AcmTaskEvent pojo.">
+
+        <jms:inbound-endpoint
+                queue="solrTaskToQuickSearch.in"
+                exchange-pattern="one-way"
+                connector-ref="ActiveMQ-ACM"
+                doc:name="JMS" />
+
+        <timer-interceptor/>
+
+        <echo-component doc:name="Echo"/>
+
+        <component doc:name="Convert to JSON Format">
+            <spring-object bean="taskToQuickSearchJsonConverter"/>
+        </component>
 
         <http:outbound-endpoint ref="submitQuicksearchDocuments"/>
     </flow>

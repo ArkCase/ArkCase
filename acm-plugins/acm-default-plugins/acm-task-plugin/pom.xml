@@ -85,6 +85,12 @@
             <artifactId>acm-web</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.services</groupId>
+            <artifactId>acm-service-search</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- date time -->
         <dependency>

@@ -1,97 +1,24 @@
 package com.armedia.acm.activiti;
 
-import com.armedia.acm.event.AcmEvent;
-import org.activiti.engine.task.Task;
-
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by armdev on 6/24/14.
+ * Created by armdev on 6/25/14.
  */
-public class AcmTaskEvent extends AcmEvent
+public interface AcmTaskEvent extends Serializable
 {
-    private String assignee;
-    private String taskName;
-    private Date taskCreated;
-    private String description;
-    private Date dueDate;
-    private String taskEvent;
+    String getAssignee();
 
-    public AcmTaskEvent(Task source, String taskEvent)
-    {
-        super(source);
-        setSucceeded(true);
-        setObjectType("TASK");
-        setEventType("com.armedia.acm.activiti.task." + taskEvent);
-        setObjectId(Long.valueOf(source.getId()));
-        setEventDate(new Date());
-        setUserId("ACTIVITI_SYSTEM");
+    String getTaskName();
 
-        setAssignee(source.getAssignee());
-        setTaskName(source.getName());
-        setTaskCreated(source.getCreateTime());
-        setDescription(source.getDescription());
-        setDueDate(source.getDueDate());
-        setTaskEvent(taskEvent);
-    }
+    Date getTaskCreated();
 
-    public String getAssignee()
-    {
-        return assignee;
-    }
+    String getDescription();
 
-    public void setAssignee(String assignee)
-    {
-        this.assignee = assignee;
-    }
+    Date getDueDate();
 
-    public String getTaskName()
-    {
-        return taskName;
-    }
+    String getTaskEvent();
 
-    public void setTaskName(String taskName)
-    {
-        this.taskName = taskName;
-    }
-
-    public Date getTaskCreated()
-    {
-        return taskCreated;
-    }
-
-    public void setTaskCreated(Date taskCreated)
-    {
-        this.taskCreated = taskCreated;
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-
-    public Date getDueDate()
-    {
-        return dueDate;
-    }
-
-    public void setDueDate(Date dueDate)
-    {
-        this.dueDate = dueDate;
-    }
-
-    public String getTaskEvent()
-    {
-        return taskEvent;
-    }
-
-    public void setTaskEvent(String taskEvent)
-    {
-        this.taskEvent = taskEvent;
-    }
+    Long getObjectId();
 }

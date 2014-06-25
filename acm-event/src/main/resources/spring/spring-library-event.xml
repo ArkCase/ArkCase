@@ -8,4 +8,6 @@
         <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
 
+    <bean id="eventSucceededPredicate" class="com.armedia.acm.event.EventSucceededPredicate"/>
+
 </beans>

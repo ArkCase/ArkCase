@@ -21,7 +21,7 @@ public class AcmUserTaskEventHandler implements ApplicationEventPublisherAware
             log.debug("Got a task event '" + eventName + "'; execution of type'" + task.getClass().getName() + "'");
         }
 
-        AcmTaskEvent event = new AcmTaskEvent(task, eventName);
+        AcmTaskActivitiEvent event = new AcmTaskActivitiEvent(task, eventName);
 
         getApplicationEventPublisher().publishEvent(event);
 

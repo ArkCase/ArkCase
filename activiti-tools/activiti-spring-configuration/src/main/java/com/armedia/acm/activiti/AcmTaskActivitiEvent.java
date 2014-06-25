@@ -1,14 +1,11 @@
-package com.armedia.acm.plugins.task.model;
+package com.armedia.acm.activiti;
 
-import com.armedia.acm.activiti.AcmTaskEvent;
 import com.armedia.acm.event.AcmEvent;
+import org.activiti.engine.task.Task;
 
 import java.util.Date;
 
-/**
- * Created by armdev on 6/25/14.
- */
-public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
+public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent
 {
     private String assignee;
     private String taskName;
@@ -17,22 +14,20 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     private Date dueDate;
     private String taskEvent;
 
-    public AcmApplicationTaskEvent(AcmTask source, String taskEvent, String eventUser, boolean succeeded, String ipAddress)
+    public AcmTaskActivitiEvent(Task source, String taskEvent)
     {
         super(source);
-
-        setSucceeded(succeeded);
-        setIpAddress(ipAddress);
+        setSucceeded(true);
         setObjectType("TASK");
-        setEventType("com.armedia.acm.app.task." + taskEvent);
-        setObjectId(source.getTaskId());
+        setEventType("com.armedia.acm.activiti.task." + taskEvent);
+        setObjectId(Long.valueOf(source.getId()));
         setEventDate(new Date());
-        setUserId(eventUser);
+        setUserId("ACTIVITI_SYSTEM");
 
         setAssignee(source.getAssignee());
-        setTaskName(source.getTitle());
-        setTaskCreated(new Date());
-        setDescription(source.getTitle());
+        setTaskName(source.getName());
+        setTaskCreated(source.getCreateTime());
+        setDescription(source.getDescription());
         setDueDate(source.getDueDate());
         setTaskEvent(taskEvent);
     }
