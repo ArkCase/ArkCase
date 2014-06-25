@@ -3,12 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="eventRaisingActivitiProcessListener" class="com.armedia.acm.activiti.ActivitiProcessEventHandler">
+    <bean id="eventRaisingActivitiProcessListener" class="com.armedia.acm.activiti.AcmProcessEventHandler">
         <property name="runtimeService" ref="activitiRuntimeService"/>
         <property name="historyService" ref="activitiHistoryService"/>
     </bean>
 
-    <bean id="eventRaisingActivitiTaskListener" class="com.armedia.acm.activiti.AcmTaskEventHandler">
+    <bean id="eventRaisingActivitiTaskListener" class="com.armedia.acm.activiti.AcmUserTaskEventHandler">
     </bean>
 
     <bean id="acmActivitiListener_processStart" class="com.armedia.acm.activiti.AcmActivitiListener">
@@ -55,7 +55,7 @@
         </property>
     </bean>
 
-    <bean id="acmActivitiTaskHandler" class="com.armedia.acm.activiti.ActivitiTaskParseHandler">
+    <bean id="acmActivitiUserTaskHandler" class="com.armedia.acm.activiti.ActivitiUserTaskParseHandler">
         <property name="listenersToAdd">
             <list>
                 <ref bean="acmActivitiListener_taskCreate"/>
@@ -75,7 +75,7 @@
         <property name="preBpmnParseHandlers">
             <list>
                 <ref bean="acmActivitiProcessHandler"/>
-                <ref bean="acmActivitiTaskHandler"/>
+                <ref bean="acmActivitiUserTaskHandler"/>
             </list>
         </property>
     </bean>

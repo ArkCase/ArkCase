@@ -23,4 +23,9 @@ public class AcmActivitiTaskEventListener implements ApplicationListener<AcmTask
     {
         return timesCalled;
     }
+
+    public void reset()
+    {
+        timesCalled = 0;
+    }
 }

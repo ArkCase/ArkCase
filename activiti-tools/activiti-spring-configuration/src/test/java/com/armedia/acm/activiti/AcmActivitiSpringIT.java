@@ -47,23 +47,14 @@ public class AcmActivitiSpringIT
         testDeployment = repo.createDeployment()
                 .addClasspathResource("activiti/TestActivitiSpringProcess.bpmn20.xml")
                 .deploy();
+
+        acmTaskEventListener.reset();
     }
 
     @After
     public void shutDown() throws Exception
     {
         repo.deleteDeployment(testDeployment.getId(), true);
-    }
-
-    @Test
-    public void createAndCloseAdHocTask()
-    {
-        Task adHoc = taskService.newTask();
-        adHoc.setAssignee("test assignee");
-
-        taskService.saveTask(adHoc);
-
-        taskService.complete(adHoc.getId());
     }
 
     @Test

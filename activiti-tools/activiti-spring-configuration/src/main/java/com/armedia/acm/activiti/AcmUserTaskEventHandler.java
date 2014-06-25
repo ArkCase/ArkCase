@@ -9,16 +9,14 @@ import org.springframework.context.ApplicationEventPublisherAware;
 /**
  * Created by armdev on 6/24/14.
  */
-public class AcmTaskEventHandler implements ApplicationEventPublisherAware
+public class AcmUserTaskEventHandler implements ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher applicationEventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public void handleTaskEvent(String eventName, Task task)
     {
-        boolean debug = log.isDebugEnabled();
-
-        if ( debug )
+        if ( log.isDebugEnabled() )
         {
             log.debug("Got a task event '" + eventName + "'; execution of type'" + task.getClass().getName() + "'");
         }

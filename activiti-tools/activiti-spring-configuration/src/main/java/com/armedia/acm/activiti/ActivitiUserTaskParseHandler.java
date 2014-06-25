@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by dmiller on 3/5/14.
  */
-public class ActivitiTaskParseHandler extends AbstractBpmnParseHandler<UserTask>
+public class ActivitiUserTaskParseHandler extends AbstractBpmnParseHandler<UserTask>
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private List<ActivitiListener> listenersToAdd;
