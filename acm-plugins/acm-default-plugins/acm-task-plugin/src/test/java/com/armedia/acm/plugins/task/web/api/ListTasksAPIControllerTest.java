@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.AcmTaskSearchResultEvent;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,15 +81,12 @@ public class ListTasksAPIControllerTest extends EasyMockSupport
         String ipAddress = "ipAddress";
 
         expect(mockTaskDao.tasksForUser(user)).andReturn(Arrays.asList(userTask));
-        mockTaskEventPublisher.publishTaskEvent(
-                anyObject(AcmTaskSearchResultEvent.class),
-                eq(mockAuthentication),
-                eq(ipAddress));
+        mockTaskEventPublisher.publishTaskEvent(anyObject(AcmApplicationTaskEvent.class));
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
         replayAll();
 

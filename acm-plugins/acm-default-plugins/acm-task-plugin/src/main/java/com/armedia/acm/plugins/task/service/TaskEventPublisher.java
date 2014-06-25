@@ -1,9 +1,8 @@
 package com.armedia.acm.plugins.task.service;
 
-import com.armedia.acm.plugins.task.model.AcmTaskEvent;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.security.core.Authentication;
 
 /**
  * Created by armdev on 6/2/14.
@@ -12,18 +11,8 @@ public class TaskEventPublisher implements ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public void publishTaskEvent(
-            AcmTaskEvent event,
-            Authentication authentication,
-            String ipAddress)
+    public void publishTaskEvent(AcmApplicationTaskEvent event)
     {
-        if ( authentication != null )
-        {
-            event.setUserId(authentication.getName());
-        }
-
-        event.setIpAddress(ipAddress);
-
         getApplicationEventPublisher().publishEvent(event);
     }
 

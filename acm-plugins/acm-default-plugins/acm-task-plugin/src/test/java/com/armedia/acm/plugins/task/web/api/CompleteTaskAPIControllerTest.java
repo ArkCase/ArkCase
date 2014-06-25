@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.AcmTaskCompletedEvent;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -76,17 +76,14 @@ public class CompleteTaskAPIControllerTest extends EasyMockSupport
         AcmTask found = new AcmTask();
         found.setTaskId(taskId);
 
-        Capture<AcmTaskCompletedEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockTaskDao.completeTask(eq(mockAuthentication), eq(taskId))).andReturn(found);
-        mockTaskEventPublisher.publishTaskEvent(
-                capture(capturedEvent),
-                eq(mockAuthentication),
-                eq(ipAddress));
+        mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
         // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
         replayAll();
 
@@ -113,7 +110,7 @@ public class CompleteTaskAPIControllerTest extends EasyMockSupport
         assertNotNull(completedTask);
         assertEquals(completedTask.getTaskId(), taskId);
 
-        AcmTaskCompletedEvent event = capturedEvent.getValue();
+        AcmApplicationTaskEvent event = capturedEvent.getValue();
         assertEquals(taskId, event.getObjectId());
         assertEquals("TASK", event.getObjectType());
         assertTrue(event.isSucceeded());
@@ -128,17 +125,14 @@ public class CompleteTaskAPIControllerTest extends EasyMockSupport
         AcmTask found = new AcmTask();
         found.setTaskId(taskId);
 
-        Capture<AcmTaskCompletedEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockTaskDao.completeTask(eq(mockAuthentication), eq(taskId))).andThrow(new AcmTaskException("testException"));
-        mockTaskEventPublisher.publishTaskEvent(
-                capture(capturedEvent),
-                eq(mockAuthentication),
-                eq(ipAddress));
+        mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
         // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
         replayAll();
 
@@ -152,7 +146,7 @@ public class CompleteTaskAPIControllerTest extends EasyMockSupport
 
         verifyAll();
 
-        AcmTaskCompletedEvent event = capturedEvent.getValue();
+        AcmApplicationTaskEvent event = capturedEvent.getValue();
         assertEquals(taskId, event.getObjectId());
         assertEquals("TASK", event.getObjectType());
         assertFalse(event.isSucceeded());
