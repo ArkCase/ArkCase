@@ -179,7 +179,7 @@
         <property name="lastModifiedProperty" value="modified"/>
         <property name="quickSearchFieldToEntityPropertyMap">
             <map>
-                <entry key="title" value="complaintTitle"/>
+                <entry key="title_t" value="complaintTitle"/>
                 <entry key="object_id_s" value="complaintId"/>
                 <entry key="last_modified" value="modified"/>
                 <entry key="create_dt" value="created"/>

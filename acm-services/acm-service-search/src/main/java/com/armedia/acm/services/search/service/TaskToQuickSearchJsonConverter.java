@@ -29,7 +29,7 @@ public class TaskToQuickSearchJsonConverter
         }
 
         Map<String, Object> quickSearchMap = new HashMap<>();
-        quickSearchMap.put("title", event.getDescription());
+        quickSearchMap.put("title_t", event.getDescription());
         quickSearchMap.put("object_id_s", event.getObjectId());
         quickSearchMap.put("create_dt", event.getTaskCreated());
         quickSearchMap.put("name", event.getTaskName());
