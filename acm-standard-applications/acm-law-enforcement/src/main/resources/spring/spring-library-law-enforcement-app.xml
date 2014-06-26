@@ -176,6 +176,7 @@
         <property name="objectType" value="Complaint"/>
         <property name="batchSize" value="50"/>
         <property name="idProperty" value="complaintId"/>
+        <property name="ownerProperty" value="author"/>
         <property name="lastModifiedProperty" value="modified"/>
         <property name="quickSearchFieldToEntityPropertyMap">
             <map>

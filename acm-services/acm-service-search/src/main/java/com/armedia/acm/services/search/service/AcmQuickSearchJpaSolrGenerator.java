@@ -45,6 +45,7 @@ public class AcmQuickSearchJpaSolrGenerator
 
 
     public static final String SOLR_ID_PROPERTY = "id";
+    public static final String SOLR_OBJECT_OWNER_PROPERTY = "owner_s";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -103,6 +104,13 @@ public class AcmQuickSearchJpaSolrGenerator
      * Name of the last modified property of the business entity.  Used in the WHERE clause of the batch query.
      */
     private String lastModifiedProperty;
+
+    /**
+     * Name of the property whose value is considered the "owner" of this object.  For complaints, it would be the
+     * creator; for case files, the case agent.  Set this to a field containing a user id.  This value must also be
+     * a key in the "quickSearchFieldToEntityPropertyMap" map.
+     */
+    private String ownerProperty;
 
     /**
      * Internal use only (not specified via Spring).  The values from the quickSearchFieldToEntityPropertyMap.
@@ -278,8 +286,8 @@ public class AcmQuickSearchJpaSolrGenerator
 
         for ( Object[] properties : businessObjects )
         {
-            // allocate two extra map entries: one for object type, one for ID
-            Map<String, Object> objectMap = new HashMap<>(properties.length + 2);
+            // allocate three extra map entries: one for object type, one for ID, one for object owner
+            Map<String, Object> objectMap = new HashMap<>(properties.length + 3);
             objectMap.put(SearchConstants.SOLR_OBJECT_TYPE_FIELD_NAME, objectType);
 
 
@@ -298,6 +306,7 @@ public class AcmQuickSearchJpaSolrGenerator
             }
 
             objectMap.put(SOLR_ID_PROPERTY, objectMap.get("object_id_s") + "-" + getObjectType());
+            objectMap.put(SOLR_OBJECT_OWNER_PROPERTY, objectMap.get(getOwnerProperty()));
             retval.add(objectMap);
         }
 
@@ -464,5 +473,15 @@ public class AcmQuickSearchJpaSolrGenerator
     public void setPropertyFileManager(PropertyFileManager propertyFileManager)
     {
         this.propertyFileManager = propertyFileManager;
+    }
+
+    public String getOwnerProperty()
+    {
+        return ownerProperty;
+    }
+
+    public void setOwnerProperty(String ownerProperty)
+    {
+        this.ownerProperty = ownerProperty;
     }
 }

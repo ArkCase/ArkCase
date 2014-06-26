@@ -35,6 +35,7 @@ public class TaskToQuickSearchJsonConverter
         quickSearchMap.put("name", event.getTaskName());
         quickSearchMap.put("status_s", event.getTaskEvent() == null ? null : event.getTaskEvent().toUpperCase());
         quickSearchMap.put("assignee_s", event.getAssignee());
+        quickSearchMap.put("owner_s", event.getAssignee());
         quickSearchMap.put("id", event.getObjectId() + "-" + TASK_TYPE);
         quickSearchMap.put(SearchConstants.SOLR_OBJECT_TYPE_FIELD_NAME, TASK_TYPE);
 
