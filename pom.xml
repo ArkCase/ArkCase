@@ -459,7 +459,6 @@
                     </flowInitContext>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <keepBranch>true</keepBranch>
-                    <noReleaseBuild>true</noReleaseBuild>
                     <pushReleases>true</pushReleases>
                 </configuration>
             </plugin>
