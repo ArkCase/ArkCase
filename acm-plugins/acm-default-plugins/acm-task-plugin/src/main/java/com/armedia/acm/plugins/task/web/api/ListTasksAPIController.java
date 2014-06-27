@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.AcmTaskSearchResultEvent;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import org.slf4j.Logger;
@@ -48,8 +48,9 @@ public class ListTasksAPIController
 
             for ( AcmTask task : retval )
             {
-                AcmTaskSearchResultEvent event = new AcmTaskSearchResultEvent(task);
-                getTaskEventPublisher().publishTaskEvent(event, authentication, ipAddress);
+                AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "searchResult",
+                        authentication.getName(), true, ipAddress);
+                getTaskEventPublisher().publishTaskEvent(event);
             }
 
             return retval;

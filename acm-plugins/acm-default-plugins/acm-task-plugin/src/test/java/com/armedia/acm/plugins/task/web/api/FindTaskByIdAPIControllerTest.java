@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmFindTaskByIdEvent;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
@@ -82,11 +82,11 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
 
         expect(mockTaskDao.findById(taskId)).andReturn(returned);
 
-        Capture<AcmFindTaskByIdEvent> eventRaised = new Capture<>();
-        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised), eq(mockAuthentication), eq(ipAddress));
+        Capture<AcmApplicationTaskEvent> eventRaised = new Capture<>();
+        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised));
 
         // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
         replayAll();
 
@@ -111,7 +111,7 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         assertNotNull(fromJson);
         assertEquals(returned.getTitle(), fromJson.getTitle());
 
-        AcmFindTaskByIdEvent event = eventRaised.getValue();
+        AcmApplicationTaskEvent event = eventRaised.getValue();
         assertTrue(event.isSucceeded());
         assertEquals(taskId, event.getObjectId());
     }
@@ -126,8 +126,8 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
 
         expect(mockTaskDao.findById(taskId)).andThrow(new AcmTaskException());
 
-        Capture<AcmFindTaskByIdEvent> eventRaised = new Capture<>();
-        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised), eq(mockAuthentication), eq(ipAddress));
+        Capture<AcmApplicationTaskEvent> eventRaised = new Capture<>();
+        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised));
 
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
@@ -143,7 +143,7 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
 
         verifyAll();
 
-        AcmFindTaskByIdEvent event = eventRaised.getValue();
+        AcmApplicationTaskEvent event = eventRaised.getValue();
         assertFalse(event.isSucceeded());
         assertEquals(taskId, event.getObjectId());
 

@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by armdev on 5/30/14.
  */
-public class ActivitiProcessEventHandler implements ApplicationEventPublisherAware
+public class AcmProcessEventHandler implements ApplicationEventPublisherAware
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private RuntimeService runtimeService;
@@ -24,8 +24,12 @@ public class ActivitiProcessEventHandler implements ApplicationEventPublisherAwa
 
     public void handleProcessEvent(String eventName, ProcessInstance execution)
     {
-        log.info("Got an Activiti event; eventName: " + eventName + "; " +
-            "process instance id: " + execution.getProcessInstanceId());
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Got an Activiti event; eventName: " + eventName + "; " + "process instance id: " +
+                    execution.getProcessInstanceId());
+        }
+
 
         Map<String, Object> processVariables = getRuntimeService().getVariables(execution.getId());
 

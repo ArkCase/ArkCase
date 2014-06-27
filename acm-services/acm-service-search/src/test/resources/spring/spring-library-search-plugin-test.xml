@@ -43,7 +43,7 @@
           destroy-method="shutdownBean">
         <property name="specificConfigFiles">
             <list>
-                <value>/flows/quickSearchJpaToSolrFlow.xml</value>
+                <value>/flows/quickSearchToSolrFlow.xml</value>
                 <value>/flows/MuleActiveMqConnectorFlow.xml</value>
                 <value>/flows/solrConfigurationFlow.xml</value>
                 <value>/flows/quickSearchQueryFlow.xml</value>

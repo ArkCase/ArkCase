@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmAdHocTaskCreatedEvent;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
@@ -61,13 +61,12 @@ public class CreateAdHocTaskAPIController
     protected void publishAdHocTaskCreatedEvent(
             Authentication authentication,
             HttpSession httpSession,
-            AcmTask completed,
+            AcmTask created,
             boolean succeeded)
     {
-        AcmAdHocTaskCreatedEvent event = new AcmAdHocTaskCreatedEvent(completed);
-        event.setSucceeded(succeeded);
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-        getTaskEventPublisher().publishTaskEvent(event, authentication, ipAddress);
+        AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(created, "create", authentication.getName(), succeeded, ipAddress);
+        getTaskEventPublisher().publishTaskEvent(event);
     }
 
 

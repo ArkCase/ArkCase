@@ -3,7 +3,6 @@ package com.armedia.acm.services.search.service;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -31,10 +30,7 @@ import java.util.Map;
  */
 public class AcmQuickSearchJpaSolrGenerator
 {
-    /**
-     * The date format SOLR expects.  Any other date format causes SOLR to throw an exception.
-     */
-    private static final String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
 
     /**
      * The default run date to use if this generator has never run before (or if the properties file that stores the
@@ -47,11 +43,9 @@ public class AcmQuickSearchJpaSolrGenerator
      */
     private static final String SOLR_LAST_RUN_DATE_PROPERTY_KEY = "solr.last.run.date";
 
-    /**
-     * The SOLR field name to store the ACM object type.
-     */
-    public static final String SOLR_OBJECT_TYPE_FIELD_NAME = "object_type_s";
+
     public static final String SOLR_ID_PROPERTY = "id";
+    public static final String SOLR_OBJECT_OWNER_PROPERTY = "owner_s";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -110,6 +104,13 @@ public class AcmQuickSearchJpaSolrGenerator
      * Name of the last modified property of the business entity.  Used in the WHERE clause of the batch query.
      */
     private String lastModifiedProperty;
+
+    /**
+     * Name of the property whose value is considered the "owner" of this object.  For complaints, it would be the
+     * creator; for case files, the case agent.  Set this to a field containing a user id.  This value must also be
+     * a key in the "quickSearchFieldToEntityPropertyMap" map.
+     */
+    private String ownerProperty;
 
     /**
      * Internal use only (not specified via Spring).  The values from the quickSearchFieldToEntityPropertyMap.
@@ -178,7 +179,7 @@ public class AcmQuickSearchJpaSolrGenerator
                 log.debug("last run date: " + lastRunDate);
             }
 
-            DateFormat solrDateFormat = new SimpleDateFormat(SOLR_DATE_FORMAT);
+            DateFormat solrDateFormat = new SimpleDateFormat(SearchConstants.SOLR_DATE_FORMAT);
             Date sinceWhen = solrDateFormat.parse(lastRunDate);
 
             // store the current time as the last run date to use the next time this job runs.  This allows us to
@@ -207,11 +208,8 @@ public class AcmQuickSearchJpaSolrGenerator
     {
         int current = 0;
         int batchSize = getBatchSize();
-        DateFormat solrDateFormat = new SimpleDateFormat(SOLR_DATE_FORMAT);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper = mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        mapper = mapper.setDateFormat(solrDateFormat);
+        ObjectMapper mapper = new ObjectMapperFactory().createObjectMapper();
 
         boolean debug = log.isDebugEnabled();
 
@@ -238,7 +236,7 @@ public class AcmQuickSearchJpaSolrGenerator
                     log.debug("Quick search JSON: " + json);
                 }
 
-                MuleMessage fromSolr = getMuleClient().send("jms://solrQuickSearch.in", json, null);
+                MuleMessage fromSolr = getMuleClient().send(SearchConstants.QUICK_SEARCH_JMS_QUEUE_NAME, json, null);
 
                 Object muleResponse = fromSolr.getPayload();
 
@@ -288,9 +286,9 @@ public class AcmQuickSearchJpaSolrGenerator
 
         for ( Object[] properties : businessObjects )
         {
-            // allocate two extra map entries: one for object type, one for ID
-            Map<String, Object> objectMap = new HashMap<>(properties.length + 2);
-            objectMap.put(SOLR_OBJECT_TYPE_FIELD_NAME, objectType);
+            // allocate three extra map entries: one for object type, one for ID, one for object owner
+            Map<String, Object> objectMap = new HashMap<>(properties.length + 3);
+            objectMap.put(SearchConstants.SOLR_OBJECT_TYPE_FIELD_NAME, objectType);
 
 
             int fieldPosition = 0;
@@ -308,6 +306,7 @@ public class AcmQuickSearchJpaSolrGenerator
             }
 
             objectMap.put(SOLR_ID_PROPERTY, objectMap.get("object_id_s") + "-" + getObjectType());
+            objectMap.put(SOLR_OBJECT_OWNER_PROPERTY, objectMap.get(getOwnerProperty()));
             retval.add(objectMap);
         }
 
@@ -474,5 +473,15 @@ public class AcmQuickSearchJpaSolrGenerator
     public void setPropertyFileManager(PropertyFileManager propertyFileManager)
     {
         this.propertyFileManager = propertyFileManager;
+    }
+
+    public String getOwnerProperty()
+    {
+        return ownerProperty;
+    }
+
+    public void setOwnerProperty(String ownerProperty)
+    {
+        this.ownerProperty = ownerProperty;
     }
 }

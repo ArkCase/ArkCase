@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmFindTaskByIdEvent;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
@@ -62,10 +62,9 @@ public class FindTaskByIdAPIController
     protected void raiseEvent(Authentication authentication, HttpSession session, AcmTask task, boolean succeeded)
     {
         String ipAddress = (String) session.getAttribute("acm_ip_address");
-        AcmFindTaskByIdEvent event = new AcmFindTaskByIdEvent(task);
-        event.setSucceeded(succeeded);
-        event.setIpAddress(ipAddress);
-        getTaskEventPublisher().publishTaskEvent(event, authentication, ipAddress);
+        AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "findById", authentication.getName(),
+                succeeded, ipAddress);
+        getTaskEventPublisher().publishTaskEvent(event);
     }
 
 

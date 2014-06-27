@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmAdHocTaskCreatedEvent;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
@@ -80,7 +80,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         found.setTaskId(taskId);
 
         Capture<AcmTask> taskSentToDao = new Capture<>();
-        Capture<AcmAdHocTaskCreatedEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
 
         org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
         String inJson = objectMapper.writeValueAsString(adHoc);
@@ -88,13 +88,10 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockTaskDao.createAdHocTask(capture(taskSentToDao))).andReturn(found);
-        mockTaskEventPublisher.publishTaskEvent(
-                capture(capturedEvent),
-                eq(mockAuthentication),
-                eq(ipAddress));
+        mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 
         // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
         replayAll();
 
@@ -125,7 +122,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         assertNotNull(newTask);
         assertEquals(newTask.getTaskId(), found.getTaskId());
 
-        AcmAdHocTaskCreatedEvent event = capturedEvent.getValue();
+        AcmApplicationTaskEvent event = capturedEvent.getValue();
         assertEquals(taskId, event.getObjectId());
         assertEquals("TASK", event.getObjectType());
         assertTrue(event.isSucceeded());
@@ -134,14 +131,13 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
     @Test
     public void createAdHocTask_exception() throws Exception
     {
-        Long taskId = 500L;
         String ipAddress = "ipAddress";
 
         AcmTask adHoc = new AcmTask();
         adHoc.setAssignee("assignee");
 
         Capture<AcmTask> taskSentToDao = new Capture<>();
-        Capture<AcmAdHocTaskCreatedEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
 
         org.codehaus.jackson.map.ObjectMapper objectMapper = new org.codehaus.jackson.map.ObjectMapper();
         String inJson = objectMapper.writeValueAsString(adHoc);
@@ -149,13 +145,10 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockTaskDao.createAdHocTask(capture(taskSentToDao))).andThrow(new AcmTaskException("testException"));
-        mockTaskEventPublisher.publishTaskEvent(
-                capture(capturedEvent),
-                eq(mockAuthentication),
-                eq(ipAddress));
+        mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 
         // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
         replayAll();
 
@@ -175,7 +168,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         assertNull(sentToDao.getTaskId());
         assertEquals(adHoc.getAssignee(), sentToDao.getAssignee());
 
-        AcmAdHocTaskCreatedEvent event = capturedEvent.getValue();
+        AcmApplicationTaskEvent event = capturedEvent.getValue();
         assertNull(event.getObjectId());
         assertEquals("TASK", event.getObjectType());
         assertFalse(event.isSucceeded());

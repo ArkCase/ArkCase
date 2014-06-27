@@ -2,8 +2,8 @@ package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.AcmTaskCompletedEvent;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import org.slf4j.Logger;
@@ -65,10 +65,9 @@ public class CompleteTaskAPIController
             AcmTask completed,
             boolean succeeded)
     {
-        AcmTaskCompletedEvent event = new AcmTaskCompletedEvent(completed);
-        event.setSucceeded(succeeded);
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-        getTaskEventPublisher().publishTaskEvent(event, authentication, ipAddress);
+        AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(completed, "complete", authentication.getName(), succeeded, ipAddress);
+        getTaskEventPublisher().publishTaskEvent(event);
     }
 
 
