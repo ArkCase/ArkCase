@@ -26,6 +26,11 @@ var Search = Search || {
     ,EMPTY_RESULT: {"Result": "OK","Records": [],"TotalRecordCount": 0}
     ,DEFAULT_PAGE_SIZE: 4
 
+    ,OBJTYPE_CASE: "Case"
+    ,OBJTYPE_COMPLAINT: "Complaint"
+    ,OBJTYPE_TASK: "Task"
+    ,OBJTYPE_DOCUMENT: "Document"
+
     ,_quickSearchTerm: undefined
     ,getQuickSearchTerm: function() {
         return this._quickSearchTerm;

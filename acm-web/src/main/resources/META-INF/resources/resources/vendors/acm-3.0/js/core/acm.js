@@ -53,7 +53,7 @@ var Acm = Acm || {
     //This function handles input url in following sample cases:
     //  some.com/some/path
     //  some.com/some/path/
-    //  some.com/some/path/?var=abc
+    //  some.com/some/path?var=abc
     ,makeNoneCacheUrl: function(url) {
         var lastChar = url.slice(-1);
         var hasQmark = (-1 !== url.indexOf('?'));
@@ -61,9 +61,9 @@ var Acm = Acm || {
         if (hasQmark) {
             url += '&'
         } else {
-            if ('/' !== lastChar) {
-                url += '/';
-            }
+//            if ('/' !== lastChar) {
+//                url += '/';
+//            }
             url += '?';
         }
         url += 'rand=' + Math.floor((Math.random()*10000000000));

@@ -5,12 +5,6 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
-
-    <%--<script type="text/javascript">--%>
-        <%--$(document).ready(function () {--%>
-            <%--Dashboard.initialize();--%>
-        <%--});--%>
-    <%--</script>--%>
 </jsp:attribute>
 
 
@@ -23,8 +17,8 @@
     <script type="text/javascript" src="<c:url value='/resources/js/dashboard/dashboardService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/dashboard/dashboardCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/easypiechart/jquery.easy-pie-chart.js"></script>

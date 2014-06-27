@@ -79,7 +79,12 @@ Search.Object = {
                         url += "&n=" + jtParams.jtPageSize;
                     }
                     if (Acm.isNotEmpty(jtParams.jtSorting)) {
-                        url += "&s=" + jtParams.jtSorting;
+                        var arr = jtParams.jtSorting.split(" ");
+                        if (2 == arr.length) {
+                            if ("title" == arr[0]) {
+                                url += "&s=title_t%20" + arr[1];
+                            }
+                        }
                     }
 
 //                    if (0 == jtParams.jtStartIndex) {
@@ -112,10 +117,11 @@ Search.Object = {
                                                 for (var i = 0; i < response.docs.length; i++) {
                                                     var Record = {};
                                                     Record.id = response.docs[i].object_id_s;
-                                                    Record.type = response.docs[i].object_type_s;
-                                                    Record.title = response.docs[i].name;
-                                                    Record.owner = response.docs[i].author_s;
-                                                    Record.created = response.docs[i].create_dt;
+                                                    Record.name = Acm.goodValue(response.docs[i].name);
+                                                    Record.type = Acm.goodValue(response.docs[i].object_type_s);
+                                                    Record.title = Acm.goodValue(response.docs[i].title_t);
+                                                    Record.owner = Acm.goodValue(response.docs[i].owner_s);
+                                                    Record.created = Acm.goodValue(response.docs[i].create_dt);
                                                     jtData.Records.push(Record);
 
                                                 }
@@ -156,19 +162,35 @@ Search.Object = {
                 id: {
                     title: 'ID'
                     ,key: true
-                    ,list: true
+                    ,list: false
                     ,create: false
                     ,edit: false
                     ,sorting: false
+                }
+                ,name: {
+                    title: 'Name'
+                    ,width: '15%'
+                    ,sorting: false
                     ,display: function(data) {
-                        var $lnk = $("<a href='" + "http://www.google.com" + "'>" + data.record.id + "</a>");
-                        $lnk.click(function(){alert("click" + data.record.id)});
+                        var url = Acm.getContextPath();
+                        if (Search.OBJTYPE_CASE == data.record.type) {
+                            url += "/plugin/case/" + data.record.id;
+                        } else if (Search.OBJTYPE_COMPLAINT == data.record.type) {
+                            url += "/plugin/complaint/" + data.record.id;
+                        } else if (Search.OBJTYPE_TASK == data.record.type) {
+                            url += "/plugin/task/" + data.record.id;
+                        } else if (Search.OBJTYPE_DOCUMENT == data.record.type) {
+                            url += "/plugin/document/" + data.record.id;
+                        }
+                        var $lnk = $("<a href='" + url + "'>" + data.record.name + "</a>");
+                        //$lnk.click(function(){alert("click" + data.record.id)});
                         return $lnk;
                     }
                 }
                 ,type: {
                     title: 'Type'
-                    ,options: ["Case", "Complaint", "Task", "Document"]
+                    ,options: [Search.OBJTYPE_CASE, Search.OBJTYPE_COMPLAINT, Search.OBJTYPE_TASK, Search.OBJTYPE_DOCUMENT]
+                    ,sorting: false
                 }
                 ,title: {
                     title: 'Title'

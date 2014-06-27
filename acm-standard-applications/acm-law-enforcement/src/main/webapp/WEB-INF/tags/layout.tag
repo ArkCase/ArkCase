@@ -31,43 +31,36 @@
     <%@include file="/WEB-INF/tagf/footer.tagf"%>
 </section>
 
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/core/acm.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/core/acmDialog.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/core/acmAjax.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/core/acmDispatcher.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/core/acmObject.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/core/acmValidation.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acm.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDialog.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmAjax.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDispatcher.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmObject.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmValidation.js"></script>
 
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/topbar/topbar.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/topbar/topbarObject.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/topbar/topbarEvent.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/topbar/topbarPage.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/topbar/topbarRule.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/topbar/topbarService.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/topbar/topbarCallback.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/topbar/topbar.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/topbar/topbarObject.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/topbar/topbarEvent.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/topbar/topbarPage.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/topbar/topbarRule.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/topbar/topbarService.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/topbar/topbarCallback.js"></script>
 
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/sidebar/sidebar.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/sidebar/sidebarObject.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/sidebar/sidebarEvent.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/sidebar/sidebarPage.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/sidebar/sidebarRule.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/sidebar/sidebarService.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/sidebar/sidebarCallback.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebar.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarObject.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarEvent.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarPage.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarRule.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarService.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarCallback.js"></script>
 
 
-<%--<script type="text/javascript" src="//underscorejs.org/underscore-min.js"></script>--%>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_underscore}/underscore-min.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/typeahead.js"></script>
 <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/typeahead.jquery.js"></script>--%>
 <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/bloodhound.js"></script>--%>
 
-<%--<script type="text/javascript">--%>
-    <%--$(document).ready(function () {--%>
-        <%--Acm.initialize();--%>
-        <%--Topbar.initialize();--%>
-        <%--Sidebar.initialize();--%>
-    <%--});--%>
-<%--</script>--%>
+
 <jsp:invoke fragment="endOfBody"/>
 <%@include file="/WEB-INF/tagf/ready.tagf"%>
 </body>

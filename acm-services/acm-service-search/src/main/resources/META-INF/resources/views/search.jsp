@@ -18,8 +18,8 @@
     <script type="text/javascript" src="<c:url value='/resources/js/search/SearchService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/search/SearchCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
     <script src="<c:url value='/'/>resources/vendors/${vd_charts}/easypiechart/jquery.easy-pie-chart.js"></script>
@@ -116,7 +116,8 @@
                 <header class="header bg-white b-b clearfix">
                     <div class="row m-t-sm">
                         <div class="col-sm-12 m-b-xs">
-                            <a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default active"><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>
+                            <%--<a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default active"><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>--%>
+                            <a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default "><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
                                 <button type="button" class="btn btn-sm btn-default" title="Filter" data-toggle="dropdown"><i class="fa fa-filter"></i> <span class="caret"></span></button>
@@ -134,7 +135,7 @@
                 <section class="scrollable wrapper w-f">
                     <section class="panel panel-default">
                         <div id="divResults" style="width:98%"></div>
-
+                        <!--
                         </br></br>
                         <div class="table-responsive">
                             <table class="table table-striped m-b-none">
@@ -182,9 +183,11 @@
                                 </tbody>
                             </table>
                         </div>
+                        -->
                     </section>
                 </section>
                 <footer class="footer bg-white b-t">
+                    <!--
                     <div class="row text-center-xs">
                         <div class="col-md-6 hidden-sm">
                             <p class="text-muted m-t">Showing 20-30 of 50</p>
@@ -201,6 +204,7 @@
                             </ul>
                         </div>
                     </div>
+                    -->
                 </footer>
             </section>
         </aside>

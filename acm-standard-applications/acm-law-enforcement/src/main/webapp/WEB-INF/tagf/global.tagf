@@ -42,6 +42,8 @@
 <c:set var="vd_font_awesome"     scope="session" value="font-awesome-4.1.0"/>
 <c:set var="vd_underscore"       scope="session" value="underscore-1.6.0"/>
 
+<c:set var="acm_theme"           scope="session" value="acm-3.0/themes/basic"/>
+
 
 
 <!-- Bootstrap http://getbootstrap.com -->
@@ -50,10 +52,10 @@
 
 
 <link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_font_awesome}/css/font-awesome.min.css" />
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/css/animate.css" />
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/css/icon.css" />
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/css/font.css" />
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/css/app.css" />
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/animate.css" />
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/icon.css" />
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/font.css" />
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/app.css" />
 
 <!--[if lt IE 8]>
 <link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_ie}/css/ie.css" />
@@ -78,5 +80,6 @@
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_bootbox}/bootbox.min.js" ></script>
 
 
-<%--<script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>--%>
-<%--<script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.js" ></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.plugin.js" ></script>
+

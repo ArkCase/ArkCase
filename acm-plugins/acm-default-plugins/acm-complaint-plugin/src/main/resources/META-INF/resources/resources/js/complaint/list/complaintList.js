@@ -44,5 +44,13 @@ var ComplaintList = ComplaintList || {
         return found;
     }
 
+    ,_singleObject: false
+    ,isSingleObject: function() {
+        return this._singleObject;
+    }
+    ,setSingleObject: function(single) {
+        this._singleObject = single;
+    }
+
 };
 

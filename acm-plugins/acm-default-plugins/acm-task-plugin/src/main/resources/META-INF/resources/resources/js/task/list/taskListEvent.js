@@ -35,6 +35,11 @@ TaskList.Event = {
     }
 
     ,onPostInit: function() {
-        TaskList.Service.listTask(Acm.getUserName());
+        if (TaskList.isSingleObject()) {
+            var taskId = Task.getTaskId();
+            TaskList.Service.retrieveDetail(taskId);
+        } else {
+            TaskList.Service.listTask(Acm.getUserName());
+        }
     }
 };

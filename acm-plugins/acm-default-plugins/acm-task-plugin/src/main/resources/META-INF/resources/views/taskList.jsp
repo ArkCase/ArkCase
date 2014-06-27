@@ -6,6 +6,9 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
+    <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="taskId">${taskId}</span>
+    </div>
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
@@ -18,8 +21,8 @@
 <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListService.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>
 
-<script src="<c:url value='/resources/js/app.js'/>"></script>
-<script src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+<%--<script src="<c:url value='/resources/js/app.js'/>"></script>--%>
+<%--<script src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
 

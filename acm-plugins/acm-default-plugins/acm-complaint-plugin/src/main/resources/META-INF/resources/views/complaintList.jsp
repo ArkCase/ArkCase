@@ -6,6 +6,9 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
+    <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="complaintId">${complaintId}</span>
+    </div>
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
@@ -19,8 +22,8 @@
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListCallback.js'/>"></script>
 
 
-<script src="<c:url value='/resources/js/app.js'/>"></script>
-<script src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+<%--<script src="<c:url value='/resources/js/app.js'/>"></script>--%>
+<%--<script src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
 <!-- Summernote WYSIWYG -->
@@ -267,7 +270,7 @@
                 <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span> <a href="#" class="font-bold">Notes</a> </div>
                 <div class="panel-body max-200">
                     <ul class="list-group list-group-lg no-bg auto">
-                        <a href="#" class="list-group-item clearfix"> <span class="pull-left thumb-sm avatar m-r"> <img src="<c:url value='/resources/images/a4.png'/>" alt="John said"> <i class="on b-white bottom"></i> </span> <span class="clear"> <small class="text-muted pull-right">5m ago</small> <span>Judy Hsu</span> <small class="text-muted clear text-ellipsis">Sample notes go here.</small> </span> </a>
+                        <a href="#" class="list-group-item clearfix"> <span class="pull-left thumb-sm avatar m-r"> <img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/a4.png" alt="John said"> <i class="on b-white bottom"></i> </span> <span class="clear"> <small class="text-muted pull-right">5m ago</small> <span>Judy Hsu</span> <small class="text-muted clear text-ellipsis">Sample notes go here.</small> </span> </a>
                     </ul>
                 </div>
             </section>

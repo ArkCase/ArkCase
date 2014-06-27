@@ -20,7 +20,6 @@ public class TaskUiController
 
     private AcmPageDescriptor pageDescriptorList;
     private AcmPageDescriptor pageDescriptorWizard;
-    private AcmPageDescriptor pageDescriptorDetail;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -36,9 +35,9 @@ public class TaskUiController
     public ModelAndView openTaskDetail(@PathVariable(value = "taskId") Long taskId)
     {
         ModelAndView retval = new ModelAndView();
-        retval.setViewName("taskDetail");
+        retval.setViewName("taskList");
         retval.addObject("taskId",  taskId);
-        retval.addObject("pageDescriptor",  getPageDescriptorDetail());
+        retval.addObject("pageDescriptor",  getPageDescriptorList());
         return retval;
     }
 
@@ -68,11 +67,4 @@ public class TaskUiController
         this.pageDescriptorList = pageDescriptorList;
     }
 
-    public AcmPageDescriptor getPageDescriptorDetail() {
-        return pageDescriptorDetail;
-    }
-
-    public void setPageDescriptorDetail(AcmPageDescriptor pageDescriptorDetail) {
-        this.pageDescriptorDetail = pageDescriptorDetail;
-    }
 }
