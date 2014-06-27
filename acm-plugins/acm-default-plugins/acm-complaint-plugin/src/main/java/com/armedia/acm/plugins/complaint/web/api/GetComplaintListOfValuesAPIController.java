@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.configuration.ListOfValuesService;
 import com.armedia.acm.configuration.LookupTableDescriptor;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,20 +25,34 @@ public class GetComplaintListOfValuesAPIController
             value = "priorities",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<String> getComplaintPriorities()
+    public @ResponseBody List<String> getComplaintPriorities() throws AcmListObjectsFailedException
     {
-        List<String> priorities = getListOfValuesService().lookupListOfStringValues(getPriorityDescriptor());
-        return priorities;
+        try
+        {
+            List<String> priorities = getListOfValuesService().lookupListOfStringValues(getPriorityDescriptor());
+            return priorities;
+        }
+        catch (DataAccessException e)
+        {
+            throw new AcmListObjectsFailedException("complaint priorities", e.getMessage(), e);
+        }
     }
 
     @RequestMapping(
             value = "types",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<String> getComplaintTypes()
+    public @ResponseBody List<String> getComplaintTypes() throws AcmListObjectsFailedException
     {
-        List<String> types = getListOfValuesService().lookupListOfStringValues(getTypesDescriptor());
-        return types;
+        try
+        {
+            List<String> types = getListOfValuesService().lookupListOfStringValues(getTypesDescriptor());
+            return types;
+        }
+        catch (DataAccessException e)
+        {
+            throw new AcmListObjectsFailedException("complaint types", e.getMessage(), e);
+        }
     }
 
 

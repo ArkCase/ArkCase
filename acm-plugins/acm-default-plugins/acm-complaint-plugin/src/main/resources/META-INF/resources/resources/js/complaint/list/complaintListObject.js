@@ -8,6 +8,18 @@
 ComplaintList.Object = {
     initialize : function() {
         this.$ulComplaints      = $("#ulComplaints");
+        this.$asideComplaints   = this.$ulComplaints.closest("aside");
+
+        var items = $(document).items();
+        var complaintId = items.properties("complaintId").itemValue();
+        if (Acm.isNotEmpty(complaintId)) {
+            Complaint.setComplaintId(complaintId);
+            this.showAsideComplaints(false);
+            ComplaintList.setSingleObject(true);
+        } else {
+            ComplaintList.setSingleObject(false);
+        }
+
         this.$lnkTitle          = $("#caseTitle");
         this.$h4ComplaintNumber = $("#caseTitle").parent();
 
@@ -31,6 +43,9 @@ ComplaintList.Object = {
 
     }
 
+    ,showAsideComplaints: function(show) {
+        Acm.Object.show(this.$asideComplaints, show);
+    }
     ,hiliteSelectedItem: function() {
         var cur = Complaint.getComplaintId();
         this.$ulComplaints.find("li").each(function(index) {
@@ -74,20 +89,6 @@ ComplaintList.Object = {
         //ComplaintList.Page.buildTableIncident(c);
         ComplaintList.Page.buildTableDocDocuments(c);
         //ComplaintList.Page.buildTableRefDocuments(c);
-
-
-
-//todo: jasmine test
-//        var $c = $("<h4>beg<a>mid</a>end</h4>");
-//        var c1 = Acm.Object.getTextNodeText($c);
-//        var c2 = Acm.Object.getTextNodeText($c, 0);
-//        var c3 = Acm.Object.getTextNodeText($c, 1);
-//        Acm.Object.setTextNodeText($c, "last", -1);
-//        var c4 = Acm.Object.getTextNodeText($c);
-//
-//todo:
-// test Acm.setXxx (null, undefined, ""),
-//
     }
     ,setTextLnkTitle: function(txt) {
         Acm.Object.setText(this.$lnkTitle, txt);

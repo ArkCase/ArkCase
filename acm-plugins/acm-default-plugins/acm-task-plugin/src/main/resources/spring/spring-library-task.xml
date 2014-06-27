@@ -22,11 +22,7 @@
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
-            <props>
-                <prop key="complaint.workflow.enabled">true</prop>
-                <prop key="complaint.workflow.activiti.name">cmComplaintWorkflow</prop>
-                <prop key="complaint.workflow.trigger.eventName">com.armedia.acm.complaint.created</prop>
-            </props>
+            <props/>
         </property>
     </bean>
 

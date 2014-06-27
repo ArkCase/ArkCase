@@ -55,7 +55,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
     public void publishComplaintWorkflowEvent(
             Complaint source,
             Authentication authentication,
-            String userIpAddress)
+            String userIpAddress, boolean successful)
     {
         ComplaintApprovalWorkflowRequestedEvent requestEvent = new ComplaintApprovalWorkflowRequestedEvent(source);
         requestEvent.setIpAddress(userIpAddress);

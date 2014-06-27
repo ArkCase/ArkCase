@@ -42,6 +42,11 @@ ComplaintList.Event = {
     }
 
     ,onPostInit: function() {
-        ComplaintList.Service.listComplaint();
+        if (ComplaintList.isSingleObject()) {
+            var complaintId = Complaint.getComplaintId();
+            ComplaintList.Service.retrieveDetail(complaintId);
+        } else {
+            ComplaintList.Service.listComplaint();
+        }
     }
 };

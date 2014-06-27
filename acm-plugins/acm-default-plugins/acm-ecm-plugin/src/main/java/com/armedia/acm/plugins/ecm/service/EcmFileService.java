@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,5 +20,5 @@ public interface EcmFileService
             String targetCmisFolderId,
             String parentObjectType,
             Long parentObjectId,
-            String parentObjectName);
+            String parentObjectName) throws AcmCreateObjectFailedException;
 }

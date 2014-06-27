@@ -1,14 +1,13 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmAdHocTaskCreatedEvent;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
-import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,14 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class CreateAdHocTaskAPIController
 {
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
-    private AcmSpringMvcErrorManager errorManager;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -36,7 +33,7 @@ public class CreateAdHocTaskAPIController
             Authentication authentication,
             HttpSession httpSession,
             HttpServletResponse response
-    ) throws IOException
+    ) throws AcmCreateObjectFailedException
     {
         if ( log.isInfoEnabled() )
         {
@@ -47,25 +44,29 @@ public class CreateAdHocTaskAPIController
         {
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
 
-            publishAdHocTaskCreatedEvent(authentication, httpSession, adHocTask);
+            publishAdHocTaskCreatedEvent(authentication, httpSession, adHocTask, true);
 
             return adHocTask;
         }
         catch (AcmTaskException e)
         {
-            getErrorManager().sendErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage(), response);
+            // gen up a fake task so we can audit the failure
+            AcmTask fakeTask = new AcmTask();
+            fakeTask.setTaskId(null);  // no object id since the task could not be created
+            publishAdHocTaskCreatedEvent(authentication, httpSession, fakeTask, false);
+            throw new AcmCreateObjectFailedException("task", e.getMessage(), e);
         }
-
-        // Spring MVC has already flushed the response output stream during sendErrorResponse, but Java
-        // makes us return something.
-        return null;
     }
 
-    protected void publishAdHocTaskCreatedEvent(Authentication authentication, HttpSession httpSession, AcmTask completed)
+    protected void publishAdHocTaskCreatedEvent(
+            Authentication authentication,
+            HttpSession httpSession,
+            AcmTask created,
+            boolean succeeded)
     {
-        AcmAdHocTaskCreatedEvent event = new AcmAdHocTaskCreatedEvent(completed);
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-        getTaskEventPublisher().publishTaskEvent(event, authentication, ipAddress);
+        AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(created, "create", authentication.getName(), succeeded, ipAddress);
+        getTaskEventPublisher().publishTaskEvent(event);
     }
 
 
@@ -89,13 +90,4 @@ public class CreateAdHocTaskAPIController
         this.taskEventPublisher = taskEventPublisher;
     }
 
-    public AcmSpringMvcErrorManager getErrorManager()
-    {
-        return errorManager;
-    }
-
-    public void setErrorManager(AcmSpringMvcErrorManager errorManager)
-    {
-        this.errorManager = errorManager;
-    }
 }

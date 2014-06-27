@@ -11,19 +11,16 @@
     <bean id="completeTaskAPIController" class="com.armedia.acm.plugins.task.web.api.CompleteTaskAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
-        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
     </bean>
 
     <bean id="createAdHocTaskAPIController" class="com.armedia.acm.plugins.task.web.api.CreateAdHocTaskAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
-        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
     </bean>
 
     <bean id="findTaskByIdAPIController" class="com.armedia.acm.plugins.task.web.api.FindTaskByIdAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
-        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
     </bean>
 
 </beans>

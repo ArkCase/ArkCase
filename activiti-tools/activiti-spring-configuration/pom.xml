@@ -3,7 +3,7 @@
     <parent>
         <artifactId>activiti-tools</artifactId>
         <groupId>com.armedia</groupId>
-        <version>1.7</version>
+        <version>1.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -44,6 +44,21 @@
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-spring</artifactId>
+        </dependency>
+
+        <!-- testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>jdbc</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

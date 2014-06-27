@@ -11,7 +11,7 @@
 <body>
     <section id="content" class="m-t-lg wrapper-md animated fadeInUp">
         <div class="container aside-xl ">
-            <a class="navbar-brand block" href="portal.html"><img src="<c:url value='/resources/images/logo.png'/>" ></a>
+            <a class="navbar-brand block" href="portal.html"><img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/logo.png" ></a>
             <section class="m-b-lg">
                 <header class="wrapper text-center">
                     <strong>Enter your username and password.</strong>
@@ -53,9 +53,9 @@
             </p>
         </div>
     </footer>
-    <script src="<c:url value='/resources/js/app.js'/>"></script>
-    <script src="<c:url value='/resources/js/slimscroll/jquery.slimscroll.min.js'/>"></script>
-    <script src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+    <%--<script src="<c:url value='/resources/js/app.js'/>"></script>--%>
+    <%--<script src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
+    <script src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
 </body>
 </html>

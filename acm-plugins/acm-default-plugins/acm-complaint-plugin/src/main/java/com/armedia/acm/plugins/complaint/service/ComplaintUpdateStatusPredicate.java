@@ -17,7 +17,11 @@ public class ComplaintUpdateStatusPredicate implements Predicate
     @Override
     public boolean evaluate(Object object)
     {
-        log.debug("type of event: " + object.getClass().toString());
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("type of event: " + object.getClass().toString());
+        }
+
         if ( ! ( object instanceof AcmBusinessProcessEvent ) )
         {
             return false;

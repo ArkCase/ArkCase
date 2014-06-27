@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.FileUpload;
@@ -47,7 +48,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String targetCmisFolderId,
             String parentObjectType,
             Long parentObjectId,
-            String parentObjectName)
+            String parentObjectName) throws AcmCreateObjectFailedException
     {
         if ( log.isDebugEnabled() )
         {
@@ -113,7 +114,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 applicationEventPublisher.publishEvent(event);
             }
             log.error("Could not upload file: " + e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
         }
     }
 

@@ -12,7 +12,7 @@ ComplaintList.Callback = {
     }
 
     ,EVENT_LIST_RETURNED		: "complaint-list-list-returned"
-    ,EVENT_DETAIL_RETRIEVED		: "complaint-list-retrieved"
+    ,EVENT_DETAIL_RETRIEVED		: "complaint-list-detail-retrieved"
 
     ,onListReturned : function(Callback, response) {
         var success = false;

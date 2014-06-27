@@ -1,35 +1,40 @@
 package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmFindTaskByIdEvent;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
-import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * Created by armdev on 6/4/14.
- */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {
+        "classpath:/spring/spring-web-acm-web.xml",
+        "classpath:/spring/spring-library-task-plugin-test.xml"
+})
 public class FindTaskByIdAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -39,7 +44,10 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
 
     private TaskDao mockTaskDao;
     private TaskEventPublisher mockTaskEventPublisher;
-    private AcmSpringMvcErrorManager mockErrorManager;
+    private Authentication mockAuthentication;
+
+    @Autowired
+    private ExceptionHandlerExceptionResolver exceptionResolver;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -49,19 +57,18 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         mockTaskDao = createMock(TaskDao.class);
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);
         mockHttpSession = new MockHttpSession();
-        mockErrorManager = createMock(AcmSpringMvcErrorManager.class);
+        mockAuthentication = createMock(Authentication.class);
 
         unit = new FindTaskByIdAPIController();
 
         unit.setTaskDao(mockTaskDao);
         unit.setTaskEventPublisher(mockTaskEventPublisher);
-        unit.setErrorManager(mockErrorManager);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
     @Test
-    public void findComplaintById() throws Exception
+    public void findTaskById() throws Exception
     {
         String ipAddress = "ipAddress";
         String title = "The Test Title";
@@ -75,15 +82,19 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
 
         expect(mockTaskDao.findById(taskId)).andReturn(returned);
 
-        Capture<AcmFindTaskByIdEvent> eventRaised = new Capture<>();
-        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised), isNull(Authentication.class), eq(ipAddress));
+        Capture<AcmApplicationTaskEvent> eventRaised = new Capture<>();
+        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised));
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/task/byId/{taskId}", taskId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .session(mockHttpSession))
+                        .session(mockHttpSession)
+                        .principal(mockAuthentication))
                 .andReturn();
 
         verifyAll();
@@ -100,13 +111,13 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         assertNotNull(fromJson);
         assertEquals(returned.getTitle(), fromJson.getTitle());
 
-        AcmFindTaskByIdEvent event = eventRaised.getValue();
+        AcmApplicationTaskEvent event = eventRaised.getValue();
         assertTrue(event.isSucceeded());
         assertEquals(taskId, event.getObjectId());
     }
 
     @Test
-    public void findComplaintById_notFound() throws Exception
+    public void findTaskById_exception() throws Exception
     {
         Long taskId = 500L;
         String ipAddress = "ipAddress";
@@ -115,24 +126,26 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
 
         expect(mockTaskDao.findById(taskId)).andThrow(new AcmTaskException());
 
-        Capture<AcmFindTaskByIdEvent> eventRaised = new Capture<>();
-        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised), isNull(Authentication.class), eq(ipAddress));
-        mockErrorManager.sendErrorResponse(
-                eq(HttpStatus.INTERNAL_SERVER_ERROR),
-                anyObject(String.class),
-                anyObject(HttpServletResponse.class));
+        Capture<AcmApplicationTaskEvent> eventRaised = new Capture<>();
+        mockTaskEventPublisher.publishTaskEvent(capture(eventRaised));
+
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
         replayAll();
 
         mockMvc.perform(
                 get("/api/v1/plugin/task/byId/{taskId}", taskId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .session(mockHttpSession));
+                        .principal(mockAuthentication)
+                        .session(mockHttpSession))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
 
         verifyAll();
 
-        AcmFindTaskByIdEvent event = eventRaised.getValue();
+        AcmApplicationTaskEvent event = eventRaised.getValue();
         assertFalse(event.isSucceeded());
         assertEquals(taskId, event.getObjectId());
+
     }
 }

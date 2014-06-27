@@ -46,7 +46,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
     private MuleClient mockMuleClient;
     private MuleMessage mockMuleMessage;
     private ContentStream mockContentStream;
-    private InputStream mockInputStream;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -61,7 +60,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         mockMuleClient = createMock(MuleClient.class);
         mockMuleMessage = createMock(MuleMessage.class);
         mockContentStream = createMock(ContentStream.class);
-        mockInputStream = createMock(InputStream.class);
 
         unit = new FileDownloadAPIController();
 

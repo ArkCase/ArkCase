@@ -7,14 +7,25 @@
  */
 TaskList.Object = {
     initialize : function() {
-        this.$ulTasks     = $("#ulTasks");
+        this.$ulTasks      = $("#ulTasks");
+        this.$asideTasks   = this.$ulTasks.closest("aside");
+
+        var items = $(document).items();
+        var taskId = items.properties("taskId").itemValue();
+        if (Acm.isNotEmpty(taskId)) {
+            Task.setTaskId(taskId);
+            this.showAsideTasks(false);
+            TaskList.setSingleObject(true);
+        } else {
+            TaskList.setSingleObject(false);
+        }
 
         this.$btnComplete               = $("button[data-title='Complete']");
         this.$btnComplete.click(function(e) {TaskList.Event.onClickBtnComplete(e);});
 
-        this.$lnkTitle    = $("#caseTitle");
-        this.$h4TitleDate = $("#caseTitle").parent();
-        this.$divDetails  = $(".taskDetails");
+        this.$lnkTitle                  = $("#caseTitle");
+        this.$h4TitleDate               = $("#caseTitle").parent();
+        this.$divDetails                = $(".taskDetails");
 
         this.$edtTaskId                 = $("#taskId");
         this.$edtTitle                  = $("#title");
@@ -34,6 +45,9 @@ TaskList.Object = {
     }
 
 
+    ,showAsideTasks: function(show) {
+        Acm.Object.show(this.$asideTasks, show);
+    }
 //=======================================
     ,setValueEdtTitle: function(val) {
         return Acm.Object.setPlaceHolderInput(this.$edtTitle, val);

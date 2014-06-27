@@ -98,71 +98,6 @@ securitySchemes:
       
         400:
           description: Usually means the request body was invalid (did not match the expected JSON format).  The response body will be empty.
-    /details/{complaintId}:
-      post:
-        description: Update complaint details, including title, description text, type, etc.
-        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
-        body:
-          application/json:
-            example: |
-              {
-                "incidentDate": "2014-04-28",
-                // complaintType must be a value from the "GET types" service
-                "complaintType": "Agricultural",
-                // complaintPriority must be a value from the "GET priorities" service
-                "priority": "expedite",
-                "complaintTitle": "Sample Title",
-                "details": "<strong>Sample Text, properly encoding HTML within JSON</strong>"
-              }
-        responses:
-          200:
-            description: Indicates the details were saved.  Response is the complete Complaint JSON.
-            body:
-              application/json:
-                example: |
-                  {
-                    "complaintId": 555,
-                    "complaintNumber": "20140424_555",
-                    "complaintStatus": "DRAFT",
-                    "incidentDate": "2014-04-28",
-                    "complaintType": "Agricultural",
-                    "priority": "expedite",
-                    "complaintTitle": "Sample Title",
-                    "details": "<strong>Sample Text, properly encoding HTML within JSON</strong>"
-                    "originator": {
-                      "id": 556,
-                      "status": "ACTIVE",
-                      "title": "Mr.",
-                      "givenName": "John",
-                      "familyName": "Doe",
-                      "company": "Contoso",
-                      "addresses": [
-                        {
-                          "id": 557,
-                          "type": "home",
-                          "streetAddress": "123 Main St.",
-                          "streetAddress2": null,
-                          "city": "Peoria",
-                          "state": "IL",
-                          "zip": "12345"
-                        }
-                      ],
-                      "contactMethods": [
-                        {
-                          "id": 558,
-                          "type": "Mobile Phone",
-                          "value": "123-456-7890"
-                        },
-                        {
-                          "id": 559,
-                          "type": "Personal E-mail",
-                          "value": "john.doe@gmail.com"
-                        }
-                      ],
-                      "securityTags": ["Anonymous", "Confidential", "Top Secret"]
-                    }
-                  }
-    
     /types:
       description: Manage the list of complaint types.
       get:
@@ -373,6 +308,102 @@ securitySchemes:
             body:
               text/plain:
                 example: Task with ID '92838' does not exist.
+  /search:
+    /quickSearch:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      get:
+        description: Query the quickSearch search index.  The Quicksearch index contains only selected metadata and is smaller than the full index; so it should be faster to search.
+        queryParameters:
+          q:
+            description: The query string; must be a valid Apache Solr query string.
+            type: string
+            required: true
+          s:
+            description: The sort order.  The sort key must be a field in the Solr quick search index.  The key must be followed by " asc" or " desc".  Optional; default null.
+            type: string
+            required: false
+            example: last_modified asc
+          start:
+            description: The first matching result to be returned.  Useful for pagination.  Optional; default 0.
+            type: number
+            required: false
+            default: 0
+          n:
+            description: Number of results to be returned.  Useful for pagination.  Optional; default 10.
+            type: number
+            required: false
+            default: 10
+        responses:
+          200:
+            description: Normal response; includes either search results or an error message from Apache Solr.  The example response below includes both a "response" JSON object and an "error" JSON object.  Real responses only have one or the other; a "response" object for a successful search, and an "error" object if SOLR could not process the search.  
+            body:
+              application/json:
+                example: |
+                  {
+                    "responseHeader": {
+                      // 0 == success; there will be a response object (see below).  Any other value 
+                      // is an error (there will be an error object).
+                      "status": 0,
+                      "QTime": 0,
+                      "params": {
+                        "indent": "true",
+                        "q": "*:*",
+                        "_": "1403288137744",
+                        "wt": "json",
+                        "rows": "2"
+                      }
+                    },
+                    // NOTE: "response" object only exists if the status was 0.
+                    "response": {
+                      "numFound": 61,
+                      "start": 0,
+                      "docs": [
+                        {
+                          "id": "12-Complaint",
+                          "status_s": "DRAFT",
+                          "author": "ann-acm",
+                          "author_s": "ann-acm",
+                          "modifier_s": "ann-acm",
+                          "title": [
+                            "Test 20140502_12"
+                          ],
+                          "last_modified": "2014-05-02T11:30:27Z",
+                          "create_dt": "2014-05-02T11:30:27Z",
+                          "name": "20140502_12",
+                          "object_id_s": "12",
+                          "object_type_s": "Complaint",
+                          "_version_": 1471373882636107800
+                        },
+                        {
+                          "id": "14-Complaint",
+                          "status_s": "DRAFT",
+                          "author": "ann-acm",
+                          "author_s": "ann-acm",
+                          "modifier_s": "ann-acm",
+                          "title": [
+                            "Test 20140502_14"
+                          ],
+                          "last_modified": "2014-05-02T11:39:21Z",
+                          "create_dt": "2014-05-02T11:39:21Z",
+                          "name": "20140502_14",
+                          "object_id_s": "14",
+                          "object_type_s": "Complaint",
+                          "_version_": 1471373882844774400
+                        }
+                      ]
+                    }
+                    // NOTE: "error" object only exists if the status was NOT 0.
+                    "error": {
+                      "msg": "Can't determine a Sort Order (asc or desc) in sort spec 'sdf', pos=3",
+                      "code": 400
+                    }
+                  }
+          500:
+            description: The server could not process the search request (Apache Solr is down, or some other error).
+            body:
+              text/plain:
+                example:
+                  Server encountered an exception.
 /users:
   /withPrivilege/{privilege}:
     securedBy: [ spring_security_form_auth, spring_security_basic_auth ]

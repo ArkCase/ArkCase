@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
-import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
@@ -25,14 +25,13 @@ public class CreateComplaintAPIController
 
     private SaveComplaintTransaction complaintTransaction;
     private ComplaintEventPublisher eventPublisher;
-    private ComplaintDao complaintDao;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Complaint createComplaint(
             @RequestBody Complaint in,
             Authentication auth
-    )
+    ) throws AcmCreateObjectFailedException
     {
         if ( log.isTraceEnabled() )
         {
@@ -60,14 +59,7 @@ public class CreateComplaintAPIController
             log.error("Could not save complaint: " + e.getMessage(), e);
             getEventPublisher().publishComplaintEvent(in, auth, isInsert, false);
 
-            if ( !isInsert )
-            {
-                Complaint existing = getComplaintDao().find(Complaint.class, in.getComplaintId());
-                // TODO: REST-based exception handling (e.g. send a proper http response code)
-                return existing;
-            }
-
-            return in;
+            throw new AcmCreateObjectFailedException("complaint", e.getMessage(), e);
         }
 
     }
@@ -92,13 +84,4 @@ public class CreateComplaintAPIController
         this.eventPublisher = eventPublisher;
     }
 
-    public ComplaintDao getComplaintDao()
-    {
-        return complaintDao;
-    }
-
-    public void setComplaintDao(ComplaintDao complaintDao)
-    {
-        this.complaintDao = complaintDao;
-    }
 }

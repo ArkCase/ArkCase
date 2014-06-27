@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>1.7</version>
+        <version>1.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,6 +14,7 @@
     <description>Core services used by all ACM implementations.</description>
     <modules>
         <module>acm-service-users</module>
+        <module>acm-service-search</module>
     </modules>
 
 

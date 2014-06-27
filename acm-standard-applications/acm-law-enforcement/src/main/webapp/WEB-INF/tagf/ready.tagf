@@ -1,0 +1,42 @@
+<script type="text/javascript">
+
+jQuery(document).ready(function() {
+    if (typeof Acm != "undefined") {
+        Acm.initialize();
+    }
+    if (typeof Topbar != "undefined") {
+        Topbar.initialize();
+    }
+    if (typeof Sidebar != "undefined") {
+        Sidebar.initialize();
+    }
+    if (typeof Dashboard != "undefined") {
+        Dashboard.initialize();
+    }
+    if (typeof Complaint != "undefined") {
+        Complaint.initialize();
+    }
+    if (typeof ComplaintWizard != "undefined") {
+        ComplaintWizard.initialize();
+    }
+    if (typeof ComplaintList != "undefined") {
+        ComplaintList.initialize();
+    }
+    if (typeof Task != "undefined") {
+        Task.initialize();
+    }
+    if (typeof TaskWizard != "undefined") {
+        TaskWizard.initialize();
+    }
+    if (typeof TaskList != "undefined") {
+        TaskList.initialize();
+    }
+    if (typeof Search != "undefined") {
+        Search.initialize();
+    }
+
+
+
+});
+
+</script>

@@ -400,6 +400,7 @@ ComplaintWizard.Object = {
                     rc.Records[0].familyName = c.originator.familyName;
                     rc.Records[0].type = "";
                     rc.Records[0].description = "";
+                    //rc.Records[0].description = "first init line\r\nsecond init line";
                     return rc;
 //                    return {
 //                        "Result": "OK"

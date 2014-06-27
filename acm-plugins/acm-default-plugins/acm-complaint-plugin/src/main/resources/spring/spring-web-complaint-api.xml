@@ -6,19 +6,12 @@
     <bean id="createComplaintAPIController" class="com.armedia.acm.plugins.complaint.web.api.CreateComplaintAPIController">
         <property name="complaintTransaction" ref="saveComplaintTransaction"/>
         <property name="eventPublisher" ref="complaintEventPublisher"/>
-        <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 
     <bean id="getComplaintTypesAPIController" class="com.armedia.acm.plugins.complaint.web.api.GetComplaintListOfValuesAPIController">
         <property name="listOfValuesService" ref="listOfValuesService"/>
         <property name="priorityDescriptor" ref="complaintPriorityTable"/>
         <property name="typesDescriptor" ref="complaintTypeTable"/>
-    </bean>
-
-    <bean id="saveComplaintDetailsAPIController" class="com.armedia.acm.plugins.complaint.web.api.SaveComplaintDetailsAPIController">
-        <property name="complaintDao" ref="acmComplaintDao"/>
-        <property name="eventPublisher" ref="complaintEventPublisher"/>
-        <property name="complaintTransaction" ref="saveComplaintTransaction"/>
     </bean>
 
     <bean id="addComplaintFileController" class="com.armedia.acm.plugins.complaint.web.api.AddFileAPIController">
@@ -33,13 +26,11 @@
 
     <bean id="complaintWorkflowAPIController" class="com.armedia.acm.plugins.complaint.web.api.ComplaintWorkflowAPIController">
         <property name="eventPublisher" ref="complaintEventPublisher"/>
-        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
     </bean>
 
     <bean id="findComplaintByIdAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintByIdAPIController">
         <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="eventPublisher" ref="complaintEventPublisher"/>
-        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
     </bean>
 
 

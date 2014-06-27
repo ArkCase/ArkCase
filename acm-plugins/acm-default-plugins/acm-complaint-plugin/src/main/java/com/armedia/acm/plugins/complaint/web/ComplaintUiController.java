@@ -15,7 +15,6 @@ public class ComplaintUiController
 
     private AcmPageDescriptor pageDescriptorWizard;
     private AcmPageDescriptor pageDescriptorList;
-    private AcmPageDescriptor pageDescriptorDetail;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -31,9 +30,9 @@ public class ComplaintUiController
     public ModelAndView openComplaintDetail(@PathVariable(value = "complaintId") Long complaintId)
     {
         ModelAndView retval = new ModelAndView();
-        retval.setViewName("complaintDetail");
+        retval.setViewName("complaintList");
         retval.addObject("complaintId", complaintId);
-        retval.addObject("pageDescriptor",  getPageDescriptorDetail());
+        retval.addObject("pageDescriptor",  getPageDescriptorList());
         return retval;
     }
 
@@ -63,11 +62,4 @@ public class ComplaintUiController
         this.pageDescriptorList = pageDescriptorList;
     }
 
-    public AcmPageDescriptor getPageDescriptorDetail() {
-        return pageDescriptorDetail;
-    }
-
-    public void setPageDescriptorDetail(AcmPageDescriptor pageDescriptorDetail) {
-        this.pageDescriptorDetail = pageDescriptorDetail;
-    }
 }

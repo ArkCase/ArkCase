@@ -5,12 +5,6 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
-
-    <script type="text/javascript">
-    $(document).ready(function () {
-        Dashboard.initialize();
-    });
-</script>
 </jsp:attribute>
 
 
@@ -23,19 +17,19 @@
     <script type="text/javascript" src="<c:url value='/resources/js/dashboard/dashboardService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/dashboard/dashboardCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/slimscroll/jquery.slimscroll.min.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
-    <script src="<c:url value='/resources/js/charts/easypiechart/jquery.easy-pie-chart.js'/>"></script>
-    <script src="<c:url value='/resources/js/charts/sparkline/jquery.sparkline.min.js'/>"></script>
-    <script src="<c:url value='/resources/js/charts/flot/jquery.flot.min.js'/>"></script>
-    <script src="<c:url value='/resources/js/charts/flot/jquery.flot.tooltip.min.js'/>"></script>
-    <script src="<c:url value='/resources/js/charts/flot/jquery.flot.spline.js'/>"></script>
-    <script src="<c:url value='/resources/js/charts/flot/jquery.flot.pie.min.js'/>"></script>
-    <script src="<c:url value='/resources/js/charts/flot/jquery.flot.resize.js'/>"></script>
-    <script src="<c:url value='/resources/js/charts/flot/jquery.flot.grow.js'/>"></script>
-    <script src="<c:url value='/resources/js/charts/flot/demo.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/easypiechart/jquery.easy-pie-chart.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/sparkline/jquery.sparkline.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.tooltip.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.spline.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.pie.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.resize.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.grow.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/demo.js"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -43,9 +37,18 @@
 <section class="vbox">
 <section class="scrollable padder">
 <section class="row m-b-md">
-    <div class="col-sm-12">
+    <div class="col-sm-6">
         <h3 class="m-b-xs text-black">${pageDescriptor.descShort}</h3>
         <small>Welcome back, ${acm_user.fullName}</small> </div>
+    <div class="col-sm-6 text-right text-left-xs m-t-md">
+        <div class="btn-group"> <a class="btn btn-rounded btn-default b-2x dropdown-toggle" data-toggle="dropdown">Add Widgets <span class="caret"></span></a>
+            <ul class="dropdown-menu text-left pull-right">
+                <li><a href="#">Widget 1</a></li>
+                <li><a href="#">Widget 2</a></li>
+                <li><a href="#">Widget 3</a></li>
+            </ul>
+        </div>
+    </div>
 </section>
 <div class="row">
     <div class="col-sm-12">
@@ -59,72 +62,27 @@
         </div>
     </div>
 </div>
-<!-- jwu commented out temporarily for demo
 <div class="row">
-<div class="col-md-6">
-    <section class="panel b-a">
-        <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="complaints.html" class="font-bold">My Complaints</a> </div>
-        <div class="panel-body max-200 no-padder">
-            <table class="table table-striped th-sortable table-hover">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Priority</th>
-                    <th>Due</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="odd gradeA">
-                    <td>[ID]</td>
-                    <td>[Title]</td>
-                    <td>[Priority]</td>
-                    <td>[Due]</td>
-                    <td>[Status]</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-</div>
-<div class="col-md-6">
-    <section class="panel b-a">
-        <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="cases.html" class="font-bold">My Cases</a> </div>
-        <div class="panel-body max-200 no-padder">
-            <table class="table table-striped th-sortable table-hover">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Priority</th>
-                    <th>Due</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="odd gradeA">
-                    <td>[ID]</td>
-                    <td>[Title]</td>
-                    <td>[Priority]</td>
-                    <td>[Due]</td>
-                    <td>[Status]</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-</div>
-
-</div>
--->
-
-
-<div class="row">
-    <!-- jwu commented out temporarily for demo
     <div class="col-md-6">
         <section class="panel b-a">
-            <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="documents.html" class="font-bold">My Documents</a> </div>
+            <div class="panel-heading b-b">
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Filter</span> <span class="caret"></span> </button>
+                        <ul class="dropdown-menu dropdown-select">
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 1</a></li>
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 2</a></li>
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 3</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <a href="complaints.html" class="font-bold">My Complaints</a> </div>
             <div class="panel-body max-200 no-padder">
                 <table class="table table-striped th-sortable table-hover">
                     <thead>
@@ -149,10 +107,116 @@
             </div>
         </section>
     </div>
-    -->
     <div class="col-md-6">
         <section class="panel b-a">
-            <div class="panel-heading b-b"> <span class="badge pull-right">0</span> <a href="tasks.html" class="font-bold">My Tasks</a> </div>
+            <div class="panel-heading b-b">
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Filter</span> <span class="caret"></span> </button>
+                        <ul class="dropdown-menu dropdown-select">
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 1</a></li>
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 2</a></li>
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 3</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <a href="cases.html" class="font-bold">My Cases</a> </div>
+            <div class="panel-body max-200 no-padder">
+                <table class="table table-striped th-sortable table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Priority</th>
+                        <th>Due</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="odd gradeA">
+                        <td>[ID]</td>
+                        <td>[Title]</td>
+                        <td>[Priority]</td>
+                        <td>[Due]</td>
+                        <td>[Status]</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <section class="panel b-a">
+            <div class="panel-heading b-b">
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Filter</span> <span class="caret"></span> </button>
+                        <ul class="dropdown-menu dropdown-select">
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 1</a></li>
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 2</a></li>
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 3</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <a href="documents.html" class="font-bold">My Documents</a> </div>
+            <div class="panel-body max-200 no-padder">
+                <table class="table table-striped th-sortable table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Priority</th>
+                        <th>Due</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="odd gradeA">
+                        <td>[ID]</td>
+                        <td>[Title]</td>
+                        <td>[Priority]</td>
+                        <td>[Due]</td>
+                        <td>[Status]</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <div class="col-md-6">
+        <section class="panel b-a">
+            <div class="panel-heading b-b">
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Filter</span> <span class="caret"></span> </button>
+                        <ul class="dropdown-menu dropdown-select">
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 1</a></li>
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 2</a></li>
+                            <li><a href="#">
+                                <input type="radio" name="b">
+                                Filter 3</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <a href="tasks.html" class="font-bold">My Tasks</a> </div>
             <div class="panel-body max-200 no-padder">
                 <table class="table table-striped th-sortable table-hover" id="tabMyTasks">
                     <thead>
@@ -165,32 +229,26 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!--
-                    <tr class="odd gradeA">
-                        <td>[ID]</td>
-                        <td>[Title]</td>
-                        <td>[Priority]</td>
-                        <td>[Due]</td>
-                        <td>[Status]</td>
-                    </tr>
-                    -->
+                    <%--<tr class="odd gradeA">--%>
+                        <%--<td>[ID]</td>--%>
+                        <%--<td>[Title]</td>--%>
+                        <%--<td>[Priority]</td>--%>
+                        <%--<td>[Due]</td>--%>
+                        <%--<td>[Status]</td>--%>
+                    <%--</tr>--%>
                     </tbody>
                 </table>
             </div>
         </section>
     </div>
-
 </div>
-
-
-
 <div class="row bg-light dk m-b">
     <div class="col-md-6 dker">
         <section>
             <header class="font-bold padder-v">
                 <div class="pull-right">
                     <div class="btn-group">
-                        <button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Week</span> <span class="caret"></span> </button>
+                        <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Week</span> <span class="caret"></span> </button>
                         <ul class="dropdown-menu dropdown-select">
                             <li><a href="#">
                                 <input type="radio" name="b">
@@ -203,7 +261,7 @@
                                 Day</a></li>
                         </ul>
                     </div>
-                    <a href="#" class="btn btn-default btn-icon btn-rounded btn-sm">Go</a> </div>
+                </div>
                 Documents In Workflow </header>
             <div class="panel-body">
                 <div id="flot-sp1ine" style="height:210px"></div>
@@ -219,7 +277,7 @@
     <div class="col-md-6">
         <header class="font-bold padder-v">
             <div class="btn-group pull-right">
-                <button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Last 24 Hours</span> <span class="caret"></span> </button>
+                <button data-toggle="dropdown" class="btn btn-xs btn-rounded btn-default dropdown-toggle"> <span class="dropdown-label">Last 24 Hours</span> <span class="caret"></span> </button>
                 <ul class="dropdown-menu dropdown-select">
                     <li><a href="#">
                         <input type="radio" name="a">

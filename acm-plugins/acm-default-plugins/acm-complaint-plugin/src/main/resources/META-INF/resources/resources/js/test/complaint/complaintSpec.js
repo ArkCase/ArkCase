@@ -6,6 +6,7 @@
 describe("Complaint", function()
 {
     it("Complaint.Initialize", function() {
+        expect(true).toBe(true);
     });
 
 });

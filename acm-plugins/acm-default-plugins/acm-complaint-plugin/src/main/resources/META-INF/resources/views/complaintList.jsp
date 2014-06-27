@@ -6,13 +6,9 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            Complaint.initialize();
-            ComplaintList.initialize();
-        });
-    </script>
+    <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="complaintId">${complaintId}</span>
+    </div>
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
@@ -25,24 +21,22 @@
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListCallback.js'/>"></script>
 
-    <script src="<c:url value='/resources/js/app.js'/>"></script>
-    <script src="<c:url value='/resources/js/slimscroll/jquery.slimscroll.min.js'/>"></script>
-    <script src="<c:url value='/resources/js/app.plugin.js'/>"></script>
 
-    <!-- Summernote WYSIWYG -->
-    <link rel="stylesheet" href="<c:url value='/resources/js/summernote0.5.1/summernote.css'/>" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/resources/js/summernote0.5.1/summernote.js'/>"></script>
+<%--<script src="<c:url value='/resources/js/app.js'/>"></script>--%>
+<%--<script src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
-    <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/resources/js/jtable2.4.0/themes/lightcolor/blue/jtable.css" type="text/css'/>"/>
-    <script type="text/javascript" src="<c:url value='/resources/js/jtable2.4.0/jquery.jtable.js'/>"></script>
+<!-- Summernote WYSIWYG -->
+<link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
 
+<!-- JTable -->
+<link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
 
 <!-- X-Editable -->
-
-<link href="<c:url value='/resources/js/x-editable1.5.1/css/bootstrap-editable.css" rel="stylesheet'/>">
-<script src="<c:url value='/resources/js/x-editable1.5.1/js/bootstrap-editable.min.js'/>"></script>
-<script src="<c:url value='/resources/js/typeahead.js'/>"></script>
+<link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
+<script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
 <script>
     $.fn.editable.defaults.url = '/post';
     $(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); });
@@ -276,7 +270,7 @@
                 <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span> <a href="#" class="font-bold">Notes</a> </div>
                 <div class="panel-body max-200">
                     <ul class="list-group list-group-lg no-bg auto">
-                        <a href="#" class="list-group-item clearfix"> <span class="pull-left thumb-sm avatar m-r"> <img src="<c:url value='/resources/images/a4.png'/>" alt="John said"> <i class="on b-white bottom"></i> </span> <span class="clear"> <small class="text-muted pull-right">5m ago</small> <span>Judy Hsu</span> <small class="text-muted clear text-ellipsis">Sample notes go here.</small> </span> </a>
+                        <a href="#" class="list-group-item clearfix"> <span class="pull-left thumb-sm avatar m-r"> <img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/a4.png" alt="John said"> <i class="on b-white bottom"></i> </span> <span class="clear"> <small class="text-muted pull-right">5m ago</small> <span>Judy Hsu</span> <small class="text-muted clear text-ellipsis">Sample notes go here.</small> </span> </a>
                     </ul>
                 </div>
             </section>

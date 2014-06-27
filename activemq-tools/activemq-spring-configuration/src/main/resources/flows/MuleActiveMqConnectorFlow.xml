@@ -6,7 +6,7 @@
       xsi:schemaLocation="
           http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
           http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd"
-      version="CE-3.4.0">
+      version="CE-3.5.0">
 
     <jms:activemq-connector
             name="ActiveMQ-ACM"
