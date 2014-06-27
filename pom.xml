@@ -450,14 +450,17 @@
             </plugin>
 
             <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-jgitflow-plugin</artifactId>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
                 <version>${maven-jgitflow-plugin.version}</version>
                 <configuration>
                     <flowInitContext>
                         <versionTagPrefix>acm</versionTagPrefix>
                     </flowInitContext>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <keepBranch>true</keepBranch>
+                    <noReleaseBuild>true</noReleaseBuild>
+                    <pushReleases>true</pushReleases>
                 </configuration>
             </plugin>
         </plugins>
