@@ -1,7 +1,7 @@
 <header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
     <div class="navbar-header aside dk text-center">
         <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a>
-        <a href="portal.html" class="navbar-brand"><img src="<c:url value='/resources/images/armedia.png'/>" class="m-r-sm"></a></div>
+        <a href="portal.html" class="navbar-brand"><img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/armedia.png" class="m-r-sm"></a></div>
     <ul class="nav navbar-nav hidden-xs">
         <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
             <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">

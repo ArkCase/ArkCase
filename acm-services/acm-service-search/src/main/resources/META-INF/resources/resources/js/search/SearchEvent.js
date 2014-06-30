@@ -22,11 +22,8 @@ alert("go");
 
 
     ,onPostInit: function() {
-        //var term = Acm.getUrlParameter("term");
-        var term = Topbar.Object.getValueEdtSearch();
+        var term = Topbar.Object.getQuickSearchTerm();
         if (Acm.isNotEmpty(term)) {
-            //Search.Object.showSubNav(false);
-            Search.setQuickSearchTerm(term);
             Search.Object.reloadJTableResults();
         }
     }

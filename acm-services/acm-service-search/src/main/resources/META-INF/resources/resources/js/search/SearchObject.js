@@ -39,6 +39,9 @@ Search.Object = {
 //        this.$tabResults.find("tbody:last").append(row);
 //    }
 
+    ,setTableTitle: function(title) {
+        Acm.Object.setValue($(".jtable-title-text"), title);
+    }
     ,reloadJTableResults: function() {
         var $s = this.$divResults;
         $s.jtable('load');
@@ -64,7 +67,7 @@ Search.Object = {
                         return Search.EMPTY_RESULT; //[];
                     }
 
-                    var term = Search.getQuickSearchTerm();
+                    var term = Topbar.Object.getQuickSearchTerm();
                     if (Acm.isEmpty(term)) {
                         return Search.EMPTY_RESULT;
                     }

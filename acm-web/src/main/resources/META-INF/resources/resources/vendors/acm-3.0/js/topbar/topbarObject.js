@@ -8,24 +8,27 @@
 Topbar.Object = {
     initialize : function() {
         this.$formSearch = $("form[role='search']");
+        this.$edtSearch = this.$formSearch.find("input.typeahead");
+        this.$btnSearch = this.$formSearch.find("button[type='submit']");
+
         this.$formSearch.submit(function() {Topbar.Event.onSubmitFormSearch(this);});
+        this.$btnSearch.click(function(e) {Topbar.Event.onClickBtnSearch(e);});
 
         this.$formSearch.attr("method", "get");
-        this.$edtSearch = this.$formSearch.find("input.typeahead");
-
-        var url = Acm.getContextPath() + "/plugin/search"
         var term = this.getQuickSearchTerm();
-        if (Acm.isNotEmpty(term)) {
-            url += "?term=" + term;
-            this.setValueEdtSearch(term);
-            this.setQuickSearchTerm(null);
-        }
-        this.$formSearch.attr("action", url);
+        this.setActionFormSearch(term);
 
         this.useTypeAhead2();
     }
 
 
+    ,setActionFormSearch: function(term) {
+        var url = Acm.getContextPath() + "/plugin/search"
+        if (Acm.isNotEmpty(term)) {
+            url += "?q=" + term;
+        }
+        this.$formSearch.attr("action", url);
+    }
     ,getQuickSearchTerm: function() {
         var term = localStorage.getItem("AcmQuickSearchTerm");
         if (term === "null") {
@@ -47,6 +50,13 @@ Topbar.Object = {
     ,setValueEdtSearch: function(val) {
         return Acm.Object.setPlaceHolderInput(this.$edtSearch, val);
     }
+    ,getValueHidSearch: function() {
+        return Acm.Object.getPlaceHolderInput(this.$hidSearch);
+    }
+    ,setValueHidSearch: function(val) {
+        return Acm.Object.setPlaceHolderInput(this.$hidSearch, val);
+    }
+
 ///////////////////////////////////////
     ,_ctrObjs: {}
     ,_ctrTitles: []

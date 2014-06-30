@@ -10,6 +10,13 @@ Topbar.Event = {
     }
 
 
+    ,onClickBtnSearch : function(e) {
+        var term = Topbar.Object.getValueEdtSearch();
+        Topbar.Object.setActionFormSearch(term);
+        console.log("Topbar.Event.onClickBtnSearch, term=" + term);
+        //e.preventDefault();
+    }
+
     ,onSubmitFormSearch : function(e) {
         var term = Topbar.Object.getValueEdtSearch();
         Topbar.Object.setQuickSearchTerm(term);
