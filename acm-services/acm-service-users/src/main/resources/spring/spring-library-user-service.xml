@@ -7,7 +7,6 @@
 
     <task:scheduler id="ldapSyncTaskScheduler" pool-size="1"/>
 
-
     <bean id="springLdapDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapDao"/>
 
     <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.ldap.UserDao"/>
@@ -16,9 +15,8 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-
-
-
-
+    <!-- NOTE: LDAP sync service beans (of class com.armedia.acm.services.users.service.ldap.LdapSyncService) should
+         be defined in dynamically-loaded Spring config files, placed in the ACM spring configuration folder
+         ($HOME/.acm/spring). -->
 
 </beans>
