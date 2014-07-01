@@ -58,7 +58,7 @@
                     <label class="col-sm-6 control-label">Complaints</label>
                     <div class="col-sm-4">
                         <label class="switch">
-                            <input type="checkbox">
+                            <input type="checkbox" id="chkComplaints">
                             <span></span>
                         </label>
                     </div>
@@ -70,7 +70,7 @@
                     <label class="col-sm-6 control-label">Cases</label>
                     <div class="col-sm-4">
                         <label class="switch">
-                            <input type="checkbox">
+                            <input type="checkbox" id="chkCases">
                             <span></span>
                         </label>
                     </div>
@@ -82,7 +82,7 @@
                     <label class="col-sm-6 control-label">Tasks</label>
                     <div class="col-sm-4">
                         <label class="switch">
-                            <input type="checkbox">
+                            <input type="checkbox" id="chkTasks">
                             <span></span>
                         </label>
                     </div>
@@ -95,7 +95,7 @@
                     <label class="col-sm-6 control-label">Documents</label>
                     <div class="col-sm-4">
                         <label class="switch">
-                            <input type="checkbox">
+                            <input type="checkbox" id="chkDocuments">
                             <span></span>
                         </label>
                     </div>

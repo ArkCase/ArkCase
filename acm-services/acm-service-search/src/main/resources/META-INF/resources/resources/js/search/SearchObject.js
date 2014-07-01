@@ -12,7 +12,11 @@ Search.Object = {
         this.$lnkToggleSubNav = $("a[href='#subNav']");
         //this.$lnkToggleSubNav.click(function(e) {Search.Event.onClickBtnToggleSubNav(e);});
 
-        this.$edtSearch = $("#searchQuery");
+        this.$edtSearch     = $("#searchQuery");
+        this.$chkComplaints = $("#chkComplaints");
+        this.$chkCases      = $("#chkCases");
+        this.$chkTasks      = $("#chkTasks");
+        this.$chkDocuments  = $("#chkDocuments");
 
         this.$btnSearch = this.$edtSearch.next().find("button");
         this.$btnSearch.click(function(e) {Search.Event.onClickBtnSearch(e);});
@@ -20,7 +24,7 @@ Search.Object = {
 //        this.$tabResults = $("table");
 
         this.$divResults = $("#divResults");
-        Search.Object.createJTableResults();
+        Search.Object.createJTableResults(this.$divResults);
     }
 
     ,showSubNav: function(show) {
@@ -39,15 +43,29 @@ Search.Object = {
 //        this.$tabResults.find("tbody:last").append(row);
 //    }
 
+    ,getValueEdtSearch: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtSearch);
+    }
+    ,isCheckChkComplaints: function() {
+        return Acm.Object.isChecked(this.$chkComplaints);
+    }
+    ,isCheckChkCases: function() {
+        return Acm.Object.isChecked(this.$chkCases);
+    }
+    ,isCheckChkTasks: function() {
+        return Acm.Object.isChecked(this.$chkTasks);
+    }
+    ,isCheckChkDocuments: function() {
+        return Acm.Object.isChecked(this.$chkDocuments);
+    }
     ,setTableTitle: function(title) {
-        Acm.Object.setValue($(".jtable-title-text"), title);
+        Acm.Object.setText($(".jtable-title-text"), title);
     }
     ,reloadJTableResults: function() {
         var $s = this.$divResults;
         $s.jtable('load');
     }
-    ,createJTableResults: function() {
-        var $s = this.$divResults;
+    ,createJTableResults: function($s) {
         $s.jtable({
             title: 'Search Results'
             //,selecting: false
@@ -140,6 +158,9 @@ Search.Object = {
                                     }
                                 }
 
+                                var term = Topbar.Object.getQuickSearchTerm();
+                                Search.Object.setTableTitle('Search Results of "' + term + '"');
+
                                 if (jtData) {
                                     $dfd.resolve(jtData);
                                 } else {
@@ -210,12 +231,6 @@ Search.Object = {
                     ,width: '20%'
                     ,sorting: false
                 }
-            }
-            ,recordAdded: function(event, data){
-                $s.jtable('load');
-            }
-            ,recordUpdated: function(event, data){
-                $s.jtable('load');
             }
         });
 
