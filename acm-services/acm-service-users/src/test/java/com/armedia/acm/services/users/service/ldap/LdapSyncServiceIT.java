@@ -3,6 +3,7 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ public class LdapSyncServiceIT
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Test
+    @Ignore
     public void ldapSync()
     {
         // the sync is done via init-bean so we don't even have to call it here.  Just starting the Sprign

@@ -71,22 +71,24 @@ public class UserDao
         return retval;
     }
 
-    public void markAllUsersInvalid()
+    public void markAllUsersInvalid(String directoryName)
     {
         Query markInvalid = getEntityManager().createQuery(
-                "UPDATE AcmUser set userState = :state, userModified = :now"
+                "UPDATE AcmUser au set au.userState = :state, au.userModified = :now WHERE au.userDirectoryName = :directoryName"
         );
         markInvalid.setParameter("state", "INVALID");
         markInvalid.setParameter("now", new Date());
+        markInvalid.setParameter("directoryName", directoryName);
         markInvalid.executeUpdate();
     }
 
-    public void markAllRolesInvalid()
+    public void markAllRolesInvalid(String directoryName)
     {
         Query markInvalid = getEntityManager().createQuery(
-                "UPDATE AcmUserRole set userRoleState = :state"
-        );
+                "UPDATE AcmUserRole aur set aur.userRoleState = :state WHERE aur.userId IN " +
+                        "( SELECT au.userId FROM AcmUser au WHERE au.userDirectoryName = :directoryName )");
         markInvalid.setParameter("state", "INVALID");
+        markInvalid.setParameter("directoryName", directoryName);
         markInvalid.executeUpdate();
     }
 

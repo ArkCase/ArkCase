@@ -22,18 +22,18 @@ public class LdapSyncDatabaseHelper
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional
-    public void updateDatabase(Set<String> allRoles, Map<String, List<AcmUser>> usersByDirectoryName, Map<String, List<AcmUser>> usersByRole)
+    public void updateDatabase(String directoryName,
+                               Set<String> allRoles,
+                               List<AcmUser> users,
+                               Map<String, List<AcmUser>> usersByRole)
     {
         // Mark all users invalid... users still in LDAP will change to valid during the sync
-        getUserDao().markAllUsersInvalid();
-        getUserDao().markAllRolesInvalid();
+        getUserDao().markAllUsersInvalid(directoryName);
+        getUserDao().markAllRolesInvalid(directoryName);
 
         persistApplicationRoles(allRoles);
 
-        for ( Map.Entry<String, List<AcmUser>> usersByDirectoryNameEntry : usersByDirectoryName.entrySet() )
-        {
-            persistUsers(usersByDirectoryNameEntry.getValue(), usersByDirectoryNameEntry.getKey());
-        }
+        persistUsers(directoryName, users);
 
         for ( Map.Entry<String, List<AcmUser>> usersByRoleEntry : usersByRole.entrySet() )
         {
@@ -66,7 +66,7 @@ public class LdapSyncDatabaseHelper
         return retval;
     }
 
-    protected List<AcmUser> persistUsers(List<AcmUser> users, String configBeanName)
+    protected List<AcmUser> persistUsers(String directoryName, List<AcmUser> users)
     {
         List<AcmUser> retval = new ArrayList<>(users.size());
 
@@ -79,7 +79,7 @@ public class LdapSyncDatabaseHelper
                 log.debug("persisting user '" + user.getUserId() + "'");
             }
 
-            user.setUserDirectoryName(configBeanName);
+            user.setUserDirectoryName(directoryName);
             AcmUser saved = getUserDao().saveAcmUser(user);
             retval.add(saved);
         }

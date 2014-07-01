@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+
+    <task:scheduler id="ldapSyncTaskScheduler" pool-size="1"/>
+
 
     <bean id="springLdapDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapDao"/>
 
@@ -11,12 +16,9 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-    <bean id="ldapSyncService" class="com.armedia.acm.services.users.service.ldap.LdapSyncService"
-            init-method="ldapSync">
-        <property name="configFileWatcher" ref="configFileListener"/>
-        <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="ldapDao" ref="springLdapDao"/>
-        <property name="ldapSyncDatabaseHelper" ref="userDatabaseHelper"/>
-    </bean>
+
+
+
+
 
 </beans>
