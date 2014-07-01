@@ -21,9 +21,6 @@
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListCallback.js'/>"></script>
 
-
-<%--<script src="<c:url value='/resources/js/app.js'/>"></script>--%>
-<%--<script src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
 <!-- Summernote WYSIWYG -->

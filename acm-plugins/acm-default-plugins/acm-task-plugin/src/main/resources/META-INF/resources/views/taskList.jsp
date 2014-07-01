@@ -21,8 +21,6 @@
 <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListService.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>
 
-<%--<script src="<c:url value='/resources/js/app.js'/>"></script>--%>
-<%--<script src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
 

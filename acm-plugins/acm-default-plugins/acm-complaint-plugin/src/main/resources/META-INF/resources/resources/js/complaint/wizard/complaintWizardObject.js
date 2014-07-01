@@ -13,6 +13,8 @@ ComplaintWizard.Object = {
         this.$btnSubmit              = $("button[data-title='Submit']");
         this.$btnSubmit.click(function(e) {ComplaintWizard.Event.onClickBtnSubmit(e);});
 
+        this.$h3Title = $("section>div>h3");
+
         this.$selIntiatorFlags       = $(".choose-intitiatorFlags");   //"#intiatorFlags"
         this.$selIntiatorFlags.chosen();
 
@@ -54,6 +56,12 @@ ComplaintWizard.Object = {
         });
     }
 
+    ,getTextH3Title: function() {
+        return Acm.Object.getText(this.$h3Title);
+    }
+    ,setTextH3Title: function(title) {
+        Acm.Object.setText(this.$h3Title, title);
+    }
     ,_appendSelect: function($s, key, val) {
         $s.append($("<option></option>")
             .attr("value",key)
