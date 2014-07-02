@@ -20,7 +20,7 @@ ComplaintList.Page = {
                 }
 
                 html += "<li class='list-group-item'> <a href='#' class='thumb-sm pull-left m-r-sm'> <img src='"
-                    + Acm.getContextPath() + "/resources/images/a0.png'" + "class='img-circle'> </a> "
+                    + Acm.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a0.png'" + "class='img-circle'> </a> "
                     + "<a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
                     + Acm.getDateFromDatetime(c.created) + "</small><strong class='block'>"
                     + c.complaintTitle + "</strong><small>"
@@ -36,7 +36,7 @@ ComplaintList.Page = {
 
     ,buildTableDocDocuments: function(c) {
         ComplaintList.Object.resetTableDocDocuments();
-        var urlBase = Acm.getContextPath() + "/api/v1/plugin/ecm/download/byId/";
+        var urlBase = Acm.getContextPath() + ComplaintList.Service.API_DOWNLOAD_DOCUMENT;
 
         var childObjects = c.childObjects;
         if (Acm.isNotEmpty(childObjects)) {
@@ -46,7 +46,6 @@ ComplaintList.Page = {
                 if (obj.targetType == "FILE") {
                     var row = "<tr class='odd gradeA'>"
                         + "<td><a href='" + urlBase + obj.targetId + "'>" + obj.targetId + "</a></td>"
-//                        + "<td>" + obj.targetId + "</td>"
                         + "<td>" + obj.targetName + "</td>"
                         + "<td>" + Acm.getDateFromDatetime(obj.created) + "</td>"
                         + "<td>" + obj.creator + "</td>"
