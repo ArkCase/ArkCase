@@ -18,4 +18,13 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
     </changeSet>
+
+    <changeSet id="03-user-service-role-type-constraint" author="dmiller">
+        <addForeignKeyConstraint baseTableName="acm_role" baseColumnNames="cm_role_type"
+                                 constraintName="fk_role_type"
+                                 referencedTableName="acm_role_type_lu"
+                                 referencedColumnNames="cm_value"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
 </databaseChangeLog>
