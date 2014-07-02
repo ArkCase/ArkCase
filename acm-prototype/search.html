@@ -15,6 +15,7 @@
     <script src="js/ie/respond.min.js"></script>
     <script src="js/ie/excanvas.js"></script>
   <![endif]-->
+  <script src="resources/js/jquery.min.js"></script> 
 </head>
 <body class="">
 <section class="vbox">
@@ -25,10 +26,8 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <i class="i i-plus"></i> New
           </a>
-          <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
-         
-            <div class="row m-l-none m-r-none m-t m-b text-center">
-              <div class="col-xs-3">
+          <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">   <div class="row m-l-none m-r-none m-t m-b text-center">
+              <div class="col-xs-4">
                 <div class="padder-v2">
                   <a href="newComplaint.html">
                     <span class="m-b-xs block">
@@ -38,7 +37,7 @@
                   </a>
                 </div>
               </div>
-              <div class="col-xs-3">
+              <div class="col-xs-4">
                 <div class="padder-v2">
                   <a href="newCase.html">
                     <span class="m-b-xs block">
@@ -48,23 +47,13 @@
                   </a>
                 </div>
               </div>
-              <div class="col-xs-3">
+              <div class="col-xs-4">
                 <div class="padder-v2">
                   <a href="newTask.html">
                     <span class="m-b-xs block">
                       <i class="i i-checkmark i-2x text-success-lt"></i>
                     </span>
                     <small class="text-muted">Task</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-3">
-                <div class="padder-v2">
-                  <a href="newDocument.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-file i-2x text-info-lt"></i>
-                    </span>
-                    <small class="text-muted">Document</small>
                   </a>
                 </div>
               </div>
@@ -164,19 +153,25 @@
                       <label class="col-sm-6 control-label"><strong>Complaints</strong></label>
                       <div class="col-sm-4">
                         <label class="switch">
-                          <input type="checkbox" href="#complaintFields" data-toggle="class:show">
+                          <input type="checkbox"id="complaintCheck">
                           <span></span>
                         </label>
                       </div>
+                     
                       
                       
-                      <div class="col-sm-12 hide" id="complaintFields">
+                      <div class="col-sm-12" id="complaintFields">
                       	 <label class="label">Complaint Title</label>
                          <input type="text" class="form-control" placeholder="Enter Complaint Title">
                          <label class="label">Complaint ID</label>
                			 <input type="text" class="form-control" placeholder="Enter Complaint ID">
                          <label class="label">Incident Date</label>
-                         <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                         <div class="clear"></div>
+                          <label class="label col-sm-3">From</label>
+                          <div class="col-sm-9"><input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
+                          <label class="label col-sm-3">To</label>
+                         <div class="col-sm-9"> <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
+                         <div class="clear"></div>
                          <label for="priority"  class="label">Priority</label>
                               <select name="priority" class="form-control">
                                 <option>Choose Priority</option>
@@ -205,19 +200,24 @@
                       <label class="col-sm-6 control-label"><strong>Cases</strong></label>
                       <div class="col-sm-4">
                         <label class="switch">
-                          <input type="checkbox" href="#caseFields" data-toggle="class:show">
+                          <input type="checkbox" id="caseCheck">
                           <span></span>
                         </label>
                       </div>
                       
                       
-                      <div class="col-sm-12 hide" id="caseFields">
+                      <div class="col-sm-12" id="caseFields">
                       	 <label class="label">Case Title</label>
                          <input type="text" class="form-control" placeholder="Enter Case Title">
                          <label class="label">Case ID</label>
                			 <input type="text" class="form-control" placeholder="Enter Case ID">
                          <label class="label">Incident Date</label>
-                         <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                        <div class="clear"></div>
+                          <label class="label col-sm-3">From</label>
+                          <div class="col-sm-9"><input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
+                          <label class="label col-sm-3">To</label>
+                         <div class="col-sm-9"> <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
+                         <div class="clear"></div>
                          <label for="priority"  class="label">Priority</label>
                               <select name="priority" class="form-control">
                                 <option>Choose Priority</option>
@@ -246,18 +246,23 @@
                       <label class="col-sm-6 control-label"><strong>Tasks</strong></label>
                       <div class="col-sm-4">
                         <label class="switch">
-                          <input type="checkbox" href="#taskFields" data-toggle="class:show">
+                          <input type="checkbox" id="taskCheck">
                           <span></span>
                         </label>
                       </div>
                       
-                       <div class="col-sm-12 hide" id="taskFields">
+                       <div class="col-sm-12" id="taskFields">
                       	 <label class="label">Task Title</label>
                          <input type="text" class="form-control" placeholder="Enter Task Title">
                          <label class="label">Task ID</label>
                			 <input type="text" class="form-control" placeholder="Enter Task ID">
                          <label class="label">Due Date</label>
-                         <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                         <div class="clear"></div>
+                          <label class="label col-sm-3">From</label>
+                          <div class="col-sm-9"><input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
+                          <label class="label col-sm-3">To</label>
+                         <div class="col-sm-9"> <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
+                         <div class="clear"></div>
                          <label for="priority"  class="label">Priority</label>
                               <select name="priority" class="form-control">
                                 <option>Choose Priority</option>
@@ -289,20 +294,25 @@
                       <label class="col-sm-6 control-label"><strong>Documents</strong></label>
                       <div class="col-sm-4">
                         <label class="switch">
-                          <input type="checkbox" href="#docFields" data-toggle="class:show">
+                          <input type="checkbox" id="docCheck">
                           <span></span>
                         </label>
                       </div>
                       
                       
                       
-                       <div class="col-sm-12 hide" id="docFields">
+                       <div class="col-sm-12" id="docFields">
                       	 <label class="label">Document Title</label>
                          <input type="text" class="form-control" placeholder="Enter Document Title">
                          <label class="label">Document ID</label>
                			 <input type="text" class="form-control" placeholder="Enter Document ID">
                          <label class="label">Due Date</label>
-                         <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                         <div class="clear"></div>
+                          <label class="label col-sm-3">From</label>
+                          <div class="col-sm-9"><input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
+                          <label class="label col-sm-3">To</label>
+                         <div class="col-sm-9"> <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
+                         <div class="clear"></div>
                          <label for="priority"  class="label">Priority</label>
                               <select name="priority" class="form-control">
                                 <option>Choose Priority</option>
@@ -334,14 +344,14 @@
                       <label class="col-sm-6 control-label"><strong>People</strong></label>
                       <div class="col-sm-4">
                         <label class="switch">
-                          <input type="checkbox" href="#peopleFields" data-toggle="class:show">
+                          <input type="checkbox" id="peopleCheck">
                           <span></span>
                         </label>
                       </div>
                       
                       
                       
-                       <div class="col-sm-12 hide" id="peopleFields">
+                       <div class="col-sm-12" id="peopleFields">
                       	<label class="label">Title</label>
                          <input type="text" class="form-control" placeholder="Enter Title">
                          <label class="label">First Name</label>
@@ -412,7 +422,7 @@
                           <tr>
                             <th width="20"><label class="checkbox m-n i-checks"><input type="checkbox"><i></i></label></th>
                             <th width="20"></th>
-                            <th width="20">ID</th>
+                            <th class="th-sortable" width="20">ID </th>
                             <th class="th-sortable" data-toggle="class">Type
                               <span class="th-sort">
                                 <i class="fa fa-sort-down text"></i>
@@ -420,14 +430,27 @@
                                 <i class="fa fa-sort"></i>
                               </span>
                             </th>
+                             <th class="th-sortable">Priority <span class="th-sort">
+                                <i class="fa fa-sort-down text"></i>
+                                <i class="fa fa-sort-up text-active"></i>
+                                <i class="fa fa-sort"></i>
+                              </span></th>
                            <th class="th-sortable" data-toggle="class">Title
                               <span class="th-sort">
                                 <i class="fa fa-sort-down text"></i>
                                 <i class="fa fa-sort-up text-active"></i>
                                 <i class="fa fa-sort"></i>
                               </span>
-                            <th>Owner</th>
-                            <th>Created</th>
+                            <th class="th-sortable">Owner <span class="th-sort">
+                                <i class="fa fa-sort-down text"></i>
+                                <i class="fa fa-sort-up text-active"></i>
+                                <i class="fa fa-sort"></i>
+                              </span></th>
+                            <th class="th-sortable">Created <span class="th-sort">
+                                <i class="fa fa-sort-down text"></i>
+                                <i class="fa fa-sort-up text-active"></i>
+                                <i class="fa fa-sort"></i>
+                              </span></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -435,7 +458,9 @@
                             <td><label class="checkbox m-n i-checks"><input type="checkbox" name="ids[]"><i></i></label></td>
                             <td><a href="#modal" data-toggle="modal"><i class="fa fa-search-plus text-muted"></i></a></td>
                             <td>[ID]</td>
+                            
                             <td>[Type]</td>
+                             <td>[Priority]</td>
                             <td>[Title]</td>
                             <td>[Owner]</td>
                             <td>[Date Created]</td>
@@ -445,6 +470,7 @@
                             <td><a href="#modal" data-toggle="modal"><i class="fa fa-search-plus text-muted"></i></a></td>
                             <td>[ID]</td>
                             <td>[Type]</td>
+                             <td>[Priority]</td>
                             <td>[Title]</td>
                             <td>[Owner]</td>
                             <td>[Date Created]</td>
@@ -485,9 +511,45 @@
   </section>
 </section>
 
-<script src="resources/js/jquery.min.js"></script> 
 <script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
 <script src="resources/js/datepicker/bootstrap-datepicker.js"></script>
+
+<script>
+					  
+$('#complaintCheck').click(function(){
+        var val = $(this).val();
+        $('#complaintFields').slideToggle();
+});
+
+$('#caseCheck').click(function(){
+        var val = $(this).val();
+        $('#caseFields').slideToggle();
+});
+
+$('#taskCheck').click(function(){
+        var val = $(this).val();
+        $('#taskFields').slideToggle();
+});
+
+$('#docCheck').click(function(){
+        var val = $(this).val();
+        $('#docFields').slideToggle();
+});
+	
+$('#peopleCheck').click(function(){
+        var val = $(this).val();
+        $('#peopleFields').slideToggle();
+});	
+	
+	
+					  
+</script>
+                      
+<style>
+
+#complaintFields, #caseFields, #taskFields, #docFields, #peopleFields { display:none}
+
+</style>
 
 
 <!-- Bootstrap --> 
