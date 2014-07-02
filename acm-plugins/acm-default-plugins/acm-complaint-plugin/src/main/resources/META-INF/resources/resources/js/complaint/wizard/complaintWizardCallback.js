@@ -59,11 +59,14 @@ ComplaintWizard.Callback = {
         if (response) {
             if (Acm.isNotEmpty(response.complaintId)) {
                 ComplaintWizard.Object.setComplaintData(response);
+                ComplaintWizard.Object.setTextH3Title(Acm.goodValue(response.complaintNumber));
                 success = true;
             }
         }
 
-        if (!success) {
+        if (success) {
+            Acm.Dialog.info("Complaint data saved");
+        } else {
             Acm.Dialog.error("Failed to create or save complaint");
         }
     }
@@ -74,7 +77,9 @@ ComplaintWizard.Callback = {
                 success = true;
         }
 
-        if (!success) {
+        if (success) {
+            Acm.goHome();
+        } else {
             Acm.Dialog.error("Error occurred for complaint approval submission");
         }
     }

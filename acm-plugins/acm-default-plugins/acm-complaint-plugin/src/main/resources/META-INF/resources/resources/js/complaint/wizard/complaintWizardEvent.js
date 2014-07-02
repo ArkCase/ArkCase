@@ -13,7 +13,6 @@ ComplaintWizard.Event = {
         var data = ComplaintWizard.Object.getComplaintData();
         ComplaintWizard.Service.submitForApproval(data);
         e.preventDefault();
-
     }
     ,onClickBtnSave : function(e) {
         var data = ComplaintWizard.Object.getComplaintData();

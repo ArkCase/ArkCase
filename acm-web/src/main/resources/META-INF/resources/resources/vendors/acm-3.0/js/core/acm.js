@@ -164,6 +164,9 @@ var Acm = Acm || {
         return yyyyMmDd;
     }
 
+    ,goHome: function() {
+        window.location.href = Acm.getContextPath() + "/plugin/dashboard";
+    }
 
 //    ,_foobar_cont: function (){
 //        console.log("finished.");

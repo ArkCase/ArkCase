@@ -10,7 +10,13 @@ Search.Event = {
     }
 
     ,onClickBtnSearch : function(e) {
-alert("go");
+//alert("go");
+        var search = Search.Object.getValueEdtSearch();
+        var hasComplaints = Search.Object.isCheckChkComplaints();
+        var hasCases = Search.Object.isCheckChkCases();
+        var hasTasks = Search.Object.isCheckChkTasks();
+        var hasDocuments = Search.Object.isCheckChkDocuments();
+
         e.preventDefault();
     }
 
