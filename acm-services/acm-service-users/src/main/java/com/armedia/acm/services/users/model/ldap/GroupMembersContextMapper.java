@@ -9,14 +9,19 @@ import org.springframework.ldap.core.DirContextAdapter;
 public class GroupMembersContextMapper implements ContextMapper
 {
     @Override
-    public String[] mapFromContext(Object ctx)
+    public LdapGroup mapFromContext(Object ctx)
     {
+        LdapGroup group = new LdapGroup();
+
         DirContextAdapter adapter = (DirContextAdapter) ctx;
+        String groupName = adapter.getStringAttribute("cn");
+        group.setGroupName(groupName);
+
         if ( adapter.attributeExists("member"))
         {
             String[] members = adapter.getStringAttributes("member");
-            return members;
+            group.setMemberDistinguishedNames(members);
         }
-        return new String[0];
+        return group;
     }
 }

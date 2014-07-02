@@ -4,6 +4,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
 import com.armedia.acm.services.users.model.ldap.GroupMembersContextMapper;
+import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.SimpleAuthenticationSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,33 +22,6 @@ public class SpringLdapDao
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
-    public List<String> groupMemberDistinguishedNames(LdapTemplate ldapTemplate, AcmLdapSyncConfig syncConfig, String groupName)
-    {
-        if ( log.isInfoEnabled() )
-        {
-            log.info("Looking up group members for group: " + groupName);
-        }
-
-        List<String[]> groupMembers = ldapTemplate.search(
-                syncConfig.getGroupSearchBase(),
-                String.format(syncConfig.getGroupSearchFilter(), groupName),
-                new GroupMembersContextMapper());
-
-        if ( groupMembers.size() > 1 )
-        {
-            throw new IllegalStateException("Should only find one group named '" + groupName + "', instead found " +
-                groupMembers.size());
-        }
-
-        if ( groupMembers.isEmpty() )
-        {
-            return new ArrayList<>();
-        }
-
-        String[] members = groupMembers.get(0);
-        return Arrays.asList(members);
-    }
 
     public LdapTemplate buildLdapTemplate(final AcmLdapSyncConfig syncConfig)
     {
@@ -73,11 +46,11 @@ public class SpringLdapDao
         return ldapTemplate;
     }
 
-    public List<AcmUser> findGroupMembers(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String ldapGroup)
+    public List<AcmUser> findGroupMembers(LdapTemplate template, final AcmLdapSyncConfig syncConfig, LdapGroup group)
     {
-        List<String> memberDns = groupMemberDistinguishedNames(template, syncConfig, ldapGroup);
+        String[] memberDns = group.getMemberDistinguishedNames();
 
-        List<AcmUser> retval = new ArrayList<>(memberDns.size());
+        List<AcmUser> retval = new ArrayList<>(memberDns.length);
 
         AcmUserContextMapper mapper = new AcmUserContextMapper();
         mapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
@@ -100,5 +73,14 @@ public class SpringLdapDao
         }
 
         return retval;
+    }
+
+    public List<LdapGroup> findGroups(LdapTemplate template, AcmLdapSyncConfig config)
+    {
+        List<LdapGroup> groups = template.search(
+                config.getGroupSearchBase(),
+                config.getGroupSearchFilter(),
+                new GroupMembersContextMapper());
+        return groups;
     }
 }
