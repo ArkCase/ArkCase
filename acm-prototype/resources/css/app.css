@@ -2,6 +2,8 @@
 
 /* @override http://localhost/~aj/acm3/resources/css/app.css */
 
+/* @override http://localhost/~aj/acm3/resources/css/app.css */
+
 /* @override http://localhost/~aj/acm3/css/app.css */
 
 /* @override http://localhost/~aj/acm3/css/app.css */
@@ -918,6 +920,20 @@ body.container {
 }
 
 
+
+
+
+ul.fancytree-container {
+  background-color: transparent !important;
+  border: 0px !important;
+  
+  
+}
+
+ul.fancytree-container:focus
+{
+  outline:none;
+}
 
 
 
