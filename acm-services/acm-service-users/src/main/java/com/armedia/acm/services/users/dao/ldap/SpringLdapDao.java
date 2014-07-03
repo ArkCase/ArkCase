@@ -1,10 +1,10 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmLdapEntity;
+import com.armedia.acm.services.users.model.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.AcmLdapEntityContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
 import com.armedia.acm.services.users.model.ldap.GroupMembersContextMapper;
-import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.SimpleAuthenticationSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,20 +21,22 @@ import java.util.List;
 public class SpringLdapDao
 {
 
+    private final GroupMembersContextMapper groupMembersContextMapper = new GroupMembersContextMapper();
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public LdapTemplate buildLdapTemplate(final AcmLdapSyncConfig syncConfig)
     {
         AuthenticationSource authenticationSource = null;
 
-        if ( syncConfig.getAuthUserDn() != null )
+        if (syncConfig.getAuthUserDn() != null)
         {
             authenticationSource = new SimpleAuthenticationSource(syncConfig.getAuthUserDn(), syncConfig.getAuthUserPassword());
         }
 
         LdapContextSource ldapContextSource = new LdapContextSource();
         ldapContextSource.setUrl(syncConfig.getLdapUrl());
-        if ( authenticationSource != null )
+        if (authenticationSource != null)
         {
             ldapContextSource.setAuthenticationSource(authenticationSource);
         }
@@ -46,29 +48,31 @@ public class SpringLdapDao
         return ldapTemplate;
     }
 
-    public List<AcmUser> findGroupMembers(LdapTemplate template, final AcmLdapSyncConfig syncConfig, LdapGroup group)
+    public List<AcmLdapEntity> findGroupMembers(LdapTemplate template, final AcmLdapSyncConfig syncConfig, LdapGroup group)
     {
         String[] memberDns = group.getMemberDistinguishedNames();
 
-        List<AcmUser> retval = new ArrayList<>(memberDns.length);
+        List<AcmLdapEntity> retval = new ArrayList<>(memberDns.length);
 
-        AcmUserContextMapper mapper = new AcmUserContextMapper();
+        AcmLdapEntityContextMapper mapper = new AcmLdapEntityContextMapper();
         mapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
 
         boolean debug = log.isDebugEnabled();
 
-        for ( String memberDn : memberDns )
+        for (String memberDn : memberDns)
         {
-            if ( debug )
+            if (debug)
             {
                 log.debug("Looking up user '" + memberDn + "'");
             }
 
-            AcmUser user = (AcmUser) template.lookup(memberDn, mapper);
+            AcmLdapEntity ldapEntity = (AcmLdapEntity) template.lookup(memberDn, mapper);
+            ldapEntity.setDistinguishedName(memberDn);
 
-            if ( user != null )
+            // The context mapper returns null if the group member is a disabled user
+            if (ldapEntity != null)
             {
-                retval.add(user);
+                retval.add(ldapEntity);
             }
         }
 
@@ -80,7 +84,14 @@ public class SpringLdapDao
         List<LdapGroup> groups = template.search(
                 config.getGroupSearchBase(),
                 config.getGroupSearchFilter(),
-                new GroupMembersContextMapper());
+                groupMembersContextMapper);
         return groups;
     }
+
+    public LdapGroup findGroup(LdapTemplate template, AcmLdapSyncConfig config, String groupDistinguishedName)
+    {
+        LdapGroup group = (LdapGroup) template.lookup(groupDistinguishedName, groupMembersContextMapper);
+        return group;
+    }
+
 }

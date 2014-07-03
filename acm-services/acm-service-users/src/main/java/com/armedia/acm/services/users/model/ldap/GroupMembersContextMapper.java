@@ -1,5 +1,6 @@
 package com.armedia.acm.services.users.model.ldap;
 
+import com.armedia.acm.services.users.model.LdapGroup;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 

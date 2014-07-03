@@ -1,9 +1,11 @@
 package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
+import com.armedia.acm.services.users.model.AcmLdapEntity;
+import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
@@ -86,7 +88,8 @@ public class LdapSyncService
             Map<String, List<AcmUser>> usersByApplicationRole,
             Map<String, List<AcmUser>> usersByLdapGroup)
     {
-        if ( log.isDebugEnabled() )
+        boolean debug = log.isDebugEnabled();
+        if ( debug )
         {
             log.debug("querying users from directory '" + directoryName + "'");
         }
@@ -104,16 +107,77 @@ public class LdapSyncService
 
         for ( LdapGroup group : groups )
         {
-            log.debug("Found group '" + group.getGroupName() + "', with " + group.getMemberDistinguishedNames().length + " members");
+            if ( debug )
+            {
+                log.debug("Found group '" + group.getGroupName() + "', with " +
+                        group.getMemberDistinguishedNames().length + " members");
+            }
 
-            List<AcmUser> foundUsers = getLdapDao().findGroupMembers(template, config, group);
-            users.addAll(foundUsers);
+            List<AcmUser> usersForThisGroup = findAllUsersForGroup(config, template, group);
 
             String ucGroupName = group.getGroupName().toUpperCase();
 
-            addUsersToMap(usersByLdapGroup, ucGroupName, foundUsers);
+            users.addAll(usersForThisGroup);
 
-            addUsersToApplicationRole(usersByApplicationRole, groupToRoleMap, foundUsers, ucGroupName);
+            addUsersToMap(usersByLdapGroup, ucGroupName, usersForThisGroup);
+
+            addUsersToApplicationRole(usersByApplicationRole, groupToRoleMap, usersForThisGroup, ucGroupName);
+        }
+    }
+
+    private List<AcmUser> findAllUsersForGroup(AcmLdapSyncConfig config, LdapTemplate template, LdapGroup group)
+    {
+        List<AcmRole> nestedGroups = new ArrayList<>();
+
+        List<AcmUser> allUsersForGroup = new ArrayList<>();
+
+        List<AcmLdapEntity> foundEntities = getLdapDao().findGroupMembers(template, config, group);
+
+        splitEntitiesIntoNestedGroupsAndUsers(foundEntities, nestedGroups, allUsersForGroup);
+
+        findUsersForNestedGroups(config, template, nestedGroups, allUsersForGroup);
+
+        return allUsersForGroup;
+    }
+
+    private void findUsersForNestedGroups(
+            AcmLdapSyncConfig config,
+            LdapTemplate template,
+            List<AcmRole> nestedGroups,
+            List<AcmUser> usersForMainGroup)
+    {
+        List<AcmLdapEntity> foundEntities;
+        while ( !nestedGroups.isEmpty() )
+        {
+            List<AcmRole> current = new ArrayList<>(nestedGroups.size());
+            current.addAll(nestedGroups);
+            nestedGroups.clear();
+
+            for ( AcmRole currentNestedGroup : current )
+            {
+                LdapGroup ldapGroup = getLdapDao().findGroup(template, config, currentNestedGroup.getDistinguishedName());
+                foundEntities = getLdapDao().findGroupMembers(template, config, ldapGroup);
+
+                splitEntitiesIntoNestedGroupsAndUsers(foundEntities, nestedGroups, usersForMainGroup);
+            }
+        }
+    }
+
+    private void splitEntitiesIntoNestedGroupsAndUsers(
+            List<AcmLdapEntity> foundEntities,
+            List<AcmRole> nestedGroups,
+            List<AcmUser> usersForThisGroup)
+    {
+        for ( AcmLdapEntity found : foundEntities )
+        {
+            if ( found.isGroup() )
+            {
+                nestedGroups.add((AcmRole) found);
+            }
+            else
+            {
+                usersForThisGroup.add((AcmUser) found);
+            }
         }
     }
 

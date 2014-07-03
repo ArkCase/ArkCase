@@ -4,10 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "ACM_ROLE")
-public class AcmRole
+public class AcmRole implements AcmLdapEntity
 {
     @Id
     @Column(name = "CM_ROLE_NAME")
@@ -15,6 +16,9 @@ public class AcmRole
 
     @Column(name = "CM_ROLE_TYPE")
     private String roleType;
+
+    @Transient
+    private String distinguishedName;
 
     public String getRoleName()
     {
@@ -35,4 +39,24 @@ public class AcmRole
     {
         this.roleType = roleType;
     }
+
+    @Override
+    public String getDistinguishedName()
+    {
+        return distinguishedName;
+    }
+
+    @Override
+    public void setDistinguishedName(String distinguishedName)
+    {
+        this.distinguishedName = distinguishedName;
+    }
+
+    @Override
+    public boolean isGroup()
+    {
+        return true;
+    }
+
+
 }
