@@ -11,6 +11,8 @@ ComplaintList.Service = {
 
     ,API_LIST_COMPLAINT        : "/api/latest/plugin/complaint/list"
     ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/complaint/byId/"
+    ,API_DOWNLOAD_DOCUMENT     : "/api/v1/plugin/ecm/download/byId/"
+    ,API_UPLOAD_COMPLAINT_FILE     : "/api/latest/plugin/complaint/file"
 
 
     ,listComplaint : function() {

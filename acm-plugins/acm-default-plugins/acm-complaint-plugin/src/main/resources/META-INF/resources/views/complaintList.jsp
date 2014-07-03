@@ -21,15 +21,20 @@
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListCallback.js'/>"></script>
 
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
-<!-- Summernote WYSIWYG -->
-<link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
+    <!-- File Manager -->
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_knob}/js/jquery.knob.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/jquery.iframe-transport.js"></script>
 
-<!-- JTable -->
-<link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
+    <!-- Summernote WYSIWYG -->
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
+
+    <!-- JTable -->
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
 
 <!-- X-Editable -->
 <link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
@@ -279,7 +284,10 @@
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a" id='secDocDocuments'>
-                <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span> <a href="#" class="font-bold">Documents</a> </div>
+                <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span>
+                    <a href="#" class="font-bold">Documents</a>
+                    <input type="file" name="files[]" multiple style="display:none;"/>
+                </div>
                 <div class="panel-body max-200 no-padder">
                     <table class="table table-striped th-sortable table-hover">
                         <thead>
@@ -296,6 +304,10 @@
                         </tr>
                         </tbody>
                     </table>
+                    <%--<ul/>--%>
+                </div>
+                <div id="upload">
+                    <ul/>
                 </div>
             </section>
         </div>
