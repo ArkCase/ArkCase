@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -62,7 +65,10 @@ public class AcmActivitiSpringIT
     {
         assertEquals(0, acmTaskEventListener.getTimesCalled());
 
-        ProcessInstance pi = runtimeService.startProcessInstanceByKey("TestActivitiSpringProcess");
+        Map<String, Object> processVariables = new HashMap<>();
+        processVariables.put("key", "value");
+
+        ProcessInstance pi = runtimeService.startProcessInstanceByKey("TestActivitiSpringProcess", processVariables);
         assertNotNull(pi);
 
         Task userTask = taskService.createTaskQuery().processInstanceId(pi.getId()).singleResult();

@@ -9,6 +9,7 @@
     </bean>
 
     <bean id="eventRaisingActivitiTaskListener" class="com.armedia.acm.activiti.AcmUserTaskEventHandler">
+        <property name="runtimeService" ref="activitiRuntimeService"/>
     </bean>
 
     <bean id="acmActivitiListener_processStart" class="com.armedia.acm.activiti.AcmActivitiListener">
