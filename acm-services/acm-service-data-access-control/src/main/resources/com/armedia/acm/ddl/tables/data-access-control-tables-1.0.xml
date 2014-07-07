@@ -280,5 +280,22 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="04-data-access-default-add-audit-columns" author="dmiller">
+        <addColumn tableName="acm_access_control_default">
+            <column name="cm_access_default_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_default_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_default_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_default_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>
