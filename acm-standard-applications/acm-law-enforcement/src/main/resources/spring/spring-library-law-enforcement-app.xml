@@ -2,10 +2,40 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-                http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+                http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
     <task:annotation-driven />
+
+    <context:property-placeholder
+            properties-ref="lawEnforcementAppProperties"
+            ignore-unresolvable="true"
+            local-override="false"
+            order="18372"/>
+
+    <bean id="lawEnforcementAppProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/lawEnforcementApp.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="create.complaint.button.text">Complaint</prop>
+                <prop key="complaint.navigator.tab.text">Complaints</prop>
+                <prop key="complaint.list.page.title">Complaints | ACM | Armedia Case Management</prop>
+                <prop key="complaint.list.page.short.text">Complaints</prop>
+                <prop key="complaint.list.page.long.text">Complaints</prop>
+                <prop key="complaint.wizard.page.title">Complaint | ACM | Armedia Case Management</prop>
+                <prop key="complaint.wizard.page.short.text">New Complaint</prop>
+                <prop key="complaint.wizard.page.long.text">New Complaint</prop>
+            </props>
+        </property>
+    </bean>
 
     <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication">
         <property name="applicationName" value="Law Enforcement Application"/>
@@ -27,34 +57,17 @@
 
     <!-- Actions -->
     <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Complaint"/>
+        <property name="actionName" value="${create.complaint.button.text}"/>
         <property name="iconName" value="i-notice"/>
         <property name="url" value="/plugin/complaint/wizard"/>
         <property name="requiredPrivilege" value="acm-complaint-create"/>
     </bean>
     <bean id="complaintNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Complaints"/>
+        <property name="actionName" value="${complaint.navigator.tab.text}"/>
         <property name="iconName" value="i-notice"/>
         <property name="url" value="/plugin/complaint"/>
         <property name="requiredPrivilege" value="acm-complaint-list"/>
     </bean>
-    <!-- temporary for DoT demo -->
-    <!--
-    <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Case"/>
-        <property name="iconName" value="i-notice"/>
-        <property name="url" value="/plugin/complaint/wizard"/>
-        <property name="requiredPrivilege" value="acm-complaint-create"/>
-    </bean>
-    <bean id="complaintNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Cases"/>
-        <property name="iconName" value="i-notice"/>
-        <property name="url" value="/plugin/complaint"/>
-        <property name="requiredPrivilege" value="acm-complaint-list"/>
-    </bean>
-    -->
-
-
     <bean id="createTaskAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Task"/>
         <property name="iconName" value="i-checkmark"/>
@@ -108,29 +121,15 @@
 
 
     <bean id="complaintListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Complaints | ACM | Armedia Case Management"/>
-        <property name="descShort" value="Complaints"/>
-        <property name="descLong" value="Complaints"/>
+        <property name="title" value="${complaint.list.page.title}"/>
+        <property name="descShort" value="${complaint.list.page.short.text}"/>
+        <property name="descLong" value="${complaint.list.page.long.text}"/>
     </bean>
     <bean id="complaintWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Complaint | ACM | Armedia Case Management"/>
-        <property name="descShort" value="New Complaint"/>
-        <property name="descLong" value="New Complaint"/>
+        <property name="title" value="${complaint.wizard.page.title}"/>
+        <property name="descShort" value="${complaint.wizard.page.short.text}"/>
+        <property name="descLong" value="${complaint.wizard.page.long.text}"/>
     </bean>
-
-    <!-- temporary for DoT demo -->
-    <!--
-    <bean id="complaintListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Cases | ACM | Armedia Case Management"/>
-        <property name="descShort" value="Cases"/>
-        <property name="descLong" value="Cases"/>
-    </bean>
-    <bean id="complaintWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Case | ACM | Armedia Case Management"/>
-        <property name="descShort" value="New Case"/>
-        <property name="descLong" value="New Case"/>
-    </bean>
-    -->
 
     <bean id="taskListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
         <property name="title" value="Tasks | ACM | Armedia Case Management"/>
@@ -143,7 +142,7 @@
         <property name="descLong" value="New Task"/>
     </bean>
 
-    <bean id="armdiaBlogPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+    <bean id="armediaBlogPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
         <property name="title" value="Armedia Blog | ACM | Armedia Case Management"/>
         <property name="descShort" value="Aremedia Blog"/>
         <property name="descLong" value="Aremedia Blog"/>
