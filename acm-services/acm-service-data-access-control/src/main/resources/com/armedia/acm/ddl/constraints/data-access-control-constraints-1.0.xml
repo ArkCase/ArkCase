@@ -31,5 +31,24 @@
                 initiallyDeferred="true"/>
     </changeSet>
 
+    <changeSet id="02-data-access-default-foreign-keys" author="dmiller">
+        <addForeignKeyConstraint
+                baseTableName="acm_access_control_default"
+                baseColumnNames="cm_access_decision"
+                constraintName="fk_data_access_deflt_decision"
+                referencedTableName="acm_access_control_decision_lu"
+                referencedColumnNames="cm_value"
+                deferrable="true"
+                initiallyDeferred="true"/>
+        <addForeignKeyConstraint
+                baseTableName="acm_access_control_default"
+                baseColumnNames="cm_allow_discretionary_update"
+                constraintName="fk_data_access_deflt_update"
+                referencedTableName="acm_boolean_lu"
+                referencedColumnNames="cm_value"
+                deferrable="true"
+                initiallyDeferred="true"/>
+    </changeSet>
+
 
 </databaseChangeLog>

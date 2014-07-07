@@ -254,5 +254,31 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="03-data-access-default-data-access-table" author="dmiller">
+        <createTable tableName="acm_access_control_default">
+            <column name="cm_access_control_default_id" type="NUMBER(32,0)">
+                <constraints primaryKeyName="pk_acm_access_control_default" primaryKey="true"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_state" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_level" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_accessor_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_decision" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_allow_discretionary_update" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 
 </databaseChangeLog>
