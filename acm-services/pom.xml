@@ -15,6 +15,7 @@
     <modules>
         <module>acm-service-users</module>
         <module>acm-service-search</module>
+        <module>acm-service-data-access-control</module>
     </modules>
 
 
