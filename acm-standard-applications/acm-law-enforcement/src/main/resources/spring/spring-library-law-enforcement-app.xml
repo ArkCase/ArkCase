@@ -53,7 +53,180 @@
                 <ref bean="searchNavigatorAction"/>
             </list>
         </property>
+        <property name="businessObjects">
+            <list>
+                <ref bean="complaintObjectType"/>
+                <ref bean="taskObjectType"/>
+            </list>
+        </property>
     </bean>
+
+    <!-- business objects -->
+    <bean id="complaintObjectType" class="com.armedia.acm.core.AcmObjectType">
+        <property name="name" value="Complaint"/>
+        <property name="description" value="Documentation of an event that may need to be investigated."/>
+        <property name="participantTypes">
+            <list>
+                <ref bean="complaintParticipantOwner"/>
+                <ref bean="complaintParticipantSupervisor"/>
+                <ref bean="complaintParticipantGroup"/>
+                <ref bean="complaintParticipantApprover"/>
+            </list>
+        </property>
+        <property name="states">
+            <list>
+                <ref bean="complaintDraftState"/>
+                <ref bean="complaintReviewState"/>
+                <ref bean="complaintActiveState"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="taskObjectType" class="com.armedia.acm.core.AcmObjectType">
+        <property name="name" value="Task"/>
+        <property name="description" value="A unit of work that must be completed."/>
+        <property name="participantTypes">
+            <list>
+                <ref bean="taskAssignee"/>
+                <ref bean="taskOriginator"/>
+            </list>
+        </property>
+        <property name="states">
+            <list>
+                <ref bean="taskAssignedState"/>
+                <ref bean="taskCompletedState"/>
+                <ref bean="taskUnassignedState"/>
+            </list>
+        </property>
+    </bean>
+    <!-- end of business objects -->
+
+    <!-- complaint participants -->
+    <bean id="complaintParticipantOwner" class="com.armedia.acm.core.AcmParticipantType">
+        <property name="name" value="Complaint Owner"/>
+        <property name="description" value="The user who is responsible for completing the complaint."/>
+        <property name="type" value="SINGLE_USER"/>
+        <property name="requiredOnACL" value="true"/>
+    </bean>
+    <bean id="complaintParticipantSupervisor" class="com.armedia.acm.core.AcmParticipantType">
+        <property name="name" value="Complaint Supervisor"/>
+        <property name="description" value="The user who has oversight over how the complaint is completed."/>
+        <property name="type" value="SINGLE_USER"/>
+        <property name="requiredOnACL" value="false"/>
+    </bean>
+    <bean id="complaintParticipantApprover" class="com.armedia.acm.core.AcmParticipantType">
+        <property name="name" value="Complaint Approver"/>
+        <property name="description" value="The users allowed to approve the complaint."/>
+        <property name="type" value="MULTIPLE_USERS"/>
+        <property name="requiredOnACL" value="false"/>
+    </bean>
+    <bean id="complaintParticipantGroup" class="com.armedia.acm.core.AcmParticipantType">
+        <property name="name" value="Complaint Group"/>
+        <property name="description" value="The group responsible for this type of complaint."/>
+        <property name="type" value="SINGLE_LDAP_GROUP"/>
+        <property name="requiredOnACL" value="false"/>
+    </bean>
+    <!-- end of complaint participants -->
+
+    <!-- task participants -->
+    <bean id="taskAssignee" class="com.armedia.acm.core.AcmParticipantType">
+        <property name="name" value="Task Assignee"/>
+        <property name="description" value="The user who must complete the task."/>
+        <property name="type" value="SINGLE_USER"/>
+        <property name="requiredOnACL" value="false"/>
+    </bean>
+    <bean id="taskOriginator" class="com.armedia.acm.core.AcmParticipantType">
+        <property name="name" value="Task Originator"/>
+        <property name="description" value="The user who created the task."/>
+        <property name="type" value="SINGLE_USER"/>
+        <property name="requiredOnACL" value="true"/>
+    </bean>
+    <!-- end of task participants -->
+
+
+    <!-- complaint states -->
+    <bean id="complaintDraftState" class="com.armedia.acm.core.AcmObjectState">
+        <property name="name" value="DRAFT"/>
+        <property name="description" value="A complaint that is still being written and has not been submitted for review."/>
+        <property name="validActions">
+            <list>
+                <ref bean="saveComplaintAction"/>
+                <ref bean="submitComplaintForApprovalAction"/>
+                <ref bean="addDocumentToComplaintAction"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="complaintReviewState" class="com.armedia.acm.core.AcmObjectState">
+        <property name="name" value="IN APPROVAL"/>
+        <property name="description" value="A complaint that is still being written and has not been submitted for review."/>
+        <property name="validActions">
+            <list>
+                <ref bean="addDocumentToComplaintAction"/>
+                <ref bean="approveComplaintAction"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="complaintActiveState" class="com.armedia.acm.core.AcmObjectState">
+        <property name="name" value="ACTIVE"/>
+        <property name="description" value="A complaint that is actively being worked."/>
+        <property name="validActions">
+            <list>
+                <ref bean="addDocumentToComplaintAction"/>
+            </list>
+        </property>
+    </bean>
+    <!-- end of complaint states -->
+
+    <!-- task states -->
+    <bean id="taskAssignedState" class="com.armedia.acm.core.AcmObjectState">
+        <property name="name" value="ASSIGNED"/>
+        <property name="description" value="A that is assigned to a user to complete."/>
+        <property name="validActions">
+            <list>
+                <ref bean="taskCompleteAction"/>
+            </list>
+        </property>
+    </bean>
+    <bean id="taskUnassignedState" class="com.armedia.acm.core.AcmObjectState">
+        <property name="name" value="UNASSIGNED"/>
+        <property name="description" value="A task that is not assigned to any user."/>
+        <property name="validActions">
+            <list>
+                <!-- note we have not implemented Assign Task yet -->
+            </list>
+        </property>
+    </bean>
+    <bean id="taskCompletedState" class="com.armedia.acm.core.AcmObjectState">
+        <property name="name" value="COMPLETE"/>
+        <property name="description" value="A task that has been completed"/>
+        <property name="validActions">
+            <list>
+            </list>
+        </property>
+    </bean>
+    <!-- end of task states -->
+
+
+    <!-- task actions -->
+    <bean id="createTaskAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Task"/>
+        <property name="iconName" value="i-checkmark"/>
+        <property name="url" value="/plugin/task/wizard"/>
+        <property name="requiredPrivilege" value="acm-complaint-create"/>
+    </bean>
+    <bean id="taskNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Tasks"/>
+        <property name="iconName" value="i-checkmark"/>
+        <property name="url" value="/plugin/task"/>
+        <property name="requiredPrivilege" value="acm-complaint-list"/>
+    </bean>
+    <bean id="taskCompleteAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Complete"/>
+        <property name="iconName" value="fa-check"/>
+        <property name="url" value="/api/{version}/plugin/task/completeTask/{taskId}"/>
+        <property name="requiredPrivilege" value="acm-task-complete"/>
+    </bean>
+    <!-- end of task actions -->
+
 
     <!-- Actions -->
     <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
@@ -68,17 +241,26 @@
         <property name="url" value="/plugin/complaint"/>
         <property name="requiredPrivilege" value="acm-complaint-list"/>
     </bean>
-    <bean id="createTaskAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Task"/>
-        <property name="iconName" value="i-checkmark"/>
-        <property name="url" value="/plugin/task/wizard"/>
+    <bean id="saveComplaintAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Save"/>
+        <property name="iconName" value="fa-save"/>
+        <property name="url" value="/api/{version}/plugin/complaint"/>
         <property name="requiredPrivilege" value="acm-complaint-create"/>
     </bean>
-    <bean id="taskNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Tasks"/>
-        <property name="iconName" value="i-checkmark"/>
-        <property name="url" value="/plugin/task"/>
-        <property name="requiredPrivilege" value="acm-complaint-list"/>
+    <bean id="submitComplaintForApprovalAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Submit for Approval"/>
+        <property name="iconName" value="fa-check"/>
+        <property name="url" value="/api/{version}/plugin/complaint/workflow"/>
+        <property name="requiredPrivilege" value="acm-complaint-create"/>
+    </bean>
+    <bean id="addDocumentToComplaintAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Add Document"/>
+        <property name="url" value="/api/{version}/plugin/complaint/file"/>
+        <property name="requiredPrivilege" value="acm-complaint-create"/>
+    </bean>
+    <bean id="approveComplaintAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Approve Complaint"/>
+        <property name="requiredPrivilege" value="acm-complaint-approve"/>
     </bean>
     <bean id="searchNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Search"/>
