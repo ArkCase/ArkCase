@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.services</groupId>
+    <groupId>com.armedia.acm.acm-services</groupId>
     <artifactId>acm-service-search</artifactId>
     <name>ACM Service: Search</name>
     <description>Quick Search and Advanced Search services.</description>

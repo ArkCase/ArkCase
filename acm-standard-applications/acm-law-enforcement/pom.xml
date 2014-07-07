@@ -130,12 +130,12 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.services</groupId>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-users</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.services</groupId>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-search</artifactId>
             <version>${acm.version}</version>
         </dependency>
