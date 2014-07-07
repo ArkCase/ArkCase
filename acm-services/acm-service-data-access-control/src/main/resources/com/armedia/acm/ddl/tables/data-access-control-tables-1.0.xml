@@ -1,0 +1,241 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-data-access-acl-table" author="dmiller">
+        <createTable tableName="acm_access_control_entry">
+            <column name="cm_access_control_entry_id" type="NUMBER(32,0)">
+                <constraints primaryKeyName="pk_acm_access_control_entry" primaryKey="true"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_state" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_level" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_accessor_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_accessor_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_decision" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_decision_reason" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_allow_discretionary_update" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="acm_access_control_decision_lu">
+            <column name="cm_id" type="NUMBER(32,0)">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_acl_decision"/>
+            </column>
+            <column name="cm_value" type="VARCHAR(4000)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_acl_decision_type"/>
+            </column>
+            <column name="cm_order" type="NUMBER(32,0)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_acl_decision_order"/>
+            </column>
+            <column name="cm_status" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="acm_access_control_decision_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="GRANT"/>
+            <column name="cm_order" valueNumeric="0"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_access_control_decision_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="DENY"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_access_control_decision_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="MANDATORY_GRANT"/>
+            <column name="cm_order" valueNumeric="2"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_access_control_decision_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="MANDATORY_DENY"/>
+            <column name="cm_order" valueNumeric="3"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+
+        <createTable tableName="acm_access_control_reason_lu">
+            <column name="cm_id" type="NUMBER(32,0)">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_acl_reason"/>
+            </column>
+            <column name="cm_value" type="VARCHAR(4000)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_acl_reason_type"/>
+            </column>
+            <column name="cm_order" type="NUMBER(32,0)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_acl_reason_order"/>
+            </column>
+            <column name="cm_status" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="acm_access_control_reason_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Default"/>
+            <column name="cm_order" valueNumeric="0"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_access_control_reason_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Discretionary"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_access_control_reason_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Inherited"/>
+            <column name="cm_order" valueNumeric="2"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_access_control_reason_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Business Rule"/>
+            <column name="cm_order" valueNumeric="3"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+
+        <createTable tableName="acm_boolean_lu">
+            <column name="cm_id" type="NUMBER(32,0)">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_boolean"/>
+            </column>
+            <column name="cm_value" type="VARCHAR(4000)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_boolean_type"/>
+            </column>
+            <column name="cm_order" type="NUMBER(32,0)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_boolean_order"/>
+            </column>
+            <column name="cm_status" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="acm_boolean_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Y"/>
+            <column name="cm_order" valueNumeric="0"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_boolean_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="N"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+
+        <createIndex tableName="acm_access_control_entry" indexName="idx_access_control_object_id">
+            <column name="cm_object_id"/>
+            <column name="cm_object_type"/>
+        </createIndex>
+    </changeSet>
+
+
+</databaseChangeLog>
