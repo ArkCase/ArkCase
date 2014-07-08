@@ -50,5 +50,23 @@
                 initiallyDeferred="true"/>
     </changeSet>
 
+    <changeSet id="03-data-access-control-unique-constraints" author="dmiller">
+        <comment>
+            The default ACL table can only have one row per object type, state, access level, and accessor type.  This
+            prevents having conflicting rows; e.g. one row for (Case, Draft, Read, Case Agent) where Decision = GRANT,
+            and another row for (Case, Draft, Read, Case Agent) where Decision = DENY.
+
+            Same logic applies for acm_access_control_entry.  Only one row per object type, object id, object state,
+            access level, and accessor id.
+        </comment>
+        <addUniqueConstraint tableName="acm_access_control_default"
+                             columnNames="cm_object_type, cm_object_state, cm_access_level, cm_accessor_type"
+                             constraintName="uk_access_control_default_rule"/>
+        <addUniqueConstraint tableName="acm_access_control_entry"
+                             columnNames="cm_object_type, cm_object_id, cm_object_state, cm_access_level, cm_accessor_id"
+                             constraintName="uk_access_control_entry_rule"/>
+
+    </changeSet>
+
 
 </databaseChangeLog>

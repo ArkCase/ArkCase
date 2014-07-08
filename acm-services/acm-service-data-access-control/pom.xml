@@ -15,6 +15,12 @@
     <description>Services to store, retrieve, and evaluate data access controls and access control lists.</description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.armedia.acm.spring-tools</groupId>
+            <artifactId>acm-spring-tools-data-source</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -34,6 +40,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>jdbc</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
