@@ -2,18 +2,11 @@
 
 /* @override http://localhost/~aj/acm3/resources/css/app.css */
 
-/* @override http://localhost/~aj/acm3/css/app.css */
+/* @override http://localhost/~aj/acm3/resources/css/app.css */
 
 /* @override http://localhost/~aj/acm3/css/app.css */
 
-/*jwu: try to use variables; not working
-background: url(var(--chosen_sprite))
-background: var(--chosen_sprite2)
-::root {
-    --chosen_sprite: '../vendors/chosen-1.1.0/chosen-sprite.png';
-    --chosen_sprite2: url('../vendors/chosen-1.1.0/chosen-sprite.png');
-}
-*/
+/* @override http://localhost/~aj/acm3/css/app.css */
 
 html {
   background-color: #f2f4f8;
@@ -927,6 +920,20 @@ body.container {
 }
 
 
+
+
+
+ul.fancytree-container {
+  background-color: transparent !important;
+  border: 0px !important;
+  
+  
+}
+
+ul.fancytree-container:focus
+{
+  outline:none;
+}
 
 
 

@@ -21,7 +21,7 @@ ComplaintList.Object = {
         }
 
         this.$lnkTitle          = $("#caseTitle");
-        this.$h4ComplaintNumber = $("#caseTitle").parent();
+        this.$h4TitleHeader     = $("#caseTitle").parent();
 
         this.$lnkIncident       = $("#incident");
         this.$lnkPriority       = $("#priority");
@@ -78,7 +78,7 @@ ComplaintList.Object = {
     }
     ,updateDetail: function(c) {
         this.setTextLnkTitle(c.complaintTitle);
-        this.setTextH4ComplaintNumber(" (" + c.complaintNumber + ")");
+        this.setTextH4TitleHeader(" (" + c.complaintNumber + ")");
         this.setTextLnkIncident(Acm.getDateFromDatetime(c.created));
         this.setTextLnkPriority(c.priority);
         this.setTextLnkAssigned(c.assignee);
@@ -98,8 +98,8 @@ ComplaintList.Object = {
     ,setTextLnkTitle: function(txt) {
         Acm.Object.setText(this.$lnkTitle, txt);
     }
-    ,setTextH4ComplaintNumber: function(txt) {
-        Acm.Object.setTextNodeText(this.$h4ComplaintNumber, txt, 1);
+    ,setTextH4TitleHeader: function(txt) {
+        Acm.Object.setTextNodeText(this.$h4TitleHeader, txt, 1);
     }
 
     ,setTextLnkIncident: function(txt) {

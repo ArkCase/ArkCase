@@ -8,7 +8,16 @@
 TaskList.Event = {
     initialize : function() {
     }
+    ,onClickLnkListItemImage : function(e) {
+        var taskId = TaskList.Object.getHiddenTaskId(e);
+        if (Task.getTaskId() == taskId) {
+            return;
+        } else {
+            Task.setTaskId(taskId);
+        }
 
+        this.doClickLnkListItem();
+    }
     ,onClickLnkListItem : function(e) {
         var taskId = TaskList.Object.getHiddenTaskId(e);
         if (Task.getTaskId() == taskId) {
@@ -28,10 +37,13 @@ TaskList.Event = {
             TaskList.Object.hiliteSelectedItem(taskId);
         }
     }
-
     ,onClickBtnComplete : function(e) {
         var taskId = Task.getTaskId();
         TaskList.Service.completeTask(taskId);
+    }
+    ,onClickBtnReject : function(e) {
+        alert("onClickBtnReject");
+        var taskId = Task.getTaskId();
     }
 
     ,onPostInit: function() {

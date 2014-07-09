@@ -36,6 +36,10 @@
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
 
+
+<link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
+<script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/jquery.fancytree.js"></script>
+
 <!-- X-Editable -->
 <link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
 <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
@@ -73,6 +77,50 @@
             weekStart: 1
         }
     }); });
+
+</script>
+
+<script type='text/javascript'>
+
+$(function () {
+    $("#tree").fancytree({
+
+        source: [{
+            title: "2014-03-12321",
+            tooltip: "Sample Compalint Title",
+            expanded: "fancytree-expanded",
+            children: [{
+                title: "Incident",
+                folder: true,
+                children: [{
+                    title: "Initiator "
+                }, {
+                    title: "People",
+                    folder: true,
+                    children: [{title: "Person 1"}, {title: "Person 2"}]
+                }]
+            }, {
+                title: "Attachments",
+                folder: true,
+                children: [{title: "Pending", folder:true}, {title: "Approved", folder:true}, {title: "Rejected", folder:true} ]
+            }, {
+                title: "Tasks",
+                folder: true,
+                children: [{title: "Unassigned", folder:true}, {title: "Assigned", folder:true}, {title: "Completed", folder:true} ]
+            }, {
+                title: "References",
+                folder: true,
+                children: [{title: "Complaints", folder:true}, {title: "Cases", folder:true}, {title: "Tasks", folder:true}, {title: "Documents", folder:true} ]
+            }, {
+                title: "Participants",
+                folder: true,
+                children: [{title: "Approvers", folder:true}, {title: "Collaborators", folder:true}, {title: "Watchers", folder:true} ]
+            }]
+        }]
+    });
+
+
+});
 
 </script>
 </jsp:attribute>
@@ -697,25 +745,20 @@
 </aside>
 <!-- /.aside -->
 
+
 <aside class="aside bg-light lt hide" id="chat">
     <section class="vbox animated fadeInLeft">
         <section class="scrollable">
             <header class="dk header">
-                <p>Approvers</p>
+                <p>Navigation</p>
             </header>
-            <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
-            <header class="dk header">
-                <p>Collaborators</p>
-            </header>
-            <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
-            <header class="dk header">
-                <p>Watchers</p>
-            </header>
-            <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
+            <div class="row m-b">
+                <div class="col-sm-12">
+                    <div id="tree"></div>
+
+                </div>
+            </div>
         </section>
-        <footer class="footer text-center">
-            <button class="btn btn-light bg-empty btn-sm"><i class="fa fa-plus"></i> New Partipant</button>
-        </footer>
     </section>
 </aside>
 </section>

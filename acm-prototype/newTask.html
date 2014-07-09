@@ -147,8 +147,8 @@
                           <p>Description</p>
                           <section class="row m-b-md">
                             <div class="col-sm-4">
-                            <label for="priority"  class="label">Owner</label>
-                              <select name="priority" class="form-control m-b">
+                            <label for="owner"  class="label">Owner</label>
+                              <select name="owner" class="form-control m-b">
                                 <option>Choose Owner</option>
                               </select>
                               <label for="dueDate" class="label">Due Date</label>
@@ -167,8 +167,8 @@
                                 <option>option 4</option>
                               </select>
                                
-                             <label for="dueDate" class="label">Start Date</label>
-                              <input id="dueDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                             <label for="startDate" class="label">Start Date</label>
+                              <input id="startDate" type="text" class="datepicker-input form-control" placeholder="Incident Date"  value="12-02-2013" data-date-format="dd-mm-yyyy" >
                               
                               
                               
@@ -188,9 +188,9 @@
                               </select>
                               
                               
-                                  <label for="intiatorFlags" class="label">Task Flags</label>
+                                  <label for="taskFlags" class="label">Task Flags</label>
                           
-                          <select data-placeholder="Choose Task Flags..." id="intiatorFlags" class="choose-intitiatorFlags form-control" multiple >
+                          <select data-placeholder="Choose Task Flags..." id="taskFlags" class="choose-taskFlags form-control" multiple >
                                 <option value=""></option>
                                 <option value="Protected Source">Protected Source</option>
                          </select>
@@ -207,7 +207,7 @@
                          
                           <hr />
                             
-                             <div class="complaintDetails">Complaint Details</div>
+                             <div class="detail">Task Details</div>
                             </div>
                             
                           </section>
@@ -275,7 +275,7 @@
 <script src="resources/js/summernote/summernote.js"></script> 
 <script>
     $(document).ready(function() {
-      $('.complaintDetails').summernote({
+      $('.detail').summernote({
   height: 300
 });
   });

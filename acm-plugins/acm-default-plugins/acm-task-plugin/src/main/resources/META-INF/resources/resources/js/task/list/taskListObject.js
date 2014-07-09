@@ -20,35 +20,126 @@ TaskList.Object = {
             TaskList.setSingleObject(false);
         }
 
-        this.$btnComplete               = $("button[data-title='Complete']");
+        this.$btnComplete       = $("button[data-title='Complete']");
+        this.$btnReject         = $("button[data-title='Reject']");
         this.$btnComplete.click(function(e) {TaskList.Event.onClickBtnComplete(e);});
+        this.$btnReject.click(function(e) {TaskList.Event.onClickBtnReject(e);});
 
-        this.$lnkTitle                  = $("#caseTitle");
-        this.$h4TitleDate               = $("#caseTitle").parent();
-        this.$divDetails                = $(".taskDetails");
+        this.$lnkTitle          = $("#caseTitle");
+        this.$h4TitleHeader     = $("#caseTitle").parent();
 
-        this.$edtTaskId                 = $("#taskId");
-        this.$edtTitle                  = $("#title");
-        this.$edtPriority               = $("#priority");
-        this.$edtDueDate                = $("#dueDate");
-        this.$edtAssignee               = $("#assignee");
-        //this.$chkAdhocTask              = $("#adhocTask");
-        this.$edtAdhocTask              = $("#adhocTask");
-        this.$edtBusinessProcessName    = $("#businessProcessName");
-//        this.$edtAttachedToObjectType   = $("#attachedToObjectType");
-//        this.$edtAttachedToObjectId     = $("#attachedToObjectId");
-        this.$divExtra                  = $("#divExtra");
+        this.$lnkDueDate        = $("#incident");
+        this.$lnkPriority       = $("#priority");
+        this.$lnkAssigned       = $("#assigned");
+        this.$lnkComplaintType  = $("#type");
+        this.$lnkStatus         = $("#status");
 
-        this.lnkAttachedToObject        = this.$divExtra.find("a");
-        this.scanAttachedToObjectType   = this.$divExtra.find("a > scan:first");
-        this.scanAttachedToObjectId     = this.$divExtra.find("a > scan:last");
+//old stuff
+//        this.$divDetails                = $(".taskDetails");
+//
+//        this.$edtTaskId                 = $("#taskId");
+//        this.$edtTitle                  = $("#title");
+//        this.$edtPriority               = $("#priority");
+//        this.$edtDueDate                = $("#dueDate");
+//        this.$edtAssignee               = $("#assignee");
+//        //this.$chkAdhocTask              = $("#adhocTask");
+//        this.$edtAdhocTask              = $("#adhocTask");
+//        this.$edtBusinessProcessName    = $("#businessProcessName");
+////        this.$edtAttachedToObjectType   = $("#attachedToObjectType");
+////        this.$edtAttachedToObjectId     = $("#attachedToObjectId");
+//        this.$divExtra                  = $("#divExtra");
+//
+//        this.lnkAttachedToObject        = this.$divExtra.find("a");
+//        this.scanAttachedToObjectType   = this.$divExtra.find("a > scan:first");
+//        this.scanAttachedToObjectId     = this.$divExtra.find("a > scan:last");
     }
 
 
     ,showAsideTasks: function(show) {
         Acm.Object.show(this.$asideTasks, show);
     }
-//=======================================
+    ,updateDetail: function(t) {
+        this.setTextTitle(t.title);
+        this.setTextTitleHeader(" (" + Acm.getDateFromDatetime(t.dueDate) + ")");
+
+        this.setTextLnkDueDate(Acm.getDateFromDatetime(t.dueDate));
+        this.setTextLnkPriority(t.priority);
+        this.setTextLnkAssigned(t.assignee);
+        //this.setTextLnkComplaintType(c.complaintType);
+        //this.setTextLnkStatus(c.status);
+
+//old stuff
+//        this.setValueEdtTitle(t.title);
+//        this.setValueEdtPriority(t.priority);
+//        this.setValueEdtDueDate(Acm.getDateFromDatetime(t.dueDate));
+//        this.setValueEdtAssignee(t.assignee);
+//        this.setValueEdtTaskId(t.taskId);
+//
+//        //this.setCheckedChkAdhocTask(t.adhocTask);
+//        if (t.adhocTask) {
+//            this.setValueEdtAdhocTask("Yes");
+//            this.showDivExtra(false);
+//        } else {
+//            this.setValueEdtAdhocTask("No");
+//            this.showDivExtra(true);
+//            this.setValueEdtBusinessProcessName(t.businessProcessName);
+////            this.setValueEdtAttachedToObjectType(t.attachedToObjectType);
+////            this.setValueEdtAttachedToObjectId(t.attachedToObjectId);
+//            this.setTextNodeScanAttachedToObjectType(t.attachedToObjectType);
+//            this.setTextNodeScanAttachedToObjectId(t.attachedToObjectId);
+//            this.setHrefLnkAttachedToObject(Acm.getContextPath() + "/plugin/complaint/" + t.attachedToObjectId);
+//        }
+
+    }
+    ,getHtmlUlTasks: function() {
+        return Acm.Object.getHtml(this.$ulTasks);
+    }
+    ,setHtmlUlTasks: function(val) {
+        return Acm.Object.setHtml(this.$ulTasks, val);
+    }
+    ,registerClickListItemEvents: function() {
+        this.$ulTasks.find("a.text-ellipsis").click(function(e) {TaskList.Event.onClickLnkListItem(this);});
+        this.$ulTasks.find("a.thumb-sm").click(function(e) {TaskList.Event.onClickLnkListItemImage(this);});
+    }
+    ,getHiddenTaskId: function(e) {
+        var $hidden = $(e).siblings("input[type='hidden']");
+        return $hidden.val();
+    }
+    ,setTextTitle: function(txt) {
+        Acm.Object.setText(this.$lnkTitle, txt);
+    }
+    ,setTextTitleHeader: function(txt) {
+        Acm.Object.setTextNodeText(this.$h4TitleHeader, txt, 1);
+    }
+    ,setTextLnkDueDate: function(txt) {
+        Acm.Object.setText(this.$lnkDueDate, txt);
+    }
+    ,setTextLnkPriority: function(txt) {
+        Acm.Object.setText(this.$lnkPriority, txt);
+    }
+    ,setTextLnkAssigned: function(txt) {
+        Acm.Object.setText(this.$lnkAssigned, txt);
+    }
+    ,setTextLnkComplaintType: function(txt) {
+        Acm.Object.setText(this.$lnkComplaintType, txt);
+    }
+    ,setTextLnkStatus: function(txt) {
+        Acm.Object.setText(this.$lnkStatus, txt);
+    }
+    ,hiliteSelectedItem: function() {
+        var cur = Task.getTaskId();
+        this.$ulTasks.find("li").each(function(index) {
+            var tid = $(this).find("input[type='hidden']").val();
+            if (tid == cur) {
+                $(this).addClass("active");
+            } else {
+                $(this).removeClass("active");
+            }
+        });
+    }
+
+
+//============= Old Stuff ==========================
     ,setValueEdtTitle: function(val) {
         return Acm.Object.setPlaceHolderInput(this.$edtTitle, val);
     }
@@ -92,63 +183,6 @@ TaskList.Object = {
         Acm.Object.show(this.$divExtra, show);
     }
 //=======================================
-    ,updateDetail: function(t) {
-        this.setTextTitle(t.title);
-        this.setTextTitleDate(" (" + Acm.getDateFromDatetime(t.dueDate) + ")");
-
-        this.setValueEdtTitle(t.title);
-        this.setValueEdtPriority(t.priority);
-        this.setValueEdtDueDate(Acm.getDateFromDatetime(t.dueDate));
-        this.setValueEdtAssignee(t.assignee);
-        this.setValueEdtTaskId(t.taskId);
-
-        //this.setCheckedChkAdhocTask(t.adhocTask);
-        if (t.adhocTask) {
-            this.setValueEdtAdhocTask("Yes");
-            this.showDivExtra(false);
-        } else {
-            this.setValueEdtAdhocTask("No");
-            this.showDivExtra(true);
-            this.setValueEdtBusinessProcessName(t.businessProcessName);
-//            this.setValueEdtAttachedToObjectType(t.attachedToObjectType);
-//            this.setValueEdtAttachedToObjectId(t.attachedToObjectId);
-            this.setTextNodeScanAttachedToObjectType(t.attachedToObjectType);
-            this.setTextNodeScanAttachedToObjectId(t.attachedToObjectId);
-            this.setHrefLnkAttachedToObject(Acm.getContextPath() + "/plugin/complaint/" + t.attachedToObjectId);
-        }
-
-    }
-    ,getHtmlUlTasks: function() {
-        return Acm.Object.getHtml(this.$ulTasks);
-    }
-    ,setHtmlUlTasks: function(val) {
-        return Acm.Object.setHtml(this.$ulTasks, val);
-    }
-    ,registerClickListItemEvents: function() {
-        this.$ulTasks.find("a.text-ellipsis").click(function(e) {TaskList.Event.onClickLnkListItem(this);});
-    }
-    ,getHiddenTaskId: function(e) {
-        var $hidden = $(e).siblings("input[type='hidden']");
-        return $hidden.val();
-    }
-    ,setTextTitle: function(txt) {
-        Acm.Object.setText(this.$lnkTitle, txt);
-    }
-    ,setTextTitleDate: function(txt) {
-        Acm.Object.setTextNodeText(this.$h4TitleDate, txt, 1);
-    }
-    ,hiliteSelectedItem: function() {
-        var cur = Task.getTaskId();
-        this.$ulTasks.find("li").each(function(index) {
-            var tid = $(this).find("input[type='hidden']").val();
-            if (tid == cur) {
-                $(this).addClass("active");
-            } else {
-                $(this).removeClass("active");
-            }
-        });
-    }
-
 };
 
 

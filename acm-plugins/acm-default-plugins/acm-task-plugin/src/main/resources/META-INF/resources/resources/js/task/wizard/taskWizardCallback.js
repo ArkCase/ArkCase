@@ -18,7 +18,7 @@ TaskWizard.Callback = {
     ,onAssigneesRetrieved : function(Callback, response) {
         var success = false;
         if (response) {
-            TaskWizard.Object.initAssignees(response);
+            TaskWizard.Object.initOwners(response);
             success = true;
         }
 
