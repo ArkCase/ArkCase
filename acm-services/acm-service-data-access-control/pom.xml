@@ -20,6 +20,11 @@
             <artifactId>acm-spring-tools-data-source</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-core-object-model</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- logging -->
         <dependency>
@@ -30,6 +35,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- preconditions -->
+        <dependency>
+            <groupId>com.google.collections</groupId>
+            <artifactId>google-collections</artifactId>
         </dependency>
 
         <!-- testing -->
