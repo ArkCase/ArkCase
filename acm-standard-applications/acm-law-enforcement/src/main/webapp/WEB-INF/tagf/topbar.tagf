@@ -9,7 +9,7 @@
                     <c:forEach items="${acm_application.topbarActions}" var="topbarAction">
                         <c:set var="requiredPrivilege" value="${topbarAction.requiredPrivilege}" scope="page"/>
                         <c:if test="${acm_privileges[requiredPrivilege]}">
-                            <div class="col-xs-3">
+                            <div class="col-xs-4">
                                 <div class="padder-v2">
                                     <a href="<c:url value='${topbarAction.url}'/>">
                                         <span class="m-b-xs block">

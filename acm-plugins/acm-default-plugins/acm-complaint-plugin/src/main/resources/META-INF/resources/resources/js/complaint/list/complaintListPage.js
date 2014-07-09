@@ -20,7 +20,7 @@ ComplaintList.Page = {
                 }
 
                 html += "<li class='list-group-item'> <a href='#' class='thumb-sm pull-left m-r-sm'> <img src='"
-                    + Acm.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a0.png'" + "class='img-circle'> </a> "
+                    + Acm.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a0.png" + "' class='img-circle'> </a> "
                     + "<a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
                     + Acm.getDateFromDatetime(c.created) + "</small><strong class='block'>"
                     + c.complaintTitle + "</strong><small>"

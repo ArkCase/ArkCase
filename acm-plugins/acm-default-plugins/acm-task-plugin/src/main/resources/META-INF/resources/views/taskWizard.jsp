@@ -23,14 +23,6 @@
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_parsley}/parsley.min.js"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_wizard}/jquery.bootstrap.wizard.js"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_wizard}/demo.js"></script>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/app.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
-
-    <!-- File Manager -->
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_knob}/js/jquery.knob.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/jquery.fileupload.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/jquery.iframe-transport.js"></script>
-<!--    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/file-uploads-custom.js"></script>     -->
 
     <!-- Summernote WYSIWYG -->
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
@@ -38,12 +30,6 @@
 
     <!-- Multi-Select Field WYSIWYG -->
     <script type="text/javascript" charset="utf-8" src="<c:url value='/'/>resources/vendors/${vd_chosen}/chosen.js"></script>
-
-
-    <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
-
 </jsp:attribute>
 
 <jsp:body>
@@ -59,29 +45,79 @@
                     <div class="col-sm-12">
                         <form id="wizardform" method="get" action="">
                             <div class="panel panel-default">
-                                <div class="panel-heading text-right">
-                                    <span class="hidden-sm"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i> Create Task</button></span>
+                                <div class="panel-heading">
+                                    <ul class="nav nav-tabs font-bold">
+                                        <li><a href="#step1" data-toggle="tab">Step 1: Task Information</a></li>
+                                    </ul>
+                                    <span class="hidden-sm">
+                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i>Create Task</button>
+                                    </span>
                                 </div>
                                 <div class="panel-body">
+                                    <div class="progress progress-xs m-t-sm">
+                                        <div class="progress-bar bg-success"></div>
+                                    </div>
                                     <div class="tab-content">
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                <label for="title" class="label">Title</label>
-                                                <input id="title" type="text" class="form-control" placeholder="Title">
 
-                                                <label for="priority" class="label">Priority</label>
-                                                <input id="priority" type="text" class="form-control" placeholder="Priority">
+                                        <div class="tab-pane" id="step1">
+                                            <h4>Task Information</h4>
+                                            <p>Description</p>
+                                            <section class="row m-b-md">
+                                                <div class="col-sm-4">
+                                                    <label for="owner"  class="label">Owner</label>
+                                                    <select name="owner" class="form-control m-b">
+                                                        <option>Choose Owner</option>
+                                                    </select>
 
-                                                <label for="dueDate" class="label">Due Date</label>
-                                                <input id="dueDate" type="text" class="datepicker-input form-control" placeholder="Due Date" value="" data-date-format="yyyy-mm-dd" style="display:none">
+                                                    <label for="dueDate" class="label">Due Date</label>
+                                                    <input id="dueDate" type="text" class="datepicker-input form-control" placeholder="Due Date"  value="" data-date-format="yyyy-mm-dd">
 
-                                                <label for="assignees"  class="label">Assignee</label>
-                                                <select id="assignees" name="assignees" class="form-control m-b">
-                                                    <option value=""></option>
-                                                </select>
-                                            </div>
+                                                    <label for="subject"  class="label">Subject</label>
+                                                    <input id="subject" type="text" class="form-control" placeholder="Subject">
+
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="priority"  class="label">Priority</label>
+                                                    <input id="priority" type="text" class="form-control" placeholder="Priority"  >
+
+                                                    <label for="startDate" class="label">Start Date</label>
+                                                    <input id="startDate" type="text" class="datepicker-input form-control" placeholder="Start Date"  value="" data-date-format="yyyy-mm-dd" >
+
+                                                    <label for="case" class="label">Associate Case</label>
+                                                    <input id="case" type="text" class="form-control" placeholder="Case"  >
+                                                </div>
+
+
+                                                <div class="col-sm-4">
+                                                    <label for="status"  class="label">Status</label>
+                                                    <select name="status" class="form-control m-b">
+                                                        <option>Choose Status</option>
+                                                    </select>
+
+                                                    <label for="taskFlags" class="label">Task Flags</label>
+                                                    <select data-placeholder="Choose Task Flags..." id="taskFlags" class="choose-taskFlags form-control" multiple >
+                                                        <option value=""></option>
+                                                        <option value="Protected Source">Protected Source</option>
+                                                    </select>
+
+                                                    <label for="complaint" class="label">Associate Complaint</label>
+                                                    <input id="complaint" type="text" class="form-control" placeholder="Complaint"  >
+                                                </div>
+
+                                                <div class="col-sm-12">
+                                                    <hr />
+
+                                                    <div class="detail"></div>
+                                                </div>
+
+                                            </section>
                                         </div>
 
+                                        <ul class="pager wizard m-b-sm">
+                                            <li class="previous first" style="display:none;"><a href="#">First</a></li>
+                                            <li class="previous"><a href="#">Previous</a></li>
+                                            <li class="next"><a href="#">Next</a></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>

@@ -118,6 +118,11 @@ Acm.Object = {
         //}).prop('selected', true); //for jQuery v1.6+
     	}).attr('selected', true);
     }
+    ,appendSelect: function($s, key, val) {
+        $s.append($("<option></option>")
+            .attr("value",key)
+            .text(val));
+    }
 
     //ignore first option, which is instruction
     ,getSelectValueIgnoreFirst: function($s) {
@@ -137,6 +142,7 @@ Acm.Object = {
             return this.value;
         }).get().join(sep);
     }
+
     ,getPlaceHolderInput : function($s) {
         var v;
         v = $s.val();
@@ -179,6 +185,15 @@ Acm.Object = {
     ,setSummernote : function($s, value) {
         $s.code(value);
     }
+
+    // Setting value directly to a date picker causes date picker popup initially visible.
+    // Use setValueDatePicker() to solve the problem.
+    ,setValueDatePicker: function($s, val) {
+        $s.attr("style", "display:none");
+        Acm.Object.setPlaceHolderInput($s, val);
+        Acm.Object.show($s, true);
+    }
+
     ,setEnable : function($s, value) {
         if (value == "true" || value == true) {
             $s.removeAttr("disabled");
@@ -311,7 +326,6 @@ Acm.Object = {
             $s.html("");
         }
     }
-
 
 
 };

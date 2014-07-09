@@ -31,6 +31,8 @@ ComplaintWizard.Object = {
         this.$selNotifications.chosen();
 
         this.$edtIncidentDate        = $("#incidentDate");
+        this.setValueEdtIncidentDate(Acm.getCurrentDay());
+
         this.$edtComplaintTitle      = $("#edtComplaintTitle");
         this.$selComplaintType       = $("select[name='complaintType']");
         this.$selPriority            = $("select[name='priority']");
@@ -62,25 +64,20 @@ ComplaintWizard.Object = {
     ,setTextH3Title: function(title) {
         Acm.Object.setText(this.$h3Title, title);
     }
-    ,_appendSelect: function($s, key, val) {
-        $s.append($("<option></option>")
-            .attr("value",key)
-            .text(val));
-    }
     ,initApprovers: function(data) {
         $.each(data, function(idx, val) {
-            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selApprovers, val.userId, val.fullName);
+            Acm.Object.appendSelect(ComplaintWizard.Object.$selApprovers, val.userId, val.fullName);
         });
         this.$selApprovers.chosen();
     }
     ,initComplaintTypes: function(data) {
         $.each(data, function(idx, val) {
-            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selComplaintType, val, val);
+            Acm.Object.appendSelect(ComplaintWizard.Object.$selComplaintType, val, val);
         });
     }
     ,initPriorities: function(data) {
         $.each(data, function(idx, val) {
-            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selPriority, val, val);
+            Acm.Object.appendSelect(ComplaintWizard.Object.$selPriority, val, val);
         });
     }
 
