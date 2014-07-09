@@ -7,6 +7,7 @@ import com.armedia.acm.core.AcmParticipantType;
 import com.armedia.acm.core.AcmUserAction;
 import com.armedia.acm.services.dataaccess.model.AcmAccessControlDefault;
 import com.armedia.acm.services.dataaccess.model.enums.AccessControlDecision;
+import com.armedia.acm.services.dataaccess.service.DataAccessDefaultGenerator;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * This class produces the initial default data access control entries from the AcmApplication object.
  */
-public class DataAccessDefaultGeneratorImpl
+public class DataAccessDefaultGeneratorImpl implements DataAccessDefaultGenerator
 {
     private List<String> crudOperations;
     private String allUsersIndicator;
@@ -25,12 +26,13 @@ public class DataAccessDefaultGeneratorImpl
     private AccessControlDecision participantAccess;
     private Boolean participantAccessDiscretionaryUpdateAllowed;
 
-    public List<AcmAccessControlDefault> generateDefaultAccessFromApplication(AcmApplication acmApplicaton)
+    @Override
+    public List<AcmAccessControlDefault> generateDefaultAccessFromApplication(AcmApplication acmApplication)
     {
-        Preconditions.checkNotNull(acmApplicaton, "acmApplication cannot be null");
-        Preconditions.checkArgument(acmApplicaton.getBusinessObjects() != null, "Business objects must be defined in " +
+        Preconditions.checkNotNull(acmApplication, "acmApplication cannot be null");
+        Preconditions.checkArgument(acmApplication.getBusinessObjects() != null, "Business objects must be defined in " +
                 "the ACM application");
-        Preconditions.checkArgument(!acmApplicaton.getBusinessObjects().isEmpty(), "Business objects must be defined in " +
+        Preconditions.checkArgument(!acmApplication.getBusinessObjects().isEmpty(), "Business objects must be defined in " +
                 "the ACM application");
         Preconditions.checkState(getCrudOperations() != null, "CRUD operations must be defined in this generator");
         Preconditions.checkState(!getCrudOperations().isEmpty(), "CRUD operations must be defined in this generator");
@@ -46,11 +48,11 @@ public class DataAccessDefaultGeneratorImpl
 
         List<AcmAccessControlDefault> defaultAccessors = new ArrayList<>();
 
-        addDefaultCrudAccessors(acmApplicaton.getBusinessObjects(), defaultAccessors);
+        addDefaultCrudAccessors(acmApplication.getBusinessObjects(), defaultAccessors);
 
-        addParticipantCrudAccessors(acmApplicaton.getBusinessObjects(), defaultAccessors);
+        addParticipantCrudAccessors(acmApplication.getBusinessObjects(), defaultAccessors);
 
-        addParticipantActionAccessors(acmApplicaton.getBusinessObjects(), defaultAccessors);
+        addParticipantActionAccessors(acmApplication.getBusinessObjects(), defaultAccessors);
 
         return defaultAccessors;
     }

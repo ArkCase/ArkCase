@@ -24,16 +24,16 @@ public class AcmAccessControlDefault implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "cm_object_type")
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType;
 
-    @Column(name = "cm_object_state")
+    @Column(name = "cm_object_state", insertable = true, updatable = false)
     private String objectState;
 
-    @Column(name = "cm_access_level")
+    @Column(name = "cm_access_level", insertable = true, updatable = false)
     private String accessLevel;
 
-    @Column(name = "cm_accessor_type")
+    @Column(name = "cm_accessor_type", insertable = true, updatable = false)
     private String accessorType;
 
     @Column(name = "cm_access_decision")
