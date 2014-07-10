@@ -182,6 +182,57 @@ securitySchemes:
             body:
               text/plain:
                 example: Complaint ID 2739 not found.
+  /dataaccess:
+    /accessControlDefaults:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      get:
+        description: Get a page of the default access controls.
+        queryParameters:
+          s:
+            description: A property to sort by.  Must be one of the properties shown in the resultPage of the example response.  Multiple values are allowed.
+            default: objectType,objectState,accessLevel,accessorType
+          start:
+            description: index of the first row to be returned.  The first page starts at row 0.
+            default: 0
+            type: integer
+          n:
+            description: maximum rows to be returned.
+            default: 10
+            type: integer
+        responses:
+          200:
+            description: Normal response.  Includes integers for totalCount, startRow, and maxRows, and an array of default ACL objects.
+            body:
+              application/json:
+                example: |
+                  {
+                    "totalCount" : 98,    // total number of default access controls
+                    "startRow" : 0,       // start row (from the request)
+                    "maxRows" : 1,        // max rows (from the request)
+                    "resultPage" : [{     // array of default access control objects
+                        "id" : 1861,      // default access ID
+                        "objectType" : "Complaint",                     // type of the object to be protected
+                        "objectState" : "DRAFT",                        // object state this default access applies to
+                        "accessLevel" : "Add Document",                 // the action protected by this default access
+                        "accessorType" : "Complaint Group",             // the type of participant to whom this access applies
+                        "accessDecision" : "GRANT",                     // whether access is permitted (GRANT, DENY, MANDATORY_GRANT, MANDATORY_DENY)
+                        "allowDiscretionaryUpdate" : true,              // whether this access can be updated at runtime for any given object
+                        "created" : "2014-07-09T18:03:16.826+0000",     // when the default access was created
+                        "creator" : "ACL_SYSTEM_USER",                  // user id that created the access
+                        "modified" : "2014-07-09T18:03:16.826+0000",    // when the default access was last modified
+                        "modifier" : "ACL_SYSTEM_USER"                  // user id that modified the default access
+                      }
+                    ]
+                  }
+          
+          403:
+            description: The user is not authorized to view the default access controls.
+          500:
+            description: Somehow the server was not able to deliver the requested default access controls.
+            body:
+              text/plain:
+                example: |
+                  Some error text will be returned.
   /task:
     /forUser/{user}:
       securedBy: [ spring_security_form_auth, spring_security_basic_auth ]

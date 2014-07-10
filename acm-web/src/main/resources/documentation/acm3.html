@@ -701,6 +701,208 @@
     <div class="panel panel-white">
     <div class="panel-heading">
         <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_dataaccess">
+                
+                <span class="parent">/plugin</span>/dataaccess
+            </a>
+        </h4>
+    </div>
+    <div id="panel__plugin_dataaccess" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_dataaccess_accessControlDefaults">
+                
+                    <span class="badge badge_get">get</span>
+                
+                <span class="parent">/plugin/dataaccess</span>/accessControlDefaults
+            </a>
+        </h4>
+    </div>
+    <div id="panel__plugin_dataaccess_accessControlDefaults" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_plugin_dataaccess_accessControlDefaults_get" class="list-group-item">
+                        <span class="badge badge_get">get</span>
+                        Get a page of the default access controls.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_plugin_dataaccess_accessControlDefaults_get">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_get">get</span>
+                            <span class="parent">/plugin/dataaccess</span>/accessControlDefaults
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Get a page of the default access controls.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_plugin_dataaccess_accessControlDefaults_get_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_plugin_dataaccess_accessControlDefaults_get_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_plugin_dataaccess_accessControlDefaults_get_request">
+                                
+
+                                
+                                    <h3>Query Parameters</h3>
+                                    <ul>
+                                        
+                                            <li>
+                                                <strong>s</strong>
+                                                <em>
+                                                    
+                                                    
+                                                      (string)
+                                                    
+                                                </em>
+
+                                                <p>A property to sort by.  Must be one of the properties shown in the resultPage of the example response.  Multiple values are allowed.</p>
+
+
+                                                
+                                            </li>
+                                        
+                                            <li>
+                                                <strong>start</strong>
+                                                <em>
+                                                    
+                                                    
+                                                      (integer)
+                                                    
+                                                </em>
+
+                                                <p>index of the first row to be returned.  The first page starts at row 0.</p>
+
+
+                                                
+                                            </li>
+                                        
+                                            <li>
+                                                <strong>n</strong>
+                                                <em>
+                                                    
+                                                    
+                                                      (integer)
+                                                    
+                                                </em>
+
+                                                <p>maximum rows to be returned.</p>
+
+
+                                                
+                                            </li>
+                                        
+                                    </ul>
+                                
+
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_plugin_dataaccess_accessControlDefaults_get_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>Normal response.  Includes integers for totalCount, startRow, and maxRows, and an array of default ACL objects.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>{
+  &quot;totalCount&quot; : 98,    // total number of default access controls
+  &quot;startRow&quot; : 0,       // start row (from the request)
+  &quot;maxRows&quot; : 1,        // max rows (from the request)
+  &quot;resultPage&quot; : [{     // array of default access control objects
+      &quot;id&quot; : 1861,      // default access ID
+      &quot;objectType&quot; : &quot;Complaint&quot;,                     // type of the object to be protected
+      &quot;objectState&quot; : &quot;DRAFT&quot;,                        // object state this default access applies to
+      &quot;accessLevel&quot; : &quot;Add Document&quot;,                 // the action protected by this default access
+      &quot;accessorType&quot; : &quot;Complaint Group&quot;,             // the type of participant to whom this access applies
+      &quot;accessDecision&quot; : &quot;GRANT&quot;,                     // whether access is permitted (GRANT, DENY, MANDATORY_GRANT, MANDATORY_DENY)
+      &quot;allowDiscretionaryUpdate&quot; : true,              // whether this access can be updated at runtime for any given object
+      &quot;created&quot; : &quot;2014-07-09T18:03:16.826+0000&quot;,     // when the default access was created
+      &quot;creator&quot; : &quot;ACL_SYSTEM_USER&quot;,                  // user id that created the access
+      &quot;modified&quot; : &quot;2014-07-09T18:03:16.826+0000&quot;,    // when the default access was last modified
+      &quot;modifier&quot; : &quot;ACL_SYSTEM_USER&quot;                  // user id that modified the default access
+    }
+  ]
+}
+</pre>
+                                            
+                                        
+                                    
+                                        <h2>HTTP status code 403</h2>
+                                        <p>The user is not authorized to view the default access controls.</p>
+
+
+                                        
+
+                                        
+                                    
+                                        <h2>HTTP status code 500</h2>
+                                        <p>Somehow the server was not able to deliver the requested default access controls.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: text/plain</strong></p>
+                                                <pre>Some error text will be returned.
+</pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+
+
+
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
             <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task">
                 
                 <span class="parent">/plugin</span>/task

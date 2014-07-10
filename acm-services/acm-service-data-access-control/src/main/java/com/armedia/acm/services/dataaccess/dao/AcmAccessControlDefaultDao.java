@@ -9,7 +9,13 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,9 +71,47 @@ public class AcmAccessControlDefaultDao
                 existingDefaults.get(0);
     }
 
+    public List<AcmAccessControlDefault> findPage(String[] sortOrder, int startRow, int maxRows)
+    {
+        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<AcmAccessControlDefault> query = builder.createQuery(AcmAccessControlDefault.class);
+        Root<AcmAccessControlDefault> root = query.from(AcmAccessControlDefault.class);
+        query.select(root);
+
+        List<Order> orderBy = new ArrayList<>();
+        for ( String so : sortOrder )
+        {
+            Order order = builder.asc(root.get(so.trim()));
+            orderBy.add(order);
+        }
+        query.orderBy(orderBy);
+
+        TypedQuery<AcmAccessControlDefault> dbQuery = getEntityManager().createQuery(query);
+        dbQuery.setFirstResult(startRow);
+        dbQuery.setMaxResults(maxRows);
+
+        List<AcmAccessControlDefault> results = dbQuery.getResultList();
+
+        return results;
+
+    }
+
+    public int countAll()
+    {
+        final String jpql = "SELECT COUNT(a.id) FROM AcmAccessControlDefault a";
+        Query query = getEntityManager().createQuery(jpql);
+
+        Long count = (Long) query.getSingleResult();
+
+        return count.intValue();
+
+    }
+
 
     public EntityManager getEntityManager()
     {
         return entityManager;
     }
+
+
 }
