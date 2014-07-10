@@ -43,6 +43,56 @@ public class LdapSyncServiceTest extends EasyMockSupport
     }
 
     @Test
+    public void queryLdapUsers_applicationRoles_differentCases()
+    {
+        Map<String, String> rolesToGroupMap = new HashMap<>();
+        String groupOne = "GroupOne";
+        String roleOne = "RoleOne";
+        rolesToGroupMap.put(roleOne, groupOne);
+
+        AcmLdapSyncConfig config = new AcmLdapSyncConfig();
+        config.setRoleToGroupMap(rolesToGroupMap);
+
+        String directoryName = "directoryName";
+
+        Set<String> roles = new HashSet<>();
+        List<AcmUser> users = new ArrayList<>();
+        Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
+        Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
+
+        String userDnOne = "dn1";
+        String userDnTwo = "dn2";
+        String[] memberDns = {userDnOne, userDnTwo};
+        LdapGroup group = new LdapGroup();
+        group.setGroupName(groupOne.toLowerCase());
+        group.setMemberDistinguishedNames(memberDns);
+
+        List<LdapGroup> groups = Arrays.asList(group);
+
+        AcmLdapEntity userOne = new AcmUser();
+        userOne.setDistinguishedName(userDnOne);
+
+        AcmLdapEntity userTwo = new AcmUser();
+        userTwo.setDistinguishedName(userDnTwo);
+
+        List<AcmLdapEntity> entities = Arrays.asList(userOne, userTwo);
+
+        expect(mockLdapDao.buildLdapTemplate(config)).andReturn(mockLdapTemplate);
+        expect(mockLdapDao.findGroups(mockLdapTemplate, config)).andReturn(groups);
+        expect(mockLdapDao.findGroupMembers(mockLdapTemplate, config, group)).andReturn(entities);
+
+        replayAll();
+
+        unit.queryLdapUsers(config, directoryName, roles, users, usersByApplicationRole, usersByLdapGroup);
+
+        verifyAll();
+
+        assertEquals(1, usersByApplicationRole.size());
+        assertEquals(1, usersByLdapGroup.size());
+
+    }
+
+    @Test
     public void queryLdapUsers_nestedGroups()
     {
         Map<String, String> rolesToGroupMap = new HashMap<>();
