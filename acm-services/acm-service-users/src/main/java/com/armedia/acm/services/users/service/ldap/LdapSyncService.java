@@ -205,8 +205,8 @@ public class LdapSyncService
         List<String> roles;
         for ( Map.Entry<String, String> roleMapEntry : roleToGroup.entrySet() )
         {
-            String role = roleMapEntry.getKey();
-            String group = roleMapEntry.getValue();
+            String role = roleMapEntry.getKey().toUpperCase();
+            String group = roleMapEntry.getValue().toUpperCase();
 
             if ( groupToRoleMap.containsKey(group) )
             {

@@ -8,7 +8,6 @@
     </bean>
 
     <bean id="fileDownloadAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDownloadAPIController">
-        <property name="errorManager" ref="acmSpringMvcErrorManager"/>
         <property name="muleClient" ref="muleClient"/>
         <property name="fileDao" ref="ecmFileDao"/>
     </bean>

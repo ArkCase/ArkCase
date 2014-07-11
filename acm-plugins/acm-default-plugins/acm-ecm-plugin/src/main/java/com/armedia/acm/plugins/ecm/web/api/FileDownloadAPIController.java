@@ -1,9 +1,9 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
-import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +26,6 @@ import java.io.InputStream;
 @RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
 public class FileDownloadAPIController implements ApplicationEventPublisherAware
 {
-    private AcmSpringMvcErrorManager errorManager;
-
     private MuleClient muleClient;
 
     private EcmFileDao fileDao;
@@ -44,7 +41,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             Authentication authentication,
             HttpSession httpSession,
             HttpServletResponse response
-    ) throws IOException
+    ) throws IOException, MuleException, AcmObjectNotFoundException
     {
         if (log.isInfoEnabled())
         {
@@ -77,7 +74,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             Authentication authentication,
             HttpSession httpSession,
             HttpServletResponse response
-    ) throws IOException
+    ) throws IOException, MuleException, AcmObjectNotFoundException
     {
         if (log.isInfoEnabled())
         {
@@ -98,7 +95,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             Authentication authentication,
             HttpSession httpSession,
             HttpServletResponse response
-    ) throws IOException
+    ) throws IOException, MuleException, AcmObjectNotFoundException
     {
         if (log.isInfoEnabled())
         {
@@ -110,26 +107,20 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         download(fileId, response);
     }
 
-    protected void download(String fileId, HttpServletResponse response) throws IOException
+    protected void download(String fileId, HttpServletResponse response) throws IOException, MuleException, AcmObjectNotFoundException
     {
-        try
-        {
-            MuleMessage downloadedFile = getMuleClient().send("vm://downloadFileFlow.in", fileId, null);
 
-            if ( downloadedFile.getPayload() instanceof ContentStream )
-            {
-                handleFilePayload((ContentStream) downloadedFile.getPayload(), response);
-            }
-            else
-            {
-                fileNotFound(response);
-            }
+        MuleMessage downloadedFile = getMuleClient().send("vm://downloadFileFlow.in", fileId, null);
 
-        }
-        catch (MuleException me)
+        if ( downloadedFile.getPayload() instanceof ContentStream )
         {
-            getErrorManager().sendErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, me.getMessage(), response);
+            handleFilePayload((ContentStream) downloadedFile.getPayload(), response);
         }
+        else
+        {
+            fileNotFound(response);
+        }
+
     }
 
     // called for normal processing - file was found
@@ -175,20 +166,9 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     }
 
     // called when the file was not found.
-    private void fileNotFound(HttpServletResponse response) throws IOException
+    private void fileNotFound(HttpServletResponse response) throws AcmObjectNotFoundException
     {
-        getErrorManager().sendErrorResponse(HttpStatus.BAD_REQUEST, "File not found.", response);
-    }
-
-
-    public AcmSpringMvcErrorManager getErrorManager()
-    {
-        return errorManager;
-    }
-
-    public void setErrorManager(AcmSpringMvcErrorManager errorManager)
-    {
-        this.errorManager = errorManager;
+        throw new AcmObjectNotFoundException(null, null, "File not found", null);
     }
 
     public MuleClient getMuleClient()

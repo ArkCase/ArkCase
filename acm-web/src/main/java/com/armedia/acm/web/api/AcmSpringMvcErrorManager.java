@@ -2,6 +2,7 @@ package com.armedia.acm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import org.slf4j.Logger;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -21,46 +21,45 @@ public class AcmSpringMvcErrorManager
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(AcmObjectNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public void handleException(HttpServletResponse response, AcmObjectNotFoundException e)
     {
-        sendResponse(response, e.getMessage());
+        sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmUserActionFailedException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public void handleException(HttpServletResponse response, AcmUserActionFailedException e)
     {
-        sendResponse(response, e.getMessage());
+        sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmCreateObjectFailedException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public void handleCreateObjectFailed(HttpServletResponse response, AcmCreateObjectFailedException e)
     {
-        sendResponse(response, e.getMessage());
+        sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmListObjectsFailedException.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public void handleListObjectsFailed(HttpServletResponse response, AcmListObjectsFailedException e)
     {
-        sendResponse(response, e.getMessage());
+        sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
+    }
+
+    @ExceptionHandler(AcmNotAuthorizedException.class)
+    public void handleNotAuthorized(HttpServletResponse response, AcmNotAuthorizedException e)
+    {
+        sendResponse(HttpStatus.FORBIDDEN, response, e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public void lastChanceHandler(HttpServletResponse response, Exception e)
     {
-        log.error("General exception from controller: " + e.getMessage(), e);
-        sendResponse(response, e.getMessage());
+        sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
-
-
-    protected void sendResponse(HttpServletResponse response, String message)
+    protected void sendResponse(HttpStatus status, HttpServletResponse response, String message)
     {
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+        response.setStatus(status.value());
 
         boolean empty = message == null || message.trim().isEmpty();
 
@@ -76,15 +75,4 @@ public class AcmSpringMvcErrorManager
         }
     }
 
-
-    public void sendErrorResponse(HttpStatus httpStatus, String message, HttpServletResponse response) throws IOException
-    {
-        response.setStatus(httpStatus.value());
-        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-
-        byte[] bytes = message == null ? "Unknown Error...".getBytes() : message.getBytes();
-        response.setContentLength(bytes.length);
-        response.getOutputStream().write(bytes);
-        response.getOutputStream().flush();
-    }
 }

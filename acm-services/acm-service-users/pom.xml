@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.services</groupId>
+    <groupId>com.armedia.acm.acm-services</groupId>
     <artifactId>acm-service-users</artifactId>
     <name>ACM Service: Users</name>
     <description>Find and manage ACM user accounts.</description>

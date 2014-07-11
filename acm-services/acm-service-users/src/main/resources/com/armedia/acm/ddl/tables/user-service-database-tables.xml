@@ -131,4 +131,43 @@
         <addNotNullConstraint tableName="acm_role" columnName="cm_role_type" defaultNullValue="APPLICATION_ROLE"/>
     </changeSet>
 
+    <changeSet id="07-users-add-participant-table" author="dmiller">
+        <createTable tableName="acm_participant">
+            <column name="cm_participant_id" type="NUMBER(32,0)">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_participant"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_ldap_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="acm_participant" indexName="idx_acm_participant_object">
+            <column name="cm_object_id"/>
+            <column name="cm_object_type"/>
+        </createIndex>
+        <createIndex tableName="acm_participant" indexName="idx_acm_participant_user">
+            <column name="UPPER(cm_participant_id)"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
