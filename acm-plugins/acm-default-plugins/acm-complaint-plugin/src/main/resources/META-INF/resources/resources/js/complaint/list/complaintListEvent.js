@@ -48,5 +48,38 @@ ComplaintList.Event = {
         } else {
             ComplaintList.Service.listComplaint();
         }
+
+        Acm.keepTrying(ComplaintList.Event._tryInitAssignee, 8, 200);
+        Acm.keepTrying(ComplaintList.Event._tryInitPriority, 8, 200);
+        Acm.keepTrying(ComplaintList.Event._tryInitComplaintType, 8, 200);
     }
+
+    ,_tryInitAssignee: function() {
+        var data = Acm.Object.getApprovers();
+        if (Acm.isNotEmpty(data)) {
+            ComplaintList.Object.initAssignee(data);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    ,_tryInitPriority: function() {
+        var data = Acm.Object.getPriorities();
+        if (Acm.isNotEmpty(data)) {
+            ComplaintList.Object.initPriority(data);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    ,_tryInitComplaintType: function() {
+        var data = Acm.Object.getComplaintTypes();
+        if (Acm.isNotEmpty(data)) {
+            ComplaintList.Object.initComplaintType(data);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 };

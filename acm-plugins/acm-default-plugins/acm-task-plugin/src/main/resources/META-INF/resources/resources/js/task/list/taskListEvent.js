@@ -53,5 +53,28 @@ TaskList.Event = {
         } else {
             TaskList.Service.listTask(Acm.getUserName());
         }
+
+        Acm.keepTrying(TaskList.Event._tryInitAssignee, 8, 200);
+        Acm.keepTrying(TaskList.Event._tryInitComplaintType, 8, 200);
+    }
+
+
+    ,_tryInitAssignee: function() {
+        var data = Acm.Object.getApprovers();
+        if (Acm.isNotEmpty(data)) {
+            TaskList.Object.initAssignee(data);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    ,_tryInitComplaintType: function() {
+        var data = Acm.Object.getComplaintTypes();
+        if (Acm.isNotEmpty(data)) {
+            TaskList.Object.initComplaintType(data);
+            return true;
+        } else {
+            return false;
+        }
     }
 };

@@ -44,6 +44,73 @@ ComplaintList.Object = {
         this._useFileUpload(this.$secDocDocuments, this.$tableDocDocuments, this.$upploadList, this.$lnkNewDoc);
 
         this.$tableRefDocuments = $("#secRefDocuments>div>table");
+
+
+        //$.fn.editable.defaults.url = '/post';
+        this.$lnkTitle.editable({placement: 'right'});
+        this.$lnkIncident.editable({placement: 'bottom'
+            ,format: 'yyyy-mm-dd'
+            ,viewformat: 'yyyy/mm/dd'
+            ,datepicker: {
+                weekStart: 1
+            }
+        });
+
+//test area
+//        $("#sex").editable({placement: 'right'
+//            , value: "F"
+//            ,source: [
+//                //{value: "", text: 'no select'},
+//                {value: "M", text: 'Male'}
+//                ,{value: "F", text: 'Female'}
+//            ]
+//            ,url: ""
+//            ,success: function(response, newValue) {
+//                console.log("editable, sex=" + newValue); //update backbone model
+//            }
+//
+//        });
+//        $("#sex").editable("setValue", "");
+
+
+        this.$tree = $("#tree");
+        this.$tree.fancytree({
+
+            source: [{
+                title: "2014-03-12321",
+                tooltip: "Sample Compalint Title",
+                expanded: "fancytree-expanded",
+                children: [{
+                    title: "Incident",
+                    folder: true,
+                    children: [{
+                        title: "Initiator "
+                    }, {
+                        title: "People",
+                        folder: true,
+                        children: [{title: "Person 1"}, {title: "Person 2"}]
+                    }]
+                }, {
+                    title: "Attachments",
+                    folder: true,
+                    children: [{title: "Pending", folder:true}, {title: "Approved", folder:true}, {title: "Rejected", folder:true} ]
+                }, {
+                    title: "Tasks",
+                    folder: true,
+                    children: [{title: "Unassigned", folder:true}, {title: "Assigned", folder:true}, {title: "Completed", folder:true} ]
+                }, {
+                    title: "References",
+                    folder: true,
+                    children: [{title: "Complaints", folder:true}, {title: "Cases", folder:true}, {title: "Tasks", folder:true}, {title: "Documents", folder:true} ]
+                }, {
+                    title: "Participants",
+                    folder: true,
+                    children: [{title: "Approvers", folder:true}, {title: "Collaborators", folder:true}, {title: "Watchers", folder:true} ]
+                }]
+            }]
+        });
+
+
     }
 
     ,showAsideComplaints: function(show) {
@@ -62,6 +129,45 @@ ComplaintList.Object = {
     }
 
 
+    ,initAssignee: function(data) {
+        var choices = []; //[{value: "", text: "Choose Assignee"}];
+        $.each(data, function(idx, val) {
+            var opt = {};
+            opt.value = val.userId;
+            opt.text = val.fullName;
+            choices.push(opt);
+        });
+
+        this.$lnkAssigned.editable({placement: 'bottom', value: "",
+            source: choices
+        });
+    }
+    ,initComplaintType: function(data) {
+        var choices = []; //[{value: "", text: "Choose Type"}];
+        $.each(data, function(idx, val) {
+            var opt = {};
+            opt.value = val;
+            opt.text = val;
+            choices.push(opt);
+        });
+
+        this.$lnkComplaintType.editable({placement: 'bottom', value: "",
+            source: choices
+        });
+    }
+    ,initPriority: function(data) {
+        var choices = []; //[{value: "", text: "Choose Priority"}];
+        $.each(data, function(idx, val) {
+            var opt = {};
+            opt.value = val;
+            opt.text = val;
+            choices.push(opt);
+        });
+
+        this.$lnkPriority.editable({placement: 'bottom', value: "",
+            source: choices
+        });
+    }
     ,getHtmlUlComplaints: function() {
         return Acm.Object.getHtml(this.$ulComplaints);
     }
@@ -77,12 +183,12 @@ ComplaintList.Object = {
         return $hidden.val();
     }
     ,updateDetail: function(c) {
-        this.setTextLnkTitle(c.complaintTitle);
+        this.setValueLnkTitle(c.complaintTitle);
         this.setTextH4TitleHeader(" (" + c.complaintNumber + ")");
-        this.setTextLnkIncident(Acm.getDateFromDatetime(c.created));
-        this.setTextLnkPriority(c.priority);
-        this.setTextLnkAssigned(c.assignee);
-        this.setTextLnkComplaintType(c.complaintType);
+        this.setValueLnkIncident(Acm.getDateFromDatetime(c.created));
+        this.setValueLnkPriority(c.priority);
+        this.setValueLnkAssigned(c.assignee);
+        this.setValueLnkComplaintType(c.complaintType);
         this.setTextLnkStatus(c.status);
 
         this.setHtmlDetails(c.details);
@@ -95,24 +201,25 @@ ComplaintList.Object = {
         ComplaintList.Page.buildTableDocDocuments(c);
         //ComplaintList.Page.buildTableRefDocuments(c);
     }
-    ,setTextLnkTitle: function(txt) {
-        Acm.Object.setText(this.$lnkTitle, txt);
+    ,setValueLnkTitle: function(txt) {
+        this.$lnkTitle.editable("setValue", txt);
     }
     ,setTextH4TitleHeader: function(txt) {
         Acm.Object.setTextNodeText(this.$h4TitleHeader, txt, 1);
     }
 
-    ,setTextLnkIncident: function(txt) {
+    ,setValueLnkIncident: function(txt) {
         Acm.Object.setText(this.$lnkIncident, txt);
+        //this.$lnkIncident.editable("setValue", txt);
     }
-    ,setTextLnkPriority: function(txt) {
-        Acm.Object.setText(this.$lnkPriority, txt);
+    ,setValueLnkPriority: function(txt) {
+        this.$lnkPriority.editable("setValue", txt);
     }
-    ,setTextLnkAssigned: function(txt) {
-        Acm.Object.setText(this.$lnkAssigned, txt);
+    ,setValueLnkAssigned: function(txt) {
+        this.$lnkAssigned.editable("setValue", txt);
     }
-    ,setTextLnkComplaintType: function(txt) {
-        Acm.Object.setText(this.$lnkComplaintType, txt);
+    ,setValueLnkComplaintType: function(txt) {
+        this.$lnkComplaintType.editable("setValue", txt);
     }
     ,setTextLnkStatus: function(txt) {
         Acm.Object.setText(this.$lnkStatus, txt);

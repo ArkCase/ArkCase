@@ -20,6 +20,7 @@
         <module>acm-addressable-plugin</module>
         <module>acm-person-plugin</module>
         <module>acm-ecm-plugin</module>
+        <module>acm-admin-plugin</module>
     </modules>
 
 

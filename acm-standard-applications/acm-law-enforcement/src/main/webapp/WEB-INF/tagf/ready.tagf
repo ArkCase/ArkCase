@@ -1,40 +1,40 @@
 <script type="text/javascript">
 
 jQuery(document).ready(function() {
-    if (typeof Acm != "undefined") {
+    if ("undefined" != typeof Acm) {
         Acm.initialize();
     }
-    if (typeof Topbar != "undefined") {
+    if ("undefined" != typeof Topbar) {
         Topbar.initialize();
     }
-    if (typeof Sidebar != "undefined") {
+    if ("undefined" != typeof Sidebar) {
         Sidebar.initialize();
     }
-    if (typeof Dashboard != "undefined") {
+    if ("undefined" != typeof Dashboard) {
         Dashboard.initialize();
     }
-    if (typeof Complaint != "undefined") {
+    if ("undefined" != typeof Complaint) {
         Complaint.initialize();
     }
-    if (typeof ComplaintWizard != "undefined") {
+    if ("undefined" != typeof ComplaintWizard) {
         ComplaintWizard.initialize();
     }
-    if (typeof ComplaintList != "undefined") {
+    if ("undefined" != typeof ComplaintList) {
         ComplaintList.initialize();
     }
-    if (typeof Task != "undefined") {
+    if ("undefined" != typeof Task) {
         Task.initialize();
     }
-    if (typeof TaskWizard != "undefined") {
+    if ("undefined" != typeof TaskWizard) {
         TaskWizard.initialize();
     }
-    if (typeof TaskList != "undefined") {
+    if ("undefined" != typeof TaskList) {
         TaskList.initialize();
     }
-    if (typeof Search != "undefined") {
+    if ("undefined" != typeof Search) {
         Search.initialize();
     }
-    if (typeof Admin != "undefined") {
+    if ("undefined" != typeof Admin) {
         Admin.initialize();
     }
 

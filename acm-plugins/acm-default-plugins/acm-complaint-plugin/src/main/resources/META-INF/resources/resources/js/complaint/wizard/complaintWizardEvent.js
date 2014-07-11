@@ -22,10 +22,39 @@ ComplaintWizard.Event = {
 
 
     ,onPostInit: function() {
-        ComplaintWizard.Service.getApprovers();
-        ComplaintWizard.Service.getComplaintTypes();
-        ComplaintWizard.Service.getPriorities();
+        Acm.keepTrying(ComplaintWizard.Event._tryInitApprovers, 8, 200);
+        Acm.keepTrying(ComplaintWizard.Event._tryInitComplaintTypes, 8, 200);
+        Acm.keepTrying(ComplaintWizard.Event._tryInitPriorities, 8, 200);
     }
+
+    ,_tryInitApprovers: function() {
+        var data = Acm.Object.getApprovers();
+        if (Acm.isNotEmpty(data)) {
+            ComplaintWizard.Object.initApprovers(data);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    ,_tryInitComplaintTypes: function() {
+        var data = Acm.Object.getComplaintTypes();
+        if (Acm.isNotEmpty(data)) {
+            ComplaintWizard.Object.initComplaintTypes(data);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    ,_tryInitPriorities: function() {
+        var data = Acm.Object.getPriorities();
+        if (Acm.isNotEmpty(data)) {
+            ComplaintWizard.Object.initPriorities(data);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     //-------------------------------------------------
     ,test : function(btn) {

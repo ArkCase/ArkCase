@@ -37,92 +37,12 @@
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
 
 
-<link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
-<script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/jquery.fancytree.js"></script>
+    <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
+    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/jquery.fancytree.js"></script>
 
-<!-- X-Editable -->
-<link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
-<script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
-<script>
-    $.fn.editable.defaults.url = '/post';
-    $(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); });
-    $(document).ready(function() { $('#priority').editable({placement: 'left', value: 2,
-        source: [
-            {value: 1, text: 'Low'},
-            {value: 2, text: 'Medium'},
-            {value: 3, text: 'High'},
-            {value: 3, text: 'Expedited'}
-        ]}); });
-    $(document).ready(function() { $('#type').editable({placement: 'bottom', value: 2,
-        source: [
-            {value: 1, text: 'Type 1'},
-            {value: 2, text: 'Type 2'},
-            {value: 3, text: 'Type 3'},
-            {value: 3, text: 'Type 4'}
-        ]}); });
-
-    $(document).ready(function() { $('#assigned').editable({placement: 'bottom', value: 2,
-        source: [
-            {value: 1, text: 'David Miller'},
-            {value: 2, text: 'Judy Hsu'},
-            {value: 3, text: 'Ronda Ringo'},
-            {value: 3, text: 'AJ McClary'}
-        ]}); });
-
-    $(document).ready(function() { $('#incident').editable({
-        format: 'yyyy-mm-dd',
-        placement: 'bottom',
-        viewformat: 'dd/mm/yyyy',
-        datepicker: {
-            weekStart: 1
-        }
-    }); });
-
-</script>
-
-<script type='text/javascript'>
-
-$(function () {
-    $("#tree").fancytree({
-
-        source: [{
-            title: "2014-03-12321",
-            tooltip: "Sample Compalint Title",
-            expanded: "fancytree-expanded",
-            children: [{
-                title: "Incident",
-                folder: true,
-                children: [{
-                    title: "Initiator "
-                }, {
-                    title: "People",
-                    folder: true,
-                    children: [{title: "Person 1"}, {title: "Person 2"}]
-                }]
-            }, {
-                title: "Attachments",
-                folder: true,
-                children: [{title: "Pending", folder:true}, {title: "Approved", folder:true}, {title: "Rejected", folder:true} ]
-            }, {
-                title: "Tasks",
-                folder: true,
-                children: [{title: "Unassigned", folder:true}, {title: "Assigned", folder:true}, {title: "Completed", folder:true} ]
-            }, {
-                title: "References",
-                folder: true,
-                children: [{title: "Complaints", folder:true}, {title: "Cases", folder:true}, {title: "Tasks", folder:true}, {title: "Documents", folder:true} ]
-            }, {
-                title: "Participants",
-                folder: true,
-                children: [{title: "Approvers", folder:true}, {title: "Collaborators", folder:true}, {title: "Watchers", folder:true} ]
-            }]
-        }]
-    });
-
-
-});
-
-</script>
+    <!-- X-Editable -->
+    <link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
+    <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -210,6 +130,11 @@ $(function () {
                     <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>
                     <small class="text-muted">Assigned To</small> </div>
             </div>
+
+            <!-- test area -->
+            <%--<br/><div>Test: <a href="#" id="sex" data-type="select" data-pk="1" data-value="" data-title="Select sex"></a></div>--%>
+            <%--<br/><div>Test: <a href="#" id="sex" data-type="select" data-pk="1" data-title="Select sex"></a></div>--%>
+
         </div>
     </div>
     <div class="col-xs-3">

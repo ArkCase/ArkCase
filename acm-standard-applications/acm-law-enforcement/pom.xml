@@ -66,6 +66,11 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <artifactId>acm-admin-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.default</groupId>
             <artifactId>acm-complaint-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>

@@ -12,73 +12,36 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
-<script type="text/javascript" src="<c:url value='/resources/js/task/task.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskList.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListObject.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListEvent.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListPage.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListRule.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListService.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/task.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskList.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListObject.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListEvent.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListPage.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>
 
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
 
-<!-- Summernote WYSIWYG -->
-<link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
-<script>
+    <!-- Summernote WYSIWYG -->
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
+    <%--<script>--%>
 
-    var edit = function() {
-        $('.taskDetails').summernote({focus: true});
-    };
-    var save = function() {
-        var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
-        $('.taskDetails').destroy();
-    };
+        <%--var edit = function() {--%>
+            <%--$('.taskDetails').summernote({focus: true});--%>
+        <%--};--%>
+        <%--var save = function() {--%>
+            <%--var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).--%>
+            <%--$('.taskDetails').destroy();--%>
+        <%--};--%>
 
-</script>
+    <%--</script>--%>
 
-<!-- X-Editable -->
-
-<link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
-<script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
-<script>
-    $.fn.editable.defaults.url = '/post';
-    $(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); });
-    $(document).ready(function() { $('#priority').editable({placement: 'left', value: 2,
-        source: [
-            {value: 1, text: 'Low'},
-            {value: 2, text: 'Medium'},
-            {value: 3, text: 'High'},
-            {value: 3, text: 'Expedited'}
-        ]}); });
-    $(document).ready(function() { $('#type').editable({placement: 'bottom', value: 2,
-        source: [
-            {value: 1, text: 'Type 1'},
-            {value: 2, text: 'Type 2'},
-            {value: 3, text: 'Type 3'},
-            {value: 3, text: 'Type 4'}
-        ]}); });
-
-    $(document).ready(function() { $('#assigned').editable({placement: 'bottom', value: 2,
-        source: [
-            {value: 1, text: 'David Miller'},
-            {value: 2, text: 'Judy Hsu'},
-            {value: 3, text: 'Ronda Ringo'},
-            {value: 3, text: 'AJ McClary'}
-        ]}); });
-
-    $(document).ready(function() { $('#incident').editable({
-        format: 'yyyy-mm-dd',
-        placement: 'bottom',
-        viewformat: 'dd/mm/yyyy',
-        datepicker: {
-            weekStart: 1
-        }
-    }); });
-
-</script>
+    <!-- X-Editable -->
+    <link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
+    <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -89,7 +52,7 @@
 <aside class="aside-lg" id="email-list">
     <section class="vbox">
         <header class="dker header clearfix">
-            <h3 class="m-b-xs text-black pull-left">Tasks</h3>
+            <h3 class="m-b-xs text-black pull-left">${pageDescriptor.descShort}</h3>
             <div class="btn-toolbar">
                 <div class="btn-group inline select pull-right">
                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
@@ -155,13 +118,13 @@
         <div class="panel b-a  bg-gradient">
             <div class="padder-v text-center clearfix">
                 <div class="col-xs-4 b-r">
-                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
+                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>
                     <small class="text-muted">Due Date</small> </div>
                 <div class="col-xs-4 b-r">
-                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
+                    <div class="h4 font-bold"><a href="#" id="priority" data-type="text" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>
                     <small class="text-muted">Priority</small> </div>
                 <div class="col-xs-4">
-                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">AJ McClary</a></div>
+                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>
                     <small class="text-muted">Assigned To</small> </div>
             </div>
         </div>
@@ -170,7 +133,7 @@
         <div class="panel b-a  bg-gradient">
             <div class="padder-v text-center clearfix">
                 <div class="col-xs-12">
-                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
+                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>
                     <small class="text-muted">Subject Type</small> </div>
             </div>
         </div>
