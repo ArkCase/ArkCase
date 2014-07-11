@@ -24,28 +24,28 @@ public class AcmSpringMvcErrorManager
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public void handleException(HttpServletResponse response, AcmObjectNotFoundException e)
     {
-        sendResponse(response, e.getMessage());
+        sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmUserActionFailedException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public void handleException(HttpServletResponse response, AcmUserActionFailedException e)
     {
-        sendResponse(response, e.getMessage());
+        sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmCreateObjectFailedException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public void handleCreateObjectFailed(HttpServletResponse response, AcmCreateObjectFailedException e)
     {
-        sendResponse(response, e.getMessage());
+        sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmListObjectsFailedException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public void handleListObjectsFailed(HttpServletResponse response, AcmListObjectsFailedException e)
     {
-        sendResponse(response, e.getMessage());
+        sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
@@ -53,14 +53,15 @@ public class AcmSpringMvcErrorManager
     public void lastChanceHandler(HttpServletResponse response, Exception e)
     {
         log.error("General exception from controller: " + e.getMessage(), e);
-        sendResponse(response, e.getMessage());
+        sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
 
 
-    protected void sendResponse(HttpServletResponse response, String message)
+    protected void sendResponse(HttpStatus status, HttpServletResponse response, String message)
     {
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+        response.setStatus(status.value());
 
         boolean empty = message == null || message.trim().isEmpty();
 
