@@ -17,6 +17,16 @@ TaskWizard.Event = {
 
 
     ,onPostInit: function() {
-        TaskWizard.Service.getAssignees();
+        Acm.keepTrying(TaskWizard.Event._tryInitOwners, 8, 200);
+    }
+
+    ,_tryInitOwners: function() {
+        var data = Acm.Object.getApprovers();
+        if (Acm.isNotEmpty(data)) {
+            TaskWizard.Object.initOwners(data);
+            return true;
+        } else {
+            return false;
+        }
     }
 };

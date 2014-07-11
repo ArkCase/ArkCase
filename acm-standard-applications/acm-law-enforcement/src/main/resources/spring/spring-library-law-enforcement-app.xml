@@ -21,6 +21,7 @@
                 <ref bean="complaintNavigatorAction"/>
                 <ref bean="taskNavigatorAction"/>
                 <ref bean="searchNavigatorAction"/>
+                <ref bean="adminNavigatorAction"/>
             </list>
         </property>
     </bean>
@@ -80,6 +81,12 @@
         <property name="url" value="/plugin/dashboard"/>
         <property name="requiredPrivilege" value="acm-dashboard"/>
     </bean>
+    <bean id="adminNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Admin"/>
+        <property name="iconName" value="i-settings"/>
+        <property name="url" value="/plugin/admin"/>
+        <property name="requiredPrivilege" value="acm-admin"/>
+    </bean>
     <bean id="helloWorldNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Hello World"/>
         <property name="iconName" value="i-world"/>
@@ -99,6 +106,11 @@
         <property name="title" value="Dashboard | ACM | Armedia Case Management"/>
         <property name="descShort" value="Dashboard"/>
         <property name="descLong" value="Dashboard"/>
+    </bean>
+    <bean id="adminPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Admin | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Admin"/>
+        <property name="descLong" value="Administration"/>
     </bean>
     <bean id="searchPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
         <property name="title" value="Search | ACM | Armedia Case Management"/>

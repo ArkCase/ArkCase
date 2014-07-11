@@ -34,6 +34,21 @@ TaskList.Object = {
         this.$lnkComplaintType  = $("#type");
         this.$lnkStatus         = $("#status");
 
+
+        this.$lnkTitle.editable({placement: 'right'});
+        this.$lnkDueDate.editable({placement: 'bottom'
+            ,format: 'yyyy-mm-dd'
+            ,viewformat: 'yyyy/mm/dd'
+            ,datepicker: {
+                weekStart: 1
+            }
+        });
+        this.$lnkPriority.editable({placement: 'bottom'
+            ,value: 50
+        });
+
+
+
 //old stuff
 //        this.$divDetails                = $(".taskDetails");
 //
@@ -59,13 +74,13 @@ TaskList.Object = {
         Acm.Object.show(this.$asideTasks, show);
     }
     ,updateDetail: function(t) {
-        this.setTextTitle(t.title);
+        this.setValueLnkTitle(t.title);
         this.setTextTitleHeader(" (" + Acm.getDateFromDatetime(t.dueDate) + ")");
 
-        this.setTextLnkDueDate(Acm.getDateFromDatetime(t.dueDate));
-        this.setTextLnkPriority(t.priority);
-        this.setTextLnkAssigned(t.assignee);
-        //this.setTextLnkComplaintType(c.complaintType);
+        this.setValueLnkDueDate(Acm.getDateFromDatetime(t.dueDate));
+        this.setValueLnkPriority(t.priority);
+        this.setValueLnkAssigned(t.assignee);
+        //this.setValueLnkComplaintType(c.complaintType);
         //this.setTextLnkStatus(c.status);
 
 //old stuff
@@ -105,26 +120,53 @@ TaskList.Object = {
         var $hidden = $(e).siblings("input[type='hidden']");
         return $hidden.val();
     }
-    ,setTextTitle: function(txt) {
-        Acm.Object.setText(this.$lnkTitle, txt);
+    ,setValueLnkTitle: function(txt) {
+        this.$lnkTitle.editable("setValue", txt);
     }
     ,setTextTitleHeader: function(txt) {
         Acm.Object.setTextNodeText(this.$h4TitleHeader, txt, 1);
     }
-    ,setTextLnkDueDate: function(txt) {
+    ,setValueLnkDueDate: function(txt) {
         Acm.Object.setText(this.$lnkDueDate, txt);
+        //this.$lnkDueDate.editable("setValue", txt);
     }
-    ,setTextLnkPriority: function(txt) {
-        Acm.Object.setText(this.$lnkPriority, txt);
+    ,setValueLnkPriority: function(txt) {
+        this.$lnkPriority.editable("setValue", txt);
     }
-    ,setTextLnkAssigned: function(txt) {
-        Acm.Object.setText(this.$lnkAssigned, txt);
+    ,setValueLnkAssigned: function(txt) {
+        this.$lnkAssigned.editable("setValue", txt);
     }
-    ,setTextLnkComplaintType: function(txt) {
-        Acm.Object.setText(this.$lnkComplaintType, txt);
+    ,setValueLnkComplaintType: function(txt) {
+        this.$lnkComplaintType.editable("setValue", txt);
     }
     ,setTextLnkStatus: function(txt) {
         Acm.Object.setText(this.$lnkStatus, txt);
+    }
+    ,initAssignee: function(data) {
+        var choices = []; //[{value: "", text: "Choose Assignee"}];
+        $.each(data, function(idx, val) {
+            var opt = {};
+            opt.value = val.userId;
+            opt.text = val.fullName;
+            choices.push(opt);
+        });
+
+        this.$lnkAssigned.editable({placement: 'bottom', value: "",
+            source: choices
+        });
+    }
+    ,initComplaintType: function(data) {
+        var choices = []; //[{value: "", text: "Choose Type"}];
+        $.each(data, function(idx, val) {
+            var opt = {};
+            opt.value = val;
+            opt.text = val;
+            choices.push(opt);
+        });
+
+        this.$lnkComplaintType.editable({placement: 'bottom', value: "",
+            source: choices
+        });
     }
     ,hiliteSelectedItem: function() {
         var cur = Task.getTaskId();
