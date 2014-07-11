@@ -1,4 +1,4 @@
-Acm.Validation = {
+Acm.Rule = {
     initialize: function() {
     }
 

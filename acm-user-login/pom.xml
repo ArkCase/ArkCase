@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>1.8</version>
+        <version>1.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,7 +15,7 @@
     <dependencies>
         <!-- acm -->
         <dependency>
-            <groupId>com.armedia.services</groupId>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-users</artifactId>
             <version>${acm.version}</version>
         </dependency>

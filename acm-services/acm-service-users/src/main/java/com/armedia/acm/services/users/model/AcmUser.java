@@ -8,12 +8,13 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "ACM_USER")
-public class AcmUser implements Serializable
+public class AcmUser implements Serializable, AcmLdapEntity
 {
     private static final long serialVersionUID = 3399640646540732944L;
 
@@ -43,6 +44,9 @@ public class AcmUser implements Serializable
 
     @Column(name = "cm_user_state")
     private String userState;
+
+    @Transient
+    private String distinguishedName;
 
     @PrePersist
     public void preInsert()
@@ -137,5 +141,23 @@ public class AcmUser implements Serializable
     public void setLastName(String lastName)
     {
         this.lastName = lastName;
+    }
+
+    @Override
+    public String getDistinguishedName()
+    {
+        return distinguishedName;
+    }
+
+    @Override
+    public void setDistinguishedName(String distinguishedName)
+    {
+        this.distinguishedName = distinguishedName;
+    }
+
+    @Override
+    public boolean isGroup()
+    {
+        return false;
     }
 }

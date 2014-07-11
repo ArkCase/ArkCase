@@ -3,25 +3,29 @@ package com.armedia.acm.plugins.ecm.web.api;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
-import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.io.InputStream;
 
@@ -29,9 +33,11 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-/**
- * Created by armdev on 6/9/14.
- */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {
+        "/spring/spring-library-ecm-plugin-test.xml",
+        "/spring/spring-web-acm-web.xml"
+})
 public class FileDownloadAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -41,11 +47,13 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
     private EcmFileDao mockFileDao;
     private Authentication mockAuthentication;
-    private AcmSpringMvcErrorManager errorManager;
     private ApplicationEventPublisher mockEventPublisher;
     private MuleClient mockMuleClient;
     private MuleMessage mockMuleMessage;
     private ContentStream mockContentStream;
+
+    @Autowired
+    private ExceptionHandlerExceptionResolver exceptionResolver;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -55,7 +63,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         mockFileDao = createMock(EcmFileDao.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
-        errorManager = new AcmSpringMvcErrorManager();
         mockEventPublisher = createMock(ApplicationEventPublisher.class);
         mockMuleClient = createMock(MuleClient.class);
         mockMuleMessage = createMock(MuleMessage.class);
@@ -64,11 +71,10 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         unit = new FileDownloadAPIController();
 
         unit.setFileDao(mockFileDao);
-        unit.setErrorManager(errorManager);
         unit.setApplicationEventPublisher(mockEventPublisher);
         unit.setMuleClient(mockMuleClient);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
     @Test
@@ -146,6 +152,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         verifyAll();
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), result.getResponse().getStatus());
     }
 }

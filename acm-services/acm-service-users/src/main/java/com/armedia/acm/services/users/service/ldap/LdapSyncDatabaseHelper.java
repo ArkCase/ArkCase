@@ -21,23 +21,34 @@ public class LdapSyncDatabaseHelper
     private UserDao userDao;
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    private static final String ROLE_TYPE_APPLICATION_ROLE = "APPLICATION_ROLE";
+    private static final String ROLE_TYPE_LDAP_GROUP = "LDAP_GROUP";
+
     @Transactional
-    public void updateDatabase(Set<String> allRoles, Map<String, List<AcmUser>> usersByDirectoryName, Map<String, List<AcmUser>> usersByRole)
+    public void updateDatabase(String directoryName,
+                               Set<String> allRoles,
+                               List<AcmUser> users,
+                               Map<String, List<AcmUser>> usersByRole,
+                               Map<String, List<AcmUser>> usersByLdapGroup)
     {
         // Mark all users invalid... users still in LDAP will change to valid during the sync
-        getUserDao().markAllUsersInvalid();
-        getUserDao().markAllRolesInvalid();
+        getUserDao().markAllUsersInvalid(directoryName);
+        getUserDao().markAllRolesInvalid(directoryName);
 
-        persistApplicationRoles(allRoles);
+        persistApplicationRoles(allRoles, ROLE_TYPE_APPLICATION_ROLE);
+        persistApplicationRoles(usersByLdapGroup.keySet(), ROLE_TYPE_LDAP_GROUP);
 
-        for ( Map.Entry<String, List<AcmUser>> usersByDirectoryNameEntry : usersByDirectoryName.entrySet() )
+        persistUsers(directoryName, users);
+
+        storeRoles(usersByRole);
+        storeRoles(usersByLdapGroup);
+    }
+
+    private void storeRoles(Map<String, List<AcmUser>> userMap)
+    {
+        for ( Map.Entry<String, List<AcmUser>> userMapEntry : userMap.entrySet() )
         {
-            persistUsers(usersByDirectoryNameEntry.getValue(), usersByDirectoryNameEntry.getKey());
-        }
-
-        for ( Map.Entry<String, List<AcmUser>> usersByRoleEntry : usersByRole.entrySet() )
-        {
-            persistUserRoles(usersByRoleEntry.getValue(), usersByRoleEntry.getKey());
+            persistUserRoles(userMapEntry.getValue(), userMapEntry.getKey());
         }
     }
 
@@ -66,7 +77,7 @@ public class LdapSyncDatabaseHelper
         return retval;
     }
 
-    protected List<AcmUser> persistUsers(List<AcmUser> users, String configBeanName)
+    protected List<AcmUser> persistUsers(String directoryName, List<AcmUser> users)
     {
         List<AcmUser> retval = new ArrayList<>(users.size());
 
@@ -79,7 +90,7 @@ public class LdapSyncDatabaseHelper
                 log.debug("persisting user '" + user.getUserId() + "'");
             }
 
-            user.setUserDirectoryName(configBeanName);
+            user.setUserDirectoryName(directoryName);
             AcmUser saved = getUserDao().saveAcmUser(user);
             retval.add(saved);
         }
@@ -87,7 +98,7 @@ public class LdapSyncDatabaseHelper
         return retval;
     }
 
-    protected void persistApplicationRoles(Set<String> applicationRoles)
+    protected void persistApplicationRoles(Set<String> applicationRoles, String roleType)
     {
         boolean debug = log.isDebugEnabled();
         for ( String role : applicationRoles )
@@ -98,6 +109,7 @@ public class LdapSyncDatabaseHelper
             }
             AcmRole jpaRole = new AcmRole();
             jpaRole.setRoleName(role);
+            jpaRole.setRoleType(roleType);
             getUserDao().saveAcmRole(jpaRole);
         }
     }

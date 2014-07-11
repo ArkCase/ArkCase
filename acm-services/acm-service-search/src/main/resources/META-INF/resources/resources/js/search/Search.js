@@ -31,13 +31,5 @@ var Search = Search || {
     ,OBJTYPE_TASK: "Task"
     ,OBJTYPE_DOCUMENT: "Document"
 
-    ,_quickSearchTerm: undefined
-    ,getQuickSearchTerm: function() {
-        return this._quickSearchTerm;
-    }
-    ,setQuickSearchTerm: function(term) {
-        this._quickSearchTerm = term;
-    }
-
 };
 

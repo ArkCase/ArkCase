@@ -15,6 +15,11 @@
     <script src="js/ie/respond.min.js"></script>
     <script src="js/ie/excanvas.js"></script>
   <![endif]-->
+
+<script src="resources/js/jquery.min.js"></script>
+<script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="resources/js/fancytree/jquery.fancytree.js"></script>
+<link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
 </head>
 <body class="">
 <section class="vbox">
@@ -22,20 +27,37 @@
     <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
     <ul class="nav navbar-nav hidden-xs">
       <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
-        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
-          <div class="row m-l-none m-r-none m-t m-b text-center">
-            <div class="col-xs-3">
-              <div class="padder-v2"> <a href="newComplaint.html"> <span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>
-            </div>
-            <div class="col-xs-3">
-              <div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>
-            </div>
-            <div class="col-xs-3">
-              <div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>
-            </div>
-            <div class="col-xs-3">
-              <div class="padder-v2"> <a href="newDocument.html"> <span class="m-b-xs block"> <i class="i i-file i-2x text-info-lt"></i> </span> <small class="text-muted">Document</small> </a> </div>
-            </div>
+        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">   <div class="row m-l-none m-r-none m-t m-b text-center">
+              <div class="col-xs-4">
+                <div class="padder-v2">
+                  <a href="newComplaint.html">
+                    <span class="m-b-xs block">
+                      <i class="i i-notice i-2x text-primary-lt"></i>
+                    </span>
+                    <small class="text-muted">Complaint</small>
+                  </a>
+                </div>
+              </div>
+              <div class="col-xs-4">
+                <div class="padder-v2">
+                  <a href="newCase.html">
+                    <span class="m-b-xs block">
+                      <i class="i i-folder i-2x text-danger-lt"></i>
+                    </span>
+                    <small class="text-muted">Case</small>
+                  </a>
+                </div>
+              </div>
+              <div class="col-xs-4">
+                <div class="padder-v2">
+                  <a href="newTask.html">
+                    <span class="m-b-xs block">
+                      <i class="i i-checkmark i-2x text-success-lt"></i>
+                    </span>
+                    <small class="text-muted">Task</small>
+                  </a>
+                </div>
+              </div>
           </div>
         </section>
       </li>
@@ -1318,173 +1340,18 @@
               
               <aside class="aside bg-light lt hide" id="chat">
                 <section class="vbox animated fadeInLeft">
-                
-             
-                <section class="scrollable">
-                
-                  <header class="dk header">
-                    <div class="pull-right">
-                      <button id="nestable-menu" class="btn btn-xs btn-default active" style="margin-top:15px;" data-toggle="button"><i class="fa fa-plus text fa-fw"></i><i class="fa fa-minus text-active fa-fw"></i></button>
-                    </div>
-                    <p>Navigation</p>
-                  </header>
-                  <div class="row m-b">
-                    <div class="col-sm-12">
-                      <div class="dd" id="nestable1">
-                        <ol class="dd-list">
-                          <li class="dd-item" data-id="1">
-                            <div class="dd-handle">Incident Title</div>
-                            <ol class="dd-list">
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Initiator Name</div>
-                              </li>
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">People</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle">Person 1</div>
-                                  </li>
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle">Person 2</div>
-                                  </li>
-                                </ol>
-                              </li>
-                            </ol>
-                          </li>
+                  <section class="scrollable">
+                    <header class="dk header">
+                      <p>Navigation</p>
+                    </header>
+                    <div class="row m-b">
+                      <div class="col-sm-12">
+                        <div id="tree"></div>
                        
-                          <li class="dd-item" data-id="1">
-                            <div class="dd-handle">Attachments</div>
-                            <ol class="dd-list">
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Pending</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle">Filename</div>
-                                  </li>
-                                </ol>
-                              </li>
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Approved</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle">Filename</div>
-                                  </li>
-                                </ol>
-                              </li>
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Rejected</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle">Filename</div>
-                                  </li>
-                                </ol>
-                              </li>
-                            </ol>
-                          </li>
-                          
-                          
-                          
-                          <li class="dd-item" data-id="1">
-                            <div class="dd-handle">Tasks</div>
-                            <ol class="dd-list">
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Unassigned</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle">Task Name</div>
-                                  </li>
-                                </ol>
-                              </li>
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Assigned</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle">Task Name</div>
-                                  </li>
-                                </ol>
-                              </li>
-                            </ol>
-                          </li>
-                          
-                           <li class="dd-item" data-id="1">
-                            <div class="dd-handle">References</div>
-                            <ol class="dd-list">
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Other Complaints</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle">Complaint ID - Title</div>
-                                  </li>
-                                </ol>
-                              </li>
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Other Cases</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle">Case ID - Title</div>
-                                  </li>
-                                </ol>
-                              </li>
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Other Tasks</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle">Task Title</div>
-                                  </li>
-                                </ol>
-                              </li>
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Other Documents</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle">Document Title</div>
-                                  </li>
-                                </ol>
-                              </li>
-                            </ol>
-                          </li>
-                          
-                           <li class="dd-item" data-id="1">
-                            <div class="dd-handle">Participants</div>
-                            <ol class="dd-list">
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Approvers</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle"> Name</div>
-                                  </li>
-                                </ol>
-                              </li>
-                              <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Collaborators</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle"> Name</div>
-                                  </li>
-                                </ol>
-                              </li>
-                               <li class="dd-item" data-id="1">
-                                <div class="dd-handle">Watchers</div>
-                                <ol class="dd-list">
-                                  <li class="dd-item" data-id="1">
-                                    <div class="dd-handle"> Name</div>
-                                  </li>
-                                </ol>
-                              </li>
-                            </ol>
-                          </li>
-                          
-                          
-                        </ol>
-                        
-                        
-                     
-                        
                       </div>
                     </div>
-                  </div>
+                  </section>
                 </section>
-                 </section>
               </aside>
             </section>
           </section>
@@ -1493,7 +1360,51 @@
     </section>
   </section>
 </section>
-<script src="resources/js/jquery.min.js"></script> 
+<script type='text/javascript'>//<![CDATA[ 
+
+$(function () {
+    $("#tree").fancytree({
+   
+        source: [{
+            title: "2014-03-12321",
+			tooltip: "Sample Compalint Title",
+            expanded: "fancytree-expanded",
+            children: [{
+                title: "Incident", 
+				folder: true, 
+				children: [{
+					title: "Initiator "
+					}, {
+					title: "People", 
+					folder: true, 
+					children: [{title: "Person 1"}, {title: "Person 2"}]
+			}]
+            }, {
+                title: "Attachments",
+				folder: true, 
+				children: [{title: "Pending", folder:true}, {title: "Approved", folder:true}, {title: "Rejected", folder:true} ]
+            }, {
+                title: "Tasks",
+				folder: true, 
+				children: [{title: "Unassigned", folder:true}, {title: "Assigned", folder:true}, {title: "Completed", folder:true} ]
+            }, {
+                title: "References",
+				folder: true, 
+				children: [{title: "Complaints", folder:true}, {title: "Cases", folder:true}, {title: "Tasks", folder:true}, {title: "Documents", folder:true} ]
+            }, {
+                title: "Participants",
+				folder: true, 
+				children: [{title: "Approvers", folder:true}, {title: "Collaborators", folder:true}, {title: "Watchers", folder:true} ]
+            }]
+        }]
+    });
+
+   
+});
+//]]>  
+
+</script> 
+
 <!-- Bootstrap --> 
 <script src="resources/js/bootstrap.js"></script> 
 
@@ -1558,11 +1469,6 @@ $(document).ready(function() { $('#incident').editable({
 <!-- App --> 
 <script src="resources/js/app.js"></script> 
 <script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
-<script src="resources/js/app.plugin.js"></script> 
-
-<!-- Nestable Lists --> 
-<script src="resources/js/nestable/jquery.nestable.js"></script> 
-<script src="resources/js/nestable/demo.js"></script>
-<link rel="stylesheet" href="resources/js/nestable/nestable.css" type="text/css" />
+<script src="resources/js/app.plugin.js"></script>
 </body>
 </html>

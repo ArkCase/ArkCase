@@ -17,11 +17,16 @@ TaskWizard.Event = {
 
 
     ,onPostInit: function() {
-        TaskWizard.Service.getAssignees();
+        Acm.keepTrying(TaskWizard.Event._tryInitOwners, 8, 200);
+    }
 
-        TaskWizard.Object.setValueEdtDueDate(Acm.getCurrentDay());
-        TaskWizard.Object.showEdtDueDate(true);     //temp fix: show a non-display due date to get rid of initial popup
-
-        TaskWizard.Object.setValueEdtPriority(50);
+    ,_tryInitOwners: function() {
+        var data = Acm.Object.getApprovers();
+        if (Acm.isNotEmpty(data)) {
+            TaskWizard.Object.initOwners(data);
+            return true;
+        } else {
+            return false;
+        }
     }
 };

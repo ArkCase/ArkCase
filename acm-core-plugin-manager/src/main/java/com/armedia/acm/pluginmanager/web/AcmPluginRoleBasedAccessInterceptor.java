@@ -1,11 +1,10 @@
 package com.armedia.acm.pluginmanager.web;
 
+import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
-import com.armedia.acm.web.api.AcmSpringMvcErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +20,6 @@ import java.util.Map;
 public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapter
 {
     private AcmPluginManager acmPluginManager;
-    private AcmSpringMvcErrorManager errorManager;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -50,11 +48,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
             // no user privileges.  somehow the user is logged in and is calling a plugin URL, but does not have
             // privileges in the user session.  Somehow the login success handler did not run.  This is an
             // anomalous situation.  Better return HTTP 403.
-            String message = "Unknown user privileges; you do not have access to " + request.getServletPath();
-            getErrorManager().sendErrorResponse(HttpStatus.FORBIDDEN, message, response);
-
-            return false;
-
+            throw new AcmNotAuthorizedException(request.getServletPath());
         }
 
         List<AcmPluginUrlPrivilege> urlPrivileges = getAcmPluginManager().getUrlPrivileges();
@@ -62,11 +56,10 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
 
         if ( ! hasPrivilege )
         {
-            String message = "You do not have privileges for " + method + " " + url;
-            getErrorManager().sendErrorResponse(HttpStatus.FORBIDDEN, message, response);
+            throw new AcmNotAuthorizedException(request.getServletPath());
         }
 
-        return hasPrivilege;
+        return true;
     }
 
     protected boolean determinePrivilege(
@@ -100,15 +93,5 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
     public void setAcmPluginManager(AcmPluginManager acmPluginManager)
     {
         this.acmPluginManager = acmPluginManager;
-    }
-
-    public AcmSpringMvcErrorManager getErrorManager()
-    {
-        return errorManager;
-    }
-
-    public void setErrorManager(AcmSpringMvcErrorManager errorManager)
-    {
-        this.errorManager = errorManager;
     }
 }

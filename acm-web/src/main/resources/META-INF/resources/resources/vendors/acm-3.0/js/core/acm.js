@@ -9,14 +9,22 @@ var Acm = Acm || {
         Acm.Dispatcher.initialize();
         Acm.Ajax.initialize();
         Acm.Object.initialize();
-        Acm.Validation.initialize();
+        Acm.Event.initialize();
+        Acm.Service.initialize();
+        Acm.Callback.initialize();
+        Acm.Rule.initialize();
+
+        Acm.deferred(Acm.Event.onPostInit);
     }
 
     ,Dialog : {}
     ,Dispatcher : {}
     ,Ajax : {}
     ,Object : {}
-    ,Validation : {}
+    ,Event : {}
+    ,Service : {}
+    ,Callback : {}
+    ,Rule : {}
 
     ,getContextPath: function() {
         return Acm.Object.getContextPath();
@@ -141,8 +149,18 @@ var Acm = Acm || {
         //return JSON.parse('{"' + decodeURI(param).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     }
 
-    ,deferred: function(fcn) {
-        setTimeout(fcn, 200);
+    ,deferred: function(fn) {
+        setTimeout(fn, 200);
+    }
+
+    ,keepTrying: function(fn, trials, interval) {
+        if (!fn()) {
+            if (1 < trials) {
+                setTimeout(function(){
+                    Acm.keepTrying(fn, trials - 1, interval * 2);
+                }, interval);
+            };
+        }
     }
 
     //datetime format: "2014-04-30T16:51:33.914+0000"
@@ -164,6 +182,9 @@ var Acm = Acm || {
         return yyyyMmDd;
     }
 
+    ,goHome: function() {
+        window.location.href = Acm.getContextPath() + "/plugin/dashboard";
+    }
 
 //    ,_foobar_cont: function (){
 //        console.log("finished.");

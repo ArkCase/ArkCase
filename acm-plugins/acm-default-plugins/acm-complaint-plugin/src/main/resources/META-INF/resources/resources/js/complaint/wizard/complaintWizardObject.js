@@ -13,6 +13,8 @@ ComplaintWizard.Object = {
         this.$btnSubmit              = $("button[data-title='Submit']");
         this.$btnSubmit.click(function(e) {ComplaintWizard.Event.onClickBtnSubmit(e);});
 
+        this.$h3Title = $("section>div>h3");
+
         this.$selIntiatorFlags       = $(".choose-intitiatorFlags");   //"#intiatorFlags"
         this.$selIntiatorFlags.chosen();
 
@@ -29,6 +31,8 @@ ComplaintWizard.Object = {
         this.$selNotifications.chosen();
 
         this.$edtIncidentDate        = $("#incidentDate");
+        this.setValueEdtIncidentDate(Acm.getCurrentDay());
+
         this.$edtComplaintTitle      = $("#edtComplaintTitle");
         this.$selComplaintType       = $("select[name='complaintType']");
         this.$selPriority            = $("select[name='priority']");
@@ -54,25 +58,26 @@ ComplaintWizard.Object = {
         });
     }
 
-    ,_appendSelect: function($s, key, val) {
-        $s.append($("<option></option>")
-            .attr("value",key)
-            .text(val));
+    ,getTextH3Title: function() {
+        return Acm.Object.getText(this.$h3Title);
+    }
+    ,setTextH3Title: function(title) {
+        Acm.Object.setText(this.$h3Title, title);
     }
     ,initApprovers: function(data) {
         $.each(data, function(idx, val) {
-            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selApprovers, val.userId, val.fullName);
+            Acm.Object.appendSelect(ComplaintWizard.Object.$selApprovers, val.userId, val.fullName);
         });
         this.$selApprovers.chosen();
     }
     ,initComplaintTypes: function(data) {
         $.each(data, function(idx, val) {
-            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selComplaintType, val, val);
+            Acm.Object.appendSelect(ComplaintWizard.Object.$selComplaintType, val, val);
         });
     }
     ,initPriorities: function(data) {
         $.each(data, function(idx, val) {
-            ComplaintWizard.Object._appendSelect(ComplaintWizard.Object.$selPriority, val, val);
+            Acm.Object.appendSelect(ComplaintWizard.Object.$selPriority, val, val);
         });
     }
 
@@ -220,9 +225,6 @@ ComplaintWizard.Object = {
     ,_jqXHR : undefined
     ,_useFileUpload: function($upload, $drop, $ul, $click) {
         $(function(){
-
-            //var ul = $ul;
-
             $click.click(function(){
                 // Simulate a click on the file input button
                 // to show the file browser dialog
@@ -230,54 +232,28 @@ ComplaintWizard.Object = {
             });
 
             // Initialize the jQuery File Upload plugin
-            //jwu $('#upload').fileupload({
             _jqXHR = $upload.fileupload({
-                //To Explore:
-                //redirect : to complaintList
-                //redirectParamName:
-                //
-//check if complaintId not created, create it first
-//                submit: function (e, data) {
-//                    var input = $('#input');
-//                    data.formData = {example: input.val()};
-//                    if (!data.formData.example) {
-//                        data.context.find('button').prop('disabled', false);
-//                        input.focus();
-//                        return false;
-//                    }
-//                },
-                done: function (e, data) {
+                url: Acm.getContextPath() + ComplaintWizard.Service.API_UPLOAD_COMPLAINT_FILE
+                ,dropZone: $drop
+
+                ,done: function (e, data) {
                     var a1 = data.result
                     var a2 = data.textStatus;
                     var a3 = data.jqXHR;
                     var z = 1;
                     //alert("done");
-                },
-//                always: function (e, data) {
-//                    // data.result
-//                    // data.textStatus;
-//                    // data.jqXHR;
-//                },
-                //autoUpload: false
-                //sequentialUploads: true
+                }
 
-
-
-                url: Acm.getContextPath() + ComplaintWizard.Service.API_UPLOAD_COMPLAINT_FILE,
-
-                formData: function(form) {
+                ,formData: function(form) {
                     var fd = [{}];
                     fd[0].name = "complaintId";
                     fd[0].value = Complaint.getComplaintId();
                     return fd;
-                },
-
-                // This element will accept file drag/drop uploading
-                dropZone: $drop,
+                }
 
                 // This function is called when a file is added to the queue;
                 // either via the browse button, or via drag/drop:
-                add: function (e, data) {
+                ,add: function (e, data) {
 
                     var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
                         ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
@@ -296,7 +272,6 @@ ComplaintWizard.Object = {
                     tpl.find('span').click(function(){
 
                         if(tpl.hasClass('working')){
-                            //jwu jqXHR.abort();
                             _jqXHR.abort();
                         }
 
@@ -307,12 +282,10 @@ ComplaintWizard.Object = {
                     });
 
                     // Automatically upload the file once it is added to the queue
-                    //var jqXHR = data.submit();
                     _jqXHR = data.submit();
-                },
+                }
 
-                progress: function(e, data){
-
+                ,progress: function(e, data){
                     // Calculate the completion percentage of the upload
                     var progress = parseInt(data.loaded / data.total * 100, 10);
 
@@ -323,12 +296,35 @@ ComplaintWizard.Object = {
                     if(progress == 100){
                         data.context.removeClass('working');
                     }
-                },
+                }
 
-                fail:function(e, data){
+                ,fail:function(e, data){
                     // Something has gone wrong!
                     data.context.addClass('error');
                 }
+
+
+//To Explore:
+                //redirect : to complaintList
+                //redirectParamName:
+                //autoUpload: false
+                //sequentialUploads: true
+//
+//check if complaintId not created, create it first
+//                ,submit: function (e, data) {
+//                    var input = $('#input');
+//                    data.formData = {example: input.val()};
+//                    if (!data.formData.example) {
+//                        data.context.find('button').prop('disabled', false);
+//                        input.focus();
+//                        return false;
+//                    }
+//                }
+//                ,always: function (e, data) {
+//                    // data.result
+//                    // data.textStatus;
+//                    // data.jqXHR;
+//                }
 
             });
 

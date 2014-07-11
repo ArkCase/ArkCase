@@ -13,6 +13,7 @@ public class AcmApplication implements Serializable
     private String applicationName;
     private List<AcmUserAction> topbarActions;
     private List<AcmUserAction> navigatorTabs;
+    private List<AcmObjectType> businessObjects;
 
     public String getApplicationName()
     {
@@ -42,5 +43,15 @@ public class AcmApplication implements Serializable
     public void setNavigatorTabs(List<AcmUserAction> navigatorTabs)
     {
         this.navigatorTabs = navigatorTabs;
+    }
+
+    public List<AcmObjectType> getBusinessObjects()
+    {
+        return businessObjects;
+    }
+
+    public void setBusinessObjects(List<AcmObjectType> businessObjects)
+    {
+        this.businessObjects = businessObjects;
     }
 }

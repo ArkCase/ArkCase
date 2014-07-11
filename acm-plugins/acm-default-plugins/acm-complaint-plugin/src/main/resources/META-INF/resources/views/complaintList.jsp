@@ -21,58 +21,28 @@
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListCallback.js'/>"></script>
 
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
-<%--<script src="<c:url value='/resources/js/app.js'/>"></script>--%>
-<%--<script src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <!-- File Manager -->
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_knob}/js/jquery.knob.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/jquery.iframe-transport.js"></script>
 
-<!-- Summernote WYSIWYG -->
-<link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
+    <!-- Summernote WYSIWYG -->
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
 
-<!-- JTable -->
-<link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
+    <!-- JTable -->
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
 
-<!-- X-Editable -->
-<link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
-<script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
-<script>
-    $.fn.editable.defaults.url = '/post';
-    $(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); });
-    $(document).ready(function() { $('#priority').editable({placement: 'left', value: 2,
-        source: [
-            {value: 1, text: 'Low'},
-            {value: 2, text: 'Medium'},
-            {value: 3, text: 'High'},
-            {value: 3, text: 'Expedited'}
-        ]}); });
-    $(document).ready(function() { $('#type').editable({placement: 'bottom', value: 2,
-        source: [
-            {value: 1, text: 'Type 1'},
-            {value: 2, text: 'Type 2'},
-            {value: 3, text: 'Type 3'},
-            {value: 3, text: 'Type 4'}
-        ]}); });
 
-    $(document).ready(function() { $('#assigned').editable({placement: 'bottom', value: 2,
-        source: [
-            {value: 1, text: 'David Miller'},
-            {value: 2, text: 'Judy Hsu'},
-            {value: 3, text: 'Ronda Ringo'},
-            {value: 3, text: 'AJ McClary'}
-        ]}); });
+    <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
+    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/jquery.fancytree.js"></script>
 
-    $(document).ready(function() { $('#incident').editable({
-        format: 'yyyy-mm-dd',
-        placement: 'bottom',
-        viewformat: 'dd/mm/yyyy',
-        datepicker: {
-            weekStart: 1
-        }
-    }); });
-
-</script>
+    <!-- X-Editable -->
+    <link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
+    <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -160,6 +130,11 @@
                     <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>
                     <small class="text-muted">Assigned To</small> </div>
             </div>
+
+            <!-- test area -->
+            <%--<br/><div>Test: <a href="#" id="sex" data-type="select" data-pk="1" data-value="" data-title="Select sex"></a></div>--%>
+            <%--<br/><div>Test: <a href="#" id="sex" data-type="select" data-pk="1" data-title="Select sex"></a></div>--%>
+
         </div>
     </div>
     <div class="col-xs-3">
@@ -282,7 +257,10 @@
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a" id='secDocDocuments'>
-                <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span> <a href="#" class="font-bold">Documents</a> </div>
+                <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span>
+                    <a href="#" class="font-bold">Documents</a>
+                    <input type="file" name="files[]" multiple style="display:none;"/>
+                </div>
                 <div class="panel-body max-200 no-padder">
                     <table class="table table-striped th-sortable table-hover">
                         <thead>
@@ -299,6 +277,10 @@
                         </tr>
                         </tbody>
                     </table>
+                    <%--<ul/>--%>
+                </div>
+                <div id="upload">
+                    <ul/>
                 </div>
             </section>
         </div>
@@ -688,25 +670,20 @@
 </aside>
 <!-- /.aside -->
 
+
 <aside class="aside bg-light lt hide" id="chat">
     <section class="vbox animated fadeInLeft">
         <section class="scrollable">
             <header class="dk header">
-                <p>Approvers</p>
+                <p>Navigation</p>
             </header>
-            <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
-            <header class="dk header">
-                <p>Collaborators</p>
-            </header>
-            <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
-            <header class="dk header">
-                <p>Watchers</p>
-            </header>
-            <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
+            <div class="row m-b">
+                <div class="col-sm-12">
+                    <div id="tree"></div>
+
+                </div>
+            </div>
         </section>
-        <footer class="footer text-center">
-            <button class="btn btn-light bg-empty btn-sm"><i class="fa fa-plus"></i> New Partipant</button>
-        </footer>
     </section>
 </aside>
 </section>

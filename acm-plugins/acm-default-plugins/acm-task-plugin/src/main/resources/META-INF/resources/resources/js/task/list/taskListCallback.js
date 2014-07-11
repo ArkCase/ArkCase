@@ -53,10 +53,12 @@ TaskList.Callback = {
         var success = false;
         if (response) {
             if (Acm.isNotEmpty(response.taskId)) {
-
-                //todo: remove from local copy, no need to call service
-                TaskList.Service.listTask(Acm.getUserName());
-
+                if (TaskList.isSingleObject()) {
+                    Acm.goHome();
+                } else {
+                    //todo: remove from local copy, no need to call service
+                    TaskList.Service.listTask(Acm.getUserName());
+                }
                 success = true;
             }
         }

@@ -10,49 +10,76 @@ TaskWizard.Object = {
         this.$btnSave          = $("button[data-title='Save']");
         this.$btnSave.click(function(e) {TaskWizard.Event.onClickBtnSave(e);});
 
-        this.$edtTitle         = $("#title");
+        this.$selOwners        = $("select[name='owner']");
+        this.$edtSubject       = $("#subject");
+        this.$edtCase          = $("#case");
+        this.$edtComplaint     = $("#complaint");
+        this.$selStatus        = $("select[name='status']");
+
         this.$edtPriority      = $("#priority");
+        this.setValueEdtPriority(50);
+
         this.$edtDueDate       = $("#dueDate");
-        this.$selAssignees     = $("#assignees");
-    }
+        Acm.Object.setValueDatePicker(this.$edtDueDate, Acm.getCurrentDay());
 
-    ,initAssignees: function(data) {
-        $.each(data, function(idx, val) {
-            TaskWizard.Object.appendAssignees(val.userId, val.fullName);
+        this.$edtStartDate     = $("#startDate");
+        Acm.Object.setValueDatePicker(this.$edtStartDate, Acm.getCurrentDay());
+
+        this.$selTaskFlags     = $("#taskFlags");
+        this.$selTaskFlags.chosen();
+
+        this.$divDetail        = $(".detail");
+        this.$divDetail.summernote({
+            height: 300
         });
-        this.$selAssignees.chosen();
-    }
-    ,appendAssignees: function(key, val) {
-        this.$selAssignees.append($("<option></option>")
-                .attr("value",key)
-                .text(val));
-    }
-    ,setEnableBtnSave: function(enable) {
-        Acm.Object.setEnable(this.$btnSave, enable);
+
+//old stuff
+//        this.$edtTitle         = $("#title");
+//        this.$edtPriority      = $("#priority");
+//        this.$edtDueDate       = $("#dueDate");
+//        this.$selAssignees     = $("#assignees");
     }
 
-    ,getValueEdtTitle: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtTitle);
+
+
+    ,initOwners: function(data) {
+        $.each(data, function(idx, val) {
+            Acm.Object.appendSelect(TaskWizard.Object.$selOwners, val.userId, val.fullName);
+        });
+    }
+    ,getSelectValueSelOwners: function() {
+        return Acm.Object.getSelectValue(this.$selOwners);
+    }
+    ,getValueEdtDueDate: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtDueDate);
+    }
+    ,getValueEdtSubject: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtSubject);
     }
     ,getValueEdtPriority: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtPriority);
     }
     ,setValueEdtPriority: function(val) {
-        return Acm.Object.setPlaceHolderInput(this.$edtPriority, val);
+        Acm.Object.setPlaceHolderInput(this.$edtPriority, val);
     }
-    ,getValueEdtDueDate: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtDueDate);
+    ,getValueEdtStartDate: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtStartDate);
     }
-    ,setValueEdtDueDate: function(val) {
-        return Acm.Object.setPlaceHolderInput(this.$edtDueDate, val);
+    ,getValueEdtCase: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtCase);
     }
-    ,showEdtDueDate: function(show) {
-        return Acm.Object.show(this.$edtDueDate, show);
+    ,getValueEdtComplaint: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtComplaint);
     }
-    ,getSelectValueSelAssignee: function() {
-        return Acm.Object.getSelectValue(this.$selAssignees);
+    ,getSelectValueSelStatus: function() {
+        return Acm.Object.getSelectValue(this.$selStatus);
     }
-
+    ,getSelectValueSelTaskFlags: function() {
+        return Acm.Object.getSelectValue(this.$selTaskFlags);
+    }
+    ,getHtmlDivDetail: function() {
+        return Acm.Object.getSummernote(this.$divDetail);
+    }
 
     ,setTaskData : function(data) {
         var t = Task.getTask();
@@ -70,15 +97,14 @@ TaskWizard.Object = {
         t.taskStartDate = data.taskStartDate;
         t.taskFinishedDate = data.taskFinishedDate;
         t.taskDurationInMillis = data.taskDurationInMillis;
-
     }
     ,getTaskData : function() {
         var data = {};
         var t = Task.getTask();
-        data.title = this.getValueEdtTitle();
+        data.title = this.getValueEdtSubject();
         data.priority = this.getValueEdtPriority();
         data.dueDate = this.getValueEdtDueDate();
-        data.assignee = this.getSelectValueSelAssignee();
+        data.assignee = this.getSelectValueSelOwners();
         data.adhocTask = true;
 
         data.taskId = t.taskId;
@@ -93,6 +119,65 @@ TaskWizard.Object = {
     }
 
 
+//old stuff
+//    ,initAssignees: function(data) {
+//        $.each(data, function(idx, val) {
+//            TaskWizard.Object.appendAssignees(val.userId, val.fullName);
+//        });
+//        this.$selAssignees.chosen();
+//    }
+//    ,appendAssignees: function(key, val) {
+//        this.$selAssignees.append($("<option></option>")
+//            .attr("value",key)
+//            .text(val));
+//    }
+//    ,setEnableBtnSave: function(enable) {
+//        Acm.Object.setEnable(this.$btnSave, enable);
+//    }
+//    ,getValueEdtTitle: function() {
+//        return Acm.Object.getPlaceHolderInput(this.$edtTitle);
+//    }
+//    ,getSelectValueSelAssignee: function() {
+//        return Acm.Object.getSelectValue(this.$selAssignees);
+//    }
+//
+//
+//    ,setTaskData : function(data) {
+//        var t = Task.getTask();
+//        t.title = data.title;
+//        t.priority = data.priority;
+//        t.dueDate = data.dueDate;
+//        t.assignee = data.assignee;
+//
+//        t.taskId = data.taskId;
+//        t.attachedToObjectType = data.attachedToObjectType;
+//        t.attachedToObjectId = data.attachedToObjectId;
+//        t.businessProcessName = data.businessProcessName;
+//        t.adhocTask = data.adhocTask;
+//        t.completed = data.completed;
+//        t.taskStartDate = data.taskStartDate;
+//        t.taskFinishedDate = data.taskFinishedDate;
+//        t.taskDurationInMillis = data.taskDurationInMillis;
+//    }
+//    ,getTaskData : function() {
+//        var data = {};
+//        var t = Task.getTask();
+//        data.title = this.getValueEdtTitle();
+//        data.priority = this.getValueEdtPriority();
+//        data.dueDate = this.getValueEdtDueDate();
+//        data.assignee = this.getSelectValueSelAssignee();
+//        data.adhocTask = true;
+//
+//        data.taskId = t.taskId;
+//        data.attachedToObjectType = t.attachedToObjectType;
+//        data.attachedToObjectId = t.attachedToObjectId;
+//        data.businessProcessName = t.businessProcessName;
+//        data.completed = t.completed;
+//        data.taskStartDate = t.taskStartDate;
+//        data.taskFinishedDate = t.taskFinishedDate;
+//        data.taskDurationInMillis = t.taskDurationInMillis;
+//        return data;
+//    }
 };
 
 

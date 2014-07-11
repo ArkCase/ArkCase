@@ -1,0 +1,72 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-data-access-foreign-keys" author="dmiller">
+        <addForeignKeyConstraint
+                baseTableName="acm_access_control_entry"
+                baseColumnNames="cm_access_decision"
+                constraintName="fk_data_access_decision"
+                referencedTableName="acm_access_control_decision_lu"
+                referencedColumnNames="cm_value"
+                deferrable="true"
+                initiallyDeferred="true"/>
+        <addForeignKeyConstraint
+                baseTableName="acm_access_control_entry"
+                baseColumnNames="cm_access_decision_reason"
+                constraintName="fk_data_access_reason"
+                referencedTableName="acm_access_control_reason_lu"
+                referencedColumnNames="cm_value"
+                deferrable="true"
+                initiallyDeferred="true"/>
+        <addForeignKeyConstraint
+                baseTableName="acm_access_control_entry"
+                baseColumnNames="cm_allow_discretionary_update"
+                constraintName="fk_data_access_updateable"
+                referencedTableName="acm_boolean_lu"
+                referencedColumnNames="cm_value"
+                deferrable="true"
+                initiallyDeferred="true"/>
+    </changeSet>
+
+    <changeSet id="02-data-access-default-foreign-keys" author="dmiller">
+        <addForeignKeyConstraint
+                baseTableName="acm_access_control_default"
+                baseColumnNames="cm_access_decision"
+                constraintName="fk_data_access_deflt_decision"
+                referencedTableName="acm_access_control_decision_lu"
+                referencedColumnNames="cm_value"
+                deferrable="true"
+                initiallyDeferred="true"/>
+        <addForeignKeyConstraint
+                baseTableName="acm_access_control_default"
+                baseColumnNames="cm_allow_discretionary_update"
+                constraintName="fk_data_access_deflt_update"
+                referencedTableName="acm_boolean_lu"
+                referencedColumnNames="cm_value"
+                deferrable="true"
+                initiallyDeferred="true"/>
+    </changeSet>
+
+    <changeSet id="03-data-access-control-unique-constraints" author="dmiller">
+        <comment>
+            The default ACL table can only have one row per object type, state, access level, and accessor type.  This
+            prevents having conflicting rows; e.g. one row for (Case, Draft, Read, Case Agent) where Decision = GRANT,
+            and another row for (Case, Draft, Read, Case Agent) where Decision = DENY.
+
+            Same logic applies for acm_access_control_entry.  Only one row per object type, object id, object state,
+            access level, and accessor id.
+        </comment>
+        <addUniqueConstraint tableName="acm_access_control_default"
+                             columnNames="cm_object_type, cm_object_state, cm_access_level, cm_accessor_type"
+                             constraintName="uk_access_control_default_rule"/>
+        <addUniqueConstraint tableName="acm_access_control_entry"
+                             columnNames="cm_object_type, cm_object_id, cm_object_state, cm_access_level, cm_accessor_id"
+                             constraintName="uk_access_control_entry_rule"/>
+
+    </changeSet>
+
+
+</databaseChangeLog>

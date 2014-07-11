@@ -27,6 +27,38 @@ Acm.Object = {
         return this._userName;
     }
 
+    //Expect data to be JSON array: [{userId:"xxx" fullName:"xxx" ...},{...} ]
+    ,getApprovers: function() {
+        var data = localStorage.getItem("AcmApprovers");
+        var item = ("null" === data)? null : JSON.parse(data);
+        return item;
+    }
+    ,setApprovers: function(data) {
+        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
+        localStorage.setItem("AcmApprovers", item);
+    }
+    ,getComplaintTypes: function() {
+        var data = localStorage.getItem("AcmComplaintTypes");
+        var item = ("null" === data)? null : JSON.parse(data);
+        return item;
+    }
+    ,setComplaintTypes: function(data) {
+        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
+        localStorage.setItem("AcmComplaintTypes", item);
+    }
+    ,getPriorities: function() {
+        var data = localStorage.getItem("AcmPriorities");
+        var item = ("null" === data)? null : JSON.parse(data);
+        return item;
+    }
+    ,setPriorities: function(data) {
+        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
+        localStorage.setItem("AcmPriorities", item);
+    }
+
+
+
+
 //    ,_pluginName: ""
 //    ,_pluginUrl: ""
 //    ,_pluginImage: ""
@@ -118,6 +150,11 @@ Acm.Object = {
         //}).prop('selected', true); //for jQuery v1.6+
     	}).attr('selected', true);
     }
+    ,appendSelect: function($s, key, val) {
+        $s.append($("<option></option>")
+            .attr("value",key)
+            .text(val));
+    }
 
     //ignore first option, which is instruction
     ,getSelectValueIgnoreFirst: function($s) {
@@ -137,6 +174,7 @@ Acm.Object = {
             return this.value;
         }).get().join(sep);
     }
+
     ,getPlaceHolderInput : function($s) {
         var v;
         v = $s.val();
@@ -179,6 +217,15 @@ Acm.Object = {
     ,setSummernote : function($s, value) {
         $s.code(value);
     }
+
+    // Setting value directly to a date picker causes date picker popup initially visible.
+    // Use setValueDatePicker() to solve the problem.
+    ,setValueDatePicker: function($s, val) {
+        $s.attr("style", "display:none");
+        Acm.Object.setPlaceHolderInput($s, val);
+        Acm.Object.show($s, true);
+    }
+
     ,setEnable : function($s, value) {
         if (value == "true" || value == true) {
             $s.removeAttr("disabled");
@@ -311,7 +358,6 @@ Acm.Object = {
             $s.html("");
         }
     }
-
 
 
 };

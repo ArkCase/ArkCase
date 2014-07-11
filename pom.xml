@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>1.8</version>
+    <version>1.9</version>
     <packaging>pom</packaging>
 
     <name>Armedia Case Management Framework and Default Plugins</name>
@@ -32,6 +32,7 @@
         <easymock.version>3.2</easymock.version>
         <eclipselink-jpa.version>2.5.1</eclipselink-jpa.version>
         <fasterxml-jackson-core.version>2.4.0</fasterxml-jackson-core.version>
+        <google-collections.version>1.0</google-collections.version>
         <h2.version>1.3.169</h2.version>
         <hibernate-validator.version>5.1.1.Final</hibernate-validator.version>
         <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
@@ -59,7 +60,7 @@
         <maven.site.id>acm3-documentation</maven.site.id>
         <maven.site.url>scp://arm-proj-web02.armedia.com/var/www/html/acm3</maven.site.url>
         <maven.taglist.version>2.4</maven.taglist.version>
-        <maven-jgitflow-plugin.version>1.0-m3</maven-jgitflow-plugin.version>
+        <maven-jgitflow-plugin.version>1.0-alpha27</maven-jgitflow-plugin.version>
 
         <mule.version>3.5.0-bighorn</mule.version>
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
@@ -458,7 +459,7 @@
                         <versionTagPrefix>acm</versionTagPrefix>
                     </flowInitContext>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <keepBranch>true</keepBranch>
+                    <keepBranch>false</keepBranch>
                     <pushReleases>true</pushReleases>
                 </configuration>
             </plugin>
@@ -871,6 +872,13 @@
                 <artifactId>javax.el-api</artifactId>
                 <version>${javax-el.version}</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <!-- preconditions -->
+            <dependency>
+                <groupId>com.google.collections</groupId>
+                <artifactId>google-collections</artifactId>
+                <version>${google-collections.version}</version>
             </dependency>
 
 

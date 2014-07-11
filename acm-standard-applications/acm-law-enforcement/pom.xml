@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-standard-applications</artifactId>
         <groupId>com.armedia.acm.application</groupId>
-        <version>1.8</version>
+        <version>1.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -62,6 +62,11 @@
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.default</groupId>
             <artifactId>acm-dashboard-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <artifactId>acm-admin-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -130,13 +135,18 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.services</groupId>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-users</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.services</groupId>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-search</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-data-access-control</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

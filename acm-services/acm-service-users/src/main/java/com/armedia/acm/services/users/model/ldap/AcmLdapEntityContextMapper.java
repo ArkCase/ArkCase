@@ -1,15 +1,19 @@
 package com.armedia.acm.services.users.model.ldap;
 
+import com.armedia.acm.services.users.model.AcmLdapEntity;
+import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 
+import javax.naming.directory.Attribute;
+
 /**
  * Created by armdev on 5/29/14.
  */
-public class AcmUserContextMapper implements ContextMapper
+public class AcmLdapEntityContextMapper implements ContextMapper
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -18,7 +22,7 @@ public class AcmUserContextMapper implements ContextMapper
     private String userIdAttributeName;
 
     @Override
-    public AcmUser mapFromContext(Object ctx)
+    public AcmLdapEntity mapFromContext(Object ctx)
     {
         DirContextAdapter adapter = (DirContextAdapter) ctx;
 
@@ -36,9 +40,40 @@ public class AcmUserContextMapper implements ContextMapper
                 return null;
             }
         }
+
+
+        Attribute objectClasses = adapter.getAttributes().get("objectClass");
+        boolean isGroup = objectClasses.contains("group") || objectClasses.contains("groupOfNames");
+
+        log.debug("Ldap Entity '" + fullName + "' is a group? " + isGroup);
+
+        AcmLdapEntity retval;
+        if ( isGroup )
+        {
+            retval = generateAcmRole(adapter);
+        }
+        else
+        {
+            retval = generateAcmUser(adapter);
+        }
+
+        return retval;
+    }
+
+    private AcmRole generateAcmRole(DirContextAdapter adapter)
+    {
+        AcmRole role = new AcmRole();
+        role.setRoleName(adapter.getStringAttribute("cn"));
+        role.setRoleType("LDAP_GROUP");
+
+        return role;
+    }
+
+    private AcmUser generateAcmUser(DirContextAdapter adapter)
+    {
         AcmUser retval = new AcmUser();
 
-        retval.setFullName(fullName);
+        retval.setFullName(adapter.getStringAttribute("cn"));
 
         if ( adapter.attributeExists("sn") )
         {
@@ -49,6 +84,8 @@ public class AcmUserContextMapper implements ContextMapper
             retval.setFirstName(adapter.getStringAttribute("givenName"));
         }
         retval.setUserId(adapter.getStringAttribute(getUserIdAttributeName()));
+
+        retval.setDistinguishedName(adapter.getStringAttribute("dn"));
 
         return retval;
     }

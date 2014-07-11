@@ -86,7 +86,8 @@ public class SpringContextHolder implements ApplicationContextAware, Application
     private boolean isSpringConfigFile(File eventFile)
     {
         return eventFile.getParentFile().getName().equals("spring") &&
-                eventFile.getName().startsWith("spring-config");
+                eventFile.getName().startsWith("spring-config") &&
+                eventFile.getName().endsWith(".xml");
     }
 
     @Override

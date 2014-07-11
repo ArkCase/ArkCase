@@ -7,7 +7,9 @@
  */
 Sidebar.Object = {
     initialize : function() {
-        this.$ulPlugin = jQuery("#ulPlugin");
+        this.$ulPlugin = $("#ulPlugin");
+        this.$lnkNav   = $("nav a");
+        this.$lnkNav.click(function(e){Sidebar.Event.onClickLnkNav(e);});
     }
 
     ,hiliteActivePlugin: function() {
