@@ -1,10 +1,13 @@
 package com.armedia.acm.services.dataaccess.dao;
 
+import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.dataaccess.model.AcmAccessControlDefault;
 import com.armedia.acm.services.dataaccess.model.enums.DefaultAccessControlSavePolicy;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,7 +24,7 @@ import java.util.List;
 /**
  * Created by armdev on 7/9/14.
  */
-public class AcmAccessControlDefaultDao
+public class AcmAccessControlDefaultDao extends AcmAbstractDao<AcmAccessControlDefault>
 {
     @PersistenceContext
     private EntityManager entityManager;
@@ -36,6 +39,7 @@ public class AcmAccessControlDefaultDao
                     "AND d.accessLevel = :accessLevel " +
                     "AND d.accessorType = :accessorType";
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public AcmAccessControlDefault save(AcmAccessControlDefault in, DefaultAccessControlSavePolicy savePolicy) throws PersistenceException
     {
         Preconditions.checkNotNull(in, "Cannot save a null access control default!");
@@ -66,9 +70,15 @@ public class AcmAccessControlDefaultDao
         // unique constraint ensures there is only one max result, but JPA doesn't know that so we have to get a list
         List<AcmAccessControlDefault> existingDefaults = lookupQuery.getResultList();
 
-        return existingDefaults == null || existingDefaults.isEmpty() ?
+        AcmAccessControlDefault retval =  existingDefaults == null || existingDefaults.isEmpty() ?
                 null :
                 existingDefaults.get(0);
+        if ( retval != null )
+        {
+            getEntityManager().refresh(retval);
+        }
+
+        return retval;
     }
 
     public List<AcmAccessControlDefault> findPage(String[] sortOrder, int startRow, int maxRows)

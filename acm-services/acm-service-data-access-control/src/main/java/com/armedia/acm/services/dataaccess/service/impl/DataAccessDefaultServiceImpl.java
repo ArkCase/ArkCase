@@ -1,6 +1,7 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.dataaccess.dao.AcmAccessControlDefaultDao;
 import com.armedia.acm.services.dataaccess.model.AcmAccessControlDefault;
 import com.armedia.acm.services.dataaccess.model.enums.DefaultAccessControlSavePolicy;
@@ -9,6 +10,7 @@ import com.armedia.acm.services.dataaccess.service.DataAccessDefaultService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,6 +25,28 @@ public class DataAccessDefaultServiceImpl implements DataAccessDefaultService
     private AcmAccessControlDefaultDao accessControlDefaultDao;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Override
+    @Transactional
+    public AcmAccessControlDefault save(
+            Long defaultAccessId,
+            AcmAccessControlDefault toSave,
+            Authentication authentication) throws AcmUserActionFailedException
+    {
+        AcmAccessControlDefault existing = getAccessControlDefaultDao().find(AcmAccessControlDefault.class, defaultAccessId);
+        if ( existing == null )
+        {
+            throw new AcmUserActionFailedException("update", "default access", defaultAccessId,
+                    "Default access with id '" + defaultAccessId + "' does not exist.", null);
+        }
+
+        // only the access decision, the discretionary access flag, and the modifier can be changed.
+        existing.setModifier(authentication.getName());
+        existing.setAccessDecision(toSave.getAccessDecision());
+        existing.setAllowDiscretionaryUpdate(toSave.getAllowDiscretionaryUpdate());
+
+        return getAccessControlDefaultDao().save(existing, DefaultAccessControlSavePolicy.OVERWRITE_EXISTING);
+    }
 
     @Override
     @Transactional

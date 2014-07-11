@@ -8,11 +8,13 @@
         <property name="privileges">
             <list>
                 <ref bean="listDefaultAccessPrivilege"/>
+                <ref bean="updateDefaultAccessPrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
             <list>
                 <ref bean="listDefaultAccessPrivilegeUrl"/>
+                <ref bean="updateDefaultAccessPrivilegeUrl"/>
             </list>
         </property>
     </bean>
@@ -23,8 +25,23 @@
         <property name="requiredPrivilege" ref="listDefaultAccessPrivilege"/>
     </bean>
 
+    <bean id="updateDefaultAccessPrivilegeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+        <property name="httpMethod" value="POST"/>
+        <property name="url" value="/api/{version}/plugin/dataaccess/default/{defaultAccessId}"/>
+        <property name="requiredPrivilege" ref="updateDefaultAccessPrivilege"/>
+    </bean>
+
     <bean id="listDefaultAccessPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="listDefaultAccessPrivilege"/>
+        <property name="privilegeName" value="list-default-access"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="updateDefaultAccessPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="update-default-access"/>
         <property name="applicationRolesWithPrivilege">
             <list>
                 <value>ROLE_ADMINISTRATOR</value>

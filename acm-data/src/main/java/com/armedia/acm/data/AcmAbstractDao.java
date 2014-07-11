@@ -1,6 +1,7 @@
 package com.armedia.acm.data;
 
 
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -18,7 +19,7 @@ public abstract class AcmAbstractDao<T>
         return saved;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public T find(Class<? extends T> cls, Long id)
     {
         T found = em.find(cls, id);
