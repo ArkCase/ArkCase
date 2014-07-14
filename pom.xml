@@ -60,7 +60,7 @@
         <maven.site.id>acm3-documentation</maven.site.id>
         <maven.site.url>scp://arm-proj-web02.armedia.com/var/www/html/acm3</maven.site.url>
         <maven.taglist.version>2.4</maven.taglist.version>
-        <maven-jgitflow-plugin.version>1.0-alpha27</maven-jgitflow-plugin.version>
+        <maven-jgitflow-plugin.version>1.0-m3</maven-jgitflow-plugin.version>
 
         <mule.version>3.5.0-bighorn</mule.version>
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
@@ -461,6 +461,7 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <keepBranch>false</keepBranch>
                     <pushReleases>true</pushReleases>
+                    <allowUntracked>true</allowUntracked>
                 </configuration>
             </plugin>
         </plugins>
