@@ -1082,12 +1082,9 @@
 
     <profiles>
         <profile>
-            <id>dmiller-local</id>
+            <id>netbeans-deploy</id>
             <properties>
-                <acm.driverClassName>oracle.jdbc.OracleDriver</acm.driverClassName>
-                <acm.url>jdbc:oracle:thin:@wso2vm:1521:XE</acm.url>
-                <acm.username>acm3</acm.username>
-                <acm.password>acm3</acm.password>
+                <skipITs>true</skipITs>
             </properties>
         </profile>
     </profiles>

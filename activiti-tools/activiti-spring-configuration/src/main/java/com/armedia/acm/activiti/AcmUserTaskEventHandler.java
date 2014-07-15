@@ -27,8 +27,11 @@ public class AcmUserTaskEventHandler implements ApplicationEventPublisherAware
 
         Map<String, Object> processVariables = getRuntimeService().getVariables(task.getProcessInstanceId());
         log.debug("process variables from runtime: " + processVariables.size());
+        
+        Long parentObjectId = (Long)processVariables.get("OBJECT_ID");
+        String parentObjectType =(String)processVariables.get("OBJECT_TYPE");
 
-        AcmTaskActivitiEvent event = new AcmTaskActivitiEvent(task, eventName);
+        AcmTaskActivitiEvent event = new AcmTaskActivitiEvent(task, eventName, parentObjectId, parentObjectType );
 
         getApplicationEventPublisher().publishEvent(event);
 

@@ -16,6 +16,9 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     private String description;
     private Date dueDate;
     private String taskEvent;
+    private Integer priority;
+    private Long parentObjectId;
+    private String parentObjectType;
 
     public AcmApplicationTaskEvent(AcmTask source, String taskEvent, String eventUser, boolean succeeded, String ipAddress)
     {
@@ -35,6 +38,9 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
         setDescription(source.getTitle());
         setDueDate(source.getDueDate());
         setTaskEvent(taskEvent);
+        setPriority(source.getPriority());
+        setParentObjectId(null);
+        setParentObjectType(null);
     }
 
     @Override
@@ -102,4 +108,33 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     {
         this.taskEvent = taskEvent;
     }
+
+    @Override
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    @Override
+    public Long getParentObjectId() {
+        return parentObjectId;
+    }
+
+    public void setParentObjectId(Long parentObjectId) {
+        this.parentObjectId = parentObjectId;
+    }
+
+    @Override
+    public String getParentObjectType() {
+        return parentObjectType;
+    }
+
+    public void setParentObjectType(String parentObjectType) {
+        this.parentObjectType = parentObjectType;
+    }
+    
+    
 }

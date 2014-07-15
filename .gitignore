@@ -8,3 +8,6 @@ atlassian-ide-plugin.xml
 *.jar
 *.war
 *.ear
+/acm-standard-applications/acm-law-enforcement/nbactions.xml
+/activiti-tools/activiti-mule-listener/.mule/objectstore/d147d678-0c3a-11e4-8a7c-19f3ca42a692/partition-descriptor
+/acm-standard-applications/acm-law-enforcement/src/main/webapp/META-INF/context.xml
