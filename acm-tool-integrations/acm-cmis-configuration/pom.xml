@@ -49,14 +49,8 @@
             <artifactId>spring-test</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.mule-tools</groupId>
-            <artifactId>mule-context-manager</artifactId>
-            <version>${acm.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.mule-tools</groupId>
-            <artifactId>mule-context-manager</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-mule-context-manager</artifactId>
             <version>${acm.version}</version>
             <scope>test</scope>
         </dependency>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>mule-tools</artifactId>
         <groupId>com.armedia.acm</groupId>
+        <artifactId>acm-tool-integrations</artifactId>
         <version>3.0.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.acm.mule-tools</groupId>
-    <artifactId>mule-context-manager</artifactId>
+    <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+    <artifactId>acm-mule-context-manager</artifactId>
     <packaging>jar</packaging>
-    <name>Mule Tools - Context Manager</name>
+    <name>Tool Integrations: Mule Context Manager</name>
     <description>Start Mule context as a child of the Spring application context when the Web application
     context starts; and shutdown the Mule context when the Web application context shuts down.</description>
 

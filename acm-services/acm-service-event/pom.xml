@@ -9,7 +9,7 @@
 
     <groupId>com.armedia.acm.acm-services</groupId>
     <artifactId>acm-service-event</artifactId>
-    <name>ACM Event Base Classes</name>
+    <name>ACM Service: Events</name>
     <description>Provides the base class to use for all ACM events.</description>
 
     <dependencies>
@@ -20,8 +20,8 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.mule-tools</groupId>
-            <artifactId>mule-context-manager</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-mule-context-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
