@@ -40,8 +40,8 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia</groupId>
-            <artifactId>acm-user-login</artifactId>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-login</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
