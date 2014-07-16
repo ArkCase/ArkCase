@@ -2,7 +2,7 @@
 <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
 
 	<classpath>
-		<dir name="${workspace.home}/ACM3/activiti-tools/activiti-mule-listener/target/classes">
+		<dir name="${workspace.home}/ACM3/acm-tool-integrations/acm-activiti-mule-listener/target/classes">
 		</dir>
 	</classpath>
 

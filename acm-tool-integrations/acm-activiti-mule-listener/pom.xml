@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>activiti-tools</artifactId>
-        <groupId>com.armedia</groupId>
+        <groupId>com.armedia.acm</groupId>
+        <artifactId>acm-tool-integrations</artifactId>
         <version>3.0.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.activiti-tools</groupId>
-    <artifactId>activiti-mule-listener</artifactId>
-    <name>Activiti Tools - Mule Execution Listener</name>
+    <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+    <artifactId>acm-activiti-mule-listener</artifactId>
+    <name>Tool Integrations: Activiti Mule Execution Listener</name>
     <description>
         This module provides a generic Activiti execution listener
         that invokes a Mule ESB flow.  The Mule flow will have access to the following inbound properties

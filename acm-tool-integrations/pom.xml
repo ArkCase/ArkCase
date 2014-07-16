@@ -18,6 +18,7 @@
     <modules>
         <module>acm-activemq-configuration</module>
         <module>acm-activiti-actions</module>
+        <module>acm-activiti-mule-listener</module>
         <module>acm-spring-classpath-copier</module>
         <module>acm-spring-context-holder</module>
         <module>acm-spring-data-source</module>
