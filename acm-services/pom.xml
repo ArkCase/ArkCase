@@ -16,6 +16,7 @@
         <module>acm-service-audit</module>
         <module>acm-service-configuration</module>
         <module>acm-service-data-access-control</module>
+        <module>acm-service-event</module>
         <module>acm-service-search</module>
         <module>acm-service-users</module>
     </modules>
