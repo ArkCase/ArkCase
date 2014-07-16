@@ -99,7 +99,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
-        expect(mockFileDao.find(EcmFile.class, ecmFileId)).andReturn(fromDb);
+        expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockMuleClient.send("vm://downloadFileFlow.in", cmisId, null)).andReturn(mockMuleMessage);
         expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).atLeastOnce();
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
@@ -139,7 +139,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String user = "user";
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
-        expect(mockFileDao.find(EcmFile.class, ecmFileId)).andReturn(null);
+        expect(mockFileDao.find(ecmFileId)).andReturn(null);
 
 
         replayAll();

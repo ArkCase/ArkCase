@@ -80,7 +80,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
-        expect(mockComplaintDao.find(Complaint.class, complaint.getComplaintId())).andReturn(complaint);
+        expect(mockComplaintDao.find(complaint.getComplaintId())).andReturn(complaint);
 
         expect(mockEcmFileService.upload(
                 mockMultipartFile,
@@ -126,7 +126,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
-        expect(mockComplaintDao.find(Complaint.class, complaint.getComplaintId())).andReturn(complaint);
+        expect(mockComplaintDao.find(complaint.getComplaintId())).andReturn(complaint);
 
         expect(mockEcmFileService.upload(
                 mockMultipartFile,
@@ -169,7 +169,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
          // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
-        expect(mockComplaintDao.find(Complaint.class, Long.valueOf(complaintId))).andReturn(null);
+        expect(mockComplaintDao.find(Long.valueOf(complaintId))).andReturn(null);
 
         replayAll();
 

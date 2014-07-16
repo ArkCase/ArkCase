@@ -124,4 +124,9 @@ public class AcmAccessControlDefaultDao extends AcmAbstractDao<AcmAccessControlD
     }
 
 
+    @Override
+    protected Class<AcmAccessControlDefault> getPersistenceClass()
+    {
+        return AcmAccessControlDefault.class;
+    }
 }

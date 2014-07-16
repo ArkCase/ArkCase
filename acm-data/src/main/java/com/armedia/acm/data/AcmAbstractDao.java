@@ -12,6 +12,7 @@ public abstract class AcmAbstractDao<T>
     @PersistenceContext
     private EntityManager em;
 
+
     public T save(T toSave)
     {
         T saved = em.merge(toSave);
@@ -20,9 +21,9 @@ public abstract class AcmAbstractDao<T>
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public T find(Class<? extends T> cls, Long id)
+    public T find(Long id)
     {
-        T found = em.find(cls, id);
+        T found = em.find(getPersistenceClass(), id);
         if ( found != null )
         {
             em.refresh(found);
@@ -30,6 +31,8 @@ public abstract class AcmAbstractDao<T>
 
         return found;
     }
+
+    protected abstract Class<T> getPersistenceClass();
 
     public EntityManager getEm()
     {

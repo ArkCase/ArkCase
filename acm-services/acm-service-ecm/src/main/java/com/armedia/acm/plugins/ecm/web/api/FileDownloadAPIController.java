@@ -48,7 +48,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             log.info("Downloading file by ID '" + fileId + "' for user '" + authentication.getName() + "'");
         }
 
-        EcmFile ecmFile = getFileDao().find(EcmFile.class, fileId);
+        EcmFile ecmFile = getFileDao().find(fileId);
 
         if ( ecmFile != null )
         {

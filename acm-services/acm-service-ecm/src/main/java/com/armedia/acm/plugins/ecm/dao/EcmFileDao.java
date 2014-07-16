@@ -8,4 +8,9 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
  */
 public class EcmFileDao extends AcmAbstractDao<EcmFile>
 {
+    @Override
+    protected Class<EcmFile> getPersistenceClass()
+    {
+        return EcmFile.class;
+    }
 }

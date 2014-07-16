@@ -69,7 +69,7 @@ public class DataAccessDefaultServiceImplTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn(updateUser);
 
-        expect(mockAccessControlDefaultDao.find(AcmAccessControlDefault.class, in.getId())).andReturn(existing);
+        expect(mockAccessControlDefaultDao.find(in.getId())).andReturn(existing);
 
         expect(mockAccessControlDefaultDao.save(capture(toSave), eq(DefaultAccessControlSavePolicy.OVERWRITE_EXISTING)))
                 .andReturn(existing);
@@ -119,7 +119,7 @@ public class DataAccessDefaultServiceImplTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn(updateUser);
 
-        expect(mockAccessControlDefaultDao.find(AcmAccessControlDefault.class, in.getId())).andReturn(existing);
+        expect(mockAccessControlDefaultDao.find(in.getId())).andReturn(existing);
 
         expect(mockAccessControlDefaultDao.save(capture(toSave), eq(DefaultAccessControlSavePolicy.OVERWRITE_EXISTING)))
                 .andReturn(existing);
@@ -145,7 +145,7 @@ public class DataAccessDefaultServiceImplTest extends EasyMockSupport
         AcmAccessControlDefault in = new AcmAccessControlDefault();
         in.setId(500L);
 
-        expect(mockAccessControlDefaultDao.find(AcmAccessControlDefault.class, in.getId())).andReturn(null);
+        expect(mockAccessControlDefaultDao.find(in.getId())).andReturn(null);
 
         replayAll();
 
