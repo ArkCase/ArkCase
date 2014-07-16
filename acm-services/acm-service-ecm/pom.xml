@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>acm-default-plugins</artifactId>
-        <groupId>com.armedia.acm.acm-plugins</groupId>
+        <artifactId>acm-services</artifactId>
+        <groupId>com.armedia.acm</groupId>
         <version>3.0.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.acm.acm-plugins.default</groupId>
-    <artifactId>acm-ecm-plugin</artifactId>
+    <groupId>com.armedia.acm.acm-services</groupId>
+    <artifactId>acm-service-ecm</artifactId>
     <name>ACM Default Plugin: Enterprise Content Management</name>
     <description>This plugin adds the ability to store folders and files in an ECM repository.</description>
 
