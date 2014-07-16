@@ -216,7 +216,6 @@
 
     <modules>
         <module>activiti-tools</module>
-        <module>acm-spring-tools</module>
         <module>acm-web</module>
         <module>arm-file-tools</module>
         <module>acm-core-plugin-manager</module>
