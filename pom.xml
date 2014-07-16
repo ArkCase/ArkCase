@@ -221,7 +221,6 @@
         <module>acm-core-plugin-manager</module>
         <module>acm-plugins</module>
         <module>mule-tools</module>
-        <module>activemq-tools</module>
         <module>drools-tools</module>
         <module>cmis-tools</module>
         <module>acm-core-object-model</module>
