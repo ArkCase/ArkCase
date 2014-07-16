@@ -13,7 +13,6 @@
     <name>ActiveMQ Tools</name>
     <description>ActiveMQ Spring Configuration and other ActiveMQ utilities</description>
     <modules>
-        <module>activemq-spring-configuration</module>
     </modules>
 
 

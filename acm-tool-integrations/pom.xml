@@ -16,6 +16,7 @@
     <description>Parent project for any library or tool interfaces (CMIS, Activiti, etc)</description>
 
     <modules>
+        <module>acm-activemq-configuration</module>
         <module>acm-spring-classpath-copier</module>
         <module>acm-spring-context-holder</module>
         <module>acm-spring-data-source</module>
