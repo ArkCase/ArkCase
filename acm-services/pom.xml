@@ -13,9 +13,10 @@
     <name>ACM Services</name>
     <description>Core services used by all ACM implementations.</description>
     <modules>
-        <module>acm-service-users</module>
-        <module>acm-service-search</module>
+        <module>acm-service-audit</module>
         <module>acm-service-data-access-control</module>
+        <module>acm-service-search</module>
+        <module>acm-service-users</module>
     </modules>
 
 

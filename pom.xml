@@ -219,7 +219,6 @@
         <module>acm-user-login</module>
         <module>acm-spring-tools</module>
         <module>acm-web</module>
-        <module>acm-audit</module>
         <module>acm-event</module>
         <module>arm-file-tools</module>
         <module>acm-core-plugin-manager</module>

@@ -4,15 +4,6 @@
 	<classpath>
 		<dir name="${workspace.home}/ACM3/acm-user-login/target/classes">
 		</dir>
-
 	</classpath>
-
-    <web>
-        <link target="/">
-            <dir name="${workspace.home}/ACM3/acm-user-login/src/main/resources/META-INF/resources">
-            </dir>
-        </link>
-    </web>
-
 
 </application>
