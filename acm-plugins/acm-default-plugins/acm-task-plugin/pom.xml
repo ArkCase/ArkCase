@@ -45,8 +45,8 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.activiti-tools</groupId>
-            <artifactId>activiti-actions</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-activiti-actions</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
