@@ -1,15 +1,12 @@
 package com.armedia.acm.files;
 
 import org.apache.commons.vfs2.FileObject;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,7 +21,7 @@ import static org.junit.Assert.*;
  * Created by dmiller on 2/20/14.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/spring/spring-library-folder-watcher.xml", "/spring-test-config-file-watcher.xml"})
+@ContextConfiguration(locations = {"/spring/spring-library-folder-watcher.xml", "/spring-test-config-file-watcher.xml"})
 public class ConfigFileWatcherIT
 {
 

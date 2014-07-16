@@ -18,8 +18,8 @@
     <dependencies>
         <!-- acm -->
         <dependency>
-            <groupId>com.armedia.acm.arm-file-tools</groupId>
-            <artifactId>arm-folder-watcher</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-file-folder-watcher</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>

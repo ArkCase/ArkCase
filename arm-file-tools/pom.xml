@@ -14,7 +14,6 @@
     <description>Parent project for all file utilities.</description>
     
     <modules>
-        <module>arm-folder-watcher</module>
         <module>arm-property-file-manager</module>
     </modules>
 
