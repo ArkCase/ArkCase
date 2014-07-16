@@ -20,6 +20,7 @@
         <module>acm-activiti-actions</module>
         <module>acm-activiti-configuration</module>
         <module>acm-activiti-mule-listener</module>
+        <module>acm-cmis-configuration</module>
         <module>acm-files-folder-watcher</module>
         <module>acm-files-property-file-manager</module>
         <module>acm-spring-classpath-copier</module>

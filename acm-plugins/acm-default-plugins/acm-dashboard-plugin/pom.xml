@@ -66,8 +66,8 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.cmis-tools</groupId>
-            <artifactId>cmis-spring-configuration</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-cmis-configuration</artifactId>
             <version>${acm.version}</version>
             <scope>runtime</scope>
         </dependency>
