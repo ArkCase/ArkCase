@@ -31,8 +31,8 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.spring-tools</groupId>
-            <artifactId>spring-classpath-copier</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-classpath-copier</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
