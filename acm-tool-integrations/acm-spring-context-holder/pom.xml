@@ -10,7 +10,7 @@
     <groupId>com.armedia.acm.acm-tool-integrations</groupId>
     <artifactId>acm-spring-context-holder</artifactId>
     <packaging>jar</packaging>
-    <name>Spring Tools: Child Context Holder</name>
+    <name>Tool Integrations: Spring Child Context Holder</name>
     <description>Manages Spring child contexts.</description>
 
     <dependencies>

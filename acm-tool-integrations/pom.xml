@@ -17,6 +17,7 @@
 
     <modules>
         <module>acm-spring-context-holder</module>
+        <module>acm-spring-data-source</module>
     </modules>
 
 </project>
