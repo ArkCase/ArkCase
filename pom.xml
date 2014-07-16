@@ -228,7 +228,6 @@
         <module>activemq-tools</module>
         <module>drools-tools</module>
         <module>cmis-tools</module>
-        <module>acm-configuration-service</module>
         <module>acm-core-object-model</module>
         <module>acm-standard-applications</module>
         <module>acm-services</module>
