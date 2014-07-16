@@ -12,7 +12,6 @@
     <name>Activiti Tools and Utilities Parent Project</name>
     <description>Parent project for all Activiti tools.</description>
     <modules>
-        <module>activiti-spring-configuration</module>
     </modules>
 
 

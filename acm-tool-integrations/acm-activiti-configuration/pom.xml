@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>activiti-tools</artifactId>
-        <groupId>com.armedia</groupId>
+        <groupId>com.armedia.acm</groupId>
+        <artifactId>acm-tool-integrations</artifactId>
         <version>3.0.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.activiti-tools</groupId>
-    <artifactId>activiti-spring-configuration</artifactId>
-    <name>Activiti Tools - Spring Configuration</name>
+    <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+    <artifactId>acm-activiti-spring-configuration</artifactId>
+    <name>Tool Integrations: Activiti Configuration</name>
     <description>Spring configuration to launch Activiti instance using a Spring datasource and
         transaction manager.
     </description>
