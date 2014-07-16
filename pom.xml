@@ -228,6 +228,7 @@
         <module>acm-core-object-model</module>
         <module>acm-standard-applications</module>
         <module>acm-services</module>
+        <module>acm-tool-integrations</module>
     </modules>
 
     <scm>
