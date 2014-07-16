@@ -216,7 +216,6 @@
 
     <modules>
         <module>acm-web</module>
-        <module>arm-file-tools</module>
         <module>acm-core-plugin-manager</module>
         <module>acm-plugins</module>
         <module>mule-tools</module>

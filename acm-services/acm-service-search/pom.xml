@@ -15,8 +15,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.armedia.acm.arm-file-tools</groupId>
-            <artifactId>arm-property-file-manager</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-files-property-file-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
