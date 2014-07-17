@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-services</artifactId>
-        <version>1.10-SNAPSHOT</version>
+        <version>3.0.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,23 +14,23 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.armedia.acm</groupId>
-            <artifactId>acm-core-plugin-manager</artifactId>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-plugin-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.spring-tools</groupId>
-            <artifactId>acm-spring-tools-context-holder</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-context-holder</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.arm-file-tools</groupId>
-            <artifactId>arm-folder-watcher</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-file-folder-watcher</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.spring-tools</groupId>
-            <artifactId>acm-spring-tools-data-source</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-data-source</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

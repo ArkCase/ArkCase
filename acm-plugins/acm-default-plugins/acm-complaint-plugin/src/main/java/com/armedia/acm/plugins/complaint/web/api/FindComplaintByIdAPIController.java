@@ -43,7 +43,7 @@ public class FindComplaintByIdAPIController
 
         try
         {
-            Complaint found = getComplaintDao().find(Complaint.class, complaintId);
+            Complaint found = getComplaintDao().find(complaintId);
 
             if ( found == null )
             {

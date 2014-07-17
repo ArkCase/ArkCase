@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>1.10-SNAPSHOT</version>
+    <version>3.0.10-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Armedia Case Management Framework and Default Plugins</name>
@@ -215,24 +215,11 @@
     </contributors>
 
     <modules>
-        <module>activiti-tools</module>
-        <module>acm-user-login</module>
-        <module>acm-spring-tools</module>
         <module>acm-web</module>
-        <module>acm-audit</module>
-        <module>acm-event</module>
-        <module>arm-file-tools</module>
-        <module>acm-core-plugin-manager</module>
         <module>acm-plugins</module>
-        <module>mule-tools</module>
-        <module>acm-data</module>
-        <module>activemq-tools</module>
-        <module>drools-tools</module>
-        <module>cmis-tools</module>
-        <module>acm-configuration-service</module>
-        <module>acm-core-object-model</module>
         <module>acm-standard-applications</module>
         <module>acm-services</module>
+        <module>acm-tool-integrations</module>
     </modules>
 
     <scm>
@@ -1082,12 +1069,9 @@
 
     <profiles>
         <profile>
-            <id>dmiller-local</id>
+            <id>netbeans-deploy</id>
             <properties>
-                <acm.driverClassName>oracle.jdbc.OracleDriver</acm.driverClassName>
-                <acm.url>jdbc:oracle:thin:@wso2vm:1521:XE</acm.url>
-                <acm.username>acm3</acm.username>
-                <acm.password>acm3</acm.password>
+                <skipITs>true</skipITs>
             </properties>
         </profile>
     </profiles>

@@ -3,14 +3,14 @@
     <parent>
         <artifactId>acm-plugins</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>1.10-SNAPSHOT</version>
+        <version>3.0.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-plugins</groupId>
     <artifactId>acm-plugins-samples</artifactId>
     <packaging>pom</packaging>
-    <name>ACM Sample Plugins Parent Project</name>
+    <name>ACM Sample Plugins</name>
     <description>Parent project for sample plugins.</description>
     <modules>
         <module>hello-world-plugin</module>

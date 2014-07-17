@@ -47,7 +47,7 @@ public class AddFileAPIController
 
         try
         {
-            Complaint in = getComplaintDao().find(Complaint.class, complaintId);
+            Complaint in = getComplaintDao().find(complaintId);
 
             if ( in == null )
             {

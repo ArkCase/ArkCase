@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>acm</artifactId>
+        <groupId>com.armedia</groupId>
+        <version>3.0.10-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.armedia.acm</groupId>
+    <artifactId>acm-tool-integrations</artifactId>
+    <packaging>pom</packaging>
+    <name>ACM Tool Integrations</name>
+    <description>Parent project for any library or tool interfaces (CMIS, Activiti, etc)</description>
+
+    <modules>
+        <module>acm-activemq-configuration</module>
+        <module>acm-activiti-actions</module>
+        <module>acm-activiti-configuration</module>
+        <module>acm-activiti-mule-listener</module>
+        <module>acm-cmis-configuration</module>
+        <module>acm-drools-rule-monitor</module>
+        <module>acm-files-folder-watcher</module>
+        <module>acm-files-property-file-manager</module>
+        <module>acm-mule-context-manager</module>
+        <module>acm-spring-classpath-copier</module>
+        <module>acm-spring-context-holder</module>
+        <module>acm-spring-data-source</module>
+    </modules>
+
+</project>

@@ -53,4 +53,9 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
         return updateStatusQuery.executeUpdate();
     }
 
+    @Override
+    protected Class<Complaint> getPersistenceClass()
+    {
+        return Complaint.class;
+    }
 }
