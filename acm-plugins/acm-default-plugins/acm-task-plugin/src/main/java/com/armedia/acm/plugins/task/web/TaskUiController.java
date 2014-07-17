@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -42,11 +43,15 @@ public class TaskUiController
     }
 
     @RequestMapping(value = "/wizard", method = RequestMethod.GET)
-    public ModelAndView openTaskWizard()
-    {
+    public ModelAndView openTaskWizard(
+            @RequestParam(value = "parentType", required = false) String parentType
+            ,@RequestParam(value = "parentId", required = false) Integer parentId
+    ) {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("taskWizard");
         retval.addObject("pageDescriptor",  getPageDescriptorWizard());
+        retval.addObject("parentType",  parentType);
+        retval.addObject("parentId",  parentId);
         return retval;
 
     }

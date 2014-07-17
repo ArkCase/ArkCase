@@ -29,31 +29,31 @@ Acm.Object = {
 
     //Expect data to be JSON array: [{userId:"xxx" fullName:"xxx" ...},{...} ]
     ,getApprovers: function() {
-        var data = localStorage.getItem("AcmApprovers");
+        var data = sessionStorage.getItem("AcmApprovers");
         var item = ("null" === data)? null : JSON.parse(data);
         return item;
     }
     ,setApprovers: function(data) {
         var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
-        localStorage.setItem("AcmApprovers", item);
+        sessionStorage.setItem("AcmApprovers", item);
     }
     ,getComplaintTypes: function() {
-        var data = localStorage.getItem("AcmComplaintTypes");
+        var data = sessionStorage.getItem("AcmComplaintTypes");
         var item = ("null" === data)? null : JSON.parse(data);
         return item;
     }
     ,setComplaintTypes: function(data) {
         var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
-        localStorage.setItem("AcmComplaintTypes", item);
+        sessionStorage.setItem("AcmComplaintTypes", item);
     }
     ,getPriorities: function() {
-        var data = localStorage.getItem("AcmPriorities");
+        var data = sessionStorage.getItem("AcmPriorities");
         var item = ("null" === data)? null : JSON.parse(data);
         return item;
     }
     ,setPriorities: function(data) {
         var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
-        localStorage.setItem("AcmPriorities", item);
+        sessionStorage.setItem("AcmPriorities", item);
     }
 
 

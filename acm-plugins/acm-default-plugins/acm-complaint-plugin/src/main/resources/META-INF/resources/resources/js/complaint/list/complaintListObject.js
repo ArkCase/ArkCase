@@ -9,6 +9,7 @@ ComplaintList.Object = {
     initialize : function() {
         this.$ulComplaints      = $("#ulComplaints");
         this.$asideComplaints   = this.$ulComplaints.closest("aside");
+        this.$ulTabs            = $("#ulTabs");
 
         var items = $(document).items();
         var complaintId = items.properties("complaintId").itemValue();
@@ -19,6 +20,9 @@ ComplaintList.Object = {
         } else {
             ComplaintList.setSingleObject(false);
         }
+        this.setInitId(items.properties("initId").itemValue());
+        this.setInitTab(items.properties("initTab").itemValue());
+
 
         this.$lnkTitle          = $("#caseTitle");
         this.$h4TitleHeader     = $("#caseTitle").parent();
@@ -42,6 +46,11 @@ ComplaintList.Object = {
         //this.$upploadList       = $('#secDocDocuments ul');
         this.$upploadList       = $('#upload ul');
         this._useFileUpload(this.$secDocDocuments, this.$tableDocDocuments, this.$upploadList, this.$lnkNewDoc);
+
+        this.$tableTasks        = $("div#tasks>div>div>section>div>table");
+        this.$lnkNewTasks       = $("div#tasks>div>div>section>div>span");
+        this.$lnkNewTasks.click(function(e){ComplaintList.Event.onClickLnkNewTasks(e);});
+
 
         this.$tableRefDocuments = $("#secRefDocuments>div>table");
 
@@ -113,6 +122,22 @@ ComplaintList.Object = {
 
     }
 
+    ,_initId: ""
+    ,getInitId: function() {
+        return this._initId;
+    }
+    ,setInitId: function(id) {
+        this._initId = id;
+    }
+
+    ,_initTab: ""
+    ,getInitTab: function() {
+        return this._initTab;
+    }
+    ,setInitTab: function(tab) {
+        this._initTab = tab;
+    }
+
     ,showAsideComplaints: function(show) {
         Acm.Object.show(this.$asideComplaints, show);
     }
@@ -122,6 +147,11 @@ ComplaintList.Object = {
             var cid = $(this).find("input[type='hidden']").val();
             if (cid == cur) {
                 $(this).addClass("active");
+
+                //todo: scroll selected item to view
+                //$('#yourUL').scrollTop($('#yourUL li:nth-child(14)').position().top);
+                //$('#yourUL').scrollTop($('#yourUL').top + $('#yourUL li:nth-child(14)').position().top);
+                //this.$ulComplaints.scrollTop($(this).position().top);
             } else {
                 $(this).removeClass("active");
             }
@@ -225,6 +255,10 @@ ComplaintList.Object = {
         Acm.Object.setText(this.$lnkStatus, txt);
     }
 
+    ,clickTab: function(tab) {
+        var lnk = this.$ulTabs.find("a[href='#" + tab + "']");
+        lnk.click();
+    }
 
     ,setHtmlDetails: function(html) {
         Acm.Object.setHtml(this.$divDetails, html);
@@ -237,7 +271,15 @@ ComplaintList.Object = {
     ,addRowTableDocDocuments: function(row) {
         this.$tableDocDocuments.find("tbody:last").append(row);
     }
-
+    ,resetTableTasks: function() {
+        this.$tableTasks.find("tbody > tr").remove();
+    }
+    ,addRowTableTasks: function(row) {
+        this.$tableTasks.find("tbody:last").append(row);
+    }
+    ,registerChangeSelTasksEvents: function() {
+        this.$tableTasks.find("select").change(function(e) {ComplaintList.Event.onChangeSelTasks(this);});
+    }
     ,resetTableRefDocuments: function() {
         this.$tableRefDocuments.find("tbody > tr").remove();
     }

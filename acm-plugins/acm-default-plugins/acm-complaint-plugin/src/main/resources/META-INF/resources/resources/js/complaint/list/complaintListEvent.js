@@ -32,12 +32,21 @@ ComplaintList.Event = {
     ,doClickLnkListItem: function() {
         var complaintId = Complaint.getComplaintId();
         ComplaintList.Service.retrieveDetail(complaintId);
+        ComplaintList.Service.retrieveTasks(complaintId);
 
         var c = ComplaintList.findComplaint(complaintId);
         if (null != c) {
             ComplaintList.Object.updateDetail(c);
             Complaint.setComplaintId(complaintId);
             ComplaintList.Object.hiliteSelectedItem(complaintId);
+            //todo: bring item in list to view
+        }
+
+
+        var initTab = ComplaintList.Object.getInitTab();
+        if (Acm.isNotEmpty(initTab)) {
+            ComplaintList.Object.clickTab(initTab);
+            ComplaintList.Object.setInitTab("");
         }
     }
 
@@ -45,6 +54,7 @@ ComplaintList.Event = {
         if (ComplaintList.isSingleObject()) {
             var complaintId = Complaint.getComplaintId();
             ComplaintList.Service.retrieveDetail(complaintId);
+            ComplaintList.Service.retrieveTasks(complaintId);
         } else {
             ComplaintList.Service.listComplaint();
         }
@@ -52,6 +62,15 @@ ComplaintList.Event = {
         Acm.keepTrying(ComplaintList.Event._tryInitAssignee, 8, 200);
         Acm.keepTrying(ComplaintList.Event._tryInitPriority, 8, 200);
         Acm.keepTrying(ComplaintList.Event._tryInitComplaintType, 8, 200);
+    }
+
+    ,onClickLnkNewTasks : function(e) {
+        var complaintId = Complaint.getComplaintId();
+        var url = ComplaintList.Page.URL_NEW_TASK + complaintId;
+        Acm.gotoPage(url);
+    }
+    ,onChangeSelTasks : function(e) {
+        alert("onChangeSelTasks:" + e.value);
     }
 
     ,_tryInitAssignee: function() {

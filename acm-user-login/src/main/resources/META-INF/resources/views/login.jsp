@@ -53,10 +53,12 @@
             </p>
         </div>
     </footer>
-    <%--<script src="<c:url value='/resources/js/app.js'/>"></script>--%>
-    <%--<script src="<c:url value='/resources/js/app.plugin.js'/>"></script>--%>
+
     <script src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
+    <script type="text/javascript" src="<c:url value='/resources/js/login/login.js'/>"></script>
+
+    <%@include file="/WEB-INF/tagf/ready.tagf"%>
 </body>
 </html>
 

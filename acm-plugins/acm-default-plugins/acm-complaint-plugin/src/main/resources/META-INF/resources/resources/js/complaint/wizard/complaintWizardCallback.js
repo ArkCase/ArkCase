@@ -55,32 +55,22 @@ ComplaintWizard.Callback = {
 //        }
 //    }
     ,onComplaintSaved : function(Callback, response) {
-        var success = false;
-        if (response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to create or save complaint:" + response.errorMsg);
+        } else {
             if (Acm.isNotEmpty(response.complaintId)) {
                 ComplaintWizard.Object.setComplaintData(response);
                 ComplaintWizard.Object.setTextH3Title(Acm.goodValue(response.complaintNumber));
-                success = true;
+                Acm.Dialog.info("Complaint data saved");
             }
-        }
-
-        if (success) {
-            Acm.Dialog.info("Complaint data saved");
-        } else {
-            Acm.Dialog.error("Failed to create or save complaint");
         }
     }
     ,onComplaintSubmitted : function(Callback, response) {
-        var success = false;
-        if (response) {
-                //validate response.length == Complaint.getComplaint().approvers.length
-                success = true;
-        }
-
-        if (success) {
-            Acm.goHome();
+        if (response.hasError) {
+            Acm.Dialog.error("Error occurred for complaint approval submission:" + response.errorMsg);
         } else {
-            Acm.Dialog.error("Error occurred for complaint approval submission");
+                //validate response.length == Complaint.getComplaint().approvers.length
+            Acm.gotoPage(ComplaintWizard.Page.URL_DASHBOARD);
         }
     }
 };

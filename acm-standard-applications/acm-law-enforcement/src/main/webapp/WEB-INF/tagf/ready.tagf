@@ -10,6 +10,9 @@ jQuery(document).ready(function() {
     if ("undefined" != typeof Sidebar) {
         Sidebar.initialize();
     }
+    if ("undefined" != typeof Login) {
+        Login.initialize();
+    }
     if ("undefined" != typeof Dashboard) {
         Dashboard.initialize();
     }

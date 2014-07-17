@@ -19,9 +19,10 @@ Acm.Ajax = {
                 Acm.Dispatcher.triggerEvent(callback, response);
             }
             ,error: function(xhr, status, error) {
-                //var err = eval("(" + xhr.responseText + ")");
-                Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+                Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
             }
+            //,complete: function(xhr, status) {
+            //}
         });
     }
 
@@ -34,7 +35,7 @@ Acm.Ajax = {
 	            Acm.Dispatcher.triggerEvent(callback, response);
 	        }
 	        ,error: function(xhr, status, error) {
-	            Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+	            Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
 	        }
 	    });
 	}
@@ -48,7 +49,7 @@ Acm.Ajax = {
                 Acm.Dispatcher.triggerEvent(callback, response);
             }
             ,error: function(xhr, status, error) {
-                Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+                Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
             }
         });
     }
@@ -69,7 +70,7 @@ Acm.Ajax = {
                 Acm.Dispatcher.triggerEvent(callback, response);
             }
             ,error: function(xhr, status, error) {
-                Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+                Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
             }
         });
     }
@@ -83,7 +84,7 @@ Acm.Ajax = {
                 Acm.Dispatcher.triggerEvent(callback, response);
             }
             ,error: function(xhr, status, error) {
-                Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+                Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
             }
         });
     }
@@ -103,7 +104,7 @@ Acm.Ajax = {
 	            Acm.Dispatcher.triggerEvent(callback, response);
 	        }
 	        ,error: function(xhr, status, error) {
-	            Acm.Dispatcher.triggerEvent(callback, {success:false,message:xhr.responseText});
+	            Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
 	        }
 	    });
 	}

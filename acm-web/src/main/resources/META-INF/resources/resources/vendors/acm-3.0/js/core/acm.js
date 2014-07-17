@@ -182,8 +182,8 @@ var Acm = Acm || {
         return yyyyMmDd;
     }
 
-    ,goHome: function() {
-        window.location.href = Acm.getContextPath() + "/plugin/dashboard";
+    ,gotoPage: function(url) {
+        window.location.href = Acm.getContextPath() + url;
     }
 
 //    ,_foobar_cont: function (){
@@ -214,6 +214,12 @@ var Acm = Acm || {
                 break;
             }
         }
+    }
+
+    ,reset: function() {
+        Acm.Object.setApprovers(null);
+        Acm.Object.setComplaintTypes(null);
+        Acm.Object.setPriorities(null);
     }
 };
 

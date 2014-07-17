@@ -30,19 +30,17 @@ Topbar.Object = {
         this.$formSearch.attr("action", url);
     }
     ,getQuickSearchTerm: function() {
-        var term = localStorage.getItem("AcmQuickSearchTerm");
+        var term = sessionStorage.getItem("AcmQuickSearchTerm");
         if (term === "null") {
-            console.log("null term in getQuickSearchTerm!")
             return null;
         }
         return term;
     }
     ,setQuickSearchTerm: function(term) {
         if (term === "null") {
-            console.log("null term in ssssssssssssssetQuickSearchTerm!")
-            localStorage.removeItem("AcmQuickSearchTerm");
+            sessionStorage.removeItem("AcmQuickSearchTerm");
         }
-        localStorage.setItem("AcmQuickSearchTerm", term);
+        sessionStorage.setItem("AcmQuickSearchTerm", term);
     }
     ,getValueEdtSearch: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtSearch);
@@ -151,10 +149,10 @@ Topbar.Object = {
     }
 ///////////////////////////////////////
     ,getTypeAheadTerms: function() {
-        localStorage.getItem("AcmTypeAheadTerms");
+        sessionStorage.getItem("AcmTypeAheadTerms");
     }
     ,setTypeAheadTerms: function(typeAheadTerms) {
-        localStorage.setItem("AcmTypeAheadTerms", typeAheadTerms);
+        sessionStorage.setItem("AcmTypeAheadTerms", typeAheadTerms);
     }
     ,useTypeAheadSearch: function(typeAheadTerms) {
         this._useTypeAhead(this.$edtSearch, typeAheadTerms);

@@ -31,6 +31,11 @@
     <%@include file="/WEB-INF/tagf/footer.tagf"%>
 </section>
 
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_underscore}/underscore-min.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/typeahead.js"></script>
+<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/typeahead.jquery.js"></script>--%>
+<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/bloodhound.js"></script>--%>
+
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acm.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDialog.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmAjax.js"></script>
@@ -56,13 +61,6 @@
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarRule.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarService.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarCallback.js"></script>
-
-
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_underscore}/underscore-min.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/typeahead.js"></script>
-<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/typeahead.jquery.js"></script>--%>
-<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/bloodhound.js"></script>--%>
-
 
 <jsp:invoke fragment="endOfBody"/>
 <%@include file="/WEB-INF/tagf/ready.tagf"%>

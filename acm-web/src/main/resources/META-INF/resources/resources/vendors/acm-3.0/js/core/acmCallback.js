@@ -18,36 +18,24 @@ Acm.Callback = {
 
 
     ,onApproversRetrieved : function(Callback, response) {
-        var success = false;
-        if (response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to retrieve approvers:" + response.errorMsg);
+        } else {
             Acm.Object.setApprovers(response);
-            success = true;
-        }
-
-        if (!success) {
-            Acm.Dialog.error("Failed to retrieve approvers");
         }
     }
     ,onComplaintTypesRetrieved : function(Callback, response) {
-        var success = false;
-        if (response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to retrieve complaint types:" + response.errorMsg);
+        } else {
             Acm.Object.setComplaintTypes(response);
-            success = true;
-        }
-
-        if (!success) {
-            Acm.Dialog.error("Failed to retrieve complaint types");
         }
     }
     ,onPrioritiesRetrieved : function(Callback, response) {
-        var success = false;
-        if (response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to retrieve priorities:" + response.errorMsg);
+        } else {
             Acm.Object.setPriorities(response);
-            success = true;
-        }
-
-        if (!success) {
-            Acm.Dialog.error("Failed to retrieve priorities");
         }
     }
 

@@ -13,14 +13,10 @@ Dashboard.Callback = {
     ,EVENT_MY_TASKS_RETRIEVED		: "dashboard-my-tasks-retrieved"
 
     ,onMyTasksRetrieved : function(Callback, response) {
-        var success = false;
-        if (response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to retrieve my tasks:" + response.errorMsg);
+        } else {
             Dashboard.Page.fillMyTasks(response);
-            success = true;
-        }
-
-        if (!success) {
-            Acm.Dialog.error("Failed to retrieve my tasks");
         }
     }
 };

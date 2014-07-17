@@ -16,7 +16,7 @@ TaskList.Service = {
 
     ,listTask : function(user) {
         Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_LIST_TASK + user
-            ,TaskList.Callback.EVENT_LIST_RETURNED
+            ,TaskList.Callback.EVENT_LIST_RETRIEVED
         );
     }
     ,retrieveDetail : function(taskId) {
