@@ -48,6 +48,11 @@
                     <property name="url" value="/api/{version}/plugin/search/quickSearch"/>
                     <property name="requiredPrivilege" ref="searchPrivilege"/>
                 </bean>
+                 <bean id="ChildrenUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/children"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
             </list>
         </property>
 
