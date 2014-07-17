@@ -10,7 +10,7 @@
     <groupId>com.armedia.acm</groupId>
     <artifactId>acm-plugins</artifactId>
     <packaging>pom</packaging>
-    <name>ACM Plugin Parent Project</name>
+    <name>ACM Plugins</name>
     <description>Parent project for ACM default plugins.</description>
     <modules>
         <module>acm-plugins-samples</module>

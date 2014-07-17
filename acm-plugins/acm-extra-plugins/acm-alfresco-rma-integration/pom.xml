@@ -9,7 +9,7 @@
 
     <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
     <artifactId>acm-alfresco-rma-integration</artifactId>
-    <name>ACM Extra Plugins: Alfresco RMA Integration</name>
+    <name>ACM Extra Plugin: Alfresco RMA Integration</name>
     <description>Adds folders and files to the Alfersco Records Mangement module based on defined business rules.</description>
 
     <dependencies>
@@ -35,7 +35,7 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-complaint-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>

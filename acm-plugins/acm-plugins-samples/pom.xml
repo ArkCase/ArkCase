@@ -10,7 +10,7 @@
     <groupId>com.armedia.acm.acm-plugins</groupId>
     <artifactId>acm-plugins-samples</artifactId>
     <packaging>pom</packaging>
-    <name>ACM Sample Plugins Parent Project</name>
+    <name>ACM Sample Plugins</name>
     <description>Parent project for sample plugins.</description>
     <modules>
         <module>hello-world-plugin</module>

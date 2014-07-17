@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.acm.acm-plugins.default</groupId>
+    <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
     <artifactId>acm-object-association-plugin</artifactId>
     <name>ACM Default Plugin: Object Associations</name>
     <description>This plugin enables arbitrary associations of parent objects to target objects

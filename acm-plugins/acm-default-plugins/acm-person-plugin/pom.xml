@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.acm.acm-plugins.default</groupId>
+    <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
     <artifactId>acm-person-plugin</artifactId>
     <name>ACM Default Plugin: Person</name>
     <description>This plugin adds the ability to store and track information about people.</description>
@@ -32,7 +32,7 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-addressable-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>

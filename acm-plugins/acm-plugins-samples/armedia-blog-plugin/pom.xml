@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.acm.acm-plugins.samples</groupId>
+    <groupId>com.armedia.acm.acm-plugins.acm-plugins-samples</groupId>
     <artifactId>armedia-blog-plugin</artifactId>
     <name>ACM Sample Plugin: Armedia Blog Reader</name>
     <description>Sample plugin to read the Armedia blog.</description>

@@ -7,9 +7,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.acm.acm-plugins.samples</groupId>
+    <groupId>com.armedia.acm.acm-plugins.acm-plugins-samples</groupId>
     <artifactId>hello-world-plugin</artifactId>
-    <name>A Simple ACM Sample Plugin: Hello World</name>
+    <name>ACM Sample Plugin: Hello World</name>
     <description>Sample plugin to show the classic "Hello, World!" greeting.</description>
 
     <dependencies>
