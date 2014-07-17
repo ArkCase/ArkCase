@@ -218,7 +218,6 @@
         <module>acm-web</module>
         <module>acm-core-plugin-manager</module>
         <module>acm-plugins</module>
-        <module>acm-core-object-model</module>
         <module>acm-standard-applications</module>
         <module>acm-services</module>
         <module>acm-tool-integrations</module>

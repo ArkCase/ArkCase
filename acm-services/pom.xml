@@ -15,6 +15,7 @@
     <modules>
         <module>acm-service-audit</module>
         <module>acm-service-configuration</module>
+        <module>acm-service-core-object-model</module>
         <module>acm-service-data</module>
         <module>acm-service-data-access-control</module>
         <module>acm-service-ecm</module>
