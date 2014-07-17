@@ -216,7 +216,6 @@
 
     <modules>
         <module>acm-web</module>
-        <module>acm-core-plugin-manager</module>
         <module>acm-plugins</module>
         <module>acm-standard-applications</module>
         <module>acm-services</module>

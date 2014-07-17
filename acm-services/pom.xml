@@ -21,6 +21,7 @@
         <module>acm-service-ecm</module>
         <module>acm-service-event</module>
         <module>acm-service-login</module>
+        <module>acm-service-plugin-manager</module>
         <module>acm-service-search</module>
         <module>acm-service-users</module>
     </modules>
