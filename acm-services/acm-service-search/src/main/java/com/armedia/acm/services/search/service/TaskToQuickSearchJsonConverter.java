@@ -18,7 +18,7 @@ public class TaskToQuickSearchJsonConverter
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private static final String TASK_TYPE = "Task";
+    private static final String TASK_TYPE = "TASK";
 
     // This method is used by Mule when sending tasks to SOLR. Don't act on IDEA's not-used warning.
     public String toQuickSearchJson(
