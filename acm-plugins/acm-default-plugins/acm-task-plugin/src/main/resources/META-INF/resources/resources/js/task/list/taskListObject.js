@@ -102,7 +102,7 @@ TaskList.Object = {
 ////            this.setValueEdtAttachedToObjectId(t.attachedToObjectId);
 //            this.setTextNodeScanAttachedToObjectType(t.attachedToObjectType);
 //            this.setTextNodeScanAttachedToObjectId(t.attachedToObjectId);
-//            this.setHrefLnkAttachedToObject(Acm.getContextPath() + "/plugin/complaint/" + t.attachedToObjectId);
+//            this.setHrefLnkAttachedToObject(App.getContextPath() + "/plugin/complaint/" + t.attachedToObjectId);
 //        }
 
     }

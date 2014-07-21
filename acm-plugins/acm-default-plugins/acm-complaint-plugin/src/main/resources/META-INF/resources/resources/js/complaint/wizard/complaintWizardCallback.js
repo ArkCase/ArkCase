@@ -70,7 +70,7 @@ ComplaintWizard.Callback = {
             Acm.Dialog.error("Error occurred for complaint approval submission:" + response.errorMsg);
         } else {
                 //validate response.length == Complaint.getComplaint().approvers.length
-            Acm.gotoPage(ComplaintWizard.Page.URL_DASHBOARD);
+            App.gotoPage(ComplaintWizard.Page.URL_DASHBOARD);
         }
     }
 };

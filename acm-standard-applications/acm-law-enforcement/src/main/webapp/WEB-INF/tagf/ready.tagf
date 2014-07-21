@@ -4,6 +4,9 @@ jQuery(document).ready(function() {
     if ("undefined" != typeof Acm) {
         Acm.initialize();
     }
+    if ("undefined" != typeof App) {
+        App.initialize();
+    }
     if ("undefined" != typeof Topbar) {
         Topbar.initialize();
     }

@@ -415,7 +415,7 @@ ComplaintList.Object = {
                 }
                 ,type: {
                     title: 'Type'
-                    //,options: Acm.getContextPath() + '/api/latest/plugin/complaint/types'
+                    //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
                     ,options: Complaint.getPersonTypes()
                 }
                 ,description: {
@@ -491,7 +491,7 @@ ComplaintList.Object = {
                         rc.Record.type = record.type;
                         rc.Record.value = record.value;
                         rc.Record.created = Acm.getCurrentDay(); //record.created;
-                        rc.Record.creator = Acm.getUserName();   //record.creator;
+                        rc.Record.creator = App.getUserName();   //record.creator;
                         return rc;
 //                        return {
 //                            "Result": "OK"
@@ -867,7 +867,7 @@ ComplaintList.Object = {
 
             // Initialize the jQuery File Upload plugin
             _jqXHR = $upload.fileupload({
-                url: Acm.getContextPath() + ComplaintList.Service.API_UPLOAD_COMPLAINT_FILE
+                url: App.getContextPath() + ComplaintList.Service.API_UPLOAD_COMPLAINT_FILE
                 ,dropZone: $drop
 
                 ,done: function (e, data) {

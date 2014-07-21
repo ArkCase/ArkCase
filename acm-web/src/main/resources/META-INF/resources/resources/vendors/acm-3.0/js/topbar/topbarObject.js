@@ -23,7 +23,7 @@ Topbar.Object = {
 
 
     ,setActionFormSearch: function(term) {
-        var url = Acm.getContextPath() + "/plugin/search"
+        var url = App.getContextPath() + "/plugin/search"
         if (Acm.isNotEmpty(term)) {
             url += "?q=" + term;
         }
@@ -88,7 +88,7 @@ Topbar.Object = {
     ,_throttledRequest: function(query, process){
         //get the data to populate the typeahead (plus an id value)
         $.ajax({
-            url: Acm.getContextPath() + Topbar.Service.API_TYPEAHEAD_SUGGESTION + "?q=" + query
+            url: App.getContextPath() + Topbar.Service.API_TYPEAHEAD_SUGGESTION + "?q=" + query
             ,cache: false
             ,success: function(data){
                 Topbar.Object._onSuccessSuggestion(query, process, data);

@@ -17,20 +17,20 @@ ComplaintList.Service = {
 
 
     ,listComplaint : function() {
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_LIST_COMPLAINT
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_COMPLAINT
             ,ComplaintList.Callback.EVENT_LIST_RETRIEVED
         );
     }
 
     ,retrieveDetail : function(complaintId) {
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_RETRIEVE_DETAIL + complaintId
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_DETAIL + complaintId
             ,ComplaintList.Callback.EVENT_DETAIL_RETRIEVED
         );
     }
 
     ,retrieveTasks : function(complaintId) {
-        //Acm.Ajax.asyncGet(Acm.getContextPath() + "/api/v1/plugin/search/quickSearch?q=object_type_s:Task&start=0&n=800&s="
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_RETRIEVE_TASKS + complaintId
+        //Acm.Ajax.asyncGet(App.getContextPath() + "/api/v1/plugin/search/quickSearch?q=object_type_s:Task&start=0&n=800&s="
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_TASKS + complaintId
             ,ComplaintList.Callback.EVENT_TASKS_RETRIEVED
         );
     }

@@ -11,11 +11,11 @@ Admin.Event = {
 
     ,onClickBtnTest: function(e) {
         alert("test clicked");
-        Acm.Object.setApprovers(null);
-        Acm.Object.setComplaintTypes(null);
-        Acm.Object.setPriorities(null);
+        App.Object.setApprovers(null);
+        App.Object.setComplaintTypes(null);
+        App.Object.setPriorities(null);
     }
     ,onPostInit: function() {
-//        Admin.Service.retrieveMyTasks(Acm.getUserName());
+//        Admin.Service.retrieveMyTasks(App.getUserName());
     }
 };

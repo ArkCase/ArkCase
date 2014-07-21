@@ -10,8 +10,6 @@ var Acm = Acm || {
         Acm.Ajax.initialize();
         Acm.Object.initialize();
         Acm.Event.initialize();
-        Acm.Service.initialize();
-        Acm.Callback.initialize();
         Acm.Rule.initialize();
 
         Acm.deferred(Acm.Event.onPostInit);
@@ -22,16 +20,8 @@ var Acm = Acm || {
     ,Ajax : {}
     ,Object : {}
     ,Event : {}
-    ,Service : {}
-    ,Callback : {}
     ,Rule : {}
 
-    ,getContextPath: function() {
-        return Acm.Object.getContextPath();
-    }
-    ,getUserName: function() {
-        return Acm.Object.getUserName();
-    }
 
 	,isEmpty: function (val) {
 //        if (typeof val == "undefined") {
@@ -182,9 +172,6 @@ var Acm = Acm || {
         return yyyyMmDd;
     }
 
-    ,gotoPage: function(url) {
-        window.location.href = Acm.getContextPath() + url;
-    }
 
 //    ,_foobar_cont: function (){
 //        console.log("finished.");
@@ -216,24 +203,7 @@ var Acm = Acm || {
         }
     }
 
-    ,reset: function() {
-        Acm.Object.setApprovers(null);
-        Acm.Object.setComplaintTypes(null);
-        Acm.Object.setPriorities(null);
-    }
 };
 
 
-
-/**
- * initialize Acm
- */
-//
-// call it externally, from common/ready.js for example
-//
-//jQuery(document).ready(
-//    function() {
-//        Acm.initialize();
-//    }
-//);
 

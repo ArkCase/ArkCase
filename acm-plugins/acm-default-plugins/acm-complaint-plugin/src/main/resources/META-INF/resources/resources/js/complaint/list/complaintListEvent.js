@@ -67,14 +67,14 @@ ComplaintList.Event = {
     ,onClickLnkNewTasks : function(e) {
         var complaintId = Complaint.getComplaintId();
         var url = ComplaintList.Page.URL_NEW_TASK + complaintId;
-        Acm.gotoPage(url);
+        App.gotoPage(url);
     }
     ,onChangeSelTasks : function(e) {
         alert("onChangeSelTasks:" + e.value);
     }
 
     ,_tryInitAssignee: function() {
-        var data = Acm.Object.getApprovers();
+        var data = App.Object.getApprovers();
         if (Acm.isNotEmpty(data)) {
             ComplaintList.Object.initAssignee(data);
             return true;
@@ -83,7 +83,7 @@ ComplaintList.Event = {
         }
     }
     ,_tryInitPriority: function() {
-        var data = Acm.Object.getPriorities();
+        var data = App.Object.getPriorities();
         if (Acm.isNotEmpty(data)) {
             ComplaintList.Object.initPriority(data);
             return true;
@@ -92,7 +92,7 @@ ComplaintList.Event = {
         }
     }
     ,_tryInitComplaintType: function() {
-        var data = Acm.Object.getComplaintTypes();
+        var data = App.Object.getComplaintTypes();
         if (Acm.isNotEmpty(data)) {
             ComplaintList.Object.initComplaintType(data);
             return true;

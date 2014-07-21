@@ -11,7 +11,7 @@ Dashboard.Page = {
 
     ,fillMyTasks: function(data) {
         Dashboard.Object.resetTableMyTasks();
-        var urlBase = Acm.getContextPath() + "/plugin/task/";
+        var urlBase = App.getContextPath() + "/plugin/task/";
         $.each(data, function(idx, val) {
             var dueDate =  Acm.getDateFromDatetime(val.dueDate);
             var status = (val.completed == true)? "Completed": "Active";

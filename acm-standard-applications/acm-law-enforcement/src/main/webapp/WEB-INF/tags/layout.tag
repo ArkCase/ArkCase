@@ -36,15 +36,11 @@
 <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/typeahead.jquery.js"></script>--%>
 <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/bloodhound.js"></script>--%>
 
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acm.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDialog.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmAjax.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDispatcher.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmObject.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmEvent.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmService.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmCallback.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmRule.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app/app.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app/appObject.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app/appEvent.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app/appService.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app/appCallback.js"></script>
 
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/topbar/topbar.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/topbar/topbarObject.js"></script>

@@ -18,7 +18,7 @@ Search.Page = {
 //            var a = val;
 //            var z = 1;
 //
-//            var urlBase = Acm.getContextPath() + "/plugin/complaint/";
+//            var urlBase = App.getContextPath() + "/plugin/complaint/";
 //            var row = "<tr>"
 //                + "<td style='width:20%'><a href='" + urlBase + val.complaintId + "'>" + val.complaintId  + "</a></td>"
 //                + "<td>" + val.complaintTitle + "</td>"

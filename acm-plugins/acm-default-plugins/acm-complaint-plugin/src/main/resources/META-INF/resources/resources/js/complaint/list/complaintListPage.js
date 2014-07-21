@@ -29,7 +29,7 @@ ComplaintList.Page = {
             for (var i = 0; i < len; i++) {
                 var c = arr[i];
                 html += "<li class='list-group-item'> <a href='#' class='thumb-sm pull-left m-r-sm'> <img src='"
-                    + Acm.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a0.png" + "' class='img-circle'> </a> "
+                    + App.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a0.png" + "' class='img-circle'> </a> "
                     + "<a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
                     + Acm.getDateFromDatetime(c.created) + "</small><strong class='block'>"
                     + c.complaintTitle + "</strong><small>"
@@ -45,7 +45,7 @@ ComplaintList.Page = {
 
     ,buildTableDocDocuments: function(c) {
         ComplaintList.Object.resetTableDocDocuments();
-        var urlBase = Acm.getContextPath() + ComplaintList.Service.API_DOWNLOAD_DOCUMENT;
+        var urlBase = App.getContextPath() + ComplaintList.Service.API_DOWNLOAD_DOCUMENT;
 
         var childObjects = c.childObjects;
         if (Acm.isNotEmpty(childObjects)) {
@@ -68,7 +68,7 @@ ComplaintList.Page = {
 
     ,buildTableTasks: function(response) {
         ComplaintList.Object.resetTableTasks();
-        var urlBase = Acm.getContextPath() + this.URL_TASK_DETAIL;
+        var urlBase = App.getContextPath() + this.URL_TASK_DETAIL;
 
         for (var i = 0; i < response.docs.length; i++) {
             var obj = response.docs[i];

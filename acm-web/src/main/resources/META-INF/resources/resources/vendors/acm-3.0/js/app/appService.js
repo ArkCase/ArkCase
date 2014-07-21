@@ -1,11 +1,11 @@
 /**
- * Acm.Service
+ * App.Service
  *
  * manages all service call to application server
  *
  * @author jwu
  */
-Acm.Service = {
+App.Service = {
     initialize : function() {
     }
 
@@ -15,18 +15,18 @@ Acm.Service = {
 
 
     ,getApprovers : function() {
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_GET_APPROVERS
-            ,Acm.Callback.EVENT_APPROVERS_RETRIEVED
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_GET_APPROVERS
+            ,App.Callback.EVENT_APPROVERS_RETRIEVED
         );
     }
     ,getComplaintTypes : function() {
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_GET_COMPLAINT_TYPES
-            ,Acm.Callback.EVENT_COMPLAINT_TYPES_RETRIEVED
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_GET_COMPLAINT_TYPES
+            ,App.Callback.EVENT_COMPLAINT_TYPES_RETRIEVED
         );
     }
     ,getPriorities : function() {
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_GET_PRIORITIES
-            ,Acm.Callback.EVENT_PRIORIES_RETRIEVED
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_GET_PRIORITIES
+            ,App.Callback.EVENT_PRIORIES_RETRIEVED
         );
     }
 };

@@ -14,12 +14,12 @@ TaskWizard.Service = {
 
 
 //    ,getAssignees : function() {
-//        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_GET_ASSIGNEES
+//        Acm.Ajax.asyncGet(App.getContextPath() + this.API_GET_ASSIGNEES
 //            ,TaskWizard.Callback.EVENT_ASSIGNEES_RETRIEVED
 //        );
 //    }
     ,createAdhocTask : function(data) {
-        Acm.Ajax.asyncPost(Acm.getContextPath() + this.API_CREATE_ADHOC_TASK
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_CREATE_ADHOC_TASK
             ,JSON.stringify(data)
             ,TaskWizard.Callback.EVENT_TASK_CREATED
         );

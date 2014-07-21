@@ -13,7 +13,7 @@ Dashboard.Service = {
 
 
     ,retrieveMyTasks : function(user) {
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_RETRIEVE_MY_TASKS + user
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_MY_TASKS + user
             ,Dashboard.Callback.EVENT_MY_TASKS_RETRIEVED
         );
     }

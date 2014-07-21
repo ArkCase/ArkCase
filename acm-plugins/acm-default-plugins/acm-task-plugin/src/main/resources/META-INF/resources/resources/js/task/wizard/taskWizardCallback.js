@@ -44,7 +44,7 @@ TaskWizard.Callback = {
                     }
                     url += attachedToObjectId;
                 }
-                Acm.gotoPage(url);
+                App.gotoPage(url);
             }
         }
     }

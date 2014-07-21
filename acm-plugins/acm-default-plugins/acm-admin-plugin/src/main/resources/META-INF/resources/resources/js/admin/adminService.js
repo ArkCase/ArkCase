@@ -1,11 +1,11 @@
 /**
- * Dashboard.Service
+ * Admin.Service
  *
  * manages all service call to application server
  *
  * @author jwu
  */
-Dashboard.Service = {
+Admin.Service = {
     initialize : function() {
     }
 
@@ -13,8 +13,8 @@ Dashboard.Service = {
 //
 //
 //    ,retrieveMyTasks : function(user) {
-//        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_RETRIEVE_MY_TASKS + user
-//            ,Dashboard.Callback.EVENT_MY_TASKS_RETRIEVED
+//        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_MY_TASKS + user
+//            ,Admin.Callback.EVENT_MY_TASKS_RETRIEVED
 //        );
 //    }
 };

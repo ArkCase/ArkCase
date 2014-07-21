@@ -81,7 +81,7 @@ Search.Object = {
 
             ,actions: {
                 listAction: function (postData, jtParams) {
-                    if (Acm.isEmpty(Acm.getContextPath())) {
+                    if (Acm.isEmpty(App.getContextPath())) {
                         return Search.EMPTY_RESULT; //[];
                     }
 
@@ -91,7 +91,7 @@ Search.Object = {
                     }
 
                     var url;
-                    url =  Acm.getContextPath() + Search.Service.API_QUICK_SEARCH;
+                    url =  App.getContextPath() + Search.Service.API_QUICK_SEARCH;
                     url += "?q=" + term;
                     if (Acm.isNotEmpty(jtParams.jtStartIndex)) {
                         url += "&start=" + jtParams.jtStartIndex;
@@ -109,11 +109,11 @@ Search.Object = {
                     }
 
 //                    if (0 == jtParams.jtStartIndex) {
-//                        url = Acm.getContextPath() + "/resources/search.json" + "?jtStartIndex=" + jtParams.jtStartIndex + '&jtPageSize=' + jtParams.jtPageSize + '&jtSorting=' + jtParams.jtSorting;
+//                        url = App.getContextPath() + "/resources/search.json" + "?jtStartIndex=" + jtParams.jtStartIndex + '&jtPageSize=' + jtParams.jtPageSize + '&jtSorting=' + jtParams.jtSorting;
 //                    } else if (4 == jtParams.jtStartIndex) {
-//                        url = Acm.getContextPath() + "/resources/search2.json" + "?jtStartIndex=" + jtParams.jtStartIndex + '&jtPageSize=' + jtParams.jtPageSize + '&jtSorting=' + jtParams.jtSorting;
+//                        url = App.getContextPath() + "/resources/search2.json" + "?jtStartIndex=" + jtParams.jtStartIndex + '&jtPageSize=' + jtParams.jtPageSize + '&jtSorting=' + jtParams.jtSorting;
 //                    } else {
-//                        url = Acm.getContextPath() + "/resources/search3.json" + "?jtStartIndex=" + jtParams.jtStartIndex + '&jtPageSize=' + jtParams.jtPageSize + '&jtSorting=' + jtParams.jtSorting;
+//                        url = App.getContextPath() + "/resources/search3.json" + "?jtStartIndex=" + jtParams.jtStartIndex + '&jtPageSize=' + jtParams.jtPageSize + '&jtSorting=' + jtParams.jtSorting;
 //                    }
 
                     return $.Deferred(function ($dfd) {
@@ -196,7 +196,7 @@ Search.Object = {
                     ,width: '15%'
                     ,sorting: false
                     ,display: function(data) {
-                        var url = Acm.getContextPath();
+                        var url = App.getContextPath();
                         if (Search.OBJTYPE_CASE == data.record.type) {
                             url += "/plugin/case/" + data.record.id;
                         } else if (Search.OBJTYPE_COMPLAINT == data.record.type) {

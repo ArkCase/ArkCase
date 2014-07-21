@@ -46,10 +46,10 @@ TaskList.Callback = {
         } else {
             if (Acm.isNotEmpty(response.taskId)) {
                 if (TaskList.isSingleObject()) {
-                    Acm.gotoPage(TaskList.Page.URL_DASHBOARD);
+                    App.gotoPage(TaskList.Page.URL_DASHBOARD);
                 } else {
                     //todo: remove item from local copy list, no need to call service to retrieve list
-                    TaskList.Service.listTask(Acm.getUserName());
+                    TaskList.Service.listTask(App.getUserName());
                 }
             }
         }

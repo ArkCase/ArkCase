@@ -51,7 +51,7 @@ TaskList.Event = {
             var taskId = Task.getTaskId();
             TaskList.Service.retrieveDetail(taskId);
         } else {
-            TaskList.Service.listTask(Acm.getUserName());
+            TaskList.Service.listTask(App.getUserName());
         }
 
         Acm.keepTrying(TaskList.Event._tryInitAssignee, 8, 200);
@@ -60,7 +60,7 @@ TaskList.Event = {
 
 
     ,_tryInitAssignee: function() {
-        var data = Acm.Object.getApprovers();
+        var data = App.Object.getApprovers();
         if (Acm.isNotEmpty(data)) {
             TaskList.Object.initAssignee(data);
             return true;
@@ -69,7 +69,7 @@ TaskList.Event = {
         }
     }
     ,_tryInitComplaintType: function() {
-        var data = Acm.Object.getComplaintTypes();
+        var data = App.Object.getComplaintTypes();
         if (Acm.isNotEmpty(data)) {
             TaskList.Object.initComplaintType(data);
             return true;

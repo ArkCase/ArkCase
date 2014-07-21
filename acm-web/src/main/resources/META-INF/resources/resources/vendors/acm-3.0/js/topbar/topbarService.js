@@ -16,7 +16,7 @@ Topbar.Service = {
     ,getTypeAheadTerms : function() {
         var typeAheadTerms = Topbar.Object.getTypeAheadTerms();
         if (Acm.isEmpty()) {
-            Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_GET_TYPEAHEAD_TERMS
+            Acm.Ajax.asyncGet(App.getContextPath() + this.API_GET_TYPEAHEAD_TERMS
                 ,Topbar.Callback.EVENT_TYPEAHEAD_TERMS_RETRIEVED
             );
         } else {

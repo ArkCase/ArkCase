@@ -8,73 +8,7 @@
  */
 Acm.Object = {
     initialize : function() {
-        var items = $(document).items();
-        this._contextPath = items.properties("contextPath").itemValue();
-        this._userName = items.properties("userName").itemValue();
-
-//        this._pluginName = items.properties("pluginName").itemValue();
-//        this._pluginUrl = items.properties("pluginUrl").itemValue();
-//        this._pluginImage = items.properties("pluginImage").itemValue();
-//        this._pluginDesc = items.properties("pluginDesc").itemValue();
     }
-
-    ,_contextPath: ""
-    ,getContextPath: function() {
-        return this._contextPath;
-    }
-    ,_userName: ""
-    ,getUserName: function() {
-        return this._userName;
-    }
-
-    //Expect data to be JSON array: [{userId:"xxx" fullName:"xxx" ...},{...} ]
-    ,getApprovers: function() {
-        var data = sessionStorage.getItem("AcmApprovers");
-        var item = ("null" === data)? null : JSON.parse(data);
-        return item;
-    }
-    ,setApprovers: function(data) {
-        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
-        sessionStorage.setItem("AcmApprovers", item);
-    }
-    ,getComplaintTypes: function() {
-        var data = sessionStorage.getItem("AcmComplaintTypes");
-        var item = ("null" === data)? null : JSON.parse(data);
-        return item;
-    }
-    ,setComplaintTypes: function(data) {
-        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
-        sessionStorage.setItem("AcmComplaintTypes", item);
-    }
-    ,getPriorities: function() {
-        var data = sessionStorage.getItem("AcmPriorities");
-        var item = ("null" === data)? null : JSON.parse(data);
-        return item;
-    }
-    ,setPriorities: function(data) {
-        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
-        sessionStorage.setItem("AcmPriorities", item);
-    }
-
-
-
-
-//    ,_pluginName: ""
-//    ,_pluginUrl: ""
-//    ,_pluginImage: ""
-//    ,_pluginDesc: ""
-//    ,getPluginName: function() {
-//        return this._pluginName;
-//    }
-//    ,getPluginUrl: function() {
-//        return this._pluginUrl;
-//    }
-//    ,getPluginImage: function() {
-//        return this._pluginImage;
-//    }
-//    ,getPluginDesc: function() {
-//        return this._pluginDesc;
-//    }
 
 
     ,getValue : function($s) {

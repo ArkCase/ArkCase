@@ -1,41 +1,41 @@
 /**
- * Acm.Callback
+ * App.Callback
  *
  * Callback handlers for server responses
  *
  * @author jwu
  */
-Acm.Callback = {
+App.Callback = {
     initialize : function() {
         Acm.Dispatcher.addEventListener(this.EVENT_APPROVERS_RETRIEVED, this.onApproversRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_TYPES_RETRIEVED, this.onComplaintTypesRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_PRIORIES_RETRIEVED, this.onPrioritiesRetrieved);
     }
 
-    ,EVENT_APPROVERS_RETRIEVED        : "acm-approvers-retrieved"
-    ,EVENT_COMPLAINT_TYPES_RETRIEVED  : "acm-complaint-types-retrieved"
-    ,EVENT_PRIORIES_RETRIEVED         : "acm-priorities-retrieved"
+    ,EVENT_APPROVERS_RETRIEVED        : "app-approvers-retrieved"
+    ,EVENT_COMPLAINT_TYPES_RETRIEVED  : "app-complaint-types-retrieved"
+    ,EVENT_PRIORIES_RETRIEVED         : "app-priorities-retrieved"
 
 
     ,onApproversRetrieved : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve approvers:" + response.errorMsg);
         } else {
-            Acm.Object.setApprovers(response);
+            App.Object.setApprovers(response);
         }
     }
     ,onComplaintTypesRetrieved : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve complaint types:" + response.errorMsg);
         } else {
-            Acm.Object.setComplaintTypes(response);
+            App.Object.setComplaintTypes(response);
         }
     }
     ,onPrioritiesRetrieved : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve priorities:" + response.errorMsg);
         } else {
-            Acm.Object.setPriorities(response);
+            App.Object.setPriorities(response);
         }
     }
 
