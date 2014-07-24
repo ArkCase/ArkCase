@@ -8,4 +8,9 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
+    <bean id="findParticipantTypesForObjectTypeNameAPIController"
+          class="com.armedia.acm.services.users.web.api.FindParticipantTypesForObjectTypeNameAPIController">
+        <property name="acmApplication" ref="acmApplication"/>
+    </bean>
+
 </beans>
