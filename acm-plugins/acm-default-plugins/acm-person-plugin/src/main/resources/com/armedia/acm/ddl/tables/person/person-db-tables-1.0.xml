@@ -105,6 +105,79 @@
             <column name="cm_contact_method_id"/>
         </createIndex>
     </changeSet>
+    
+    <changeSet id="07-add-person-type-tables" author="tsedalu">
+        <createTable tableName="acm_person_type_lu">
+            <column name="cm_id" type="NUMBER(32,0)">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_person_type"/>
+            </column>
+            <column name="cm_value" type="VARCHAR(4000)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_person_type"/>
+            </column>
+            <column name="cm_order" type="NUMBER(32,0)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_person_type_order"/>
+            </column>
+            <column name="cm_status" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Subject"/>
+            <column name="cm_order" valueNumeric="0"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Witness"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>        
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Others"/>
+            <column name="cm_order" valueNumeric="2"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        
+     </changeSet>
+     
+     <changeSet id="08-add-cm-person-type-id" author="tsedalu">
+        <addColumn tableName="acm_person">
+            <column name="cm_person_type_id" type="VARCHAR(1024)"/>
+        </addColumn>
+        <createIndex tableName="acm_person" indexName="idx_person_type_id">
+            <column name="cm_person_type_id"/>
+        </createIndex>
+     </changeSet>
 
 </databaseChangeLog>
 

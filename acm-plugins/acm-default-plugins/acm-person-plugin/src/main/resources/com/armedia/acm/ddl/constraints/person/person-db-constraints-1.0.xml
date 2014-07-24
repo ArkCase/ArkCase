@@ -42,5 +42,14 @@
                                  initiallyDeferred="true"/>
 
     </changeSet>
+    
+    <changeSet id="02-person-type-foreign-key" author="tsedalu">
+        <addForeignKeyConstraint baseTableName="acm_person" baseColumnNames="cm_person_type_id"
+                                 constraintName="fk_person_type"
+                                 referencedTableName="acm_person_type_lu"
+                                 referencedColumnNames="cm_value"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
 
 </databaseChangeLog>
