@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.complaint.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -405,6 +406,7 @@ public class Complaint implements Serializable, AcmObject
     }
 
     @Override
+    @JsonIgnore
     public String getObjectType()
     {
         return "Complaint";
