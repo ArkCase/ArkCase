@@ -1787,6 +1787,140 @@
 
 
 
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__users_participantTypesForObjectTypeName__objectTypeName_">
+                
+                    <span class="badge badge_get">get</span>
+                
+                <span class="parent">/users</span>/participantTypesForObjectTypeName/{objectTypeName}
+            </a>
+        </h4>
+    </div>
+    <div id="panel__users_participantTypesForObjectTypeName__objectTypeName_" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_users_participantTypesForObjectTypeName__objectTypeName__get" class="list-group-item">
+                        <span class="badge badge_get">get</span>
+                        Retrieve the types of participants that can be assigned to a certain object type.  For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_users_participantTypesForObjectTypeName__objectTypeName__get">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_get">get</span>
+                            <span class="parent">/users</span>/participantTypesForObjectTypeName/{objectTypeName}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Retrieve the types of participants that can be assigned to a certain object type.  For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_users_participantTypesForObjectTypeName__objectTypeName__get_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_users_participantTypesForObjectTypeName__objectTypeName__get_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_users_participantTypesForObjectTypeName__objectTypeName__get_request">
+                                
+                                    <h3>URI Parameters</h3>
+                                    <ul>
+                                        
+                                            <li><strong>objectTypeName</strong>: string</li>
+                                        
+                                    </ul>
+                                
+
+                                
+
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_users_participantTypesForObjectTypeName__objectTypeName__get_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>Expected response; a JSON array of participant types.  The type property can be SINGLE_USER, MULTIPLE_USERS, SINGLE_LDAP_GROUP, MULTIPLE_LDAP_GROUPS, SINGLE_APPLICATION_ROLE, or MULTIPLE_APPLICATION_ROLES.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>[
+  {
+    &quot;name&quot; : &quot;Complaint Owner&quot;,
+    &quot;description&quot; : &quot;The user who is responsible for completing the complaint.&quot;,
+    &quot;type&quot; : &quot;SINGLE_USER&quot;,
+    &quot;requiredOnACL&quot; : true
+  }, 
+  {
+    &quot;name&quot; : &quot;Complaint Supervisor&quot;,
+    &quot;description&quot; : &quot;The user who has oversight over how the complaint is completed.&quot;,
+    &quot;type&quot; : &quot;SINGLE_USER&quot;,
+    &quot;requiredOnACL&quot; : false
+  },
+  {
+    &quot;name&quot; : &quot;Complaint Group&quot;,
+    &quot;description&quot; : &quot;The group responsible for this type of complaint.&quot;,
+    &quot;type&quot; : &quot;SINGLE_LDAP_GROUP&quot;,
+    &quot;requiredOnACL&quot; : false
+  }, 
+  {
+    &quot;name&quot; : &quot;Complaint Approver&quot;,
+    &quot;description&quot; : &quot;The users allowed to approve the complaint.&quot;,
+    &quot;type&quot; : &quot;MULTIPLE_USERS&quot;,
+    &quot;requiredOnACL&quot; : false
+  }
+]
+</pre>
+                                            
+                                        
+                                    
+                                        <h2>HTTP status code 500</h2>
+                                        <p>The requested objectTypeName was not recognized.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: text/plain</strong></p>
+                                                <pre>No such business object with name &#x27;unrecognized&#x27;</pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+
 
                             </div>
                         </div>

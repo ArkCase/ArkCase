@@ -469,3 +469,47 @@ securitySchemes:
                 [{"userId":"OPIS_Admin","fullName":"OPIS Admin","firstName":"OPIS","lastName":"Admin"},
                  {"userId":"ann-acm","fullName":"Ann Administrator","firstName":"Ann","lastName":"Administrator"}]
   
+  /participantTypesForObjectTypeName/{objectTypeName}:
+    securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+    get:
+      description: Retrieve the types of participants that can be assigned to a certain object type.  For 
+        example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.
+      responses:
+        200:
+          description: Expected response; a JSON array of participant types.  The type property can be SINGLE_USER, 
+            MULTIPLE_USERS, SINGLE_LDAP_GROUP, MULTIPLE_LDAP_GROUPS, SINGLE_APPLICATION_ROLE, or MULTIPLE_APPLICATION_ROLES.
+          body:
+            application/json:
+              example: |
+                [
+                  {
+                    "name" : "Complaint Owner",
+                    "description" : "The user who is responsible for completing the complaint.",
+                    "type" : "SINGLE_USER",
+                    "requiredOnACL" : true
+                  }, 
+                  {
+                    "name" : "Complaint Supervisor",
+                    "description" : "The user who has oversight over how the complaint is completed.",
+                    "type" : "SINGLE_USER",
+                    "requiredOnACL" : false
+                  },
+                  {
+                    "name" : "Complaint Group",
+                    "description" : "The group responsible for this type of complaint.",
+                    "type" : "SINGLE_LDAP_GROUP",
+                    "requiredOnACL" : false
+                  }, 
+                  {
+                    "name" : "Complaint Approver",
+                    "description" : "The users allowed to approve the complaint.",
+                    "type" : "MULTIPLE_USERS",
+                    "requiredOnACL" : false
+                  }
+                ]
+        500:
+          description: The requested objectTypeName was not recognized.
+          body:
+            text/plain:
+              example: |
+                No such business object with name 'unrecognized'
