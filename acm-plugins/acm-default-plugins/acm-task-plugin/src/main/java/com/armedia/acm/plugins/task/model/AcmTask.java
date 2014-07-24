@@ -1,8 +1,10 @@
 package com.armedia.acm.plugins.task.model;
 
+import com.armedia.acm.core.AcmObject;
+
 import java.util.Date;
 
-public class AcmTask
+public class AcmTask implements AcmObject
 {
     private Long taskId;
     private int priority;
@@ -147,5 +149,11 @@ public class AcmTask
     public void setTaskDurationInMillis(Long taskDurationInMillis)
     {
         this.taskDurationInMillis = taskDurationInMillis;
+    }
+
+    @Override
+    public String getObjectType()
+    {
+        return "Task";
     }
 }

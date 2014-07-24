@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.complaint.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_complaint")
-public class Complaint implements Serializable
+public class Complaint implements Serializable, AcmObject
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -401,5 +402,11 @@ public class Complaint implements Serializable
     public void setApprovers(List<String> approvers)
     {
         this.approvers = approvers;
+    }
+
+    @Override
+    public String getObjectType()
+    {
+        return "Complaint";
     }
 }
