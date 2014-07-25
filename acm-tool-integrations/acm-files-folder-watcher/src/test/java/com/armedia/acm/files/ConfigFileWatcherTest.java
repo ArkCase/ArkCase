@@ -93,7 +93,7 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     public void raiseEvent_whenFileIsAdded() throws Exception
     {
         Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest("file:/" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
+                setupEventTest("file:" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileCreated(mockFileChangeEvent);
 
@@ -105,7 +105,7 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     public void raiseEvent_whenFileIsRemoved() throws Exception
     {
         Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest("file:/" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
+                setupEventTest("file:" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileDeleted(mockFileChangeEvent);
 
@@ -117,7 +117,7 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     public void raiseEvent_whenFileIsChanged() throws Exception
     {
         Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest("file:/" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
+                setupEventTest("file:" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileChanged(mockFileChangeEvent);
 
