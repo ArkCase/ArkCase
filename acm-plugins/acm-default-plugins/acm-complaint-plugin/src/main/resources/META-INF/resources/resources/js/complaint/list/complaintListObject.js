@@ -51,6 +51,10 @@ ComplaintList.Object = {
         this.$lnkNewTasks       = $("div#tasks>div>div>section>div>span");
         this.$lnkNewTasks.click(function(e){ComplaintList.Event.onClickLnkNewTasks(e);});
 
+        this.$divTasks          = $("#divTasks");
+        this._createJTableTasks(this.$divTasks);
+        this.$spanAddTask       = this.$divTasks.find(".jtable-toolbar-item-add-record");
+        this.$spanAddTask.unbind("click").on("click", function(e){ComplaintList.Event.onClickSpanAddTask(e);});
 
         this.$tableRefDocuments = $("#secRefDocuments>div>table");
 
@@ -231,6 +235,25 @@ ComplaintList.Object = {
         ComplaintList.Page.buildTableDocDocuments(c);
         //ComplaintList.Page.buildTableRefDocuments(c);
     }
+    ,updateTasks: function(response) {
+        var tasks = [];
+        for (var i = 0; i < response.docs.length; i++) {
+            var obj = response.docs[i];
+            var task = {};
+            task.taskId = obj.object_id_s;
+            task.title = obj.name; //?or obj.title_t
+            task.created = obj.create_dt;
+            task.priority = "[priority]";
+            task.dueDate ="[due]";
+            task.status = obj.status_s;
+            task.assignee = "[assignee]";
+
+            tasks.push(task);
+        }
+        Complaint.setTasks(tasks);
+
+        this.$divTasks.jtable('load');
+    }
     ,setValueLnkTitle: function(txt) {
         this.$lnkTitle.editable("setValue", txt);
     }
@@ -311,6 +334,8 @@ ComplaintList.Object = {
             fnOpen($t, $row);
         }
     }
+
+
 
     //
     // Initiator ------------------
@@ -853,6 +878,105 @@ ComplaintList.Object = {
     }
 
 
+    //
+    // Tasks
+    //
+    ,_createJTableTasks: function($s) {
+        $s.jtable({
+            title: 'Tasks'
+            ,paging: false
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var tasks = Complaint.getTasks();
+                    var rc = {"Result": "OK", "Records": []};
+                    for (i =  0; i < tasks.length; i++) {
+                        var record = {};
+                        record.id = tasks[i].taskId;
+                        record.title = tasks[i].title;
+                        record.created = Acm.getDateFromDatetime(tasks[i].created);
+                        record.priority = tasks[i].priority;
+                        record.dueDate = tasks[i].dueDate;
+                        record.status = tasks[i].status;
+                        record.assignee = tasks[i].assignee;
+                        rc.Records.push(record);
+                    }
+                    return rc;
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                        ,"Record": {}
+                    };
+                }
+            }
+
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: true
+                    ,create: false
+                    ,edit: false
+                }
+                ,title: {
+                    title: 'Title'
+                    ,width: '30%'
+                }
+                ,created: {
+                    title: 'Created'
+                    ,width: '15%'
+                }
+                ,priority: {
+                    title: 'Priority'
+                    ,width: '10%'
+                }
+                ,dueDate: {
+                    title: 'Due'
+                    ,width: '15%'
+                }
+                ,status: {
+                    title: 'status'
+                    ,width: '10%'
+                }
+                ,description: {
+                    title: 'Action'
+                    ,width: '10%'
+                    ,sorting: false
+                    ,edit: false
+                    ,create: false
+                    //,openChildAsAccordion: true
+                    ,display: function (commData) {
+                        var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                        var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
+
+                        $a.click(function (e) {
+                            ComplaintList.Event.onClickBtnTaskAssign(e);
+                            e.preventDefault();
+                        });
+                        $b.click(function (e) {
+                            ComplaintList.Event.onClickBtnTaskUnassign(e);
+                            e.preventDefault();
+                        });
+                        return $a.add($b);
+                    }
+                }
+            }
+            ,recordAdded: function(event, data){
+                $s.jtable('load');
+            }
+            ,recordUpdated: function(event, data){
+                $s.jtable('load');
+            }
+        });
+
+        $s.jtable('load');
+    }
+
+
+
+    //
+    // Documents
+    //
     ,removeUploadFileArea: function() {
         this.$upploadList.find("li").remove();
     }

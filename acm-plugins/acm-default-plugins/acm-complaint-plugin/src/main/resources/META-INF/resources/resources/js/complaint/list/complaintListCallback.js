@@ -45,7 +45,33 @@ ComplaintList.Callback = {
         var success = false;
         var err = "Invalid task list data";
         if (data.hasError) {
-            err += response.errorMsg;
+            err += ":" + response.errorMsg;
+        } else {
+            if (Acm.isNotEmpty(data.responseHeader)) {
+                var responseHeader = data.responseHeader;
+                if (Acm.isNotEmpty(responseHeader.status)) {
+                    if (0 == responseHeader.status) {
+                        var response = data.response;
+                        ComplaintList.Object.updateTasks(response);
+                        success = true;
+                    } else {
+                        if (Acm.isNotEmpty(data.error)) {
+                            err = data.error.msg + "(" + data.error.code + ")";
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!success) {
+            Acm.Dialog.error(err);
+        }
+    }
+    ,onTasksRetrieved0 : function(Callback, data) {
+        var success = false;
+        var err = "Invalid task list data";
+        if (data.hasError) {
+            err += ":" + response.errorMsg;
         } else {
             if (Acm.isNotEmpty(data.responseHeader)) {
                 var responseHeader = data.responseHeader;

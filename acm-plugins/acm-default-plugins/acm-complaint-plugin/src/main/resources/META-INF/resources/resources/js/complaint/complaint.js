@@ -85,6 +85,14 @@ var Complaint = Complaint || {
         return c;
     }
 
+    ,_tasks : []
+    ,getTasks : function() {
+        return this._tasks;
+    }
+    ,setTasks : function(tasks) {
+        this._tasks = tasks;
+    }
+
 
     ,_personTypes : ["Witness", "Subject", "Spouse"]
     ,getPersonTypes : function() {

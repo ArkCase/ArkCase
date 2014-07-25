@@ -49,7 +49,17 @@ ComplaintList.Event = {
             ComplaintList.Object.setInitTab("");
         }
     }
-
+    ,onClickBtnTaskAssign : function(e) {
+        alert("onClickBtnTaskAssign");
+    }
+    ,onClickBtnTaskUnassign : function(e) {
+        alert("onClickBtnTaskUnassign");
+    }
+    ,onClickSpanAddTask: function(e) {
+        var complaintId = Complaint.getComplaintId();
+        var url = ComplaintList.Page.URL_NEW_TASK + complaintId;
+        App.gotoPage(url);
+    }
     ,onPostInit: function() {
         if (ComplaintList.isSingleObject()) {
             var complaintId = Complaint.getComplaintId();

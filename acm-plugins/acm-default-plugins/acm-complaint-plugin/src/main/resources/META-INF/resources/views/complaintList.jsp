@@ -389,6 +389,12 @@
                         </tbody>
                     </table>
                 </div>
+
+
+                <div class="panel-body max-200 no-padder">
+                    <div id="divTasks" style="width:100%"></div>
+                </div>
+
             </section>
         </div>
     </div>
