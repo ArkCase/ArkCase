@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>1.9</version>
+        <version>3.0.10</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,9 +13,17 @@
     <name>ACM Services</name>
     <description>Core services used by all ACM implementations.</description>
     <modules>
-        <module>acm-service-users</module>
-        <module>acm-service-search</module>
+        <module>acm-service-audit</module>
+        <module>acm-service-configuration</module>
+        <module>acm-service-core-object-model</module>
+        <module>acm-service-data</module>
         <module>acm-service-data-access-control</module>
+        <module>acm-service-ecm</module>
+        <module>acm-service-event</module>
+        <module>acm-service-login</module>
+        <module>acm-service-plugin-manager</module>
+        <module>acm-service-search</module>
+        <module>acm-service-users</module>
     </modules>
 
 

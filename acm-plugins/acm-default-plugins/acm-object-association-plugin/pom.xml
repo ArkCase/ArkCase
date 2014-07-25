@@ -3,11 +3,11 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>1.9</version>
+        <version>3.0.10</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.acm.acm-plugins.default</groupId>
+    <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
     <artifactId>acm-object-association-plugin</artifactId>
     <name>ACM Default Plugin: Object Associations</name>
     <description>This plugin enables arbitrary associations of parent objects to target objects
@@ -17,8 +17,8 @@
     <dependencies>
         <!-- acm -->
         <dependency>
-            <groupId>com.armedia.acm</groupId>
-            <artifactId>acm-data</artifactId>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-data</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

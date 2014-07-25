@@ -79,7 +79,7 @@ public class FindComplaintByIdAPIControllerTest extends EasyMockSupport
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-        expect(mockComplaintDao.find(Complaint.class, complaintId)).andReturn(returned);
+        expect(mockComplaintDao.find(complaintId)).andReturn(returned);
         mockComplaintEventPublisher.publishFindComplaintByIdEvent(
                 eq(returned),
                 eq(mockAuthentication),
@@ -122,7 +122,7 @@ public class FindComplaintByIdAPIControllerTest extends EasyMockSupport
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-        expect(mockComplaintDao.find(Complaint.class, complaintId)).andThrow(new PersistenceException());
+        expect(mockComplaintDao.find(complaintId)).andThrow(new PersistenceException());
         mockComplaintEventPublisher.publishFindComplaintByIdEvent(
                 anyObject(Complaint.class),
                 eq(mockAuthentication),

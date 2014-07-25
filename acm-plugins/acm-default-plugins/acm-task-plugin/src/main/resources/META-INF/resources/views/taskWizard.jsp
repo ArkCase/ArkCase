@@ -6,6 +6,10 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
+    <div id="wizardData" itemscope="true" style="display: none">
+        <span itemprop="parentType">${parentType}</span>
+        <span itemprop="parentId">${parentId}</span>
+    </div>
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">

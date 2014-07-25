@@ -21,7 +21,7 @@ TaskWizard.Event = {
     }
 
     ,_tryInitOwners: function() {
-        var data = Acm.Object.getApprovers();
+        var data = App.Object.getApprovers();
         if (Acm.isNotEmpty(data)) {
             TaskWizard.Object.initOwners(data);
             return true;

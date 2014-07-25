@@ -10,8 +10,6 @@ var Acm = Acm || {
         Acm.Ajax.initialize();
         Acm.Object.initialize();
         Acm.Event.initialize();
-        Acm.Service.initialize();
-        Acm.Callback.initialize();
         Acm.Rule.initialize();
 
         Acm.deferred(Acm.Event.onPostInit);
@@ -22,16 +20,8 @@ var Acm = Acm || {
     ,Ajax : {}
     ,Object : {}
     ,Event : {}
-    ,Service : {}
-    ,Callback : {}
     ,Rule : {}
 
-    ,getContextPath: function() {
-        return Acm.Object.getContextPath();
-    }
-    ,getUserName: function() {
-        return Acm.Object.getUserName();
-    }
 
 	,isEmpty: function (val) {
 //        if (typeof val == "undefined") {
@@ -182,9 +172,6 @@ var Acm = Acm || {
         return yyyyMmDd;
     }
 
-    ,goHome: function() {
-        window.location.href = Acm.getContextPath() + "/plugin/dashboard";
-    }
 
 //    ,_foobar_cont: function (){
 //        console.log("finished.");
@@ -215,19 +202,8 @@ var Acm = Acm || {
             }
         }
     }
+
 };
 
 
-
-/**
- * initialize Acm
- */
-//
-// call it externally, from common/ready.js for example
-//
-//jQuery(document).ready(
-//    function() {
-//        Acm.initialize();
-//    }
-//);
 

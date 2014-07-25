@@ -898,6 +898,145 @@
 
 
 
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_dataaccess_default__defaultAccessId_">
+                
+                    <span class="badge badge_post">post</span>
+                
+                <span class="parent">/plugin/dataaccess</span>/default/{defaultAccessId}
+            </a>
+        </h4>
+    </div>
+    <div id="panel__plugin_dataaccess_default__defaultAccessId_" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_plugin_dataaccess_default__defaultAccessId__post" class="list-group-item">
+                        <span class="badge badge_post">post</span>
+                        Update the default access control with ID = the given defaultAccessId.  Only the accessDecision and the allowDiscretionaryUpdate flag can be changed.  The other fields are read-only.  accessDecision can be GRANT, DENY, MANDATORY_GRANT, or MANDATORY_DENY.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_plugin_dataaccess_default__defaultAccessId__post">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_post">post</span>
+                            <span class="parent">/plugin/dataaccess</span>/default/{defaultAccessId}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Update the default access control with ID = the given defaultAccessId.  Only the accessDecision and the allowDiscretionaryUpdate flag can be changed.  The other fields are read-only.  accessDecision can be GRANT, DENY, MANDATORY_GRANT, or MANDATORY_DENY.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_plugin_dataaccess_default__defaultAccessId__post_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_plugin_dataaccess_default__defaultAccessId__post_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_plugin_dataaccess_default__defaultAccessId__post_request">
+                                
+                                    <h3>URI Parameters</h3>
+                                    <ul>
+                                        
+                                            <li><strong>defaultAccessId</strong>: string</li>
+                                        
+                                    </ul>
+                                
+
+                                
+
+                                
+                                    <h3>Body</h3>
+                                    
+                                        <p><strong>Type: application/json</strong></p>
+                                        <pre>{
+  &quot;id&quot; : 500,
+  &quot;objectType&quot; : &quot;Complaint&quot;,
+  &quot;objectState&quot; : &quot;DRAFT&quot;,
+  &quot;accessLevel&quot; : &quot;update&quot;,
+  &quot;accessorType&quot; : &quot;Supervisor&quot;,
+  &quot;accessDecision&quot; : &quot;GRANT&quot;,
+  &quot;allowDiscretionaryUpdate&quot; : true,
+}
+</pre>
+                                    
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_plugin_dataaccess_default__defaultAccessId__post_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>The default access control rule was updated successfully.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>{
+  &quot;id&quot; : 500,
+  &quot;objectType&quot; : &quot;type&quot;,
+  &quot;objectState&quot; : &quot;state&quot;,
+  &quot;accessLevel&quot; : &quot;accessLevel&quot;,
+  &quot;accessorType&quot; : &quot;accessor&quot;,
+  &quot;accessDecision&quot; : &quot;GRANT&quot;,
+  &quot;allowDiscretionaryUpdate&quot; : true,
+  &quot;created&quot; : &quot;2014-06-03T21:16:56.090+0000&quot;,
+  &quot;creator&quot; : &quot;creator&quot;,
+  &quot;modified&quot; : &quot;2014-07-24T21:16:56.090+0000&quot;,
+  &quot;modifier&quot; : &quot;modifier&quot;
+}
+</pre>
+                                            
+                                        
+                                    
+                                        <h2>HTTP status code 400</h2>
+                                        <p>The requested default access control rule does not exist.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: text/plain</strong></p>
+                                                <pre>Could not update default access with ID = 500.
+Server encountered exception: Default access with id &#x27;500&#x27; does not exist.
+Exception type was: &#x27;com.armedia.acm.core.exceptions.AcmUserActionFailedException&#x27;.
+</pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+
 
 
     <div class="panel panel-white">
@@ -1771,6 +1910,140 @@
                                                 <pre>[{&quot;userId&quot;:&quot;OPIS_Admin&quot;,&quot;fullName&quot;:&quot;OPIS Admin&quot;,&quot;firstName&quot;:&quot;OPIS&quot;,&quot;lastName&quot;:&quot;Admin&quot;},
  {&quot;userId&quot;:&quot;ann-acm&quot;,&quot;fullName&quot;:&quot;Ann Administrator&quot;,&quot;firstName&quot;:&quot;Ann&quot;,&quot;lastName&quot;:&quot;Administrator&quot;}]
 </pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+
+    <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__users_participantTypesForObjectTypeName__objectTypeName_">
+                
+                    <span class="badge badge_get">get</span>
+                
+                <span class="parent">/users</span>/participantTypesForObjectTypeName/{objectTypeName}
+            </a>
+        </h4>
+    </div>
+    <div id="panel__users_participantTypesForObjectTypeName__objectTypeName_" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_users_participantTypesForObjectTypeName__objectTypeName__get" class="list-group-item">
+                        <span class="badge badge_get">get</span>
+                        Retrieve the types of participants that can be assigned to a certain object type.  For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_users_participantTypesForObjectTypeName__objectTypeName__get">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_get">get</span>
+                            <span class="parent">/users</span>/participantTypesForObjectTypeName/{objectTypeName}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Retrieve the types of participants that can be assigned to a certain object type.  For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_users_participantTypesForObjectTypeName__objectTypeName__get_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_users_participantTypesForObjectTypeName__objectTypeName__get_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_users_participantTypesForObjectTypeName__objectTypeName__get_request">
+                                
+                                    <h3>URI Parameters</h3>
+                                    <ul>
+                                        
+                                            <li><strong>objectTypeName</strong>: string</li>
+                                        
+                                    </ul>
+                                
+
+                                
+
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_users_participantTypesForObjectTypeName__objectTypeName__get_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>Expected response; a JSON array of participant types.  The type property can be SINGLE_USER, MULTIPLE_USERS, SINGLE_LDAP_GROUP, MULTIPLE_LDAP_GROUPS, SINGLE_APPLICATION_ROLE, or MULTIPLE_APPLICATION_ROLES.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: application/json</strong></p>
+                                                <pre>[
+  {
+    &quot;name&quot; : &quot;Complaint Owner&quot;,
+    &quot;description&quot; : &quot;The user who is responsible for completing the complaint.&quot;,
+    &quot;type&quot; : &quot;SINGLE_USER&quot;,
+    &quot;requiredOnACL&quot; : true
+  }, 
+  {
+    &quot;name&quot; : &quot;Complaint Supervisor&quot;,
+    &quot;description&quot; : &quot;The user who has oversight over how the complaint is completed.&quot;,
+    &quot;type&quot; : &quot;SINGLE_USER&quot;,
+    &quot;requiredOnACL&quot; : false
+  },
+  {
+    &quot;name&quot; : &quot;Complaint Group&quot;,
+    &quot;description&quot; : &quot;The group responsible for this type of complaint.&quot;,
+    &quot;type&quot; : &quot;SINGLE_LDAP_GROUP&quot;,
+    &quot;requiredOnACL&quot; : false
+  }, 
+  {
+    &quot;name&quot; : &quot;Complaint Approver&quot;,
+    &quot;description&quot; : &quot;The users allowed to approve the complaint.&quot;,
+    &quot;type&quot; : &quot;MULTIPLE_USERS&quot;,
+    &quot;requiredOnACL&quot; : false
+  }
+]
+</pre>
+                                            
+                                        
+                                    
+                                        <h2>HTTP status code 500</h2>
+                                        <p>The requested objectTypeName was not recognized.</p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: text/plain</strong></p>
+                                                <pre>No such business object with name &#x27;unrecognized&#x27;</pre>
                                             
                                         
                                     

@@ -14,26 +14,18 @@ Search.Callback = {
 
     //for demo
     ,onResultRetrieved : function(Callback, response) {
-        var success = false;
-        if (response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to retrieve search results:" + response.errorMsg);
+        } else {
             var data = [response];
             Search.Page.fillResults(data);
-            success = true;
-        }
-
-        if (!success) {
-            Acm.Dialog.error("Failed to retrieve my tasks");
         }
     }
     ,onResultRetrieved_save : function(Callback, response) {
-        var success = false;
-        if (response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to retrieve search results:" + response.errorMsg);
+        } else {
             Search.Page.fillResults(response);
-            success = true;
-        }
-
-        if (!success) {
-            Acm.Dialog.error("Failed to retrieve my tasks");
         }
     }
 };

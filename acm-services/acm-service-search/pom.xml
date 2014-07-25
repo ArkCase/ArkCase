@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-services</artifactId>
-        <version>1.9</version>
+        <version>3.0.10</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,13 +15,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.armedia.acm.arm-file-tools</groupId>
-            <artifactId>arm-property-file-manager</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-files-property-file-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.spring-tools</groupId>
-            <artifactId>acm-spring-tools-data-source</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-data-source</artifactId>
             <scope>runtime</scope>
             <version>${acm.version}</version>
         </dependency>
@@ -31,19 +31,19 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.mule-tools</groupId>
-            <artifactId>mule-context-manager</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-mule-context-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.activemq-tools</groupId>
-            <artifactId>activemq-spring-configuration</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-activemq-configuration</artifactId>
             <version>${acm.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.armedia.activiti-tools</groupId>
-            <artifactId>activiti-spring-configuration</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-activiti-spring-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -126,7 +126,7 @@
             <artifactId>spring-test</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-complaint-plugin</artifactId>
             <version>${acm.version}</version>
             <scope>test</scope>

@@ -28,7 +28,7 @@ ComplaintWizard.Event = {
     }
 
     ,_tryInitApprovers: function() {
-        var data = Acm.Object.getApprovers();
+        var data = App.Object.getApprovers();
         if (Acm.isNotEmpty(data)) {
             ComplaintWizard.Object.initApprovers(data);
             return true;
@@ -37,7 +37,7 @@ ComplaintWizard.Event = {
         }
     }
     ,_tryInitComplaintTypes: function() {
-        var data = Acm.Object.getComplaintTypes();
+        var data = App.Object.getComplaintTypes();
         if (Acm.isNotEmpty(data)) {
             ComplaintWizard.Object.initComplaintTypes(data);
             return true;
@@ -46,7 +46,7 @@ ComplaintWizard.Event = {
         }
     }
     ,_tryInitPriorities: function() {
-        var data = Acm.Object.getPriorities();
+        var data = App.Object.getPriorities();
         if (Acm.isNotEmpty(data)) {
             ComplaintWizard.Object.initPriorities(data);
             return true;

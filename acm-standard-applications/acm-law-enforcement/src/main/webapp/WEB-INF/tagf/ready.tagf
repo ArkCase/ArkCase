@@ -4,11 +4,17 @@ jQuery(document).ready(function() {
     if ("undefined" != typeof Acm) {
         Acm.initialize();
     }
+    if ("undefined" != typeof App) {
+        App.initialize();
+    }
     if ("undefined" != typeof Topbar) {
         Topbar.initialize();
     }
     if ("undefined" != typeof Sidebar) {
         Sidebar.initialize();
+    }
+    if ("undefined" != typeof Login) {
+        Login.initialize();
     }
     if ("undefined" != typeof Dashboard) {
         Dashboard.initialize();

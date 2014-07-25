@@ -4,6 +4,7 @@ import com.armedia.acm.web.AcmPageDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,11 +19,14 @@ public class ComplaintUiController
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView openComplaintList()
-    {
+    public ModelAndView openComplaintList(@RequestParam(value = "initId", required = false) Integer initId
+                                          ,@RequestParam(value = "initTab", required = false) String initTab
+    ) {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintList");
         retval.addObject("pageDescriptor",  getPageDescriptorList());
+        retval.addObject("initId",  initId);
+        retval.addObject("initTab",  initTab);
         return retval;
     }
 

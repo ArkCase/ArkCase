@@ -10,20 +10,6 @@ Acm.Event = {
     }
 
     ,onPostInit: function() {
-        var data = Acm.Object.getApprovers();
-        if (Acm.isEmpty(data)) {
-            Acm.Service.getApprovers();
-        } else {
-            //alert("Acm: data Not empty")
-        }
-        data = Acm.Object.getComplaintTypes();
-        if (Acm.isEmpty(data)) {
-            Acm.Service.getComplaintTypes();
-        }
-        data = Acm.Object.getPriorities();
-        if (Acm.isEmpty(data)) {
-            Acm.Service.getPriorities();
-        }
     }
 
 };

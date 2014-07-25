@@ -7,6 +7,15 @@
  */
 TaskWizard.Object = {
     initialize : function() {
+        var items = $(document).items();
+        var parentType = items.properties("parentType").itemValue();
+        var parentId = items.properties("parentId").itemValue();
+        if (Acm.isNotEmpty(parentType) && Acm.isNotEmpty(parentId)) {
+            var t = Task.getTask();
+            t.attachedToObjectType = parentType;
+            t.attachedToObjectId = parseInt(parentId);
+
+        }
         this.$btnSave          = $("button[data-title='Save']");
         this.$btnSave.click(function(e) {TaskWizard.Event.onClickBtnSave(e);});
 
@@ -40,8 +49,14 @@ TaskWizard.Object = {
 //        this.$selAssignees     = $("#assignees");
     }
 
-
-
+    ,getAttachedToObjectType: function() {
+        var t = Task.getTask();
+        return Acm.goodValue(t.attachedToObjectType);
+    }
+    ,getAttachedToObjectId: function() {
+        var t = Task.getTask();
+        return Acm.goodValue(t.attachedToObjectId);
+    }
     ,initOwners: function(data) {
         $.each(data, function(idx, val) {
             Acm.Object.appendSelect(TaskWizard.Object.$selOwners, val.userId, val.fullName);

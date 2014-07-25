@@ -42,6 +42,7 @@
 <c:set var="vd_font_awesome"     scope="session" value="font-awesome-4.1.0"/>
 <c:set var="vd_underscore"       scope="session" value="underscore-1.6.0"/>
 <c:set var="vd_fancytree"        scope="session" value="fancytree-2.2.0"/>
+<c:set var="vd_angular"          scope="session" value="angular-1.2.18"/>
 
 <c:set var="acm_theme"           scope="session" value="acm-3.0/themes/basic"/>
 
@@ -80,6 +81,13 @@
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_issueCollector}/jiraIssueCollector.js" ></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_bootbox}/bootbox.min.js" ></script>
 
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acm.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDialog.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmAjax.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDispatcher.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmObject.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmEvent.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmRule.js"></script>
 
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.js" ></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.plugin.js" ></script>

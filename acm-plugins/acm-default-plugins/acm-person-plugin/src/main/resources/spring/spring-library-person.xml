@@ -5,4 +5,8 @@
 
     <bean id="acmPersonDao" class="com.armedia.acm.plugins.person.dao.PersonDao"/>
 
+    <bean id="personTypeTable" class="com.armedia.acm.configuration.LookupTableDescriptor">
+        <property name="tableName" value="acm_person_type_lu"/>
+        <property name="description" value="Valid person types."/>
+    </bean>
 </beans>

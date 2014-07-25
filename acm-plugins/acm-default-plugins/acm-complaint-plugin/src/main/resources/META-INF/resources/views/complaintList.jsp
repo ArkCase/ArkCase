@@ -8,6 +8,8 @@
     <title>${pageDescriptor.title}</title>
     <div id="detailData" itemscope="true" style="display: none">
         <span itemprop="complaintId">${complaintId}</span>
+        <span itemprop="initId">${initId}</span>
+        <span itemprop="initTab">${initTab}</span>
     </div>
 </jsp:attribute>
 
@@ -158,7 +160,7 @@
 </div>
 <section class="panel panel-default">
 <header class="panel-heading bg-light">
-    <ul class="nav nav-tabs nav-justified">
+    <ul class="nav nav-tabs nav-justified" id="ulTabs">
         <li class="active"><a href="#details" data-toggle="tab">Incident</a></li>
         <li><a href="#documents" data-toggle="tab">Documents</a></li>
         <li><a href="#tasks" data-toggle="tab">Tasks</a></li>
@@ -354,6 +356,52 @@
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a">
+                <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span>
+                    <a href="#" class="font-bold">Tasks</a>
+                </div>
+                <div class="panel-body max-200 no-padder">
+                    <table class="table table-striped th-sortable table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Created</th>
+                            <th>Priority</th>
+                            <th>Due</th>
+                            <th>Status</th>
+                            <th width="10%">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="odd gradeA">
+                            <%--<td>[ID]</td>--%>
+                            <%--<td>[Title]</td>--%>
+                            <%--<td>[Created]</td>--%>
+                            <%--<td>[Priority]</td>--%>
+                            <%--<td>[Due]</td>--%>
+                            <%--<td>[Status]</td>--%>
+                            <%--<td><select class="input-sm form-control input-s-sm inline v-middle">--%>
+                                <%--<option value="0">Choose Action</option>--%>
+                                <%--<option value="1">Assign</option>--%>
+                                <%--<option value="2">Unassign</option>--%>
+                            <%--</select></td>--%>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="panel-body max-200 no-padder">
+                    <div id="divTasks" style="width:100%"></div>
+                </div>
+
+            </section>
+        </div>
+    </div>
+    <!--
+    <div class="row">
+        <div class="col-md-12">
+            <section class="panel b-a">
                 <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Unassigned</a> </div>
                 <div class="panel-body max-200 no-padder">
                     <table class="table table-striped th-sortable table-hover">
@@ -424,6 +472,7 @@
             </section>
         </div>
     </div>
+    -->
 </div>
 <div class="tab-pane" id="references">
     <div class="row">

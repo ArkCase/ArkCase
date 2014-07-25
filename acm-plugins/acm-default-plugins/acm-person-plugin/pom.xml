@@ -3,11 +3,11 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>1.9</version>
+        <version>3.0.10</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.armedia.acm.acm-plugins.default</groupId>
+    <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
     <artifactId>acm-person-plugin</artifactId>
     <name>ACM Default Plugin: Person</name>
     <description>This plugin adds the ability to store and track information about people.</description>
@@ -21,19 +21,24 @@
         </dependency>
 
         <dependency>
-            <groupId>com.armedia.acm.spring-tools</groupId>
-            <artifactId>acm-spring-tools-data-source</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-data-source</artifactId>
             <version>${acm.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm</groupId>
-            <artifactId>acm-data</artifactId>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-data</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-addressable-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-web</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -48,18 +53,28 @@
             <scope>runtime</scope>
         </dependency>
 
+       <!-- json -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
         <!-- testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-            <scope>test</scope>
+            <artifactId>spring-test</artifactId>            
         </dependency>
 
         <dependency>
@@ -67,7 +82,39 @@
             <artifactId>jdbc</artifactId>
             <scope>test</scope>
         </dependency>
-
+        
+        <!-- spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>                      
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-configuration</artifactId>
+            <version>${acm.version}</version>
+           
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+           
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-core-object-model</artifactId>
+            <version>${acm.version}</version>
+            
+        </dependency>
+        
     </dependencies>
 
 </project>

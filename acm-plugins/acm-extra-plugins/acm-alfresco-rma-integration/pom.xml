@@ -3,39 +3,39 @@
     <parent>
         <artifactId>acm-extra-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>1.9</version>
+        <version>3.0.10</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
     <artifactId>acm-alfresco-rma-integration</artifactId>
-    <name>ACM Extra Plugins: Alfresco RMA Integration</name>
+    <name>ACM Extra Plugin: Alfresco RMA Integration</name>
     <description>Adds folders and files to the Alfersco Records Mangement module based on defined business rules.</description>
 
     <dependencies>
         <!-- acm -->
         <dependency>
-            <groupId>com.armedia.acm.drools-tools</groupId>
-            <artifactId>drools-rule-monitor</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-drools-rule-monitor</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.cmis-tools</groupId>
-            <artifactId>cmis-spring-configuration</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-cmis-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.activemq-tools</groupId>
-            <artifactId>activemq-spring-configuration</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-activemq-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-plugins.default</groupId>
-            <artifactId>acm-ecm-plugin</artifactId>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ecm</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-plugins.default</groupId>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-complaint-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>

@@ -33,7 +33,7 @@ public class DataAccessDefaultServiceImpl implements DataAccessDefaultService
             AcmAccessControlDefault toSave,
             Authentication authentication) throws AcmUserActionFailedException
     {
-        AcmAccessControlDefault existing = getAccessControlDefaultDao().find(AcmAccessControlDefault.class, defaultAccessId);
+        AcmAccessControlDefault existing = getAccessControlDefaultDao().find(defaultAccessId);
         if ( existing == null )
         {
             throw new AcmUserActionFailedException("update", "default access", defaultAccessId,

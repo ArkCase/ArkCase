@@ -27,16 +27,25 @@ TaskWizard.Callback = {
 //        }
 //    }
     ,onTaskCreated : function(Callback, response) {
-        var success = false;
-        if (response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to create new task:"  +response.errorMsg);
+        } else {
             if (Acm.isNotEmpty(response.taskId)) {
                 TaskWizard.Object.setTaskData(response);
-                success = true;
-            }
-        }
 
-        if (!success) {
-            Acm.Dialog.error("Failed to create new task");
+                var attachedToObjectType = TaskWizard.Object.getAttachedToObjectType();
+                var attachedToObjectId = TaskWizard.Object.getAttachedToObjectId();
+                var url;
+                if (Acm.isEmpty(attachedToObjectId)) {
+                    url = TaskWizard.Page.URL_DASHBOARD;
+                } else {
+                    if ("COMPLAINT" == attachedToObjectType) {
+                        url = TaskWizard.Page.URL_PARENT_COMPLAINT;
+                    }
+                    url += attachedToObjectId;
+                }
+                App.gotoPage(url);
+            }
         }
     }
 };

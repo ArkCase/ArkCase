@@ -13,16 +13,12 @@ Topbar.Callback = {
     ,EVENT_TYPEAHEAD_TERMS_RETRIEVED  : "topbar-typeahead-terms-retrieved"
 
     ,onTypeAheadTermsRetrieved : function(Callback, response) {
-        var success = false;
-        if (response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to retrieve typeAhead terms:" + response.errorMsg);
+        } else {
             var typeAheadTerms = response;
             Topbar.Object.setTypeAheadTerms(typeAheadTerms);
             Topbar.Object.useTypeAheadSearch(typeAheadTerms);
-            success = true;
-        }
-
-        if (!success) {
-            Acm.Dialog.error("Failed to retrieve typeAhead terms");
         }
     }
 };

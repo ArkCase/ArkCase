@@ -23,26 +23,24 @@ Topbar.Object = {
 
 
     ,setActionFormSearch: function(term) {
-        var url = Acm.getContextPath() + "/plugin/search"
+        var url = App.getContextPath() + "/plugin/search"
         if (Acm.isNotEmpty(term)) {
             url += "?q=" + term;
         }
         this.$formSearch.attr("action", url);
     }
     ,getQuickSearchTerm: function() {
-        var term = localStorage.getItem("AcmQuickSearchTerm");
+        var term = sessionStorage.getItem("AcmQuickSearchTerm");
         if (term === "null") {
-            console.log("null term in getQuickSearchTerm!")
             return null;
         }
         return term;
     }
     ,setQuickSearchTerm: function(term) {
         if (term === "null") {
-            console.log("null term in ssssssssssssssetQuickSearchTerm!")
-            localStorage.removeItem("AcmQuickSearchTerm");
+            sessionStorage.removeItem("AcmQuickSearchTerm");
         }
-        localStorage.setItem("AcmQuickSearchTerm", term);
+        sessionStorage.setItem("AcmQuickSearchTerm", term);
     }
     ,getValueEdtSearch: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtSearch);
@@ -90,7 +88,7 @@ Topbar.Object = {
     ,_throttledRequest: function(query, process){
         //get the data to populate the typeahead (plus an id value)
         $.ajax({
-            url: Acm.getContextPath() + Topbar.Service.API_TYPEAHEAD_SUGGESTION + "?q=" + query
+            url: App.getContextPath() + Topbar.Service.API_TYPEAHEAD_SUGGESTION + "?q=" + query
             ,cache: false
             ,success: function(data){
                 Topbar.Object._onSuccessSuggestion(query, process, data);
@@ -151,10 +149,10 @@ Topbar.Object = {
     }
 ///////////////////////////////////////
     ,getTypeAheadTerms: function() {
-        localStorage.getItem("AcmTypeAheadTerms");
+        sessionStorage.getItem("AcmTypeAheadTerms");
     }
     ,setTypeAheadTerms: function(typeAheadTerms) {
-        localStorage.setItem("AcmTypeAheadTerms", typeAheadTerms);
+        sessionStorage.setItem("AcmTypeAheadTerms", typeAheadTerms);
     }
     ,useTypeAheadSearch: function(typeAheadTerms) {
         this._useTypeAhead(this.$edtSearch, typeAheadTerms);

@@ -24,7 +24,7 @@ TaskList.Page = {
 //                    + t.title + "</strong></small></a><input type='hidden' value='" + t.taskId + "' /> </li>";
 
                 html += "<li class='list-group-item'><a href='#' class='thumb-sm pull-left m-r-sm'> <img src='"
-                    + Acm.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a1.png" + "' class='img-circle'> </a>"
+                    + App.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a1.png" + "' class='img-circle'> </a>"
                     + "<a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
                     //+ Acm.getDateFromDatetime(t.dueDate) + "</small><strong class='block'>"
                     + "[Date Created]" + "</small><strong class='block'>"

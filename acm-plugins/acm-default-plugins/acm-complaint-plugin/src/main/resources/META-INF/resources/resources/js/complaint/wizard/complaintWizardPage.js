@@ -9,5 +9,6 @@ ComplaintWizard.Page = {
     initialize : function() {
     }
 
+    ,URL_DASHBOARD: "/plugin/dashboard"
 };
 

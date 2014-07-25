@@ -32,19 +32,39 @@ ComplaintList.Event = {
     ,doClickLnkListItem: function() {
         var complaintId = Complaint.getComplaintId();
         ComplaintList.Service.retrieveDetail(complaintId);
+        ComplaintList.Service.retrieveTasks(complaintId);
 
         var c = ComplaintList.findComplaint(complaintId);
         if (null != c) {
             ComplaintList.Object.updateDetail(c);
             Complaint.setComplaintId(complaintId);
             ComplaintList.Object.hiliteSelectedItem(complaintId);
+            //todo: bring item in list to view
+        }
+
+
+        var initTab = ComplaintList.Object.getInitTab();
+        if (Acm.isNotEmpty(initTab)) {
+            ComplaintList.Object.clickTab(initTab);
+            ComplaintList.Object.setInitTab("");
         }
     }
-
+    ,onClickBtnTaskAssign : function(e) {
+        alert("onClickBtnTaskAssign");
+    }
+    ,onClickBtnTaskUnassign : function(e) {
+        alert("onClickBtnTaskUnassign");
+    }
+    ,onClickSpanAddTask: function(e) {
+        var complaintId = Complaint.getComplaintId();
+        var url = ComplaintList.Page.URL_NEW_TASK + complaintId;
+        App.gotoPage(url);
+    }
     ,onPostInit: function() {
         if (ComplaintList.isSingleObject()) {
             var complaintId = Complaint.getComplaintId();
             ComplaintList.Service.retrieveDetail(complaintId);
+            ComplaintList.Service.retrieveTasks(complaintId);
         } else {
             ComplaintList.Service.listComplaint();
         }
@@ -54,8 +74,17 @@ ComplaintList.Event = {
         Acm.keepTrying(ComplaintList.Event._tryInitComplaintType, 8, 200);
     }
 
+    ,onClickLnkNewTasks : function(e) {
+        var complaintId = Complaint.getComplaintId();
+        var url = ComplaintList.Page.URL_NEW_TASK + complaintId;
+        App.gotoPage(url);
+    }
+    ,onChangeSelTasks : function(e) {
+        alert("onChangeSelTasks:" + e.value);
+    }
+
     ,_tryInitAssignee: function() {
-        var data = Acm.Object.getApprovers();
+        var data = App.Object.getApprovers();
         if (Acm.isNotEmpty(data)) {
             ComplaintList.Object.initAssignee(data);
             return true;
@@ -64,7 +93,7 @@ ComplaintList.Event = {
         }
     }
     ,_tryInitPriority: function() {
-        var data = Acm.Object.getPriorities();
+        var data = App.Object.getPriorities();
         if (Acm.isNotEmpty(data)) {
             ComplaintList.Object.initPriority(data);
             return true;
@@ -73,7 +102,7 @@ ComplaintList.Event = {
         }
     }
     ,_tryInitComplaintType: function() {
-        var data = Acm.Object.getComplaintTypes();
+        var data = App.Object.getComplaintTypes();
         if (Acm.isNotEmpty(data)) {
             ComplaintList.Object.initComplaintType(data);
             return true;

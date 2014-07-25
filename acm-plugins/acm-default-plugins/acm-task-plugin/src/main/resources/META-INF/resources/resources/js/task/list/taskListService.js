@@ -15,17 +15,17 @@ TaskList.Service = {
 
 
     ,listTask : function(user) {
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_LIST_TASK + user
-            ,TaskList.Callback.EVENT_LIST_RETURNED
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK + user
+            ,TaskList.Callback.EVENT_LIST_RETRIEVED
         );
     }
     ,retrieveDetail : function(taskId) {
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_RETRIEVE_DETAIL + taskId
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_DETAIL + taskId
             ,TaskList.Callback.EVENT_DETAIL_RETRIEVED
         );
     }
     ,completeTask : function(taskId) {
-        Acm.Ajax.asyncPost(Acm.getContextPath() + this.API_COMPLETE_TASK + taskId
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_COMPLETE_TASK + taskId
             ,"{}"
             ,TaskList.Callback.EVENT_TASK_COMPLETED
         );

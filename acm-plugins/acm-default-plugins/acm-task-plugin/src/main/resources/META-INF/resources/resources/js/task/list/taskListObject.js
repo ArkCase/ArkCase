@@ -7,9 +7,6 @@
  */
 TaskList.Object = {
     initialize : function() {
-        this.$ulTasks      = $("#ulTasks");
-        this.$asideTasks   = this.$ulTasks.closest("aside");
-
         var items = $(document).items();
         var taskId = items.properties("taskId").itemValue();
         if (Acm.isNotEmpty(taskId)) {
@@ -19,6 +16,9 @@ TaskList.Object = {
         } else {
             TaskList.setSingleObject(false);
         }
+
+        this.$ulTasks           = $("#ulTasks");
+        this.$asideTasks        = this.$ulTasks.closest("aside");
 
         this.$btnComplete       = $("button[data-title='Complete']");
         this.$btnReject         = $("button[data-title='Reject']");
@@ -102,7 +102,7 @@ TaskList.Object = {
 ////            this.setValueEdtAttachedToObjectId(t.attachedToObjectId);
 //            this.setTextNodeScanAttachedToObjectType(t.attachedToObjectType);
 //            this.setTextNodeScanAttachedToObjectId(t.attachedToObjectId);
-//            this.setHrefLnkAttachedToObject(Acm.getContextPath() + "/plugin/complaint/" + t.attachedToObjectId);
+//            this.setHrefLnkAttachedToObject(App.getContextPath() + "/plugin/complaint/" + t.attachedToObjectId);
 //        }
 
     }

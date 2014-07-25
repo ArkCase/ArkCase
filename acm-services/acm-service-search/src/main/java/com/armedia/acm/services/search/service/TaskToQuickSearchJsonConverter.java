@@ -18,7 +18,7 @@ public class TaskToQuickSearchJsonConverter
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private static final String TASK_TYPE = "Task";
+    private static final String TASK_TYPE = "TASK";
 
     // This method is used by Mule when sending tasks to SOLR. Don't act on IDEA's not-used warning.
     public String toQuickSearchJson(
@@ -38,6 +38,9 @@ public class TaskToQuickSearchJsonConverter
         quickSearchMap.put("assignee_s", event.getAssignee());
         quickSearchMap.put("owner_s", event.getAssignee());
         quickSearchMap.put("id", event.getObjectId() + "-" + TASK_TYPE);
+        quickSearchMap.put("priority_i", event.getPriority());
+        quickSearchMap.put("parent_object_id_i", event.getParentObjectId());
+        quickSearchMap.put("parent_object_type_s", event.getParentObjectType());
         quickSearchMap.put(SearchConstants.SOLR_OBJECT_TYPE_FIELD_NAME, TASK_TYPE);
 
         // We have to send SOLR a JSON array.  If we send a JSON object, SOLR will interpret it as a SOLR command,

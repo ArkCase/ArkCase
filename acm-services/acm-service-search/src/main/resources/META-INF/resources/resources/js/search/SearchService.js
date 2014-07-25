@@ -21,7 +21,7 @@ Search.Service = {
             Search.Page.fillResults([]);
             return;
         }
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_SEARCH_DEMO + term
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_SEARCH_DEMO + term
             ,Search.Callback.EVENT_RESULT_RETRIEVED
         );
     }
@@ -31,7 +31,7 @@ Search.Service = {
             Search.Page.fillResults([]);
             return;
         }
-        Acm.Ajax.asyncGet(Acm.getContextPath() + this.API_SEARCH
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_SEARCH
             ,Search.Callback.EVENT_RESULT_RETRIEVED
         );
     }
