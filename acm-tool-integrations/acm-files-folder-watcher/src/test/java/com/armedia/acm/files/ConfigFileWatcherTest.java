@@ -45,6 +45,9 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     private String fileSeparator = File.separator;
 
     private Logger log = LoggerFactory.getLogger(getClass());
+    
+    // for this test to pass, Windows and Linux require different file URL prefixes
+    private final String fileUrlPrefix = "file:" + ( File.separator.equals("/") ? "" : "/" );
 
     @Before
     public void setUp() throws Exception
@@ -80,7 +83,7 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     public void raiseEvent_ignoreFilesFromIgnoreFolders() throws Exception
     {
         Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest("file:/" + unit.getBaseFolderPath() + fileSeparator +
+                setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator +
                         "ignoreFolder" + fileSeparator + "file.txt");
 
         unit.fileCreated(mockFileChangeEvent);
@@ -93,19 +96,20 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     public void raiseEvent_whenFileIsAdded() throws Exception
     {
         Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest("file:/" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
+                setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileCreated(mockFileChangeEvent);
 
         verifyEventTestResults(capturedEvent);
         assertEquals(ConfigurationFileAddedEvent.class, capturedEvent.getValue().getClass());
     }
+    
 
     @Test
     public void raiseEvent_whenFileIsRemoved() throws Exception
     {
         Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest("file:/" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
+                setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileDeleted(mockFileChangeEvent);
 
@@ -117,7 +121,7 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     public void raiseEvent_whenFileIsChanged() throws Exception
     {
         Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest("file:/" + unit.getBaseFolderPath() + fileSeparator + "file.txt");
+                setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileChanged(mockFileChangeEvent);
 
