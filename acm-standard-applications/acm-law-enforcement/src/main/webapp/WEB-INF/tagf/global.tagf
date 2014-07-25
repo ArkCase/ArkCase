@@ -42,6 +42,7 @@
 <c:set var="vd_font_awesome"     scope="session" value="font-awesome-4.1.0"/>
 <c:set var="vd_underscore"       scope="session" value="underscore-1.6.0"/>
 <c:set var="vd_fancytree"        scope="session" value="fancytree-2.2.0"/>
+<c:set var="vd_angular"          scope="session" value="angular-1.2.18"/>
 
 <c:set var="acm_theme"           scope="session" value="acm-3.0/themes/basic"/>
 
