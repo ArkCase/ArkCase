@@ -233,6 +233,52 @@ securitySchemes:
               text/plain:
                 example: |
                   Some error text will be returned.
+    /default/{defaultAccessId}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      post:
+        description: Update the default access control with ID = the given defaultAccessId.  Only the accessDecision and the 
+          allowDiscretionaryUpdate flag can be changed.  The other fields are read-only.  accessDecision can be GRANT, DENY, 
+          MANDATORY_GRANT, or MANDATORY_DENY.
+        body:
+          application/json:
+            example: |
+              {
+                "id" : 500,
+                "objectType" : "Complaint",
+                "objectState" : "DRAFT",
+                "accessLevel" : "update",
+                "accessorType" : "Supervisor",
+                "accessDecision" : "GRANT",
+                "allowDiscretionaryUpdate" : true,
+              }
+        responses:
+          200:
+            description: The default access control rule was updated successfully.
+            body:
+              application/json:
+                example: |
+                  {
+                    "id" : 500,
+                    "objectType" : "type",
+                    "objectState" : "state",
+                    "accessLevel" : "accessLevel",
+                    "accessorType" : "accessor",
+                    "accessDecision" : "GRANT",
+                    "allowDiscretionaryUpdate" : true,
+                    "created" : "2014-06-03T21:16:56.090+0000",
+                    "creator" : "creator",
+                    "modified" : "2014-07-24T21:16:56.090+0000",
+                    "modifier" : "modifier"
+                  }
+          
+          400:
+            description: The requested default access control rule does not exist.
+            body:
+              text/plain:
+                example: |
+                  Could not update default access with ID = 500.
+                  Server encountered exception: Default access with id '500' does not exist.
+                  Exception type was: 'com.armedia.acm.core.exceptions.AcmUserActionFailedException'.
   /task:
     /forUser/{user}:
       securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
@@ -469,3 +515,47 @@ securitySchemes:
                 [{"userId":"OPIS_Admin","fullName":"OPIS Admin","firstName":"OPIS","lastName":"Admin"},
                  {"userId":"ann-acm","fullName":"Ann Administrator","firstName":"Ann","lastName":"Administrator"}]
   
+  /participantTypesForObjectTypeName/{objectTypeName}:
+    securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+    get:
+      description: Retrieve the types of participants that can be assigned to a certain object type.  For 
+        example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.
+      responses:
+        200:
+          description: Expected response; a JSON array of participant types.  The type property can be SINGLE_USER, 
+            MULTIPLE_USERS, SINGLE_LDAP_GROUP, MULTIPLE_LDAP_GROUPS, SINGLE_APPLICATION_ROLE, or MULTIPLE_APPLICATION_ROLES.
+          body:
+            application/json:
+              example: |
+                [
+                  {
+                    "name" : "Complaint Owner",
+                    "description" : "The user who is responsible for completing the complaint.",
+                    "type" : "SINGLE_USER",
+                    "requiredOnACL" : true
+                  }, 
+                  {
+                    "name" : "Complaint Supervisor",
+                    "description" : "The user who has oversight over how the complaint is completed.",
+                    "type" : "SINGLE_USER",
+                    "requiredOnACL" : false
+                  },
+                  {
+                    "name" : "Complaint Group",
+                    "description" : "The group responsible for this type of complaint.",
+                    "type" : "SINGLE_LDAP_GROUP",
+                    "requiredOnACL" : false
+                  }, 
+                  {
+                    "name" : "Complaint Approver",
+                    "description" : "The users allowed to approve the complaint.",
+                    "type" : "MULTIPLE_USERS",
+                    "requiredOnACL" : false
+                  }
+                ]
+        500:
+          description: The requested objectTypeName was not recognized.
+          body:
+            text/plain:
+              example: |
+                No such business object with name 'unrecognized'

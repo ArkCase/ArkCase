@@ -54,4 +54,17 @@ public class AcmApplication implements Serializable
     {
         this.businessObjects = businessObjects;
     }
+
+    public AcmObjectType getBusinessObjectByName(String name)
+    {
+        for ( AcmObjectType objectType : getBusinessObjects() )
+        {
+            if ( objectType.getName().equalsIgnoreCase(name) )
+            {
+                return objectType;
+            }
+        }
+
+        throw new IllegalArgumentException("No such business object with name '" + name + "'");
+    }
 }

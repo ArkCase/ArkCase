@@ -1,5 +1,11 @@
 package com.armedia.acm.files;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.vfs2.FileChangeEvent;
 import org.apache.commons.vfs2.FileListener;
 import org.apache.commons.vfs2.FileObject;
@@ -14,12 +20,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.List;
 
 /**
  * Watch for file events in the ACM configuration folder.  Raise application events for each such event.
@@ -148,18 +148,18 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
         boolean retval = false;
         for ( String ignoreFolder : getIgnoreFolders() )
         {
-            String ignoreFolderPath = getBaseFolderPath() + ignoreFolder;
+            String ignoreFolderPath = getBaseFolderPath().replaceAll("\\\\", "/") + ignoreFolder;
 
             if ( log.isTraceEnabled() )
             {
-                log.trace("checking for " + ignoreFolderPath);
+                log.trace("checking " + fileUrl.toString() + " for " + ignoreFolderPath);
             }
 
             if ( fileUrl.toString().contains( ignoreFolderPath ))
             {
                 if ( log.isTraceEnabled() )
                 {
-                    log.debug("this file will be ignored");
+                    log.trace("this file will be ignored");
                 }
                 retval = true;
             }
@@ -216,7 +216,12 @@ public class ConfigFileWatcher implements FileListener, ApplicationEventPublishe
 
     public void setIgnoreFolders(List<String> ignoreFolders)
     {
-        this.ignoreFolders = ignoreFolders;
+        List<String> ignore = new ArrayList<>(ignoreFolders.size());
+        for ( String ignoreFolder : ignoreFolders )
+        {
+            ignore.add(ignoreFolder.replaceAll("\\\\", "/"));
+        }
+        this.ignoreFolders = ignore;
     }
 
     public List<String> getIgnoreFolders()

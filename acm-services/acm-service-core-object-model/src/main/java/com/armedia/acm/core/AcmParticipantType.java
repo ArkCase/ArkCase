@@ -2,11 +2,15 @@ package com.armedia.acm.core;
 
 import com.armedia.acm.core.enums.AcmParticipantTypes;
 
+import java.io.Serializable;
+
 /**
  * Created by armdev on 7/7/14.
  */
-public class AcmParticipantType
+public class AcmParticipantType implements Serializable
 {
+    private static final long serialVersionUID = 5828137798364937588L;
+
     private String name;
     private String description;
     private AcmParticipantTypes type;
