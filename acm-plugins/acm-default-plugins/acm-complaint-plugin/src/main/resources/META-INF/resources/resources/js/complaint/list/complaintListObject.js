@@ -235,25 +235,25 @@ ComplaintList.Object = {
         ComplaintList.Page.buildTableDocDocuments(c);
         //ComplaintList.Page.buildTableRefDocuments(c);
     }
-    ,updateTasks: function(response) {
-        var tasks = [];
-        for (var i = 0; i < response.docs.length; i++) {
-            var obj = response.docs[i];
-            var task = {};
-            task.taskId = obj.object_id_s;
-            task.title = obj.name; //?or obj.title_t
-            task.created = obj.create_dt;
-            task.priority = "[priority]";
-            task.dueDate ="[due]";
-            task.status = obj.status_s;
-            task.assignee = "[assignee]";
-
-            tasks.push(task);
-        }
-        Complaint.setTasks(tasks);
-
-        this.$divTasks.jtable('load');
-    }
+//    ,updateTasks: function(response) {
+//        var tasks = [];
+//        for (var i = 0; i < response.docs.length; i++) {
+//            var obj = response.docs[i];
+//            var task = {};
+//            task.taskId = obj.object_id_s;
+//            task.title = obj.name; //?or obj.title_t
+//            task.created = obj.create_dt;
+//            task.priority = "[priority]";
+//            task.dueDate ="[due]";
+//            task.status = obj.status_s;
+//            task.assignee = "[assignee]";
+//
+//            tasks.push(task);
+//        }
+//        Complaint.setTasks(tasks);
+//
+//        this.$divTasks.jtable('load');
+//    }
     ,setValueLnkTitle: function(txt) {
         this.$lnkTitle.editable("setValue", txt);
     }
@@ -796,11 +796,11 @@ ComplaintList.Object = {
                 data.childTable.jtable('load');
             });
     }
-    ,_closeInitiatorAliases: function($t, $row) {
-        $t.jtable('closeChildTable', $row.closest('tr'));
+    ,_closeInitiatorAliases: function($jt, $row) {
+        $jt.jtable('closeChildTable', $row.closest('tr'));
     }
-    ,_openInitiatorAliases: function($t, $row) {
-        $t.jtable('openChildTable',
+    ,_openInitiatorAliases: function($jt, $row) {
+        $jt.jtable('openChildTable',
             $row.closest('tr'),
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
@@ -881,95 +881,135 @@ ComplaintList.Object = {
     //
     // Tasks
     //
-    ,_createJTableTasks: function($s) {
-        $s.jtable({
-            title: 'Tasks'
-            ,paging: false
-            ,actions: {
-                listAction: function(postData, jtParams) {
-                    var tasks = Complaint.getTasks();
-                    var rc = {"Result": "OK", "Records": []};
-                    for (i =  0; i < tasks.length; i++) {
-                        var record = {};
-                        record.id = tasks[i].taskId;
-                        record.title = tasks[i].title;
-                        record.created = Acm.getDateFromDatetime(tasks[i].created);
-                        record.priority = tasks[i].priority;
-                        record.dueDate = tasks[i].dueDate;
-                        record.status = tasks[i].status;
-                        record.assignee = tasks[i].assignee;
-                        rc.Records.push(record);
+    ,refreshJTableTasks: function() {
+        Acm.Object.jTableLoad(this.$divTasks);
+    }
+
+    ,_createJTableTasks: function($jt) {
+        var sortMap = {};
+        sortMap["title"] = "title_t";
+
+        Acm.Object.jTableCreateSortable($jt
+            ,{
+                title: 'Tasks'
+                ,selecting: true
+                ,multiselect: false
+                ,selectingCheckboxes: false
+
+                ,actions: {
+                    listActionSortable: function (postData, jtParams, sortMap) {
+                        return Acm.Object.jTableDefaultListAction(postData, jtParams, sortMap
+                            ,function() {
+                                var url;
+                                url =  App.getContextPath() + ComplaintList.Service.API_RETRIEVE_TASKS;
+                                url += Complaint.getComplaintId();
+                                return url;
+                            }
+                            ,function(data) {
+                                var jtData = null;
+                                var err = "Invalid search data";
+                                if (data) {
+                                    if (Acm.isNotEmpty(data.responseHeader)) {
+                                        var responseHeader = data.responseHeader;
+                                        if (Acm.isNotEmpty(responseHeader.status)) {
+                                            if (0 == responseHeader.status) {
+                                                var response = data.response;
+                                                //response.start should match to jtParams.jtStartIndex
+                                                //response.docs.length should be <= jtParams.jtPageSize
+
+                                                jtData = Acm.Object.jTableGetEmptyResult();
+                                                for (var i = 0; i < response.docs.length; i++) {
+                                                    var Record = {};
+                                                    Record.id = response.docs[i].object_id_s;
+                                                    Record.title = Acm.goodValue(response.docs[i].name); //title_t ?
+                                                    Record.created = Acm.goodValue(response.docs[i].create_dt);
+                                                    Record.priority = "[priority]";
+                                                    Record.dueDate = "[due]";
+                                                    Record.status = Acm.goodValue(response.docs[i].status_s);
+                                                    Record.assignee = "[assignee]";
+                                                    jtData.Records.push(Record);
+
+                                                }
+                                                jtData.TotalRecordCount = response.numFound;
+
+
+                                            } else {
+                                                if (Acm.isNotEmpty(data.error)) {
+                                                    err = data.error.msg + "(" + data.error.code + ")";
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                return {jtData: jtData, jtError: err};
+                            }
+                        );
                     }
-                    return rc;
-                }
-                ,createAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                        ,"Record": {}
-                    };
-                }
-            }
 
-            ,fields: {
-                id: {
-                    title: 'ID'
-                    ,key: true
-                    ,list: true
-                    ,create: false
-                    ,edit: false
-                }
-                ,title: {
-                    title: 'Title'
-                    ,width: '30%'
-                }
-                ,created: {
-                    title: 'Created'
-                    ,width: '15%'
-                }
-                ,priority: {
-                    title: 'Priority'
-                    ,width: '10%'
-                }
-                ,dueDate: {
-                    title: 'Due'
-                    ,width: '15%'
-                }
-                ,status: {
-                    title: 'status'
-                    ,width: '10%'
-                }
-                ,description: {
-                    title: 'Action'
-                    ,width: '10%'
-                    ,sorting: false
-                    ,edit: false
-                    ,create: false
-                    //,openChildAsAccordion: true
-                    ,display: function (commData) {
-                        var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
-                        var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
-
-                        $a.click(function (e) {
-                            ComplaintList.Event.onClickBtnTaskAssign(e);
-                            e.preventDefault();
-                        });
-                        $b.click(function (e) {
-                            ComplaintList.Event.onClickBtnTaskUnassign(e);
-                            e.preventDefault();
-                        });
-                        return $a.add($b);
+                    ,createAction: function(postData, jtParams) {
+                        return Acm.Object.jTableGetEmptyResult();
                     }
                 }
-            }
-            ,recordAdded: function(event, data){
-                $s.jtable('load');
-            }
-            ,recordUpdated: function(event, data){
-                $s.jtable('load');
-            }
-        });
 
-        $s.jtable('load');
+                ,fields: {
+                    id: {
+                        title: 'ID'
+                        ,key: true
+                        ,list: true
+                        ,create: false
+                        ,edit: false
+                        ,sorting: false
+                    }
+                    ,title: {
+                        title: 'Title'
+                        ,width: '30%'
+                    }
+                    ,created: {
+                        title: 'Created'
+                        ,width: '15%'
+                        ,sorting: false
+                    }
+                    ,priority: {
+                        title: 'Priority'
+                        ,width: '10%'
+                        ,sorting: false
+                    }
+                    ,dueDate: {
+                        title: 'Due'
+                        ,width: '15%'
+                        ,sorting: false
+                    }
+                    ,status: {
+                        title: 'status'
+                        ,width: '10%'
+                        ,sorting: false
+                    }
+                    ,description: {
+                        title: 'Action'
+                        ,width: '10%'
+                        ,sorting: false
+                        ,edit: false
+                        ,create: false
+                        ,display: function (commData) {
+                            var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                            var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
+
+                            $a.click(function (e) {
+                                ComplaintList.Event.onClickBtnTaskAssign(e);
+                                e.preventDefault();
+                            });
+                            $b.click(function (e) {
+                                ComplaintList.Event.onClickBtnTaskUnassign(e);
+                                e.preventDefault();
+                            });
+                            return $a.add($b);
+                        }
+                    }
+                } //end field
+            } //end arg
+            ,sortMap
+        );
     }
 
 

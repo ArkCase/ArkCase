@@ -23,13 +23,13 @@ var Search = Search || {
     ,Service: {}
     ,Callback: {}
 
-    ,EMPTY_RESULT: {"Result": "OK","Records": [],"TotalRecordCount": 0}
-    ,DEFAULT_PAGE_SIZE: 4
-
-    ,OBJTYPE_CASE: "Case"
-    ,OBJTYPE_COMPLAINT: "Complaint"
-    ,OBJTYPE_TASK: "Task"
-    ,OBJTYPE_DOCUMENT: "Document"
+//    ,EMPTY_RESULT: {"Result": "OK","Records": [],"TotalRecordCount": 0}
+//    ,DEFAULT_PAGE_SIZE: 4
+//
+//    ,OBJTYPE_CASE: "Case"
+//    ,OBJTYPE_COMPLAINT: "Complaint"
+//    ,OBJTYPE_TASK: "Task"
+//    ,OBJTYPE_DOCUMENT: "Document"
 
 };
 

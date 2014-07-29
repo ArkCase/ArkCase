@@ -65,76 +65,42 @@ Search.Object = {
         var $s = this.$divResults;
         $s.jtable('load');
     }
-    ,createJTableResults: function($s) {
-        $s.jtable({
-            title: 'Search Results'
-            //,selecting: false
-            ,paging: true
-            ,pageSize: Search.DEFAULT_PAGE_SIZE
-            ,sorting: true
+    ,createJTableResults: function($jt) {
+        var sortMap = {};
+        sortMap["title"] = "title_t";
 
-            //,defaultSorting: 'Name ASC'
-            ,selecting: true //Enable selecting
-            ,multiselect: true //Allow multiple selecting
-            ,selectingCheckboxes: true //Show checkboxes on first column
-            //,selectOnRowClick: false //Enable this to only select using checkboxes
+        Acm.Object.jTableCreateSortable($jt
+            ,{
+                title: 'Tasks'
+                //,defaultSorting: 'Name ASC'
+                ,selecting: true //Enable selecting
+                ,multiselect: true //Allow multiple selecting
+                ,selectingCheckboxes: true //Show checkboxes on first column
+                //,selectOnRowClick: false //Enable this to only select using checkboxes
 
-            ,actions: {
-                listAction: function (postData, jtParams) {
-                    if (Acm.isEmpty(App.getContextPath())) {
-                        return Search.EMPTY_RESULT; //[];
-                    }
-
-                    var term = Topbar.Object.getQuickSearchTerm();
-                    if (Acm.isEmpty(term)) {
-                        return Search.EMPTY_RESULT;
-                    }
-
-                    var url;
-                    url =  App.getContextPath() + Search.Service.API_QUICK_SEARCH;
-                    url += "?q=" + term;
-                    if (Acm.isNotEmpty(jtParams.jtStartIndex)) {
-                        url += "&start=" + jtParams.jtStartIndex;
-                    }
-                    if (Acm.isNotEmpty(jtParams.jtPageSize)) {
-                        url += "&n=" + jtParams.jtPageSize;
-                    }
-                    if (Acm.isNotEmpty(jtParams.jtSorting)) {
-                        var arr = jtParams.jtSorting.split(" ");
-                        if (2 == arr.length) {
-                            if ("title" == arr[0]) {
-                                url += "&s=title_t%20" + arr[1];
+                ,actions: {
+                    listActionSortable: function (postData, jtParams, sortMap) {
+                        return Acm.Object.jTableDefaultListAction(postData, jtParams, sortMap
+                            ,function() {
+                                var term = Topbar.Object.getQuickSearchTerm();
+                                var url;
+                                url =  App.getContextPath() + Search.Service.API_QUICK_SEARCH;
+                                url += "?q=" + term;
+                                return url;
                             }
-                        }
-                    }
-
-//                    if (0 == jtParams.jtStartIndex) {
-//                        url = App.getContextPath() + "/resources/search.json" + "?jtStartIndex=" + jtParams.jtStartIndex + '&jtPageSize=' + jtParams.jtPageSize + '&jtSorting=' + jtParams.jtSorting;
-//                    } else if (4 == jtParams.jtStartIndex) {
-//                        url = App.getContextPath() + "/resources/search2.json" + "?jtStartIndex=" + jtParams.jtStartIndex + '&jtPageSize=' + jtParams.jtPageSize + '&jtSorting=' + jtParams.jtSorting;
-//                    } else {
-//                        url = App.getContextPath() + "/resources/search3.json" + "?jtStartIndex=" + jtParams.jtStartIndex + '&jtPageSize=' + jtParams.jtPageSize + '&jtSorting=' + jtParams.jtSorting;
-//                    }
-
-                    return $.Deferred(function ($dfd) {
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            dataType: 'json',
-                            data: postData,
-                            success: function (data) {
+                            ,function(data) {
                                 var jtData = null;
                                 var err = "Invalid search data";
                                 if (data) {
                                     if (Acm.isNotEmpty(data.responseHeader)) {
-                                       var responseHeader = data.responseHeader;
+                                        var responseHeader = data.responseHeader;
                                         if (Acm.isNotEmpty(responseHeader.status)) {
                                             if (0 == responseHeader.status) {
                                                 var response = data.response;
                                                 //response.start should match to jtParams.jtStartIndex
                                                 //response.docs.length should be <= jtParams.jtPageSize
 
-                                                jtData = {"Result": "OK","Records": [],"TotalRecordCount": 0};
+                                                jtData = Acm.Object.jTableGetEmptyResult();
                                                 for (var i = 0; i < response.docs.length; i++) {
                                                     var Record = {};
                                                     Record.id = response.docs[i].object_id_s;
@@ -158,24 +124,14 @@ Search.Object = {
                                     }
                                 }
 
-                                var term = Topbar.Object.getQuickSearchTerm();
-                                Search.Object.setTableTitle('Search Results of "' + term + '"');
-
-                                if (jtData) {
-                                    $dfd.resolve(jtData);
-                                } else {
-                                    $dfd.reject();
-                                    Acm.Dialog.error(err);
-                                }
-                            },
-                            error: function () {
-                                $dfd.reject();
+                                return {jtData: jtData, jtError: err};
                             }
-                        });
-                    });
+                        );
+                    }
                 }
-            }
-            ,fields: {
+
+
+                ,fields: {
 //                RowCheckbox: {
 //                    title: 'Status',
 //                    width: '12%',
@@ -183,58 +139,58 @@ Search.Object = {
 //                    values: { 'false': 'Passive', 'true': 'Active' },
 //                    defaultValue: 'true'
 //                },
-                id: {
-                    title: 'ID'
-                    ,key: true
-                    ,list: false
-                    ,create: false
-                    ,edit: false
-                    ,sorting: false
-                }
-                ,name: {
-                    title: 'Name'
-                    ,width: '15%'
-                    ,sorting: false
-                    ,display: function(data) {
-                        var url = App.getContextPath();
-                        if (Search.OBJTYPE_CASE == data.record.type) {
-                            url += "/plugin/case/" + data.record.id;
-                        } else if (Search.OBJTYPE_COMPLAINT == data.record.type) {
-                            url += "/plugin/complaint/" + data.record.id;
-                        } else if (Search.OBJTYPE_TASK == data.record.type) {
-                            url += "/plugin/task/" + data.record.id;
-                        } else if (Search.OBJTYPE_DOCUMENT == data.record.type) {
-                            url += "/plugin/document/" + data.record.id;
-                        }
-                        var $lnk = $("<a href='" + url + "'>" + data.record.name + "</a>");
-                        //$lnk.click(function(){alert("click" + data.record.id)});
-                        return $lnk;
+                    id: {
+                        title: 'ID'
+                        ,key: true
+                        ,list: false
+                        ,create: false
+                        ,edit: false
+                        ,sorting: false
                     }
-                }
-                ,type: {
-                    title: 'Type'
-                    ,options: [Search.OBJTYPE_CASE, Search.OBJTYPE_COMPLAINT, Search.OBJTYPE_TASK, Search.OBJTYPE_DOCUMENT]
-                    ,sorting: false
-                }
-                ,title: {
-                    title: 'Title'
-                    ,width: '30%'
-                }
-                ,owner: {
-                    title: 'Owner'
-                    ,width: '15%'
-                    ,sorting: false
-                }
-                ,created: {
-                    title: 'Created'
-                    ,type: 'textarea'
-                    ,width: '20%'
-                    ,sorting: false
-                }
-            }
-        });
-
-        $s.jtable('load');
+                    ,name: {
+                        title: 'Name'
+                        ,width: '15%'
+                        ,sorting: false
+                        ,display: function(data) {
+                            var url = App.getContextPath();
+                            if (App.OBJTYPE_CASE == data.record.type) {
+                                url += "/plugin/case/" + data.record.id;
+                            } else if (App.OBJTYPE_COMPLAINT == data.record.type) {
+                                url += "/plugin/complaint/" + data.record.id;
+                            } else if (App.OBJTYPE_TASK == data.record.type) {
+                                url += "/plugin/task/" + data.record.id;
+                            } else if (App.OBJTYPE_DOCUMENT == data.record.type) {
+                                url += "/plugin/document/" + data.record.id;
+                            }
+                            var $lnk = $("<a href='" + url + "'>" + data.record.name + "</a>");
+                            //$lnk.click(function(){alert("click" + data.record.id)});
+                            return $lnk;
+                        }
+                    }
+                    ,type: {
+                        title: 'Type'
+                        ,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
+                        ,sorting: false
+                    }
+                    ,title: {
+                        title: 'Title'
+                        ,width: '30%'
+                    }
+                    ,owner: {
+                        title: 'Owner'
+                        ,width: '15%'
+                        ,sorting: false
+                    }
+                    ,created: {
+                        title: 'Created'
+                        ,type: 'textarea'
+                        ,width: '20%'
+                        ,sorting: false
+                    }
+                } //end field
+            } //end arg
+            ,sortMap
+        );
     }
 
 

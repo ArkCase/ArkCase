@@ -145,12 +145,6 @@ Acm.Object = {
     ,setHtml : function($s, value) {
         $s.html(value);
     }
-    ,getSummernote : function($s) {
-        return $s.code();
-    }
-    ,setSummernote : function($s, value) {
-        $s.code(value);
-    }
 
     // Setting value directly to a date picker causes date picker popup initially visible.
     // Use setValueDatePicker() to solve the problem.
@@ -224,6 +218,102 @@ Acm.Object = {
     ,empty : function($s) {
         $s.empty();
     }
+
+    ,getSummernote : function($s) {
+        return $s.code();
+    }
+    ,setSummernote : function($s, value) {
+        $s.code(value);
+    }
+
+    //
+    // JTable functions
+    //
+    ,JTABLE_DEFAULT_PAGE_SIZE: 8
+    ,jTableGetEmptyResult: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
+    ,jTableLoad: function($jt) {
+        $jt.jtable('load');
+    }
+    ,jTableDefaultListAction: function(postData, jtParams, sortMap, urlEvealuator, responseHandler) {
+        if (Acm.isEmpty(App.getContextPath())) {
+            return Acm.Object.jTableGetEmptyResult();
+        }
+
+        var url = urlEvealuator();
+        if (Acm.isNotEmpty(jtParams.jtStartIndex)) {
+            url += "&start=" + jtParams.jtStartIndex;
+        }
+        if (Acm.isNotEmpty(jtParams.jtPageSize)) {
+            url += "&n=" + jtParams.jtPageSize;
+        }
+        if (Acm.isNotEmpty(jtParams.jtSorting)) {
+            var arr = jtParams.jtSorting.split(" ");
+            if (2 == arr.length) {
+                for (var key in sortMap) {
+                    if (key == arr[0]) {
+                        url += "&s=" + sortMap[key] + "%20" + arr[1];
+                    }
+                }
+            }
+        }
+        return $.Deferred(function ($dfd) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                data: postData,
+                success: function (data) {
+                    if (data) {
+                        var jtResponse = responseHandler(data);
+                    }
+
+                    if (jtResponse.jtData) {
+                        $dfd.resolve(jtResponse.jtData);
+                    } else {
+                        $dfd.reject();
+                        Acm.Dialog.error(jtResponse.jtError);
+                    }
+                },
+                error: function () {
+                    $dfd.reject();
+                }
+            });
+        });
+    }
+    ,jTableCreateSortable: function($jt, jtArg, sortMap) {
+        jtArg.paging = true;
+        if (!jtArg.pageSize) {
+            jtArg.pageSize = Acm.Object.JTABLE_DEFAULT_PAGE_SIZE;
+        }
+        if (!jtArg.recordAdded) {
+            jtArg.recordAdded = function(event, data){
+                $jt.jtable('load');
+            }
+        }
+        if (!jtArg.recordUpdated) {
+            jtArg.recordUpdated = function(event, data){
+                $jt.jtable('load');
+            }
+        }
+
+        if (sortMap) {
+            jtArg.sorting = true;
+        } else if (!jtArg.sorting) {
+            jtArg.sorting = false;
+        }
+
+        if (jtArg.actions.listActionSortable){
+            jtArg.actions.listAction = function(postData, jtParams) {
+                return jtArg.actions.listActionSortable(postData, jtParams, sortMap);
+            }
+        }
+
+        $jt.jtable(jtArg);
+
+        $jt.jtable('load');
+    }
+
+
 
     ,useDobInput: function($s) {
         $s.datepicker({

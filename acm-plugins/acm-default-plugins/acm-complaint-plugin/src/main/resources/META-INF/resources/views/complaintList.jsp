@@ -356,24 +356,24 @@
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a">
-                <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span>
-                    <a href="#" class="font-bold">Tasks</a>
-                </div>
-                <div class="panel-body max-200 no-padder">
-                    <table class="table table-striped th-sortable table-hover">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Created</th>
-                            <th>Priority</th>
-                            <th>Due</th>
-                            <th>Status</th>
-                            <th width="10%">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="odd gradeA">
+                <%--<div class="panel-heading b-b bg-info"> <span class="pull-right">New</span>--%>
+                    <%--<a href="#" class="font-bold">Tasks</a>--%>
+                <%--</div>--%>
+                <%--<div class="panel-body max-200 no-padder">--%>
+                    <%--<table class="table table-striped th-sortable table-hover">--%>
+                        <%--<thead>--%>
+                        <%--<tr>--%>
+                            <%--<th>ID</th>--%>
+                            <%--<th>Title</th>--%>
+                            <%--<th>Created</th>--%>
+                            <%--<th>Priority</th>--%>
+                            <%--<th>Due</th>--%>
+                            <%--<th>Status</th>--%>
+                            <%--<th width="10%">Action</th>--%>
+                        <%--</tr>--%>
+                        <%--</thead>--%>
+                        <%--<tbody>--%>
+                        <%--<tr class="odd gradeA">--%>
                             <%--<td>[ID]</td>--%>
                             <%--<td>[Title]</td>--%>
                             <%--<td>[Created]</td>--%>
@@ -385,10 +385,10 @@
                                 <%--<option value="1">Assign</option>--%>
                                 <%--<option value="2">Unassign</option>--%>
                             <%--</select></td>--%>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                        <%--</tr>--%>
+                        <%--</tbody>--%>
+                    <%--</table>--%>
+                <%--</div>--%>
 
 
                 <div class="panel-body max-200 no-padder">
