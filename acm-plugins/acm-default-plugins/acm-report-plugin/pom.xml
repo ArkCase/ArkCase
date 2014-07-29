@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>acm-default-plugins</artifactId>
+        <groupId>com.armedia.acm.acm-plugins</groupId>
+        <version>3.0.11-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+    <artifactId>acm-report-plugin</artifactId>
+    <name>ACM Default Plugin: report</name>
+    <description>This plugin enables the report feature.
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-person-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-data-source</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-data</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-mule-context-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-plugin-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-event</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-login</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-activiti-actions</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-activemq-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-drools-rule-monitor</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-cmis-configuration</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-object-association-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ecm</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-web</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <!-- date time -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
+        <!-- business rules -->
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-decisiontables</artifactId>
+        </dependency>
+
+        <!-- spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+
+        <!-- bean validation -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+
+        <!-- logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- mule -->
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-spring-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-cmis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-scripting</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- activiti -->
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring</artifactId>
+        </dependency>
+
+        <!-- json -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <!-- h2 is the in-memory database used for Activiti tests -->
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>jdbc</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+
+</project>
