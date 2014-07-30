@@ -22,6 +22,24 @@ public class AdminUiController
         return retval;
     }
 
+    @RequestMapping(value = "/access", method = RequestMethod.GET)
+    public ModelAndView showAccessPage()
+    {
+        ModelAndView retval = new ModelAndView();
+        retval.setViewName("adminAccess");
+        retval.addObject("pageDescriptor", getPageDescriptor());
+        return retval;
+    }
+
+    @RequestMapping(value = "/locks", method = RequestMethod.GET)
+    public ModelAndView showLocksPage()
+    {
+        ModelAndView retval = new ModelAndView();
+        retval.setViewName("adminLocks");
+        retval.addObject("pageDescriptor", getPageDescriptor());
+        return retval;
+    }
+
     public AcmPageDescriptor getPageDescriptor() {
         return pageDescriptor;
     }

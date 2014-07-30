@@ -25,6 +25,25 @@
                             </c:if>
                         </c:forEach>
                     </ul>
+                    <div class="line dk hidden-nav-xs"></div>
+                    <div class="text-muted text-xs hidden-nav-xs padder m-t-sm m-b-sm">Admin</div>
+                    <ul class="nav">
+                        <li>
+                            <a href="<c:url value='/plugin/admin/access' />">
+                            <%--<a href="access.html">--%>
+                                <i class="i i-circle-sm"></i>
+                                <span>Access Control Policy</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<c:url value='/plugin/admin/locks' />">
+                            <%--<a href="locks.html">--%>
+                                <i class="i i-circle-sm"></i>
+                                <span>Object Locks</span>
+                            </a>
+                        </li>
+
+                    </ul>
                 </nav>
                 <!-- / nav -->
             </div>

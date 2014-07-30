@@ -35,7 +35,8 @@
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
 
     <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>
+    <%--<link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>--%>
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/jtable/blue/jtable.css" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
 
 
@@ -57,6 +58,7 @@
         <header class="dker header clearfix">
             <h3 class="m-b-xs text-black pull-left">${pageDescriptor.descShort}</h3>
             <div class="btn-toolbar">
+                <a href="#nav, #chat" class="inline animated btn btn-default btn-sm  pull-right" data-toggle="class:nav-xs, show"><i class="fa  fa-columns"></i></a>
                 <div class="btn-group inline select pull-right">
                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
                     <ul class="dropdown-menu text-left text-sm">
@@ -97,7 +99,24 @@
     </section>
 </aside>
 <!-- /.aside -->
+
 <!-- .aside -->
+<aside class="aside bg-light lt hide" id="chat">
+    <section class="vbox animated fadeInLeft">
+        <section class="scrollable">
+            <header class="dk header">
+                <p>Navigation</p>
+            </header>
+            <div class="row m-b">
+                <div class="col-sm-12">
+                    <div id="tree"></div>
+
+                </div>
+            </div>
+        </section>
+    </section>
+</aside>
+
 <aside id="email-content" class="bg-light lter">
 <section class="vbox">
 <section class="scrollable">
@@ -113,7 +132,7 @@
                 <li><a href="#">Other menu items</a></li>
             </ul>
         </div>
-        <a href="#nav, #chat" class="inline animated btn btn-default btn-sm " data-toggle="class:nav-xs, show"><i class="fa  fa-columns"></i></a> </div>
+    </div>
     <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title">...</a> (...)</h4>
 </div>
 <div>
@@ -718,23 +737,6 @@
 </section>
 </aside>
 <!-- /.aside -->
-
-
-<aside class="aside bg-light lt hide" id="chat">
-    <section class="vbox animated fadeInLeft">
-        <section class="scrollable">
-            <header class="dk header">
-                <p>Navigation</p>
-            </header>
-            <div class="row m-b">
-                <div class="col-sm-12">
-                    <div id="tree"></div>
-
-                </div>
-            </div>
-        </section>
-    </section>
-</aside>
 </section>
 </section>
 </section>
