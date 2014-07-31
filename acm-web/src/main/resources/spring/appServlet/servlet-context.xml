@@ -39,6 +39,13 @@
         <property name="objectMapper" ref="acmObjectMapper"/>
     </bean>
 
+    <bean id="castorXmlMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+        <property name="ignoreExtraAttributes" value="true"/>
+        <property name="ignoreExtraElements" value="true"/>
+        <property name="validating" value="false"/>
+        <property name="suppressNamespaces" value="true"/>
+    </bean>
+
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven>
         <mvc:message-converters>
@@ -49,6 +56,10 @@
             string converter. -->
 
             <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+                <property name="marshaller" ref="castorXmlMarshaller"/>
+                <property name="unmarshaller" ref="castorXmlMarshaller"/>
+            </bean>
             <bean class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter"/>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
             <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
@@ -60,8 +71,7 @@
             <bean class="org.springframework.http.converter.BufferedImageHttpMessageConverter"/>
             <bean class="org.springframework.http.converter.FormHttpMessageConverter"/>
             <bean class="org.springframework.http.converter.xml.Jaxb2CollectionHttpMessageConverter"/>
-            <!-- marshalling converter requires spring oxm -->
-            <!--<bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"/>-->
+
         </mvc:message-converters>
     </mvc:annotation-driven>
     <!--<context:spring-configured/>-->
