@@ -24,7 +24,7 @@ public class GetComplaintListOfValuesAPIController
     @RequestMapping(
             value = "priorities",
             method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
     public @ResponseBody List<String> getComplaintPriorities() throws AcmListObjectsFailedException
     {
         try
