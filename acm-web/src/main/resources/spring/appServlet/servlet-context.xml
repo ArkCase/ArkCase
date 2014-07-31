@@ -46,8 +46,20 @@
         <property name="suppressNamespaces" value="true"/>
     </bean>
 
+    <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="defaultContentType" value="application/json" />
+        <property name="favorPathExtension" value="true"/>
+        <property name="mediaTypes">
+            <props>
+                <prop key="xml">text/xml</prop>
+                <prop key="json">application/json</prop>
+            </props>
+        </property>
+    </bean>
+
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<mvc:annotation-driven>
+	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
         <mvc:message-converters>
             <!-- We configure the Jackson mapper to output dates in ISO801 format. This requires adding our
             customized Jackson mapper to the list of Spring MVC message converters. But, if we just add our bean here
