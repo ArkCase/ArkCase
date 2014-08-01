@@ -87,43 +87,321 @@ ComplaintList.Object = {
 
 
         this.$tree = $("#tree");
-        this.$tree.fancytree({
-
-            source: [{
-                title: "2014-03-12321",
-                tooltip: "Sample Compalint Title",
-                expanded: "fancytree-expanded",
-                children: [{
-                    title: "Incident",
-                    folder: true,
-                    children: [{
-                        title: "Initiator "
-                    }, {
-                        title: "People",
-                        folder: true,
-                        children: [{title: "Person 1"}, {title: "Person 2"}]
-                    }]
-                }, {
-                    title: "Attachments",
-                    folder: true,
-                    children: [{title: "Pending", folder:true}, {title: "Approved", folder:true}, {title: "Rejected", folder:true} ]
-                }, {
-                    title: "Tasks",
-                    folder: true,
-                    children: [{title: "Unassigned", folder:true}, {title: "Assigned", folder:true}, {title: "Completed", folder:true} ]
-                }, {
-                    title: "References",
-                    folder: true,
-                    children: [{title: "Complaints", folder:true}, {title: "Cases", folder:true}, {title: "Tasks", folder:true}, {title: "Documents", folder:true} ]
-                }, {
-                    title: "Participants",
-                    folder: true,
-                    children: [{title: "Approvers", folder:true}, {title: "Collaborators", folder:true}, {title: "Watchers", folder:true} ]
-                }]
-            }]
+        this._useFancyTree(this.$tree);
+        this.tree = this.$tree.fancytree("getTree");
+    }
+    ,refreshTree: function() {
+        this.tree.reload().done(function(){
+            //alert("reloaded");
         });
+    }
+    ,_useFancyTree: function($s) {
+        $s.fancytree({
+            source: function() {
+                var items = [];
+                var complaints = ComplaintList.getComplaintList();
+                var len = complaints.length;
+                for (var i = 0; i < len; i++) {
+                    var c = complaints[i];
+
+                    //
+                    //Tree top level: /Complaint
+                    //
+                    var item = {};
+                    item.key = c.complaintId;
+                    item.title = c.complaintNumber;
+                    item.tooltip = c.complaintTitle;
+                    item.expanded = false;
+                    item.children = [{}, {}, {}, {}, {}];
+
+                        //
+                        //level 2: /Complaint/Incident
+                        //
+                        var incident = item.children[0];
+                        incident.title = "Incident";
+                        incident.folder = true;
+                        incident.children = [{}, {}];
+
+                            //level 3: /Complaint/Incident/Initiator
+                            var initiator = incident.children[0];
+                            initiator.title = "Initiator";
+
+                            //level 3: /Complaint/Incident/People
+                            var people = incident.children[1];
+                            people.title = "People";
+                            people.folder = true;
+                            people.children = [];
+                            for (var j = 0; j < 2; j++) {
+                                var person = {};
+                                person.title = "Person Name" + i;
+                                people.children.push(person);
+                            }
+
+                        //
+                        //level 2: /Complaint/Attachments
+                        //
+                        var attachments = item.children[1];
+                        attachments.title = "Attachments";
+                        attachments.folder = true;
+                        attachments.children = [{}, {}, {}];
+
+                            //level 3: /Complaint/Attachments/Pending
+                            var pending = attachments.children[0];
+                            pending.title = "Pending";
+                            pending.folder = true;
+                            pending.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                pending.children.push(person);
+//                            }
+
+                            //level 3: /Complaint/Attachments/Approved
+                            var approved = attachments.children[1];
+                            approved.title = "Approved";
+                            approved.folder = true;
+                            approved.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                approved.children.push(person);
+//                            }
+
+                            //level 3: /Complaint/Attachments/Rejected
+                            var rejected = attachments.children[2];
+                            rejected.title = "Rejected";
+                            rejected.folder = true;
+                            rejected.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                rejected.children.push(person);
+//                            }
 
 
+
+                        //
+                        //level 2: /Complaint/Tasks
+                        //
+                        var tasks = item.children[2];
+                        tasks.title = "Tasks";
+                        tasks.folder = true;
+                        tasks.children = [{}, {}, {}];
+
+                            //level 3: /Complaint/Tasks/Unassigned
+                            var unassigned = tasks.children[0];
+                            unassigned.title = "Unassigned";
+                            unassigned.folder = true;
+                            unassigned.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                unassigned.children.push(person);
+//                            }
+
+                            //level 3: /Complaint/Tasks/Assigned
+                            var assigned = tasks.children[1];
+                            assigned.title = "Assigned";
+                            assigned.folder = true;
+                            assigned.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                assigned.children.push(person);
+//                            }
+
+                            //level 3: /Complaint/Tasks/Completed
+                            var completed = tasks.children[2];
+                            completed.title = "Completed";
+                            completed.folder = true;
+                            completed.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                completed.children.push(person);
+//                            }
+
+
+                        //
+                        //level 2: /Complaint/References
+                        //
+                        var references = item.children[3];
+                        references.title = "References";
+                        references.folder = true;
+                        references.children = [{}, {}, {}, {}];
+
+                            //level 3: /Complaint/References/Complaints
+                            var rcomplaints = references.children[0];
+                            rcomplaints.title = "Complaints";
+                            rcomplaints.folder = true;
+                            rcomplaints.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                rcomplaints.children.push(person);
+//                            }
+
+                            //level 3: /Complaint/References/Cases
+                            var rcases = references.children[1];
+                            rcases.title = "Cases";
+                            rcases.folder = true;
+                            rcases.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                rcases.children.push(person);
+//                            }
+
+                            //level 3: /Complaint/References/Tasks
+                            var rtasks = references.children[2];
+                            rtasks.title = "Tasks";
+                            rtasks.folder = true;
+                            rtasks.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                rtasks.children.push(person);
+//                            }
+
+                            //level 3: /Complaint/References/Documents
+                            var rdocuments = references.children[3];
+                            rdocuments.title = "Documents";
+                            rdocuments.folder = true;
+                            rdocuments.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                rdocuments.children.push(person);
+//                            }
+
+
+
+                        //
+                        //level 2: /Complaint/Participants
+                        //
+                        var participants = item.children[4];
+                        participants.title = "Participants";
+                        participants.folder = true;
+                        participants.children = [{}, {}, {}];
+
+
+                            //level 3: /Complaint/Participants/Approvers
+                            var approvers = participants.children[0];
+                            approvers.title = "Approvers";
+                            approvers.folder = true;
+                            approvers.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                approvers.children.push(person);
+//                            }
+
+                            //level 3: /Complaint/Participants/Collaborators
+                            var collaborators = participants.children[1];
+                            collaborators.title = "Collaborators";
+                            collaborators.folder = true;
+                            collaborators.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                collaborators.children.push(person);
+//                            }
+
+                            //level 3: /Complaint/Participants/Watchers
+                            var watchers = participants.children[2];
+                            watchers.title = "Watchers";
+                            watchers.folder = true;
+                            watchers.children = [];
+//                            for (var j = 0; j < 2; j++) {
+//                                var person = {};
+//                                person.title = "Person Name" + i;
+//                                watchers.children.push(person);
+//                            }
+
+
+                    items.push(item);
+
+//                    html += "<li class='list-group-item'> <a href='#' class='thumb-sm pull-left m-r-sm'> <img src='"
+//                        + App.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a0.png" + "' class='img-circle'> </a> "
+//                        + "<a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
+//                        + Acm.getDateFromDatetime(c.created) + "</small><strong class='block'>"
+//                        + c.complaintTitle + "</strong><small>"
+//                        + c.creator + "</small></a><input type='hidden' value='" + c.complaintId + "' /> </li>";
+                } //end for i
+
+                return items;
+            } //end source
+        }); //end fancytree
+    }
+    ,_useFancyTree0: function($s) {
+        $s.fancytree({
+            source: [
+                {
+                    title: "2014-03-12321",
+                    tooltip: "Sample Compalint Title",
+                    expanded: "fancytree-expanded",
+                    children: [{
+                        title: "Incident",
+                        folder: true,
+                        children: [{
+                            title: "Initiator "
+                        }, {
+                            title: "People",
+                            folder: true,
+                            children: [{title: "Person 1"}, {title: "Person 2"}]
+                        }]
+                    }, {
+                        title: "Attachments",
+                        folder: true,
+                        children: [{title: "Pending", folder:true}, {title: "Approved", folder:true}, {title: "Rejected", folder:true} ]
+                    }, {
+                        title: "Tasks",
+                        folder: true,
+                        children: [{title: "Unassigned", folder:true}, {title: "Assigned", folder:true}, {title: "Completed", folder:true} ]
+                    }, {
+                        title: "References",
+                        folder: true,
+                        children: [{title: "Complaints", folder:true}, {title: "Cases", folder:true}, {title: "Tasks", folder:true}, {title: "Documents", folder:true} ]
+                    }, {
+                        title: "Participants",
+                        folder: true,
+                        children: [{title: "Approvers", folder:true}, {title: "Collaborators", folder:true}, {title: "Watchers", folder:true} ]
+                    }]
+                }
+                ,{
+                    title: "2014-03-12321B",
+                    tooltip: "Sample Compalint Title",
+                    expanded: false,
+                    children: [{
+                        title: "Incident",
+                        folder: true,
+                        children: [{
+                            title: "Initiator "
+                        }, {
+                            title: "People",
+                            folder: true,
+                            children: [{title: "Person 1"}, {title: "Person 2"}]
+                        }]
+                    }, {
+                        title: "Attachments",
+                        folder: true,
+                        children: [{title: "Pending", folder:true}, {title: "Approved", folder:true}, {title: "Rejected", folder:true} ]
+                    }, {
+                        title: "Tasks",
+                        folder: true,
+                        children: [{title: "Unassigned", folder:true}, {title: "Assigned", folder:true}, {title: "Completed", folder:true} ]
+                    }, {
+                        title: "References",
+                        folder: true,
+                        children: [{title: "Complaints", folder:true}, {title: "Cases", folder:true}, {title: "Tasks", folder:true}, {title: "Documents", folder:true} ]
+                    }, {
+                        title: "Participants",
+                        folder: true,
+                        children: [{title: "Approvers", folder:true}, {title: "Collaborators", folder:true}, {title: "Watchers", folder:true} ]
+                    }]
+                }
+            ]
+        });
     }
 
     ,_initId: ""

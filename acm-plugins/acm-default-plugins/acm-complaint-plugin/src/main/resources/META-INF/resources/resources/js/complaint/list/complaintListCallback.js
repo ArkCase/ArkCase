@@ -23,6 +23,7 @@ ComplaintList.Callback = {
             ComplaintList.setComplaintList(response);
             ComplaintList.Page.buildComplaintList(response);
             //ComplaintList.Event.doClickLnkListItem();
+            ComplaintList.Object.refreshTree();
         }
     }
     ,onDetailRetrieved : function(Callback, response) {

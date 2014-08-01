@@ -16,14 +16,16 @@ ComplaintList.Page = {
         var html = "";
         if (Acm.isNotEmpty(arr)) {
             var len = arr.length;
-            if (0 < len) {
-                var initId = ComplaintList.Object.getInitId();
-                if (Acm.isNotEmpty(initId)) {
-                    Complaint.setComplaintId(parseInt(initId));
-                    ComplaintList.Object.setInitId("");
-                } else {
-                    Complaint.setComplaintId(arr[0].complaintId);
-                }
+            if (0 >= len) {
+                return;
+            }
+
+            var initId = ComplaintList.Object.getInitId();
+            if (Acm.isNotEmpty(initId)) {
+                Complaint.setComplaintId(parseInt(initId));
+                ComplaintList.Object.setInitId("");
+            } else {
+                Complaint.setComplaintId(arr[0].complaintId);
             }
 
             for (var i = 0; i < len; i++) {
