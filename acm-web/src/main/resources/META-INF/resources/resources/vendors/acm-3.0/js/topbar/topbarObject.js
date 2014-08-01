@@ -18,7 +18,7 @@ Topbar.Object = {
         var term = this.getQuickSearchTerm();
         this.setActionFormSearch(term);
 
-        this.useTypeAhead2();
+        this.useTypeAhead(this.$edtSearch);
     }
 
 
@@ -97,8 +97,9 @@ Topbar.Object = {
         var z = 1;
     }
 
-    ,useTypeAhead2: function() {
-        $(".typeahead").typeahead({
+    ,useTypeAhead: function($s) {
+        //$(".typeahead").typeahead({
+        $s.typeahead({
             source: function ( query, process ) {
 
                 //here we pass the query (search) and process callback arguments to the throttled function
@@ -147,41 +148,41 @@ Topbar.Object = {
         });
 
     }
-///////////////////////////////////////
-    ,getTypeAheadTerms: function() {
-        sessionStorage.getItem("AcmTypeAheadTerms");
-    }
-    ,setTypeAheadTerms: function(typeAheadTerms) {
-        sessionStorage.setItem("AcmTypeAheadTerms", typeAheadTerms);
-    }
-    ,useTypeAheadSearch: function(typeAheadTerms) {
-        this._useTypeAhead(this.$edtSearch, typeAheadTerms);
-    }
-    ,_useTypeAhead: function ($s, typeAheadTerms){
-        $s.typeahead({
-                hint: true
-                ,highlight: true
-                ,minLength: 1
-            }
-            ,{
-                name: 'TypeAheadTerms'
-                ,displayKey: 'value'
-                ,source: this._substringMatcher(typeAheadTerms)
-            });
-    }
-    ,_substringMatcher : function(strs) {
-        return function findMatches(q, cb) {
-            var matches = [];
-            var substrRegex = new RegExp(q, 'i');
-            $.each(strs, function(i, str) {
-                if (substrRegex.test(str)) {
-                    matches.push({ value: str });
-                }
-            });
-
-            cb(matches);
-        };
-    }
+///////////// from static lookup pool //////////////////////////
+//    ,getTypeAheadTerms: function() {
+//        sessionStorage.getItem("AcmTypeAheadTerms");
+//    }
+//    ,setTypeAheadTerms: function(typeAheadTerms) {
+//        sessionStorage.setItem("AcmTypeAheadTerms", typeAheadTerms);
+//    }
+//    ,useTypeAheadSearch: function(typeAheadTerms) {
+//        this._useTypeAhead(this.$edtSearch, typeAheadTerms);
+//    }
+//    ,_useTypeAhead0: function ($s, typeAheadTerms){
+//        $s.typeahead({
+//                hint: true
+//                ,highlight: true
+//                ,minLength: 1
+//            }
+//            ,{
+//                name: 'TypeAheadTerms'
+//                ,displayKey: 'value'
+//                ,source: this._substringMatcher(typeAheadTerms)
+//            });
+//    }
+//    ,_substringMatcher : function(strs) {
+//        return function findMatches(q, cb) {
+//            var matches = [];
+//            var substrRegex = new RegExp(q, 'i');
+//            $.each(strs, function(i, str) {
+//                if (substrRegex.test(str)) {
+//                    matches.push({ value: str });
+//                }
+//            });
+//
+//            cb(matches);
+//        };
+//    }
 /////////////////////////////////////////
 };
 
