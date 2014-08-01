@@ -15,6 +15,7 @@
     <script src="js/ie/respond.min.js"></script>
     <script src="js/ie/excanvas.js"></script>
   <![endif]-->
+<script src="resources/js/jquery.min.js"></script>
 </head>
 <body class="">
 <section class="vbox">
@@ -22,37 +23,17 @@
     <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
     <ul class="nav navbar-nav hidden-xs">
       <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
-        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">   <div class="row m-l-none m-r-none m-t m-b text-center">
-              <div class="col-xs-4">
-                <div class="padder-v2">
-                  <a href="newComplaint.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-notice i-2x text-primary-lt"></i>
-                    </span>
-                    <small class="text-muted">Complaint</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-4">
-                <div class="padder-v2">
-                  <a href="newCase.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-folder i-2x text-danger-lt"></i>
-                    </span>
-                    <small class="text-muted">Case</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-4">
-                <div class="padder-v2">
-                  <a href="newTask.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-checkmark i-2x text-success-lt"></i>
-                    </span>
-                    <small class="text-muted">Task</small>
-                  </a>
-                </div>
-              </div>
+        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
+          <div class="row m-l-none m-r-none m-t m-b text-center">
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newComplaint.html"> <span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>
+            </div>
           </div>
         </section>
       </li>
@@ -109,26 +90,14 @@
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
                   <li class="active"> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
-                  <li class=""> <a href="admin.html" class="auto"> <i class="i i-settings icon"> </i> <span class="font-bold">Admin</span> </a> </li>
                 </ul>
-               <div class="line dk hidden-nav-xs"></div>
-                  <div class="text-muted text-xs hidden-nav-xs padder m-t-sm m-b-sm">Admin</div>
-                  <ul class="nav">
-                    <li>
-                      <a href="access.html">
-                        <i class="i i-circle-sm"></i>
-                        <span>Access Control Policy</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="locks.html">
-                        <i class="i i-circle-sm"></i>
-                        <span>Object Locks</span>
-                      </a>
-                    </li>
-                   
-                  </ul>
-</nav>
+                <div class="line dk hidden-nav-xs"></div>
+                <div class="text-muted text-xs hidden-nav-xs padder m-t-sm m-b-sm">Admin</div>
+                <ul class="nav">
+                  <li> <a href="access.html"> <i class="i i-circle-sm"></i> <span>Access Control Policy</span> </a> </li>
+                  <li> <a href="locks.html"> <i class="i i-circle-sm"></i> <span>Object Locks</span> </a> </li>
+                </ul>
+              </nav>
               <!-- / nav --> 
             </div>
           </section>
@@ -137,209 +106,129 @@
       </aside>
       <!-- /.aside -->
       <section id="content">
-        <section class="vbox">
-          <section class="scrollable padder">
-            <section class="row m-b-md">
-              <div class="col-sm-12">
-                <h3 class="m-b-xs text-black">Reports</h3>
+        <section class="hbox stretch">
+          <aside class="aside-md bg-light dker b-r" id="subNav">
+            <section class="scrollable">
+              <div class="wrapper b-b header">Reports</div>
+              <div class="wrapper">
+                <label for="priority"  class="label">Report</label>
+                <select name="priority" class="form-control">
+                  <option>Choose Report</option>
+                  <option >Report 1</option>
+                  <option>Report 2</option>
+                  <option>Report 3</option>
+                  <option>Report 4</option>
+                </select>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <label for="priority"  class="label">Date Range</label>
+                <div class="clearfix"></div>
+                <label class="label col-sm-3">From</label>
+                <div class="col-sm-9">
+                  <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                </div>
+                <label class="label col-sm-3">To</label>
+                <div class="col-sm-9">
+                  <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                </div>
+                <div class="clearfix"></div>
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+                <button class="btn btn-sm btn-default center-block" type="button">Generate Report</button>
               </div>
             </section>
-            <section class="panel panel-default">
-              <header class="panel-heading font-bold">Flot Line Chart</header>
-              <div class="panel-body">
-                <div id="flot-1ine" style="height:250px"></div>
-              </div>
-              <footer class="panel-footer bg-white">
-                <div class="row text-center no-gutter">
-                  <div class="col-xs-3 b-r b-light">
-                    <p class="h3 font-bold m-t">1000</p>
-                    <p class="text-muted">Label</p>
+          </aside>
+          <aside>
+            <section class="vbox">
+              <header class="header bg-white b-b clearfix">
+                <div class="row m-t-sm">
+                  <div class="col-sm-6 m-b-xs"> <a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default active"><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
+                      <button type="button" class="btn btn-sm btn-default" title="Filter" data-toggle="dropdown"><i class="fa fa-filter"></i> <span class="caret"></span></button>
+                      <ul class="dropdown-menu">
+                        <li><a href="#">Filter 1</a></li>
+                        <li><a href="#">Filter 2</a></li>
+                        <li><a href="#">Filter 3</a></li>
+                      </ul>
+                    </div>
                   </div>
-                  <div class="col-xs-3 b-r b-light">
-                    <p class="h3 font-bold m-t">400</p>
-                    <p class="text-muted">Label</p>
+                  <div class="col-sm-6 m-b-xs">
+                    <button class="btn btn-sm btn-default pull-right">Apply</button>
+                    <select class="input-sm form-control input-s-sm inline v-middle pull-right">
+                      <option value="0">Action</option>
+                      <option value="1">Export to Excel</option>
+                    </select>
                   </div>
-                  <div class="col-xs-3 b-r b-light">
-                    <p class="h3 font-bold m-t">300</p>
-                    <p class="text-muted">Label</p>
+                </div>
+              </header>
+              <section class="scrollable wrapper w-f">
+                <section class="panel panel-default">
+                  <div class="table-responsive">
+                    <table class="table table-striped m-b-none">
+                      <thead>
+                        <tr>
+                          <th class="th-sortable" width="">Column 1 <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
+                          <th class="th-sortable" data-toggle="class">Column 2 <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                          <th class="th-sortable">Column 3 <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
+                          <th class="th-sortable" data-toggle="class">Column 4 <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> 
+                          <th class="th-sortable">Column 5 <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
+                          <th class="th-sortable">Column 6 <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>[Column 1]</td>
+                          <td>[Column 2]</td>
+                          <td>[Column 3]</td>
+                          <td>[Column 4]</td>
+                          <td>[Column 5]</td>
+                          <td>[Column 6]</td>
+                        </tr>
+                        <tr class="bg-primary-ltest">
+                          <td>[Column 1]</td>
+                          <td>[Column 2]</td>
+                          <td>[Column 3]</td>
+                          <td>[Column 4]</td>
+                          <td>[Column 5]</td>
+                          <td>[Column 6]</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                  <div class="col-xs-3">
-                    <p class="h3 font-bold m-t">200</p>
-                    <p class="text-muted">Label</p>
+                </section>
+              </section>
+              <footer class="footer bg-white b-t">
+                <div class="row text-center-xs">
+                  <div class="col-md-6 hidden-sm">
+                    <p class="text-muted m-t">Showing 20-30 of 50</p>
+                  </div>
+                  <div class="col-md-6 col-sm-12 text-right text-center-xs">
+                    <ul class="pagination pagination-sm m-t-sm m-b-none">
+                      <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                      <li class="active"><a href="#">1</a></li>
+                      <li><a href="#">2</a></li>
+                      <li><a href="#">3</a></li>
+                      <li><a href="#">4</a></li>
+                      <li><a href="#">5</a></li>
+                      <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                    </ul>
                   </div>
                 </div>
               </footer>
             </section>
-            <div class="row">
-              <div class="col-md-6">
-                <section class="panel panel-default">
-                  <header class="panel-heading font-bold">Multiple Flot Line Charts</header>
-                  <div class="panel-body">
-                    <div id="flot-chart"  style="height:240px"></div>
-                  </div>
-                </section>
-              </div>
-              <div class="col-md-6">
-                <section class="panel panel-default">
-                  <header class="panel-heading font-bold">Real-time Example</header>
-                  <div class="panel-body">
-                    <div id="flot-live"  style="height:240px"></div>
-                  </div>
-                </section>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <section class="panel panel-default">
-                  <header class="panel-heading font-bold">Vertical bar</header>
-                  <div class="panel-body">
-                    <div id="flot-bar"  style="height:240px"></div>
-                  </div>
-                </section>
-              </div>
-              <div class="col-md-6">
-                <section class="panel panel-default">
-                  <header class="panel-heading font-bold">Horizontal bar</header>
-                  <div class="panel-body">
-                    <div id="flot-bar-h"  style="height:240px"></div>
-                  </div>
-                </section>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <section class="panel panel-default">
-                  <header class="panel-heading font-bold">Pie Chart</header>
-                  <div class="panel-body">
-                    <div id="flot-pie"  style="height:240px"></div>
-                  </div>
-                </section>
-              </div>
-              <div class="col-md-6">
-                <section class="panel panel-default">
-                  <header class="panel-heading font-bold">Donut pie</header>
-                  <div class="panel-body">
-                    <div id="flot-pie-donut"  style="height:240px"></div>
-                  </div>
-                </section>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-4">
-                <section class="panel panel-default">
-                  <header class="panel-heading">Pie</header>
-                  <div class="panel-body text-center">
-                    <div class="sparkline inline" data-type="pie" data-height="154" data-slice-colors="['#1ccacc','#f2f2f2']">60,40</div>
-                    <div class="line pull-in"></div>
-                    <div class="text-xs"> <i class="fa fa-circle text-info"></i> 60% <i class="fa fa-circle text-muted"></i> 40% </div>
-                  </div>
-                </section>
-              </div>
-              <div class="col-lg-4">
-                <section class="panel panel-default">
-                  <header class="panel-heading font-bold">Data graph</header>
-                  <div class="bg-light dk wrapper"> <span class="pull-right">Friday</span> <span class="h4">$540</span>
-                    <div class="text-center m-b-n m-t-sm">
-                      <div class="sparkline" data-type="line" data-height="65" data-width="100%" data-line-width="2" data-line-color="#dddddd" data-spot-color="#bbbbbb" data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="3" data-resize="true" values="280,320,220,385,450,320,345,250,250,250,400,380"></div>
-                      <div class="sparkline inline" data-type="bar" data-height="45" data-bar-width="6" data-bar-spacing="6" data-bar-color="#1ccc88">10,9,11,10,11,10,12,10,9,10,11,9,8</div>
-                    </div>
-                  </div>
-                  <div class="panel-body">
-                    <div class="row">
-                      <div class="col-xs-4"> <small class="text-muted block">Market</small> <span>$1500.00</span> </div>
-                      <div class="col-xs-4"> <small class="text-muted block">Referal</small> <span>$600.00</span> </div>
-                      <div class="col-xs-4"> <small class="text-muted block">Affiliate</small> <span>$400.00</span> </div>
-                    </div>
-                  </div>
-                </section>
-              </div>
-              <div class="col-lg-4">
-                <section class="panel panel-default">
-                  <header class="panel-heading">Stacked</header>
-                  <div class="panel-body text-center">
-                    <div class="sparkline inline" data-type="bar" data-height="193" data-bar-width="12" data-bar-spacing="10" data-stacked-bar-color="['#e33244', '#eee']">5:5,8:4,12:5,10:6,11:7,12:2,8:6,9:3,5:5,4:9</div>
-                  </div>
-                </section>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-4">
-                <section class="panel panel-default">
-                  <header class="panel-heading"> Conversion </header>
-                  <div class="panel-body text-center">
-                    <h4>62.5<small> hrs</small></h4>
-                    <small class="text-muted block">Updated at 2 minutes ago</small>
-                    <div class="inline">
-                      <div class="easypiechart" data-percent="75" data-bar-color="#fcc633" data-line-width="16" data-loop="false" data-size="188">
-                        <div> <span class="h2 m-l-sm step">75</span>%
-                          <div class="text text-sm">new</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="panel-footer"><small>% of avarage rate of the Conversion</small></div>
-                </section>
-              </div>
-              <div class="col-lg-4">
-                <section class="panel panel-default">
-                  <header class="panel-heading"> Bounce rate </header>
-                  <div class="panel-body text-center">
-                    <h4><small>last </small>12<small> hrs</small></h4>
-                    <small class="text-muted block">yesterday: 20%</small>
-                    <div class="inline">
-                      <div class="easypiechart" data-percent="25" data-line-width="6" data-loop="false" data-size="188">
-                        <div> <span class="h2 m-l-sm step">25</span>%
-                          <div class="text text-sm">today</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="panel-footer"><small>% of change</small></div>
-                </section>
-              </div>
-              <div class="col-lg-4">
-                <section class="panel panel-default">
-                  <header class="panel-heading"> New visitors </header>
-                  <div class="panel-body text-center">
-                    <h4>3,450</h4>
-                    <small class="text-muted block">Worldwide visitors</small>
-                    <div class="inline">
-                      <div class="easypiechart" data-percent="60" data-line-width="10" data-track-color="#eee" data-bar-color="#1ccc88" data-scale-color="#fff" data-size="188" data-line-cap='butt'>
-                        <div> <span class="h2 m-l-sm step">60</span>%
-                          <div class="text text-sm">new visits</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="panel-footer"><small>% of avarage rate of the visits</small></div>
-                </section>
-              </div>
-            </div>
-          </section>
+          </aside>
         </section>
       </section>
     </section>
   </section>
 </section>
-</section>
-  <script src="resources/js/jquery.min.js"></script>
-  <!-- Bootstrap -->
-  <script src="resources/js/bootstrap.js"></script>
-  <!-- App -->
-  <script src="resources/js/app.js"></script>  
-  <script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script>
-    <!-- Sparkline Chart -->
-  <script src="resources/js/charts/sparkline/jquery.sparkline.min.js"></script>
-  <!-- Easy Pie Chart -->
-  <script src="resources/js/charts/easypiechart/jquery.easy-pie-chart.js"></script>
-  <!-- Flot -->
-  <script src="resources/js/charts/flot/jquery.flot.min.js"></script>
-  <script src="resources/js/charts/flot/jquery.flot.tooltip.min.js"></script>
-  <script src="resources/js/charts/flot/jquery.flot.resize.js"></script>
-  <script src="resources/js/charts/flot/jquery.flot.orderBars.js"></script>
-  <script src="resources/js/charts/flot/jquery.flot.pie.min.js"></script>
-  <script src="resources/js/charts/flot/jquery.flot.grow.js"></script>
-  <script src="resources/js/charts/flot/demo.js"></script>
-  <script src="resources/js/app.plugin.js"></script>
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="resources/js/datepicker/bootstrap-datepicker.js"></script> 
+
+<!-- Bootstrap --> 
+<script src="resources/js/bootstrap.js"></script> 
+<!-- App --> 
+<script src="resources/js/app.js"></script> 
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="resources/js/app.plugin.js"></script>
 </body>
 </html>
