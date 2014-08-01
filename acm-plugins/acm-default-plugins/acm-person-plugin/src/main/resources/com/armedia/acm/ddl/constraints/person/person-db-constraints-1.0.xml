@@ -52,7 +52,7 @@
                                  initiallyDeferred="true"/>
     </changeSet>
 
-        <changeSet id="03-person-alias-type-foreign-key" author="tsedalu">      
+        <changeSet id="03-person-alias-type-foreign-key" author="tsedalu" failOnError="false">      
 
             <addForeignKeyConstraint baseTableName="acm_person_alias" baseColumnNames="cm_person_id"
                                      constraintName="fk_person_alias_person_id"
@@ -70,14 +70,14 @@
             
         </changeSet>
         
-        <changeSet id="04-drop-fk-peson-alias-type-id" author="tsedalu">
+        <changeSet id="04-drop-fk-peson-alias-type-id" author="tsedalu" failOnError="false">
             
             <dropForeignKeyConstraint baseTableName="acm_person_alias"
                                       constraintName="fk_person_alias_type_id"/>
             
         </changeSet>
         
-        <changeSet id="05-add-person-alias-type-foreign-key" author="">
+        <changeSet id="05-add-person-alias-type-foreign-key" author="tsedalu" failOnError="false">
             <addForeignKeyConstraint baseTableName="acm_person_alias" baseColumnNames="cm_person_alias_type" 
                                      constraintName="fk_person_alias_type" 
                                      referencedTableName="acm_person_alias_type_lu" 
