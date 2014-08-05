@@ -25,6 +25,7 @@
         <module>acm-service-search</module>
         <module>acm-service-users</module>
         <module>acm-service-orbeon-forms</module>
+        <module>acm-service-authentication-token</module>
     </modules>
 
 
