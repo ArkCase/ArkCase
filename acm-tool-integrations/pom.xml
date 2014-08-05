@@ -26,6 +26,7 @@
         <module>acm-spring-classpath-copier</module>
         <module>acm-spring-context-holder</module>
         <module>acm-spring-data-source</module>
+        <module>acm-orbeon-configuration</module>
     </modules>
 
 </project>
