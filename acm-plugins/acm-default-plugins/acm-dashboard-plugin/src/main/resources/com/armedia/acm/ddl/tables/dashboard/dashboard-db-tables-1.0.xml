@@ -1,0 +1,29 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-dashboard-table" author="marst">
+        <createTable tableName="acm_dashboard">
+            <column name="cm_dashboard_id" type="NUMBER(32,0)"  >
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_dashboard"/>
+            </column>
+            <column name="cm_dashboard_config" type="VARCHAR(3900)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+                <column name="cm_dashboard_owner" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="acm_dashboard" indexName="idx_dashboard_owner">
+            <column name="cm_dashboard_owner"/>
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>
+
