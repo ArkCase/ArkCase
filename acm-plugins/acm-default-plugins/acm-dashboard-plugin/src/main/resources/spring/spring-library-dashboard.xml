@@ -27,12 +27,6 @@
         </property>
     </bean>
 
-    <!-- lookup tables -->
-    <bean id="complaintPriorityTable" class="com.armedia.acm.configuration.LookupTableDescriptor">
-        <property name="tableName" value="acm_dashboard"/>
-        <property name="description" value="User dashboard config."/>
-    </bean>
-
     <bean id="acmDashboardDao" class="com.armedia.acm.plugins.dashboard.dao.DashboardDao"/>
 
 
