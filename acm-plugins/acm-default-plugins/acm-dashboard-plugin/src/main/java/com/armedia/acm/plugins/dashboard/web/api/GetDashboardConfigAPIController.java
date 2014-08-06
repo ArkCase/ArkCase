@@ -2,9 +2,12 @@ package com.armedia.acm.plugins.dashboard.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
+import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +29,14 @@ import javax.servlet.http.HttpSession;
 @RequestMapping({"/api/v1/plugin/dashboard", "/api/latest/plugin/dashboard"})
 public class GetDashboardConfigAPIController {
 
+
+
+    private UserDao userDao;
+    private AcmPlugin dashboardPlugin;
     private DashboardDao dashboardDao;
+
+
+
     private DashboardEventPublisher eventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -36,25 +46,36 @@ public class GetDashboardConfigAPIController {
             @PathVariable("user") String user,
             Authentication authentication,
             HttpSession session
-    ) throws AcmObjectNotFoundException, AcmUserActionFailedException {
+    ) throws AcmDashboardException {
         if (log.isInfoEnabled()) {
             log.info("Finding dashboard configuration for user '" + user + "'");
         }
+        AcmUser owner = userDao.findByUserId(user);
+        Dashboard retval = null;
         try {
-            Dashboard retval = getDashboardDao().getDashboardConfigForUser(user);
+            //If there is no record into the DB we will read defaultDashboard config String from .acm/dashboardPlugin.properties
+            retval = getDashboardDao().getDashboardConfigForUser(owner);
             if (retval == null) {
-                throw new AcmObjectNotFoundException("dashboard", null, "Object not found", null);
+                retval = new Dashboard();
+                retval.setDashboardOwner(userDao.findByUserId(user));
+                retval.setDashobardConfig((String)dashboardPlugin.getPluginProperties().get("acm.defaultDashboard"));
+                retval = dashboardDao.save(retval);
             }
             raiseEvent(authentication, session, retval, true);
             return retval;
-        } catch (Exception e) {
-            // make a fake dashboard so the event will have the desired userId (dashboard owner ID) and object type
-            Dashboard fakeDashboard = new Dashboard();
-            AcmUser fakeAcmUser = new AcmUser();
-            fakeAcmUser.setUserId(user);
-            fakeDashboard.setDashboardOwner(fakeAcmUser);
-            raiseEvent(authentication, session, fakeDashboard, false);
-            throw new AcmUserActionFailedException("get", "dashboard", null, e.getMessage(), e);
+        } catch (AcmDashboardException e) {
+
+            if (retval == null) {
+
+                retval = new Dashboard();
+                retval.setDashboardOwner(owner);
+                retval.setDashobardConfig((String)dashboardPlugin.getPluginProperties().get("acm.defaultDashboard"));
+                retval = dashboardDao.save(retval);
+            }
+            raiseEvent(authentication, session, retval, true);
+            return retval;
+        } catch (Exception e1) {
+           throw new AcmDashboardException("Event exception",e1);
         }
     }
     protected void raiseEvent(Authentication authentication, HttpSession session, Dashboard foundDashboard, boolean succeeded) {
@@ -75,5 +96,20 @@ public class GetDashboardConfigAPIController {
 
     public void setEventPublisher(DashboardEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
+    }
+
+    public AcmPlugin getDashboardPlugin() {
+        return dashboardPlugin;
+    }
+
+    public void setDashboardPlugin(AcmPlugin dashboardPlugin) {
+        this.dashboardPlugin = dashboardPlugin;
+    }
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
     }
 }

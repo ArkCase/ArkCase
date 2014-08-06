@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.dashboard.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
@@ -22,14 +24,20 @@ import java.util.List;
 
 public class DashboardDao extends AcmAbstractDao<Dashboard> {
 
-    public Dashboard getDashboardConfigForUser(String userId){
+
+    public Dashboard getDashboardConfigForUser(AcmUser user) throws AcmDashboardException{
         CriteriaBuilder builder = getEm().getCriteriaBuilder();
         CriteriaQuery<Dashboard> query = builder.createQuery(Dashboard.class);
         Root<Dashboard> d = query.from(Dashboard.class);
 
-        query.select(d).where(builder.equal(d.get("dashboardOwner"), userId));
+        query.select(d).where(builder.equal(d.get("dashboardOwner"), user));
         TypedQuery<Dashboard> dbQuery = getEm().createQuery(query);
-        List<Dashboard> results = dbQuery.getResultList();
+        List<Dashboard> results = null;
+        try {
+             results = dbQuery.getResultList();
+        } catch (Exception e) {
+            throw new AcmDashboardException("JPA exception",e);
+        }
         return results.get(0);
     }
 

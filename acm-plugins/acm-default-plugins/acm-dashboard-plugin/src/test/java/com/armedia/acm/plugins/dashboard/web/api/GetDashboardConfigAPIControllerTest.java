@@ -90,7 +90,7 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-        expect(mockDashboardDao.getDashboardConfigForUser(userId)).andReturn(returned);
+        expect(mockDashboardDao.getDashboardConfigForUser(mockUserDao.findByUserId(userId))).andReturn(returned);
         mockDashboardEventPublisher.publishGetDashboardByUserIdEvent(
                 eq(returned),
                 eq(mockAuthentication),
@@ -132,7 +132,7 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-        expect(mockDashboardDao.getDashboardConfigForUser(userId)).andThrow(new PersistenceException());
+        expect(mockDashboardDao.getDashboardConfigForUser(mockUserDao.findByUserId(userId))).andThrow(new PersistenceException());
         mockDashboardEventPublisher.publishGetDashboardByUserIdEvent(
                 anyObject(Dashboard.class),
                 eq(mockAuthentication),

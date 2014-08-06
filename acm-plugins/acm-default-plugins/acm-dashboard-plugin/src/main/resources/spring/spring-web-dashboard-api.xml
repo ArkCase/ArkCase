@@ -5,6 +5,8 @@
 
     <bean id="getDashboardSettings"  class="com.armedia.acm.plugins.dashboard.web.api.GetDashboardConfigAPIController">
         <property name="dashboardDao" ref="acmDashboardDao"/>
+        <property name="dashboardPlugin" ref="dashboardPlugin"/>
+        <property name="userDao" ref="acmUserDao"/>
     </bean>
 
     <bean id="setDashboardSettings"  class="com.armedia.acm.plugins.dashboard.web.api.SetDashboardConfigAPIController">
