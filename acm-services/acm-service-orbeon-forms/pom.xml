@@ -33,13 +33,6 @@
 			<artifactId>spring-security-core</artifactId>
 		</dependency>
 
-		<!-- jpa -->
-		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>javax.persistence</artifactId>
-			<version>${javax-persistence.version}</version>
-		</dependency>
-
 		<!-- logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
