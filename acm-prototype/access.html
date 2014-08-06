@@ -120,15 +120,56 @@
                   <thead>
                     <tr>
                       <th  class="th-sortable" data-toggle="class">Object Type <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
+                      <th  class="th-sortable" data-toggle="class">Sub Type <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
                       <th class="th-sortable" data-toggle="class">State <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
                       <th class="th-sortable" data-toggle="class">Access Level <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                      <th class="th-sortable" data-toggle="class">Accessor Type <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                      <th class="th-sortable" data-toggle="class">Participant<span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
                       <th  class="th-sortable" data-toggle="class">Access Decision <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
                       <th  class="th-sortable" data-toggle="class">Allow Discretionary Update <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
+                      <th  class="th-sortable" width="5" data-toggle="class">&nbsp;</th>
+                    </tr>
+                    <tr>
+                      <th><select name="" class="form-control">
+                            <option>Filter</option>
+                            <option >Complaint</option>
+                            <option>Task</option>
+                          </select></th>
+                      <th><select name="" class="form-control">
+                        <option>Filter</option>
+                        <option >Complaint</option>
+                        <option>Task</option>
+                      </select></th>
+                      <th><select name="" class="form-control">
+                            <option>Filter</option>
+                            <option >Draft</option>
+                            <option>In Approval</option>
+                          </select></th>
+                      <th><select name="" class="form-control">
+                            <option>Filter</option>
+                            <option >Read</option>
+                            <option>Update</option>
+                          </select></th>
+                      <th><select name="" class="form-control">
+                            <option>Filter</option>
+                            <option >Task Originator</option>
+                            <option>Complaint Owner</option>
+                          </select></th>
+                      <th><select name="" class="form-control">
+                            <option>Filter</option>
+                            <option >Grant</option>
+                            <option>Deny</option>
+                          </select></th>
+                     <th><select name="" class="form-control">
+                            <option>Filter</option>
+                            <option >True</option>
+                            <option>False</option>
+                          </select></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
                   <tr>
+                        <td width="89">Complaint</td>
                         <td width="89">Complaint</td>
                         <td width="53">DRAFT</td>
                         <td width="53">read</td>
@@ -136,6 +177,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -143,8 +185,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>update</td>
@@ -152,6 +196,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -159,8 +204,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>delete</td>
@@ -168,6 +215,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -175,8 +223,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>read</td>
@@ -184,6 +234,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -191,8 +242,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>update</td>
@@ -200,6 +253,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -207,8 +261,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>delete</td>
@@ -216,6 +272,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -223,8 +280,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>read</td>
@@ -232,6 +291,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -239,8 +299,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>update</td>
@@ -248,6 +310,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -255,8 +318,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>delete</td>
@@ -264,6 +329,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -271,8 +337,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>ASSIGNED</td>
                         <td>read</td>
@@ -280,6 +348,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -287,8 +356,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>ASSIGNED</td>
                         <td>update</td>
@@ -296,6 +367,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -303,8 +375,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>ASSIGNED</td>
                         <td>delete</td>
@@ -312,6 +386,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -319,8 +394,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>COMPLETE</td>
                         <td>read</td>
@@ -328,6 +405,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -335,8 +413,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>COMPLETE</td>
                         <td>update</td>
@@ -344,6 +424,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -351,8 +432,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>COMPLETE</td>
                         <td>delete</td>
@@ -360,6 +443,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -367,8 +451,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>UNASSIGNED</td>
                         <td>read</td>
@@ -376,6 +462,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -383,8 +470,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>UNASSIGNED</td>
                         <td>update</td>
@@ -392,6 +481,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -399,8 +489,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>UNASSIGNED</td>
                         <td>delete</td>
@@ -408,6 +500,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                         <td><select name="Update" class="form-control">
@@ -415,8 +508,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>read</td>
@@ -431,8 +526,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>read</td>
@@ -447,8 +544,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>read</td>
@@ -463,8 +562,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>update</td>
@@ -479,8 +580,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>update</td>
@@ -495,8 +598,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>update</td>
@@ -511,8 +616,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>delete</td>
@@ -527,8 +634,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>delete</td>
@@ -543,8 +652,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>delete</td>
@@ -559,8 +670,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>read</td>
@@ -575,8 +688,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>read</td>
@@ -591,8 +706,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>read</td>
@@ -607,8 +724,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>update</td>
@@ -623,8 +742,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>update</td>
@@ -639,8 +760,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>update</td>
@@ -655,8 +778,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>delete</td>
@@ -671,8 +796,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>delete</td>
@@ -687,8 +814,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>delete</td>
@@ -703,8 +832,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>read</td>
@@ -719,8 +850,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>read</td>
@@ -735,8 +868,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>read</td>
@@ -751,8 +886,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>update</td>
@@ -767,8 +904,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>update</td>
@@ -783,8 +922,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>update</td>
@@ -799,8 +940,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>delete</td>
@@ -815,8 +958,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>delete</td>
@@ -831,8 +976,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>delete</td>
@@ -847,8 +994,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>read</td>
@@ -863,8 +1012,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>read</td>
@@ -879,8 +1030,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>read</td>
@@ -895,8 +1048,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>update</td>
@@ -911,8 +1066,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>update</td>
@@ -927,8 +1084,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>update</td>
@@ -943,8 +1102,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>delete</td>
@@ -959,8 +1120,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>delete</td>
@@ -975,8 +1138,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>delete</td>
@@ -991,8 +1156,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>ASSIGNED</td>
                         <td>read</td>
@@ -1007,8 +1174,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>COMPLETE</td>
                         <td>read</td>
@@ -1023,8 +1192,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>UNASSIGNED</td>
                         <td>read</td>
@@ -1039,8 +1210,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>ASSIGNED</td>
                         <td>update</td>
@@ -1055,8 +1228,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>COMPLETE</td>
                         <td>update</td>
@@ -1071,8 +1246,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>UNASSIGNED</td>
                         <td>update</td>
@@ -1087,8 +1264,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>ASSIGNED</td>
                         <td>delete</td>
@@ -1103,8 +1282,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>COMPLETE</td>
                         <td>delete</td>
@@ -1119,8 +1300,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>UNASSIGNED</td>
                         <td>delete</td>
@@ -1135,8 +1318,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>COMPLETE</td>
                         <td>read</td>
@@ -1151,8 +1336,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>UNASSIGNED</td>
                         <td>read</td>
@@ -1167,8 +1354,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>ASSIGNED</td>
                         <td>update</td>
@@ -1183,8 +1372,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>COMPLETE</td>
                         <td>update</td>
@@ -1199,8 +1390,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>UNASSIGNED</td>
                         <td>update</td>
@@ -1215,8 +1408,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>ASSIGNED</td>
                         <td>delete</td>
@@ -1231,8 +1426,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>COMPLETE</td>
                         <td>delete</td>
@@ -1247,8 +1444,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>UNASSIGNED</td>
                         <td>delete</td>
@@ -1263,8 +1462,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Save</td>
@@ -1279,8 +1480,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Save</td>
@@ -1295,8 +1498,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Save</td>
@@ -1311,8 +1516,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Save</td>
@@ -1327,8 +1534,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Submit for Approval</td>
@@ -1343,8 +1552,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Submit for Approval</td>
@@ -1359,8 +1570,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Submit for Approval</td>
@@ -1375,8 +1588,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Submit for Approval</td>
@@ -1391,8 +1606,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Add Document</td>
@@ -1407,8 +1624,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Add Document</td>
@@ -1423,8 +1642,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Add Document</td>
@@ -1439,8 +1660,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>DRAFT</td>
                         <td>Add Document</td>
@@ -1455,8 +1678,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>Add Document</td>
@@ -1471,8 +1696,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>Add Document</td>
@@ -1487,8 +1714,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>Add Document</td>
@@ -1503,8 +1732,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>Add Document</td>
@@ -1519,8 +1750,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>Approve Complaint</td>
@@ -1535,8 +1768,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>Approve Complaint</td>
@@ -1551,8 +1786,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>Approve Complaint</td>
@@ -1567,8 +1804,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>IN APPROVAL</td>
                         <td>Approve Complaint</td>
@@ -1583,8 +1822,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>Add Document</td>
@@ -1599,8 +1840,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>Add Document</td>
@@ -1615,8 +1858,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>Add Document</td>
@@ -1631,8 +1876,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Complaint</td>
                         <td>Complaint</td>
                         <td>ACTIVE</td>
                         <td>Add Document</td>
@@ -1640,6 +1887,7 @@
                         <td><select name="Decision" class="form-control">
                             <option>Choose Decision</option>
                             <option selected>DENY</option>
+  <option>MANDATORY DENY</option>
                             <option>GRANT</option>
                           </select></td>
                          <td><select name="Update" class="form-control">
@@ -1647,8 +1895,10 @@
                             <option>true</option>
                             <option selected>false</option>
                           </select></td>
+                         <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>ASSIGNED</td>
                         <td>Complete</td>
@@ -1663,8 +1913,10 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                       <tr>
+                        <td>Task</td>
                         <td>Task</td>
                         <td>ASSIGNED</td>
                         <td>Complete</td>
@@ -1679,24 +1931,15 @@
                             <option selected>true</option>
                             <option>false</option>
                           </select></td>
+                        <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                       </tr>
                   </tbody>
-                </table>
-                
-                
-              </div>
-             <br/><br/><br/>
+                </table><br/>
              
+            </div>
             </section>
            
           </section>
-           <footer class="footer bg-info clearfix">
-                    <form class="m-t-sm pull-right">
-                      <div class="input-group">
-                         <button class="btn btn-sm btn-default" type="button">Save Changes</button>
-                      </div>
-                    </form>
-                  </footer>
         </section>
       </section>
     </section>
