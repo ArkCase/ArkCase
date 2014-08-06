@@ -909,6 +909,7 @@ ComplaintList.Object = {
                                 var jtData = null;
                                 var err = "Invalid search data";
                                 if (data) {
+                                    alert("HEY");
                                     if (Acm.isNotEmpty(data.responseHeader)) {
                                         var responseHeader = data.responseHeader;
                                         if (Acm.isNotEmpty(responseHeader.status)) {
@@ -935,6 +936,7 @@ ComplaintList.Object = {
 
                                             } else {
                                                 if (Acm.isNotEmpty(data.error)) {
+                                                    alert("HERE IS THE ERROR");
                                                     err = data.error.msg + "(" + data.error.code + ")";
                                                 }
                                             }
