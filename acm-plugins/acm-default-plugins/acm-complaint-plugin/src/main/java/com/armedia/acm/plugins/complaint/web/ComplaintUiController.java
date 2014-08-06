@@ -1,8 +1,10 @@
 package com.armedia.acm.plugins.complaint.web;
 
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.web.AcmPageDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,17 +18,21 @@ public class ComplaintUiController
 
     private AcmPageDescriptor pageDescriptorWizard;
     private AcmPageDescriptor pageDescriptorList;
-
+    private AuthenticationTokenService authenticationTokenService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView openComplaintList(@RequestParam(value = "initId", required = false) Integer initId
-                                          ,@RequestParam(value = "initTab", required = false) String initTab
+    public ModelAndView openComplaintList(Authentication auth, 
+    		@RequestParam(value = "initId", required = false) Integer initId
+    		,@RequestParam(value = "initTab", required = false) String initTab
     ) {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintList");
         retval.addObject("pageDescriptor",  getPageDescriptorList());
         retval.addObject("initId",  initId);
         retval.addObject("initTab",  initTab);
+        String token = this.authenticationTokenService.storeAuthentication(auth);
+        System.out.println("Token: " + token);
+        retval.addObject("token", token);
         return retval;
     }
 
@@ -65,5 +71,14 @@ public class ComplaintUiController
     public void setPageDescriptorList(AcmPageDescriptor pageDescriptorList) {
         this.pageDescriptorList = pageDescriptorList;
     }
+
+	public AuthenticationTokenService getAuthenticationTokenService() {
+		return authenticationTokenService;
+	}
+
+	public void setAuthenticationTokenService(
+			AuthenticationTokenService authenticationTokenService) {
+		this.authenticationTokenService = authenticationTokenService;
+	}
 
 }

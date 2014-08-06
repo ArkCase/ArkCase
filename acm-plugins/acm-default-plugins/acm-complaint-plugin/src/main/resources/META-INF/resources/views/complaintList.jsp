@@ -77,7 +77,7 @@
                         <li><a href="#">Approved Complaints</a></li>
                         <li><a href="#">Complaints From Group</a></li>
                         <li><a href="#">Closed or Expired Complaints</a></li>
-                        <li><a href="#">New Complaints</a></li>
+                        <li><a href="http://localhost:8999/orbeon/fr/acm/complaint-form/new?acm_ticket=${token}">New Complaints</a></li>
                     </ul>
                 </div>
             </div>
