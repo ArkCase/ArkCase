@@ -84,8 +84,11 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
         String userId = "ann-acm";
         String dashboardConfig = "TEST";
 
+        AcmUser dashboardOwner = new AcmUser();
+        //expect(mockUserDao.findByUserId(userId)).andReturn(dashboardOwner);
+
         Dashboard returned = new Dashboard();
-        returned.setDashboardOwner(mockUserDao.findByUserId(userId));
+        returned.setDashboardOwner(dashboardOwner);
         returned.setDashobardConfig(dashboardConfig);
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);

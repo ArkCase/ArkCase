@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.Authentication;
@@ -24,13 +23,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -79,14 +75,21 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport {
 
         Dashboard dashboard = new Dashboard();
         dashboard.setDashobardConfig("UPDATE TEST");
-        dashboard.setDashboardOwner(mockUserDao.findByUserId("ann-acm"));
+        //dashboard.setDashboardOwner(mockUserDao.findByUserId("ann-acm"));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String in = objectMapper.writeValueAsString(dashboard);
 
         log.debug("Input JSON: " + in);
         // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("ann-acm");
+        expect(mockAuthentication.getName()).andReturn("ann-acm").atLeastOnce();
+
+        Capture<Dashboard> savedDashboard = new Capture<>();
+        Capture<Dashboard> publishedDashboard = new Capture<>();
+
+        expect(mockDashboardDao.setDasboardConfigForUser(eq(userId), capture(savedDashboard))).andReturn(1);
+
+        mockDashboardEventPublisher.publishDashboardEvent(capture(publishedDashboard), eq(mockAuthentication), eq(false), eq(true));
 
         replayAll();
 
@@ -101,6 +104,9 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport {
         log.info("results: " + result.getResponse().getContentAsString());
 
         verifyAll();
+
+        assertEquals(dashboard.getDashboardId(), savedDashboard.getValue().getDashboardId());
+        assertEquals(dashboard.getDashboardId(), publishedDashboard.getValue().getDashboardId());
 
         String returned = result.getResponse().getContentAsString();
 
@@ -123,7 +129,7 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport {
         replayAll();
 
         mockMvc.perform(
-                post("/api/latest/dashboard/set")
+                post("/api/latest/plugin/dashboard/set")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication)
