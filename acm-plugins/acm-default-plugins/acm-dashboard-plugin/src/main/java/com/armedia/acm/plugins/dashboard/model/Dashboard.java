@@ -23,7 +23,7 @@ public class Dashboard implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dashboardId;
 
-    @Column(name = "cm_dashbaord_config")
+    @Column(name = "cm_dashboard_config")
     private String dashobardConfig;
 
     @OneToOne(fetch = FetchType.LAZY)
