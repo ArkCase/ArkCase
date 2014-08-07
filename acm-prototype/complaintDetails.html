@@ -192,39 +192,30 @@
                     <div>
                       <div class="wrapper">
                         <div class="row">
-                          <div class="col-xs-6">
-                            <div class="panel b-a  bg-gradient">
-                              <div class="padder-v text-center clearfix">
-                                <div class="col-xs-4 b-r">
-                                  <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
-                                  <small class="text-muted">Incident Date</small></div>
-                                <div class="col-xs-4 b-r">
-                                  <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
-                                  <small class="text-muted">Priority</small></div>
-                                <div class="col-xs-4">
-                                  <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">AJ McClary</a></div>
-                                  <small class="text-muted">Assigned To</small></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-xs-3">
-                            <div class="panel b-a  bg-gradient">
-                              <div class="padder-v text-center clearfix">
-                                <div class="col-xs-12">
-                                  <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
-                                  <small class="text-muted">Subject Type</small></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-xs-3 ">
-                            <div class="panel b-a bg-gradient">
-                              <div class="padder-v text-center clearfix">
-                                <div class="col-xs-12">
-                                  <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
-                                  <small class="text-muted">Status</small></div>
-                              </div>
-                            </div>
-                          </div>
+                        <div class="col-md-12">
+                                    <section class="panel b-a ">
+                                      <div class="panel-heading b-b bg-info">
+                                        <ul class="nav nav-pills pull-right">
+                                          <li>
+                                            <div class="btn-group padder-v2">
+                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>
+                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>
+                                              <ul class="dropdown-menu pull-right">
+                                                <li><a href="#">Other menu items</a></li>
+                                              </ul>
+                                            </div>
+                                          </li>
+                                          <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                        </ul>
+                                        </span> <a href="#" class="font-bold">Details</a> </div>
+                                      <div class="panel-body">
+                                        <div class="complaintDetails">
+                                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
+                                          <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
+                                        </div>
+                                      </div>
+                                    </section>
+                                  </div>
                         </div>
                       </div>
                     </div>
@@ -290,6 +281,7 @@ activate: function(event, data) {
             children: [{
                 title: "Incident 1",
                 folder: true,
+expanded: "fancytree-expanded",
 				expanded: "fancytree-expanded",
                 children: [{
                     title: "Details", 
