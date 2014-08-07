@@ -6,6 +6,7 @@ import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
+import com.armedia.acm.plugins.dashboard.model.DashboardDto;
 import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -29,59 +30,85 @@ import javax.servlet.http.HttpSession;
 @RequestMapping({"/api/v1/plugin/dashboard", "/api/latest/plugin/dashboard"})
 public class GetDashboardConfigAPIController {
 
-
-
     private UserDao userDao;
     private AcmPlugin dashboardPlugin;
     private DashboardDao dashboardDao;
-
-
-
     private DashboardEventPublisher eventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/get/{user}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Dashboard getDashboardConfig(
-            @PathVariable("user") String user,
+    public DashboardDto getDashboardConfig(
             Authentication authentication,
             HttpSession session
-    ) throws AcmDashboardException {
+    ) throws AcmDashboardException, AcmObjectNotFoundException {
+        String userId = (String) authentication.getName();
         if (log.isInfoEnabled()) {
-            log.info("Finding dashboard configuration for user '" + user + "'");
+            log.info("Finding dashboard configuration for user '" + userId + "'");
         }
-        AcmUser owner = userDao.findByUserId(user);
+        AcmUser owner = userDao.findByUserId(userId);
+        if (owner == null) {
+            throw new AcmObjectNotFoundException("user",null, "Object not found", null);
+        }
         Dashboard retval = null;
+        DashboardDto dashboardDto;
+        boolean inserted = false;
         try {
-            //If there is no record into the DB we will read defaultDashboard config String from .acm/dashboardPlugin.properties
             retval = getDashboardDao().getDashboardConfigForUser(owner);
+            raiseGetEvent(authentication, session, retval, true);
+            dashboardDto = prepareDashboardDto(retval,inserted);
+            return dashboardDto;
+        } catch (AcmObjectNotFoundException e) {
+            // If there is no record into the DB ( when user logs in for the first time) we will read defaultDashboard
+            // config String from .acm/dashboardPlugin.properties and that value will be stored into
+            // DB table acm-dashboard.
             if (retval == null) {
-                retval = new Dashboard();
-                retval.setDashboardOwner(userDao.findByUserId(user));
-                retval.setDashobardConfig((String)dashboardPlugin.getPluginProperties().get("acm.defaultDashboard"));
-                retval = dashboardDao.save(retval);
+                retval = createDashbaord(owner);
+                inserted = true;
+                getEventPublisher().publishDashboardEvent(retval,authentication,true,true);
             }
-            raiseEvent(authentication, session, retval, true);
-            return retval;
-        } catch (AcmDashboardException e) {
-
-            if (retval == null) {
-
-                retval = new Dashboard();
-                retval.setDashboardOwner(owner);
-                retval.setDashobardConfig((String)dashboardPlugin.getPluginProperties().get("acm.defaultDashboard"));
-                retval = dashboardDao.save(retval);
+            if (log.isInfoEnabled()) {
+                log.info("User '" + userId + "'is logged in for the first time and default dashboard is inserted into the DB");
             }
-            raiseEvent(authentication, session, retval, true);
-            return retval;
+            raiseGetEvent(authentication, session, retval, true);
+            dashboardDto = prepareDashboardDto(retval,inserted);
+            return dashboardDto;
         } catch (Exception e1) {
-           throw new AcmDashboardException("Event exception",e1);
+            if(log.isErrorEnabled()) {
+                log.error("Exception occurred while raising an event or while reading values from fetched DB dashboard ");
+            }
+           throw new AcmDashboardException("Get dashboard exception",e1);
         }
     }
-    protected void raiseEvent(Authentication authentication, HttpSession session, Dashboard foundDashboard, boolean succeeded) {
+
+    private DashboardDto prepareDashboardDto(Dashboard dashboard, boolean inserted){
+        DashboardDto dashboardDto = new DashboardDto();
+        dashboardDto.setUserId(dashboard.getDashboardOwner().getUserId());
+        dashboardDto.setDashboardConfig(dashboard.getDashobardConfig());
+        dashboardDto.setInserted(inserted);
+        return dashboardDto;
+    }
+
+    private Dashboard createDashbaord(AcmUser owner) {
+        Dashboard d = new Dashboard();
+        d.setDashboardOwner(owner);
+        if(!dashboardPlugin.getPluginProperties().isEmpty()) {
+            d.setDashobardConfig((String) dashboardPlugin.getPluginProperties().get("acm.defaultDashboard"));
+        } else {
+              // to add <prop key="acm.deafultDashbolard">"some default long dashboard string"</prop> under
+              // dashboardPluginProperties bean in spring-library-dashboard.xml and never get here?
+            if(log.isInfoEnabled()) {
+                log.info("dashboardPlugin.properties is missing, users will not have dashboard");
+            }
+        }
+        return dashboardDao.save(d);
+    }
+
+    protected void raiseGetEvent(Authentication authentication, HttpSession session, Dashboard foundDashboard, boolean succeeded) {
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         getEventPublisher().publishGetDashboardByUserIdEvent(foundDashboard, authentication, ipAddress, succeeded);
     }
+
     public DashboardDao getDashboardDao() {
         return dashboardDao;
     }
@@ -105,6 +132,7 @@ public class GetDashboardConfigAPIController {
     public void setDashboardPlugin(AcmPlugin dashboardPlugin) {
         this.dashboardPlugin = dashboardPlugin;
     }
+
     public UserDao getUserDao() {
         return userDao;
     }

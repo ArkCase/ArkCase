@@ -1,8 +1,10 @@
 package com.armedia.acm.plugins.dashboard.dao;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
+import com.armedia.acm.plugins.dashboard.model.DashboardDto;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +27,7 @@ import java.util.List;
 public class DashboardDao extends AcmAbstractDao<Dashboard> {
 
 
-    public Dashboard getDashboardConfigForUser(AcmUser user) throws AcmDashboardException{
+    public Dashboard getDashboardConfigForUser(AcmUser user) throws AcmDashboardException, AcmObjectNotFoundException{
         CriteriaBuilder builder = getEm().getCriteriaBuilder();
         CriteriaQuery<Dashboard> query = builder.createQuery(Dashboard.class);
         Root<Dashboard> d = query.from(Dashboard.class);
@@ -33,22 +35,24 @@ public class DashboardDao extends AcmAbstractDao<Dashboard> {
         query.select(d).where(builder.equal(d.get("dashboardOwner"), user));
         TypedQuery<Dashboard> dbQuery = getEm().createQuery(query);
         List<Dashboard> results = null;
-        try {
-             results = dbQuery.getResultList();
-        } catch (Exception e) {
-            throw new AcmDashboardException("JPA exception",e);
-        }
+
+            results = dbQuery.getResultList();
+
+            if( results.isEmpty()){
+                throw new AcmObjectNotFoundException("dashboard",null, "Object not found",null);
+            }
+
         return results.get(0);
     }
 
     @Transactional
-    public int setDasboardConfigForUser(String userId, Dashboard newDashboard){
+    public int setDasboardConfigForUser(AcmUser user, DashboardDto newDashboardDto){
         Query updateStatusQuery = getEm().createQuery(
                 "UPDATE Dashboard " +
                         "SET dashobardConfig = :dashobardConfig " +
                         "WHERE dashboardOwner = :dashboardOwner");
-        updateStatusQuery.setParameter("dashobardConfig", newDashboard.getDashobardConfig());
-        updateStatusQuery.setParameter("dashboardOwner", userId);
+        updateStatusQuery.setParameter("dashobardConfig", newDashboardDto.getDashboardConfig());
+        updateStatusQuery.setParameter("dashboardOwner", user);
 
         return updateStatusQuery.executeUpdate();
     }

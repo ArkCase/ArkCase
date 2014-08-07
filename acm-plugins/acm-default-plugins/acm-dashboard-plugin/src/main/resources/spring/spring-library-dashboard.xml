@@ -52,7 +52,7 @@
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <!--create dashboard get config service-->
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/dashboard/get/{user}"/>
+                    <property name="url" value="/api/{version}/plugin/dashboard/get"/>
                     <property name="requiredPrivilege" ref="dashboardPrivilege"/>
                 </bean>
 
@@ -80,5 +80,6 @@
         </property>
     </bean>
 
+  <bean id="dashboardEventPublisher" class="com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher"/>
 
 </beans>
