@@ -4,6 +4,9 @@
  * @author jwu
  */
 var Acm = Acm || {
+    ii: function() {
+        alert("ii");
+    },
     initialize : function() {
         Acm.Dialog.initialize();
         Acm.Dispatcher.initialize();

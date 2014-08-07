@@ -25,13 +25,15 @@ describe("Acm", function()
         spyOn(Acm.Dispatcher, "initialize");
         spyOn(Acm.Ajax,       "initialize");
         spyOn(Acm.Object,     "initialize");
-        spyOn(Acm.Validation, "initialize");
+        spyOn(Acm.Event,      "initialize");
+        spyOn(Acm.Rule,       "initialize");
         Acm.initialize();
-        expect(Acm.Dialog    .initialize).toHaveBeenCalled();
-        expect(Acm.Dispatcher.initialize).toHaveBeenCalled();
-        expect(Acm.Ajax      .initialize).toHaveBeenCalled();
-        expect(Acm.Object    .initialize).toHaveBeenCalled();
-        expect(Acm.Validation.initialize).toHaveBeenCalled();
+        expect(Acm.Dialog     .initialize).toHaveBeenCalled();
+        expect(Acm.Dispatcher .initialize).toHaveBeenCalled();
+        expect(Acm.Ajax       .initialize).toHaveBeenCalled();
+        expect(Acm.Object     .initialize).toHaveBeenCalled();
+        expect(Acm.Event      .initialize).toHaveBeenCalled();
+        expect(Acm.Rule       .initialize).toHaveBeenCalled();
     });
 
     it("Test Acm.isEmpty() function", function() {
@@ -99,25 +101,18 @@ describe("Acm", function()
     });
 
 //    it("Test Acm.getUrlParameter() function", function() {
-//        //don't the best way to test
+//        //don't have a good way to test
 //    });
 
     it("Test Acm.urlToJson() function", function() {
-//        expect(Acm.urlToJson("abc='20'&xyz=5&foo='bar'&yes=true"))
-//            .toEqual({abc: "20", xyz: 5, foo: "bar", yes: true});
         expect(Acm.urlToJson("abc=foo&xyz=5&foo=bar&yes=true"))
             .toEqual({abc: "foo", xyz: "5", foo: "bar", yes: "true"});
 
-//        expect(Acm.urlToJson("abc=foo&def=%5Basf%5D&xyz=5&foo=b%3Dar"))
-//            .toEqual({abc: "foo", def: "[asf]", xyz: "5", foo: "b=ar"});
         expect(Acm.urlToJson("abc=foo&def=%5Basf%5D&xyz=5&foo=bar"))
             .toEqual({abc: "foo", def: "[asf]", xyz: "5", foo: "bar"});
 
-//        expect(Acm.urlToJson("abc=foo&def=[asf]&xyz=5&foo=bar"))
-//            .toEqual({abc: "foo", def: [asf], xyz: "5", foo: "bar"});
         expect(Acm.urlToJson("abc=foo&def=[asf]&xyz=5&foo=bar"))
             .toEqual({abc: "foo", def: "[asf]", xyz: "5", foo: "bar"});
     });
-
 
 });

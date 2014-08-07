@@ -20,13 +20,13 @@ ComplaintList.Page = {
                 return;
             }
 
-            var initId = ComplaintList.Object.getInitId();
-            if (Acm.isNotEmpty(initId)) {
-                Complaint.setComplaintId(parseInt(initId));
-                ComplaintList.Object.setInitId("");
-            } else {
-                Complaint.setComplaintId(arr[0].complaintId);
-            }
+//            var initId = ComplaintList.Object.getInitId();
+//            if (Acm.isNotEmpty(initId)) {
+//                Complaint.setComplaintId(parseInt(initId));
+//                ComplaintList.Object.setInitId("");
+//            } else {
+//                Complaint.setComplaintId(arr[0].complaintId);
+//            }
 
             for (var i = 0; i < len; i++) {
                 var c = arr[i];

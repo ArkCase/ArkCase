@@ -20,10 +20,28 @@ ComplaintList.Callback = {
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve complaint list:" + response.errorMsg);
         } else {
+            var complaintId = 0;
+            var initId = ComplaintList.Object.getInitId();
+            if (Acm.isNotEmpty(initId)) {
+                ComplaintList.Object.setInitId("");
+                complaintId = parseInt(initId);
+
+                //todo: need to save current page as well, so that the page is loaded with initId included
+
+            } else {
+                if (0 < response.length) {
+                    complaintId = response[0].complaintId;
+                }
+            }
+            Complaint.setComplaintId(complaintId);
             ComplaintList.setComplaintList(response);
-            ComplaintList.Page.buildComplaintList(response);
-            //ComplaintList.Event.doClickLnkListItem();
-            ComplaintList.Object.refreshTree();
+
+            //ComplaintList.Page.buildComplaintList(response);
+            var key = "";
+            if (0 < complaintId) {
+                key = complaintId.toString();
+            }
+            ComplaintList.Object.refreshTree(key);
         }
     }
     ,onDetailRetrieved : function(Callback, response) {

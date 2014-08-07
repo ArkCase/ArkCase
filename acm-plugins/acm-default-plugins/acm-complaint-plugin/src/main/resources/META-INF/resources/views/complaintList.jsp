@@ -42,10 +42,12 @@
 
     <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
     <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/jquery.fancytree.js"></script>
+    <script src="<c:url value='/'/>resources/vendors/${vd_contextmenu}/jquery.ui-contextmenu.js"></script>
 
     <!-- X-Editable -->
     <link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
     <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
+
 </jsp:attribute>
 
 <jsp:body>
@@ -101,7 +103,8 @@
 <!-- /.aside -->
 
 <!-- .aside -->
-<aside class="aside bg-light lt hide" id="chat">
+<%--<aside class="aside bg-light lt hide" id="chat">--%>
+<aside class="aside bg-light lt" id="chat">
     <section class="vbox animated fadeInLeft">
         <section class="scrollable">
             <header class="dk header">
@@ -375,6 +378,7 @@
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a">
+
                 <%--<div class="panel-heading b-b bg-info"> <span class="pull-right">New</span>--%>
                     <%--<a href="#" class="font-bold">Tasks</a>--%>
                 <%--</div>--%>
