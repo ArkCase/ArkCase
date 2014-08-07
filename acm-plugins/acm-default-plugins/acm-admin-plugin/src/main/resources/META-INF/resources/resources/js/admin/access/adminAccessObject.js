@@ -63,11 +63,12 @@ AdminAccess.Object = {
                                         Record.accessLevel = resultPage[i].accessLevel;
                                         Record.accessorType = resultPage[i].accessorType;
                                         Record.accessDecision = resultPage[i].accessDecision;
-                                        Record.allowDiscretionaryUpdate = resultPage[i].allowDiscretionaryUpdate;
-                                       /* Record.created = resultPage[i].created;
-                                        Record.creator = resultPage[i].creator;
-                                        Record.modified = resultPage[i].modified;
-                                        Record.modifier = resultPage[i].modifier;*/
+                                        Record.allowDiscretionaryUpdate = (resultPage[i].allowDiscretionaryUpdate)? "true" : "false";
+                                        Record.id = resultPage[i].id;
+                                        /* Record.created = resultPage[i].created;
+                                         Record.creator = resultPage[i].creator;
+                                         Record.modified = resultPage[i].modified;
+                                         Record.modifier = resultPage[i].modifier;*/
                                         jtData.Records.push(Record);
                                     }
                                     jtData.TotalRecordCount = data.totalCount;
@@ -81,30 +82,61 @@ AdminAccess.Object = {
                             }
                         );
 
-                    }, createAction: function (postData, jtParams) {
-                        return Acm.Object.jTableGetEmptyResult();
                     }
-                }, fields: {
+                    , updateAction: function (postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        //var adminAccess = AdminAccess.getAdminAccess();
+                        var rc = {"Result": "OK", "Record": {}};
+                        rc.Record.accessDecision = record.accessDecision;
+                        rc.Record.allowDiscretionaryUpdate = record.allowDiscretionaryUpdate;
+                        return rc;
+
+//                        return {
+//                            "Result": "OK", "Record": { "id": 3, "objectType": "Dr.", "objectState": "Joe", "accessLevel": "Lee", "accessorType": "Witness", "accessDecision": "someone", "allowDiscretionaryUpdate": "dd" }
+//                        };
+                        //                    var rc = {"Result": "OK", "Record": {id:123, objectType:"hello", objectState:"st", accessLevel: "lv", accessDecision:"ds", allowDiscretionaryUpdate:"ad"}};
+                        //                    return rc;
+                    }
+                }
+
+
+                , fields: {
                     id: {
                         title: 'ID', key: true, type: 'hidden'
                         //   ,list: true
-                        , create: false, edit: false
+                        , create: false
+                        , edit: false
                     }, objectType: {
                         title: 'Object Type', width: '3%'
+                        ,edit: false
+
                     }, objectState: {
                         title: 'State', width: '3%'
+                        ,edit: false
                     }, accessLevel: {
                         title: 'Access Level', width: '5%'
+                        ,edit: false
                     }, accessorType: {
                         title: 'Accessor Type', width: '5%'
+                        ,edit: false
                     }, accessDecision: {
-                        title: 'Access Decision', width: '5%'
+                        title: 'Access Decision',
+                        width: '5%'
+                        ,options: ['GRANT' , 'DENY']
                     }, allowDiscretionaryUpdate: {
-                        title: 'Allow Discretionary Update', width: '5%'
+                        title: 'Allow Discretionary Update',
+                        width: '5%'
+                        ,options: ["true" , "false"]
                     }
 
                 } //end field
-            } //end arg
+                ,recordUpdated: function (event, data) { //opened handler
+                    AdminAccess.setUpdatedAdminAccessList(data);
+                    var dataUpdate = AdminAccess.getUpdatedAdminAccessList();
+                    AdminAccess.Service.updateAdminAccess(dataUpdate);
+                }
+            }
+            //end arg
         );
     }
 };

@@ -10,12 +10,14 @@ AdminAccess.Service = {
     }
 
     ,API_RETRIEVE_ACCESS_CONTROL       : "/api/latest/plugin/dataaccess/accessControlDefaults"
-//
-//
-//    ,retrieveMyTasks : function(user) {
-//        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_MY_TASKS + user
-//            ,Admin.Callback.EVENT_MY_TASKS_RETRIEVED
-//        );
-//    }
+
+    ,API_UPDATE_ACCESS_CONTROL         : "/api/latest/plugin/dataaccess/default/"
+
+    ,updateAdminAccess : function(data) {
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_UPDATE_ACCESS_CONTROL + data.id
+            ,JSON.stringify(data)
+            ,AdminAccess.Callback.EVENT_ADMIN_ACCESS_UPDATED
+        );
+    }
 };
 

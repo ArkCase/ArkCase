@@ -7,12 +7,12 @@
  */
 AdminAccess.Callback = {
     initialize : function() {
-        //Acm.Dispatcher.addEventListener(this.EVENT_MY_TASKS_RETRIEVED, this.onMyTasksRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_ADMIN_ACCESS_UPDATED, this.onAdminAccessUpdate);
     }
 
-    //,EVENT_MY_TASKS_RETRIEVED		: "dashboard-my-tasks-retrieved"
+    ,EVENT_ADMIN_ACCESS_UPDATED		: "admin-access-default-admin-access-updated"
 
-//    ,onMyTasksRetrieved : function(Callback, response) {
+    ,onAdminAccessUpdate : function(Callback, response) {
 //        var success = false;
 //        if (response) {
 //            AdminAccess.Page.fillMyTasks(response);
@@ -22,7 +22,15 @@ AdminAccess.Callback = {
 //        if (!success) {
 //            Acm.Dialog.error("Failed to retrieve my tasks");
 //        }
-//    }
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to update ACL:" + response.errorMsg);
+        } else {
+            if (Acm.isNotEmpty(response.id)) {
+                //AdminAccess.setUpdatedAdminAccessList(response);
+                //AdminAccess.Object.updateAdminAccess(response);
+            }
+        }
+    }
 };
 
 

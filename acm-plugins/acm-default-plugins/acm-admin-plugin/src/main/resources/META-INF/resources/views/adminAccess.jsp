@@ -26,30 +26,6 @@
 </jsp:attribute>
 
     <jsp:body>
-
-        <!--   <section id="content">
-        <section class="vbox">
-        <section class="scrollable padder">
-        <section class="row m-b-md">
-        <div class="col-sm-12">
-        <h3 class="m-b-xs text-black">Admin: ACL</h3>
-        </div>
-        </section>
-
-
-
-
-
-
-
-        </section>
-
-        </section>
-        </section>  -->
-
-
-
-        <!--  access.html -->
         <section id="content">
             <section class="vbox">
                 <section class="scrollable padder">
@@ -66,7 +42,7 @@
                             </section>
                         </div>
                     </div>
-
+<!--
                     <section class="panel panel-default">
 
                         <div class="table-responsive">
@@ -120,6 +96,7 @@
                         <br/><br/><br/>
 
                     </section>
+-->
 
                 </section>
                 <footer class="footer bg-info clearfix">
