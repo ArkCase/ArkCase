@@ -159,7 +159,12 @@
             <artifactId>acm-service-authentication-token</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-orbeon-forms</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>

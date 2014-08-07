@@ -33,7 +33,7 @@
             authentication-manager-ref="acmAuthenticationManager">
         <intercept-url pattern="/api/**" access="isAuthenticated()"/>
         <http-basic/>
-        <custom-filter ref="acmBasicAuthenticationFilter" before="BASIC_AUTH_FILTER"/>
+        <custom-filter ref="acmBasicAndTokenAuthenticationFilter" before="BASIC_AUTH_FILTER"/>
         <logout
                 logout-url="/logout"
                 success-handler-ref="acmLogoutSuccessHandler"

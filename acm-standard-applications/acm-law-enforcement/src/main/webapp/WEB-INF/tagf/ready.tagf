@@ -43,6 +43,9 @@ jQuery(document).ready(function() {
     if ("undefined" != typeof Admin) {
         Admin.initialize();
     }
+    if ("undefined" != typeof AdminAccess) {
+        AdminAccess.initialize();
+    }
     if ("undefined" != typeof Report) {
         Report.initialize();
     }

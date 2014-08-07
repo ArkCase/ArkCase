@@ -52,11 +52,12 @@
 
     <bean id="acmLoginSuccessListener" class="com.armedia.acm.auth.AcmLoginSuccessEventListener"/>
 
-    <bean id="acmBasicAuthenticationFilter" class="com.armedia.acm.auth.AcmBasicAuthenticationFilter">
+    <bean id="acmBasicAndTokenAuthenticationFilter" class="com.armedia.acm.auth.AcmBasicAndTokenAuthenticationFilter">
         <constructor-arg ref="acmAuthenticationManager"/>
         <property name="loginSuccessOperations" ref="acmLoginSuccessOperations"/>
         <property name="authenticationDetailsSource" ref="acmAuthenticationDetailsFactory"/>
         <property name="loginSuccessEventListener" ref="acmLoginSuccessListener"/>
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
     </bean>
     
     <bean id="acmLoginSuccessOperations" class="com.armedia.acm.auth.AcmLoginSuccessOperations">

@@ -264,13 +264,36 @@
         </createTable>
 
      </changeSet>
+     
       <changeSet id="11-modify-datatype-person-id" author="tsedalu">
           <modifyDataType tableName="acm_person_alias" columnName="cm_person_id" newDataType="NUMBER(32,0)"/>
       </changeSet>
+      
       <changeSet id="12-modify-datatype-person-alias-type" author="tsedalu">
            <modifyDataType tableName="acm_person_alias" columnName="cm_person_alias_type_id" newDataType="VARCHAR(4000)"/>
            <renameColumn tableName="acm_person_alias" oldColumnName="cm_person_alias_type_id" newColumnName="cm_person_alias_type"/>
       </changeSet>
       
+      <!-- drop columns with a unique constraints in acm_person_alias table and add them again without a unique constraint-->
+      
+     <changeSet id="13-drop-columns-with-unique-constraint" author="tsedalu">
+         <dropColumn tableName="acm_person_alias" columnName="cm_person_id"/>
+         <dropColumn tableName="acm_person_alias" columnName="cm_person_alias_type"/>
+     </changeSet>
+  
+     <changeSet id="14-add-columns-without-unique-key" author="tsedalu">
+         <addColumn tableName="acm_person_alias">
+             
+             <column name="cm_person_id" type="NUMBER(32,0)">
+                 <constraints nullable="false"/>
+             </column>
+             
+             <column name="cm_person_alias_type" type="VARCHAR(4000)">
+                 <constraints nullable="false"/>
+             </column>
+         </addColumn>
+         
+         
+     </changeSet>
 </databaseChangeLog>
 

@@ -58,7 +58,6 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
     private UserDao mockUserDao;
     private DashboardEventPublisher mockDashboardEventPublisher;
     private Authentication mockAuthentication;
-    private GetDashboardConfigAPIController mockGetDashboardConfigAPIControler;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -74,11 +73,6 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
 
-//        mockGetDashboardConfigAPIControler = createMock(GetDashboardConfigAPIController.class);
-//
-//        mockGetDashboardConfigAPIControler.setDashboardDao(mockDashboardDao);
-//        mockGetDashboardConfigAPIControler.setEventPublisher(mockDashboardEventPublisher);
-//        mockGetDashboardConfigAPIControler.setUserDao(mockUserDao);
 
         unit = new GetDashboardConfigAPIController();
 

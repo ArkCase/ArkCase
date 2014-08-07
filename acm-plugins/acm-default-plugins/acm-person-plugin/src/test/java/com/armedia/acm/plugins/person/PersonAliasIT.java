@@ -33,7 +33,7 @@ public class PersonAliasIT
     {
         PersonAlias pa = new PersonAlias();
         
-        pa.setAliasTypeId("Others");
+        pa.setAliasType("Others");
         pa.setAliasValue("ACM");
         pa.setModifier("testModifier");
         pa.setCreator("testCreator");

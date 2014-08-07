@@ -37,16 +37,12 @@ public class SearchChildrenAPIController
             Authentication authentication
     ) throws MuleException
     {
-        String query;
+        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:"+ parentId;
         
-        if (childType.equals(""))
+        if (!childType.equals(""))
         {
-         query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:"+ parentId;
-        }
-        else 
-        {
-        query = "parent_object_type_s:" + parentType+ " AND parent_object_id_i:"+ parentId + " AND object_type_s:" + childType;
-        }
+         query = query + " AND object_type_s:" + childType;
+        }   
         
         
         if ( log.isDebugEnabled() )

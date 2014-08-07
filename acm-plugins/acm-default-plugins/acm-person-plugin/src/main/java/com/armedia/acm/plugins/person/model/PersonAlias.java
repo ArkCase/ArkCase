@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.person.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -34,13 +35,13 @@ public class PersonAlias implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cm_person_id", nullable = false) 
     private Person person;
 
     @Column(name = "cm_person_alias_type")
-    private String aliasTypeId;
+    private String aliasType;
 
     @Column(name = "cm_person_alias_value")
     private String aliasValue;
@@ -65,6 +66,15 @@ public class PersonAlias implements Serializable
         if ( log.isDebugEnabled() )
         {
             log.debug("In beforeInsert()");
+        }
+        if ( getCreated() == null )
+        {
+            setCreated(new Date());
+        }
+
+        if ( getModified() == null )
+        {
+            setModified(new Date());
         }
 
    }
@@ -98,12 +108,12 @@ public class PersonAlias implements Serializable
     }
 
 
-    public String getAliasTypeId() {
-        return aliasTypeId;
+    public String getAliasType() {
+        return aliasType;
     }
 
-    public void setAliasTypeId(String aliasTypeId) {
-        this.aliasTypeId = aliasTypeId;
+    public void setAliasType(String aliasType) {
+        this.aliasType = aliasType;
     }
 
     
