@@ -124,7 +124,10 @@
             <artifactId>hibernate-validator</artifactId>
             <scope>runtime</scope>
         </dependency>
-
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+        </dependency>
 
         <!-- logging -->
         <dependency>

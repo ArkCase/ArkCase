@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="authenticationCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="authenticationEhCache"/>
+    </bean>
+
+    <bean id="authenticationEhCache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:/ehcache/authenticationTokenCacheConfig.xml"/>
+    </bean>
+
+    <bean id="authenticationTokenCache" factory-bean="authenticationCacheManager" factory-method="getCache">
+        <constructor-arg value="authentication_token_cache"/>
+    </bean>
+
+    <bean id="authenticationTokenService" class="com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService">
+        <property name="authenticationTokenCache" ref="authenticationTokenCache"/>
+    </bean>
+
+</beans>

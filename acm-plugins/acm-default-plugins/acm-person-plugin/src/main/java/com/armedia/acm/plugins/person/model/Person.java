@@ -95,7 +95,7 @@ public class Person implements Serializable
     private List<String> securityTags = new ArrayList<>();
     
     @OneToMany(cascade=ALL, mappedBy="person")   
-    private List<PersonAlias> personAlias = new ArrayList<>();
+    private List<PersonAlias> personAliases = new ArrayList<>();
 
     @PrePersist
     protected void beforeInsert()
@@ -184,6 +184,13 @@ public class Person implements Serializable
                 contactMethod.setCreator(creator);
             }
         }
+        for( PersonAlias personAlias : getPersonAliases() )
+        {
+            if ( personAlias.getCreator() == null )
+            {
+                personAlias.setCreator(creator);
+            }
+        }
     }
 
     public Date getModified()
@@ -215,6 +222,10 @@ public class Person implements Serializable
         for ( ContactMethod contactMethod : getContactMethods() )
         {
             contactMethod.setModifier(modifier);
+        }
+        for ( PersonAlias personAlias : getPersonAliases() )
+        {
+            personAlias.setModifier(modifier);
         }
     }
 
@@ -278,12 +289,16 @@ public class Person implements Serializable
         this.securityTags = securityTags;
     }
 
-    public List<PersonAlias> getPersonAlias() {
-        return personAlias;
+    public List<PersonAlias> getPersonAliases() {
+        return personAliases;
     }
 
-    public void setPersonAlias(List<PersonAlias> personAlias) {
-        this.personAlias = personAlias;
+    public void setPersonAliases(List<PersonAlias> personAliases) {
+        this.personAliases = personAliases;
+        for ( PersonAlias pa : personAliases )
+        {
+            pa.setPerson(this);
+        }
     }
 
 }

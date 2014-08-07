@@ -234,6 +234,16 @@ Acm.Object = {
     ,jTableLoad: function($jt) {
         $jt.jtable('load');
     }
+    ,_catNextParam: function(url) {
+//        var rc;
+//        if (0 < url.indexOf('?')) {
+//            rc = "?";
+//        } else {
+//            rc = "&";
+//        }
+//        return rc;
+        return (0 < url.indexOf('?'))? "&" : "?";
+    }
     ,jTableDefaultListAction: function(postData, jtParams, sortMap, urlEvealuator, responseHandler) {
         if (Acm.isEmpty(App.getContextPath())) {
             return Acm.Object.jTableGetEmptyResult();
@@ -241,17 +251,17 @@ Acm.Object = {
 
         var url = urlEvealuator();
         if (Acm.isNotEmpty(jtParams.jtStartIndex)) {
-            url += "&start=" + jtParams.jtStartIndex;
+            url += this._catNextParam(url) + "start=" + jtParams.jtStartIndex;
         }
         if (Acm.isNotEmpty(jtParams.jtPageSize)) {
-            url += "&n=" + jtParams.jtPageSize;
+            url += this._catNextParam(url) + "n=" + jtParams.jtPageSize;
         }
         if (Acm.isNotEmpty(jtParams.jtSorting)) {
             var arr = jtParams.jtSorting.split(" ");
             if (2 == arr.length) {
                 for (var key in sortMap) {
                     if (key == arr[0]) {
-                        url += "&s=" + sortMap[key] + "%20" + arr[1];
+                        url += this._catNextParam(url) + "s=" + sortMap[key] + "%20" + arr[1];
                     }
                 }
             }

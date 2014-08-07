@@ -9,13 +9,13 @@
 
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/adminObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/adminEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/adminPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/adminRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/adminService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/adminCallback.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/admin.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminObject.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminEvent.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminPage.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminCallback.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 

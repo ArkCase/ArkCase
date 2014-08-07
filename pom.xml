@@ -32,6 +32,7 @@
         <drools.version>6.0.1.Final</drools.version>
         <easymock.version>3.2</easymock.version>
         <eclipselink-jpa.version>2.5.1</eclipselink-jpa.version>
+        <ehcache.version>2.6.9</ehcache.version>
         <fasterxml-jackson-core.version>2.4.0</fasterxml-jackson-core.version>
         <google-collections.version>1.0</google-collections.version>
         <h2.version>1.3.169</h2.version>
@@ -221,6 +222,7 @@
         <module>acm-standard-applications</module>
         <module>acm-services</module>
         <module>acm-tool-integrations</module>
+        <module>acm-forms</module>
     </modules>
 
     <scm>
@@ -486,6 +488,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -885,6 +892,13 @@
                 <groupId>com.google.collections</groupId>
                 <artifactId>google-collections</artifactId>
                 <version>${google-collections.version}</version>
+            </dependency>
+
+            <!-- caching -->
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-core</artifactId>
+                <version>${ehcache.version}</version>
             </dependency>
 
 

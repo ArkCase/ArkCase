@@ -54,7 +54,7 @@ public class SavePersonAliasIT
         PersonAlias pa = new PersonAlias();
         
        
-        pa.setAliasTypeId("Nick Name");
+        pa.setAliasType("Nick Name");
         pa.setAliasValue("ACM");
         pa.setModifier("testModifier");
         pa.setCreator("testCreator");
@@ -65,7 +65,7 @@ public class SavePersonAliasIT
         List<PersonAlias> personAlias = new ArrayList<>();
         personAlias.add(pa);
         
-        person.setPersonAlias(personAlias);
+        person.setPersonAliases(personAlias);
                      
         Person saved =personDao.save(person);
         
