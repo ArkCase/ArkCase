@@ -278,9 +278,19 @@
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a" id='secDocDocuments'>
-                <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span>
+                <div class="panel-heading b-b bg-info"> 
+                
+<!-- comment it for now. replaced by teh New Form link below
+                 	<span class="pull-right">New</span>
+ -->                    
                     <a href="#" class="font-bold">Documents</a>
                     <input type="file" name="files[]" multiple style="display:none;"/>
+                                    	
+                    <a class="pull-right" href="http://localhost:8999/orbeon/fr/acm/roi-form/new?acm_ticket=${token}&complaint_id=52&complaint_number=20140430_52&complaint_title=testTitle&complaint_priority=Expedite">New Form</a>
+                    <select class="input-sm form-control input-s-sm inline v-middle pull-right">
+                    <option value="0">Report of Investigation</option>
+                	</select>
+                    
                 </div>
                 <div class="panel-body max-200 no-padder">
                     <table class="table table-striped th-sortable table-hover">
