@@ -20,9 +20,28 @@ ComplaintList.Callback = {
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve complaint list:" + response.errorMsg);
         } else {
+            var complaintId = 0;
+            var initId = ComplaintList.Object.getInitId();
+            if (Acm.isNotEmpty(initId)) {
+                ComplaintList.Object.setInitId("");
+                complaintId = parseInt(initId);
+
+                //todo: need to save current page as well, so that the page is loaded with initId included
+
+            } else {
+                if (0 < response.length) {
+                    complaintId = response[0].complaintId;
+                }
+            }
+            Complaint.setComplaintId(complaintId);
             ComplaintList.setComplaintList(response);
-            ComplaintList.Page.buildComplaintList(response);
-            //ComplaintList.Event.doClickLnkListItem();
+
+            //ComplaintList.Page.buildComplaintList(response);
+            var key = "";
+            if (0 < complaintId) {
+                key = complaintId.toString();
+            }
+            ComplaintList.Object.refreshTree(key);
         }
     }
     ,onDetailRetrieved : function(Callback, response) {
@@ -41,58 +60,58 @@ ComplaintList.Callback = {
             }
         }
     }
-    ,onTasksRetrieved : function(Callback, data) {
-        var success = false;
-        var err = "Invalid task list data";
-        if (data.hasError) {
-            err += ":" + response.errorMsg;
-        } else {
-            if (Acm.isNotEmpty(data.responseHeader)) {
-                var responseHeader = data.responseHeader;
-                if (Acm.isNotEmpty(responseHeader.status)) {
-                    if (0 == responseHeader.status) {
-                        var response = data.response;
-                        ComplaintList.Object.updateTasks(response);
-                        success = true;
-                    } else {
-                        if (Acm.isNotEmpty(data.error)) {
-                            err = data.error.msg + "(" + data.error.code + ")";
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!success) {
-            Acm.Dialog.error(err);
-        }
-    }
-    ,onTasksRetrieved0 : function(Callback, data) {
-        var success = false;
-        var err = "Invalid task list data";
-        if (data.hasError) {
-            err += ":" + response.errorMsg;
-        } else {
-            if (Acm.isNotEmpty(data.responseHeader)) {
-                var responseHeader = data.responseHeader;
-                if (Acm.isNotEmpty(responseHeader.status)) {
-                    if (0 == responseHeader.status) {
-                        var response = data.response;
-                        ComplaintList.Page.buildTableTasks(response);
-                        success = true;
-                    } else {
-                        if (Acm.isNotEmpty(data.error)) {
-                            err = data.error.msg + "(" + data.error.code + ")";
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!success) {
-            Acm.Dialog.error(err);
-        }
-    }
+//    ,onTasksRetrieved : function(Callback, data) {
+//        var success = false;
+//        var err = "Invalid task list data";
+//        if (data.hasError) {
+//            err += ":" + response.errorMsg;
+//        } else {
+//            if (Acm.isNotEmpty(data.responseHeader)) {
+//                var responseHeader = data.responseHeader;
+//                if (Acm.isNotEmpty(responseHeader.status)) {
+//                    if (0 == responseHeader.status) {
+//                        var response = data.response;
+//                        ComplaintList.Object.updateTasks(response);
+//                        success = true;
+//                    } else {
+//                        if (Acm.isNotEmpty(data.error)) {
+//                            err = data.error.msg + "(" + data.error.code + ")";
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (!success) {
+//            Acm.Dialog.error(err);
+//        }
+//    }
+//    ,onTasksRetrieved0 : function(Callback, data) {
+//        var success = false;
+//        var err = "Invalid task list data";
+//        if (data.hasError) {
+//            err += ":" + response.errorMsg;
+//        } else {
+//            if (Acm.isNotEmpty(data.responseHeader)) {
+//                var responseHeader = data.responseHeader;
+//                if (Acm.isNotEmpty(responseHeader.status)) {
+//                    if (0 == responseHeader.status) {
+//                        var response = data.response;
+//                        ComplaintList.Page.buildTableTasks(response);
+//                        success = true;
+//                    } else {
+//                        if (Acm.isNotEmpty(data.error)) {
+//                            err = data.error.msg + "(" + data.error.code + ")";
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (!success) {
+//            Acm.Dialog.error(err);
+//        }
+//    }
 
 
 };

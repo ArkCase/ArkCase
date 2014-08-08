@@ -145,12 +145,6 @@ Acm.Object = {
     ,setHtml : function($s, value) {
         $s.html(value);
     }
-    ,getSummernote : function($s) {
-        return $s.code();
-    }
-    ,setSummernote : function($s, value) {
-        $s.code(value);
-    }
 
     // Setting value directly to a date picker causes date picker popup initially visible.
     // Use setValueDatePicker() to solve the problem.
@@ -225,6 +219,112 @@ Acm.Object = {
         $s.empty();
     }
 
+    ,getSummernote : function($s) {
+        return $s.code();
+    }
+    ,setSummernote : function($s, value) {
+        $s.code(value);
+    }
+
+    //
+    // JTable functions
+    //
+    ,JTABLE_DEFAULT_PAGE_SIZE: 8
+    ,jTableGetEmptyResult: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
+    ,jTableLoad: function($jt) {
+        $jt.jtable('load');
+    }
+    ,_catNextParam: function(url) {
+//        var rc;
+//        if (0 < url.indexOf('?')) {
+//            rc = "?";
+//        } else {
+//            rc = "&";
+//        }
+//        return rc;
+        return (0 < url.indexOf('?'))? "&" : "?";
+    }
+    ,jTableDefaultListAction: function(postData, jtParams, sortMap, urlEvealuator, responseHandler) {
+        if (Acm.isEmpty(App.getContextPath())) {
+            return Acm.Object.jTableGetEmptyResult();
+        }
+
+        var url = urlEvealuator();
+        if (Acm.isNotEmpty(jtParams.jtStartIndex)) {
+            url += this._catNextParam(url) + "start=" + jtParams.jtStartIndex;
+        }
+        if (Acm.isNotEmpty(jtParams.jtPageSize)) {
+            url += this._catNextParam(url) + "n=" + jtParams.jtPageSize;
+        }
+        if (Acm.isNotEmpty(jtParams.jtSorting)) {
+            var arr = jtParams.jtSorting.split(" ");
+            if (2 == arr.length) {
+                for (var key in sortMap) {
+                    if (key == arr[0]) {
+                        url += this._catNextParam(url) + "s=" + sortMap[key] + "%20" + arr[1];
+                    }
+                }
+            }
+        }
+        return $.Deferred(function ($dfd) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                data: postData,
+                success: function (data) {
+                    if (data) {
+                        var jtResponse = responseHandler(data);
+                    }
+
+                    if (jtResponse.jtData) {
+                        $dfd.resolve(jtResponse.jtData);
+                    } else {
+                        $dfd.reject();
+                        Acm.Dialog.error(jtResponse.jtError);
+                    }
+                },
+                error: function () {
+                    $dfd.reject();
+                }
+            });
+        });
+    }
+    ,jTableCreateSortable: function($jt, jtArg, sortMap) {
+        jtArg.paging = true;
+        if (!jtArg.pageSize) {
+            jtArg.pageSize = Acm.Object.JTABLE_DEFAULT_PAGE_SIZE;
+        }
+        if (!jtArg.recordAdded) {
+            jtArg.recordAdded = function(event, data){
+                $jt.jtable('load');
+            }
+        }
+        if (!jtArg.recordUpdated) {
+            jtArg.recordUpdated = function(event, data){
+                $jt.jtable('load');
+            }
+        }
+
+        if (sortMap) {
+            jtArg.sorting = true;
+        } else if (!jtArg.sorting) {
+            jtArg.sorting = false;
+        }
+
+        if (jtArg.actions.listActionSortable){
+            jtArg.actions.listAction = function(postData, jtParams) {
+                return jtArg.actions.listActionSortable(postData, jtParams, sortMap);
+            }
+        }
+
+        $jt.jtable(jtArg);
+
+        $jt.jtable('load');
+    }
+
+
+
     ,useDobInput: function($s) {
         $s.datepicker({
             changeMonth: true, changeYear: true,
@@ -293,7 +393,97 @@ Acm.Object = {
         }
     }
 
+    // depth first tree builder for fancytree (more accurately a forest builder)
+    ,FancyTreeBuilder: {
+        _path: []
+        ,_depth: 0
+        ,_pushDepth: function(node) {
+            if (this._path.length > this._depth) {
+                this._path[this._depth] = node;
+            } else {
+                this._path.push(node);
+            }
+            this._depth++;
+        }
+        ,_popDepth: function() {
+            if (0 >= this._depth) {
+                return [];
+            }
+            this._depth--;
+            return this._path[this._depth];
+        }
+        ,_peekDepth: function() {
+            if (0 >= this._depth) {
+                return null;
+            }
+            return this._path[this._depth-1];
+        }
 
+        ,_nodes: []
+        ,reset: function() {
+            this._path = [];
+            this._depth = 0;
+            this._nodes = [];
+            return this;
+        }
+        ,addBranch: function(node) {
+            return this._addNode(node, false);
+        }
+        ,addBranchLast: function(node) {
+            return this._addNode(node, true);
+        }
+        ,addLeaf: function(node) {
+            this._addNode(node, false);
+            this._popDepth();
+            return this;
+        }
+        ,addLeafLast: function(node) {
+            this._addNode(node, true);
+            this._popDepth();
+
+            //keep popping stack until a node that is not the last child is found
+            var nonLastChildFound = false;
+            do {
+                var item = this._peekDepth();
+                nonLastChildFound = false;
+                if (item) {
+                    if (item.isLast) {
+                        this._popDepth();
+                        nonLastChildFound = true;
+                    }
+                }
+            } while (nonLastChildFound);
+
+            this._popDepth();   //the node found is not last child, so next node to insert should be its sibling. Pop to parent to prepare for inserting its sibling
+
+            return this;
+        }
+        ,_addNode: function(node, isLast) {
+            if (0 == this._depth) {
+                this._nodes.push(node);
+            } else {
+                var parent = this._peekDepth();
+                if (!parent.node.children) {
+                    parent.node.children = [node];
+                } else {
+                    parent.node.children.push(node);
+                }
+            }
+            this._pushDepth({node:node, isLast:isLast});
+            return this;
+        }
+//        ,addLeafOld: function(node) {
+//            this.addBranch(node);
+//            return this.noMoreChild();
+//        }
+//        ,noMoreChild: function() {
+//            this._popDepth();
+//            return this;
+//        }
+        ,getTree: function() {
+            return this._nodes;
+        }
+    }
 };
 
 

@@ -16,15 +16,17 @@ ComplaintList.Page = {
         var html = "";
         if (Acm.isNotEmpty(arr)) {
             var len = arr.length;
-            if (0 < len) {
-                var initId = ComplaintList.Object.getInitId();
-                if (Acm.isNotEmpty(initId)) {
-                    Complaint.setComplaintId(parseInt(initId));
-                    ComplaintList.Object.setInitId("");
-                } else {
-                    Complaint.setComplaintId(arr[0].complaintId);
-                }
+            if (0 >= len) {
+                return;
             }
+
+//            var initId = ComplaintList.Object.getInitId();
+//            if (Acm.isNotEmpty(initId)) {
+//                Complaint.setComplaintId(parseInt(initId));
+//                ComplaintList.Object.setInitId("");
+//            } else {
+//                Complaint.setComplaintId(arr[0].complaintId);
+//            }
 
             for (var i = 0; i < len; i++) {
                 var c = arr[i];
@@ -66,30 +68,30 @@ ComplaintList.Page = {
         }
     }
 
-    ,buildTableTasks: function(response) {
-        ComplaintList.Object.resetTableTasks();
-        var urlBase = App.getContextPath() + this.URL_TASK_DETAIL;
-
-        for (var i = 0; i < response.docs.length; i++) {
-            var obj = response.docs[i];
-            var row = "<tr class='odd gradeA'>"
-                + "<td><a href='" + urlBase + obj.object_id_s + "'>" + obj.object_id_s + "</a></td>"
-                + "<td>" + obj.name + "</td>"    //? or obj.title_t
-                + "<td>" + Acm.getDateFromDatetime(obj.create_dt) + "</td>"
-                + "<td>" + "[priority]" + "</td>"
-                + "<td>" + "[due]" + "</td>"
-                + "<td>" + obj.status_s + "</td>"
-                + "<td><select class='input-sm form-control input-s-sm inline v-middle'>"
-                +     "<option value='0'>Choose Action</option>"
-                +     "<option value='1'>Assign</option>"
-                +     "<option value='2'>Unassign</option>"
-                + "</select></td>"
-                + "</tr>";
-            ComplaintList.Object.addRowTableTasks(row);
-        }
-
-        ComplaintList.Object.registerChangeSelTasksEvents();
-    }
+//    ,buildTableTasks: function(response) {
+//        ComplaintList.Object.resetTableTasks();
+//        var urlBase = App.getContextPath() + this.URL_TASK_DETAIL;
+//
+//        for (var i = 0; i < response.docs.length; i++) {
+//            var obj = response.docs[i];
+//            var row = "<tr class='odd gradeA'>"
+//                + "<td><a href='" + urlBase + obj.object_id_s + "'>" + obj.object_id_s + "</a></td>"
+//                + "<td>" + obj.name + "</td>"    //? or obj.title_t
+//                + "<td>" + Acm.getDateFromDatetime(obj.create_dt) + "</td>"
+//                + "<td>" + "[priority]" + "</td>"
+//                + "<td>" + "[due]" + "</td>"
+//                + "<td>" + obj.status_s + "</td>"
+//                + "<td><select class='input-sm form-control input-s-sm inline v-middle'>"
+//                +     "<option value='0'>Choose Action</option>"
+//                +     "<option value='1'>Assign</option>"
+//                +     "<option value='2'>Unassign</option>"
+//                + "</select></td>"
+//                + "</tr>";
+//            ComplaintList.Object.addRowTableTasks(row);
+//        }
+//
+//        ComplaintList.Object.registerChangeSelTasksEvents();
+//    }
 
 };
 

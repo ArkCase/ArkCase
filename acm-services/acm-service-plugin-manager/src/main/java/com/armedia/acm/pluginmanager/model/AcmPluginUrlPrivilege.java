@@ -1,5 +1,7 @@
 package com.armedia.acm.pluginmanager.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 
 /**
@@ -9,10 +11,16 @@ import org.springframework.http.HttpMethod;
  */
 public class AcmPluginUrlPrivilege
 {
+    private static final String XML_EXTENSION = ".xml";
+    private static final String JSON_EXTENSION = ".json";
+    private static final int XML_EXTENSION_LENGTH = XML_EXTENSION.length();
+    private static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
     private String url;
     private HttpMethod httpMethod;
     private AcmPluginPrivilege requiredPrivilege;
     private String[] urlPathVariables;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public boolean matches(String incomingUrl, String method)
     {
@@ -35,7 +43,16 @@ public class AcmPluginUrlPrivilege
 
         for ( int a = 0; a < incomingUrlPathVariables.length; a++ )
         {
-            boolean exactMatch = incomingUrlPathVariables[a].equalsIgnoreCase(urlPathVariables[a]);
+            String pathPart = incomingUrlPathVariables[a];
+            if ( pathPart.endsWith(XML_EXTENSION) )
+            {
+                pathPart = trimPathPart(pathPart, XML_EXTENSION_LENGTH);
+            }
+            if ( pathPart.endsWith(JSON_EXTENSION) )
+            {
+                pathPart = trimPathPart(pathPart, JSON_EXTENSION_LENGTH);
+            }
+            boolean exactMatch = pathPart.equalsIgnoreCase(urlPathVariables[a]);
             boolean placeholder = urlPathVariables[a].startsWith("{") && urlPathVariables[a].endsWith("}");
 
             if ( !exactMatch && !placeholder )
@@ -45,6 +62,12 @@ public class AcmPluginUrlPrivilege
         }
 
         return true;
+    }
+
+    private String trimPathPart(String pathPart, int extensionLength)
+    {
+        pathPart = pathPart.substring(0, pathPart.length() - extensionLength);
+        return pathPart;
     }
 
     public String getUrl()

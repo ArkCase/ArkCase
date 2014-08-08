@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+<head>
+<meta charset="utf-8" />
+<title>Complaints | ACM | Armedia Case Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/icon.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/app.css" type="text/css" />
+<!--[if lt IE 9]>
+    <script src="js/ie/html5shiv.js"></script>
+    <script src="js/ie/respond.min.js"></script>
+    <script src="js/ie/excanvas.js"></script>
+  <![endif]-->
+
+<script src="resources/js/jquery.min.js"></script>
+<script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="resources/js/fancytree/jquery.fancytree.js"></script>
+<script src="resources/js/fancytree/jquery.fancytree.table.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
+</head>
+<body class="">
+<section class="vbox">
+  <header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
+    <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
+    <ul class="nav navbar-nav hidden-xs">
+      <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
+        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
+          <div class="row m-l-none m-r-none m-t m-b text-center">
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newComplaint.html"> <span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>
+            </div>
+          </div>
+        </section>
+      </li>
+    </ul>
+    <form class="navbar-form navbar-right input-s-lg m-t m-l-n-xs hidden-xs" role="search">
+      <div class="form-group">
+        <div class="input-group"> <span class="input-group-btn">
+          <button type="submit" class="btn btn-sm bg-white b-white btn-icon"><i class="fa fa-search"></i></button>
+          </span>
+          <input type="text" class="form-control input-sm no-border" placeholder="Search complaints, cases...">
+        </div>
+      </div>
+    </form>
+    <ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user user">
+      <li class="hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-chat3"></i> <span class="badge badge-sm up bg-danger count">0</span> </a>
+        <section class="dropdown-menu aside-xl animated flipInY">
+          <section class="panel bg-white">
+            <header class="panel-heading b-light bg-light"> <strong>You have <span class="count">0</span> notifications</strong> </header>
+            <div class="list-group list-group-alt"> </div>
+            <footer class="panel-footer text-sm"> <a href="#" class="pull-right"><i class="fa fa-cog"></i></a> <a href="#notes" data-toggle="class:show animated fadeInRight">See all acitivity</a> </footer>
+          </section>
+        </section>
+      </li>
+    </ul>
+  </header>
+  <section>
+    <section class="hbox stretch"> 
+      <!-- .aside -->
+      <aside class="bg-light lt b-r b-light aside hidden-print" id="nav">
+        <section class="vbox">
+          <section class="w-f scrollable">
+            <div class=slim-scroll data-height=auto data-disable-fade-out=true data-distance=0 data-size=10px data-railOpacity=0.2>
+              <div class="clearfix wrapper dk nav-user hidden-xs">
+                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="resources/images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
+                  <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                    <span class="arrow top hidden-nav-xs"></span>
+                    <li> <a href="profile.html">My Profile</a> </li>
+                    <li> <a href="#">Switch User</a> </li>
+                    <li class="divider"></li>
+                    <li> <a href="index.html">Logout</a> </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- nav -->
+              <nav class="nav-primary hidden-xs">
+                <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Navigation</div>
+                <ul class="nav nav-main" data-ride="collapse">
+                  <li class=""> <a href="portal.html" class="auto"> <i class="i i-statistics icon"> </i> <span class="font-bold">Dashboard</span> </a> </li>
+                  <li class=""> <a href="activity.html" class="auto"> <i class="i i-alarm icon"> </i> <span class="font-bold">Activity</span> </a> </li>
+                  <li class="active"> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
+                  <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
+                  <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
+                  <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
+                  <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
+                  <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
+                </ul>
+                <div class="line dk hidden-nav-xs"></div>
+                <div class="text-muted text-xs hidden-nav-xs padder m-t-sm m-b-sm">Admin</div>
+                <ul class="nav">
+                  <li> <a href="access.html"> <i class="i i-circle-sm"></i> <span>Access Control Policy</span> </a> </li>
+                  <li> <a href="locks.html"> <i class="i i-circle-sm"></i> <span>Object Locks</span> </a> </li>
+                </ul>
+              </nav>
+              <!-- / nav --> 
+            </div>
+          </section>
+          <footer class="footer hidden-xs no-padder text-center-nav-xs"> <a href="#nav" data-toggle="class:nav-xs" class="btn btn-icon icon-muted btn-inactive m-l-xs m-r-xs"> <i class="i i-circleleft text"></i> <i class="i i-circleright text-active"></i> </a> </footer>
+        </section>
+      </aside>
+      <!-- /.aside -->
+      <section id="content">
+        <section class="vbox">
+          <section class="scrollable">
+            <section class="hbox stretch"><!-- /.aside --> 
+              <!-- .aside -->
+              
+              <aside class="aside-xl bg-light lt">
+                <section class="vbox animated fadeInLeft">
+                  <section class="scrollable">
+                    <header class="dk header">
+                      <h3 class="m-b-xs text-black pull-left">Complaints</h3>
+                      <div class="btn-group inline select pull-right">
+                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
+                        <ul class="dropdown-menu text-left text-sm">
+                          <li><a href="#">Sort Date Ascending</a></li>
+                          <li><a href="#">Sort Date Descending</a></li>
+                          <li><a href="#">Sort Complaint ID Ascending</a></li>
+                          <li><a href="#">Sort Complaint ID Ascending</a></li>
+                        </ul>
+                      </div>
+                      <div class="btn-group select pull-right">
+                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
+                        <ul class="dropdown-menu text-left text-sm">
+                          <li><a href="#">All Open Complaint</a></li>
+                          <li><a href="#">Complaint I've Opened</a></li>
+                          <li><a href="#">Unapproved Complaint</a></li>
+                          <li><a href="#">Approved Complaint</a></li>
+                          <li><a href="#">Complaint From Group</a></li>
+                          <li><a href="#">Closed or Expired Complaint</a></li>
+                          <li><a href="#">New Complaint</a></li>
+                        </ul>
+                      </div>
+                    </header>
+                    <div class="wrapper">
+                      <div class="input-group">
+                        <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
+                        <span class="input-group-btn">
+                        <button class="btn btn-sm btn-default" type="button">Go!</button>
+                        </span> </div>
+                    </div>
+                    <div class="row m-b">
+                      <div class="col-sm-12">
+                        <table id="tree">
+                          <colgroup>
+                          <col width="*">
+                            </col>
+                          
+                          <col width="*">
+                            </col>
+                          
+                          <col width="*">
+                            </col>
+                          
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th></th>
+                              <th></th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </section>
+                </section>
+              </aside>
+              <aside id="email-content" class="bg-light lter">
+                <section class="vbox">
+                  <section class="scrollable">
+                    <div class="wrapper dk  clearfix">
+                      <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> (2014-03-12321)</h4>
+                    </div>
+                    <div>
+                      <div class="wrapper">
+                        <div class="row">
+                     Other Cases
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                  </section>
+                </section>
+              </aside>
+              <!-- /.aside --> 
+              
+            </section>
+          </section>
+        </section>
+      </section>
+    </section>
+  </section>
+</section>
+<style>
+table.fancytree-ext-table {
+  width: 100%;
+  outline: 0;
+}
+
+table.fancytree-ext-table tbody tr td {
+  border: 0px;
+}
+</style>
+<script type='text/javascript'>//<![CDATA[ 
+
+$(function() {
+    $("#tree").fancytree({
+
+        extensions: ["table"],
+        table: {
+            nodeColumnIdx: 0, // render the node title into the 2nd column
+            checkboxColumnIdx: 1 // render the checkboxes into the 1st column
+        },
+
+        renderColumns: function(event, data) {
+            var node = data.node,
+                $tdList = $(node.tr).find(">td");
+            // (index #0 is rendered by fancytree by adding the checkbox)
+            $tdList.eq(1).text(node.data.description1);
+            // (index #2 is rendered by fancytree)
+        },
+
+activate: function(event, data) {
+				var node = data.node;
+				// Use <a> href and target attributes to load the content:
+				if( node.data.href ){
+					// Open target
+					window.open(node.data.href, "_self");
+					// or open target in iframe
+//                $("[name=contentFrame]").attr("src", node.data.href);
+				}
+			},
+
+        source: [{
+            title: "2014-03-12321",
+			href: "complaints.html",
+            test: "test",
+            description1: "Complaint Title",
+            expanded: "fancytree-expanded",
+            children: [{
+                title: "Incident 1",
+                folder: true,
+expanded: "fancytree-expanded",
+				expanded: "fancytree-expanded",
+                children: [{
+                    title: "Details", 
+					href: "complaintDetails.html"
+                }, {
+                    title: "Initiator",
+					href: "complaintIntitiator.html", 
+                    description1: "John Doe",
+                    description2: "Victim"
+                }, {
+                    title: "People ", 
+					href: "complaintPeople.html"
+                }, {
+                    title: "Notes", 
+					href: "complaintNotes.html"
+                }]
+            }, {
+                title: "Attachments",
+                folder: true,
+expanded: "fancytree-expanded",
+                children: [{
+                    title: "Pending",
+                    folder: false,
+					href: "complaintDocuments.html",
+                    children: [{
+                        title: "Document Title 1",
+                        description1: "David Miller", 
+						href: "complaintDocumentDetails.html"
+                    }, {
+                        title: "Document Title 2",
+                        description1: "Ronda Ringo", 
+						href: "complaintDocumentDetails.html"
+                    }]
+                }, {
+                    title: "Approved",
+                    folder: false,
+					href: "complaintDocuments.html",
+                    children: [{
+                        title: "Document Title 3",
+                        description1: "David Miller", 
+						href: "complaintDocumentDetails.html"
+                    }, {
+                        title: "Document Title 4",
+                        description1: "Ronda Ringo", 
+						href: "complaintDocumentDetails.html"
+                    }]
+                }, {
+                    title: "Rejected",
+                    folder: false,
+					href: "complaintDocuments.html",
+                    children: [{
+                        title: "0005",
+                        title: "Document Title 5",
+                        description1: "David Miller", 
+						href: "complaintDocumentDetails.html"
+                    }, {
+                        title: "0006",
+                        title: "Document Title 6",
+                        description1: "Ronda Ringo", 
+						href: "complaintDocumentDetails.html"
+                    }]
+                }]
+            }, {
+                title: "Tasks",
+                folder: true,
+expanded: "fancytree-expanded",
+                children: [{
+                    title: "Unassigned",
+                    folder: false,
+					href: "complaintTasks.html",
+                    children: [{
+                        title: "Task Title 1",
+                        description1: "David Miller", 
+						href: "complaintTaskDetails.html"
+                    }, {
+                        title: "Task  Title 2",
+                        description1: "Ronda Ringo", 
+						href: "complaintTaskDetails.html"
+                    }]
+                }, {
+                    title: "Assigned",
+                    folder: false,
+                    children: [{
+                        title: "Task  Title 3",
+                        description1: "David Miller", 
+						href: "complaintTaskDetails.html"
+                    }, {
+                        title: "Task  Title 4",
+                        description1: "Ronda Ringo", 
+						href: "complaintTaskDetails.html"
+                    }]
+                }, {
+                    title: "Completed",
+                    folder: false,
+                    children: [{
+                        title: "0005",
+                        title: "Task  Title 5",
+                        description1: "David Miller", 
+						href: "complaintTaskDetails.html"
+                    }, {
+                        title: "0006",
+                        title: "Task Title 6",
+                        description1: "Ronda Ringo", 
+						href: "complaintTaskDetails.html"
+                    }]
+                }]
+            }, {
+                title: "References",
+                folder: true,
+expanded: "fancytree-expanded", children: [{
+                    title: "Other Cases",
+                    folder: false, 
+					href: "complaintOtherCases.html"
+                }, {
+                    title: "Other Tasks",
+                    folder: false, 
+					href: "complaintOtherTasks.html"
+                }, {
+                    title: "Other Documents",
+                    folder: false, 
+					href: "complaintOtherDocuments.html"
+                }]
+            }, {
+                title: "Participants",
+                folder: true,
+expanded: "fancytree-expanded",
+                children: [{
+                    title: "Approvers"
+                }, {
+                    title: "Collaborators"
+                }, {
+                    title: "Watchers"
+                }]
+            }]
+        }]
+    });
+
+});
+//]]>
+</script> 
+
+<!-- Bootstrap --> 
+<script src="resources/js/bootstrap.js"></script> 
+
+<!-- Summernote WYSIWYG -->
+
+<link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>
+<script src="resources/js/summernote/summernote.js"></script> 
+<script>
+  
+  var edit = function() {
+  $('.complaintDetails').summernote({focus: true});
+};
+var save = function() {
+  var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
+  $('.complaintDetails').destroy();
+};
+  
+</script> 
+
+<!-- X-Editable -->
+
+<link href="resources/css/bootstrap-editable.css" rel="stylesheet">
+<script src="resources/js/bootstrap-editable.min.js"></script> 
+<script src="resources/js/typeahead.js"></script> 
+<script>
+$.fn.editable.defaults.url = '/post';
+$(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); }); 
+$(document).ready(function() { $('#priority').editable({placement: 'left', value: 2,    
+        source: [
+              {value: 1, text: 'Low'},
+              {value: 2, text: 'Medium'},
+              {value: 3, text: 'High'},
+              {value: 3, text: 'Expedited'}
+           ]}); }); 
+$(document).ready(function() { $('#type').editable({placement: 'bottom', value: 2,    
+        source: [
+              {value: 1, text: 'Type 1'},
+              {value: 2, text: 'Type 2'},
+              {value: 3, text: 'Type 3'},
+              {value: 3, text: 'Type 4'}
+           ]}); }); 
+		   
+$(document).ready(function() { $('#assigned').editable({placement: 'bottom', value: 2,    
+        source: [
+              {value: 1, text: 'David Miller'},
+              {value: 2, text: 'Judy Hsu'},
+              {value: 3, text: 'Ronda Ringo'},
+              {value: 3, text: 'AJ McClary'}
+           ]}); }); 
+		   
+$(document).ready(function() { $('#incident').editable({
+        format: 'yyyy-mm-dd',  
+		placement: 'bottom',  
+        viewformat: 'dd/mm/yyyy',    
+        datepicker: {
+                weekStart: 1
+           }
+        }); }); 
+
+</script> 
+
+<!-- App --> 
+<script src="resources/js/app.js"></script> 
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="resources/js/app.plugin.js"></script>
+</body>
+</html>

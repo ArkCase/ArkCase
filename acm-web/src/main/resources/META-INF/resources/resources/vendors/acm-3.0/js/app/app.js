@@ -19,6 +19,11 @@ var App = App || {
     ,Callback : {}
 
 
+    ,OBJTYPE_CASE:        "Case"
+    ,OBJTYPE_COMPLAINT:   "Complaint"
+    ,OBJTYPE_TASK:        "Task"
+    ,OBJTYPE_DOCUMENT:    "Document"
+
     ,getContextPath: function() {
         return App.Object.getContextPath();
     }

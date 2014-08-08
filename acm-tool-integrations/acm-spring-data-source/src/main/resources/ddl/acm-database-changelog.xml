@@ -20,6 +20,9 @@
 
     <!-- then constraints.  Foreign key constraint changelogs should go in these folders. -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/constraints" relativeToChangelogFile="false"/>
+    
+    <!-- insertion logs: lookup table insertion logs-->
+    <includeAll path="classpath*:/com/armedia/acm/ddl/lookupTableInserts"  relativeToChangelogFile="false"/>
 
     <!-- packages before triggers, since triggers can call packages. Note we have some Oracle specific
          assumptions here.  When we support other databases we will have to configure Spring to load a

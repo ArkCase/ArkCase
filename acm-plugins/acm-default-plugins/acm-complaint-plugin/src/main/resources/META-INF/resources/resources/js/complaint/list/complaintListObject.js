@@ -87,43 +87,364 @@ ComplaintList.Object = {
 
 
         this.$tree = $("#tree");
-        this.$tree.fancytree({
+        this._useFancyTree(this.$tree);
+    }
 
-            source: [{
-                title: "2014-03-12321",
-                tooltip: "Sample Compalint Title",
-                expanded: "fancytree-expanded",
-                children: [{
-                    title: "Incident",
-                    folder: true,
-                    children: [{
-                        title: "Initiator "
-                    }, {
-                        title: "People",
-                        folder: true,
-                        children: [{title: "Person 1"}, {title: "Person 2"}]
-                    }]
-                }, {
-                    title: "Attachments",
-                    folder: true,
-                    children: [{title: "Pending", folder:true}, {title: "Approved", folder:true}, {title: "Rejected", folder:true} ]
-                }, {
-                    title: "Tasks",
-                    folder: true,
-                    children: [{title: "Unassigned", folder:true}, {title: "Assigned", folder:true}, {title: "Completed", folder:true} ]
-                }, {
-                    title: "References",
-                    folder: true,
-                    children: [{title: "Complaints", folder:true}, {title: "Cases", folder:true}, {title: "Tasks", folder:true}, {title: "Documents", folder:true} ]
-                }, {
-                    title: "Participants",
-                    folder: true,
-                    children: [{title: "Approvers", folder:true}, {title: "Collaborators", folder:true}, {title: "Watchers", folder:true} ]
-                }]
-            }]
+    //
+    //Tree node type - key in following format:
+    //prevPage - prevPage
+    //c    - [complaintId]
+    //ci   - [complaintId].i
+    //cii  - [complaintId].ii
+    //cip  - [complaintId].ip
+    //cipp - [complaintId].ip.[personId]
+    //ca   - [complaintId].a
+    //cap  - [complaintId].ap
+    //caa  - [complaintId].aa
+    //car  - [complaintId].ar
+    //ct   - [complaintId].t
+    //ctu  - [complaintId].tu
+    //cta  - [complaintId].ta
+    //ctc  - [complaintId].tc
+    //cr   - [complaintId].r
+    //crc  - [complaintId].rc
+    //crs  - [complaintId].rs
+    //crt  - [complaintId].rt
+    //crd  - [complaintId].rd
+    //cp   - [complaintId].p
+    //cpa  - [complaintId].pa
+    //cpc  - [complaintId].pc
+    //cpw  - [complaintId].pw
+    //nextPage - nextPage
+    //
+    ,getNodeTypeByKey: function(key) {
+        if (Acm.isEmpty(key))
+            return null;
+
+        var arr = key.split(".");
+        if (1 == arr.length) {
+            if ("prevPage" == key) {
+                return "prevPage";
+            } else if ("nextPage" == key) {
+                return "nextPage";
+            } else { //if ($.isNumeric(arr[0])) {
+                return "c";
+            }
+        } else if (2 == arr.length) {
+            return "c" + arr[1];
+        } else if (3 == arr.length) {
+            return "c" + arr[1] + "p";
+        }
+        return parseInt(arr[0]);
+    }
+    ,getComplaintIdByKey: function(key) {
+        if (Acm.isEmpty(key))
+            return 0;
+
+        var arr = key.split(".");
+        var complaintId = parseInt(arr[0]);
+        if (isNaN(complaintId)) {
+            return 0;
+        }
+        return complaintId;
+    }
+    ,refreshTree: function(key) {
+        this.tree.reload().done(function(){
+            if (Acm.isNotEmpty(key)) {
+                ComplaintList.Object.tree.activateKey(key);
+            }
+        });
+    }
+    ,activeTreeNode: function(key) {
+        this.tree.activateKey(key);
+    }
+    ,expandAllTreeNode: function(key) {
+        this.tree.activateKey(key);
+    }
+    ,_useFancyTree: function($s) {
+        $s.fancytree({
+            source: function() {
+                var builder = Acm.Object.FancyTreeBuilder.reset();
+
+                builder.addLeaf({key: "prevPage"
+                    ,title: "xxx records above..."
+                    ,tooltip: "Review previous records"
+                    ,expanded: false
+                    ,folder: false
+                    ,acmIcon: "<i class='i i-arrow-up'></i>"
+                });
+
+
+                var complaints = ComplaintList.getComplaintList();
+                var len = complaints.length;
+                for (var i = 0; i < len; i++) {
+                    var c = complaints[i];
+
+                    builder.addBranch({key: c.complaintId                       //Tree top level: /Complaint
+                        ,title: c.complaintNumber
+                        ,tooltip: c.complaintTitle
+                        ,expanded: false
+                        ,acmIcon: "<i class='i i-notice'></i>" //"i-notice icon";
+                    })
+                        .addBranch({key: c.complaintId + ".i"                   //level 2: /Complaint/Incident
+                            ,title: "Incident"
+                            ,folder: true
+                        })
+                            .addLeaf({key: c.complaintId + ".ii"                //level 3: /Complaint/Incident/Initiator
+                                ,title: "Initiator"
+                                })
+                            .addBranchLast({key: c.complaintId + ".ip"          //level 3: /Complaint/Incident/People
+                                ,title: "People"
+                                ,folder: true
+                            });
+
+                                for (var j = 0; j < 2; j++) {                   //level 4: /Complaint/Incident/People/person
+                                builder.addLeaf({key: c.complaintId + ".ip." + j
+                                    ,title: "Person Name" + j
+                                });
+                                } //for j
+                                builder.addLeafLast({key: c.complaintId + ".ip." + 2
+                                    ,title: "Person Name" + 2
+                                });
+
+
+
+                        builder.addBranch({key: c.complaintId + ".a"            //level 2: /Complaint/Attachments
+                                ,title: "Attachments"
+                                ,folder: true
+                            })
+                            .addLeaf({key: c.complaintId + ".ap"                //level 3: /Complaint/Incident/Initiator
+                                ,title: "Pending"
+                                ,folder: true
+                            })
+                            .addLeaf({key: c.complaintId + ".aa"                //level 3: /Complaint/Incident/Approved
+                                ,title: "Approved"
+                                ,folder: true
+                            })
+                            .addLeafLast({key: c.complaintId + ".ar"            //level 3: /Complaint/Incident/Rejected
+                                ,title: "Rejected"
+                                ,folder: true
+                            })
+
+                        .addBranch({key: c.complaintId + ".t"                   //level 2: /Complaint/Tasks
+                            ,title: "Tasks"
+                            ,folder: true
+                        })
+                            .addLeaf({key: c.complaintId + ".tu"                //level 3: /Complaint/Tasks/Unassigned
+                                ,title: "Unassigned"
+                                ,folder: true
+                            })
+                            .addLeaf({key: c.complaintId + ".ta"                //level 3: /Complaint/Tasks/Assigned
+                                ,title: "Assigned"
+                                ,folder: true
+                            })
+                            .addLeafLast({key: c.complaintId + ".tu"            //level 3: /Complaint/Tasks/Completed
+                                ,title: "Completed"
+                                ,folder: true
+                            })
+
+                        .addBranch({key: c.complaintId + ".r"                   //level 2: /Complaint/References
+                            ,title: "References"
+                            ,folder: true
+                        })
+                            .addLeaf({key: c.complaintId + ".rc"                //level 3: /Complaint/References/Complaints
+                                ,title: "Complaints"
+                                ,folder: true
+                            })
+                            .addLeaf({key: c.complaintId + ".rs"                //level 3: /Complaint/References/Cases
+                                ,title: "Cases"
+                                ,folder: true
+                            })
+                            .addLeaf({key: c.complaintId + ".rt"                //level 3: /Complaint/References/Tasks
+                                ,title: "Tasks"
+                                ,folder: true
+                            })
+                            .addLeafLast({key: c.complaintId + ".rd"            //level 3: /Complaint/References/Documents
+                                ,title: "Documents"
+                                ,folder: true
+                            })
+
+                        .addBranchLast({key: c.complaintId + ".p"               //level 2: /Complaint/Participants
+                            ,title: "Participants"
+                            ,folder: true
+                        })
+                            .addLeaf({key: c.complaintId + ".pa"                //level 3: /Complaint/Participants/Approvers
+                                ,title: "Approvers"
+                                ,folder: true
+                            })
+                            .addLeaf({key: c.complaintId + ".pc"                //level 3: /Complaint/Participants/Collaborators
+                                ,title: "Collaborators"
+                                ,folder: true
+                            })
+                            .addLeafLast({key: c.complaintId + ".pw"            //level 3: /Complaint/Participants/Watchers
+                                ,title: "Watchers"
+                                ,folder: true
+                            })
+
+                } //end for i
+
+
+                builder.addLeafLast({key: "nextPage"
+                    ,title: "xxx more records..."
+                    ,tooltip: "Load more records"
+                    ,expanded: false
+                    ,folder: false
+                    ,acmIcon: "<i class='i i-arrow-down'></i>"
+                });
+
+                return builder.getTree();
+            } //end source
+            ,activate: function(event, data) {
+                ComplaintList.Event.onActivateTreeNode(data.node);
+            }
+            ,dblclick: function(event, data) {
+                var node = data.node;
+                alert("dblclick:(" + node.key + "," + node.title + ")");
+                //node.setExpanded();
+                //toggleExpanded();
+            }
+
+            ,focus: function(event, data) {
+//                var node = data.node;
+//                if ("prevPage" == node.key) {
+//                    alert("onFocus:" + node.key);
+//                } else if ("nextPage" == node.key) {
+//                    alert("onFocus:" + node.key);
+//                }
+            }
+            ,renderNode: function(event, data) {
+                // Optionally tweak data.node.span
+                var node = data.node;
+                var key = node.key;
+                var title = node.title;
+                var acmIcon = node.data.acmIcon;
+                if (acmIcon) {
+                    var span = node.span;
+                    var $spanIcon = $(span.children[1]);
+                    $spanIcon.removeClass("fancytree-icon");
+                    $spanIcon.html(acmIcon);
+                }
+
+            }
+//            ,onCustomRender: function(node) {
+//                return "<span class='fancytree-title'>SPAM</span>"
+//            }
+//             ,onFocus: function(node) {
+//             }
+//            ,onBlur: function(node) {
+//                $("#echoFocused").text("-");
+//            }
+//
+//            tree.activateKey(key)
+
+
+        }); //end fancytree
+
+        this.tree = this.$tree.fancytree("getTree");
+
+        $s.contextmenu({
+            //delegate: "span.fancytree-title",
+            delegate: ".fancytree-title",
+            menu: ComplaintList.Object.menu_cur,
+            beforeOpen: function(event, ui) {
+                var node = $.ui.fancytree.getNode(ui.target);
+//                node.setFocus();
+                node.setActive();
+                ComplaintList.Object.$tree.contextmenu("replaceMenu", ComplaintList.Object._getMenu(node));
+
+            },
+            select: function(event, ui) {
+                var node = $.ui.fancytree.getNode(ui.target);
+                alert("select " + ui.cmd + " on " + node);
+            }
         });
 
-
+    }
+    ,_getMenu: function(node) {
+        var key = node.key;
+        var menu = [
+            {title: "Menu:" + key, cmd: "cut", uiIcon: "ui-icon-scissors"},
+            {title: "Copy", cmd: "copy", uiIcon: "ui-icon-copy"},
+            {title: "Paste", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: false },
+            {title: "----"},
+            {title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil", disabled: true },
+            {title: "Delete", cmd: "delete", uiIcon: "ui-icon-trash", disabled: true },
+            {title: "More", children: [
+                {title: "Sub 1", cmd: "sub1"},
+                {title: "Sub 2", cmd: "sub1"}
+            ]}
+        ];
+        return menu;
+    }
+    ,_useFancyTree0: function($s) {
+        $s.fancytree({
+            source: [
+                {
+                    title: "2014-03-12321",
+                    tooltip: "Sample Compalint Title",
+                    expanded: "fancytree-expanded",
+                    children: [{
+                        title: "Incident",
+                        folder: true,
+                        children: [{
+                            title: "Initiator "
+                        }, {
+                            title: "People",
+                            folder: true,
+                            children: [{title: "Person 1"}, {title: "Person 2"}]
+                        }]
+                    }, {
+                        title: "Attachments",
+                        folder: true,
+                        children: [{title: "Pending", folder:true}, {title: "Approved", folder:true}, {title: "Rejected", folder:true} ]
+                    }, {
+                        title: "Tasks",
+                        folder: true,
+                        children: [{title: "Unassigned", folder:true}, {title: "Assigned", folder:true}, {title: "Completed", folder:true} ]
+                    }, {
+                        title: "References",
+                        folder: true,
+                        children: [{title: "Complaints", folder:true}, {title: "Cases", folder:true}, {title: "Tasks", folder:true}, {title: "Documents", folder:true} ]
+                    }, {
+                        title: "Participants",
+                        folder: true,
+                        children: [{title: "Approvers", folder:true}, {title: "Collaborators", folder:true}, {title: "Watchers", folder:true} ]
+                    }]
+                }
+                ,{
+                    title: "2014-03-12321B",
+                    tooltip: "Sample Compalint Title",
+                    expanded: false,
+                    children: [{
+                        title: "Incident",
+                        folder: true,
+                        children: [{
+                            title: "Initiator "
+                        }, {
+                            title: "People",
+                            folder: true,
+                            children: [{title: "Person 1"}, {title: "Person 2"}]
+                        }]
+                    }, {
+                        title: "Attachments",
+                        folder: true,
+                        children: [{title: "Pending", folder:true}, {title: "Approved", folder:true}, {title: "Rejected", folder:true} ]
+                    }, {
+                        title: "Tasks",
+                        folder: true,
+                        children: [{title: "Unassigned", folder:true}, {title: "Assigned", folder:true}, {title: "Completed", folder:true} ]
+                    }, {
+                        title: "References",
+                        folder: true,
+                        children: [{title: "Complaints", folder:true}, {title: "Cases", folder:true}, {title: "Tasks", folder:true}, {title: "Documents", folder:true} ]
+                    }, {
+                        title: "Participants",
+                        folder: true,
+                        children: [{title: "Approvers", folder:true}, {title: "Collaborators", folder:true}, {title: "Watchers", folder:true} ]
+                    }]
+                }
+            ]
+        });
     }
 
     ,_initId: ""
@@ -235,25 +556,25 @@ ComplaintList.Object = {
         ComplaintList.Page.buildTableDocDocuments(c);
         //ComplaintList.Page.buildTableRefDocuments(c);
     }
-    ,updateTasks: function(response) {
-        var tasks = [];
-        for (var i = 0; i < response.docs.length; i++) {
-            var obj = response.docs[i];
-            var task = {};
-            task.taskId = obj.object_id_s;
-            task.title = obj.name; //?or obj.title_t
-            task.created = obj.create_dt;
-            task.priority = "[priority]";
-            task.dueDate ="[due]";
-            task.status = obj.status_s;
-            task.assignee = "[assignee]";
-
-            tasks.push(task);
-        }
-        Complaint.setTasks(tasks);
-
-        this.$divTasks.jtable('load');
-    }
+//    ,updateTasks: function(response) {
+//        var tasks = [];
+//        for (var i = 0; i < response.docs.length; i++) {
+//            var obj = response.docs[i];
+//            var task = {};
+//            task.taskId = obj.object_id_s;
+//            task.title = obj.name; //?or obj.title_t
+//            task.created = obj.create_dt;
+//            task.priority = "[priority]";
+//            task.dueDate ="[due]";
+//            task.status = obj.status_s;
+//            task.assignee = "[assignee]";
+//
+//            tasks.push(task);
+//        }
+//        Complaint.setTasks(tasks);
+//
+//        this.$divTasks.jtable('load');
+//    }
     ,setValueLnkTitle: function(txt) {
         this.$lnkTitle.editable("setValue", txt);
     }
@@ -796,11 +1117,11 @@ ComplaintList.Object = {
                 data.childTable.jtable('load');
             });
     }
-    ,_closeInitiatorAliases: function($t, $row) {
-        $t.jtable('closeChildTable', $row.closest('tr'));
+    ,_closeInitiatorAliases: function($jt, $row) {
+        $jt.jtable('closeChildTable', $row.closest('tr'));
     }
-    ,_openInitiatorAliases: function($t, $row) {
-        $t.jtable('openChildTable',
+    ,_openInitiatorAliases: function($jt, $row) {
+        $jt.jtable('openChildTable',
             $row.closest('tr'),
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
@@ -881,95 +1202,136 @@ ComplaintList.Object = {
     //
     // Tasks
     //
-    ,_createJTableTasks: function($s) {
-        $s.jtable({
-            title: 'Tasks'
-            ,paging: false
-            ,actions: {
-                listAction: function(postData, jtParams) {
-                    var tasks = Complaint.getTasks();
-                    var rc = {"Result": "OK", "Records": []};
-                    for (i =  0; i < tasks.length; i++) {
-                        var record = {};
-                        record.id = tasks[i].taskId;
-                        record.title = tasks[i].title;
-                        record.created = Acm.getDateFromDatetime(tasks[i].created);
-                        record.priority = tasks[i].priority;
-                        record.dueDate = tasks[i].dueDate;
-                        record.status = tasks[i].status;
-                        record.assignee = tasks[i].assignee;
-                        rc.Records.push(record);
+    ,refreshJTableTasks: function() {
+        Acm.Object.jTableLoad(this.$divTasks);
+    }
+
+    ,_createJTableTasks: function($jt) {
+        var sortMap = {};
+        sortMap["title"] = "title_t";
+
+
+        Acm.Object.jTableCreateSortable($jt
+            ,{
+                title: 'Tasks'
+                ,selecting: true
+                ,multiselect: false
+                ,selectingCheckboxes: false
+
+                ,actions: {
+                    listActionSortable: function (postData, jtParams, sortMap) {
+                        return Acm.Object.jTableDefaultListAction(postData, jtParams, sortMap
+                            ,function() {
+                                var url;
+                                url =  App.getContextPath() + ComplaintList.Service.API_RETRIEVE_TASKS;
+                                url += Complaint.getComplaintId();
+                                return url;
+                            }
+                            ,function(data) {
+                                var jtData = null;
+                                var err = "Invalid search data";
+                                if (data) {
+                                    if (Acm.isNotEmpty(data.responseHeader)) {
+                                        var responseHeader = data.responseHeader;
+                                        if (Acm.isNotEmpty(responseHeader.status)) {
+                                            if (0 == responseHeader.status) {
+                                                var response = data.response;
+                                                //response.start should match to jtParams.jtStartIndex
+                                                //response.docs.length should be <= jtParams.jtPageSize
+
+                                                jtData = Acm.Object.jTableGetEmptyResult();
+                                                for (var i = 0; i < response.docs.length; i++) {
+                                                    var Record = {};
+                                                    Record.id = response.docs[i].object_id_s;
+                                                    Record.title = Acm.goodValue(response.docs[i].name); //title_t ?
+                                                    Record.created = Acm.goodValue(response.docs[i].create_dt);
+                                                    Record.priority = "[priority]";
+                                                    Record.dueDate = "[due]";
+                                                    Record.status = Acm.goodValue(response.docs[i].status_s);
+                                                    Record.assignee = "[assignee]";
+                                                    jtData.Records.push(Record);
+
+                                                }
+                                                jtData.TotalRecordCount = response.numFound;
+
+
+                                            } else {
+                                                if (Acm.isNotEmpty(data.error)) {
+                                                    err = data.error.msg + "(" + data.error.code + ")";
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                return {jtData: jtData, jtError: err};
+                            }
+                        );
                     }
-                    return rc;
-                }
-                ,createAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                        ,"Record": {}
-                    };
-                }
-            }
 
-            ,fields: {
-                id: {
-                    title: 'ID'
-                    ,key: true
-                    ,list: true
-                    ,create: false
-                    ,edit: false
-                }
-                ,title: {
-                    title: 'Title'
-                    ,width: '30%'
-                }
-                ,created: {
-                    title: 'Created'
-                    ,width: '15%'
-                }
-                ,priority: {
-                    title: 'Priority'
-                    ,width: '10%'
-                }
-                ,dueDate: {
-                    title: 'Due'
-                    ,width: '15%'
-                }
-                ,status: {
-                    title: 'status'
-                    ,width: '10%'
-                }
-                ,description: {
-                    title: 'Action'
-                    ,width: '10%'
-                    ,sorting: false
-                    ,edit: false
-                    ,create: false
-                    //,openChildAsAccordion: true
-                    ,display: function (commData) {
-                        var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
-                        var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
-
-                        $a.click(function (e) {
-                            ComplaintList.Event.onClickBtnTaskAssign(e);
-                            e.preventDefault();
-                        });
-                        $b.click(function (e) {
-                            ComplaintList.Event.onClickBtnTaskUnassign(e);
-                            e.preventDefault();
-                        });
-                        return $a.add($b);
+                    ,createAction: function(postData, jtParams) {
+                        return Acm.Object.jTableGetEmptyResult();
                     }
                 }
-            }
-            ,recordAdded: function(event, data){
-                $s.jtable('load');
-            }
-            ,recordUpdated: function(event, data){
-                $s.jtable('load');
-            }
-        });
 
-        $s.jtable('load');
+                ,fields: {
+                    id: {
+                        title: 'ID'
+                        ,key: true
+                        ,list: true
+                        ,create: false
+                        ,edit: false
+                        ,sorting: false
+                    }
+                    ,title: {
+                        title: 'Title'
+                        ,width: '30%'
+                    }
+                    ,created: {
+                        title: 'Created'
+                        ,width: '15%'
+                        ,sorting: false
+                    }
+                    ,priority: {
+                        title: 'Priority'
+                        ,width: '10%'
+                        ,sorting: false
+                    }
+                    ,dueDate: {
+                        title: 'Due'
+                        ,width: '15%'
+                        ,sorting: false
+                    }
+                    ,status: {
+                        title: 'status'
+                        ,width: '10%'
+                        ,sorting: false
+                    }
+                    ,description: {
+                        title: 'Action'
+                        ,width: '10%'
+                        ,sorting: false
+                        ,edit: false
+                        ,create: false
+                        ,display: function (commData) {
+                            var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                            var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
+
+                            $a.click(function (e) {
+                                ComplaintList.Event.onClickBtnTaskAssign(e);
+                                e.preventDefault();
+                            });
+                            $b.click(function (e) {
+                                ComplaintList.Event.onClickBtnTaskUnassign(e);
+                                e.preventDefault();
+                            });
+                            return $a.add($b);
+                        }
+                    }
+                } //end field
+            } //end arg
+            ,sortMap
+        );
     }
 
 

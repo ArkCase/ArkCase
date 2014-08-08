@@ -35,16 +35,19 @@
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
 
     <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>
+    <%--<link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>--%>
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/jtable/blue/jtable.css" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
 
 
     <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
     <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/jquery.fancytree.js"></script>
+    <script src="<c:url value='/'/>resources/vendors/${vd_contextmenu}/jquery.ui-contextmenu.js"></script>
 
     <!-- X-Editable -->
     <link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
     <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
+
 </jsp:attribute>
 
 <jsp:body>
@@ -57,6 +60,7 @@
         <header class="dker header clearfix">
             <h3 class="m-b-xs text-black pull-left">${pageDescriptor.descShort}</h3>
             <div class="btn-toolbar">
+                <a href="#nav, #chat" class="inline animated btn btn-default btn-sm  pull-right" data-toggle="class:nav-xs, show"><i class="fa  fa-columns"></i></a>
                 <div class="btn-group inline select pull-right">
                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
                     <ul class="dropdown-menu text-left text-sm">
@@ -75,7 +79,7 @@
                         <li><a href="#">Approved Complaints</a></li>
                         <li><a href="#">Complaints From Group</a></li>
                         <li><a href="#">Closed or Expired Complaints</a></li>
-                        <li><a href="#">New Complaints</a></li>
+                        <li><a href="http://10.21.4.149/orbeon/fr/acm/complaint-form/new?acm_ticket=${token}">New Complaints</a></li>
                     </ul>
                 </div>
             </div>
@@ -97,7 +101,25 @@
     </section>
 </aside>
 <!-- /.aside -->
+
 <!-- .aside -->
+<%--<aside class="aside bg-light lt hide" id="chat">--%>
+<aside class="aside bg-light lt" id="chat">
+    <section class="vbox animated fadeInLeft">
+        <section class="scrollable">
+            <header class="dk header">
+                <p>Navigation</p>
+            </header>
+            <div class="row m-b">
+                <div class="col-sm-12">
+                    <div id="tree"></div>
+
+                </div>
+            </div>
+        </section>
+    </section>
+</aside>
+
 <aside id="email-content" class="bg-light lter">
 <section class="vbox">
 <section class="scrollable">
@@ -113,7 +135,7 @@
                 <li><a href="#">Other menu items</a></li>
             </ul>
         </div>
-        <a href="#nav, #chat" class="inline animated btn btn-default btn-sm " data-toggle="class:nav-xs, show"><i class="fa  fa-columns"></i></a> </div>
+    </div>
     <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title">...</a> (...)</h4>
 </div>
 <div>
@@ -259,9 +281,19 @@
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a" id='secDocDocuments'>
-                <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span>
+                <div class="panel-heading b-b bg-info"> 
+                
+<!-- comment it for now. replaced by teh New Form link below
+                 	<span class="pull-right">New</span>
+ -->                    
                     <a href="#" class="font-bold">Documents</a>
                     <input type="file" name="files[]" multiple style="display:none;"/>
+                                    	
+                    <a class="pull-right" href="http://10.21.4.149/orbeon/fr/acm/roi-form/new?acm_ticket=${token}&complaint_id=52&complaint_number=20140430_52&complaint_title=testTitle&complaint_priority=Expedite">New Form</a>
+                    <select class="input-sm form-control input-s-sm inline v-middle pull-right">
+                    <option value="0">Report of Investigation</option>
+                	</select>
+                    
                 </div>
                 <div class="panel-body max-200 no-padder">
                     <table class="table table-striped th-sortable table-hover">
@@ -356,24 +388,25 @@
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a">
-                <div class="panel-heading b-b bg-info"> <span class="pull-right">New</span>
-                    <a href="#" class="font-bold">Tasks</a>
-                </div>
-                <div class="panel-body max-200 no-padder">
-                    <table class="table table-striped th-sortable table-hover">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Created</th>
-                            <th>Priority</th>
-                            <th>Due</th>
-                            <th>Status</th>
-                            <th width="10%">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="odd gradeA">
+
+                <%--<div class="panel-heading b-b bg-info"> <span class="pull-right">New</span>--%>
+                    <%--<a href="#" class="font-bold">Tasks</a>--%>
+                <%--</div>--%>
+                <%--<div class="panel-body max-200 no-padder">--%>
+                    <%--<table class="table table-striped th-sortable table-hover">--%>
+                        <%--<thead>--%>
+                        <%--<tr>--%>
+                            <%--<th>ID</th>--%>
+                            <%--<th>Title</th>--%>
+                            <%--<th>Created</th>--%>
+                            <%--<th>Priority</th>--%>
+                            <%--<th>Due</th>--%>
+                            <%--<th>Status</th>--%>
+                            <%--<th width="10%">Action</th>--%>
+                        <%--</tr>--%>
+                        <%--</thead>--%>
+                        <%--<tbody>--%>
+                        <%--<tr class="odd gradeA">--%>
                             <%--<td>[ID]</td>--%>
                             <%--<td>[Title]</td>--%>
                             <%--<td>[Created]</td>--%>
@@ -385,10 +418,10 @@
                                 <%--<option value="1">Assign</option>--%>
                                 <%--<option value="2">Unassign</option>--%>
                             <%--</select></td>--%>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                        <%--</tr>--%>
+                        <%--</tbody>--%>
+                    <%--</table>--%>
+                <%--</div>--%>
 
 
                 <div class="panel-body max-200 no-padder">
@@ -718,23 +751,6 @@
 </section>
 </aside>
 <!-- /.aside -->
-
-
-<aside class="aside bg-light lt hide" id="chat">
-    <section class="vbox animated fadeInLeft">
-        <section class="scrollable">
-            <header class="dk header">
-                <p>Navigation</p>
-            </header>
-            <div class="row m-b">
-                <div class="col-sm-12">
-                    <div id="tree"></div>
-
-                </div>
-            </div>
-        </section>
-    </section>
-</aside>
 </section>
 </section>
 </section>

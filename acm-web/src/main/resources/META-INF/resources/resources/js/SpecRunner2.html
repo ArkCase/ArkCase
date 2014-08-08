@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ACM Jasmine Spec Runner v2.0.0</title>
+
+<!-- Jasmine files -->
+<link rel="shortcut icon" type="image/png" href="jasmine2.0/jasmine_favicon.png">
+<link rel="stylesheet" type="text/css" href="jasmine2.0/jasmine.css">
+<script type="text/javascript" src="../vendors/jquery-1.11.0/jquery-1.11.0.js"></script>
+<script type="text/javascript" src="jasmine2.0/jasmine.js"></script>
+<script type="text/javascript" src="jasmine2.0/jasmine-html.js"></script>
+<script type="text/javascript" src="jasmine2.0/jasmine-jquery.js"></script>
+<script type="text/javascript" src="jasmine2.0/jasmine-fixture.js"></script>
+<script type="text/javascript" src="jasmine2.0/boot.js"></script>
+
+
+<script type="text/javascript">
+    var urlExists = function(url) {
+        var http = new XMLHttpRequest();
+        http.open('HEAD', url, false);
+        http.send();
+        return http.status!=404;
+    }
+
+    var includeScript = function(basePart, pathPart, filePart) {
+        var e = document.createElement('script');
+        e.type = "text/javascript";
+        e.src = basePart + pathPart + filePart;
+        //document.getElementsByTagName('head')[0].appendChild(e);
+        document.getElementsByTagName('body')[0].appendChild(e);
+    };
+
+    //ACM Core
+    var base = "../vendors/acm-3.0/";
+    var path = "js/";
+    includeScript(base, path, "core/acm.js");
+    includeScript(base, path, "core/acmDialog.js");
+    includeScript(base, path, "core/acmAjax.js");
+    includeScript(base, path, "core/acmDispatcher.js");
+    includeScript(base, path, "core/acmObject.js");
+    includeScript(base, path, "core/acmEvent.js");
+    includeScript(base, path, "core/acmRule.js");
+    includeScript(base, path, "test/core/acmSpec.js");
+
+    includeScript(base, path, "test/core/acmObjectSpec.js");
+    includeScript(base, path, "test/core/acmDispatcherSpec.js");
+    includeScript(base, path, "test/core/acmRuleSpec.js");
+
+    //App
+    includeScript(base, path, "app/app.js");
+    includeScript(base, path, "app/appObject.js");
+    includeScript(base, path, "app/appEvent.js");
+    includeScript(base, path, "app/appCallback.js");
+    includeScript(base, path, "app/appService.js");
+
+
+    //HelloWorld
+    base = "../../../../../../../../acm-plugins/acm-plugins-samples/hello-world-plugin/";
+    path = "src/main/resources/META-INF/resources/resources/js/";
+    includeScript(base, path, "helloWorld.js");
+    includeScript(base, path, "test/helloWorldSpec.js");
+
+    //Complaint
+    base = "../../../../../../../../acm-plugins/acm-default-plugins/acm-complaint-plugin/";
+    path = "src/main/resources/META-INF/resources/resources/js/";
+    includeScript(base, path, "complaint/complaint.js");
+    includeScript(base, path, "test/complaint/complaintSpec.js");
+
+    includeScript(base, path, "complaint/wizard/complaintWizard.js");
+    includeScript(base, path, "complaint/wizard/complaintWizardObject.js");
+    includeScript(base, path, "complaint/wizard/complaintWizardEvent.js");
+    includeScript(base, path, "complaint/wizard/complaintWizardPage.js");
+    includeScript(base, path, "complaint/wizard/complaintWizardRule.js");
+    includeScript(base, path, "complaint/wizard/complaintWizardService.js");
+    includeScript(base, path, "complaint/wizard/complaintWizardCallback.js");
+    includeScript(base, path, "test/complaint/wizard/complaintWizardSpec.js");
+
+    includeScript(base, path, "complaint/list/complaintList.js");
+    includeScript(base, path, "complaint/list/complaintListObject.js");
+    includeScript(base, path, "complaint/list/complaintListEvent.js");
+    includeScript(base, path, "complaint/list/complaintListPage.js");
+    includeScript(base, path, "complaint/list/complaintListRule.js");
+    includeScript(base, path, "complaint/list/complaintListService.js");
+    includeScript(base, path, "complaint/list/complaintListCallback.js");
+    includeScript(base, path, "test/complaint/list/complaintListSpec.js");
+    includeScript(base, path, "test/complaint/list/complaintListObjectSpec.js");
+
+</script>
+</head>
+
+<body>
+</body>
+</html>
+

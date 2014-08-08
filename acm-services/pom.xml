@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.10</version>
+        <version>3.0.11</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,6 +24,8 @@
         <module>acm-service-plugin-manager</module>
         <module>acm-service-search</module>
         <module>acm-service-users</module>
+        <module>acm-service-orbeon-forms</module>
+        <module>acm-service-authentication-token</module>
     </modules>
 
 

@@ -39,8 +39,27 @@
         <property name="objectMapper" ref="acmObjectMapper"/>
     </bean>
 
+    <bean id="castorXmlMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+        <property name="ignoreExtraAttributes" value="true"/>
+        <property name="ignoreExtraElements" value="true"/>
+        <property name="validating" value="false"/>
+        <property name="suppressNamespaces" value="true"/>
+    </bean>
+
+    <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="defaultContentType" value="application/json" />
+        <property name="favorPathExtension" value="true"/>
+        <property name="mediaTypes">
+            <props>
+                <prop key="xml">text/xml</prop>
+                <prop key="json">application/json</prop>
+            </props>
+        </property>
+    </bean>
+
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<mvc:annotation-driven>
+	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
         <mvc:message-converters>
             <!-- We configure the Jackson mapper to output dates in ISO801 format. This requires adding our
             customized Jackson mapper to the list of Spring MVC message converters. But, if we just add our bean here
@@ -49,6 +68,10 @@
             string converter. -->
 
             <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+                <property name="marshaller" ref="castorXmlMarshaller"/>
+                <property name="unmarshaller" ref="castorXmlMarshaller"/>
+            </bean>
             <bean class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter"/>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
             <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
@@ -60,8 +83,7 @@
             <bean class="org.springframework.http.converter.BufferedImageHttpMessageConverter"/>
             <bean class="org.springframework.http.converter.FormHttpMessageConverter"/>
             <bean class="org.springframework.http.converter.xml.Jaxb2CollectionHttpMessageConverter"/>
-            <!-- marshalling converter requires spring oxm -->
-            <!--<bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter"/>-->
+
         </mvc:message-converters>
     </mvc:annotation-driven>
     <!--<context:spring-configured/>-->

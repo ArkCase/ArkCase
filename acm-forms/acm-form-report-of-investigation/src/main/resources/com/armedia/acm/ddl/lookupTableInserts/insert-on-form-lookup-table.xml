@@ -1,0 +1,21 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    
+    
+    <changeSet id="01-insert-data-on-form-lookup-table" author="tsedalu">
+        <insert tableName="acm_form_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="ROI"/>
+            <column name="cm_order" valueNumeric="100"/>
+            <column name="cm_description" value="Report of Investigation"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

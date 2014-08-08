@@ -53,6 +53,7 @@ public class AcmSpringMvcErrorManager
     @ExceptionHandler(Exception.class)
     public void lastChanceHandler(HttpServletResponse response, Exception e)
     {
+        log.error("Last Chance Handler: " + e.getMessage(), e);
         sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 

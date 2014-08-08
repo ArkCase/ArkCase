@@ -2,9 +2,11 @@ package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import static javax.persistence.CascadeType.ALL;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -15,15 +17,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by armdev on 4/7/14.
@@ -92,6 +93,9 @@ public class Person implements Serializable
     )
     @Column(name = "cm_security_tag")
     private List<String> securityTags = new ArrayList<>();
+    
+    @OneToMany(cascade=ALL, mappedBy="person")   
+    private List<PersonAlias> personAliases = new ArrayList<>();
 
     @PrePersist
     protected void beforeInsert()
@@ -180,6 +184,13 @@ public class Person implements Serializable
                 contactMethod.setCreator(creator);
             }
         }
+        for( PersonAlias personAlias : getPersonAliases() )
+        {
+            if ( personAlias.getCreator() == null )
+            {
+                personAlias.setCreator(creator);
+            }
+        }
     }
 
     public Date getModified()
@@ -211,6 +222,10 @@ public class Person implements Serializable
         for ( ContactMethod contactMethod : getContactMethods() )
         {
             contactMethod.setModifier(modifier);
+        }
+        for ( PersonAlias personAlias : getPersonAliases() )
+        {
+            personAlias.setModifier(modifier);
         }
     }
 
@@ -268,9 +283,22 @@ public class Person implements Serializable
     {
         return securityTags;
     }
-
+    
     public void setSecurityTags(List<String> securityTags)
     {
         this.securityTags = securityTags;
     }
+
+    public List<PersonAlias> getPersonAliases() {
+        return personAliases;
+    }
+
+    public void setPersonAliases(List<PersonAlias> personAliases) {
+        this.personAliases = personAliases;
+        for ( PersonAlias pa : personAliases )
+        {
+            pa.setPerson(this);
+        }
+    }
+
 }

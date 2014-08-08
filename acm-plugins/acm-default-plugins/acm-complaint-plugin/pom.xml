@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.0.10</version>
+        <version>3.0.11</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -228,6 +228,16 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>jdbc</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.castor</groupId>
+            <artifactId>castor-xml</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
             <scope>test</scope>
         </dependency>
 

@@ -178,6 +178,122 @@
             <column name="cm_person_type_id"/>
         </createIndex>
      </changeSet>
+      <changeSet id="09-add-person-alias-type-tables" author="tsedalu">     
+          <createTable tableName="acm_person_alias_type_lu">
+            <column name="cm_id" type="NUMBER(32,0)">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_person_alias_type"/>
+            </column>
+            <column name="cm_value" type="VARCHAR(4000)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_person_alias_type"/>
+            </column>
+            <column name="cm_order" type="NUMBER(32,0)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_person_alias_type_order"/>
+            </column>
+            <column name="cm_status" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            
+        </createTable>
+            
+        <insert tableName="acm_person_alias_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Nick Name"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>        
+        <insert tableName="acm_person_alias_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Others"/>
+            <column name="cm_order" valueNumeric="2"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+     </changeSet>
+     
+       <changeSet id="10-add-person-alias-tables" author="tsedalu">
+        <createTable tableName="acm_person_alias">
+            <column name="cm_person_alias_id" type="NUMBER(32,0)">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_person_alias"/>
+            </column>
+            <column name="cm_person_id" type="RAW(16)" >
+               <constraints nullable="false" unique="true" />
+            </column>
+            <column name="cm_person_alias_type_id" type="VARCHAR(4000)">
+                <constraints nullable="false" unique="true" />
+            </column>                                     
+            <column name="cm_person_alias_value" type="VARCHAR(1024)">
+                <constraints nullable="false"/>   
+            </column>
+             <column name="cm_person_alias_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_alias_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_alias_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_alias_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
+     </changeSet>
+     
+      <changeSet id="11-modify-datatype-person-id" author="tsedalu">
+          <modifyDataType tableName="acm_person_alias" columnName="cm_person_id" newDataType="NUMBER(32,0)"/>
+      </changeSet>
+      
+      <changeSet id="12-modify-datatype-person-alias-type" author="tsedalu">
+           <modifyDataType tableName="acm_person_alias" columnName="cm_person_alias_type_id" newDataType="VARCHAR(4000)"/>
+           <renameColumn tableName="acm_person_alias" oldColumnName="cm_person_alias_type_id" newColumnName="cm_person_alias_type"/>
+      </changeSet>
+      
+      <!-- drop columns with a unique constraints in acm_person_alias table and add them again without a unique constraint-->
+      
+     <changeSet id="13-drop-columns-with-unique-constraint" author="tsedalu">
+         <dropColumn tableName="acm_person_alias" columnName="cm_person_id"/>
+         <dropColumn tableName="acm_person_alias" columnName="cm_person_alias_type"/>
+     </changeSet>
+  
+     <changeSet id="14-add-columns-without-unique-key" author="tsedalu">
+         <addColumn tableName="acm_person_alias">
+             
+             <column name="cm_person_id" type="NUMBER(32,0)">
+                 <constraints nullable="false"/>
+             </column>
+             
+             <column name="cm_person_alias_type" type="VARCHAR(4000)">
+                 <constraints nullable="false"/>
+             </column>
+         </addColumn>
+         
+         
+     </changeSet>
 </databaseChangeLog>
 

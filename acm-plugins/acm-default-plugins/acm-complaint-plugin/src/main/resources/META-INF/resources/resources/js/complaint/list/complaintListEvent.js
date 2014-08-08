@@ -31,15 +31,48 @@ ComplaintList.Event = {
     }
     ,doClickLnkListItem: function() {
         var complaintId = Complaint.getComplaintId();
-        ComplaintList.Service.retrieveDetail(complaintId);
-        ComplaintList.Service.retrieveTasks(complaintId);
+        if (0 < complaintId) {
+            ComplaintList.Service.retrieveDetail(complaintId);
+//        ComplaintList.Service.retrieveTasks(complaintId);
+            ComplaintList.Object.refreshJTableTasks();
+        }
 
         var c = ComplaintList.findComplaint(complaintId);
-        if (null != c) {
+        if (c) {
             ComplaintList.Object.updateDetail(c);
             Complaint.setComplaintId(complaintId);
             ComplaintList.Object.hiliteSelectedItem(complaintId);
             //todo: bring item in list to view
+        }
+
+
+        var initTab = ComplaintList.Object.getInitTab();
+        if (Acm.isNotEmpty(initTab)) {
+            ComplaintList.Object.clickTab(initTab);
+            ComplaintList.Object.setInitTab("");
+        }
+    }
+    ,onActivateTreeNode: function(node) {
+        //alert("onActivateTreeNode:(" + node.key + "," + node.title + "," + node.data.acmIcon + ")");
+        if ("prevPage" == node.key) {
+            alert("Call service to get previous page");
+            return;
+        } else if ("nextPage" == node.key) {
+            alert("Call service to get next page");
+            return;
+        }
+
+        var complaintId = ComplaintList.Object.getComplaintIdByKey(node.key);
+        if (0 < complaintId) {
+            ComplaintList.Service.retrieveDetail(complaintId);
+            ComplaintList.Object.refreshJTableTasks();
+        }
+
+        var c = ComplaintList.findComplaint(complaintId);
+        if (c) {
+            ComplaintList.Object.updateDetail(c);
+            Complaint.setComplaintId(complaintId);
+            ComplaintList.Object.hiliteSelectedItem(complaintId);
         }
 
 
@@ -64,7 +97,7 @@ ComplaintList.Event = {
         if (ComplaintList.isSingleObject()) {
             var complaintId = Complaint.getComplaintId();
             ComplaintList.Service.retrieveDetail(complaintId);
-            ComplaintList.Service.retrieveTasks(complaintId);
+            //ComplaintList.Service.retrieveTasks(complaintId);
         } else {
             ComplaintList.Service.listComplaint();
         }
@@ -74,14 +107,14 @@ ComplaintList.Event = {
         Acm.keepTrying(ComplaintList.Event._tryInitComplaintType, 8, 200);
     }
 
-    ,onClickLnkNewTasks : function(e) {
-        var complaintId = Complaint.getComplaintId();
-        var url = ComplaintList.Page.URL_NEW_TASK + complaintId;
-        App.gotoPage(url);
-    }
-    ,onChangeSelTasks : function(e) {
-        alert("onChangeSelTasks:" + e.value);
-    }
+//    ,onClickLnkNewTasks : function(e) {
+//        var complaintId = Complaint.getComplaintId();
+//        var url = ComplaintList.Page.URL_NEW_TASK + complaintId;
+//        App.gotoPage(url);
+//    }
+//    ,onChangeSelTasks : function(e) {
+//        alert("onChangeSelTasks:" + e.value);
+//    }
 
     ,_tryInitAssignee: function() {
         var data = App.Object.getApprovers();

@@ -1,5 +1,7 @@
 package com.armedia.acm.services.users.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -156,6 +158,7 @@ public class AcmUser implements Serializable, AcmLdapEntity
     }
 
     @Override
+    @JsonIgnore
     public boolean isGroup()
     {
         return false;

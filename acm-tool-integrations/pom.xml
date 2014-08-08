@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.10</version>
+        <version>3.0.11</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,6 +26,7 @@
         <module>acm-spring-classpath-copier</module>
         <module>acm-spring-context-holder</module>
         <module>acm-spring-data-source</module>
+        <module>acm-orbeon-configuration</module>
     </modules>
 
 </project>

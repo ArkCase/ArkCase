@@ -2043,7 +2043,8 @@ Exception type was: &#x27;com.armedia.acm.core.exceptions.AcmUserActionFailedExc
                                             <h3>Body</h3>
                                             
                                                 <p><strong>Type: text/plain</strong></p>
-                                                <pre>No such business object with name &#x27;unrecognized&#x27;</pre>
+                                                <pre>No such business object with name &#x27;unrecognized&#x27;
+</pre>
                                             
                                         
                                     
@@ -2065,6 +2066,105 @@ Exception type was: &#x27;com.armedia.acm.core.exceptions.AcmUserActionFailedExc
                         </div>
                     </div>
                 
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 id="_authenticationtoken" class="panel-title">/authenticationtoken</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            
+
+                            <div class="panel-group">
+                                <div class="panel panel-white">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="block collapsed" data-toggle="collapse" href="#panel__authenticationtoken">
+                
+                    <span class="badge badge_get">get</span>
+                
+                <span class="parent"></span>/authenticationtoken
+            </a>
+        </h4>
+    </div>
+    <div id="panel__authenticationtoken" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="list-group">
+                
+                    <a href="#" data-toggle="modal" data-target="#_authenticationtoken_get" class="list-group-item">
+                        <span class="badge badge_get">get</span>
+                        Retrieve an authentication token that may be appended to subsequent requests.  Such a token authenticates those future requests as the user that generated the token.
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="modal fade" id="_authenticationtoken_get">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="badge badge_get">get</span>
+                            <span class="parent"></span>/authenticationtoken
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-info"><p>Retrieve an authentication token that may be appended to subsequent requests.  Such a token authenticates those future requests as the user that generated the token.</p>
+</div>
+
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#_authenticationtoken_get_request" data-toggle="tab">Request</a></li>
+                            
+                                <li><a href="#_authenticationtoken_get_response" data-toggle="tab">Response</a></li>
+                            
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="_authenticationtoken_get_request">
+                                
+
+                                
+
+                                
+                            </div>
+
+                            
+                                <div class="tab-pane" id="_authenticationtoken_get_response">
+                                    
+                                        <h2>HTTP status code 200</h2>
+                                        <p>Successful response.  The body consists of the authentication token.  Append it to future service requests, e.g., /api/v1/<myservice>?acm_ticket=<token></p>
+
+
+                                        
+
+                                        
+                                            <h3>Body</h3>
+                                            
+                                                <p><strong>Type: text/plain</strong></p>
+                                                <pre>2cf2ab49-9ce9-45bd-a307-a452b24dd789</pre>
+                                            
+                                        
+                                    
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                
             </div>
 
             <div class="col-md-3">
@@ -2074,6 +2174,8 @@ Exception type was: &#x27;com.armedia.acm.core.exceptions.AcmUserActionFailedExc
                             <li><a href="#_plugin">/plugin</a></li>
                         
                             <li><a href="#_users">/users</a></li>
+                        
+                            <li><a href="#_authenticationtoken">/authenticationtoken</a></li>
                         
                     </ul>
                 </div>

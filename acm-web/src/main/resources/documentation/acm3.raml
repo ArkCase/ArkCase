@@ -559,3 +559,18 @@ securitySchemes:
             text/plain:
               example: |
                 No such business object with name 'unrecognized'
+/authenticationtoken:
+  get:
+    securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+    description: Retrieve an authentication token that may be appended to subsequent
+      requests.  Such a token authenticates those future requests as the user that 
+      generated the token.  
+    responses:
+      200:
+        description: Successful response.  The body consists of the authentication 
+          token.  Append it to future service requests, e.g., 
+          /api/v1/<myservice>?acm_ticket=<token>
+        body:
+          text/plain:
+            example: 2cf2ab49-9ce9-45bd-a307-a452b24dd789
+              
