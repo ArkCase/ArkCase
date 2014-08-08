@@ -10,4 +10,9 @@
 
     </bean>
     
+    <bean id="formTypeListOfValuesAPIController" class="com.armedia.acm.service.orbeon.forms.web.api.FormTypeListOfValuesAPIController">
+        <property name="listOfValuesService" ref="listOfValuesService"/>
+        <property name="typesDescriptor" ref="formTypeTable"/>
+    </bean>
+    
 </beans>
