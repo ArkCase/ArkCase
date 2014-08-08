@@ -5,5 +5,9 @@
             
     <bean id="orbeonFormController" class="com.armedia.acm.service.orbeon.forms.web.api.OrbeonFormController">
     </bean>
+
+    <bean id="orbeonPdfController" class="com.armedia.acm.service.orbeon.forms.web.api.OrbeonPdfController">
+
+    </bean>
     
 </beans>
