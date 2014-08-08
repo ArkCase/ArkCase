@@ -77,7 +77,7 @@
                         <li><a href="#">Approved Complaints</a></li>
                         <li><a href="#">Complaints From Group</a></li>
                         <li><a href="#">Closed or Expired Complaints</a></li>
-                        <li><a href="http://localhost:8999/orbeon/fr/acm/complaint-form/new?acm_ticket=${token}">New Complaints</a></li>
+                        <li><a href="http://10.21.4.149/orbeon/fr/acm/complaint-form/new?acm_ticket=${token}">New Complaints</a></li>
                     </ul>
                 </div>
             </div>
@@ -286,7 +286,7 @@
                     <a href="#" class="font-bold">Documents</a>
                     <input type="file" name="files[]" multiple style="display:none;"/>
                                     	
-                    <a class="pull-right" href="http://localhost:8999/orbeon/fr/acm/roi-form/new?acm_ticket=${token}&complaint_id=52&complaint_number=20140430_52&complaint_title=testTitle&complaint_priority=Expedite">New Form</a>
+                    <a class="pull-right" href="http://10.21.4.149/orbeon/fr/acm/roi-form/new?acm_ticket=${token}&complaint_id=52&complaint_number=20140430_52&complaint_title=testTitle&complaint_priority=Expedite">New Form</a>
                     <select class="input-sm form-control input-s-sm inline v-middle pull-right">
                     <option value="0">Report of Investigation</option>
                 	</select>
