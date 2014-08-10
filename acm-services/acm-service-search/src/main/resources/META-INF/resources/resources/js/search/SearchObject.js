@@ -69,7 +69,7 @@ Search.Object = {
         var sortMap = {};
         sortMap["title"] = "title_t";
 
-        Acm.Object.jTableCreateSortable($jt
+        AcmEx.Object.jTableCreatePaging($jt
             ,{
                 title: 'Tasks'
                 //,defaultSorting: 'Name ASC'
@@ -79,8 +79,8 @@ Search.Object = {
                 //,selectOnRowClick: false //Enable this to only select using checkboxes
 
                 ,actions: {
-                    listActionSortable: function (postData, jtParams, sortMap) {
-                        return Acm.Object.jTableDefaultListAction(postData, jtParams, sortMap
+                    pagingListAction: function (postData, jtParams, sortMap) {
+                        return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
                             ,function() {
                                 var term = Topbar.Object.getQuickSearchTerm();
                                 var url;
@@ -100,7 +100,7 @@ Search.Object = {
                                                 //response.start should match to jtParams.jtStartIndex
                                                 //response.docs.length should be <= jtParams.jtPageSize
 
-                                                jtData = Acm.Object.jTableGetEmptyResult();
+                                                jtData = AcmEx.Object.jTableGetEmptyResult();
                                                 for (var i = 0; i < response.docs.length; i++) {
                                                     var Record = {};
                                                     Record.id = response.docs[i].object_id_s;

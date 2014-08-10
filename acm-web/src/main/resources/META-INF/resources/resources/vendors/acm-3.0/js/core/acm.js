@@ -4,9 +4,6 @@
  * @author jwu
  */
 var Acm = Acm || {
-    ii: function() {
-        alert("ii");
-    },
     initialize : function() {
         Acm.Dialog.initialize();
         Acm.Dispatcher.initialize();
@@ -62,9 +59,6 @@ var Acm = Acm || {
         if (hasQmark) {
             url += '&'
         } else {
-//            if ('/' !== lastChar) {
-//                url += '/';
-//            }
             url += '?';
         }
         url += 'rand=' + Math.floor((Math.random()*10000000000));
