@@ -14,14 +14,14 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaint.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintList.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/list/complaintListCallback.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaintOld/complaint.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaintOld/list/complaintList.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaintOld/list/complaintListObject.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaintOld/list/complaintListEvent.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaintOld/list/complaintListPage.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaintOld/list/complaintListRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaintOld/list/complaintListService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaintOld/list/complaintListCallback.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 

@@ -16,14 +16,33 @@ public class ComplaintUiController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    private AcmPageDescriptor pageDescriptor;
     private AcmPageDescriptor pageDescriptorWizard;
     private AcmPageDescriptor pageDescriptorList;
     private AuthenticationTokenService authenticationTokenService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView openComplaintList(Authentication auth, 
-    		@RequestParam(value = "initId", required = false) Integer initId
-    		,@RequestParam(value = "initTab", required = false) String initTab
+    public ModelAndView openComplaints() {
+        ModelAndView retval = new ModelAndView();
+        retval.setViewName("complaint");
+        retval.addObject("pageDescriptor",  getPageDescriptorList());
+        return retval;
+    }
+
+    @RequestMapping(value = "/{complaintId}", method = RequestMethod.GET)
+    public ModelAndView openComplaint(@PathVariable(value = "complaintId") Long complaintId
+    ) {
+        ModelAndView retval = new ModelAndView();
+        retval.setViewName("complaint");
+        retval.addObject("complaintId", complaintId);
+        retval.addObject("pageDescriptor",  getPageDescriptorList());
+        return retval;
+    }
+
+    @RequestMapping(value = "/old", method = RequestMethod.GET)
+    public ModelAndView openComplaintList(Authentication auth,
+                                          @RequestParam(value = "initId", required = false) Integer initId
+            ,@RequestParam(value = "initTab", required = false) String initTab
     ) {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintList");
@@ -36,7 +55,7 @@ public class ComplaintUiController
         return retval;
     }
 
-    @RequestMapping(value = "/{complaintId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/old/{complaintId}", method = RequestMethod.GET)
     public ModelAndView openComplaintDetail(@PathVariable(value = "complaintId") Long complaintId)
     {
         ModelAndView retval = new ModelAndView();
@@ -54,6 +73,14 @@ public class ComplaintUiController
         retval.addObject("pageDescriptor",  getPageDescriptorWizard());
         return retval;
 
+    }
+
+    public AcmPageDescriptor getPageDescriptor() {
+        return pageDescriptor;
+    }
+
+    public void setPageDescriptor(AcmPageDescriptor pageDescriptor) {
+        this.pageDescriptor = pageDescriptor;
     }
 
     public AcmPageDescriptor getPageDescriptorWizard() {
