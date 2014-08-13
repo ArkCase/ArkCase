@@ -121,7 +121,7 @@
                     <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>
                     <small class="text-muted">Due Date</small> </div>
                 <div class="col-xs-4 b-r">
-                    <div class="h4 font-bold"><a href="#" id="priority" data-type="text" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>
+                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>
                     <small class="text-muted">Priority</small> </div>
                 <div class="col-xs-4">
                     <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>
