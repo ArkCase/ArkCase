@@ -32,7 +32,6 @@
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
 
     <!-- JTable -->
-    <%--<link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_jtable}/themes/lightcolor/blue/jtable.css" type="text/css"/>--%>
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/jtable/blue/jtable.css" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
 
@@ -67,7 +66,8 @@
             <section class="hbox stretch"><!-- /.aside -->
                 <!-- .aside -->
 
-                <aside class="aside-xl bg-light lt">
+                <%--<aside class="aside-xl bg-light lt">   used with tree table--%>
+                <aside class="aside-lg bg-light lt">
                     <section class="vbox animated fadeInLeft">
                         <section class="scrollable">
                             <header class="dk header">
@@ -129,6 +129,7 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                    <%--<div id="tree"></div>--%>
                                 </div>
                             </div>
                         </section>
