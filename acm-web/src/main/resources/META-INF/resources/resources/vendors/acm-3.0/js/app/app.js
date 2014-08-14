@@ -23,6 +23,8 @@ var App = App || {
     ,OBJTYPE_COMPLAINT:   "Complaint"
     ,OBJTYPE_TASK:        "Task"
     ,OBJTYPE_DOCUMENT:    "Document"
+    ,OBJTYPE_PEOPLE:    "People"
+
 
     ,getContextPath: function() {
         return App.Object.getContextPath();

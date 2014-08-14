@@ -43,9 +43,11 @@ TaskList.Object = {
                 weekStart: 1
             }
         });
-        this.$lnkPriority.editable({placement: 'bottom'
+
+
+        /*this.$lnkPriority.editable({placement: 'bottom'
             ,value: 50
-        });
+        });*/
 
 
 
@@ -131,7 +133,20 @@ TaskList.Object = {
         //this.$lnkDueDate.editable("setValue", txt);
     }
     ,setValueLnkPriority: function(txt) {
-        this.$lnkPriority.editable("setValue", txt);
+        var priorityValue;
+        if(txt == "Low"){
+            priorityValue = 25;
+        }
+        else if(txt == "Medium"){
+            priorityValue = 50;
+        }
+        else if (txt == "High"){
+            priorityValue = 75;
+        }
+        else {
+            priorityValue = 90;
+        }
+        this.$lnkPriority.editable("setValue", priorityValue);
     }
     ,setValueLnkAssigned: function(txt) {
         this.$lnkAssigned.editable("setValue", txt);
@@ -141,6 +156,21 @@ TaskList.Object = {
     }
     ,setTextLnkStatus: function(txt) {
         Acm.Object.setText(this.$lnkStatus, txt);
+    }
+
+
+    ,initPriority: function(data){
+        var choices = []; //[{value: "", text: "Choose Priority"}];
+        $.each(data,function(idx,val){
+            var opt= {};
+            opt.value = val;
+            opt.text = val;
+            choices.push(opt);
+        });
+
+        this.$lnkPriority.editable({placement: 'bottom', value:"",
+            source: choices
+        })
     }
     ,initAssignee: function(data) {
         var choices = []; //[{value: "", text: "Choose Assignee"}];

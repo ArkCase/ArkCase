@@ -56,6 +56,8 @@ TaskList.Event = {
 
         Acm.keepTrying(TaskList.Event._tryInitAssignee, 8, 200);
         Acm.keepTrying(TaskList.Event._tryInitComplaintType, 8, 200);
+        Acm.keepTrying(TaskList.Event._tryInitPriority, 8, 200);
+
     }
 
 
@@ -72,6 +74,15 @@ TaskList.Event = {
         var data = App.Object.getComplaintTypes();
         if (Acm.isNotEmpty(data)) {
             TaskList.Object.initComplaintType(data);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    ,_tryInitPriority: function() {
+        var data = App.Object.getPriorities();
+        if (Acm.isNotEmpty(data)) {
+            TaskList.Object.initPriority(data);
             return true;
         } else {
             return false;

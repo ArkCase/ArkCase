@@ -109,6 +109,7 @@ AdminAccess.Object = {
                     }, objectType: {
                         title: 'Object Type', width: '3%'
                         ,edit: false
+                        //,sorting : true
 
                     }, objectState: {
                         title: 'State', width: '3%'
@@ -122,7 +123,9 @@ AdminAccess.Object = {
                     }, accessDecision: {
                         title: 'Access Decision',
                         width: '5%'
-                        ,options: ['GRANT' , 'DENY']
+                        ,options: [{ Value: 'GRANT', DisplayText: 'GRANT' }, { Value: 'DENY', DisplayText: 'DENY' }, { Value: 'MANDATORY_DENY', DisplayText: 'MANDATORY DENY' }]
+
+                       // ,options: ['GRANT' , 'DENY', 'MANDATORY_DENY']
                     }, allowDiscretionaryUpdate: {
                         title: 'Allow Discretionary Update',
                         width: '5%'
@@ -137,7 +140,9 @@ AdminAccess.Object = {
                 }
             }
             //end arg
+            ,sortMap
         );
+
     }
 };
 
