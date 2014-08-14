@@ -5,6 +5,9 @@
  */
 var Complaint = Complaint || {
     initialize: function() {
+        Complaint.cachePage = new Acm.CacheFifo(2);
+        Complaint.cacheComplaint = new Acm.CacheFifo(3);
+
         Complaint.Object.initialize();
         Complaint.Event.initialize();
         Complaint.Page.initialize();
@@ -22,36 +25,60 @@ var Complaint = Complaint || {
     ,Service: {}
     ,Callback: {}
 
-
-    ,_complaintList: []
-    ,getComplaintList: function() {
-        return this._complaintList;
+    ,cachePage: null
+    ,cacheComplaint: null
+    ,_complaintId: 0
+    ,getComplaintId : function() {
+        return this._complaintId;
     }
-    ,setComplaintList: function(list) {
-        return this._complaintList = list;
+    ,setComplaintId : function(id) {
+        this._complaintId = id;
     }
-    ,findComplaint: function(complaintId) {
-        var found = null;
-        if (Acm.isNotEmpty(this._complaintList)) {
-            var len = this._complaintList.length;
-            for (var i = 0; i < len; i++) {
-                var c = this._complaintList[i];
-                if (complaintId == c.complaintId) {
-                    found = c;
-                    break;
-                }
-            }//end for
+    ,getComplaint: function() {
+        if (0 >= this._complaintId) {
+            return null;
         }
-        return found;
+        return this.cacheComplaint.get(this._complaintId);
     }
 
-    ,_singleObject: false
-    ,isSingleObject: function() {
-        return this._singleObject;
+
+    ,PERSON_SUBTABLE_TITLE_DEVICES:       "Communication Devices"
+    ,PERSON_SUBTABLE_TITLE_ORGANIZATIONS: "Organizations"
+    ,PERSON_SUBTABLE_TITLE_LOCATIONS:     "Locations"
+    ,PERSON_SUBTABLE_TITLE_ALIASES:       "Aliases"
+
+
+
+    ,_personTypes : ["Witness", "Subject", "Spouse"]
+    ,getPersonTypes : function() {
+        return this._personTypes;
     }
-    ,setSingleObject: function(single) {
-        this._singleObject = single;
+
+    ,_personTitles : ['Mr.', 'Mrs.', 'Ms.', 'Dr.']
+    ,getPersonTitles : function() {
+        return this._personTitles;
+    }
+
+    ,_deviceTypes : ['Phone', 'Email']
+    ,getDeviceTypes : function() {
+        return this._deviceTypes;
+    }
+
+    ,_organizationTypes : ['org', 'gov', 'com']
+    ,getOrganizationTypes : function() {
+        return this._organizationTypes;
+    }
+
+    ,_locationTypes : ['Home', 'Office', 'Hotel']
+    ,getLocationTypes : function() {
+        return this._locationTypes;
+    }
+
+    ,_aliasTypes : ['Nick Name', 'Other Name']
+    ,getAliasTypes : function() {
+        return this._aliasTypes;
     }
 
 };
+
 

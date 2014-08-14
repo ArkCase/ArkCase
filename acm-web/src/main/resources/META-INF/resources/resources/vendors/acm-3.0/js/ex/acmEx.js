@@ -52,7 +52,7 @@ var AcmEx = AcmEx || {
         ,addBranchLast: function(node) {
             return this._addNode(node, true);
         }
-        ,makeLast: function(node) {
+        ,makeLast: function() {
             //keep popping stack until a node that is not the last child is found
             var nonLastChildFound = false;
             do {

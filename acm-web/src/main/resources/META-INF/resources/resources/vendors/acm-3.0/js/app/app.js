@@ -36,33 +36,18 @@ var App = App || {
     }
 
 
-    //Complaint treeInfo is in jason format, includes
-    //{
-    //     complaintId : 0
-    //     ,initKey: null
-    //     ,start: 0
-    //    ,n: 10
-    //    ,term: null
-    //    sort fields
-    //    search terms
-    //    filters
-    //}
     ,getComplaintTreeInfo: function() {
         var data = sessionStorage.getItem("AcmComplaintTreeInfo");
-        var treeInfo = ("null" !== data)? JSON.parse(data) : {
-            complaintId: 0
-            ,initKey: null
-            ,start: 0
-            ,n: Acm.TREE_DEFAULT_PAGE_SIZE
-            ,term: null
-        };
-        return treeInfo;
+        if (Acm.isEmpty(data)) {
+            return null;
+        }
+        return JSON.parse(data);
     }
     ,setComplaintTreeInfo: function(treeInfo) {
         var data = (Acm.isEmpty(treeInfo))? null : JSON.stringify(treeInfo);
         sessionStorage.setItem("AcmComplaintTreeInfo", data);
     }
-    ,TREE_DEFAULT_PAGE_SIZE:10
+
 
 };
 
