@@ -1,14 +1,20 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <title>ACM 3.0 API API documentation</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<!DOCTYPE HTML><html><head><title>ACM 3.0 API API documentation</title><meta http-equiv=X-UA-Compatible content="IE=edge"><meta http-equiv=Content-Type content="text/html; charset=utf-8"><meta name=generator content="https://github.com/kevinrenskers/raml2html 0.30.0"><link rel=stylesheet href=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css><link rel=stylesheet href=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css><script type=text/javascript src=http://code.jquery.com/jquery-1.11.0.min.js></script><script type=text/javascript src=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js></script><script type=text/javascript src=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js></script><script type=text/javascript>
+        $(document).ready(function() {
+            $('.page-header pre code, .top-resource-description pre code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
 
-    <style>
+            $('[data-toggle]').click(function() {
+                var selector = $(this).data('target') + ' pre code';
+                $(selector).each(function(i, block) {
+                    hljs.highlightBlock(block);
+                });
+            });
+        });
+    </script><style>
+        .hljs {
+            background: transparent;
+        }
         .parent {
             color: #999;
         }
@@ -16,23 +22,16 @@
             float: none;
             margin-right: 6px;
         }
-        .panel-title > .block > .badge {
+        .panel-title > .methods {
             float: right;
-            margin-left: 5px;
         }
         .badge {
             border-radius: 0;
             text-transform: uppercase;
-            width: 60px;
+            width: 70px;
             font-weight: normal;
             color: #f3f3f6;
             line-height: normal;
-        }
-        .block .badge {
-            visibility: hidden;
-        }
-        .block.collapsed .badge {
-            visibility: visible;
         }
         .badge_get {
             background-color: #63a8e2;
@@ -45,9 +44,6 @@
         }
         .badge_delete {
             background-color: #d26460;
-        }
-        .block {
-            display: block;
         }
         .list-group, .panel-group {
             margin-bottom: 0;
@@ -87,2100 +83,344 @@
         #sidebar {
             margin-top: 30px;
         }
-        .resource-description {
+        .top-resource-description {
             border-bottom: 1px solid #ddd;
             background: #fcfcfc;
             padding: 15px 15px 0 15px;
             margin: -15px -15px 10px -15px;
         }
-    </style>
-</head>
-
-<body data-spy="scroll" data-target="#sidebar">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-9" role="main">
-                <div class="page-header">
-                    <h1>ACM 3.0 API API documentation <small>version v1</small></h1>
-                    <p>http://armdec6acm1.armedia.com/acm/api/v1</p>
-
-                    
-                </div>
-
-                
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 id="_plugin" class="panel-title">/plugin</h3>
-                        </div>
-
-                        <div class="panel-body">
-                            
-
-                            <div class="panel-group">
-                                <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin">
-                
-                <span class="parent"></span>/plugin
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-            </div>
-        </div>
-    </div>
-
-    
-</div>
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_complaint">
-                
-                    <span class="badge badge_post">post</span>
-                
-                <span class="parent">/plugin</span>/complaint
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_complaint" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_complaint_post" class="list-group-item">
-                        <span class="badge badge_post">post</span>
-                        Create a complaint based on the complaint originator&#x27;s contact information
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_complaint_post">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_post">post</span>
-                            <span class="parent">/plugin</span>/complaint
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Create a complaint based on the complaint originator&#39;s contact information</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_complaint_post_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_plugin_complaint_post_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_complaint_post_request">
-                                
-
-                                
-
-                                
-                                    <h3>Body</h3>
-                                    
-                                        <p><strong>Type: application/json</strong></p>
-                                        <pre>{
-  &quot;complaintId&quot;: null,
-  &quot;originator&quot;: {
-    &quot;id&quot;: null,
-    &quot;title&quot;: &quot;Mr.&quot;,
-    &quot;givenName&quot;: &quot;John&quot;,
-    &quot;familyName&quot;: &quot;Doe&quot;,
-    &quot;company&quot;: &quot;Contoso&quot;,
-    &quot;addresses&quot;: [
+        .resource-description {
+            border-bottom: 1px solid #fcfcfc;
+            background: #fcfcfc;
+            padding: 15px 15px 0 15px;
+            margin: -15px -15px 10px -15px;
+        }
+        .panel > .panel-body > .panel-group > .panel:first-child .resource-description {
+            display: none;
+        }
+        .list-group .badge {
+            float: left;
+        }
+        .method_description {
+            margin-left: 85px;
+        }
+        .method_description p:last-child {
+            margin: 0;
+        }
+    </style></head><body data-spy=scroll data-target=#sidebar><div class=container><div class=row><div class=col-md-9 role=main><div class=page-header><h1>ACM 3.0 API API documentation <small>version v1</small></h1><p>http://armdec6acm1.armedia.com/acm/api/v1</p></div><div class="panel panel-default"><div class=panel-heading><h3 id=_plugin class=panel-title>/plugin</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin><span class=parent></span>/plugin</a> <span class=methods></span></h4></div><div id=panel__plugin class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint><span class=parent>/plugin</span>/complaint</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Create a complaint based on the complaint originator&#39;s contact information</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin</span>/complaint</h4></div><div class=modal-body><div class="alert alert-info"><p>Create a complaint based on the complaint originator&#39;s contact information</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_post_request><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "complaintId": null,
+  "originator": {
+    "id": null,
+    "title": "Mr.",
+    "givenName": "John",
+    "familyName": "Doe",
+    "company": "Contoso",
+    "addresses": [
       {
-        &quot;type&quot;: &quot;home&quot;,
-        &quot;streetAddress&quot;: &quot;123 Main St.&quot;,
-        &quot;streetAddress2&quot;: null,
-        &quot;city&quot;: &quot;Peoria&quot;,
-        &quot;state&quot;: &quot;IL&quot;,
-        &quot;zip&quot;: &quot;12345&quot;
+        "type": "home",
+        "streetAddress": "123 Main St.",
+        "streetAddress2": null,
+        "city": "Peoria",
+        "state": "IL",
+        "zip": "12345"
       }
     ],
-    &quot;contactMethods&quot;: [
+    "contactMethods": [
       {
-        &quot;type&quot;: &quot;Mobile Phone&quot;,
-        &quot;value&quot;: &quot;123-456-7890&quot;
+        "type": "Mobile Phone",
+        "value": "123-456-7890"
       },
       {
-        &quot;type&quot;: &quot;Personal E-mail&quot;,
-        &quot;value&quot;: &quot;john.doe@gmail.com&quot;
+        "type": "Personal E-mail",
+        "value": "john.doe@gmail.com"
       }
     ],
-    &quot;securityTags&quot;: [&quot;Anonymous&quot;, &quot;Confidential&quot;, &quot;Top Secret&quot;]
+    "securityTags": ["Anonymous", "Confidential", "Top Secret"],
+    "personAliases": [
+    {
+      "id": null,
+      "aliasType": "Nick Name",
+      "aliasValue": "Nick"
+    }
+    ]		                 
   }
 }
-</pre>
-                                    
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_plugin_complaint_post_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>Normal response indicating the system created a new complaint</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>{
-  &quot;complaintId&quot;: 555,
-  &quot;complaintNumber&quot;: &quot;20140424_555&quot;,
-  &quot;complaintStatus&quot;: &quot;DRAFT&quot;,
-  &quot;originator&quot;: {
-    &quot;id&quot;: 556,
-    &quot;status&quot;: &quot;ACTIVE&quot;,
-    &quot;title&quot;: &quot;Mr.&quot;,
-    &quot;givenName&quot;: &quot;John&quot;,
-    &quot;familyName&quot;: &quot;Doe&quot;,
-    &quot;company&quot;: &quot;Contoso&quot;,
-    &quot;addresses&quot;: [
+</code></pre></small></p></div><div class=tab-pane id=_plugin_complaint_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response indicating the system created a new complaint</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "complaintId": 555,
+  "complaintNumber": "20140424_555",
+  "complaintStatus": "DRAFT",
+  "originator": {
+    "id": 556,
+    "status": "ACTIVE",
+    "title": "Mr.",
+    "givenName": "John",
+    "familyName": "Doe",
+    "company": "Contoso",
+    "addresses": [
       {
-        &quot;id&quot;: 557,
-        &quot;type&quot;: &quot;home&quot;,
-        &quot;streetAddress&quot;: &quot;123 Main St.&quot;,
-        &quot;streetAddress2&quot;: null,
-        &quot;city&quot;: &quot;Peoria&quot;,
-        &quot;state&quot;: &quot;IL&quot;,
-        &quot;zip&quot;: &quot;12345&quot;
+        "id": 557,
+        "type": "home",
+        "streetAddress": "123 Main St.",
+        "streetAddress2": null,
+        "city": "Peoria",
+        "state": "IL",
+        "zip": "12345"
       }
     ],
-    &quot;contactMethods&quot;: [
+    "contactMethods": [
       {
-        &quot;id&quot;: 558,
-        &quot;type&quot;: &quot;Mobile Phone&quot;,
-        &quot;value&quot;: &quot;123-456-7890&quot;
+        "id": 558,
+        "type": "Mobile Phone",
+        "value": "123-456-7890"
       },
       {
-        &quot;id&quot;: 559,
-        &quot;type&quot;: &quot;Personal E-mail&quot;,
-        &quot;value&quot;: &quot;john.doe@gmail.com&quot;
+        "id": 559,
+        "type": "Personal E-mail",
+        "value": "john.doe@gmail.com"
       }
     ],
-    &quot;securityTags&quot;: [&quot;Anonymous&quot;, &quot;Confidential&quot;, &quot;Top Secret&quot;]
-  }
+    "securityTags": ["Anonymous", "Confidential", "Top Secret"],
+    "personAliases": [
+     {
+        "id": 560,
+        "aliasType": "Nick Name",
+        "aliasValue": "Nick"
+    }
+    ]
+  }              
 }
   
-</pre>
-                                            
-                                        
-                                    
-                                        <h2>HTTP status code 400</h2>
-                                        <p>Usually means the request body was invalid (did not match the expected JSON format).  The response body will be empty.</p>
-
-
-                                        
-
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_complaint_types">
-                
-                    <span class="badge badge_get">get</span>
-                
-                <span class="parent">/plugin/complaint</span>/types
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_complaint_types" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_complaint_types_get" class="list-group-item">
-                        <span class="badge badge_get">get</span>
-                        Retrieve array of valid complaint types.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_complaint_types_get">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_get">get</span>
-                            <span class="parent">/plugin/complaint</span>/types
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Retrieve array of valid complaint types.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_complaint_types_get_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_plugin_complaint_types_get_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_complaint_types_get_request">
-                                
-
-                                
-
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_plugin_complaint_types_get_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>Expected response including the valid complaint types.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>[ &quot;Domestic Dispute&quot;, &quot;Arson&quot;, &quot;Better Business Dispute&quot;, &quot;Government&quot;, &quot;Local&quot;, &quot;Agricultural&quot;, &quot;Pollution&quot; ]
-</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_complaint_priorities">
-                
-                    <span class="badge badge_get">get</span>
-                
-                <span class="parent">/plugin/complaint</span>/priorities
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_complaint_priorities" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_complaint_priorities_get" class="list-group-item">
-                        <span class="badge badge_get">get</span>
-                        Retrieve array of valid complaint priorities.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_complaint_priorities_get">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_get">get</span>
-                            <span class="parent">/plugin/complaint</span>/priorities
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Retrieve array of valid complaint priorities.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_complaint_priorities_get_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_plugin_complaint_priorities_get_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_complaint_priorities_get_request">
-                                
-
-                                
-
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_plugin_complaint_priorities_get_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>Expected response including the valid complaint priorities.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>[ &quot;Low&quot;, &quot;Medium&quot;, &quot;High&quot; ]
-</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_complaint_file">
-                
-                    <span class="badge badge_post">post</span>
-                
-                <span class="parent">/plugin/complaint</span>/file
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_complaint_file" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_complaint_file_post" class="list-group-item">
-                        <span class="badge badge_post">post</span>
-                        Add a file to the complaint.  Submitted form must include a complaintId element, and a file[] element with the files to be uploaded.  Returns JSON suitable for consumption by the jQuery File Upload plugin.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_complaint_file_post">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_post">post</span>
-                            <span class="parent">/plugin/complaint</span>/file
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Add a file to the complaint.  Submitted form must include a complaintId element, and a file[] element with the files to be uploaded.  Returns JSON suitable for consumption by the jQuery File Upload plugin.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_complaint_file_post_request" data-toggle="tab">Request</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_complaint_file_post_request">
-                                
-
-                                
-
-                                
-                                    <h3>Body</h3>
-                                    
-                                        <p><strong>Type: multipart/form-data</strong></p>
-                                        <pre></pre>
-                                    
-                                
-                            </div>
-
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_complaint_byId__complaintId_">
-                
-                    <span class="badge badge_get">get</span>
-                
-                <span class="parent">/plugin/complaint</span>/byId/{complaintId}
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_complaint_byId__complaintId_" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_complaint_byId__complaintId__get" class="list-group-item">
-                        <span class="badge badge_get">get</span>
-                        Lookup complaint details by complaint ID.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_complaint_byId__complaintId__get">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_get">get</span>
-                            <span class="parent">/plugin/complaint</span>/byId/{complaintId}
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Lookup complaint details by complaint ID.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_complaint_byId__complaintId__get_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_plugin_complaint_byId__complaintId__get_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_complaint_byId__complaintId__get_request">
-                                
-                                    <h3>URI Parameters</h3>
-                                    <ul>
-                                        
-                                            <li><strong>complaintId</strong>: string</li>
-                                        
-                                    </ul>
-                                
-
-                                
-
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_plugin_complaint_byId__complaintId__get_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>expected response containing the desired complaint details</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>{
-&quot;complaintId&quot;:739,
-&quot;complaintNumber&quot;:&quot;20140603_739&quot;,
-&quot;complaintType&quot;:&quot;Domestic Dispute&quot;,
-&quot;priority&quot;:&quot;Medium&quot;,
-&quot;complaintTitle&quot;:null,
-&quot;details&quot;:&quot;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&quot;,
-&quot;incidentDate&quot;:&quot;2013-02-12T00:00:00.000+0000&quot;,
-&quot;created&quot;:&quot;2014-06-03T21:16:56.090+0000&quot;,
-&quot;creator&quot;:&quot;ebmillar&quot;,
-&quot;modified&quot;:&quot;2014-06-03T21:17:05.315+0000&quot;,
-&quot;modifier&quot;:&quot;ebmillar&quot;,
-&quot;status&quot;:&quot;DRAFT&quot;,
-&quot;originator&quot;:{
-  &quot;id&quot;:740,
-  &quot;title&quot;:&quot;Mr.&quot;,
-  &quot;company&quot;:null,
-  &quot;status&quot;:&quot;ACTIVE&quot;,
-  &quot;givenName&quot;:&quot;Bob&quot;,
-  &quot;familyName&quot;:&quot;Weir&quot;,
-  &quot;created&quot;:&quot;2014-06-03T21:16:56.090+0000&quot;,
-  &quot;creator&quot;:&quot;ebmillar&quot;,
-  &quot;modified&quot;:&quot;2014-06-03T21:16:56.090+0000&quot;,
-  &quot;modifier&quot;:&quot;ebmillar&quot;,
-  &quot;addresses&quot;:[],
-  &quot;contactMethods&quot;:[],
-  &quot;securityTags&quot;:[]
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the request body was invalid (did not match the expected JSON format). The response body will be empty.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_types><span class=parent>/plugin/complaint</span>/types</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_types_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_types class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage the list of complaint types.</p></div><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_types_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve array of valid complaint types.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_types_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/types</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve array of valid complaint types.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_types_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_types_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_types_get_request></div><div class=tab-pane id=_plugin_complaint_types_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response including the valid complaint types.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[ "Domestic Dispute", "Arson", "Better Business Dispute", "Government", "Local", "Agricultural", "Pollution" ]
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_priorities><span class=parent>/plugin/complaint</span>/priorities</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_priorities_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_priorities class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage the list of complaint priorities.</p></div><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_priorities_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve array of valid complaint priorities.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_priorities_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/priorities</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve array of valid complaint priorities.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_priorities_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_priorities_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_priorities_get_request></div><div class=tab-pane id=_plugin_complaint_priorities_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response including the valid complaint priorities.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[ "Low", "Medium", "High" ]
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_file><span class=parent>/plugin/complaint</span>/file</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_file_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_file class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage complaint files.</p></div><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_file_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Add a file to the complaint. Submitted form must include a complaintId element, and a file[] element with the files to be uploaded. Returns JSON suitable for consumption by the jQuery File Upload plugin.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_file_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/file</h4></div><div class=modal-body><div class="alert alert-info"><p>Add a file to the complaint. Submitted form must include a complaintId element, and a file[] element with the files to be uploaded. Returns JSON suitable for consumption by the jQuery File Upload plugin.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_file_post_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_file_post_request><h3>Body</h3><p><strong>Type: multipart/form-data</strong></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_byId__complaintId_><span class=parent>/plugin/complaint</span>/byId/{complaintId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_byId__complaintId__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_byId__complaintId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_byId__complaintId__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Lookup complaint details by complaint ID.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_byId__complaintId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/byId/{complaintId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Lookup complaint details by complaint ID.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_byId__complaintId__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_byId__complaintId__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_byId__complaintId__get_request><h3>URI Parameters</h3><ul><li><strong>complaintId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_complaint_byId__complaintId__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>expected response containing the desired complaint details</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+"complaintId":739,
+"complaintNumber":"20140603_739",
+"complaintType":"Domestic Dispute",
+"priority":"Medium",
+"complaintTitle":null,
+"details":"&lt;p&gt;&lt;br&gt;&lt;/p&gt;",
+"incidentDate":"2013-02-12T00:00:00.000+0000",
+"created":"2014-06-03T21:16:56.090+0000",
+"creator":"ebmillar",
+"modified":"2014-06-03T21:17:05.315+0000",
+"modifier":"ebmillar",
+"status":"DRAFT",
+"originator":{
+  "id":740,
+  "title":"Mr.",
+  "company":null,
+  "status":"ACTIVE",
+  "givenName":"Bob",
+  "familyName":"Weir",
+  "created":"2014-06-03T21:16:56.090+0000",
+  "creator":"ebmillar",
+  "modified":"2014-06-03T21:16:56.090+0000",
+  "modifier":"ebmillar",
+  "addresses":[],
+  "contactMethods":[],
+  "securityTags":[]
 },
-&quot;ecmFolderPath&quot;:null,
-&quot;ecmFolderId&quot;:&quot;workspace://SpacesStore/7d240f67-023a-4059-b653-6bc06b2d58ab&quot;,
-&quot;childObjects&quot;:[],
-&quot;approvers&quot;:null
+"ecmFolderPath":null,
+"ecmFolderId":"workspace://SpacesStore/7d240f67-023a-4059-b653-6bc06b2d58ab",
+"childObjects":[],
+"approvers":null
 }
-</pre>
-                                            
-                                        
-                                    
-                                        <h2>HTTP status code 400</h2>
-                                        <p>Usually means the requested complaint does not exist.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: text/plain</strong></p>
-                                                <pre>Complaint ID 2739 not found.</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_dataaccess">
-                
-                <span class="parent">/plugin</span>/dataaccess
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_dataaccess" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-            </div>
-        </div>
-    </div>
-
-    
-</div>
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_dataaccess_accessControlDefaults">
-                
-                    <span class="badge badge_get">get</span>
-                
-                <span class="parent">/plugin/dataaccess</span>/accessControlDefaults
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_dataaccess_accessControlDefaults" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_dataaccess_accessControlDefaults_get" class="list-group-item">
-                        <span class="badge badge_get">get</span>
-                        Get a page of the default access controls.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_dataaccess_accessControlDefaults_get">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_get">get</span>
-                            <span class="parent">/plugin/dataaccess</span>/accessControlDefaults
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Get a page of the default access controls.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_dataaccess_accessControlDefaults_get_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_plugin_dataaccess_accessControlDefaults_get_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_dataaccess_accessControlDefaults_get_request">
-                                
-
-                                
-                                    <h3>Query Parameters</h3>
-                                    <ul>
-                                        
-                                            <li>
-                                                <strong>s</strong>
-                                                <em>
-                                                    
-                                                    
-                                                      (string)
-                                                    
-                                                </em>
-
-                                                <p>A property to sort by.  Must be one of the properties shown in the resultPage of the example response.  Multiple values are allowed.</p>
-
-
-                                                
-                                            </li>
-                                        
-                                            <li>
-                                                <strong>start</strong>
-                                                <em>
-                                                    
-                                                    
-                                                      (integer)
-                                                    
-                                                </em>
-
-                                                <p>index of the first row to be returned.  The first page starts at row 0.</p>
-
-
-                                                
-                                            </li>
-                                        
-                                            <li>
-                                                <strong>n</strong>
-                                                <em>
-                                                    
-                                                    
-                                                      (integer)
-                                                    
-                                                </em>
-
-                                                <p>maximum rows to be returned.</p>
-
-
-                                                
-                                            </li>
-                                        
-                                    </ul>
-                                
-
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_plugin_dataaccess_accessControlDefaults_get_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>Normal response.  Includes integers for totalCount, startRow, and maxRows, and an array of default ACL objects.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>{
-  &quot;totalCount&quot; : 98,    // total number of default access controls
-  &quot;startRow&quot; : 0,       // start row (from the request)
-  &quot;maxRows&quot; : 1,        // max rows (from the request)
-  &quot;resultPage&quot; : [{     // array of default access control objects
-      &quot;id&quot; : 1861,      // default access ID
-      &quot;objectType&quot; : &quot;Complaint&quot;,                     // type of the object to be protected
-      &quot;objectState&quot; : &quot;DRAFT&quot;,                        // object state this default access applies to
-      &quot;accessLevel&quot; : &quot;Add Document&quot;,                 // the action protected by this default access
-      &quot;accessorType&quot; : &quot;Complaint Group&quot;,             // the type of participant to whom this access applies
-      &quot;accessDecision&quot; : &quot;GRANT&quot;,                     // whether access is permitted (GRANT, DENY, MANDATORY_GRANT, MANDATORY_DENY)
-      &quot;allowDiscretionaryUpdate&quot; : true,              // whether this access can be updated at runtime for any given object
-      &quot;created&quot; : &quot;2014-07-09T18:03:16.826+0000&quot;,     // when the default access was created
-      &quot;creator&quot; : &quot;ACL_SYSTEM_USER&quot;,                  // user id that created the access
-      &quot;modified&quot; : &quot;2014-07-09T18:03:16.826+0000&quot;,    // when the default access was last modified
-      &quot;modifier&quot; : &quot;ACL_SYSTEM_USER&quot;                  // user id that modified the default access
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the requested complaint does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Complaint ID 2739 not found.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess><span class=parent>/plugin</span>/dataaccess</a> <span class=methods></span></h4></div><div id=panel__plugin_dataaccess class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess_accessControlDefaults><span class=parent>/plugin/dataaccess</span>/accessControlDefaults</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_dataaccess_accessControlDefaults class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a page of the default access controls.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_dataaccess_accessControlDefaults_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/dataaccess</span>/accessControlDefaults</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a page of the default access controls.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_dataaccess_accessControlDefaults_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_dataaccess_accessControlDefaults_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_dataaccess_accessControlDefaults_get_request><h3>Query Parameters</h3><ul><li><strong>s</strong> <em>(string)</em><p>A property to sort by. Must be one of the properties shown in the resultPage of the example response. Multiple values are allowed.</p></li><li><strong>start</strong> <em>(integer)</em><p>index of the first row to be returned. The first page starts at row 0.</p></li><li><strong>n</strong> <em>(integer)</em><p>maximum rows to be returned.</p></li></ul></div><div class=tab-pane id=_plugin_dataaccess_accessControlDefaults_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response. Includes integers for totalCount, startRow, and maxRows, and an array of default ACL objects.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "totalCount" : 98,    // total number of default access controls
+  "startRow" : 0,       // start row (from the request)
+  "maxRows" : 1,        // max rows (from the request)
+  "resultPage" : [{     // array of default access control objects
+      "id" : 1861,      // default access ID
+      "objectType" : "Complaint",                     // type of the object to be protected
+      "objectState" : "DRAFT",                        // object state this default access applies to
+      "accessLevel" : "Add Document",                 // the action protected by this default access
+      "accessorType" : "Complaint Group",             // the type of participant to whom this access applies
+      "accessDecision" : "GRANT",                     // whether access is permitted (GRANT, DENY, MANDATORY_GRANT, MANDATORY_DENY)
+      "allowDiscretionaryUpdate" : true,              // whether this access can be updated at runtime for any given object
+      "created" : "2014-07-09T18:03:16.826+0000",     // when the default access was created
+      "creator" : "ACL_SYSTEM_USER",                  // user id that created the access
+      "modified" : "2014-07-09T18:03:16.826+0000",    // when the default access was last modified
+      "modifier" : "ACL_SYSTEM_USER"                  // user id that modified the default access
     }
   ]
 }
-</pre>
-                                            
-                                        
-                                    
-                                        <h2>HTTP status code 403</h2>
-                                        <p>The user is not authorized to view the default access controls.</p>
-
-
-                                        
-
-                                        
-                                    
-                                        <h2>HTTP status code 500</h2>
-                                        <p>Somehow the server was not able to deliver the requested default access controls.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: text/plain</strong></p>
-                                                <pre>Some error text will be returned.
-</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_dataaccess_default__defaultAccessId_">
-                
-                    <span class="badge badge_post">post</span>
-                
-                <span class="parent">/plugin/dataaccess</span>/default/{defaultAccessId}
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_dataaccess_default__defaultAccessId_" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_dataaccess_default__defaultAccessId__post" class="list-group-item">
-                        <span class="badge badge_post">post</span>
-                        Update the default access control with ID = the given defaultAccessId.  Only the accessDecision and the allowDiscretionaryUpdate flag can be changed.  The other fields are read-only.  accessDecision can be GRANT, DENY, MANDATORY_GRANT, or MANDATORY_DENY.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_dataaccess_default__defaultAccessId__post">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_post">post</span>
-                            <span class="parent">/plugin/dataaccess</span>/default/{defaultAccessId}
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Update the default access control with ID = the given defaultAccessId.  Only the accessDecision and the allowDiscretionaryUpdate flag can be changed.  The other fields are read-only.  accessDecision can be GRANT, DENY, MANDATORY_GRANT, or MANDATORY_DENY.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_dataaccess_default__defaultAccessId__post_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_plugin_dataaccess_default__defaultAccessId__post_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_dataaccess_default__defaultAccessId__post_request">
-                                
-                                    <h3>URI Parameters</h3>
-                                    <ul>
-                                        
-                                            <li><strong>defaultAccessId</strong>: string</li>
-                                        
-                                    </ul>
-                                
-
-                                
-
-                                
-                                    <h3>Body</h3>
-                                    
-                                        <p><strong>Type: application/json</strong></p>
-                                        <pre>{
-  &quot;id&quot; : 500,
-  &quot;objectType&quot; : &quot;Complaint&quot;,
-  &quot;objectState&quot; : &quot;DRAFT&quot;,
-  &quot;accessLevel&quot; : &quot;update&quot;,
-  &quot;accessorType&quot; : &quot;Supervisor&quot;,
-  &quot;accessDecision&quot; : &quot;GRANT&quot;,
-  &quot;allowDiscretionaryUpdate&quot; : true,
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/403 target=_blank>403</a></h2><p>The user is not authorized to view the default access controls.</p><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>Somehow the server was not able to deliver the requested default access controls.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Some error text will be returned.
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess_default__defaultAccessId_><span class=parent>/plugin/dataaccess</span>/default/{defaultAccessId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_dataaccess_default__defaultAccessId__post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_dataaccess_default__defaultAccessId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_dataaccess_default__defaultAccessId__post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Update the default access control with ID = the given defaultAccessId. Only the accessDecision and the allowDiscretionaryUpdate flag can be changed. The other fields are read-only. accessDecision can be GRANT, DENY, MANDATORY_GRANT, or MANDATORY_DENY.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_dataaccess_default__defaultAccessId__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/dataaccess</span>/default/{defaultAccessId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Update the default access control with ID = the given defaultAccessId. Only the accessDecision and the allowDiscretionaryUpdate flag can be changed. The other fields are read-only. accessDecision can be GRANT, DENY, MANDATORY_GRANT, or MANDATORY_DENY.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_dataaccess_default__defaultAccessId__post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_dataaccess_default__defaultAccessId__post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_dataaccess_default__defaultAccessId__post_request><h3>URI Parameters</h3><ul><li><strong>defaultAccessId</strong>: <em>required (string)</em></li></ul><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "id" : 500,
+  "objectType" : "Complaint",
+  "objectState" : "DRAFT",
+  "accessLevel" : "update",
+  "accessorType" : "Supervisor",
+  "accessDecision" : "GRANT",
+  "allowDiscretionaryUpdate" : true,
 }
-</pre>
-                                    
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_plugin_dataaccess_default__defaultAccessId__post_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>The default access control rule was updated successfully.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>{
-  &quot;id&quot; : 500,
-  &quot;objectType&quot; : &quot;type&quot;,
-  &quot;objectState&quot; : &quot;state&quot;,
-  &quot;accessLevel&quot; : &quot;accessLevel&quot;,
-  &quot;accessorType&quot; : &quot;accessor&quot;,
-  &quot;accessDecision&quot; : &quot;GRANT&quot;,
-  &quot;allowDiscretionaryUpdate&quot; : true,
-  &quot;created&quot; : &quot;2014-06-03T21:16:56.090+0000&quot;,
-  &quot;creator&quot; : &quot;creator&quot;,
-  &quot;modified&quot; : &quot;2014-07-24T21:16:56.090+0000&quot;,
-  &quot;modifier&quot; : &quot;modifier&quot;
+</code></pre></small></p></div><div class=tab-pane id=_plugin_dataaccess_default__defaultAccessId__post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>The default access control rule was updated successfully.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "id" : 500,
+  "objectType" : "type",
+  "objectState" : "state",
+  "accessLevel" : "accessLevel",
+  "accessorType" : "accessor",
+  "accessDecision" : "GRANT",
+  "allowDiscretionaryUpdate" : true,
+  "created" : "2014-06-03T21:16:56.090+0000",
+  "creator" : "creator",
+  "modified" : "2014-07-24T21:16:56.090+0000",
+  "modifier" : "modifier"
 }
-</pre>
-                                            
-                                        
-                                    
-                                        <h2>HTTP status code 400</h2>
-                                        <p>The requested default access control rule does not exist.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: text/plain</strong></p>
-                                                <pre>Could not update default access with ID = 500.
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>The requested default access control rule does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Could not update default access with ID = 500.
 Server encountered exception: Default access with id &#x27;500&#x27; does not exist.
 Exception type was: &#x27;com.armedia.acm.core.exceptions.AcmUserActionFailedException&#x27;.
-</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task">
-                
-                <span class="parent">/plugin</span>/task
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_task" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-            </div>
-        </div>
-    </div>
-
-    
-</div>
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task_forUser__user_">
-                
-                    <span class="badge badge_get">get</span>
-                
-                <span class="parent">/plugin/task</span>/forUser/{user}
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_task_forUser__user_" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_task_forUser__user__get" class="list-group-item">
-                        <span class="badge badge_get">get</span>
-                        Get a list of active tasks for the specified user.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_task_forUser__user__get">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_get">get</span>
-                            <span class="parent">/plugin/task</span>/forUser/{user}
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Get a list of active tasks for the specified user.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_task_forUser__user__get_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_plugin_task_forUser__user__get_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_task_forUser__user__get_request">
-                                
-                                    <h3>URI Parameters</h3>
-                                    <ul>
-                                        
-                                            <li><strong>user</strong>: string</li>
-                                        
-                                    </ul>
-                                
-
-                                
-
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_plugin_task_forUser__user__get_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>expected response containing a list of tasks.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>[
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task><span class=parent>/plugin</span>/task</a> <span class=methods></span></h4></div><div id=panel__plugin_task class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_forUser__user_><span class=parent>/plugin/task</span>/forUser/{user}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_forUser__user__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_forUser__user_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_task_forUser__user__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a list of active tasks for the specified user.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_forUser__user__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/forUser/{user}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a list of active tasks for the specified user.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_forUser__user__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_forUser__user__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_forUser__user__get_request><h3>URI Parameters</h3><ul><li><strong>user</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_task_forUser__user__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>expected response containing a list of tasks.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[
   {
-    &quot;taskId&quot;:500,
-    &quot;priority&quot;:0,
-    &quot;title&quot;:&quot;Example Task Title&quot;,
-    &quot;dueDate&quot;:&quot;2014-06-03&quot;,
-    &quot;attachedToObjectType&quot;:&quot;COMPLAINT&quot;,
-    &quot;attachedToObjectId&quot;:495, 
-    &quot;assignee&quot;:&quot;ann-acm&quot;,
-    &quot;businessProcessName&quot;:&quot;cmComplaintWorkflow&quot;,
-    &quot;adhocTask&quot;:false
+    "taskId":500,
+    "priority":0,
+    "title":"Example Task Title",
+    "dueDate":"2014-06-03",
+    "attachedToObjectType":"COMPLAINT",
+    "attachedToObjectId":495, 
+    "assignee":"ann-acm",
+    "businessProcessName":"cmComplaintWorkflow",
+    "adhocTask":false
   }
  ]
-</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task_completeTask__taskId_">
-                
-                    <span class="badge badge_post">post</span>
-                
-                <span class="parent">/plugin/task</span>/completeTask/{taskId}
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_task_completeTask__taskId_" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_task_completeTask__taskId__post" class="list-group-item">
-                        <span class="badge badge_post">post</span>
-                        Complete a task.  Must be called by the task&#x27;s current assignee.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_task_completeTask__taskId__post">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_post">post</span>
-                            <span class="parent">/plugin/task</span>/completeTask/{taskId}
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Complete a task.  Must be called by the task&#39;s current assignee.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_task_completeTask__taskId__post_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_plugin_task_completeTask__taskId__post_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_task_completeTask__taskId__post_request">
-                                
-                                    <h3>URI Parameters</h3>
-                                    <ul>
-                                        
-                                            <li><strong>taskId</strong>: string</li>
-                                        
-                                    </ul>
-                                
-
-                                
-
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_plugin_task_completeTask__taskId__post_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>Task was successfully completed.  JSON represents the historical task instance, with information as to when the task was started and completed.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>{
-&quot;taskId&quot;:500,
-&quot;priority&quot;:50,
-&quot;title&quot;:&quot;The Task Title&quot;,
-&quot;dueDate&quot;:&quot;2014-06-03&quot;,
-&quot;attachedToObjectType&quot;:&quot;COMPLAINT&quot;,
-&quot;attachedToObjectId&quot;:250,
-&quot;assignee&quot;:&quot;ann-acm&quot;,
-&quot;businessProcessName&quot;:&quot;Complaint Approval&quot;,
-&quot;adhocTask&quot;:false,
-&quot;completed&quot;:true,
-&quot;taskStartDate&quot;:&quot;2014-06-02&quot;,
-&quot;taskFinishedDate&quot;:&quot;2014-06-03&quot;,
-&quot;taskDurationInMillis&quot;:298392
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_completeTask__taskId_><span class=parent>/plugin/task</span>/completeTask/{taskId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_completeTask__taskId__post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_completeTask__taskId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_task_completeTask__taskId__post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Complete a task. Must be called by the task&#39;s current assignee.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_completeTask__taskId__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/completeTask/{taskId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Complete a task. Must be called by the task&#39;s current assignee.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_completeTask__taskId__post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_completeTask__taskId__post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_completeTask__taskId__post_request><h3>URI Parameters</h3><ul><li><strong>taskId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_task_completeTask__taskId__post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Task was successfully completed. JSON represents the historical task instance, with information as to when the task was started and completed.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+"taskId":500,
+"priority":50,
+"title":"The Task Title",
+"dueDate":"2014-06-03",
+"attachedToObjectType":"COMPLAINT",
+"attachedToObjectId":250,
+"assignee":"ann-acm",
+"businessProcessName":"Complaint Approval",
+"adhocTask":false,
+"completed":true,
+"taskStartDate":"2014-06-02",
+"taskFinishedDate":"2014-06-03",
+"taskDurationInMillis":298392
 }
-</pre>
-                                            
-                                        
-                                    
-                                        <h2>HTTP status code 400</h2>
-                                        <p>The task could not be completed.  Either the task ID does not represent an active task (task does not exist or is already closed), or the authenticated user is not the task assignee.  T</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: text/plain</strong></p>
-                                                <pre>Task &#x27;500&#x27; does not exist or has already been completed.
-</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task_adHocTask">
-                
-                    <span class="badge badge_post">post</span>
-                
-                <span class="parent">/plugin/task</span>/adHocTask
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_task_adHocTask" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_task_adHocTask_post" class="list-group-item">
-                        <span class="badge badge_post">post</span>
-                        Create a standalone task (not tied to a workflow or business process)
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_task_adHocTask_post">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_post">post</span>
-                            <span class="parent">/plugin/task</span>/adHocTask
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Create a standalone task (not tied to a workflow or business process)</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_task_adHocTask_post_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_plugin_task_adHocTask_post_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_task_adHocTask_post_request">
-                                
-
-                                
-
-                                
-                                    <h3>Body</h3>
-                                    
-                                        <p><strong>Type: application/json</strong></p>
-                                        <pre>{
-  &quot;priority&quot;:50,
-  &quot;title&quot;:&quot;The Task Title&quot;,
-  &quot;dueDate&quot;:&quot;2014-06-03&quot;,
-  &quot;assignee&quot;:&quot;ebmillar&quot;,
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>The task could not be completed. Either the task ID does not represent an active task (task does not exist or is already closed), or the authenticated user is not the task assignee. T</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Task &#x27;500&#x27; does not exist or has already been completed.
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_adHocTask><span class=parent>/plugin/task</span>/adHocTask</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_adHocTask_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_adHocTask class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_task_adHocTask_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Create a standalone task (not tied to a workflow or business process)</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_adHocTask_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/adHocTask</h4></div><div class=modal-body><div class="alert alert-info"><p>Create a standalone task (not tied to a workflow or business process)</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_adHocTask_post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_adHocTask_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_adHocTask_post_request><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "priority":50,
+  "title":"The Task Title",
+  "dueDate":"2014-06-03",
+  "assignee":"ebmillar",
 }
-</pre>
-                                    
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_plugin_task_adHocTask_post_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>Task created successfully. The response includes the new tasks&#39;s ID.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>{
-  &quot;taskId&quot;:2801,
-  &quot;priority&quot;:50,
-  &quot;title&quot;:&quot;The Task Title&quot;,
-  &quot;dueDate&quot;:&quot;2014-06-03T00:00:00.000+0000&quot;,
-  &quot;attachedToObjectType&quot;:null,
-  &quot;attachedToObjectId&quot;:null,
-  &quot;assignee&quot;:&quot;ebmillar&quot;,
-  &quot;businessProcessName&quot;:null,
-  &quot;adhocTask&quot;:false,
-  &quot;completed&quot;:false,
-  &quot;taskStartDate&quot;:null,
-  &quot;taskFinishedDate&quot;:null,
-  &quot;taskDurationInMillis&quot;:null
+</code></pre></small></p></div><div class=tab-pane id=_plugin_task_adHocTask_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Task created successfully. The response includes the new tasks&#39;s ID.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "taskId":2801,
+  "priority":50,
+  "title":"The Task Title",
+  "dueDate":"2014-06-03T00:00:00.000+0000",
+  "attachedToObjectType":null,
+  "attachedToObjectId":null,
+  "assignee":"ebmillar",
+  "businessProcessName":null,
+  "adhocTask":false,
+  "completed":false,
+  "taskStartDate":null,
+  "taskFinishedDate":null,
+  "taskDurationInMillis":null
 }
-</pre>
-                                            
-                                        
-                                    
-                                        <h2>HTTP status code 400</h2>
-                                        <p>Task could not be created; perhaps the request body was invalid.</p>
-
-
-                                        
-
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_task_byId__taskId_">
-                
-                    <span class="badge badge_get">get</span>
-                
-                <span class="parent">/plugin/task</span>/byId/{taskId}
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_task_byId__taskId_" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_task_byId__taskId__get" class="list-group-item">
-                        <span class="badge badge_get">get</span>
-                        Get task details by the task ID.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_task_byId__taskId__get">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_get">get</span>
-                            <span class="parent">/plugin/task</span>/byId/{taskId}
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Get task details by the task ID.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_task_byId__taskId__get_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_plugin_task_byId__taskId__get_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_task_byId__taskId__get_request">
-                                
-                                    <h3>URI Parameters</h3>
-                                    <ul>
-                                        
-                                            <li><strong>taskId</strong>: string</li>
-                                        
-                                    </ul>
-                                
-
-                                
-
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_plugin_task_byId__taskId__get_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>Normal response; body includes the task details.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>{
-  &quot;taskId&quot;:2801,
-  &quot;priority&quot;:50,
-  &quot;title&quot;:&quot;The Task Title&quot;,
-  &quot;dueDate&quot;:&quot;2014-06-03T00:00:00.000+0000&quot;,
-  &quot;attachedToObjectType&quot;:null,
-  &quot;attachedToObjectId&quot;:null,
-  &quot;assignee&quot;:&quot;ebmillar&quot;,
-  &quot;businessProcessName&quot;:null,
-  &quot;adhocTask&quot;:true,
-  &quot;completed&quot;:true,
-  &quot;taskStartDate&quot;:&quot;2014-06-04T14:46:46.472+0000&quot;,
-  &quot;taskFinishedDate&quot;:&quot;2014-06-04T17:45:49.822+0000&quot;,
-  &quot;taskDurationInMillis&quot;:10743350
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Task could not be created; perhaps the request body was invalid.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_byId__taskId_><span class=parent>/plugin/task</span>/byId/{taskId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_byId__taskId__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_byId__taskId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_task_byId__taskId__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get task details by the task ID.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_byId__taskId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/byId/{taskId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get task details by the task ID.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_byId__taskId__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_byId__taskId__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_byId__taskId__get_request><h3>URI Parameters</h3><ul><li><strong>taskId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_task_byId__taskId__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response; body includes the task details.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "taskId":2801,
+  "priority":50,
+  "title":"The Task Title",
+  "dueDate":"2014-06-03T00:00:00.000+0000",
+  "attachedToObjectType":null,
+  "attachedToObjectId":null,
+  "assignee":"ebmillar",
+  "businessProcessName":null,
+  "adhocTask":true,
+  "completed":true,
+  "taskStartDate":"2014-06-04T14:46:46.472+0000",
+  "taskFinishedDate":"2014-06-04T17:45:49.822+0000",
+  "taskDurationInMillis":10743350
 }
-</pre>
-                                            
-                                        
-                                    
-                                        <h2>HTTP status code 500</h2>
-                                        <p>Could not get the task details; task does not exist, or an Activiti error</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: text/plain</strong></p>
-                                                <pre>Task with ID &#x27;92838&#x27; does not exist.</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_search">
-                
-                <span class="parent">/plugin</span>/search
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_search" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-            </div>
-        </div>
-    </div>
-
-    
-</div>
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__plugin_search_quickSearch">
-                
-                    <span class="badge badge_get">get</span>
-                
-                <span class="parent">/plugin/search</span>/quickSearch
-            </a>
-        </h4>
-    </div>
-    <div id="panel__plugin_search_quickSearch" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_plugin_search_quickSearch_get" class="list-group-item">
-                        <span class="badge badge_get">get</span>
-                        Query the quickSearch search index.  The Quicksearch index contains only selected metadata and is smaller than the full index; so it should be faster to search.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_plugin_search_quickSearch_get">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_get">get</span>
-                            <span class="parent">/plugin/search</span>/quickSearch
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Query the quickSearch search index.  The Quicksearch index contains only selected metadata and is smaller than the full index; so it should be faster to search.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_plugin_search_quickSearch_get_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_plugin_search_quickSearch_get_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_plugin_search_quickSearch_get_request">
-                                
-
-                                
-                                    <h3>Query Parameters</h3>
-                                    <ul>
-                                        
-                                            <li>
-                                                <strong>q</strong>
-                                                <em>
-                                                    
-                                                      required
-                                                    
-                                                    
-                                                      (string)
-                                                    
-                                                </em>
-
-                                                <p>The query string; must be a valid Apache Solr query string.</p>
-
-
-                                                
-                                            </li>
-                                        
-                                            <li>
-                                                <strong>s</strong>
-                                                <em>
-                                                    
-                                                    
-                                                      (string)
-                                                    
-                                                </em>
-
-                                                <p>The sort order.  The sort key must be a field in the Solr quick search index.  The key must be followed by &quot; asc&quot; or &quot; desc&quot;.  Optional; default null.</p>
-
-
-                                                
-                                                    <p>
-                                                        <small>
-                                                            <strong>Example:</strong>
-                                                            <code>last_modified asc</code>
-                                                        </small>
-                                                    </p>
-                                                
-                                            </li>
-                                        
-                                            <li>
-                                                <strong>start</strong>
-                                                <em>
-                                                    
-                                                    
-                                                      (number)
-                                                    
-                                                </em>
-
-                                                <p>The first matching result to be returned.  Useful for pagination.  Optional; default 0.</p>
-
-
-                                                
-                                            </li>
-                                        
-                                            <li>
-                                                <strong>n</strong>
-                                                <em>
-                                                    
-                                                    
-                                                      (number)
-                                                    
-                                                </em>
-
-                                                <p>Number of results to be returned.  Useful for pagination.  Optional; default 10.</p>
-
-
-                                                
-                                            </li>
-                                        
-                                    </ul>
-                                
-
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_plugin_search_quickSearch_get_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>Normal response; includes either search results or an error message from Apache Solr.  The example response below includes both a &quot;response&quot; JSON object and an &quot;error&quot; JSON object.  Real responses only have one or the other; a &quot;response&quot; object for a successful search, and an &quot;error&quot; object if SOLR could not process the search.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>{
-  &quot;responseHeader&quot;: {
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>Could not get the task details; task does not exist, or an Activiti error</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Task with ID &#x27;92838&#x27; does not exist.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_search><span class=parent>/plugin</span>/search</a> <span class=methods></span></h4></div><div id=panel__plugin_search class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_search_quickSearch><span class=parent>/plugin/search</span>/quickSearch</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_search_quickSearch_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_search_quickSearch class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_search_quickSearch_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Query the quickSearch search index. The Quicksearch index contains only selected metadata and is smaller than the full index; so it should be faster to search.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_search_quickSearch_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/search</span>/quickSearch</h4></div><div class=modal-body><div class="alert alert-info"><p>Query the quickSearch search index. The Quicksearch index contains only selected metadata and is smaller than the full index; so it should be faster to search.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_search_quickSearch_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_search_quickSearch_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_search_quickSearch_get_request><h3>Query Parameters</h3><ul><li><strong>q</strong> <em>required (string)</em><p>The query string; must be a valid Apache Solr query string.</p></li><li><strong>s</strong> <em>(string)</em><p>The sort order. The sort key must be a field in the Solr quick search index. The key must be followed by " asc" or " desc". Optional; default null.</p><p><small><strong>Example</strong>:<pre><code>last_modified asc</code></pre></small></p></li><li><strong>start</strong> <em>(number)</em><p>The first matching result to be returned. Useful for pagination. Optional; default 0.</p></li><li><strong>n</strong> <em>(number)</em><p>Number of results to be returned. Useful for pagination. Optional; default 10.</p></li></ul></div><div class=tab-pane id=_plugin_search_quickSearch_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response; includes either search results or an error message from Apache Solr. The example response below includes both a "response" JSON object and an "error" JSON object. Real responses only have one or the other; a "response" object for a successful search, and an "error" object if SOLR could not process the search.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "responseHeader": {
     // 0 == success; there will be a response object (see below).  Any other value 
     // is an error (there will be an error object).
-    &quot;status&quot;: 0,
-    &quot;QTime&quot;: 0,
-    &quot;params&quot;: {
-      &quot;indent&quot;: &quot;true&quot;,
-      &quot;q&quot;: &quot;*:*&quot;,
-      &quot;_&quot;: &quot;1403288137744&quot;,
-      &quot;wt&quot;: &quot;json&quot;,
-      &quot;rows&quot;: &quot;2&quot;
+    "status": 0,
+    "QTime": 0,
+    "params": {
+      "indent": "true",
+      "q": "*:*",
+      "_": "1403288137744",
+      "wt": "json",
+      "rows": "2"
     }
   },
-  // NOTE: &quot;response&quot; object only exists if the status was 0.
-  &quot;response&quot;: {
-    &quot;numFound&quot;: 61,
-    &quot;start&quot;: 0,
-    &quot;docs&quot;: [
+  // NOTE: "response" object only exists if the status was 0.
+  "response": {
+    "numFound": 61,
+    "start": 0,
+    "docs": [
       {
-        &quot;id&quot;: &quot;12-Complaint&quot;,
-        &quot;status_s&quot;: &quot;DRAFT&quot;,
-        &quot;author&quot;: &quot;ann-acm&quot;,
-        &quot;author_s&quot;: &quot;ann-acm&quot;,
-        &quot;modifier_s&quot;: &quot;ann-acm&quot;,
-        &quot;title&quot;: [
-          &quot;Test 20140502_12&quot;
+        "id": "12-Complaint",
+        "status_s": "DRAFT",
+        "author": "ann-acm",
+        "author_s": "ann-acm",
+        "modifier_s": "ann-acm",
+        "title": [
+          "Test 20140502_12"
         ],
-        &quot;last_modified&quot;: &quot;2014-05-02T11:30:27Z&quot;,
-        &quot;create_dt&quot;: &quot;2014-05-02T11:30:27Z&quot;,
-        &quot;name&quot;: &quot;20140502_12&quot;,
-        &quot;object_id_s&quot;: &quot;12&quot;,
-        &quot;object_type_s&quot;: &quot;Complaint&quot;,
-        &quot;_version_&quot;: 1471373882636107800
+        "last_modified": "2014-05-02T11:30:27Z",
+        "create_dt": "2014-05-02T11:30:27Z",
+        "name": "20140502_12",
+        "object_id_s": "12",
+        "object_type_s": "Complaint",
+        "_version_": 1471373882636107800
       },
       {
-        &quot;id&quot;: &quot;14-Complaint&quot;,
-        &quot;status_s&quot;: &quot;DRAFT&quot;,
-        &quot;author&quot;: &quot;ann-acm&quot;,
-        &quot;author_s&quot;: &quot;ann-acm&quot;,
-        &quot;modifier_s&quot;: &quot;ann-acm&quot;,
-        &quot;title&quot;: [
-          &quot;Test 20140502_14&quot;
+        "id": "14-Complaint",
+        "status_s": "DRAFT",
+        "author": "ann-acm",
+        "author_s": "ann-acm",
+        "modifier_s": "ann-acm",
+        "title": [
+          "Test 20140502_14"
         ],
-        &quot;last_modified&quot;: &quot;2014-05-02T11:39:21Z&quot;,
-        &quot;create_dt&quot;: &quot;2014-05-02T11:39:21Z&quot;,
-        &quot;name&quot;: &quot;20140502_14&quot;,
-        &quot;object_id_s&quot;: &quot;14&quot;,
-        &quot;object_type_s&quot;: &quot;Complaint&quot;,
-        &quot;_version_&quot;: 1471373882844774400
+        "last_modified": "2014-05-02T11:39:21Z",
+        "create_dt": "2014-05-02T11:39:21Z",
+        "name": "20140502_14",
+        "object_id_s": "14",
+        "object_type_s": "Complaint",
+        "_version_": 1471373882844774400
       }
     ]
   }
-  // NOTE: &quot;error&quot; object only exists if the status was NOT 0.
-  &quot;error&quot;: {
-    &quot;msg&quot;: &quot;Can&#x27;t determine a Sort Order (asc or desc) in sort spec &#x27;sdf&#x27;, pos=3&quot;,
-    &quot;code&quot;: 400
+  // NOTE: "error" object only exists if the status was NOT 0.
+  "error": {
+    "msg": "Can&#x27;t determine a Sort Order (asc or desc) in sort spec &#x27;sdf&#x27;, pos=3",
+    "code": 400
   }
 }
-</pre>
-                                            
-                                        
-                                    
-                                        <h2>HTTP status code 500</h2>
-                                        <p>The server could not process the search request (Apache Solr is down, or some other error).</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: text/plain</strong></p>
-                                                <pre>Server encountered an exception.</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-
-
-
-                            </div>
-                        </div>
-                    </div>
-                
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 id="_users" class="panel-title">/users</h3>
-                        </div>
-
-                        <div class="panel-body">
-                            
-
-                            <div class="panel-group">
-                                <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__users">
-                
-                <span class="parent"></span>/users
-            </a>
-        </h4>
-    </div>
-    <div id="panel__users" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-            </div>
-        </div>
-    </div>
-
-    
-</div>
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__users_withPrivilege__privilege_">
-                
-                    <span class="badge badge_get">get</span>
-                
-                <span class="parent">/users</span>/withPrivilege/{privilege}
-            </a>
-        </h4>
-    </div>
-    <div id="panel__users_withPrivilege__privilege_" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_users_withPrivilege__privilege__get" class="list-group-item">
-                        <span class="badge badge_get">get</span>
-                        Get a list of users with the specified privilege.  Used to obtain a list of users who are authorized to perform a certain action.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_users_withPrivilege__privilege__get">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_get">get</span>
-                            <span class="parent">/users</span>/withPrivilege/{privilege}
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Get a list of users with the specified privilege.  Used to obtain a list of users who are authorized to perform a certain action.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_users_withPrivilege__privilege__get_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_users_withPrivilege__privilege__get_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_users_withPrivilege__privilege__get_request">
-                                
-                                    <h3>URI Parameters</h3>
-                                    <ul>
-                                        
-                                            <li><strong>privilege</strong>: string</li>
-                                        
-                                    </ul>
-                                
-
-                                
-
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_users_withPrivilege__privilege__get_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>expected response containing the list of users with the requested privilege.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>[{&quot;userId&quot;:&quot;OPIS_Admin&quot;,&quot;fullName&quot;:&quot;OPIS Admin&quot;,&quot;firstName&quot;:&quot;OPIS&quot;,&quot;lastName&quot;:&quot;Admin&quot;},
- {&quot;userId&quot;:&quot;ann-acm&quot;,&quot;fullName&quot;:&quot;Ann Administrator&quot;,&quot;firstName&quot;:&quot;Ann&quot;,&quot;lastName&quot;:&quot;Administrator&quot;}]
-</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-    <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__users_participantTypesForObjectTypeName__objectTypeName_">
-                
-                    <span class="badge badge_get">get</span>
-                
-                <span class="parent">/users</span>/participantTypesForObjectTypeName/{objectTypeName}
-            </a>
-        </h4>
-    </div>
-    <div id="panel__users_participantTypesForObjectTypeName__objectTypeName_" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_users_participantTypesForObjectTypeName__objectTypeName__get" class="list-group-item">
-                        <span class="badge badge_get">get</span>
-                        Retrieve the types of participants that can be assigned to a certain object type.  For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_users_participantTypesForObjectTypeName__objectTypeName__get">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_get">get</span>
-                            <span class="parent">/users</span>/participantTypesForObjectTypeName/{objectTypeName}
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Retrieve the types of participants that can be assigned to a certain object type.  For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_users_participantTypesForObjectTypeName__objectTypeName__get_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_users_participantTypesForObjectTypeName__objectTypeName__get_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_users_participantTypesForObjectTypeName__objectTypeName__get_request">
-                                
-                                    <h3>URI Parameters</h3>
-                                    <ul>
-                                        
-                                            <li><strong>objectTypeName</strong>: string</li>
-                                        
-                                    </ul>
-                                
-
-                                
-
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_users_participantTypesForObjectTypeName__objectTypeName__get_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>Expected response; a JSON array of participant types.  The type property can be SINGLE_USER, MULTIPLE_USERS, SINGLE_LDAP_GROUP, MULTIPLE_LDAP_GROUPS, SINGLE_APPLICATION_ROLE, or MULTIPLE_APPLICATION_ROLES.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: application/json</strong></p>
-                                                <pre>[
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>The server could not process the search request (Apache Solr is down, or some other error).</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Server encountered an exception.</code></pre></small></p></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class=panel-heading><h3 id=_users class=panel-title>/users</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__users><span class=parent></span>/users</a> <span class=methods></span></h4></div><div id=panel__users class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__users_withPrivilege__privilege_><span class=parent>/users</span>/withPrivilege/{privilege}</a> <span class=methods><a href=# data-toggle=modal data-target=#_users_withPrivilege__privilege__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__users_withPrivilege__privilege_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_users_withPrivilege__privilege__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a list of users with the specified privilege. Used to obtain a list of users who are authorized to perform a certain action.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_users_withPrivilege__privilege__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/users</span>/withPrivilege/{privilege}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a list of users with the specified privilege. Used to obtain a list of users who are authorized to perform a certain action.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_users_withPrivilege__privilege__get_request data-toggle=tab>Request</a></li><li><a href=#_users_withPrivilege__privilege__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_users_withPrivilege__privilege__get_request><h3>URI Parameters</h3><ul><li><strong>privilege</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_users_withPrivilege__privilege__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>expected response containing the list of users with the requested privilege.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[{"userId":"OPIS_Admin","fullName":"OPIS Admin","firstName":"OPIS","lastName":"Admin"},
+ {"userId":"ann-acm","fullName":"Ann Administrator","firstName":"Ann","lastName":"Administrator"}]
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__users_participantTypesForObjectTypeName__objectTypeName_><span class=parent>/users</span>/participantTypesForObjectTypeName/{objectTypeName}</a> <span class=methods><a href=# data-toggle=modal data-target=#_users_participantTypesForObjectTypeName__objectTypeName__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__users_participantTypesForObjectTypeName__objectTypeName_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_users_participantTypesForObjectTypeName__objectTypeName__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve the types of participants that can be assigned to a certain object type. For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_users_participantTypesForObjectTypeName__objectTypeName__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/users</span>/participantTypesForObjectTypeName/{objectTypeName}</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve the types of participants that can be assigned to a certain object type. For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_users_participantTypesForObjectTypeName__objectTypeName__get_request data-toggle=tab>Request</a></li><li><a href=#_users_participantTypesForObjectTypeName__objectTypeName__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_users_participantTypesForObjectTypeName__objectTypeName__get_request><h3>URI Parameters</h3><ul><li><strong>objectTypeName</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_users_participantTypesForObjectTypeName__objectTypeName__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response; a JSON array of participant types. The type property can be SINGLE_USER, MULTIPLE_USERS, SINGLE_LDAP_GROUP, MULTIPLE_LDAP_GROUPS, SINGLE_APPLICATION_ROLE, or MULTIPLE_APPLICATION_ROLES.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[
   {
-    &quot;name&quot; : &quot;Complaint Owner&quot;,
-    &quot;description&quot; : &quot;The user who is responsible for completing the complaint.&quot;,
-    &quot;type&quot; : &quot;SINGLE_USER&quot;,
-    &quot;requiredOnACL&quot; : true
+    "name" : "Complaint Owner",
+    "description" : "The user who is responsible for completing the complaint.",
+    "type" : "SINGLE_USER",
+    "requiredOnACL" : true
   }, 
   {
-    &quot;name&quot; : &quot;Complaint Supervisor&quot;,
-    &quot;description&quot; : &quot;The user who has oversight over how the complaint is completed.&quot;,
-    &quot;type&quot; : &quot;SINGLE_USER&quot;,
-    &quot;requiredOnACL&quot; : false
+    "name" : "Complaint Supervisor",
+    "description" : "The user who has oversight over how the complaint is completed.",
+    "type" : "SINGLE_USER",
+    "requiredOnACL" : false
   },
   {
-    &quot;name&quot; : &quot;Complaint Group&quot;,
-    &quot;description&quot; : &quot;The group responsible for this type of complaint.&quot;,
-    &quot;type&quot; : &quot;SINGLE_LDAP_GROUP&quot;,
-    &quot;requiredOnACL&quot; : false
+    "name" : "Complaint Group",
+    "description" : "The group responsible for this type of complaint.",
+    "type" : "SINGLE_LDAP_GROUP",
+    "requiredOnACL" : false
   }, 
   {
-    &quot;name&quot; : &quot;Complaint Approver&quot;,
-    &quot;description&quot; : &quot;The users allowed to approve the complaint.&quot;,
-    &quot;type&quot; : &quot;MULTIPLE_USERS&quot;,
-    &quot;requiredOnACL&quot; : false
+    "name" : "Complaint Approver",
+    "description" : "The users allowed to approve the complaint.",
+    "type" : "MULTIPLE_USERS",
+    "requiredOnACL" : false
   }
 ]
-</pre>
-                                            
-                                        
-                                    
-                                        <h2>HTTP status code 500</h2>
-                                        <p>The requested objectTypeName was not recognized.</p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: text/plain</strong></p>
-                                                <pre>No such business object with name &#x27;unrecognized&#x27;
-</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-
-
-                            </div>
-                        </div>
-                    </div>
-                
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 id="_authenticationtoken" class="panel-title">/authenticationtoken</h3>
-                        </div>
-
-                        <div class="panel-body">
-                            
-
-                            <div class="panel-group">
-                                <div class="panel panel-white">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a class="block collapsed" data-toggle="collapse" href="#panel__authenticationtoken">
-                
-                    <span class="badge badge_get">get</span>
-                
-                <span class="parent"></span>/authenticationtoken
-            </a>
-        </h4>
-    </div>
-    <div id="panel__authenticationtoken" class="panel-collapse collapse">
-        <div class="panel-body">
-            <div class="list-group">
-                
-                    <a href="#" data-toggle="modal" data-target="#_authenticationtoken_get" class="list-group-item">
-                        <span class="badge badge_get">get</span>
-                        Retrieve an authentication token that may be appended to subsequent requests.  Such a token authenticates those future requests as the user that generated the token.
-                    </a>
-                
-            </div>
-        </div>
-    </div>
-
-    
-        <div class="modal fade" id="_authenticationtoken_get">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            <span class="badge badge_get">get</span>
-                            <span class="parent"></span>/authenticationtoken
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info"><p>Retrieve an authentication token that may be appended to subsequent requests.  Such a token authenticates those future requests as the user that generated the token.</p>
-</div>
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#_authenticationtoken_get_request" data-toggle="tab">Request</a></li>
-                            
-                                <li><a href="#_authenticationtoken_get_response" data-toggle="tab">Response</a></li>
-                            
-                        </ul>
-
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="_authenticationtoken_get_request">
-                                
-
-                                
-
-                                
-                            </div>
-
-                            
-                                <div class="tab-pane" id="_authenticationtoken_get_response">
-                                    
-                                        <h2>HTTP status code 200</h2>
-                                        <p>Successful response.  The body consists of the authentication token.  Append it to future service requests, e.g., /api/v1/<myservice>?acm_ticket=<token></p>
-
-
-                                        
-
-                                        
-                                            <h3>Body</h3>
-                                            
-                                                <p><strong>Type: text/plain</strong></p>
-                                                <pre>2cf2ab49-9ce9-45bd-a307-a452b24dd789</pre>
-                                            
-                                        
-                                    
-                                </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-</div>
-
-
-
-                            </div>
-                        </div>
-                    </div>
-                
-            </div>
-
-            <div class="col-md-3">
-                <div id="sidebar" class="hidden-print affix" role="complementary">
-                    <ul class="nav nav-pills nav-stacked">
-                        
-                            <li><a href="#_plugin">/plugin</a></li>
-                        
-                            <li><a href="#_users">/users</a></li>
-                        
-                            <li><a href="#_authenticationtoken">/authenticationtoken</a></li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>The requested objectTypeName was not recognized.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>No such business object with name &#x27;unrecognized&#x27;
+</code></pre></small></p></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class=panel-heading><h3 id=_authenticationtoken class=panel-title>/authenticationtoken</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__authenticationtoken><span class=parent></span>/authenticationtoken</a> <span class=methods><a href=# data-toggle=modal data-target=#_authenticationtoken_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__authenticationtoken class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_authenticationtoken_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve an authentication token that may be appended to subsequent requests. Such a token authenticates those future requests as the user that generated the token.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_authenticationtoken_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent></span>/authenticationtoken</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve an authentication token that may be appended to subsequent requests. Such a token authenticates those future requests as the user that generated the token.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_authenticationtoken_get_request data-toggle=tab>Request</a></li><li><a href=#_authenticationtoken_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_authenticationtoken_get_request></div><div class=tab-pane id=_authenticationtoken_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Successful response. The body consists of the authentication token. Append it to future service requests, e.g., /api/v1/<myservice>?acm_ticket=<token></token></myservice></p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>2cf2ab49-9ce9-45bd-a307-a452b24dd789</code></pre></small></p></div></div></div></div></div></div></div></div></div></div></div><div class=col-md-3><div id=sidebar class="hidden-print affix" role=complementary><ul class="nav nav-pills nav-stacked"><li><a href=#_plugin>/plugin</a></li><li><a href=#_users>/users</a></li><li><a href=#_authenticationtoken>/authenticationtoken</a></li></ul></div></div></div></div></body></html>
