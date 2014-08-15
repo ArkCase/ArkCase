@@ -43,6 +43,7 @@ Complaint.Event = {
             Complaint.Service.listComplaint(treeInfo);
             return;
         }
+
         var complaintId = Complaint.Object.getComplaintIdByKey(node.key);
         Complaint.setComplaintId(complaintId);
         if (0 >= complaintId) {
@@ -60,83 +61,23 @@ Complaint.Event = {
         //Complaint.Object.activeTreeNode(node.key);
 
         Complaint.Object.showTab(node.key);
-
-        //alert("onActivateTreeNode:(" + node.key + "," + node.title + "," + node.data.acmIcon + ")");
-
-//        if ("prevPage" == node.key) {
-//            alert("Call service to get previous page");
-//            return;
-//        } else if ("nextPage" == node.key) {
-//            alert("Call service to get next page");
-//            return;
-//        }
-//
-//        var complaintId = Complaint.Object.getComplaintIdByKey(node.key);
-//        if (0 < complaintId) {
-//            Complaint.Service.retrieveDetail(complaintId);
-//            Complaint.Object.refreshJTableTasks();
-//        }
-//
-//        var c = Complaint.findComplaint(complaintId);
-//        if (c) {
-//            Complaint.Object.updateDetail(c);
-//            Complaint.setComplaintId(complaintId);
-//            Complaint.Object.hiliteSelectedItem(complaintId);
-//        }
-//
-//
-//        var initTab = Complaint.Object.getInitTab();
-//        if (Acm.isNotEmpty(initTab)) {
-//            Complaint.Object.clickTab(initTab);
-//            Complaint.Object.setInitTab("");
-//        }
     }
 
+    ,onClickSpanAddDocument: function(e) {
+        var report = Complaint.Object.getSelectReport();
+        var token = Complaint.Object.setToken();
+        var c = Complaint.getComplaint();
 
+        var url = "http://10.21.4.149/orbeon/fr/acm/roi-form/new"
+            + "?acm_ticket=" + token
+            + "&complaint_id=" + c.complaintId
+            + "&complaint_number=" + c.complaintNumber
+            + "&complaint_title=" + c.complaintTitle
+            + "&complaint_priority=" + c.priority;
 
-    ,onClickLnkListItemImage : function(e) {
-        var complaintId = Complaint.Object.getHiddenComplaintId(e);
-        if (Complaint.getComplaintId() == complaintId) {
-            return;
-        } else {
-            Complaint.setComplaintId(complaintId);
-        }
-
-        this.doClickLnkListItem();
+        window.location.href = url;
     }
-    ,onClickLnkListItem : function(e) {
-        var complaintId = Complaint.Object.getHiddenComplaintId(e);
-        if (Complaint.getComplaintId() == complaintId) {
-            return;
-        } else {
-            Complaint.setComplaintId(complaintId);
-        }
 
-        this.doClickLnkListItem();
-    }
-    ,doClickLnkListItem: function() {
-        var complaintId = Complaint.getComplaintId();
-        if (0 < complaintId) {
-            Complaint.Service.retrieveDetail(complaintId);
-//        Complaint.Service.retrieveTasks(complaintId);
-            Complaint.Object.refreshJTableTasks();
-        }
-
-        var c = Complaint.findComplaint(complaintId);
-        if (c) {
-            Complaint.Object.updateDetail(c);
-            Complaint.setComplaintId(complaintId);
-            Complaint.Object.hiliteSelectedItem(complaintId);
-            //todo: bring item in list to view
-        }
-
-
-        var initTab = Complaint.Object.getInitTab();
-        if (Acm.isNotEmpty(initTab)) {
-            Complaint.Object.clickTab(initTab);
-            Complaint.Object.setInitTab("");
-        }
-    }
     ,onClickBtnTaskAssign : function(e) {
         alert("onClickBtnTaskAssign");
     }
@@ -148,28 +89,6 @@ Complaint.Event = {
         var url = Complaint.Page.URL_NEW_TASK + complaintId;
         App.gotoPage(url);
     }
-    ,onPostInit0: function() {
-        if (Complaint.isSingleObject()) {
-            var complaintId = Complaint.getComplaintId();
-            Complaint.Service.retrieveDetail(complaintId);
-            //Complaint.Service.retrieveTasks(complaintId);
-        } else {
-            Complaint.Service.listComplaint();
-        }
-
-        Acm.keepTrying(Complaint.Event._tryInitAssignee, 8, 200);
-        Acm.keepTrying(Complaint.Event._tryInitPriority, 8, 200);
-        Acm.keepTrying(Complaint.Event._tryInitComplaintType, 8, 200);
-    }
-
-//    ,onClickLnkNewTasks : function(e) {
-//        var complaintId = Complaint.getComplaintId();
-//        var url = Complaint.Page.URL_NEW_TASK + complaintId;
-//        App.gotoPage(url);
-//    }
-//    ,onChangeSelTasks : function(e) {
-//        alert("onChangeSelTasks:" + e.value);
-//    }
 
     ,_tryInitAssignee: function() {
         var data = App.Object.getApprovers();

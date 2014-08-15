@@ -9,12 +9,10 @@ Complaint.Callback = {
     initialize : function() {
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_RETRIEVED, this.onListRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_RETRIEVED, this.onDetailRetrieved);
-//        Acm.Dispatcher.addEventListener(this.EVENT_TASKS_RETRIEVED, this.onTasksRetrieved);
     }
 
     ,EVENT_LIST_RETRIEVED		: "complaint-list-list-retrieved"
     ,EVENT_DETAIL_RETRIEVED		: "complaint-list-detail-retrieved"
-//    ,EVENT_TASKS_RETRIEVED		: "complaint-list-tasks-retrieved"
 
     ,onListRetrieved : function(Callback, response) {
         if (response.hasError) {
