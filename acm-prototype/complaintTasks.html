@@ -19,7 +19,7 @@
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="resources/js/fancytree/jquery.fancytree.js"></script>
-<script src="resources/js/fancytree/jquery.fancytree.table.js" type="text/javascript"></script>
+
 <link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
 </head>
 <body class="">
@@ -116,7 +116,7 @@
             <section class="hbox stretch"><!-- /.aside --> 
               <!-- .aside -->
               
-              <aside class="aside-xl bg-light lt">
+              <aside class="aside-lg bg-light lt">
                 <section class="vbox animated fadeInLeft">
                   <section class="scrollable">
                     <header class="dk header">
@@ -152,32 +152,7 @@
                     </div>
                     <div class="row m-b">
                       <div class="col-sm-12">
-                        <table id="tree">
-                          <colgroup>
-                          <col width="*">
-                            </col>
-                          
-                          <col width="*">
-                            </col>
-                          
-                          <col width="*">
-                            </col>
-                          
-                          </colgroup>
-                          <thead>
-                            <tr>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td></td>
-                              <td></td>
-                            </tr>
-                          </tbody>
-                        </table>
+                        <div id="tree"></div>
                       </div>
                     </div>
                   </section>
@@ -269,34 +244,10 @@
     </section>
   </section>
 </section>
-<style>
-table.fancytree-ext-table {
-  width: 100%;
-  outline: 0;
-}
-
-table.fancytree-ext-table tbody tr td {
-  border: 0px;
-}
-</style>
 <script type='text/javascript'>//<![CDATA[ 
 
 $(function() {
     $("#tree").fancytree({
-
-        extensions: ["table"],
-        table: {
-            nodeColumnIdx: 0, // render the node title into the 2nd column
-            checkboxColumnIdx: 1 // render the checkboxes into the 1st column
-        },
-
-        renderColumns: function(event, data) {
-            var node = data.node,
-                $tdList = $(node.tr).find(">td");
-            // (index #0 is rendered by fancytree by adding the checkbox)
-            $tdList.eq(1).text(node.data.description1);
-            // (index #2 is rendered by fancytree)
-        },
 
 activate: function(event, data) {
 				var node = data.node;
@@ -310,15 +261,13 @@ activate: function(event, data) {
 			},
 
         source: [{
-            title: "2014-03-12321",
-			href: "complaints.html",
-            test: "test",
-            description1: "Complaint Title",
+            title: "Complaint Title",
+href: "complaints.html",
+tooltip: "2014-03-12321",
             expanded: "fancytree-expanded",
             children: [{
                 title: "Incident 1",
                 folder: true,
-expanded: "fancytree-expanded",
 				expanded: "fancytree-expanded",
                 children: [{
                     title: "Details", 

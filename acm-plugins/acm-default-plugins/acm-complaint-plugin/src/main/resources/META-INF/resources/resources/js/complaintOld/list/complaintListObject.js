@@ -164,7 +164,7 @@ ComplaintList.Object = {
     ,_useFancyTree: function($s) {
         $s.fancytree({
             source: function() {
-                var builder = Acm.Object.FancyTreeBuilder.reset();
+                var builder = AcmEx.FancyTreeBuilder.reset();
 
                 builder.addLeaf({key: "prevPage"
                     ,title: "xxx records above..."
@@ -1203,7 +1203,7 @@ ComplaintList.Object = {
     // Tasks
     //
     ,refreshJTableTasks: function() {
-        Acm.Object.jTableLoad(this.$divTasks);
+        AcmEx.Object.jTableLoad(this.$divTasks);
     }
 
     ,_createJTableTasks: function($jt) {
@@ -1211,7 +1211,7 @@ ComplaintList.Object = {
         sortMap["title"] = "title_t";
 
 
-        Acm.Object.jTableCreateSortable($jt
+        AcmEx.Object.jTableCreatePaging($jt
             ,{
                 title: 'Tasks'
                 ,selecting: true
@@ -1219,8 +1219,8 @@ ComplaintList.Object = {
                 ,selectingCheckboxes: false
 
                 ,actions: {
-                    listActionSortable: function (postData, jtParams, sortMap) {
-                        return Acm.Object.jTableDefaultListAction(postData, jtParams, sortMap
+                    pagingListAction: function (postData, jtParams, sortMap) {
+                        return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
                             ,function() {
                                 var url;
                                 url =  App.getContextPath() + ComplaintList.Service.API_RETRIEVE_TASKS;
@@ -1239,7 +1239,7 @@ ComplaintList.Object = {
                                                 //response.start should match to jtParams.jtStartIndex
                                                 //response.docs.length should be <= jtParams.jtPageSize
 
-                                                jtData = Acm.Object.jTableGetEmptyResult();
+                                                jtData = AcmEx.Object.jTableGetEmptyResult();
                                                 for (var i = 0; i < response.docs.length; i++) {
                                                     var Record = {};
                                                     Record.id = response.docs[i].object_id_s;
@@ -1270,7 +1270,7 @@ ComplaintList.Object = {
                     }
 
                     ,createAction: function(postData, jtParams) {
-                        return Acm.Object.jTableGetEmptyResult();
+                        return AcmEx.Object.jTableGetEmptyResult();
                     }
                 }
 
