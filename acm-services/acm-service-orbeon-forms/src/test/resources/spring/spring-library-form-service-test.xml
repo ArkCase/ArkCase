@@ -7,4 +7,16 @@
             id="formExceptionResolver"
             class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
+<!--     <bean id="form" class="com.armedia.acm.service.orbeon.forms.model.ROIFormMain"/>
+    <bean id="header" class="com.armedia.acm.service.orbeon.forms.model.ROIFormHeader"/>
+    <bean id="detail" class="com.armedia.acm.service.orbeon.forms.model.ROIFormReportDetail"/>
+    <bean id="footer" class="com.armedia.acm.service.orbeon.forms.model.ROIFormFooter"/>
+ -->    
+    <bean id="marshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+	</bean>
+
+    <bean id="unmarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+		<property name="mappingLocation" value="classpath:orbeonFormXMLMapping.xml" />
+	</bean>
+    
 </beans>
