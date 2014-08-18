@@ -8,6 +8,7 @@
     <title>${pageDescriptor.title}</title>
     <div id="detailData" itemscope="true" style="display: none">
         <span itemprop="complaintId">${complaintId}</span>
+        <span itemprop="token">${token}</span>
     </div>
 </jsp:attribute>
 
@@ -103,33 +104,33 @@
                             </div>
                             <div class="row m-b">
                                 <div class="col-sm-12">
-                                    <table id="tree">
-                                        <colgroup>
-                                            <col width="*">
-                                            </col>
+                                    <%--<table id="tree">--%>
+                                        <%--<colgroup>--%>
+                                            <%--<col width="*">--%>
+                                            <%--</col>--%>
 
-                                            <col width="*">
-                                            </col>
+                                            <%--<col width="*">--%>
+                                            <%--</col>--%>
 
-                                            <col width="*">
-                                            </col>
+                                            <%--<col width="*">--%>
+                                            <%--</col>--%>
 
-                                        </colgroup>
-                                        <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <%--<div id="tree"></div>--%>
+                                        <%--</colgroup>--%>
+                                        <%--<thead>--%>
+                                        <%--<tr>--%>
+                                            <%--<th></th>--%>
+                                            <%--<th></th>--%>
+                                            <%--<th></th>--%>
+                                        <%--</tr>--%>
+                                        <%--</thead>--%>
+                                        <%--<tbody>--%>
+                                        <%--<tr>--%>
+                                            <%--<td></td>--%>
+                                            <%--<td></td>--%>
+                                        <%--</tr>--%>
+                                        <%--</tbody>--%>
+                                    <%--</table>--%>
+                                    <div id="tree"></div>
                                 </div>
                             </div>
                         </section>
@@ -456,65 +457,7 @@
                                     <div class="row" id="tabPending" style="display:none;">
                                         <div class="col-md-12">
                                             <section class="panel b-a">
-                                                <div class="panel-heading b-b bg-info">
-                                                    <ul class="nav nav-pills pull-right">
-                                                        <li style="margin-right:5px">
-                                                            <div class="btn-group" style="margin-top:4px;">
-                                                                <button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown">Filter</span> <span class="caret"></span> </button>
-                                                                <ul class="dropdown-menu dropdown-select">
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 1</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 2</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 3</a></li>
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="btn-group padder-v2">
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
-                                                            </div>
-                                                        </li>
-                                                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                                    </ul>
-                                                    <a href="#" class="font-bold">Documents [Status] </a> </div>
-                                                <div class="panel-body max-200 no-padder">
-                                                    <table class="table table-striped th-sortable table-hover">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Title</th>
-                                                            <th>Created</th>
-                                                            <th>Author</th>
-                                                            <th>Priority</th>
-                                                            <th>Due</th>
-                                                            <th>Status</th>
-                                                            <th width="10%">Action</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr class="odd gradeA">
-                                                            <td>[ID]</td>
-                                                            <td>[Title]</td>
-                                                            <td>[Created]</td>
-                                                            <td>[Author]</td>
-                                                            <td>[Priority]</td>
-                                                            <td>[Due]</td>
-                                                            <td>[Status]</td>
-                                                            <td><select class="input-sm form-control input-s-sm inline v-middle">
-                                                                <option value="0">Choose Action</option>
-                                                                <option value="1">Delete</option>
-                                                                <option value="1">Approve</option>
-                                                                <option value="1">Reject</option>
-                                                            </select></td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                <div id="divDocuments" style="width:100%"></div>
                                             </section>
                                         </div>
                                     </div>

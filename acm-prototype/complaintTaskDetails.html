@@ -19,7 +19,6 @@
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="resources/js/fancytree/jquery.fancytree.js"></script>
-
 <link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
 </head>
 <body class="">
@@ -162,11 +161,96 @@
                 <section class="vbox">
                   <section class="scrollable">
                     <div class="wrapper dk  clearfix">
-                      <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> (2014-03-12321)</h4>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <div class="">
+                            <div class=" clearfix">
+                              <div class="col-xs-4 b-r">
+                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> </div>
+                                <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
+                                <small class="text-muted">Incident Date</small></div>
+                              <div class="col-xs-1 b-r">
+                                <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
+                                <small class="text-muted">Priority</small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">AJ McClary</a></div>
+                                <small class="text-muted">Assigned To</small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
+                                <small class="text-muted">Subject Type</small></div>
+                              <div class="col-xs-1">
+                                <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
+                                <small class="text-muted">Status</small></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <div class="wrapper">
-                        <div class="row">Task Details</div>
+                    
+                     <div class="wrapper bg-empty  clearfix">
+                      <div class="pull-right inline">
+                        <div class="btn-group">
+                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete Task"><i class="fa fa-check"></i></button>
+                          
+                        </div> </div>
+                      <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> Sample Task Subject</a> (12321)</h4>
+                    <hr/>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <div class="">
+                            <div class=" clearfix">
+                             
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#">0%</a></div>
+                                <small class="text-muted">Complete</small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#">AJ McClary</a></div>
+                                <small class="text-muted">Owner</small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#">High</a></div>
+                                <small class="text-muted">Priority</small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#">MM/DD/YYYY</a></div>
+                                <small class="text-muted">Start Date</small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#">MM/DD/YYYY</a></div>
+                                <small class="text-muted">Due Date</small></div>
+                              <div class="col-xs-2">
+                                <div class="h4 font-bold"><a href="#">ASSIGNED</a></div>
+                                <small class="text-muted">Status</small></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="wrapper ">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <section class="panel b-a ">
+                            <div class="panel-heading b-b bg-info">
+                              <ul class="nav nav-pills pull-right">
+                                <li>
+                                  <div class="btn-group padder-v2">
+                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>
+                                    <ul class="dropdown-menu pull-right">
+                                      <li><a href="#">Other menu items</a></li>
+                                    </ul>
+                                  </div>
+                                </li>
+                                <li> </li>
+                              </ul>
+                              </span> <a href="#" class="font-bold">Task Details</a> </div>
+                            <div class="panel-body">
+                              <div class="complaintDetails">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
+                                <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
+                              </div>
+                            </div>
+                          </section>
+                        </div>
                       </div>
                     </div>
                     </div>
@@ -199,7 +283,7 @@ activate: function(event, data) {
 			},
 
         source: [{
-            title: "Complaint Title",
+            title: "Sample Complaint Title <em>(2014-03-12321)</em>",
 href: "complaints.html",
 tooltip: "2014-03-12321",
             expanded: "fancytree-expanded",
@@ -223,7 +307,7 @@ tooltip: "2014-03-12321",
 					href: "complaintNotes.html"
                 }]
             }, {
-                title: "Attachments",
+                title: "Documents",
                 folder: true,
 expanded: "fancytree-expanded",
                 children: [{
@@ -316,6 +400,10 @@ expanded: "fancytree-expanded",
                 title: "References",
                 folder: true,
 expanded: "fancytree-expanded", children: [{
+                    title: "Other Complaints",
+                    folder: false, 
+					href: "complaintOtherComplaints.html"
+                },{
                     title: "Other Cases",
                     folder: false, 
 					href: "complaintOtherCases.html"

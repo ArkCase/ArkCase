@@ -22,20 +22,26 @@ public class ComplaintUiController
     private AuthenticationTokenService authenticationTokenService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView openComplaints() {
+    public ModelAndView openComplaints(Authentication auth) {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaint");
         retval.addObject("pageDescriptor",  getPageDescriptorList());
+
+        String token = this.authenticationTokenService.storeAuthentication(auth);
+        retval.addObject("token", token);
         return retval;
     }
 
     @RequestMapping(value = "/{complaintId}", method = RequestMethod.GET)
-    public ModelAndView openComplaint(@PathVariable(value = "complaintId") Long complaintId
+    public ModelAndView openComplaint(Authentication auth, @PathVariable(value = "complaintId") Long complaintId
     ) {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaint");
         retval.addObject("complaintId", complaintId);
         retval.addObject("pageDescriptor",  getPageDescriptorList());
+
+        String token = this.authenticationTokenService.storeAuthentication(auth);
+        retval.addObject("token", token);
         return retval;
     }
 

@@ -24,6 +24,8 @@ Complaint.Object = {
         if (Acm.isNotEmpty(complaintId)) {
             ti.complaintId = complaintId;
         }
+        var token = items.properties("token").itemValue();
+        this.setToken(token);
 
         this.$lnkTitle          = $("#caseTitle");
         this.$lnkTitle.editable({placement: 'right'});
@@ -47,13 +49,35 @@ Complaint.Object = {
         this.$divInitiator      = $("#divInitiator");
         this._createJTableInitiator(this.$divInitiator);
 
+        this.$divDocuments      = $("#divDocuments");
+        this._createJTableDocuments(this.$divDocuments);
+        this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+        this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
+        Complaint.Page.fillReportSelection();
+
         this.$divTasks          = $("#divTasks");
         this._createJTableTasks(this.$divTasks);
+        this.$spanAddTask       = this.$divTasks.find(".jtable-toolbar-item-add-record");
+        this.$spanAddTask.unbind("click").on("click", function(e){ComplaintList.Event.onClickSpanAddTask(e);});
 
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
     }
 
+    ,_token: ""
+    ,getToken: function() {
+        return this._token;
+    }
+    ,setToken: function(token) {
+        this._token = token;
+    }
+
+    ,beforeSpanAddDocument: function(html) {
+        this.$spanAddDocument.before(html);
+    }
+    ,getSelectReport: function() {
+        return Acm.Object.getSelectValue(this.$spanAddDocument.prev().find("select"));
+    }
     ,showTab: function(key) {
         var tabIds = ["tabBlank"
             ,"tabMain"
@@ -166,6 +190,7 @@ Complaint.Object = {
         this.setHtmlDivDetails(c.details);
 
         this.refreshJTableInitiator();
+        this.refreshJTableDocuments();
         this.refreshJTableTasks();
     }
 
@@ -368,22 +393,7 @@ Complaint.Object = {
     }
     ,_useFancyTree: function($s) {
         $s.fancytree({
-            extensions: ["table"]
-
-            ,table: {
-                nodeColumnIdx: 0 // render the node title into the 2nd column
-                //,checkboxColumnIdx: 1 // render the checkboxes into the 1st column
-            }
-
-            ,renderColumns: function(event, data) {
-                var node = data.node,
-                $tdList = $(node.tr).find(">td");
-                // (index #0 is rendered by fancytree by adding the checkbox)
-                $tdList.eq(1).text(node.data.description1);
-                // (index #2 is rendered by fancytree)
-            }
-
-            ,activate: function(event, data) {
+            activate: function(event, data) {
                 Complaint.Event.onActivateTreeNode(data.node);
             }
             ,dblclick: function(event, data) {
@@ -423,6 +433,20 @@ Complaint.Object = {
                 }
 
             }
+//            ,extensions: ["table"]
+//
+//            ,table: {
+//                nodeColumnIdx: 0 // render the node title into the 2nd column
+//                //,checkboxColumnIdx: 1 // render the checkboxes into the 1st column
+//            }
+//
+//            ,renderColumns: function(event, data) {
+//                var node = data.node,
+//                $tdList = $(node.tr).find(">td");
+//                // (index #0 is rendered by fancytree by adding the checkbox)
+//                $tdList.eq(1).text(node.data.description1);
+//                // (index #2 is rendered by fancytree)
+//            }
 
             ,source: function() {
                 var builder = AcmEx.FancyTreeBuilder.reset();
@@ -603,11 +627,7 @@ Complaint.Object = {
 
         var toClose;
         if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
-            if (curTitle === title) {
-                toClose = true;
-            } else {
-                toClose = false;
-            }
+            toClose = (curTitle === title);
         } else {
             toClose = false;
         }
@@ -1287,6 +1307,119 @@ Complaint.Object = {
 
     //----------------- end of Initiator -----------------------
 
+
+    //
+    //----------------- Documents ------------------------------
+    //
+    ,refreshJTableDocuments: function() {
+        AcmEx.Object.jTableLoad(this.$divDocuments);
+    }
+    ,_createJTableDocuments: function($s) {
+        $s.jtable({
+            title: 'Documents'
+            ,paging: false
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = {"Result": "OK", "Records": []};
+                    var c = Complaint.getComplaint();
+                    if (c) {
+                        if (Acm.isEmpty(c.childObjects)) {
+                            for (var i = 0; i < c.childObjects; i++) {
+                                var childObject = c.childObjects[i];
+                                var record = {};
+                                record.id = childObject.targetId;
+                                record.title = childObject.targetName;
+                                record.created = Acm.getDateFromDatetime(childObject.created);
+                                record.creator = childObject.creator;
+                                record.status = childObject.status;
+                                rc.Records.push(record);
+                            }
+                        }
+                    }
+                    return rc;
+//for test
+//                    return {
+//                        "Result": "OK"
+//                        ,"Records": [
+//                            {"id": 11, "title": "Nick Name", "created": "01-02-03", "creator": "123 do re mi", "status": "JJ"}
+//                            ,{"id": 12, "title": "Some Name", "created": "14-05-15", "creator": "xyz abc", "status": "Ice Man"}
+//                        ]
+//                        ,"TotalRecordCount": 2
+//                    };
+                }
+                ,createAction: function(postData, jtParams) {
+                    //custom web form creation takes over; this action should never be called
+                    var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:"", status:""}};
+                    return rc;
+                }
+                ,updateAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = {"Result": "OK", "Record": {}};
+                    //id,created,creator is readonly
+                    //rc.Record.id = record.id;
+                    //rc.Record.created = record.created;
+                    //rc.Record.creator = record.creator;
+                    rc.Record.title = record.title;
+                    rc.Record.status = record.status;
+                    return rc;
+                }
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                }
+                ,title: {
+                    title: 'Title'
+                    ,width: '10%'
+                    ,display: function (commData) {
+                        var a = "<a href='" + App.getContextPath() + Complaint.Service.API_DOWNLOAD_DOCUMENT
+                            + ((0 >= commData.record.id)? "#" : commData.record.id)
+                            + "'>" + commData.record.title + "</a>";
+                        return $(a);
+                    }
+                }
+                ,created: {
+                    title: 'Created'
+                    ,width: '15%'
+                    ,edit: false
+                }
+                ,creator: {
+                    title: 'Creator'
+                    ,width: '15%'
+                    ,edit: false
+                }
+                ,status: {
+                    title: 'Status'
+                    ,width: '30%'
+                }
+            }
+            ,recordUpdated : function (event, data) {
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var record = data.record;
+                var c = Complaint.getComplaint();
+                if (c) {
+                    if (c.childObjeccts) {
+                        if (0 < c.childObjects.length) {
+                            var childObject = c.childObjects[whichRow];
+                            //id,created,creator is readonly
+                            //childObject.Record.id = record.id;
+                            //childObject.Record.created = record.created;
+                            //childObject.Record.creator = record.creator;
+                            childObject.Record.title = record.title;
+                            childObject.Record.status = record.status;
+                        }
+                    }
+                }
+            }
+        });
+
+        $s.jtable('load');
+    }
+    //----------------- end of Documents ----------------------
 
 
     //

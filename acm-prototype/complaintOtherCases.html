@@ -162,12 +162,80 @@
                 <section class="vbox">
                   <section class="scrollable">
                     <div class="wrapper dk  clearfix">
-                      <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> (2014-03-12321)</h4>
-                    </div>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <div class="">
+                            <div class=" clearfix">
+                              <div class="col-xs-4 b-r">
+                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> </div>
+                                <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
+                                <small class="text-muted">Incident Date</small></div>
+                              <div class="col-xs-1 b-r">
+                                <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
+                                <small class="text-muted">Priority</small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">AJ McClary</a></div>
+                                <small class="text-muted">Assigned To</small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
+                                <small class="text-muted">Subject Type</small></div>
+                              <div class="col-xs-1">
+                                <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div> <small class="text-muted">Status</small></div>
+                            </div>
+                          </div>
+                        </div>
+                    </div></div>
                     <div>
                       <div class="wrapper">
                         <div class="row">
-                     Other Cases
+                          <div class="col-md-12">
+                            <section class="panel b-a">
+                              <div class="panel-heading b-b bg-info">
+                                <ul class="nav nav-pills pull-right">
+                                  <li style="margin-right:5px"></li>
+                                  <li>
+                                    <div class="btn-group padder-v2">
+                                      <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New Reference</button>
+                                    </div>
+                                  </li>
+                                  <li> </li>
+                                </ul>
+                                <a href="#" class="font-bold">Other Cases</a></div>
+                              <div class="panel-body max-200 no-padder">
+                                <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                      <th>Case ID</th>
+                                      <th>Title</th>
+                                      <th>Incident Date</th>
+                                      <th>Priority</th>
+                                      <th>Assigned To</th>
+                                      <th>Subject Type</th>
+                                      <th>Status</th>
+                                      <th width="10%">Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                      <td>[Case ID]</td>
+                                      <td>[Title]</td>
+                                      <td>[Incident Date]</td>
+                                      <td>[Priority]</td>
+                                      <td>[Assigned To]</td>
+                                      <td>[Subject Type]</td>
+                                      <td>[Status]</td>
+                                      <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
+                                        <option value="0">Choose Action</option>
+                                        <option value="1">Delete</option>
+                                      </select></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </section>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -201,7 +269,7 @@ activate: function(event, data) {
 			},
 
         source: [{
-            title: "Complaint Title",
+            title: "Sample Complaint Title <em>(2014-03-12321)</em>",
 href: "complaints.html",
 tooltip: "2014-03-12321",
             expanded: "fancytree-expanded",
@@ -225,7 +293,7 @@ tooltip: "2014-03-12321",
 					href: "complaintNotes.html"
                 }]
             }, {
-                title: "Attachments",
+                title: "Documents",
                 folder: true,
 expanded: "fancytree-expanded",
                 children: [{
@@ -318,6 +386,10 @@ expanded: "fancytree-expanded",
                 title: "References",
                 folder: true,
 expanded: "fancytree-expanded", children: [{
+                    title: "Other Complaints",
+                    folder: false, 
+					href: "complaintOtherComplaints.html"
+                },{
                     title: "Other Cases",
                     folder: false, 
 					href: "complaintOtherCases.html"
