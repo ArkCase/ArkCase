@@ -18,9 +18,6 @@ Report.Event = {
         var reportName = Report.Object.getSelectedValueSelReport()
         var startDate = Report.Object.getValueStartDate();
         var endDate = Report.Object.getValueEndDate();
-
-        alert(reportName);
-        alert(startDate);
-        alert(endDate);
+        Acm.Dialog.info(reportName + "<br>" +  startDate + "</br>" + endDate);
     }
 };

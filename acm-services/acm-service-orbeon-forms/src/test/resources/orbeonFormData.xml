@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>              
+	<header>
+		<reportTitle>Test Orbeon Form XML Unmarshalling</reportTitle>
+		<preparedDate/>
+		<lastName>Wu</lastName>
+		<firstName>David</firstName>
+	</header>
+	<reportDetail>
+		<complaintTitle>testTitle</complaintTitle>
+		<complaintNumber>20140430_52</complaintNumber>
+		<complaintPriority>Expedite</complaintPriority>
+		<reportSummary/>
+	</reportDetail>
+	<attachment>
+		<document>
+		<file filename="" mediatype="" size=""/>
+		</document>
+	</attachment>
+	<footer>
+		<acm_ticket>28d3baee-454e-42e1-9edb-bd2bc55acfa7</acm_ticket>
+		<complaint_id>52</complaint_id>
+	</footer>
+</form>

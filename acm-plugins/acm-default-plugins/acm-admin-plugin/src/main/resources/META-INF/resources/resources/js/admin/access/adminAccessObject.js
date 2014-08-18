@@ -35,7 +35,7 @@ AdminAccess.Object = {
         sortMap["accessDecision"] = "accessDecision";
         sortMap["allowDiscretionaryUpdate"] = "allowDiscretionaryUpdate";
 
-        Acm.Object.jTableCreateSortable($jt
+        AcmEx.Object.jTableCreatePaging($jt
             , {
                 title: 'Access Control Policy'
                 ,selecting: true
@@ -43,8 +43,8 @@ AdminAccess.Object = {
                 ,selectingCheckboxes: false
 
                 ,actions: {
-                    listActionSortable: function (postData, jtParams, sortMap) {
-                        return Acm.Object.jTableDefaultListAction(postData, jtParams, sortMap
+                    pagingListAction: function (postData, jtParams, sortMap) {
+                        return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
                             , function () {
                                 var url;
                                 url = App.getContextPath() + AdminAccess.Service.API_RETRIEVE_ACCESS_CONTROL;
@@ -53,7 +53,7 @@ AdminAccess.Object = {
                             , function (data) {
                                 var jtData = null;
                                 var err = "ACL Error";
-                                jtData = Acm.Object.jTableGetEmptyResult();
+                                jtData = AcmEx.Object.jTableGetEmptyResult();
                                 if (data) {
                                     var resultPage = data.resultPage;
                                     for (var i = 0; i < resultPage.length; i++) {
@@ -109,6 +109,7 @@ AdminAccess.Object = {
                     }, objectType: {
                         title: 'Object Type', width: '3%'
                         ,edit: false
+                        //,sorting : true
 
                     }, objectState: {
                         title: 'State', width: '3%'
@@ -122,7 +123,9 @@ AdminAccess.Object = {
                     }, accessDecision: {
                         title: 'Access Decision',
                         width: '5%'
-                        ,options: ['GRANT' , 'DENY']
+                        ,options: [{ Value: 'GRANT', DisplayText: 'GRANT' }, { Value: 'DENY', DisplayText: 'DENY' }, { Value: 'MANDATORY_DENY', DisplayText: 'MANDATORY DENY' }]
+
+                       // ,options: ['GRANT' , 'DENY', 'MANDATORY_DENY']
                     }, allowDiscretionaryUpdate: {
                         title: 'Allow Discretionary Update',
                         width: '5%'
@@ -137,7 +140,9 @@ AdminAccess.Object = {
                 }
             }
             //end arg
+            ,sortMap
         );
+
     }
 };
 

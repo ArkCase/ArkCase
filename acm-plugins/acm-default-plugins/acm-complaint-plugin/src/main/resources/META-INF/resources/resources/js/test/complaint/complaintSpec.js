@@ -5,8 +5,9 @@
  */
 describe("Complaint", function()
 {
-    it("Complaint.Initialize", function() {
-        expect(true).toBe(true);
+    it("Complaint", function() {
+        expect(true).toEqual(true);
     });
+
 
 });

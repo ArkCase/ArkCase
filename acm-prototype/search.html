@@ -15,53 +15,29 @@
     <script src="js/ie/respond.min.js"></script>
     <script src="js/ie/excanvas.js"></script>
   <![endif]-->
-  <script src="resources/js/jquery.min.js"></script> 
+<script src="resources/js/jquery.min.js"></script>
 </head>
 <body class="">
 <section class="vbox">
   <header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
     <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
-   <ul class="nav navbar-nav hidden-xs">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="i i-plus"></i> New
-          </a>
-          <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">   <div class="row m-l-none m-r-none m-t m-b text-center">
-              <div class="col-xs-4">
-                <div class="padder-v2">
-                  <a href="newComplaint.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-notice i-2x text-primary-lt"></i>
-                    </span>
-                    <small class="text-muted">Complaint</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-4">
-                <div class="padder-v2">
-                  <a href="newCase.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-folder i-2x text-danger-lt"></i>
-                    </span>
-                    <small class="text-muted">Case</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-4">
-                <div class="padder-v2">
-                  <a href="newTask.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-checkmark i-2x text-success-lt"></i>
-                    </span>
-                    <small class="text-muted">Task</small>
-                  </a>
-                </div>
-              </div>
-             
+    <ul class="nav navbar-nav hidden-xs">
+      <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
+        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
+          <div class="row m-l-none m-r-none m-t m-b text-center">
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newComplaint.html"> <span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>
             </div>
-          </section>
-        </li>
-      </ul>
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>
+            </div>
+          </div>
+        </section>
+      </li>
+    </ul>
     <form class="navbar-form navbar-right input-s-lg m-t m-l-n-xs hidden-xs" role="search">
       <div class="form-group">
         <div class="input-group"> <span class="input-group-btn">
@@ -95,7 +71,7 @@
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
-<li> <a href="#">Switch User</a> </li>
+                    <li> <a href="#">Switch User</a> </li>
                     <li class="divider"></li>
                     <li> <a href="index.html">Logout</a> </li>
                   </ul>
@@ -115,24 +91,13 @@
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class="active"> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
                 </ul>
-               <div class="line dk hidden-nav-xs"></div>
-                  <div class="text-muted text-xs hidden-nav-xs padder m-t-sm m-b-sm">Admin</div>
-                  <ul class="nav">
-                    <li>
-                      <a href="access.html">
-                        <i class="i i-circle-sm"></i>
-                        <span>Access Control Policy</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="locks.html">
-                        <i class="i i-circle-sm"></i>
-                        <span>Object Locks</span>
-                      </a>
-                    </li>
-                   
-                  </ul>
-</nav>
+                <div class="line dk hidden-nav-xs"></div>
+                <div class="text-muted text-xs hidden-nav-xs padder m-t-sm m-b-sm">Admin</div>
+                <ul class="nav">
+                  <li> <a href="access.html"> <i class="i i-circle-sm"></i> <span>Access Control Policy</span> </a> </li>
+                  <li> <a href="locks.html"> <i class="i i-circle-sm"></i> <span>Object Locks</span> </a> </li>
+                </ul>
+              </nav>
               <!-- / nav --> 
             </div>
           </section>
@@ -141,402 +106,320 @@
       </aside>
       <!-- /.aside -->
       <section id="content">
-       
-       
-       
-       
-       
-       <section class="hbox stretch">
-      
-            <aside class="aside-md bg-light dker b-r" id="subNav">
-            
-             <section class="scrollable">
-             
-              <div class="wrapper b-b header">Advanced Search</div>
-       
-       <div class="wrapper">
-
-        <div class="input-group">
-                        <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
-                        <span class="input-group-btn">
-                          <button class="btn btn-sm btn-default" type="button">Go!</button>
-                        </span>
-                      
-       </div>
-       
-        <div class="line line-dashed b-b line-lg pull-in"></div>
-       <div class="form-group">
-                      <label class="col-sm-6 control-label"><strong>Complaints</strong></label>
-                      <div class="col-sm-4">
-                        <label class="switch">
-                          <input type="checkbox"id="complaintCheck">
-                          <span></span>
-                        </label>
-                      </div>
-                     
-                      
-                      
-                      <div class="col-sm-12" id="complaintFields">
-                      	 <label class="label">Complaint Title</label>
-                         <input type="text" class="form-control" placeholder="Enter Complaint Title">
-                         <label class="label">Complaint ID</label>
-               			 <input type="text" class="form-control" placeholder="Enter Complaint ID">
-                         <label class="label">Incident Date</label>
-                         <div class="clear"></div>
-                          <label class="label col-sm-3">From</label>
-                          <div class="col-sm-9"><input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
-                          <label class="label col-sm-3">To</label>
-                         <div class="col-sm-9"> <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
-                         <div class="clear"></div>
-                         <label for="priority"  class="label">Priority</label>
-                              <select name="priority" class="form-control">
-                                <option>Choose Priority</option>
-                                <option selected>Low</option>
-                                <option>Medium</option>
-                                <option>High</option>
-                                <option>Expedited</option>
-                              </select>
-                              <label class="label">Assigned To</label>
-                         <input type="text" class="form-control" placeholder="Enter Assigned To">
-                         <label for="subjectType"  class="label">Subject Type</label>
-                              <select name="subjectType" class="form-control">
-                                <option>Choose Subject Type</option>
-                              </select>
-                              <label for="comnplaintStatus"  class="label">Status</label>
-                              <select name="comnplaintStatus" class="form-control">
-                                <option>Choose Status</option>
-                              </select>
-                      </div>
-                      
+        <section class="hbox stretch">
+          <aside class="aside-md bg-light dker b-r" id="subNav">
+            <section class="vbox">
+              <section class="scrollable">
+                <div class="wrapper b-b header">Advanced Search</div>
+                <div class="wrapper">
+                  <div class="input-group">
+                    <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
+                    <span class="input-group-btn">
+                    <button class="btn btn-sm btn-default" type="button">Go!</button>
+                    </span> </div>
+                  <div class="line line-dashed b-b line-lg pull-in"></div>
+                  <div class="form-group">
+                    <label class="col-sm-6 control-label"><strong>Complaints</strong></label>
+                    <div class="col-sm-4">
+                      <label class="switch">
+                        <input type="checkbox"id="complaintCheck">
+                        <span></span> </label>
                     </div>
-                    
-                     <div class="line line-dashed b-b line-lg pull-in"></div>
-                     
-                      <div class="form-group">
-                      <label class="col-sm-6 control-label"><strong>Cases</strong></label>
-                      <div class="col-sm-4">
-                        <label class="switch">
-                          <input type="checkbox" id="caseCheck">
-                          <span></span>
-                        </label>
+                    <div class="col-sm-12" id="complaintFields">
+                      <label class="label">Complaint Title</label>
+                      <input type="text" class="form-control" placeholder="Enter Complaint Title">
+                      <label class="label">Complaint ID</label>
+                      <input type="text" class="form-control" placeholder="Enter Complaint ID">
+                      <label class="label">Incident Date</label>
+                      <div class="clear"></div>
+                      <label class="label col-sm-3">From</label>
+                      <div class="col-sm-9">
+                        <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
                       </div>
-                      
-                      
-                      <div class="col-sm-12" id="caseFields">
-                      	 <label class="label">Case Title</label>
-                         <input type="text" class="form-control" placeholder="Enter Case Title">
-                         <label class="label">Case ID</label>
-               			 <input type="text" class="form-control" placeholder="Enter Case ID">
-                         <label class="label">Incident Date</label>
-                        <div class="clear"></div>
-                          <label class="label col-sm-3">From</label>
-                          <div class="col-sm-9"><input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
-                          <label class="label col-sm-3">To</label>
-                         <div class="col-sm-9"> <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
-                         <div class="clear"></div>
-                         <label for="priority"  class="label">Priority</label>
-                              <select name="priority" class="form-control">
-                                <option>Choose Priority</option>
-                                <option selected>Low</option>
-                                <option>Medium</option>
-                                <option>High</option>
-                                <option>Expedited</option>
-                              </select>
-                              <label class="label">Assigned To</label>
-                         <input type="text" class="form-control" placeholder="Enter Assigned To">
-                         <label for="subjectType"  class="label">Subject Type</label>
-                              <select name="subjectType" class="form-control">
-                                <option>Choose Subject Type</option>
-                              </select>
-                              <label for="comnplaintStatus"  class="label">Status</label>
-                              <select name="comnplaintStatus" class="form-control">
-                                <option>Choose Status</option>
-                              </select>
+                      <label class="label col-sm-3">To</label>
+                      <div class="col-sm-9">
+                        <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
                       </div>
-                      
+                      <div class="clear"></div>
+                      <label for="priority"  class="label">Priority</label>
+                      <select name="priority" class="form-control">
+                        <option>Choose Priority</option>
+                        <option selected>Low</option>
+                        <option>Medium</option>
+                        <option>High</option>
+                        <option>Expedited</option>
+                      </select>
+                      <label class="label">Assigned To</label>
+                      <input type="text" class="form-control" placeholder="Enter Assigned To">
+                      <label for="subjectType"  class="label">Subject Type</label>
+                      <select name="subjectType" class="form-control">
+                        <option>Choose Subject Type</option>
+                      </select>
+                      <label for="comnplaintStatus"  class="label">Status</label>
+                      <select name="comnplaintStatus" class="form-control">
+                        <option>Choose Status</option>
+                      </select>
                     </div>
-                    
-                     <div class="line line-dashed b-b line-lg pull-in"></div>
-                     
-                      <div class="form-group">
-                      <label class="col-sm-6 control-label"><strong>Tasks</strong></label>
-                      <div class="col-sm-4">
-                        <label class="switch">
-                          <input type="checkbox" id="taskCheck">
-                          <span></span>
-                        </label>
-                      </div>
-                      
-                       <div class="col-sm-12" id="taskFields">
-                      	 <label class="label">Task Title</label>
-                         <input type="text" class="form-control" placeholder="Enter Task Title">
-                         <label class="label">Task ID</label>
-               			 <input type="text" class="form-control" placeholder="Enter Task ID">
-                         <label class="label">Due Date</label>
-                         <div class="clear"></div>
-                          <label class="label col-sm-3">From</label>
-                          <div class="col-sm-9"><input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
-                          <label class="label col-sm-3">To</label>
-                         <div class="col-sm-9"> <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
-                         <div class="clear"></div>
-                         <label for="priority"  class="label">Priority</label>
-                              <select name="priority" class="form-control">
-                                <option>Choose Priority</option>
-                                <option selected>Low</option>
-                                <option>Medium</option>
-                                <option>High</option>
-                                <option>Expedited</option>
-                              </select>
-                              <label class="label">Assigned To</label>
-                         <input type="text" class="form-control" placeholder="Enter Assigned To">
-                         <label for="subjectType"  class="label">Subject Type</label>
-                              <select name="subjectType" class="form-control">
-                                <option>Choose Subject Type</option>
-                              </select>
-                              <label for="comnplaintStatus"  class="label">Status</label>
-                              <select name="comnplaintStatus" class="form-control">
-                                <option>Choose Status</option>
-                              </select>
-                      </div>
-                      
-                      
-                      
+                  </div>
+                  <div class="line line-dashed b-b line-lg pull-in"></div>
+                  <div class="form-group">
+                    <label class="col-sm-6 control-label"><strong>Cases</strong></label>
+                    <div class="col-sm-4">
+                      <label class="switch">
+                        <input type="checkbox" id="caseCheck">
+                        <span></span> </label>
                     </div>
-                    
-                     <div class="line line-dashed b-b line-lg pull-in"></div>
-                     
-                     
-                      <div class="form-group">
-                      <label class="col-sm-6 control-label"><strong>Documents</strong></label>
-                      <div class="col-sm-4">
-                        <label class="switch">
-                          <input type="checkbox" id="docCheck">
-                          <span></span>
-                        </label>
+                    <div class="col-sm-12" id="caseFields">
+                      <label class="label">Case Title</label>
+                      <input type="text" class="form-control" placeholder="Enter Case Title">
+                      <label class="label">Case ID</label>
+                      <input type="text" class="form-control" placeholder="Enter Case ID">
+                      <label class="label">Incident Date</label>
+                      <div class="clear"></div>
+                      <label class="label col-sm-3">From</label>
+                      <div class="col-sm-9">
+                        <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
                       </div>
-                      
-                      
-                      
-                       <div class="col-sm-12" id="docFields">
-                      	 <label class="label">Document Title</label>
-                         <input type="text" class="form-control" placeholder="Enter Document Title">
-                         <label class="label">Document ID</label>
-               			 <input type="text" class="form-control" placeholder="Enter Document ID">
-                         <label class="label">Due Date</label>
-                         <div class="clear"></div>
-                          <label class="label col-sm-3">From</label>
-                          <div class="col-sm-9"><input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
-                          <label class="label col-sm-3">To</label>
-                         <div class="col-sm-9"> <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" ></div>
-                         <div class="clear"></div>
-                         <label for="priority"  class="label">Priority</label>
-                              <select name="priority" class="form-control">
-                                <option>Choose Priority</option>
-                                <option selected>Low</option>
-                                <option>Medium</option>
-                                <option>High</option>
-                                <option>Expedited</option>
-                              </select>
-                              <label class="label">Assigned To</label>
-                         <input type="text" class="form-control" placeholder="Enter Assigned To">
-                         <label for="subjectType"  class="label">Document Type</label>
-                              <select name="subjectType" class="form-control">
-                                <option>Choose Document Type</option>
-                              </select>
-                              
-                              
-                              
-                               <label for="formType"  class="label">Form Type</label>
-                              <select name="formType" class="form-control">
-                                <option>Choose Form Type</option>
-                              </select>
-                              <label for="comnplaintStatus"  class="label">Status</label>
-                              <select name="comnplaintStatus" class="form-control">
-                                <option>Choose Status</option>
-                              </select>
+                      <label class="label col-sm-3">To</label>
+                      <div class="col-sm-9">
+                        <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
                       </div>
-                      
+                      <div class="clear"></div>
+                      <label for="priority"  class="label">Priority</label>
+                      <select name="priority" class="form-control">
+                        <option>Choose Priority</option>
+                        <option selected>Low</option>
+                        <option>Medium</option>
+                        <option>High</option>
+                        <option>Expedited</option>
+                      </select>
+                      <label class="label">Assigned To</label>
+                      <input type="text" class="form-control" placeholder="Enter Assigned To">
+                      <label for="subjectType"  class="label">Subject Type</label>
+                      <select name="subjectType" class="form-control">
+                        <option>Choose Subject Type</option>
+                      </select>
+                      <label for="comnplaintStatus"  class="label">Status</label>
+                      <select name="comnplaintStatus" class="form-control">
+                        <option>Choose Status</option>
+                      </select>
                     </div>
-                    
-                     
-                     
-                       <div class="line line-dashed b-b line-lg pull-in"></div>
-                     
-                     
-                      <div class="form-group">
-                      <label class="col-sm-6 control-label"><strong>People</strong></label>
-                      <div class="col-sm-4">
-                        <label class="switch">
-                          <input type="checkbox" id="peopleCheck">
-                          <span></span>
-                        </label>
+                  </div>
+                  <div class="line line-dashed b-b line-lg pull-in"></div>
+                  <div class="form-group">
+                    <label class="col-sm-6 control-label"><strong>Tasks</strong></label>
+                    <div class="col-sm-4">
+                      <label class="switch">
+                        <input type="checkbox" id="taskCheck">
+                        <span></span> </label>
+                    </div>
+                    <div class="col-sm-12" id="taskFields">
+                      <label class="label">Task Title</label>
+                      <input type="text" class="form-control" placeholder="Enter Task Title">
+                      <label class="label">Task ID</label>
+                      <input type="text" class="form-control" placeholder="Enter Task ID">
+                      <label class="label">Due Date</label>
+                      <div class="clear"></div>
+                      <label class="label col-sm-3">From</label>
+                      <div class="col-sm-9">
+                        <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
                       </div>
-                      
-                      
-                      
-                       <div class="col-sm-12" id="peopleFields">
-                      	<label class="label">Title</label>
-                         <input type="text" class="form-control" placeholder="Enter Title">
-                         <label class="label">First Name</label>
-                         <input type="text" class="form-control" placeholder="Enter First Name">
-                         <label class="label">Last Name</label>
-                         <input type="text" class="form-control" placeholder="Enter Last Name">
-                        <label for="priority"  class="label">Type</label>
+                      <label class="label col-sm-3">To</label>
+                      <div class="col-sm-9">
+                        <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                      </div>
+                      <div class="clear"></div>
+                      <label for="priority"  class="label">Priority</label>
+                      <select name="priority" class="form-control">
+                        <option>Choose Priority</option>
+                        <option selected>Low</option>
+                        <option>Medium</option>
+                        <option>High</option>
+                        <option>Expedited</option>
+                      </select>
+                      <label class="label">Assigned To</label>
+                      <input type="text" class="form-control" placeholder="Enter Assigned To">
+                      <label for="subjectType"  class="label">Subject Type</label>
+                      <select name="subjectType" class="form-control">
+                        <option>Choose Subject Type</option>
+                      </select>
+                      <label for="comnplaintStatus"  class="label">Status</label>
+                      <select name="comnplaintStatus" class="form-control">
+                        <option>Choose Status</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="line line-dashed b-b line-lg pull-in"></div>
+                  <div class="form-group">
+                    <label class="col-sm-6 control-label"><strong>Documents</strong></label>
+                    <div class="col-sm-4">
+                      <label class="switch">
+                        <input type="checkbox" id="docCheck">
+                        <span></span> </label>
+                    </div>
+                    <div class="col-sm-12" id="docFields">
+                      <label class="label">Document Title</label>
+                      <input type="text" class="form-control" placeholder="Enter Document Title">
+                      <label class="label">Document ID</label>
+                      <input type="text" class="form-control" placeholder="Enter Document ID">
+                      <label class="label">Due Date</label>
+                      <div class="clear"></div>
+                      <label class="label col-sm-3">From</label>
+                      <div class="col-sm-9">
+                        <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                      </div>
+                      <label class="label col-sm-3">To</label>
+                      <div class="col-sm-9">
+                        <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                      </div>
+                      <div class="clear"></div>
+                      <label for="priority"  class="label">Priority</label>
+                      <select name="priority" class="form-control">
+                        <option>Choose Priority</option>
+                        <option selected>Low</option>
+                        <option>Medium</option>
+                        <option>High</option>
+                        <option>Expedited</option>
+                      </select>
+                      <label class="label">Assigned To</label>
+                      <input type="text" class="form-control" placeholder="Enter Assigned To">
+                      <label for="subjectType"  class="label">Document Type</label>
+                      <select name="subjectType" class="form-control">
+                        <option>Choose Document Type</option>
+                      </select>
+                      <label for="formType"  class="label">Form Type</label>
+                      <select name="formType" class="form-control">
+                        <option>Choose Form Type</option>
+                      </select>
+                      <label for="comnplaintStatus"  class="label">Status</label>
+                      <select name="comnplaintStatus" class="form-control">
+                        <option>Choose Status</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="line line-dashed b-b line-lg pull-in"></div>
+                  <div class="form-group">
+                    <label class="col-sm-6 control-label"><strong>People</strong></label>
+                    <div class="col-sm-4">
+                      <label class="switch">
+                        <input type="checkbox" id="peopleCheck">
+                        <span></span> </label>
+                    </div>
+                    <div class="col-sm-12" id="peopleFields">
+                      <label class="label">Title</label>
+                      <input type="text" class="form-control" placeholder="Enter Title">
+                      <label class="label">First Name</label>
+                      <input type="text" class="form-control" placeholder="Enter First Name">
+                      <label class="label">Last Name</label>
+                      <input type="text" class="form-control" placeholder="Enter Last Name">
+                      <label for="priority"  class="label">Type</label>
                       <select name="priority" class="form-control">
                         <option>Choose Type</option>
                       </select>
                       <label class="label">Phone</label>
-                          <input type="text" class="form-control" data-type="phone" placeholder="(XXX) XXXX XXX" data-required="true">
-                          
-                          <label class="label">Organization</label>
-                         <input type="text" class="form-control" placeholder="Enter Organization">
-                         
-                         <label class="label">Address</label>
-                         <input type="text" class="form-control" placeholder="Enter Address">
-                         <label class="label">City</label>
-                         <input type="text" class="form-control" placeholder="Enter City">
-                         
-                         <label for="state"  class="label">State</label>
+                      <input type="text" class="form-control" data-type="phone" placeholder="(XXX) XXXX XXX" data-required="true">
+                      <label class="label">Organization</label>
+                      <input type="text" class="form-control" placeholder="Enter Organization">
+                      <label class="label">Address</label>
+                      <input type="text" class="form-control" placeholder="Enter Address">
+                      <label class="label">City</label>
+                      <input type="text" class="form-control" placeholder="Enter City">
+                      <label for="state"  class="label">State</label>
                       <select name="state" class="form-control">
                         <option>Choose State</option>
                       </select>
                       <label class="label">ZIP</label>
-                         <input type="text" class="form-control" placeholder="Enter ZIP">
-                      
-                      </div>
-                      
-                    </div>
-                    
-                     <div class="line line-dashed b-b line-lg pull-in"></div>
-       
-       
-       </div>
-       
-       
-       </section>
-       
-       
-            </aside>
-            <aside>
-              <section class="vbox">
-                <header class="header bg-white b-b clearfix">
-                  <div class="row m-t-sm">
-                    <div class="col-sm-12 m-b-xs">
-                      <a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default active"><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
-                        <button type="button" class="btn btn-sm btn-default" title="Filter" data-toggle="dropdown"><i class="fa fa-filter"></i> <span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                          <li><a href="#">Filter 1</a></li>
-                         <li><a href="#">Filter 2</a></li>
-                         <li><a href="#">Filter 3</a></li>
-                        </ul>
-                      </div>
-                      
-                    </div>
-                   
-                  </div>
-                </header>
-                <section class="scrollable wrapper w-f">
-                  <section class="panel panel-default">
-                    <div class="table-responsive">
-                      <table class="table table-striped m-b-none">
-                        <thead>
-                          <tr>
-                            <th width="20"><label class="checkbox m-n i-checks"><input type="checkbox"><i></i></label></th>
-                            <th width="20"></th>
-                            <th class="th-sortable" width="20">ID </th>
-                            <th class="th-sortable" data-toggle="class">Type
-                              <span class="th-sort">
-                                <i class="fa fa-sort-down text"></i>
-                                <i class="fa fa-sort-up text-active"></i>
-                                <i class="fa fa-sort"></i>
-                              </span>
-                            </th>
-                             <th class="th-sortable">Priority <span class="th-sort">
-                                <i class="fa fa-sort-down text"></i>
-                                <i class="fa fa-sort-up text-active"></i>
-                                <i class="fa fa-sort"></i>
-                              </span></th>
-                           <th class="th-sortable" data-toggle="class">Title
-                              <span class="th-sort">
-                                <i class="fa fa-sort-down text"></i>
-                                <i class="fa fa-sort-up text-active"></i>
-                                <i class="fa fa-sort"></i>
-                              </span>
-                            <th class="th-sortable">Owner <span class="th-sort">
-                                <i class="fa fa-sort-down text"></i>
-                                <i class="fa fa-sort-up text-active"></i>
-                                <i class="fa fa-sort"></i>
-                              </span></th>
-                            <th class="th-sortable">Created <span class="th-sort">
-                                <i class="fa fa-sort-down text"></i>
-                                <i class="fa fa-sort-up text-active"></i>
-                                <i class="fa fa-sort"></i>
-                              </span></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td><label class="checkbox m-n i-checks"><input type="checkbox" name="ids[]"><i></i></label></td>
-                            <td><a href="#modal" data-toggle="modal"><i class="fa fa-search-plus text-muted"></i></a></td>
-                            <td>[ID]</td>
-                            
-                            <td>[Type]</td>
-                             <td>[Priority]</td>
-                            <td>[Title]</td>
-                            <td>[Owner]</td>
-                            <td>[Date Created]</td>
-                          </tr>
-                          <tr class="bg-primary-ltest">
-                            <td><label class="checkbox m-n i-checks"><input type="checkbox" name="ids[]"><i></i></label></td>
-                            <td><a href="#modal" data-toggle="modal"><i class="fa fa-search-plus text-muted"></i></a></td>
-                            <td>[ID]</td>
-                            <td>[Type]</td>
-                             <td>[Priority]</td>
-                            <td>[Title]</td>
-                            <td>[Owner]</td>
-                            <td>[Date Created]</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </section>
-                </section>
-                <footer class="footer bg-white b-t">
-                  <div class="row text-center-xs">
-                    <div class="col-md-6 hidden-sm">
-                      <p class="text-muted m-t">Showing 20-30 of 50</p>
-                    </div>
-                    <div class="col-md-6 col-sm-12 text-right text-center-xs">                
-                      <ul class="pagination pagination-sm m-t-sm m-b-none">
-                        <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                        <li class="active"><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
-                      </ul>
+                      <input type="text" class="form-control" placeholder="Enter ZIP">
                     </div>
                   </div>
-                </footer>
+                  <div class="line line-dashed b-b line-lg pull-in"></div>
+                </div>
               </section>
-            </aside>
-          </section>
-       
-       
-       
-       
-       
+            </section>
+          </aside>
+          <aside>
+            <section class="vbox">
+              <header class="header bg-white b-b clearfix">
+                <div class="row m-t-sm">
+                  <div class="col-sm-12 m-b-xs"> <a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default active"><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </header>
+              <section class="scrollable wrapper w-f">
+                <section class="panel panel-default">
+                  <div class="table-responsive">
+                    <table class="table table-striped m-b-none">
+                      <thead>
+                        <tr>
+                          <th width="20"><label class="checkbox m-n i-checks">
+                              <input type="checkbox">
+                              <i></i></label></th>
+                          <th class="th-sortable" width="">ID <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
+                          <th class="th-sortable" data-toggle="class">Type <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                          <th class="th-sortable">Priority <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
+                          <th class="th-sortable" data-toggle="class">Title <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> 
+                          <th class="th-sortable">Owner <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
+                          <th class="th-sortable">Created <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><label class="checkbox m-n i-checks">
+                              <input type="checkbox" name="ids[]">
+                              <i></i></label></td>
+                          <td>[ID]</td>
+                          <td>[Type]</td>
+                          <td>[Priority]</td>
+                          <td>[Title]</td>
+                          <td>[Owner]</td>
+                          <td>[Date Created]</td>
+                        </tr>
+                        <tr class="bg-primary-ltest">
+                          <td><label class="checkbox m-n i-checks">
+                              <input type="checkbox" name="ids[]">
+                              <i></i></label></td>
+                          <td>[ID]</td>
+                          <td>[Type]</td>
+                          <td>[Priority]</td>
+                          <td>[Title]</td>
+                          <td>[Owner]</td>
+                          <td>[Date Created]</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+              </section>
+              <footer class="footer bg-white b-t">
+                <div class="row text-center-xs">
+                  <div class="col-md-6 hidden-sm">
+                    <p class="text-muted m-t">Showing 20-30 of 50</p>
+                  </div>
+                  <div class="col-md-6 col-sm-12 text-right text-center-xs">
+                    <ul class="pagination pagination-sm m-t-sm m-b-none">
+                      <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                      <li class="active"><a href="#">1</a></li>
+                      <li><a href="#">2</a></li>
+                      <li><a href="#">3</a></li>
+                      <li><a href="#">4</a></li>
+                      <li><a href="#">5</a></li>
+                      <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                    </ul>
+                  </div>
+                </div>
+              </footer>
+            </section>
+          </aside>
+        </section>
       </section>
     </section>
   </section>
 </section>
-
 <script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
-<script src="resources/js/datepicker/bootstrap-datepicker.js"></script>
-
+<script src="resources/js/datepicker/bootstrap-datepicker.js"></script> 
 <script>
 					  
 $('#complaintCheck').click(function(){
@@ -567,19 +450,17 @@ $('#peopleCheck').click(function(){
 	
 					  
 </script>
-                      
 <style>
 
 #complaintFields, #caseFields, #taskFields, #docFields, #peopleFields { display:none}
 
 </style>
 
-
 <!-- Bootstrap --> 
 <script src="resources/js/bootstrap.js"></script> 
 <!-- App --> 
 <script src="resources/js/app.js"></script> 
 <script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
-<script src="resources/js/app.plugin.js"></script> 
+<script src="resources/js/app.plugin.js"></script>
 </body>
 </html>
