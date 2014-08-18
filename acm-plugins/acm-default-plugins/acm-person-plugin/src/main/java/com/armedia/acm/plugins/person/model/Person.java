@@ -96,7 +96,10 @@ public class Person implements Serializable
     
     @OneToMany(cascade=ALL, mappedBy="person")   
     private List<PersonAlias> personAliases = new ArrayList<>();
-
+    
+    @OneToMany(cascade = ALL, mappedBy ="person")
+    private List<PersonAssociation> personAssociation = new ArrayList<>();
+    
     @PrePersist
     protected void beforeInsert()
     {
@@ -289,16 +292,34 @@ public class Person implements Serializable
         this.securityTags = securityTags;
     }
 
-    public List<PersonAlias> getPersonAliases() {
+    public List<PersonAlias> getPersonAliases() 
+    {
         return personAliases;
     }
 
-    public void setPersonAliases(List<PersonAlias> personAliases) {
+    public void setPersonAliases(List<PersonAlias> personAliases) 
+    {
         this.personAliases = personAliases;
         for ( PersonAlias pa : personAliases )
         {
             pa.setPerson(this);
         }
     }
+
+    public List<PersonAssociation> getPersonAssociation()
+    {
+        return personAssociation;
+    }
+
+    public void setPersonAssociation(List<PersonAssociation> personAssociation)
+    {
+        this.personAssociation = personAssociation;
+        
+        for(PersonAssociation personAssoc : personAssociation)
+        {
+            personAssoc.setPerson(this);
+        }
+    }
+   
 
 }

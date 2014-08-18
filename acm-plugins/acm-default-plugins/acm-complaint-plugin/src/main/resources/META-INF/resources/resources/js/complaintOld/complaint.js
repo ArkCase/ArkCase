@@ -38,8 +38,8 @@ var Complaint = Complaint || {
         c.originator.familyName = "";
         //c.originator.type = "";               //????need to be defined in POJO
         //c.originator.description = "";        //????need to be defined in POJO
-
         c.originator.contactMethods = [];
+        c.originator.personAliases = [];
         //c.originator.contactMethods.id = 0;
         //c.originator.contactMethods.type = "";
         //c.originator.contactMethods.value = "";
