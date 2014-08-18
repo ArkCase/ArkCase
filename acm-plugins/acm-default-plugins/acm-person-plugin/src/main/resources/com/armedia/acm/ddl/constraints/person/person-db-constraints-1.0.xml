@@ -85,4 +85,19 @@
                                      deferrable="true"
                                      initiallyDeferred="true"/>
         </changeSet>
+        
+        <changeSet id="06-person-assoc-foreign-key" author="tsedalu">
+              <addForeignKeyConstraint baseTableName="acm_person_assoc" baseColumnNames="cm_person_assoc_person_id" 
+                                       constraintName="fk_person_assoc_person_id"
+                                       referencedTableName="acm_person" 
+                                       referencedColumnNames="cm_person_id"
+                                       deferrable="true"
+                                       initiallyDeferred="true"/>
+              <addForeignKeyConstraint baseTableName="acm_person_assoc" baseColumnNames="cm_person_assoc_person_type" 
+                                       constraintName="fk_person_assoc_person_type"
+                                       referencedTableName="acm_person_type_lu" 
+                                       referencedColumnNames="cm_value"
+                                       deferrable="true"
+                                       initiallyDeferred="true"/>
+        </changeSet>
 </databaseChangeLog>
