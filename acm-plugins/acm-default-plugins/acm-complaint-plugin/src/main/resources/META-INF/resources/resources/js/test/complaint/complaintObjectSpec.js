@@ -7,74 +7,108 @@
 describe("Complaint.Object", function()
 {
     //
-    //tabId             - nodeType - key
+    //tabIds            - nodeType - key
     //------------------------------------------
     //tabBlank          - prevPage - prevPage
     //tabBlank          - p        - [pageId]
-    //tabMain           - pc       - [pageId].[complaintId]
-    //tabDetail         - pci      - [pageId].[complaintId].i
+    //all ex tabBlank)  - pc       - [pageId].[complaintId]
+    // [d,i,p]          - pci      - [pageId].[complaintId].i
     //tabDetail         - pcid     - [pageId].[complaintId].id
     //tabInitiator      - pcii     - [pageId].[complaintId].ii
     //tabPeople         - pcip     - [pageId].[complaintId].ip
     //tabPeople         - pcipc    - [pageId].[complaintId].ip.[personId]
     //tabNotes          - pcin     - [pageId].[complaintId].in
-    //tabPending        - pca      - [pageId].[complaintId].a
-    //tabPending        - pcap     - [pageId].[complaintId].ap
-    //tabPending        - pcapc    - [pageId].[complaintId].ap.[docId]
-    //tabApproved       - pcaa     - [pageId].[complaintId].aa
-    //tabApproved       - pcaac    - [pageId].[complaintId].aa.[docId]
-    //tabRejected       - pcar     - [pageId].[complaintId].ar
-    //tabRejected       - pcarc    - [pageId].[complaintId].ar.[docId]
-    //tabUnassigned     - pct      - [pageId].[complaintId].t
+    // [p,a,r]          - pcd      - [pageId].[complaintId].d
+    //tabPending        - pcdp     - [pageId].[complaintId].dp
+    //tabPending        - pcdpc    - [pageId].[complaintId].dp.[docId]
+    //tabApproved       - pcda     - [pageId].[complaintId].da
+    //tabApproved       - pcdac    - [pageId].[complaintId].da.[docId]
+    //tabRejected       - pcdr     - [pageId].[complaintId].dr
+    //tabRejected       - pcdrc    - [pageId].[complaintId].dr.[docId]
+    // [u,a,c]          - pct      - [pageId].[complaintId].t
     //tabUnassigned     - pctu     - [pageId].[complaintId].tu
     //tabUnassigned     - pctuc    - [pageId].[complaintId].tu.[taskId]
     //tabAssigned       - pcta     - [pageId].[complaintId].ta
     //tabAssigned       - pctac    - [pageId].[complaintId].ta.[taskId]
     //tabCompleted      - pctc     - [pageId].[complaintId].tc
     //tabCompleted      - pctcc    - [pageId].[complaintId].tc.[taskId]
-    //tabRefComplaints  - pcr      - [pageId].[complaintId].r
+    // [c,s,t,d]        - pcr      - [pageId].[complaintId].r
     //tabRefComplaints  - pcrc     - [pageId].[complaintId].rc
     //tabRefCases       - pcrs     - [pageId].[complaintId].rs
     //tabRefTasks       - pcrt     - [pageId].[complaintId].rt
     //tabRefDocuments   - pcrd     - [pageId].[complaintId].rd
-    //tabApprovers      - pcp      - [pageId].[complaintId].p
+    // [a,c,w]          - pcp      - [pageId].[complaintId].p
     //tabApprovers      - pcpa     - [pageId].[complaintId].pa
     //tabCollaborators  - pcpc     - [pageId].[complaintId].pc
     //tabWatchers       - pcpw     - [pageId].[complaintId].pw
     //tabBlank          - nextPage - nextPage
     //
 
-    it("Complaint.Object.getTabIdByKey", function() {
-        expect(Complaint.Object._getTabIdByKey(null)).toEqual("tabBlank");
-        expect(Complaint.Object._getTabIdByKey("")).toEqual("tabBlank");
-        expect(Complaint.Object._getTabIdByKey("prevPage")).toEqual("tabBlank");
-        expect(Complaint.Object._getTabIdByKey("nextPage")).toEqual("tabBlank");
-        expect(Complaint.Object._getTabIdByKey("2")).toEqual("tabBlank");
-        expect(Complaint.Object._getTabIdByKey("2.1993")).toEqual("tabMain");
-        expect(Complaint.Object._getTabIdByKey("2.1993.i")).toEqual("tabDetail");
-        expect(Complaint.Object._getTabIdByKey("2.1993.id")).toEqual("tabDetail");
-        expect(Complaint.Object._getTabIdByKey("2.1993.ii")).toEqual("tabInitiator");
-        expect(Complaint.Object._getTabIdByKey("2.1993.ip")).toEqual("tabPeople");
-        expect(Complaint.Object._getTabIdByKey("2.1993.ip.123")).toEqual("tabPeople");
-        expect(Complaint.Object._getTabIdByKey("2.1993.in")).toEqual("tabNotes");
-        expect(Complaint.Object._getTabIdByKey("2.1993.a")).toEqual("tabPending");
-        expect(Complaint.Object._getTabIdByKey("2.1993.ap")).toEqual("tabPending");
-        expect(Complaint.Object._getTabIdByKey("2.1993.aa")).toEqual("tabApproved");
-        expect(Complaint.Object._getTabIdByKey("2.1993.ar")).toEqual("tabRejected");
-        expect(Complaint.Object._getTabIdByKey("2.1993.t")).toEqual("tabUnassigned");
-        expect(Complaint.Object._getTabIdByKey("2.1993.tu")).toEqual("tabUnassigned");
-        expect(Complaint.Object._getTabIdByKey("2.1993.tu.111")).toEqual("tabUnassigned");
-        expect(Complaint.Object._getTabIdByKey("2.1993.ta")).toEqual("tabAssigned");
-        expect(Complaint.Object._getTabIdByKey("2.1993.tc")).toEqual("tabCompleted");
-        expect(Complaint.Object._getTabIdByKey("2.1993.r")).toEqual("tabRefComplaints");
-        expect(Complaint.Object._getTabIdByKey("2.1993.rc")).toEqual("tabRefComplaints");
-        expect(Complaint.Object._getTabIdByKey("2.1993.rs")).toEqual("tabRefCases");
-        expect(Complaint.Object._getTabIdByKey("2.1993.rt")).toEqual("tabRefTasks");
-        expect(Complaint.Object._getTabIdByKey("2.1993.rd")).toEqual("tabRefDocuments");
-        expect(Complaint.Object._getTabIdByKey("2.1993.p")).toEqual("tabApprovers");
-        expect(Complaint.Object._getTabIdByKey("2.1993.pa")).toEqual("tabApprovers");
-        expect(Complaint.Object._getTabIdByKey("2.1993.pc")).toEqual("tabCollaborators");
-        expect(Complaint.Object._getTabIdByKey("2.1993.pw")).toEqual("tabWatchers");
+    it("Complaint.Object.getTabIdsByKey", function() {
+        expect(Complaint.Object._getTabIdsByKey(null)).toEqual(["tabBlank"]);
+        expect(Complaint.Object._getTabIdsByKey("")).toEqual(["tabBlank"]);
+        expect(Complaint.Object._getTabIdsByKey("prevPage")).toEqual(["tabBlank"]);
+        expect(Complaint.Object._getTabIdsByKey("nextPage")).toEqual(["tabBlank"]);
+        expect(Complaint.Object._getTabIdsByKey("2")).toEqual(["tabBlank"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993")).toEqual(["tabDetail"
+            ,"tabInitiator"
+            ,"tabPeople"
+            ,"tabNotes"
+            ,"tabPending"
+            ,"tabApproved"
+            ,"tabRejected"
+            ,"tabUnassigned"
+            ,"tabAssigned"
+            ,"tabCompleted"
+            ,"tabRefComplaints"
+            ,"tabRefCases"
+            ,"tabRefTasks"
+            ,"tabRefDocuments"
+            ,"tabApprovers"
+            ,"tabCollaborators"
+            ,"tabWatchers"
+        ]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.i")).toEqual(["tabDetail"
+            ,"tabInitiator"
+            ,"tabPeople"
+            ,"tabNotes"
+        ]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.id")).toEqual(["tabDetail"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.ii")).toEqual(["tabInitiator"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.ip")).toEqual(["tabPeople"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.ip.123")).toEqual(["tabPeople"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.in")).toEqual(["tabNotes"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.d")).toEqual(["tabPending"
+            ,"tabApproved"
+            ,"tabRejected"
+        ]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.dp")).toEqual(["tabPending"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.da")).toEqual(["tabApproved"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.dr")).toEqual(["tabRejected"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.t")).toEqual(["tabUnassigned"
+            ,"tabAssigned"
+            ,"tabCompleted"
+        ]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.tu")).toEqual(["tabUnassigned"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.tu.111")).toEqual(["tabUnassigned"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.ta")).toEqual(["tabAssigned"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.tc")).toEqual(["tabCompleted"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.r")).toEqual(["tabRefComplaints"
+            ,"tabRefCases"
+            ,"tabRefTasks"
+            ,"tabRefDocuments"
+        ]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.rc")).toEqual(["tabRefComplaints"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.rs")).toEqual(["tabRefCases"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.rt")).toEqual(["tabRefTasks"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.rd")).toEqual(["tabRefDocuments"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.p")).toEqual(["tabApprovers"
+            ,"tabCollaborators"
+            ,"tabWatchers"
+        ]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.pa")).toEqual(["tabApprovers"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.pc")).toEqual(["tabCollaborators"]);
+        expect(Complaint.Object._getTabIdsByKey("2.1993.pw")).toEqual(["tabWatchers"]);
     });
 
     it("Complaint.Object.getNodeTypeByKey", function() {
@@ -90,10 +124,10 @@ describe("Complaint.Object", function()
         expect(Complaint.Object.getNodeTypeByKey("2.1993.ip")).toEqual("pcip");
         expect(Complaint.Object.getNodeTypeByKey("2.1993.ip.123")).toEqual("pcipc");
         expect(Complaint.Object.getNodeTypeByKey("2.1993.in")).toEqual("pcin");
-        expect(Complaint.Object.getNodeTypeByKey("2.1993.a")).toEqual("pca");
-        expect(Complaint.Object.getNodeTypeByKey("2.1993.ap")).toEqual("pcap");
-        expect(Complaint.Object.getNodeTypeByKey("2.1993.aa")).toEqual("pcaa");
-        expect(Complaint.Object.getNodeTypeByKey("2.1993.ar")).toEqual("pcar");
+        expect(Complaint.Object.getNodeTypeByKey("2.1993.d")).toEqual("pcd");
+        expect(Complaint.Object.getNodeTypeByKey("2.1993.dp")).toEqual("pcdp");
+        expect(Complaint.Object.getNodeTypeByKey("2.1993.da")).toEqual("pcda");
+        expect(Complaint.Object.getNodeTypeByKey("2.1993.dr")).toEqual("pcdr");
         expect(Complaint.Object.getNodeTypeByKey("2.1993.t")).toEqual("pct");
         expect(Complaint.Object.getNodeTypeByKey("2.1993.tu")).toEqual("pctu");
         expect(Complaint.Object.getNodeTypeByKey("2.1993.tu.111")).toEqual("pctuc");
