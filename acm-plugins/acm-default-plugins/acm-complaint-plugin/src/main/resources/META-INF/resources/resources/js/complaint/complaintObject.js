@@ -756,7 +756,7 @@ Complaint.Object = {
                     listAction: function(postData, jtParams) {
                         var c = Complaint.getComplaint();
                         var contactMethods = c.originator.contactMethods;
-                        var cnt = contactMethods.length;;
+                        var cnt = contactMethods.length;
 
                         var rc = {"Result": "OK", "Records": []};
                         for (i = 0; i < cnt; i++) {
@@ -985,28 +985,71 @@ Complaint.Object = {
                 ,sorting: true
                 ,actions: {
                 listAction: function(postData, jtParams) {
-                    return {
+                    var c = Complaint.getComplaint();
+                    var addresses = c.originator.addresses;
+                    var cnt = addresses.length;
+                    var rc = {"Result": "OK", "Records": []};
+                    for(i = 0; i<cnt; i++){
+                        rc.Records.push({personId: c.originator.id
+                            ,id: addresses[i].id
+                            ,type: addresses[i].type
+                            ,streetAddress: addresses[i].streetAddress
+                            ,city: addresses[i].city
+                            ,state: addresses[i].state
+                            ,zip: addresses[i].zip
+                            ,creator: addresses[i].creator
+                            ,created: addresses[i].created
+                        });
+                    }
+                    return rc;
+                    }
+                  /*  return {
                         "Result": "OK"
                         ,"Records": [
                             { "personId":  1, "id": "a", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "123 do re mi" }
                             ,{ "personId": 2, "id": "b", "type": "Office", "address": "999 Fairfax Blvd #201, Fairfax, VA 22030", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "14-05-15", "createBy": "xyz abc" }
                         ]
                         //,"TotalRecordCount": 2
-                    };
-                }
+                    };*/
+
                 ,createAction: function(postData, jtParams) {
-                    return {
+                    var record = Acm.urlToJson(postData);
+                    var c = Complaint.getComplaint();
+                    var rc = {"Result": "OK", "Record": {}};
+                    rc.Record.personId = c.originator.id;
+                    rc.Record.type = record.type;
+                    rc.Record.streetAddress = record.streetAddress;
+                    rc.Record.city = record.city;
+                    rc.Record.state = record.state;
+                    rc.Record.zip = record.zip;
+                    rc.Record.created = Acm.getCurrentDay(); //record.created;
+                    rc.Record.creator = App.getUserName();   //record.creator;
+                    return rc;
+                    /*return {
                         "Result": "OK"
                         ,"Record":
                         { "personId": 3, "id": "c", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
-                    };
+                    };*/
                 }
                 ,updateAction: function(postData, jtParams) {
-                    return {
+
+                    var record = Acm.urlToJson(postData);
+                    var c = Complaint.getComplaint();
+                    var rc = {"Result": "OK", "Record": {}};
+                    rc.Record.personId = c.originator.id;
+                    rc.Record.type = record.type;
+                    rc.Record.streetAddress = record.streetAddress;
+                    rc.Record.city = record.city;
+                    rc.Record.state = record.state;
+                    rc.Record.zip = record.zip;
+                    rc.Record.created = record.created;
+                    rc.Record.creator = record.creator;
+                    return rc;
+                    /*return {
                         "Result": "OK"
                         ,"Record":
                         { "personId": 3, "id": "c", "type": "Hotel", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
-                    };
+                    };*/
                 }
                 ,deleteAction: function(postData, jtParams) {
                     return {
@@ -1014,7 +1057,8 @@ Complaint.Object = {
                     };
                 }
             }
-                ,fields: {
+
+            ,fields: {
                 personId: {
                     type: 'hidden'
                     ,defaultValue: 1 //commData.record.StudentId
@@ -1030,17 +1074,17 @@ Complaint.Object = {
                     ,width: '8%'
                     ,options: Complaint.getLocationTypes()
                 }
-                ,address: {
+                ,streetAddress: {
                     title: 'Address'
-                    ,width: '30%'
+                    ,width: '20%'
                 }
                 ,city: {
                     title: 'City'
-                    ,width: '12%'
+                    ,width: '10%'
                 }
                 ,state: {
                     title: 'State'
-                    ,width: '5%'
+                    ,width: '8%'
                 }
                 ,zip: {
                     title: 'Zip'
@@ -1050,7 +1094,7 @@ Complaint.Object = {
                     title: 'Country'
                     ,width: '8%'
                 }
-                ,createDate: {
+                ,created: {
                     title: 'Date Added'
                     ,width: '15%'
                     //,type: 'date'
@@ -1058,15 +1102,46 @@ Complaint.Object = {
                     ,create: false
                     ,edit: false
                 }
-                ,createBy: {
+                ,creator: {
                     title: 'Added By'
-                    ,width: '30%'
+                    ,width: '15%'
                 }
             }
+            ,recordAdded : function (event, data) {
+                var record = data.record;
+                var c = Complaint.getComplaint();
+                var locations = c.originator.addresses;
+                var location = {};
+                location.type = record.type;
+                location.streetAddress = record.streetAddress;
+                location.city = record.city;
+                location.state = record.state;
+                location.zip = record.zip;
+                locations.push(location);
             }
-            ,function (data) { //opened handler
-                data.childTable.jtable('load');
-            });
+            ,recordUpdated : function (event, data) {
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var record = data.record;
+                var c = Complaint.getComplaint();
+                var locations = c.originator.addresses;
+                var location = locations[whichRow];
+                location.type = record.type;
+                location.streetAddress = record.streetAddress;
+                location.city = record.city;
+                location.state = record.state;
+                location.zip = record.zip;
+            }
+            ,recordDeleted : function (event, data) {
+                var r = data.row;
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var c = Complaint.getComplaint();
+                var locations = c.originator.addresses;
+                locations.splice(whichRow, 1);
+            }
+        }
+        ,function (data) { //opened handler
+            data.childTable.jtable('load');
+        });
     }
     ,_closeInitiatorAliases: function($jt, $row) {
         $jt.jtable('closeChildTable', $row.closest('tr'));
@@ -1081,28 +1156,65 @@ Complaint.Object = {
                 ,sorting: true
                 ,actions: {
                 listAction: function(postData, jtParams) {
-                    return {
+                    var c = Complaint.getComplaint();
+                    var personAliases = c.originator.personAliases;
+                    var cnt = personAliases.length;
+
+                    var rc = {"Result": "OK", "Records": []};
+                    for(i = 0; i<cnt; i++){
+                        rc.Records.push({personId: c.originator.id
+                            ,id: personAliases[i].id
+                            ,type: personAliases[i].type
+                            ,value: personAliases[i].value
+                            ,created: personAliases[i].created
+                            ,creator: personAliases[i].creator
+                        });
+                    }
+                    return rc;
+
+
+                 /*   return {
                         "Result": "OK"
                         ,"Records": [
                             { "personId":  1, "id": "a", "type": "Nick Name", "value": "JJ", "createDate": "01-02-03", "createBy": "123 do re mi" }
                             ,{ "personId": 2, "id": "b", "type": "Some Name", "value": "Ice Man", "createDate": "14-05-15", "createBy": "xyz abc" }
                         ]
                         //,"TotalRecordCount": 2
-                    };
+                    };*/
                 }
                 ,createAction: function(postData, jtParams) {
-                    return {
+                    var record = Acm.urlToJson(postData);
+                    var c = Complaint.getComplaint();
+                    var rc = {"Result": "OK", "Record": {}};
+                    rc.Record.personId = c.originator.id;
+                    rc.Record.type = record.type;
+                    rc.Record.value = record.value;
+                    rc.Record.created = Acm.getCurrentDay(); //record.created;
+                    rc.Record.creator = App.getUserName();   //record.creator;
+                    return rc;
+
+                   /* return{
                         "Result": "OK"
                         ,"Record":
                         { "personId": 3, "id": "c", "type": "Nick Name", "value": "Ice Man", "createDate": "01-02-03", "createBy": "test" }
-                    };
+                    };*/
                 }
                 ,updateAction: function(postData, jtParams) {
-                    return {
+                    var record = Acm.urlToJson(postData);
+                    var c = Complaint.getComplaint();
+                    var rc = {"Result": "OK", "Record": {}};
+                    rc.Record.personId = c.originator.id;
+                    rc.Record.type = record.type;
+                    rc.Record.value = record.value;
+                    rc.Record.created = record.created;
+                    rc.Record.creator = record.creator;
+                    return rc;
+
+                    /*return {
                         "Result": "OK"
                         ,"Record":
                         { "personId": 3, "id": "c", "type": "Nick Name", "value": "Big Man", "createDate": "01-02-03", "createBy": "test" }
-                    };
+                    };*/
                 }
                 ,deleteAction: function(postData, jtParams) {
                     return {
@@ -1130,7 +1242,7 @@ Complaint.Object = {
                     title: 'Value'
                     ,width: '30%'
                 }
-                ,createDate: {
+                ,created: {
                     title: 'Date Added'
                     ,width: '20%'
                     //,type: 'date'
@@ -1138,15 +1250,39 @@ Complaint.Object = {
                     ,create: false
                     ,edit: false
                 }
-                ,createBy: {
+                ,creator: {
                     title: 'Added By'
                     ,width: '30%'
                 }
             }
+            ,recordAdded : function (event, data) {
+                var record = data.record;
+                var c = Complaint.getComplaint();
+                var personAliases = c.originator.personAliases;
+                var personAlias = {};
+                personAlias.type = record.type;
+                personAlias.value = record.value;
             }
-            ,function (data) { //opened handler
-                data.childTable.jtable('load');
-            });
+            ,recordUpdated : function (event, data) {
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var record = data.record;
+                var c = Complaint.getComplaint();
+                var personAliases = c.originator.personAliases;
+                var personAlias = personAliases[whichRow];
+                personAlias.type = record.type;
+                personAlias.value = record.value;
+            }
+            ,recordDeleted : function (event, data) {
+                var r = data.row;
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var c = Complaint.getComplaint();
+                var personAliases = c.originator.addresses;
+                personAliases.splice(whichRow, 1);
+            }
+        }
+        ,function (data) { //opened handler
+            data.childTable.jtable('load');
+        });
     }
 
     //----------------- end of Initiator -----------------------
