@@ -276,104 +276,82 @@ Complaint.Object = {
         }
         return null;
     }
+    ,_mapNodeTab: {
+        pc: ["tabDetail"
+            ,"tabInitiator"
+            ,"tabPeople"
+            ,"tabNotes"
+            ,"tabPending"
+            ,"tabApproved"
+            ,"tabRejected"
+            ,"tabUnassigned"
+            ,"tabAssigned"
+            ,"tabCompleted"
+            ,"tabRefComplaints"
+            ,"tabRefCases"
+            ,"tabRefTasks"
+            ,"tabRefDocuments"
+            ,"tabApprovers"
+            ,"tabCollaborators"
+            ,"tabWatchers"
+        ]
+        ,pci: ["tabDetail"
+            ,"tabInitiator"
+            ,"tabPeople"
+            ,"tabNotes"
+        ]
+        ,pcid: ["tabDetail"]
+        ,pcii: ["tabInitiator"]
+        ,pcip: ["tabPeople"]
+        ,pcipc: ["tabPeople"]
+        ,pcin: ["tabNotes"]
+        ,pcd: ["tabPending"
+            ,"tabApproved"
+            ,"tabRejected"
+        ]
+        ,pcdp: ["tabPending"]
+        ,pcdpc: ["tabPending"]
+        ,pcda: ["tabApproved"]
+        ,pcdac: ["tabApproved"]
+        ,pcdr: ["tabRejected"]
+        ,pcdrc: ["tabRejected"]
+        ,pct: ["tabUnassigned"
+            ,"tabAssigned"
+            ,"tabCompleted"
+        ]
+        ,pctu: ["tabUnassigned"]
+        ,pctuc: ["tabUnassigned"]
+        ,pcta: ["tabAssigned"]
+        ,pctac: ["tabAssigned"]
+        ,pctc: ["tabCompleted"]
+        ,pctcc: ["tabCompleted"]
+        ,pcr: ["tabRefComplaints"
+            ,"tabRefCases"
+            ,"tabRefTasks"
+            ,"tabRefDocuments"
+        ]
+        ,pcrc: ["tabRefComplaints"]
+        ,pcrs: ["tabRefCases"]
+        ,pcrt: ["tabRefTasks"]
+        ,pcrd: ["tabRefDocuments"]
+        ,pcp: ["tabApprovers"
+            ,"tabCollaborators"
+            ,"tabWatchers"
+        ]
+        ,pcpa: ["tabApprovers"]
+        ,pcpc: ["tabCollaborators"]
+        ,pcpw: ["tabWatchers"]
+    }
     ,_getTabIdsByKey: function(key) {
-        if (Acm.isEmpty(key)) {
-            return ["tabBlank"];
-        }
-
-        var arr = key.split(".");
-        if (1 == arr.length) {          //"p", "prevPage", "nextPage"
-            return ["tabBlank"];
-        } else if (2 == arr.length) {   //"pc"
-            return ["tabDetail"
-                ,"tabInitiator"
-                ,"tabPeople"
-                ,"tabNotes"
-                ,"tabPending"
-                ,"tabApproved"
-                ,"tabRejected"
-                ,"tabUnassigned"
-                ,"tabAssigned"
-                ,"tabCompleted"
-                ,"tabRefComplaints"
-                ,"tabRefCases"
-                ,"tabRefTasks"
-                ,"tabRefDocuments"
-                ,"tabApprovers"
-                ,"tabCollaborators"
-                ,"tabWatchers"
-            ];
-        } else if (3 <= arr.length) {
-            if ("i" == arr[2]) {
-                return ["tabDetail"
-                    ,"tabInitiator"
-                    ,"tabPeople"
-                    ,"tabNotes"
-                ];
-            } else if ("id" == arr[2]) {
-                return ["tabDetail"];
-            } else if ("ii" == arr[2]) {
-                return ["tabInitiator"];
-            } else if ("ip" == arr[2]) {
-                return ["tabPeople"];
-            } else if ("in" == arr[2]) {
-                return ["tabNotes"];
-
-            } else if ("d" == arr[2]) {
-                return ["tabPending"
-                    ,"tabApproved"
-                    ,"tabRejected"
-                ];
-            } else if ("dp" == arr[2]) {
-                return ["tabPending"];
-            } else if ("da" == arr[2]) {
-                return ["tabApproved"];
-            } else if ("dr" == arr[2]) {
-                return ["tabRejected"];
-
-            } else if ("t" == arr[2]) {
-                return ["tabUnassigned"
-                    ,"tabAssigned"
-                    ,"tabCompleted"
-                ];
-            } else if ("tu" == arr[2]) {
-                return ["tabUnassigned"];
-            } else if ("ta" == arr[2]) {
-                return ["tabAssigned"];
-            } else if ("tc" == arr[2]) {
-                return ["tabCompleted"];
-
-            } else if ("r" == arr[2]) {
-                return ["tabRefComplaints"
-                    ,"tabRefCases"
-                    ,"tabRefTasks"
-                    ,"tabRefDocuments"
-                ];
-            } else if ("rc" == arr[2]) {
-                return ["tabRefComplaints"];
-            } else if ("rs" == arr[2]) {
-                return ["tabRefCases"];
-            } else if ("rt" == arr[2]) {
-                return ["tabRefTasks"];
-            } else if ("rd" == arr[2]) {
-                return ["tabRefDocuments"];
-
-            } else if ("p" == arr[2]) {
-                return ["tabApprovers"
-                    ,"tabCollaborators"
-                    ,"tabWatchers"
-                ];
-            } else if ("pa" == arr[2]) {
-                return ["tabApprovers"];
-            } else if ("pc" == arr[2]) {
-                return ["tabCollaborators"];
-            } else if ("pw" == arr[2]) {
-                return ["tabWatchers"];
-            } else {
-                return ["tabBlank"];
+        var nodeType = this.getNodeTypeByKey(key);
+        var tabIds = ["tabBlank"];
+        for (var key in this._mapNodeTab) {
+            if (nodeType == key) {
+                tabIds = this._mapNodeTab[key];
+                break;
             }
         }
-        return null;
+        return tabIds;
     }
     ,getComplaintIdByKey: function(key) {
         return this._parseKey(key).complaintId;
