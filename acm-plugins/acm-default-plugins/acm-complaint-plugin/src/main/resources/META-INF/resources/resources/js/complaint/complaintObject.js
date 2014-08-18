@@ -29,7 +29,7 @@ Complaint.Object = {
 
         this.$lnkTitle          = $("#caseTitle");
         this.$lnkTitle.editable({placement: 'right'});
-        this.$h4TitleHeader     = $("#caseTitle").parent();
+        this.$lnkComplaintNum   = $("#complaintNum");
 
         this.$lnkIncident       = $("#incident");
         this.$lnkIncident.editable({placement: 'bottom'
@@ -80,7 +80,6 @@ Complaint.Object = {
     }
     ,showTab: function(key) {
         var tabIds = ["tabBlank"
-            ,"tabMain"
             ,"tabDetail"
             ,"tabInitiator"
             ,"tabPeople"
@@ -99,17 +98,19 @@ Complaint.Object = {
             ,"tabCollaborators"
             ,"tabWatchers"
         ];
-        var tabId = this._getTabIdByKey(key);
+        var tabIdsToShow = this._getTabIdsByKey(key);
         for (var i = 0; i < tabIds.length; i++) {
-            var show = (tabId == tabIds[i]);
-
-            var nodeType = this.getNodeTypeByKey(key);
-            if ("pc" == nodeType) {
-                show = 0 < i;
-            }
-
+            var show = this._foundItemInArray(tabIds[i], tabIdsToShow);
             Acm.Object.show($("#" + tabIds[i]), show);
+        } //for i
+    }
+    ,_foundItemInArray: function(item, arr) {
+        for (var i = 0; i < arr.length; i++) {
+            if (item == arr[i]) {
+                return true;
+            }
         }
+        return false;
     }
 
 
@@ -155,8 +156,8 @@ Complaint.Object = {
     ,setValueLnkTitle: function(txt) {
         this.$lnkTitle.editable("setValue", txt);
     }
-    ,setTextH4TitleHeader: function(txt) {
-        Acm.Object.setTextNodeText(this.$h4TitleHeader, txt, 1);
+    ,setValueLnkComplaintNum: function(txt) {
+        Acm.Object.setText(this.$lnkComplaintNum, txt);
     }
     ,setValueLnkIncident: function(txt) {
         Acm.Object.setText(this.$lnkIncident, txt);
@@ -180,7 +181,8 @@ Complaint.Object = {
 
     ,updateDetail: function(c) {
         this.setValueLnkTitle(c.complaintTitle);
-        this.setTextH4TitleHeader(" (" + c.complaintNumber + ")");
+        //this.setTextH4TitleHeader(" (" + c.complaintNumber + ")");
+        this.setValueLnkComplaintNum(c.complaintNumber);
         this.setValueLnkIncident(Acm.getDateFromDatetime(c.created));
         this.setValueLnkPriority(c.priority);
         this.setValueLnkAssigned(c.assignee);
@@ -215,37 +217,37 @@ Complaint.Object = {
 //    }
 
     //
-    //tabId             - nodeType - key
+    //tabIds            - nodeType - key
     //------------------------------------------
     //tabBlank          - prevPage - prevPage
     //tabBlank          - p        - [pageId]
-    //tabMain           - pc       - [pageId].[complaintId]
-    //tabDetail         - pci      - [pageId].[complaintId].i
+    //all ex tabBlank)  - pc       - [pageId].[complaintId]
+    // [d,i,p]          - pci      - [pageId].[complaintId].i
     //tabDetail         - pcid     - [pageId].[complaintId].id
     //tabInitiator      - pcii     - [pageId].[complaintId].ii
     //tabPeople         - pcip     - [pageId].[complaintId].ip
     //tabPeople         - pcipc    - [pageId].[complaintId].ip.[personId]
     //tabNotes          - pcin     - [pageId].[complaintId].in
-    //tabPending        - pca      - [pageId].[complaintId].a
-    //tabPending        - pcap     - [pageId].[complaintId].ap
-    //tabPending        - pcapc    - [pageId].[complaintId].ap.[docId]
-    //tabApproved       - pcaa     - [pageId].[complaintId].aa
-    //tabApproved       - pcaac    - [pageId].[complaintId].aa.[docId]
-    //tabRejected       - pcar     - [pageId].[complaintId].ar
-    //tabRejected       - pcarc    - [pageId].[complaintId].ar.[docId]
-    //tabUnassigned     - pct      - [pageId].[complaintId].t
+    // [p,a,r]          - pcd      - [pageId].[complaintId].d
+    //tabPending        - pcdp     - [pageId].[complaintId].dp
+    //tabPending        - pcdpc    - [pageId].[complaintId].dp.[docId]
+    //tabApproved       - pcda     - [pageId].[complaintId].da
+    //tabApproved       - pcdac    - [pageId].[complaintId].da.[docId]
+    //tabRejected       - pcdr     - [pageId].[complaintId].dr
+    //tabRejected       - pcdrc    - [pageId].[complaintId].dr.[docId]
+    // [u,a,c]          - pct      - [pageId].[complaintId].t
     //tabUnassigned     - pctu     - [pageId].[complaintId].tu
     //tabUnassigned     - pctuc    - [pageId].[complaintId].tu.[taskId]
     //tabAssigned       - pcta     - [pageId].[complaintId].ta
     //tabAssigned       - pctac    - [pageId].[complaintId].ta.[taskId]
     //tabCompleted      - pctc     - [pageId].[complaintId].tc
     //tabCompleted      - pctcc    - [pageId].[complaintId].tc.[taskId]
-    //tabRefComplaints  - pcr      - [pageId].[complaintId].r
+    // [c,s,t,d]        - pcr      - [pageId].[complaintId].r
     //tabRefComplaints  - pcrc     - [pageId].[complaintId].rc
     //tabRefCases       - pcrs     - [pageId].[complaintId].rs
     //tabRefTasks       - pcrt     - [pageId].[complaintId].rt
     //tabRefDocuments   - pcrd     - [pageId].[complaintId].rd
-    //tabApprovers      - pcp      - [pageId].[complaintId].p
+    // [a,c,w]          - pcp      - [pageId].[complaintId].p
     //tabApprovers      - pcpa     - [pageId].[complaintId].pa
     //tabCollaborators  - pcpc     - [pageId].[complaintId].pc
     //tabWatchers       - pcpw     - [pageId].[complaintId].pw
@@ -274,70 +276,82 @@ Complaint.Object = {
         }
         return null;
     }
-    ,_getTabIdByKey: function(key) {
-        if (Acm.isEmpty(key)) {
-            return "tabBlank";
-        }
-
-        var arr = key.split(".");
-        if (1 == arr.length) {
-            return "tabBlank";      //"p", "prevPage", "nextPage"
-        } else if (2 == arr.length) {
-            return "tabMain";       //"pc"
-        } else if (3 <= arr.length) {
-            if ("i" == arr[2]) {
-                return "tabDetail";
-            } else if ("id" == arr[2]) {
-                return "tabDetail";
-            } else if ("ii" == arr[2]) {
-                return "tabInitiator";
-            } else if ("ip" == arr[2]) {
-                return "tabPeople";
-            } else if ("in" == arr[2]) {
-                return "tabNotes";
-
-            } else if ("a" == arr[2]) {
-                return "tabPending";
-            } else if ("ap" == arr[2]) {
-                return "tabPending";
-            } else if ("aa" == arr[2]) {
-                return "tabApproved";
-            } else if ("ar" == arr[2]) {
-                return "tabRejected";
-
-            } else if ("t" == arr[2]) {
-                return "tabUnassigned";
-            } else if ("tu" == arr[2]) {
-                return "tabUnassigned";
-            } else if ("ta" == arr[2]) {
-                return "tabAssigned";
-            } else if ("tc" == arr[2]) {
-                return "tabCompleted";
-
-            } else if ("r" == arr[2]) {
-                return "tabRefComplaints";
-            } else if ("rc" == arr[2]) {
-                return "tabRefComplaints";
-            } else if ("rs" == arr[2]) {
-                return "tabRefCases";
-            } else if ("rt" == arr[2]) {
-                return "tabRefTasks";
-            } else if ("rd" == arr[2]) {
-                return "tabRefDocuments";
-
-            } else if ("p" == arr[2]) {
-                return "tabApprovers";
-            } else if ("pa" == arr[2]) {
-                return "tabApprovers";
-            } else if ("pc" == arr[2]) {
-                return "tabCollaborators";
-            } else if ("pw" == arr[2]) {
-                return "tabWatchers";
-            } else {
-                return "tabBlank";
+    ,_mapNodeTab: {
+        pc: ["tabDetail"
+            ,"tabInitiator"
+            ,"tabPeople"
+            ,"tabNotes"
+            ,"tabPending"
+            ,"tabApproved"
+            ,"tabRejected"
+            ,"tabUnassigned"
+            ,"tabAssigned"
+            ,"tabCompleted"
+            ,"tabRefComplaints"
+            ,"tabRefCases"
+            ,"tabRefTasks"
+            ,"tabRefDocuments"
+            ,"tabApprovers"
+            ,"tabCollaborators"
+            ,"tabWatchers"
+        ]
+        ,pci: ["tabDetail"
+            ,"tabInitiator"
+            ,"tabPeople"
+            ,"tabNotes"
+        ]
+        ,pcid: ["tabDetail"]
+        ,pcii: ["tabInitiator"]
+        ,pcip: ["tabPeople"]
+        ,pcipc: ["tabPeople"]
+        ,pcin: ["tabNotes"]
+        ,pcd: ["tabPending"
+            ,"tabApproved"
+            ,"tabRejected"
+        ]
+        ,pcdp: ["tabPending"]
+        ,pcdpc: ["tabPending"]
+        ,pcda: ["tabApproved"]
+        ,pcdac: ["tabApproved"]
+        ,pcdr: ["tabRejected"]
+        ,pcdrc: ["tabRejected"]
+        ,pct: ["tabUnassigned"
+            ,"tabAssigned"
+            ,"tabCompleted"
+        ]
+        ,pctu: ["tabUnassigned"]
+        ,pctuc: ["tabUnassigned"]
+        ,pcta: ["tabAssigned"]
+        ,pctac: ["tabAssigned"]
+        ,pctc: ["tabCompleted"]
+        ,pctcc: ["tabCompleted"]
+        ,pcr: ["tabRefComplaints"
+            ,"tabRefCases"
+            ,"tabRefTasks"
+            ,"tabRefDocuments"
+        ]
+        ,pcrc: ["tabRefComplaints"]
+        ,pcrs: ["tabRefCases"]
+        ,pcrt: ["tabRefTasks"]
+        ,pcrd: ["tabRefDocuments"]
+        ,pcp: ["tabApprovers"
+            ,"tabCollaborators"
+            ,"tabWatchers"
+        ]
+        ,pcpa: ["tabApprovers"]
+        ,pcpc: ["tabCollaborators"]
+        ,pcpw: ["tabWatchers"]
+    }
+    ,_getTabIdsByKey: function(key) {
+        var nodeType = this.getNodeTypeByKey(key);
+        var tabIds = ["tabBlank"];
+        for (var key in this._mapNodeTab) {
+            if (nodeType == key) {
+                tabIds = this._mapNodeTab[key];
+                break;
             }
         }
-        return null;
+        return tabIds;
     }
     ,getComplaintIdByKey: function(key) {
         return this._parseKey(key).complaintId;
@@ -498,17 +512,17 @@ Complaint.Object = {
                             })
 
 
-                        .addBranch({key: pageId + "." + c.complaintId + ".a"                   //level 2: /Complaint/Attachments
-                            ,title: "Attachments"
+                        .addBranch({key: pageId + "." + c.complaintId + ".d"                   //level 2: /Complaint/Documents
+                            ,title: "Documents"
                             ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".ap"                //level 3: /Complaint/Incident/Initiator
+                            .addLeaf({key: pageId + "." + c.complaintId + ".dp"                //level 3: /Complaint/Documents/Pending
                                 ,title: "Pending"
                             })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".aa"                //level 3: /Complaint/Incident/Approved
+                            .addLeaf({key: pageId + "." + c.complaintId + ".da"                //level 3: /Complaint/Documents/Approved
                                 ,title: "Approved"
                             })
-                            .addLeafLast({key: pageId + "." + c.complaintId + ".ar"            //level 3: /Complaint/Incident/Rejected
+                            .addLeafLast({key: pageId + "." + c.complaintId + ".dr"            //level 3: /Complaint/Documents/Rejected
                                 ,title: "Rejected"
                             })
 
@@ -648,7 +662,10 @@ Complaint.Object = {
             ,paging: false
             ,actions: {
                 listAction: function(postData, jtParams) {
-                    var rc = {"Result": "OK", "Records": [{id:0, title:"", giventName:"", familyName:"", type:"", description:""}]};
+                    //var rc = {"Result": "OK", "Records": [{id:0, title:"", giventName:"", familyName:"", type:"", description:""}]};
+
+                    var rc = {"Result": "OK", "Records": [{id:0, title:"", givenName:"", familyName:"", type:"", description:""}]};
+                   // var rc = {"Result": "OK", "Records": []};
                     var c = Complaint.getComplaint();
                     if (c) {
                         if (Acm.isEmpty(c.originator)) {
@@ -656,8 +673,8 @@ Complaint.Object = {
                             rc.Records[0].title = c.originator.title;
                             rc.Records[0].givenName = c.originator.givenName;
                             rc.Records[0].familyName = c.originator.familyName;
-                            rc.Records[0].type = "";
-                            rc.Records[0].description = "";
+                            rc.Records[0].type = c.originator.type;
+                            rc.Records[0].description = c.originator.description;
                         }
                     }
                     return rc;
@@ -667,9 +684,9 @@ Complaint.Object = {
                     var c = Complaint.getComplaint();
                     var rc = {"Result": "OK", "Record": {}};
                     rc.Record.id = c.originator.id;    // (record.id) is empty, do not assign;
-                    rc.Record.title = c.originator.title = record.title;
-                    rc.Record.givenName = c.originator.givenName = record.givenName;
-                    rc.Record.familyName = c.originator.familyName = record.familyName;
+                    rc.Record.title = record.title;
+                    rc.Record.givenName = record.givenName;
+                    rc.Record.familyName = record.familyName;
                     rc.Record.type = record.type;
                     rc.Record.description = record.description;
                     return rc;
@@ -742,10 +759,25 @@ Complaint.Object = {
                 }
             }
             ,recordAdded: function(event, data){
+                /*var record = data.record;
+                var c = Complaint.getComplaint();
+                c.originator.title = record.title;
+                c.originator.givenName = record.givenName;
+                c.originator.familyName = record.familyName;
+                c.originator.type = record.type;
+                c.originator.description = record.description;*/
                 $s.jtable('load');
             }
             ,recordUpdated: function(event, data){
-                $s.jtable('load');
+               // var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var record = data.record;
+                var c = Complaint.getComplaint();
+                c.originator.title = record.title;
+                c.originator.givenName = record.givenName;
+                c.originator.familyName = record.familyName;
+                c.originator.type = record.type;
+                c.originator.description = record.description;
+                //$s.jtable('load');
             }
         });
 

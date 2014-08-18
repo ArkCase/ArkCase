@@ -140,49 +140,37 @@
                     <section class="vbox">
                         <section class="scrollable">
                             <div class="wrapper dk  clearfix">
-                                <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> </a> </h4>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="">
+                                            <div class=" clearfix">
+                                                <div class="col-xs-4 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"></a> </div>
+                                                    <small class="text-muted"><a href="#" id="complaintNum" ></a></small></div>
+                                                <div class="col-xs-2 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>
+                                                    <small class="text-muted">Incident Date</small></div>
+                                                <div class="col-xs-1 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>
+                                                    <small class="text-muted">Priority</small></div>
+                                                <div class="col-xs-2 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>
+                                                    <small class="text-muted">Assigned To</small></div>
+                                                <div class="col-xs-2 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>
+                                                    <small class="text-muted">Subject Type</small></div>
+                                                <div class="col-xs-1">
+                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div> <small class="text-muted">Status</small></div>
+                                            </div>
+                                        </div>
+
+                                    </div></div>
                             </div>
+
                             <div>
                                 <div class="wrapper">
                                     <div class="row" id="tabBlank" style="display:none;">
                                         <p></p>
-                                    </div>
-
-
-                                    <div class="row" id="tabMain" style="display:none;">
-                                        <div class="col-xs-6">
-                                            <div class="panel b-a  bg-gradient">
-                                                <div class="padder-v text-center clearfix">
-                                                    <div class="col-xs-4 b-r">
-                                                        <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>
-                                                        <small class="text-muted">Incident Date</small> </div>
-                                                    <div class="col-xs-4 b-r">
-                                                        <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>
-                                                        <small class="text-muted">Priority</small> </div>
-                                                    <div class="col-xs-4">
-                                                        <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>
-                                                        <small class="text-muted">Assigned To</small> </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <div class="panel b-a  bg-gradient">
-                                                <div class="padder-v text-center clearfix">
-                                                    <div class="col-xs-12">
-                                                        <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>
-                                                        <small class="text-muted">Subject Type</small> </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3 ">
-                                            <div class="panel b-a bg-gradient">
-                                                <div class="padder-v text-center clearfix">
-                                                    <div class="col-xs-12">
-                                                        <div class="h4 font-bold"><a href="#" id="status" ></a></div>
-                                                        <small class="text-muted">Status</small> </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
 
 
