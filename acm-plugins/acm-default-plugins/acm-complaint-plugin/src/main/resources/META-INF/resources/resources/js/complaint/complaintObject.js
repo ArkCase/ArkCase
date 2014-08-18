@@ -648,7 +648,10 @@ Complaint.Object = {
             ,paging: false
             ,actions: {
                 listAction: function(postData, jtParams) {
-                    var rc = {"Result": "OK", "Records": [{id:0, title:"", giventName:"", familyName:"", type:"", description:""}]};
+                    //var rc = {"Result": "OK", "Records": [{id:0, title:"", giventName:"", familyName:"", type:"", description:""}]};
+
+                    var rc = {"Result": "OK", "Records": [{id:0, title:"", givenName:"", familyName:"", type:"", description:""}]};
+                   // var rc = {"Result": "OK", "Records": []};
                     var c = Complaint.getComplaint();
                     if (c) {
                         if (Acm.isEmpty(c.originator)) {
@@ -656,8 +659,8 @@ Complaint.Object = {
                             rc.Records[0].title = c.originator.title;
                             rc.Records[0].givenName = c.originator.givenName;
                             rc.Records[0].familyName = c.originator.familyName;
-                            rc.Records[0].type = "";
-                            rc.Records[0].description = "";
+                            rc.Records[0].type = c.originator.type;
+                            rc.Records[0].description = c.originator.description;
                         }
                     }
                     return rc;
@@ -667,9 +670,9 @@ Complaint.Object = {
                     var c = Complaint.getComplaint();
                     var rc = {"Result": "OK", "Record": {}};
                     rc.Record.id = c.originator.id;    // (record.id) is empty, do not assign;
-                    rc.Record.title = c.originator.title = record.title;
-                    rc.Record.givenName = c.originator.givenName = record.givenName;
-                    rc.Record.familyName = c.originator.familyName = record.familyName;
+                    rc.Record.title = record.title;
+                    rc.Record.givenName = record.givenName;
+                    rc.Record.familyName = record.familyName;
                     rc.Record.type = record.type;
                     rc.Record.description = record.description;
                     return rc;
@@ -742,10 +745,25 @@ Complaint.Object = {
                 }
             }
             ,recordAdded: function(event, data){
+                /*var record = data.record;
+                var c = Complaint.getComplaint();
+                c.originator.title = record.title;
+                c.originator.givenName = record.givenName;
+                c.originator.familyName = record.familyName;
+                c.originator.type = record.type;
+                c.originator.description = record.description;*/
                 $s.jtable('load');
             }
             ,recordUpdated: function(event, data){
-                $s.jtable('load');
+               // var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var record = data.record;
+                var c = Complaint.getComplaint();
+                c.originator.title = record.title;
+                c.originator.givenName = record.givenName;
+                c.originator.familyName = record.familyName;
+                c.originator.type = record.type;
+                c.originator.description = record.description;
+                //$s.jtable('load');
             }
         });
 
