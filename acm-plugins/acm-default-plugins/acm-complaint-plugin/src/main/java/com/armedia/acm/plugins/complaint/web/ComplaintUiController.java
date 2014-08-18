@@ -27,7 +27,7 @@ public class ComplaintUiController
         retval.setViewName("complaint");
         retval.addObject("pageDescriptor",  getPageDescriptorList());
 
-        String token = this.authenticationTokenService.storeAuthentication(auth);
+        String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         retval.addObject("token", token);
         return retval;
     }
@@ -40,7 +40,7 @@ public class ComplaintUiController
         retval.addObject("complaintId", complaintId);
         retval.addObject("pageDescriptor",  getPageDescriptorList());
 
-        String token = this.authenticationTokenService.storeAuthentication(auth);
+        String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         retval.addObject("token", token);
         return retval;
     }
