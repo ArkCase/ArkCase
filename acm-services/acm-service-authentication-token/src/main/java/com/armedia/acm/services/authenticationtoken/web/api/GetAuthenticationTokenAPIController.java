@@ -19,13 +19,20 @@ public class GetAuthenticationTokenAPIController
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    /**
+     * REST service to retrieve a token for an authorized user; i.e. the HTTP client should provide a Basic
+     * Authentication when calling this URL.  The token is returned in the response body.
+     *
+     * @param authentication Provided automatically by Spring MVC.
+     * @return A token that can be used to represent the Authentication.
+     */
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String authenticationtoken(Authentication authentication)
     {
         log.debug("Storing authentication token for user: '" + authentication.getName() + "'");
 
-        String token = getAuthenticationTokenService().storeAuthentication(authentication);
+        String token = getAuthenticationTokenService().getTokenForAuthentication(authentication);
         return token;
     }
 

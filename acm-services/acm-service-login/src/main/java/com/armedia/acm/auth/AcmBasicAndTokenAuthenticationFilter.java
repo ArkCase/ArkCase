@@ -109,7 +109,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             Authentication auth;
             try
             {
-                auth = getAuthenticationTokenService().retrieveAuthentication(token);
+                auth = getAuthenticationTokenService().getAuthenticationForToken(token);
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 onSuccessfulAuthentication(request, response, auth);
             }

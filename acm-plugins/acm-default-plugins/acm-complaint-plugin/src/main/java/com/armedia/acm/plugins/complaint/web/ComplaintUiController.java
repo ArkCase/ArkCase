@@ -30,7 +30,7 @@ public class ComplaintUiController
         retval.addObject("pageDescriptor",  getPageDescriptorList());
         retval.addObject("initId",  initId);
         retval.addObject("initTab",  initTab);
-        String token = this.authenticationTokenService.storeAuthentication(auth);
+        String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         System.out.println("Token: " + token);
         retval.addObject("token", token);
         return retval;
