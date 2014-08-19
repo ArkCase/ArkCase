@@ -10,11 +10,12 @@ Report.Object = {
         this.$selReport = $("#selectReport");
 
         this.$edtStartDate = $("#startDate");
-        //this.$edtStartDate(Acm.getCurrentDay());
         this.setValueStartDate(Acm.getCurrentDay());
 
         this.$edtEndDate = $("#endDate");
         this.setValueEndDate(Acm.getCurrentDay());
+        //$('#dateSelector').datepicker('disable');
+
 
 
         this.$btnGenerateReport = $("#generateReport");
@@ -33,10 +34,10 @@ Report.Object = {
         return Acm.Object.getSelectValueIgnoreFirst(this.$selReport);
     }
     ,setValueStartDate: function(val) {
-        return Acm.Object.setPlaceHolderInput(this.$edtStartDate, val);
+        Acm.Object.setValueDatePicker(this.$edtStartDate, val);
     }
     ,setValueEndDate: function(val) {
-        return Acm.Object.setPlaceHolderInput(this.$edtEndDate, val);
+        Acm.Object.setValueDatePicker(this.$edtEndDate, val);
     }
 };
 
