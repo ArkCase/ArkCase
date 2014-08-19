@@ -18,7 +18,7 @@ AcmEx.Object = {
     // JTable functions
     //
     ,JTABLE_DEFAULT_PAGE_SIZE: 8
-    ,jTableGetEmptyResult: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
+    ,jTableGetEmptyRecords: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
     ,jTableGetEmptyRecord: function() { return {"Result": "OK","Record": {}};}
     ,jTableLoad: function($jt) {
         $jt.jtable('load');
@@ -28,7 +28,7 @@ AcmEx.Object = {
     }
     ,jTableDefaultPagingListAction: function(postData, jtParams, sortMap, urlEvealuator, responseHandler) {
         if (Acm.isEmpty(App.getContextPath())) {
-            return AcmEx.Object.jTableGetEmptyResult();
+            return AcmEx.Object.jTableGetEmptyRecords();
         }
 
         var url = urlEvealuator();
