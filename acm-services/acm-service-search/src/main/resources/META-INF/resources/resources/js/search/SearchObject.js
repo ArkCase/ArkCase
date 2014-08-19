@@ -303,7 +303,7 @@ Search.Object = {
                                                 //response.start should match to jtParams.jtStartIndex
                                                 //response.docs.length should be <= jtParams.jtPageSize
 
-                                                jtData = AcmEx.Object.jTableGetEmptyResult();
+                                                jtData = AcmEx.Object.jTableGetEmptyRecords();
                                                 for (var i = 0; i < response.docs.length; i++) {
                                                     var Record = {};
                                                     Record.id = response.docs[i].object_id_s;

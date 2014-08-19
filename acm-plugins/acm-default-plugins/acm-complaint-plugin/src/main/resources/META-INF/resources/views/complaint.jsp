@@ -20,6 +20,7 @@
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintRule.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintJTable.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
@@ -201,7 +202,7 @@
 
                                     <div class="row" id="tabInitiator" style="display:none;">
                                         <div class="col-md-12">
-                                            <section class="panel b-a" id="secIncident">
+                                            <section class="panel b-a">
                                                 <div id="divInitiator" style="width:100%"></div>
                                             </section>
                                         </div>
@@ -209,6 +210,12 @@
 
 
                                     <div class="row" id="tabPeople" style="display:none;">
+                                        <div class="col-md-12">
+                                            <section class="panel b-a">
+                                                <div id="divPeople" style="width:100%"></div>
+                                            </section>
+                                        </div>
+
                                     <div class="col-md-12">
                                     <section class="panel b-a">
                                     <div class="panel-heading b-b bg-info">

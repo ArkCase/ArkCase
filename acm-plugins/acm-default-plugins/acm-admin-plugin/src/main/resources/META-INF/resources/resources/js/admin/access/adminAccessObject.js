@@ -53,7 +53,7 @@ AdminAccess.Object = {
                             , function (data) {
                                 var jtData = null;
                                 var err = "ACL Error";
-                                jtData = AcmEx.Object.jTableGetEmptyResult();
+                                jtData = AcmEx.Object.jTableGetEmptyRecords();
                                 if (data) {
                                     var resultPage = data.resultPage;
                                     for (var i = 0; i < resultPage.length; i++) {
