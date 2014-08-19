@@ -85,7 +85,7 @@ ComplaintWizard.Object = {
         Acm.Object.setEnable(this.$btnSave, enable);
     }
     ,getHtmlDivComplaintDetails: function() {
-        return Acm.Object.getSummernote(this.$divComplaintDetails);
+        return AcmEx.Object.getSummernote(this.$divComplaintDetails);
     }
     ,getValueEdtIncidentDate: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtIncidentDate);
@@ -112,7 +112,7 @@ ComplaintWizard.Object = {
         return Acm.Object.getSelectValues(this.$selNotifications);
     }
     ,getSelectValueSelPriority: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selPriority);
+        return Acm.Object.getSelectValue(this.$selPriority);
     }
     ,getSelectValueSelComplaintType: function() {
         return Acm.Object.getSelectValueIgnoreFirst(this.$selComplaintType);

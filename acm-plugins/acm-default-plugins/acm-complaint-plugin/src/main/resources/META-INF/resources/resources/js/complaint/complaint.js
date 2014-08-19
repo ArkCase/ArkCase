@@ -18,12 +18,12 @@ var Complaint = Complaint || {
         Acm.deferred(Complaint.Event.onPostInit);
     }
 
-    ,Object: {}
-    ,Event:{}
-    ,Page: {}
-    ,Rule: {}
-    ,Service: {}
-    ,Callback: {}
+//    ,Object: {}
+//    ,Event:{}
+//    ,Page: {}
+//    ,Rule: {}
+//    ,Service: {}
+//    ,Callback: {}
 
     ,cachePage: null
     ,cacheComplaint: null
