@@ -8,5 +8,16 @@
         <property name="pageDescriptorWizard" ref="complaintWizardPageDescriptor"/>
         <property name="pageDescriptorList" ref="complaintListPageDescriptor"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
+		<property name="formsProperties" ref="acm-forms-properties" />		
     </bean>
+    
+    <bean id="acm-forms-properties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="ignoreResourceNotFound" value="true" />
+        <property name="location">
+        	<value>classpath:acm/acm-forms.properties</value>
+        </property>
+	</bean>
+    
 </beans>
+

@@ -10,6 +10,8 @@
         <span itemprop="complaintId">${complaintId}</span>
         <span itemprop="initId">${initId}</span>
         <span itemprop="initTab">${initTab}</span>
+        <span itemprop="token">${token}</span>
+        <span itemprop="roiFormUrl">${roiFormUrl}</span>
     </div>
 </jsp:attribute>
 
@@ -287,11 +289,10 @@
                  	<span class="pull-right">New</span>
  -->                    
                     <a href="#" class="font-bold">Documents</a>
-                    <input type="file" name="files[]" multiple style="display:none;"/>
-                                    	
-                    <a class="pull-right" href="http://10.21.4.149/orbeon/fr/acm/roi-form/new?acm_ticket=${token}&complaint_id=52&complaint_number=20140430_52&complaint_title=testTitle&complaint_priority=Expedite">New Form</a>
-                    <select class="input-sm form-control input-s-sm inline v-middle pull-right">
-                    <option value="0">Report of Investigation</option>
+                    <input type="file" name="files[]" multiple style="display:none;"/>                                    	
+                    <select class="input-sm form-control input-s-sm inline v-middle pull-right" id="createNewForm">
+	                    <option value="0">Select option</option>
+	                    <option value="0">Report of Investigation</option>
                 	</select>
                     
                 </div>
