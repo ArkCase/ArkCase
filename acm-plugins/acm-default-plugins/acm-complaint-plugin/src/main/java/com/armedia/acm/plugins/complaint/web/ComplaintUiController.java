@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.complaint.web;
 
+import java.util.Properties;
+
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.web.AcmPageDescriptor;
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ public class ComplaintUiController
     private AcmPageDescriptor pageDescriptorWizard;
     private AcmPageDescriptor pageDescriptorList;
     private AuthenticationTokenService authenticationTokenService;
+	private Properties formsProperties;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openComplaints(Authentication auth) {
@@ -42,6 +45,10 @@ public class ComplaintUiController
 
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         retval.addObject("token", token);
+        String roiFormUrl = getFormsProperties().get("form.roi.url").toString();
+        retval.addObject("roiFormUrl", roiFormUrl);
+        
+        log.debug("Security token: " + token + "; ROI Form Url: " + roiFormUrl);
         return retval;
     }
 
@@ -55,9 +62,13 @@ public class ComplaintUiController
         retval.addObject("pageDescriptor",  getPageDescriptorList());
         retval.addObject("initId",  initId);
         retval.addObject("initTab",  initTab);
+        
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
-        System.out.println("Token: " + token);
         retval.addObject("token", token);
+        String roiFormUrl = getFormsProperties().get("form.roi.url").toString();
+        retval.addObject("roiFormUrl", roiFormUrl);
+        
+        log.debug("Security token: " + token + "; ROI Form Url: " + roiFormUrl);
         return retval;
     }
 
@@ -112,6 +123,14 @@ public class ComplaintUiController
 	public void setAuthenticationTokenService(
 			AuthenticationTokenService authenticationTokenService) {
 		this.authenticationTokenService = authenticationTokenService;
+	}
+
+	public Properties getFormsProperties() {
+		return formsProperties;
+	}
+
+	public void setFormsProperties(Properties formsProperties) {
+		this.formsProperties = formsProperties;
 	}
 
 }

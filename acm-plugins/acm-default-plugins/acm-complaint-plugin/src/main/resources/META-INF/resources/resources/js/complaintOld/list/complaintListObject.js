@@ -88,6 +88,13 @@ ComplaintList.Object = {
 
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
+        
+        //create new form definition
+        this.$ROI_FORM_NAME="Report of Investigation";
+        this.$token = items.properties("token").itemValue();
+        this.$roiFormUrl = items.properties("roiFormUrl").itemValue();
+    	this.$createNewFormSel = $("#createNewForm");    	
+    	this.registerChangeSelNewFormEvents();
     }
 
     //
@@ -1239,7 +1246,7 @@ ComplaintList.Object = {
                                                 //response.start should match to jtParams.jtStartIndex
                                                 //response.docs.length should be <= jtParams.jtPageSize
 
-                                                jtData = AcmEx.Object.jTableGetEmptyRecords();
+                                                jtData = AcmEx.Object.jTableGetEmptyResult();
                                                 for (var i = 0; i < response.docs.length; i++) {
                                                     var Record = {};
                                                     Record.id = response.docs[i].object_id_s;
@@ -1270,7 +1277,7 @@ ComplaintList.Object = {
                     }
 
                     ,createAction: function(postData, jtParams) {
-                        return AcmEx.Object.jTableGetEmptyRecords();
+                        return AcmEx.Object.jTableGetEmptyResult();
                     }
                 }
 
@@ -1476,6 +1483,19 @@ ComplaintList.Object = {
 
         });
     }
+    
+    /**
+     * Register the new form selector changed event
+     */
+	,registerChangeSelNewFormEvents: function() {
+    	this.$createNewFormSel.change(function(e) {
+    		var formName = $(this).find('option:selected').text();
+    		
+    		if ( formName === ComplaintList.Object.$ROI_FORM_NAME) {
+            	ComplaintList.Event.onChangeSelForm(e);    			
+    		}
+    	});
+	}
 };
 
 

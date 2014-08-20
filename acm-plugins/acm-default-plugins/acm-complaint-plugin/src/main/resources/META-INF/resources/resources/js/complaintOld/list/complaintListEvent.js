@@ -143,5 +143,21 @@ ComplaintList.Event = {
             return false;
         }
     }
+    
+    /**
+     * To do: complaint_id and other variable values should be
+     * populated with real complaint data based on the id. In addition,
+     * these values should be passed to orbeon form via the request body.
+     */
+    ,onChangeSelForm : function(event) {
+    	var complaint_id = "52";
+    	var complaint_number= "20140430_52";
+    	var complaint_title="testTitle";
+    	var complaint_priority="Expedite";
 
-};
+    	var pageUrl = ComplaintList.Object.$roiFormUrl + "?acm_ticket=" + ComplaintList.Object.$token 
+    		+ "&complaint_id=" + complaint_id + "&complaint_number="+ complaint_number 
+    		+ "&complaint_title=" + complaint_title + "&complaint_priority" + complaint_priority;
+    	
+    	window.open(pageUrl, "_self");
+    }};
