@@ -33,5 +33,11 @@ public interface TaskDao
      */
     List<AcmTask> tasksForUser(String user);
 
+    /**
+     * List of all open tasks assigned to all users, sorted by descending due date.
+     * @return
+     */
+    List<AcmTask> allTasks();
+
     AcmTask findById(Long taskId) throws AcmTaskException;
 }
