@@ -36,6 +36,19 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
 
     }
 
+    public List<ComplaintListView> listAllUserComplaints(String userId) {
+        CriteriaBuilder builder = getEm().getCriteriaBuilder();
+        CriteriaQuery<ComplaintListView> query = builder.createQuery(ComplaintListView.class);
+        Root<ComplaintListView> clv = query.from(ComplaintListView.class);
+        query.select(clv);
+        query.where(builder.equal(clv.get("creator"),userId));
+        // TODO: parameterized order by
+        query.orderBy(builder.desc(clv.get("created")));
+        TypedQuery<ComplaintListView> dbQuery = getEm().createQuery(query);
+        List<ComplaintListView> results = dbQuery.getResultList();
+        return results;
+    }
+
     @Transactional
     public int updateComplaintStatus(Long complaintId, String newStatus, String modifier)
     {
