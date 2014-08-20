@@ -9,10 +9,12 @@ Complaint.Callback = {
     initialize : function() {
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_RETRIEVED, this.onListRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_RETRIEVED, this.onDetailRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_COMPLAIN_SAVED, this.onComplaintSaved);
     }
 
-    ,EVENT_LIST_RETRIEVED		: "complaint-list-list-retrieved"
-    ,EVENT_DETAIL_RETRIEVED		: "complaint-list-detail-retrieved"
+    ,EVENT_LIST_RETRIEVED		: "complaint-list-retrieved"
+    ,EVENT_DETAIL_RETRIEVED		: "complaint-detail-retrieved"
+    ,EVENT_COMPLAIN_SAVED		: "complaint-complaint-saved"
 
     ,onListRetrieved : function(Callback, response) {
         if (response.hasError) {
@@ -71,6 +73,14 @@ Complaint.Callback = {
                 Complaint.cacheComplaint.put(complaintId, complaint);
                 Complaint.Object.populateComplaint(complaint);
             }
+        }
+    }
+    ,onComplaintSaved : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to create or save complaint:" + response.errorMsg);
+//        } else {
+//            if (Acm.isNotEmpty(response.complaintId)) {
+//            }
         }
     }
 

@@ -760,6 +760,18 @@ Complaint.JTable = {
                     }
                     return rc;
                 }
+                ,createAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var c = Complaint.getComplaint();
+                    var rc = {"Result": "OK", "Record": {}};
+                    rc.Record.id = c.originator.id;
+                    rc.Record.title = record.title;
+                    rc.Record.givenName = record.givenName;
+                    rc.Record.familyName = record.familyName;
+                    rc.Record.type = record.type;
+                    rc.Record.description = record.description;
+                    return rc;
+                }
                 ,updateAction: function(postData, jtParams) {
                     var record = Acm.urlToJson(postData);
                     var c = Complaint.getComplaint();
@@ -771,6 +783,11 @@ Complaint.JTable = {
                     rc.Record.type = record.type;
                     rc.Record.description = record.description;
                     return rc;
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
                 }
             }
             ,fields: {

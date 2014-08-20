@@ -69,6 +69,7 @@ Complaint.Event = {
         var c = Complaint.getComplaint();
         var html = Complaint.Object.saveDivDetails();
         c.details = html;
+        Complaint.Service.saveComplaint(c);
     }
     ,onClickSpanAddDocument: function(e) {
         var report = Complaint.Object.getSelectReport();
