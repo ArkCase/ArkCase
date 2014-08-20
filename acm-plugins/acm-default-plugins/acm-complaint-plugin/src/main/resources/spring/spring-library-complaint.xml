@@ -132,6 +132,11 @@
                     <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/complaint/forUser/{user}"/>
+                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <!-- complaint navigator tab home page -->
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/complaint"/>
