@@ -69,7 +69,7 @@ Complaint.Callback = {
                 }
 
                 Complaint.cacheComplaint.put(complaintId, complaint);
-                Complaint.Object.updateDetail(complaint);
+                Complaint.Object.populateComplaint(complaint);
             }
         }
     }

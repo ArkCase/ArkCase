@@ -7,11 +7,19 @@ AcmEx.Object = {
     initialize : function() {
     }
 
-    ,getSummernote : function($s) {
+    ,getSummerNote : function($s) {
         return $s.code();
     }
-    ,setSummernote : function($s, value) {
+    ,setSummerNote : function($s, value) {
         $s.code(value);
+    }
+    ,editSummerNote: function($s) {
+        $s.summernote({focus: true});
+    }
+    ,saveSummerNote: function($s) {
+        var aHtml = $s.code(); //save HTML If you need(aHTML: array).
+        $s.destroy();
+        return aHtml;
     }
 
     //

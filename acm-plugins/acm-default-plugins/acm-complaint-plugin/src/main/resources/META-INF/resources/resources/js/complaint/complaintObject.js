@@ -45,6 +45,13 @@ Complaint.Object = {
         this.$lnkStatus         = $("#status");
 
         this.$divDetails        = $(".complaintDetails");
+//        this.$divDetails.summernote({
+//            height: 180
+//        });
+        this.$btnEditDetails    = $("#tabDetail button:eq(0)");
+        this.$btnSaveDetails    = $("#tabDetail button:eq(1)");
+        this.$btnEditDetails.on("click", function(e) {Complaint.Event.onClickBtnEditDetails(e);});
+        this.$btnSaveDetails.on("click", function(e) {Complaint.Event.onClickBtnSaveDetails(e);});
 
         this.$divInitiator      = $("#divInitiator");
         Complaint.JTable.createJTableInitiator(this.$divInitiator);
@@ -61,7 +68,7 @@ Complaint.Object = {
         this.$divTasks          = $("#divTasks");
         Complaint.JTable.createJTableTasks(this.$divTasks);
         this.$spanAddTask       = this.$divTasks.find(".jtable-toolbar-item-add-record");
-        this.$spanAddTask.unbind("click").on("click", function(e){ComplaintList.Event.onClickSpanAddTask(e);});
+        this.$spanAddTask.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddTask(e);});
 
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
@@ -178,11 +185,22 @@ Complaint.Object = {
     ,setTextLnkStatus: function(txt) {
         Acm.Object.setText(this.$lnkStatus, txt);
     }
+    ,getHtmlDivDetails: function() {
+        //return AcmEx.Object.getSummernote(this.$divDetails);
+        return Acm.Object.getHtml(this.$divDetails);
+    }
     ,setHtmlDivDetails: function(html) {
+        //AcmEx.Object.setSummerNote(this.$divDetails, html);
         Acm.Object.setHtml(this.$divDetails, html);
     }
+    ,editDivDetails: function() {
+        AcmEx.Object.editSummerNote(this.$divDetails);
+    }
+    ,saveDivDetails: function() {
+        return AcmEx.Object.saveSummerNote(this.$divDetails);
+    }
 
-    ,updateDetail: function(c) {
+    ,populateComplaint: function(c) {
         this.setValueLnkTitle(c.complaintTitle);
         //this.setTextH4TitleHeader(" (" + c.complaintNumber + ")");
         this.setValueLnkComplaintNum(c.complaintNumber);
@@ -198,6 +216,7 @@ Complaint.Object = {
         this.refreshJTableDocuments();
         this.refreshJTableTasks();
     }
+
 
 
     //

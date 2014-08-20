@@ -13,10 +13,10 @@ var App = App || {
         Acm.deferred(App.Event.onPostInit);
     }
 
-    ,Object : {}
-    ,Event : {}
-    ,Service : {}
-    ,Callback : {}
+//    ,Object : {}
+//    ,Event : {}
+//    ,Service : {}
+//    ,Callback : {}
 
 
     ,OBJTYPE_CASE:        "Case"

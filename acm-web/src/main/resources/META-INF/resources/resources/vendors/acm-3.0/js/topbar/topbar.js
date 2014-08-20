@@ -15,12 +15,12 @@ var Topbar = Topbar || {
         Acm.deferred(Topbar.Event.onPostInit);
     }
 
-    ,Object: {}
-    ,Event:{}
-    ,Page: {}
-    ,Rule: {}
-    ,Service: {}
-    ,Callback: {}
+//    ,Object: {}
+//    ,Event:{}
+//    ,Page: {}
+//    ,Rule: {}
+//    ,Service: {}
+//    ,Callback: {}
 
 };
 
