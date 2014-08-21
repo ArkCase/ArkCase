@@ -4600,7 +4600,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             resolve: {
                 model: function($q, $http) {
                     var q = $q.defer();
-                    return $http.get("/api/latest/plugin/dashboard/get").success(function(data) {
+                    var url = App.Object.getContextPath()+ "/api/latest/plugin/dashboard/get";
+                    return $http.get(url).success(function(data) {
                         q.resolve(data.dashboardConfig)
                         console.log(App.Object.getUserName());
                     }).error(q.reject), q.promise
@@ -4632,10 +4633,11 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
 
         $scope.$on("adfDashboardChanged", function(event, name, model) {
             localStorageService.set(name, model);
+            var urlSet = App.Object.getContextPath()+"/api/latest/plugin/dashboard/set";
             var postObject = new Object;
             postObject.dashboardConfig = JSON.stringify(model), $http({
                 method: "POST",
-                url: "/api/latest/plugin/dashboard/set",
+                url: urlSet,
                 data: JSON.stringify(postObject),
                 headers: {
                     "Content-Type": "application/json"
@@ -4794,7 +4796,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
 ]).controller("myTasksCtrl", ["$scope", "$filter", "$http", "ngTableParams",
     function($scope, $filter, $http, ngTableParams) {
 
-        var url="/api/latest/plugin/task/forUser/"+App.Object.getUserName();
+        var url=App.Object.getContextPath()+"/api/latest/plugin/task/forUser/"+App.Object.getUserName();
         $http.get(url).success(function(data) {
             $scope.tableParams = new ngTableParams({
                 page: 1,
@@ -4826,7 +4828,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
     }
 ]).controller("myComplaintsCtrl", ["$scope", "$filter", "$http", "ngTableParams",
     function($scope, $filter, $http, ngTableParams) {
-        var url = "/api/latest/plugin/complaint/forUser/"+App.Object.getUserName();
+        var url =App.Object.getContextPath()+"/api/latest/plugin/complaint/forUser/"+App.Object.getUserName();
         $http.get(url).success(function(data) {
             $scope.tableParams = new ngTableParams({
                 page: 1,
