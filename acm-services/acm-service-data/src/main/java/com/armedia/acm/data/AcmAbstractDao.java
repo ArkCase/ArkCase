@@ -12,7 +12,7 @@ public abstract class AcmAbstractDao<T>
     @PersistenceContext
     private EntityManager em;
 
-
+    @Transactional(propagation = Propagation.REQUIRED)
     public T save(T toSave)
     {
         T saved = em.merge(toSave);
