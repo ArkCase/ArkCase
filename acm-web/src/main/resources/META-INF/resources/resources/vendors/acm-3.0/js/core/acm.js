@@ -161,12 +161,50 @@ var Acm = Acm || {
     //get today in "yyyy-mm-dd" format
     ,getCurrentDay: function() {
         var d = new Date();
+        return this.dateToYyyymmdd(d);
+    }
+//    ,getCurrentDay: function() {
+//        var d = new Date();
+//        var month = d.getMonth()+1;
+//        var day = d.getDate();
+//        var yyyyMmDd = d.getFullYear()
+//            + '-' + (10>month ? '0' : '') + month
+//            + '-' + (10>day   ? '0' : '') + day;
+//        return yyyyMmDd;
+//    }
+    ,dateToYyyymmdd: function(d) {
+        if (null == d) {
+            return "";
+        }
+        var month = d.getMonth()+1;
+        var day = d.getDate()+1;
+        var year = d.getFullYear();
+        return year
+            + '-' + this._padZero(month)
+            + '-' + this._padZero(day)
+            ;
+    }
+    ,dateToString: function(d) {
+        if (null == d) {
+            return "";
+        }
         var month = d.getMonth()+1;
         var day = d.getDate();
-        var yyyyMmDd = d.getFullYear()
-            + '-' + (10>month ? '0' : '') + month
-            + '-' + (10>day   ? '0' : '') + day;
-        return yyyyMmDd;
+        var year = d.getFullYear();
+        var hour = d.getHours();
+        var minute = d.getMinutes();
+        var second = d.getSeconds();
+
+        return year
+            + '-' + this._padZero(month)
+            + '-' + this._padZero(day)
+            + 'T' + this._padZero(hour)
+            + ':' + this._padZero(minute)
+            + ':' + this._padZero(second)
+            ;
+    }
+    ,_padZero: function(i) {
+        return (10 > i) ? "0" + i : "" + i;
     }
 
 

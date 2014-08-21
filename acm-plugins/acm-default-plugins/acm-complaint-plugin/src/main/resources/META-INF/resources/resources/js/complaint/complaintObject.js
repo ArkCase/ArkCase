@@ -28,7 +28,11 @@ Complaint.Object = {
         this.setToken(token);
 
         this.$lnkTitle          = $("#caseTitle");
-        this.$lnkTitle.editable({placement: 'right'});
+        this.$lnkTitle.editable({placement: 'bottom'
+            ,success: function(response, newValue) {
+                Complaint.Event.onSaveTitle(newValue);
+            }
+        });
         this.$lnkComplaintNum   = $("#complaintNum");
 
         this.$lnkIncident       = $("#incident");
@@ -38,6 +42,9 @@ Complaint.Object = {
             ,datepicker: {
                 weekStart: 1
             }
+            ,success: function(response, newValue) {
+                Complaint.Event.onSaveIncidentDate(newValue);
+            }
         });
         this.$lnkPriority       = $("#priority");
         this.$lnkAssigned       = $("#assigned");
@@ -45,9 +52,6 @@ Complaint.Object = {
         this.$lnkStatus         = $("#status");
 
         this.$divDetails        = $(".complaintDetails");
-//        this.$divDetails.summernote({
-//            height: 180
-//        });
         this.$btnEditDetails    = $("#tabDetail button:eq(0)");
         this.$btnSaveDetails    = $("#tabDetail button:eq(1)");
         this.$btnEditDetails.on("click", function(e) {Complaint.Event.onClickBtnEditDetails(e);});
@@ -133,8 +137,12 @@ Complaint.Object = {
             choices.push(opt);
         });
 
-        this.$lnkAssigned.editable({placement: 'bottom', value: "",
-            source: choices
+        this.$lnkAssigned.editable({placement: 'bottom'
+            ,value: ""
+            ,source: choices
+            ,success: function(response, newValue) {
+                Complaint.Event.onSaveAssigned(newValue);
+            }
         });
     }
     ,initComplaintType: function(data) {
@@ -146,8 +154,12 @@ Complaint.Object = {
             choices.push(opt);
         });
 
-        this.$lnkComplaintType.editable({placement: 'bottom', value: "",
-            source: choices
+        this.$lnkComplaintType.editable({placement: 'bottom'
+            ,value: ""
+            ,source: choices
+            ,success: function(response, newValue) {
+                Complaint.Event.onSaveComplaintType(newValue);
+            }
         });
     }
     ,initPriority: function(data) {
@@ -159,8 +171,12 @@ Complaint.Object = {
             choices.push(opt);
         });
 
-        this.$lnkPriority.editable({placement: 'bottom', value: "",
-            source: choices
+        this.$lnkPriority.editable({placement: 'bottom'
+            ,value: ""
+            ,source: choices
+            ,success: function(response, newValue) {
+                Complaint.Event.onSavePriority(newValue);
+            }
         });
     }
     ,setValueLnkTitle: function(txt) {

@@ -62,6 +62,38 @@ Complaint.Event = {
 
         Complaint.Object.showTab(node.key);
     }
+    ,onSaveTitle: function(value) {
+        var c = Complaint.getComplaint();
+        c.complaintTitle = value;
+        Complaint.Service.saveComplaint(c);
+    }
+    ,onSaveIncidentDate: function(value) {
+        var c = Complaint.getComplaint();
+        var fullyear = value.getFullYear();
+        var month = value.getMonth();
+        var day = value.getDay();
+        var year = value.getYear();
+        var date0 = value.getDate();
+        var s = Acm.dateToString(value);
+
+        c.created = Acm.dateToString(value);
+        Complaint.Service.saveComplaint(c);
+    } //Acm.getDateFromDatetime(c.created)
+    ,onSavePriority: function(value) {
+        var c = Complaint.getComplaint();
+        c.priority = value;
+        Complaint.Service.saveComplaint(c);
+    }
+    ,onSaveAssigned: function(value) {
+        var c = Complaint.getComplaint();
+        c.assignee = value;
+        Complaint.Service.saveComplaint(c);
+    }
+    ,onSaveComplaintType: function(value) {
+        var c = Complaint.getComplaint();
+        c.complaintTitle = value;
+        Complaint.Service.saveComplaint(c);
+    }
     ,onClickBtnEditDetails: function(e) {
         Complaint.Object.editDivDetails();
     }

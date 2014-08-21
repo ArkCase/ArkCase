@@ -58,18 +58,6 @@
         border: 0px;
     }
 </style>
-
-<script>
-
-    var edit = function() {
-        $('.complaintDetails').summernote({focus: true});
-    };
-    var save = function() {
-        var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
-        $('.complaintDetails').destroy();
-    };
-
-</script>
 //////////////////////////////////////////////////////////////////////
 </jsp:attribute>
 
@@ -158,22 +146,28 @@
                                         <div class="">
                                             <div class=" clearfix">
                                                 <div class="col-xs-4 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"></a> </div>
+                                                    <%--<div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"></a> </div>--%>
+                                                    <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a> </div>
                                                     <small class="text-muted"><a href="#" id="complaintNum" ></a></small></div>
                                                 <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>
+                                                    <%--<div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>--%>
+                                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
                                                     <small class="text-muted">Incident Date</small></div>
                                                 <div class="col-xs-1 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>
+                                                    <%--<div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>--%>
+                                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
                                                     <small class="text-muted">Priority</small></div>
                                                 <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>
+                                                    <%--<div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>--%>
+                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
                                                     <small class="text-muted">Assigned To</small></div>
                                                 <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>
+                                                    <%--<div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>--%>
+                                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
                                                     <small class="text-muted">Subject Type</small></div>
                                                 <div class="col-xs-1">
-                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div> <small class="text-muted">Status</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div>
+                                                    <small class="text-muted">Status</small></div>
                                             </div>
                                         </div>
 
@@ -194,8 +188,6 @@
                                                     <ul class="nav nav-pills pull-right">
                                                         <li>
                                                             <div class="btn-group padder-v2">
-                                                                <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>--%>
-                                                                <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>--%>
                                                                 <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
                                                                 <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
                                                                 <ul class="dropdown-menu pull-right">
@@ -229,211 +221,6 @@
                                                 <div id="divPeople" style="width:100%"></div>
                                             </section>
                                         </div>
-
-                                    <%--<div class="col-md-12">--%>
-                                    <%--<section class="panel b-a">--%>
-                                    <%--<div class="panel-heading b-b bg-info">--%>
-                                        <%--<ul class="nav nav-pills pull-right">--%>
-                                            <%--<li>--%>
-                                                <%--<div class="btn-group padder-v2">--%>
-                                                    <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-user"></i> New</button>--%>
-                                                    <%--<ul class="dropdown-menu pull-right">--%>
-                                                        <%--<li><a href="#">Other menu items</a></li>--%>
-                                                    <%--</ul>--%>
-                                                <%--</div>--%>
-                                            <%--</li>--%>
-                                            <%--<li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>--%>
-                                        <%--</ul>--%>
-                                        <%--<a href="#" class="font-bold">People</a> </div>--%>
-                                    <%--<div class="panel-body no-padder">--%>
-                                        <%--<table class="table table-striped th-sortable table-hover" >--%>
-                                            <%--<thead>--%>
-                                            <%--<tr>--%>
-                                                <%--<th width="140">Entities</th>--%>
-                                                <%--<th>Title</th>--%>
-                                                <%--<th>First Name</th>--%>
-                                                <%--<th>Last Name</th>--%>
-                                                <%--<th>Type</th>--%>
-                                                <%--<th width="85">Action</th>--%>
-                                            <%--</tr>--%>
-                                            <%--</thead>--%>
-                                            <%--<tbody>--%>
-                                            <%--<tr class="odd gradeA">--%>
-                                                <%--<td><a href="#communicationDevices1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-phone"></i></a> <a href="#organizations1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-book"></i></a> <a href="#locations1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-map-marker"></i></a> <a href="#aliases1" class="inline animated btn btn-default btn-xs" data-toggle="class:show"><i class="fa fa-users"></i></a></td>--%>
-                                                <%--<td>[Title]</td>--%>
-                                                <%--<td>[First Name]</td>--%>
-                                                <%--<td>[Last Name]</td>--%>
-                                                <%--<td>[Type]</td>--%>
-                                                <%--<td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>--%>
-                                                    <%--<button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>--%>
-                                            <%--</tr>--%>
-                                            <%--<tr>--%>
-                                                <%--<td colspan="6" class=" no-padder"><section id="communicationDevices1" class="panel b-a hide">--%>
-                                                    <%--<div class="panel-heading b-b bg-light">--%>
-                                                        <%--<ul class="nav nav-pills pull-right">--%>
-                                                            <%--<li>--%>
-                                                                <%--<div class="btn-group padder-v2">--%>
-                                                                    <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-phone"></i> New</button>--%>
-                                                                    <%--<ul class="dropdown-menu pull-right">--%>
-                                                                        <%--<li><a href="#">Other menu items</a></li>--%>
-                                                                    <%--</ul>--%>
-                                                                <%--</div>--%>
-                                                            <%--</li>--%>
-                                                            <%--<li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>--%>
-                                                        <%--</ul>--%>
-                                                        <%--<a href="#" class="font-bold">Communication Devices</a> </div>--%>
-                                                    <%--<div class="panel-body no-padder">--%>
-                                                        <%--<table class="table table-striped th-sortable table-hover" width="100%">--%>
-                                                            <%--<thead>--%>
-                                                            <%--<tr>--%>
-                                                                <%--<th>Type</th>--%>
-                                                                <%--<th>Value</th>--%>
-                                                                <%--<th>Date Added</th>--%>
-                                                                <%--<th>Added By</th>--%>
-                                                                <%--<th width="9%">Action</th>--%>
-                                                            <%--</tr>--%>
-                                                            <%--</thead>--%>
-                                                            <%--<tbody>--%>
-                                                            <%--<tr class="odd gradeA">--%>
-                                                                <%--<td>[Type]</td>--%>
-                                                                <%--<td>[Value]</td>--%>
-                                                                <%--<td>[Date Added]</td>--%>
-                                                                <%--<td>[Added By]</td>--%>
-                                                                <%--<td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>--%>
-                                                                    <%--<button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>--%>
-                                                            <%--</tr>--%>
-                                                            <%--</tbody>--%>
-                                                        <%--</table>--%>
-                                                    <%--</div>--%>
-                                                <%--</section>--%>
-                                                    <%--<section id="organizations1" class="panel b-a hide">--%>
-                                                        <%--<div class="panel-heading b-b bg-light">--%>
-                                                            <%--<ul class="nav nav-pills pull-right">--%>
-                                                                <%--<li>--%>
-                                                                    <%--<div class="btn-group padder-v2">--%>
-                                                                        <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-book"></i> New</button>--%>
-                                                                        <%--<ul class="dropdown-menu pull-right">--%>
-                                                                            <%--<li><a href="#">Other menu items</a></li>--%>
-                                                                        <%--</ul>--%>
-                                                                    <%--</div>--%>
-                                                                <%--</li>--%>
-                                                                <%--<li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>--%>
-                                                            <%--</ul>--%>
-                                                            <%--<a href="#" class="font-bold">Organizations</a> </div>--%>
-                                                        <%--<div class="panel-body no-padder">--%>
-                                                            <%--<table class="table table-striped th-sortable table-hover" width="100%">--%>
-                                                                <%--<thead>--%>
-                                                                <%--<tr>--%>
-                                                                    <%--<th>Type</th>--%>
-                                                                    <%--<th>Value</th>--%>
-                                                                    <%--<th>Date Added</th>--%>
-                                                                    <%--<th>Added By</th>--%>
-                                                                    <%--<th width="9%">Action</th>--%>
-                                                                <%--</tr>--%>
-                                                                <%--</thead>--%>
-                                                                <%--<tbody>--%>
-                                                                <%--<tr class="odd gradeA">--%>
-                                                                    <%--<td>[Type]</td>--%>
-                                                                    <%--<td>[Value]</td>--%>
-                                                                    <%--<td>[Date Added]</td>--%>
-                                                                    <%--<td>[Added By]</td>--%>
-                                                                    <%--<td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>--%>
-                                                                        <%--<button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>--%>
-                                                                <%--</tr>--%>
-                                                                <%--</tbody>--%>
-                                                            <%--</table>--%>
-                                                        <%--</div>--%>
-                                                    <%--</section>--%>
-                                                    <%--<section id="locations1" class="panel b-a hide">--%>
-                                                        <%--<div class="panel-heading b-b bg-light">--%>
-                                                            <%--<ul class="nav nav-pills pull-right">--%>
-                                                                <%--<li>--%>
-                                                                    <%--<div class="btn-group padder-v2">--%>
-                                                                        <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-map-marker"></i> New</button>--%>
-                                                                        <%--<ul class="dropdown-menu pull-right">--%>
-                                                                            <%--<li><a href="#">Other menu items</a></li>--%>
-                                                                        <%--</ul>--%>
-                                                                    <%--</div>--%>
-                                                                <%--</li>--%>
-                                                                <%--<li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>--%>
-                                                            <%--</ul>--%>
-                                                            <%--<a href="#" class="font-bold">Locations</a> </div>--%>
-                                                        <%--<div class="panel-body no-padder">--%>
-                                                            <%--<table class="table table-striped th-sortable table-hover" width="100%">--%>
-                                                                <%--<thead>--%>
-                                                                <%--<tr>--%>
-                                                                    <%--<th>Type</th>--%>
-                                                                    <%--<th>Address</th>--%>
-                                                                    <%--<th>City</th>--%>
-                                                                    <%--<th>State</th>--%>
-                                                                    <%--<th>ZIP</th>--%>
-                                                                    <%--<th>Country</th>--%>
-                                                                    <%--<th>Date Added</th>--%>
-                                                                    <%--<th>Added By</th>--%>
-                                                                    <%--<th width="9%">Action</th>--%>
-                                                                <%--</tr>--%>
-                                                                <%--</thead>--%>
-                                                                <%--<tbody>--%>
-                                                                <%--<tr class="odd gradeA">--%>
-                                                                    <%--<td>[Type]</td>--%>
-                                                                    <%--<td>[Address]</td>--%>
-                                                                    <%--<td>[City]</td>--%>
-                                                                    <%--<td>[State]</td>--%>
-                                                                    <%--<td>[ZIP]</td>--%>
-                                                                    <%--<td>[Country]</td>--%>
-                                                                    <%--<td>[Date Added]</td>--%>
-                                                                    <%--<td>[Added By]</td>--%>
-                                                                    <%--<td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>--%>
-                                                                        <%--<button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>--%>
-                                                                <%--</tr>--%>
-                                                                <%--</tbody>--%>
-                                                            <%--</table>--%>
-                                                        <%--</div>--%>
-                                                    <%--</section>--%>
-                                                    <%--<section id="aliases1" class="panel b-a hide">--%>
-                                                        <%--<div class="panel-heading b-b bg-light">--%>
-                                                            <%--<ul class="nav nav-pills pull-right">--%>
-                                                                <%--<li>--%>
-                                                                    <%--<div class="btn-group padder-v2">--%>
-                                                                        <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-users"></i> New</button>--%>
-                                                                        <%--<ul class="dropdown-menu pull-right">--%>
-                                                                            <%--<li><a href="#">Other menu items</a></li>--%>
-                                                                        <%--</ul>--%>
-                                                                    <%--</div>--%>
-                                                                <%--</li>--%>
-                                                                <%--<li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>--%>
-                                                            <%--</ul>--%>
-                                                            <%--<a href="#" class="font-bold">Aliases</a> </div>--%>
-                                                        <%--<div class="panel-body no-padder">--%>
-                                                            <%--<table class="table table-striped th-sortable table-hover" width="100%">--%>
-                                                                <%--<thead>--%>
-                                                                <%--<tr>--%>
-                                                                    <%--<th>Type</th>--%>
-                                                                    <%--<th>Value</th>--%>
-                                                                    <%--<th>Date Added</th>--%>
-                                                                    <%--<th>Added By</th>--%>
-                                                                    <%--<th width="9%">Action</th>--%>
-                                                                <%--</tr>--%>
-                                                                <%--</thead>--%>
-                                                                <%--<tbody>--%>
-                                                                <%--<tr class="odd gradeA">--%>
-                                                                    <%--<td>[Type]</td>--%>
-                                                                    <%--<td>[Value]</td>--%>
-                                                                    <%--<td>[Date Added]</td>--%>
-                                                                    <%--<td>[Added By]</td>--%>
-                                                                    <%--<td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Edit Record"><i class="fa fa-edit"></i></button>--%>
-                                                                        <%--<button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>--%>
-                                                                <%--</tr>--%>
-                                                                <%--</tbody>--%>
-                                                            <%--</table>--%>
-                                                        <%--</div>--%>
-                                                    <%--</section></td>--%>
-                                            <%--</tr>--%>
-                                            <%--</tbody>--%>
-                                        <%--</table>--%>
-                                    <%--</div>--%>
-                                    <%--</section>--%>
-                                    <%--</div>--%>
                                     </div>
 
 
