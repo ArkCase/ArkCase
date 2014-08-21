@@ -85,7 +85,7 @@ ComplaintWizard.Object = {
         Acm.Object.setEnable(this.$btnSave, enable);
     }
     ,getHtmlDivComplaintDetails: function() {
-        return AcmEx.Object.getSummernote(this.$divComplaintDetails);
+        return AcmEx.Object.getSummerNote(this.$divComplaintDetails);
     }
     ,getValueEdtIncidentDate: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtIncidentDate);

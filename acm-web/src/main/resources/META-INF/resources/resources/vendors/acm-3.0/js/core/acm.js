@@ -15,12 +15,12 @@ var Acm = Acm || {
         Acm.deferred(Acm.Event.onPostInit);
     }
 
-    ,Dialog : {}
-    ,Dispatcher : {}
-    ,Ajax : {}
-    ,Object : {}
-    ,Event : {}
-    ,Rule : {}
+//    ,Dialog : {}
+//    ,Dispatcher : {}
+//    ,Ajax : {}
+//    ,Object : {}
+//    ,Event : {}
+//    ,Rule : {}
 
 
 	,isEmpty: function (val) {

@@ -15,11 +15,11 @@ var Sidebar = Sidebar || {
         Acm.deferred(Sidebar.Event.onPostInit);
     }
 
-    ,Object: {}
-    ,Event:{}
-    ,Page: {}
-    ,Rule: {}
-    ,Service: {}
-    ,Callback: {}
+//    ,Object: {}
+//    ,Event:{}
+//    ,Page: {}
+//    ,Rule: {}
+//    ,Service: {}
+//    ,Callback: {}
 };
 

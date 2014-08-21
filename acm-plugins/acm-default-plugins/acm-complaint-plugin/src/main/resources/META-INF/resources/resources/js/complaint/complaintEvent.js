@@ -53,7 +53,7 @@ Complaint.Event = {
 
         var complaint = Complaint.cacheComplaint.get(complaintId);
         if (complaint) {
-            Complaint.Object.updateDetail(complaint);
+            Complaint.Object.populateComplaint(complaint);
         } else {
             Complaint.Service.retrieveDetail(complaintId);
         }
@@ -62,7 +62,15 @@ Complaint.Event = {
 
         Complaint.Object.showTab(node.key);
     }
-
+    ,onClickBtnEditDetails: function(e) {
+        Complaint.Object.editDivDetails();
+    }
+    ,onClickBtnSaveDetails: function(e) {
+        var c = Complaint.getComplaint();
+        var html = Complaint.Object.saveDivDetails();
+        c.details = html;
+        Complaint.Service.saveComplaint(c);
+    }
     ,onClickSpanAddDocument: function(e) {
         var report = Complaint.Object.getSelectReport();
         var token = Complaint.Object.setToken();
