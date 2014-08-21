@@ -4626,7 +4626,11 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
     }
 ]), angular.module("sample-01", ["adf", "LocalStorageModule"]).controller("sample01Ctrl", ["$scope", "$http", "localStorageService", "model",
     function($scope, $http, localStorageService, model) {
-        $scope.name = "sample-01", $scope.model = angular.fromJson(model), $scope.collapsible = !1, $scope.$on("adfDashboardChanged", function(event, name, model) {
+        $scope.name = "sample-01";
+        $scope.model = angular.fromJson(model);
+        $scope.collapsible = !1;
+
+        $scope.$on("adfDashboardChanged", function(event, name, model) {
             localStorageService.set(name, model);
             var postObject = new Object;
             postObject.dashboardConfig = JSON.stringify(model), $http({
@@ -4789,7 +4793,9 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
     }
 ]).controller("myTasksCtrl", ["$scope", "$filter", "$http", "ngTableParams",
     function($scope, $filter, $http, ngTableParams) {
-        $http.get("/api/latest/plugin/task/forUser/"+App.Object.getUserName()).success(function(data) {
+
+        var url="/api/latest/plugin/task/forUser/"+App.Object.getUserName();
+        $http.get(url).success(function(data) {
             $scope.tableParams = new ngTableParams({
                 page: 1,
                 count: 10,
@@ -4820,7 +4826,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
     }
 ]).controller("myComplaintsCtrl", ["$scope", "$filter", "$http", "ngTableParams",
     function($scope, $filter, $http, ngTableParams) {
-        $http.get("/api/latest/plugin/complaint/forUser/"+App.Object.getUserName()).success(function(data) {
+        var url = "/api/latest/plugin/complaint/forUser/"+App.Object.getUserName();
+        $http.get(url).success(function(data) {
             $scope.tableParams = new ngTableParams({
                 page: 1,
                 count: 10,
