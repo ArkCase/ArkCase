@@ -5,6 +5,9 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
+    <div id="searchData" itemscope="true" style="display: none">
+        <span itemprop="searchDef">${searchDef}</span>
+    </div>
 </script>
 </jsp:attribute>
 
@@ -58,6 +61,7 @@
 
                             </div>
 
+<!-- ================================================ -->
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div class="form-group">
                                 <label class="col-sm-6 control-label">Complaints</label>
@@ -101,7 +105,7 @@
                                 </div>
 
                             </div>
-
+ <!-- ================================================ -->
                             <div class="line line-dashed b-b line-lg pull-in"></div>
 
                             <div class="form-group">
@@ -420,8 +424,6 @@
         var val = $(this).val();
         $('#peopleFields').slideToggle();
     });
-
-
 
 </script>
 
