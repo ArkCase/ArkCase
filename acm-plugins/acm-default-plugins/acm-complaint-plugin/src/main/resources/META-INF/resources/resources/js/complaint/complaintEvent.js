@@ -91,7 +91,7 @@ Complaint.Event = {
     }
     ,onSaveComplaintType: function(value) {
         var c = Complaint.getComplaint();
-        c.complaintTitle = value;
+        c.complaintType = value;
         Complaint.Service.saveComplaint(c);
     }
     ,onClickBtnEditDetails: function(e) {

@@ -21,6 +21,13 @@ Search.Event = {
         e.preventDefault();
     }
 
+    ,onClickToggle: function(e) {
+        var id = $(e).attr("id");
+        Search.Object.slideToggle(id);
+
+    }
+
+
     ,onClickBtnToggleSubNav : function(e) {
         //alert("toggle");
         //Search.Object.showSubNav(true);
