@@ -40,7 +40,7 @@
 <jsp:body>
 <section id="content">
 <section class="vbox">
-<%--<section class="scrollable padder">--%>
+<section class="scrollable">
 
     <div class="container" ng-app="sample" style="width:100%">
         <%--<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">--%>
