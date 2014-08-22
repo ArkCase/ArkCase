@@ -4826,7 +4826,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
     }
 ]).controller("myComplaintsCtrl", ["$scope", "$filter", "$http", "ngTableParams",
     function($scope, $filter, $http, ngTableParams) {
-        var url = App.Object.getContextPath() + "/api/latest/plugin/complaints/forUser/" + App.Object.getUserName();
+        var url = App.Object.getContextPath() + "/api/latest/plugin/complaint/forUser/" + App.Object.getUserName();
         $http.get(url).success(function(data) {
             $scope.tableParams = new ngTableParams({
                 page: 1,
