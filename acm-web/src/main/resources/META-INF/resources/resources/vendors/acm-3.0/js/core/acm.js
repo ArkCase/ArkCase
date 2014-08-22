@@ -163,18 +163,20 @@ var Acm = Acm || {
         return this.dateToYyyymmdd(d);
     }
     //get day string in "yyyy-mm-dd" format
+    //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
     ,dateToYyyymmdd: function(d) {
         if (null == d) {
             return "";
         }
         var month = d.getMonth()+1;
-        var day = d.getDate()+1;
+        var day = d.getDate();
         var year = d.getFullYear();
         return year
             + "-" + this._padZero(month)
             + "-" + this._padZero(day)
             ;
     }
+    //parameter d from x-editable date format, both getDate() and getMonth() are zero based
     ,dateToString: function(d) {
         if (null == d) {
             return "";
