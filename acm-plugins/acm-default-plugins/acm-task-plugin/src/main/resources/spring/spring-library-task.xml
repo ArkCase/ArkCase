@@ -70,6 +70,11 @@
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property value="GET" name="httpMethod"/>
+                    <property value="/api/{version}/plugin/task/list" name="url"/>
+                    <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/task/completeTask/{taskId}"/>
                     <property name="requiredPrivilege" ref="acmTaskCompletePrivilege"/>

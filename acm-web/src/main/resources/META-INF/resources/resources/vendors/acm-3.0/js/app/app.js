@@ -13,16 +13,18 @@ var App = App || {
         Acm.deferred(App.Event.onPostInit);
     }
 
-    ,Object : {}
-    ,Event : {}
-    ,Service : {}
-    ,Callback : {}
+//    ,Object : {}
+//    ,Event : {}
+//    ,Service : {}
+//    ,Callback : {}
 
 
     ,OBJTYPE_CASE:        "Case"
     ,OBJTYPE_COMPLAINT:   "Complaint"
     ,OBJTYPE_TASK:        "Task"
     ,OBJTYPE_DOCUMENT:    "Document"
+    ,OBJTYPE_PEOPLE:    "People"
+
 
     ,getContextPath: function() {
         return App.Object.getContextPath();
@@ -34,6 +36,20 @@ var App = App || {
     ,gotoPage: function(url) {
         window.location.href = App.getContextPath() + url;
     }
+
+
+    ,getComplaintTreeInfo: function() {
+        var data = sessionStorage.getItem("AcmComplaintTreeInfo");
+        if (Acm.isEmpty(data)) {
+            return null;
+        }
+        return JSON.parse(data);
+    }
+    ,setComplaintTreeInfo: function(treeInfo) {
+        var data = (Acm.isEmpty(treeInfo))? null : JSON.stringify(treeInfo);
+        sessionStorage.setItem("AcmComplaintTreeInfo", data);
+    }
+
 
 };
 

@@ -61,7 +61,7 @@ public class GetAuthenticationTokenAPIControllerTest extends EasyMockSupport
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockAuthenticationTokenService.storeAuthentication(mockAuthentication)).andReturn(token);
+        expect(mockAuthenticationTokenService.getTokenForAuthentication(mockAuthentication)).andReturn(token);
 
         replayAll();
 

@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.complaint.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import static javax.persistence.CascadeType.ALL;
 
 
 /**
@@ -114,7 +116,10 @@ public class Complaint implements Serializable, AcmObject
      */
     @Transient
     private List<String> approvers;
-
+    
+    @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "cm_person_assoc_parent_id")
+    private List<PersonAssociation> personAssoc = new ArrayList<>();
 
 
     public Complaint()
@@ -140,6 +145,10 @@ public class Complaint implements Serializable, AcmObject
         {
             childObject.setParentId(complaintId);
         }
+        for ( PersonAssociation perAssoc : personAssoc )
+        {
+            perAssoc.setParentId(complaintId);
+        }
     }
 
     @PreUpdate
@@ -149,8 +158,8 @@ public class Complaint implements Serializable, AcmObject
         {
             log.debug("In beforeUpdate()");
         }
-        setModified(new Date());
-    }
+        setModified(new Date());        
+      }
 
     public Long getComplaintId()
     {
@@ -247,6 +256,13 @@ public class Complaint implements Serializable, AcmObject
                 oa.setCreated(created);
             }
         }
+        for ( PersonAssociation pa : personAssoc )
+        {
+            if (pa.getCreated() == null)
+            {
+                pa.setCreated(created);
+            }
+        }
 
 
     }
@@ -276,6 +292,13 @@ public class Complaint implements Serializable, AcmObject
                 oa.setCreator(creator);
             }
         }
+        for ( PersonAssociation pa : personAssoc )
+        {
+            if ( pa.getCreator() == null )
+            {
+                pa.setCreator(creator);
+            }
+        }
     }
 
     public Date getModified()
@@ -301,6 +324,13 @@ public class Complaint implements Serializable, AcmObject
             if ( oa.getModified() == null )
             {
                 oa.setModified(modified);
+            }
+        }
+        for ( PersonAssociation pa : personAssoc )
+        {
+            if ( pa.getModified() == null ) 
+            {
+                pa.setModified(modified);
             }
         }
     }
@@ -329,6 +359,14 @@ public class Complaint implements Serializable, AcmObject
             if ( oa.getModifier() == null )
             {
                 oa.setModifier(modifier);
+            }
+        }
+        
+        for ( PersonAssociation pa : personAssoc )
+        {
+            if ( pa.getModifier() == null )
+            {
+                pa.setModifier(modifier);
             }
         }
     }
@@ -411,4 +449,21 @@ public class Complaint implements Serializable, AcmObject
     {
         return "Complaint";
     }
+
+    public List<PersonAssociation> getPersonAssociation() 
+    {
+        return personAssoc;
+    }
+
+    public void setPersonAssociation(List<PersonAssociation> personAssociation) 
+    {
+               
+        this.personAssoc = personAssociation;
+        for ( PersonAssociation perAssoc : personAssociation )
+        {
+            perAssoc.setParentType("COMPLAINT");
+            perAssoc.setParentId(getComplaintId());
+        }
+    } 
+    
 }

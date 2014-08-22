@@ -58,6 +58,11 @@
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarService.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarCallback.js"></script>
 
+<script type="text/javascript">
+    if ("undefined" != typeof App) {
+        App.initialize();
+    }
+</script>
 <jsp:invoke fragment="endOfBody"/>
 <%@include file="/WEB-INF/tagf/ready.tagf"%>
 </body>

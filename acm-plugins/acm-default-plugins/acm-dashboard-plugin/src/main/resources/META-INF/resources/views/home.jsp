@@ -7,7 +7,7 @@
     <title>${pageDescriptor.title}</title>
 
     <%--<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_angular}/css/sample.min.0a2f966c.css" />--%>
-
+    <link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_angular}/css/ng-table.css"/>
     <!--[if lte IE 8]>
       <script>
         document.createElement('adf-dashboard');
@@ -33,13 +33,14 @@
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular.min.7931140c.js"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular-route.min.7d4fa7e4.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/sample.min.b9e5b166.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/ng-table.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/sample.js"></script>
 </jsp:attribute>
 
 <jsp:body>
 <section id="content">
 <section class="vbox">
-<%--<section class="scrollable padder">--%>
+<section class="scrollable">
 
     <div class="container" ng-app="sample" style="width:100%">
         <%--<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">--%>

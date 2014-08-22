@@ -12,14 +12,31 @@ public class AuthenticationTokenService
 {
     private Cache authenticationTokenCache;
 
-    public String storeAuthentication(Authentication auth)
+    /**
+     * Retrieve a token corresponding to the given Authentication.  The token can be placed in service URLs
+     * like so: http://$acm_host/$acm_servlet_context/api/v1/$api_service?acm_ticket=$token.
+     * <p/>
+     * The token remains valid as long as service calls using the token are made at least every half hour.  After
+     * 30 minutes of non-use (e.g. no service calls made with the token), the token is no longer valid.
+     * @param auth
+     * @return
+     */
+    public String getTokenForAuthentication(Authentication auth)
     {
         String key = UUID.randomUUID().toString();
         getAuthenticationTokenCache().put(key, auth);
         return key;
     }
 
-    public Authentication retrieveAuthentication(String key) throws IllegalArgumentException
+    /**
+     * Retrieve the authentication object corresponding to a token.  The token should have been previously retrieved
+     * by a call to getTokenForAuthentication.
+     *
+     * @param key A token (received by calling getTokenForAuthentication)
+     * @return The authentication provided when the token was retrieved
+     * @throws IllegalArgumentException If the token is no longer valid.
+     */
+    public Authentication getAuthenticationForToken(String key) throws IllegalArgumentException
     {
         Cache.ValueWrapper found = getAuthenticationTokenCache().get(key);
 

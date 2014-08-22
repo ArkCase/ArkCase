@@ -7,7 +7,10 @@
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
     </bean>
-
+    <bean  id="listAllTasksAPIController" class="com.armedia.acm.plugins.task.web.api.ListAllTasksAPIController">
+        <property ref="acmTaskDao" name="taskDao"/>
+        <property ref="taskEventPublisher" name="taskEventPublisher"/>
+    </bean>
     <bean id="completeTaskAPIController" class="com.armedia.acm.plugins.task.web.api.CompleteTaskAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>

@@ -19,7 +19,6 @@
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="resources/js/fancytree/jquery.fancytree.js"></script>
-<script src="resources/js/fancytree/jquery.fancytree.table.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
 </head>
 <body class="">
@@ -116,7 +115,7 @@
             <section class="hbox stretch"><!-- /.aside --> 
               <!-- .aside -->
               
-              <aside class="aside-xl bg-light lt">
+              <aside class="aside-lg bg-light lt">
                 <section class="vbox animated fadeInLeft">
                   <section class="scrollable">
                     <header class="dk header">
@@ -152,32 +151,7 @@
                     </div>
                     <div class="row m-b">
                       <div class="col-sm-12">
-                        <table id="tree">
-                          <colgroup>
-                          <col width="*">
-                            </col>
-                          
-                          <col width="*">
-                            </col>
-                          
-                          <col width="*">
-                            </col>
-                          
-                          </colgroup>
-                          <thead>
-                            <tr>
-                              <th></th>
-                              <th></th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td></td>
-                              <td></td>
-                            </tr>
-                          </tbody>
-                        </table>
+                        <div id="tree"></div>
                       </div>
                     </div>
                   </section>
@@ -187,46 +161,37 @@
                 <section class="vbox">
                   <section class="scrollable">
                     <div class="wrapper dk  clearfix">
-                      <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> (2014-03-12321)</h4>
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <div class="">
+                            <div class=" clearfix">
+                              <div class="col-xs-4 b-r">
+                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> </div>
+                                <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
+                                <small class="text-muted">Incident Date</small></div>
+                              <div class="col-xs-1 b-r">
+                                <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
+                                <small class="text-muted">Priority</small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">AJ McClary</a></div>
+                                <small class="text-muted">Assigned To</small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
+                                <small class="text-muted">Subject Type</small></div>
+                              <div class="col-xs-1">
+                                <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div> <small class="text-muted">Status</small></div>
+                            </div>
+                          </div>
+                   
+                    </div></div>
                     </div>
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
                     <div>
-                      <div class="wrapper">
-                        <div class="row">
-                          <div class="col-xs-6">
-                            <div class="panel b-a  bg-gradient">
-                              <div class="padder-v text-center clearfix">
-                                <div class="col-xs-4 b-r">
-                                  <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
-                                  <small class="text-muted">Incident Date</small></div>
-                                <div class="col-xs-4 b-r">
-                                  <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
-                                  <small class="text-muted">Priority</small></div>
-                                <div class="col-xs-4">
-                                  <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">AJ McClary</a></div>
-                                  <small class="text-muted">Assigned To</small></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-xs-3">
-                            <div class="panel b-a  bg-gradient">
-                              <div class="padder-v text-center clearfix">
-                                <div class="col-xs-12">
-                                  <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
-                                  <small class="text-muted">Subject Type</small></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-xs-3 ">
-                            <div class="panel b-a bg-gradient">
-                              <div class="padder-v text-center clearfix">
-                                <div class="col-xs-12">
-                                  <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
-                                  <small class="text-muted">Status</small></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <div class="wrapper"> </div>
                     </div>
                     </div>
                   </section>
@@ -241,34 +206,10 @@
     </section>
   </section>
 </section>
-<style>
-table.fancytree-ext-table {
-  width: 100%;
-  outline: 0;
-}
-
-table.fancytree-ext-table tbody tr td {
-  border: 0px;
-}
-</style>
 <script type='text/javascript'>//<![CDATA[ 
 
 $(function() {
     $("#tree").fancytree({
-
-        extensions: ["table"],
-        table: {
-            nodeColumnIdx: 0, // render the node title into the 2nd column
-            checkboxColumnIdx: 1 // render the checkboxes into the 1st column
-        },
-
-        renderColumns: function(event, data) {
-            var node = data.node,
-                $tdList = $(node.tr).find(">td");
-            // (index #0 is rendered by fancytree by adding the checkbox)
-            $tdList.eq(1).text(node.data.description1);
-            // (index #2 is rendered by fancytree)
-        },
 
 activate: function(event, data) {
 				var node = data.node;
@@ -282,10 +223,9 @@ activate: function(event, data) {
 			},
 
         source: [{
-            title: "2014-03-12321",
-			href: "complaints.html",
-            test: "test",
-            description1: "Complaint Title",
+            title: "Sample Complaint Title <em>(2014-03-12321)</em>",
+href: "complaints.html",
+tooltip: "2014-03-12321",
             expanded: "fancytree-expanded",
             children: [{
                 title: "Incident 1",
@@ -307,7 +247,7 @@ activate: function(event, data) {
 					href: "complaintNotes.html"
                 }]
             }, {
-                title: "Attachments",
+                title: "Documents",
                 folder: true,
 expanded: "fancytree-expanded",
                 children: [{
@@ -400,6 +340,10 @@ expanded: "fancytree-expanded",
                 title: "References",
                 folder: true,
 expanded: "fancytree-expanded", children: [{
+                    title: "Other Complaints",
+                    folder: false, 
+					href: "complaintOtherComplaints.html"
+                },{
                     title: "Other Cases",
                     folder: false, 
 					href: "complaintOtherCases.html"

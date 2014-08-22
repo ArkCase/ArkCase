@@ -93,7 +93,7 @@ TaskWizard.Object = {
         return Acm.Object.getSelectValue(this.$selTaskFlags);
     }
     ,getHtmlDivDetail: function() {
-        return Acm.Object.getSummernote(this.$divDetail);
+        return AcmEx.Object.getSummerNote(this.$divDetail);
     }
 
     ,setTaskData : function(data) {

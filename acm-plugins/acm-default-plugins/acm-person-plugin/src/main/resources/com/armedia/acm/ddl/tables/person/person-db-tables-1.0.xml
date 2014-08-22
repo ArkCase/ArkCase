@@ -292,8 +292,45 @@
                  <constraints nullable="false"/>
              </column>
          </addColumn>
-         
-         
+                 
+     </changeSet>
+     
+     <changeSet id="15-add-person-association-table" author="tsedalu"> 
+         <createTable tableName="acm_person_assoc">
+             <column name="cm_person_associ_id" type="NUMBER(32,0)">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_person_assoc"/>
+            </column>
+            <column name="cm_person_assoc_person_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_assoc_parent_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_assoc_person_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_assoc_parent_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_assoc_person_desc" type ="VARCHAR(4000)">
+                <constraints nullable= "false"/>
+            </column>
+             <column name="cm_person_assoc_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_assoc_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_assoc_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_person_assoc_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+         </createTable>
      </changeSet>
 </databaseChangeLog>
 

@@ -144,6 +144,31 @@ class ActivitiTaskDao implements TaskDao
 
         return retval;
     }
+    @Override
+    public List<AcmTask> allTasks() {
+        if ( log.isInfoEnabled() )
+        {
+            log.info("Finding all tasks for all users '");
+        }
+        List<Task> activitiTasks =
+                getActivitiTaskService().createTaskQuery().includeProcessVariables().
+                        orderByDueDate().desc().list();
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Found '" + activitiTasks.size() + "' tasks for all users");
+        }
+
+        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
+
+        for ( Task activitiTask : activitiTasks )
+        {
+            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
+
+            retval.add(acmTask);
+        }
+        return retval;
+    }
 
     @Override
     public AcmTask findById(Long taskId) throws AcmTaskException

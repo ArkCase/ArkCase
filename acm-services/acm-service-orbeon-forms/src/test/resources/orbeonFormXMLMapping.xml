@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
+                         "http://castor.org/mapping.dtd">
+<mapping>
+	<description>Orbeon forms description of the mapping</description>
+	
+	<class name="com.armedia.acm.service.orbeon.forms.model.ROIFormOrbeon">
+		<map-to xml="form"/>
+   		<field name="footer" type="com.armedia.acm.service.orbeon.forms.model.ROIFormFooter">
+      		<bind-xml name="footer" node="element"/>
+   		</field>
+   		<field name="detail" type="com.armedia.acm.service.orbeon.forms.model.ROIFormReportDetail">
+      		<bind-xml name="reportDetail" node="element"/>
+   		</field>
+   		<field name="header" type="com.armedia.acm.service.orbeon.forms.model.FormHeader">
+      		<bind-xml name="header" node="element"/>
+   		</field>
+   		<field name="attachment" type="com.armedia.acm.service.orbeon.forms.model.FormAttachment">
+      		<bind-xml name="attachment" node="element"/>
+   		</field>
+   	</class>
+	
+	<class name="com.armedia.acm.service.orbeon.forms.model.FormHeader">
+		<map-to xml="header"/>
+   		<field name="reportTitle" type="string">
+      		<bind-xml name="reportTitle" node="element"/>
+   		</field>
+   		<field name="preparedDate" type="string">
+      		<bind-xml name="preparedDate" node="element"/>
+   		</field>
+   		<field name="lastName" type="string">
+      		<bind-xml name="lastName" node="element"/>
+   		</field>
+   		<field name="firstName" type="string">
+      		<bind-xml name="firstName" node="element"/>
+   		</field>
+   	</class>
+
+	<class name="com.armedia.acm.service.orbeon.forms.model.ROIFormReportDetail">
+		<map-to xml="reportDetail"/>
+   		<field name="complaintNumber" type="string">
+      		<bind-xml name="complaintNumber" node="element"/>
+   		</field>
+   		<field name="complaintTitle" type="string">
+      		<bind-xml name="complaintTitle" node="element"/>
+   		</field>
+   		<field name="complaintPriority" type="string">
+      		<bind-xml name="complaintPriority" node="element"/>
+   		</field>
+		<field name="reportSummary" type="string">
+      		<bind-xml name="reportSummary" node="element"/>
+   		</field>
+   	</class>
+
+	<class name="com.armedia.acm.service.orbeon.forms.model.ROIFormFooter">
+		<map-to xml="footer"/>
+   		<field name="acm_ticket" type="string">
+      		<bind-xml name="acm_ticket" node="element"/>
+   		</field>
+   		<field name="complaint_id" type="string">
+      		<bind-xml name="complaint_id" node="element"/>
+   		</field>
+  	</class>
+  	
+	<class name="com.armedia.acm.service.orbeon.forms.model.FormAttachment">
+		<map-to xml="attachment"/>
+		<field name="fileInfo" type="string" collection="arraylist">
+        	<bind-xml name="document" />
+      	</field>
+  	</class>
+	
+</mapping>

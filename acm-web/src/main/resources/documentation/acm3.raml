@@ -47,7 +47,14 @@ securitySchemes:
                     "value": "john.doe@gmail.com"
                   }
                 ],
-                "securityTags": ["Anonymous", "Confidential", "Top Secret"]
+                "securityTags": ["Anonymous", "Confidential", "Top Secret"],
+                "personAliases": [
+                {
+                  "id": null,
+                  "aliasType": "Nick Name",
+                  "aliasValue": "Nick"
+                }
+                ]		                 
               }
             }
       responses:
@@ -90,8 +97,15 @@ securitySchemes:
                         "value": "john.doe@gmail.com"
                       }
                     ],
-                    "securityTags": ["Anonymous", "Confidential", "Top Secret"]
-                  }
+                    "securityTags": ["Anonymous", "Confidential", "Top Secret"],
+                    "personAliases": [
+                     {
+                        "id": 560,
+                        "aliasType": "Nick Name",
+                        "aliasValue": "Nick"
+                    }
+                    ]
+                  }              
                 }
                   
               

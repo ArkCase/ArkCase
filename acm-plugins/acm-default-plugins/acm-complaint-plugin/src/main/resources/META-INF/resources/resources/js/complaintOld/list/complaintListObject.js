@@ -88,6 +88,13 @@ ComplaintList.Object = {
 
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
+        
+        //create new form definition
+        this.$ROI_FORM_NAME="Report of Investigation";
+        this.$token = items.properties("token").itemValue();
+        this.$roiFormUrl = items.properties("roiFormUrl").itemValue();
+    	this.$createNewFormSel = $("#createNewForm");    	
+    	this.registerChangeSelNewFormEvents();
     }
 
     //
@@ -164,7 +171,7 @@ ComplaintList.Object = {
     ,_useFancyTree: function($s) {
         $s.fancytree({
             source: function() {
-                var builder = Acm.Object.FancyTreeBuilder.reset();
+                var builder = AcmEx.FancyTreeBuilder.reset();
 
                 builder.addLeaf({key: "prevPage"
                     ,title: "xxx records above..."
@@ -1203,7 +1210,7 @@ ComplaintList.Object = {
     // Tasks
     //
     ,refreshJTableTasks: function() {
-        Acm.Object.jTableLoad(this.$divTasks);
+        AcmEx.Object.jTableLoad(this.$divTasks);
     }
 
     ,_createJTableTasks: function($jt) {
@@ -1211,7 +1218,7 @@ ComplaintList.Object = {
         sortMap["title"] = "title_t";
 
 
-        Acm.Object.jTableCreateSortable($jt
+        AcmEx.Object.jTableCreatePaging($jt
             ,{
                 title: 'Tasks'
                 ,selecting: true
@@ -1219,8 +1226,8 @@ ComplaintList.Object = {
                 ,selectingCheckboxes: false
 
                 ,actions: {
-                    listActionSortable: function (postData, jtParams, sortMap) {
-                        return Acm.Object.jTableDefaultListAction(postData, jtParams, sortMap
+                    pagingListAction: function (postData, jtParams, sortMap) {
+                        return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
                             ,function() {
                                 var url;
                                 url =  App.getContextPath() + ComplaintList.Service.API_RETRIEVE_TASKS;
@@ -1239,7 +1246,7 @@ ComplaintList.Object = {
                                                 //response.start should match to jtParams.jtStartIndex
                                                 //response.docs.length should be <= jtParams.jtPageSize
 
-                                                jtData = Acm.Object.jTableGetEmptyResult();
+                                                jtData = AcmEx.Object.jTableGetEmptyResult();
                                                 for (var i = 0; i < response.docs.length; i++) {
                                                     var Record = {};
                                                     Record.id = response.docs[i].object_id_s;
@@ -1270,7 +1277,7 @@ ComplaintList.Object = {
                     }
 
                     ,createAction: function(postData, jtParams) {
-                        return Acm.Object.jTableGetEmptyResult();
+                        return AcmEx.Object.jTableGetEmptyResult();
                     }
                 }
 
@@ -1476,6 +1483,19 @@ ComplaintList.Object = {
 
         });
     }
+    
+    /**
+     * Register the new form selector changed event
+     */
+	,registerChangeSelNewFormEvents: function() {
+    	this.$createNewFormSel.change(function(e) {
+    		var formName = $(this).find('option:selected').text();
+    		
+    		if ( formName === ComplaintList.Object.$ROI_FORM_NAME) {
+            	ComplaintList.Event.onChangeSelForm(e);    			
+    		}
+    	});
+	}
 };
 
 
