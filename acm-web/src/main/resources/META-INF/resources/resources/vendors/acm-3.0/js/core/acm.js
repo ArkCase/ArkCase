@@ -158,20 +158,11 @@ var Acm = Acm || {
         }
         return d;
     }
-    //get today in "yyyy-mm-dd" format
     ,getCurrentDay: function() {
         var d = new Date();
         return this.dateToYyyymmdd(d);
     }
-//    ,getCurrentDay: function() {
-//        var d = new Date();
-//        var month = d.getMonth()+1;
-//        var day = d.getDate();
-//        var yyyyMmDd = d.getFullYear()
-//            + '-' + (10>month ? '0' : '') + month
-//            + '-' + (10>day   ? '0' : '') + day;
-//        return yyyyMmDd;
-//    }
+    //get day string in "yyyy-mm-dd" format
     ,dateToYyyymmdd: function(d) {
         if (null == d) {
             return "";
@@ -180,8 +171,8 @@ var Acm = Acm || {
         var day = d.getDate()+1;
         var year = d.getFullYear();
         return year
-            + '-' + this._padZero(month)
-            + '-' + this._padZero(day)
+            + "-" + this._padZero(month)
+            + "-" + this._padZero(day)
             ;
     }
     ,dateToString: function(d) {
@@ -189,18 +180,19 @@ var Acm = Acm || {
             return "";
         }
         var month = d.getMonth()+1;
-        var day = d.getDate();
+        var day = d.getDate()+1;
         var year = d.getFullYear();
         var hour = d.getHours();
         var minute = d.getMinutes();
         var second = d.getSeconds();
 
         return year
-            + '-' + this._padZero(month)
-            + '-' + this._padZero(day)
-            + 'T' + this._padZero(hour)
-            + ':' + this._padZero(minute)
-            + ':' + this._padZero(second)
+            + "-" + this._padZero(month)
+            + "-" + this._padZero(day)
+            + "T" + this._padZero(hour)
+            + ":" + this._padZero(minute)
+            + ":" + this._padZero(second)
+            + ".000+0000"
             ;
     }
     ,_padZero: function(i) {
