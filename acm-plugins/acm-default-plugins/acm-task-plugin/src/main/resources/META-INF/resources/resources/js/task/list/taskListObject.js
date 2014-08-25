@@ -21,8 +21,10 @@ TaskList.Object = {
         this.$asideTasks        = this.$ulTasks.closest("aside");
 
         this.$btnComplete       = $("button[data-title='Complete']");
+        this.$btnSignConfirm    = $("#signatureConfirmBtn");
         this.$btnReject         = $("button[data-title='Reject']");
         this.$btnComplete.click(function(e) {TaskList.Event.onClickBtnComplete(e);});
+        this.$btnSignConfirm.click(function(e) {TaskList.Event.onClickBtnSignConfirm(e);});
         this.$btnReject.click(function(e) {TaskList.Event.onClickBtnReject(e);});
 
         this.$lnkTitle          = $("#caseTitle");
@@ -43,6 +45,12 @@ TaskList.Object = {
                 weekStart: 1
             }
         });
+        
+        // forms
+        this.$signatureForm     = $("#signatureConfirmForm");
+        
+        // modals
+        this.$signConfirmModal  = $("#signatureModal");
 
 
         /*this.$lnkPriority.editable({placement: 'bottom'
@@ -107,6 +115,12 @@ TaskList.Object = {
 //            this.setHrefLnkAttachedToObject(App.getContextPath() + "/plugin/complaint/" + t.attachedToObjectId);
 //        }
 
+    }
+    ,getSignatureForm: function() {
+        return this.$signatureForm;
+    }
+    ,getSignatureModal: function() {
+        return this.$signConfirmModal;
     }
     ,getHtmlUlTasks: function() {
         return Acm.Object.getHtml(this.$ulTasks);

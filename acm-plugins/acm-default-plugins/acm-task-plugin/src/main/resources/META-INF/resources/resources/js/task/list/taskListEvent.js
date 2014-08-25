@@ -41,6 +41,14 @@ TaskList.Event = {
         var taskId = Task.getTaskId();
         TaskList.Service.completeTask(taskId);
     }
+    ,onClickBtnSignConfirm : function(e) {
+        var taskId = Task.getTaskId();
+
+        var sigModal = TaskList.Object.getSignatureModal();
+        $(sigModal).modal('hide');
+
+        TaskList.Service.signTask(taskId);
+    }
     ,onClickBtnReject : function(e) {
         alert("onClickBtnReject");
         var taskId = Task.getTaskId();

@@ -74,19 +74,29 @@ Acm.Ajax = {
             }
         });
     }
-
-    ,asyncPostDefault : function(url, callback) {
-        jQuery.ajax({type: 'POST'
-            ,url: url
-            ,async: true
-            ,contentType: "application/x-www-form-urlencoded; charset=UTF-8"
-            ,success: function(response) {
-                Acm.Dispatcher.triggerEvent(callback, response);
-            }
-            ,error: function(xhr, status, error) {
-                Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
-            }
-        });
+    
+    ,asyncPostForm : function(url, form, callback) {
+    	$(form).submit(function(e)
+    	{
+    	    var postData = $(this).serializeArray();
+    	    
+	        jQuery.ajax({type: 'POST'
+	            ,url: url
+	            ,async: true
+	            ,data : postData
+	            ,contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+	            ,success: function(response) {
+	                Acm.Dispatcher.triggerEvent(callback, response);
+	            }
+	            ,error: function(xhr, status, error) {
+	                Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
+	            }
+	        });
+        
+		    e.preventDefault(); //STOP default action
+		});
+    	
+    	$(form).submit(); //Submit form
     }
 
 	,asyncPut : function(url, param, callback) {
