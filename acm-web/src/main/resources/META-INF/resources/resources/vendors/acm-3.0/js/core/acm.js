@@ -158,49 +158,43 @@ var Acm = Acm || {
         }
         return d;
     }
-    //get today in "yyyy-mm-dd" format
     ,getCurrentDay: function() {
         var d = new Date();
         return this.dateToYyyymmdd(d);
     }
-//    ,getCurrentDay: function() {
-//        var d = new Date();
-//        var month = d.getMonth()+1;
-//        var day = d.getDate();
-//        var yyyyMmDd = d.getFullYear()
-//            + '-' + (10>month ? '0' : '') + month
-//            + '-' + (10>day   ? '0' : '') + day;
-//        return yyyyMmDd;
-//    }
+    //get day string in "yyyy-mm-dd" format
+    //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
     ,dateToYyyymmdd: function(d) {
-        if (null == d) {
-            return "";
-        }
-        var month = d.getMonth()+1;
-        var day = d.getDate()+1;
-        var year = d.getFullYear();
-        return year
-            + '-' + this._padZero(month)
-            + '-' + this._padZero(day)
-            ;
-    }
-    ,dateToString: function(d) {
         if (null == d) {
             return "";
         }
         var month = d.getMonth()+1;
         var day = d.getDate();
         var year = d.getFullYear();
+        return year
+            + "-" + this._padZero(month)
+            + "-" + this._padZero(day)
+            ;
+    }
+    //parameter d from x-editable date format, both getDate() and getMonth() are zero based
+    ,dateToString: function(d) {
+        if (null == d) {
+            return "";
+        }
+        var month = d.getMonth()+1;
+        var day = d.getDate()+1;
+        var year = d.getFullYear();
         var hour = d.getHours();
         var minute = d.getMinutes();
         var second = d.getSeconds();
 
         return year
-            + '-' + this._padZero(month)
-            + '-' + this._padZero(day)
-            + 'T' + this._padZero(hour)
-            + ':' + this._padZero(minute)
-            + ':' + this._padZero(second)
+            + "-" + this._padZero(month)
+            + "-" + this._padZero(day)
+            + "T" + this._padZero(hour)
+            + ":" + this._padZero(minute)
+            + ":" + this._padZero(second)
+            + ".000+0000"
             ;
     }
     ,_padZero: function(i) {
@@ -238,12 +232,52 @@ var Acm = Acm || {
         }
     }
 
+//Untested code, commented for now.
+// http://www.w3schools.com/HTML/html5_webworkers.asp
+//
+//    ,Timer: {
+//        startWorker: function() {
+//            if(typeof(Worker) !== "undefined") {
+//                if(typeof(this._worker) == "undefined") {
+//                    this._worker = new Worker("acmTimer.js");
+//                }
+//                this._worker.onmessage = function(event) {
+//                    Console.log("" + event.data);
+//                };
+//            } else {
+//                Console.log("Sorry! No Web Worker support.");
+//            }
+//        }
+//        ,stopWorker: function() {
+//            this._worker.terminate();
+//        }
+//    }
+//    ,SessionData: function(name) {
+//        this.name = name;
+//    }
+
     ,CacheFifo: function(maxSize) {
         this.maxSize = maxSize;
         this.reset();
     }
 
 };
+
+//data stored in SessionStorage
+//Acm.SessionData.prototype = {
+//    getName: function() {
+//        return this.name;
+//    }
+//    ,get: function() {
+//        var data = sessionStorage.getItem(this.name);
+//        var item = ("null" === data)? null : JSON.parse(data);
+//        return item;
+//    }
+//    ,set: function(data) {
+//        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
+//        sessionStorage.setItem(this.name, item);
+//    }
+//}
 
 //simple first in first out aging cache
 Acm.CacheFifo.prototype = {

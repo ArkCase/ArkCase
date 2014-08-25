@@ -12,13 +12,74 @@ Topbar.Object = {
         this.$btnSearch = this.$formSearch.find("button[type='submit']");
 
         this.$formSearch.submit(function() {Topbar.Event.onSubmitFormSearch(this);});
-        this.$btnSearch.click(function(e) {Topbar.Event.onClickBtnSearch(e);});
+        this.$btnSearch.click(function(e) {Topbar.Event.onClickBtnSearch(this);});
 
         this.$formSearch.attr("method", "get");
         var term = this.getQuickSearchTerm();
         this.setActionFormSearch(term);
 
         this.useTypeAhead(this.$edtSearch);
+
+
+
+// jw: not working code commented out. will comeback later
+//        this.$btnTest1 = $("#test1");
+//        this.$btnTest2 = $("#test2");
+//        this.$btnTest3 = $("#test3");
+//        this.$btnTest4 = $("#test4");
+//        this.$btnTest1.click(function(e) {Topbar.Event.onClickBtnTest1(this);});
+//        this.$btnTest2.click(function(e) {Topbar.Event.onClickBtnTest2(this);});
+//        this.$btnTest3.click(function(e) {Topbar.Event.onClickBtnTest3(this);});
+//        this.$btnTest4.click(function(e) {Topbar.Event.onClickBtnTest4(this);});
+//
+//        this.$divAsn = $(".asn");
+//        this.$ulAsn = $(".asn ul");
+//        this.$lnkAsn = $(".asn a[data-toggle='dropdown']");
+//        this.$lnkAsn.click(function(e) {Topbar.Event.onClickLnkAsn(this);});
+//        this.$divAsnPopup = $(".asn-popup");
+//        var pos = this.$lnkAsn.position();
+//
+//        var pos1a = this.$divAsn.position();
+//        var pos1b = this.$divAsn.offset();
+//
+//        var pos2a = this.$ulAsn.position();
+//        var pos2b = this.$ulAsn.offset();
+//
+//        var pos3a = this.$lnkAsn.position();
+//        var pos3b = this.$lnkAsn.offset();
+//
+//        var pos4a = this.$divAsnPopup.position();
+//        var pos4b = this.$divAsnPopup.offset();
+//
+//        var a = pos.top;
+//        var b = pos.top + 10;
+//        var a2 = pos.left;
+//        var b2 = pos.left + 10;
+//        var top = pos.top + 10;
+//        var left = pos.left;
+//        //this.$divAsnPopup.offset({top: top, left: left});
+//    //    this.$divAsnPopup.offset({top: 12, left: 570});
+//        //this.$divAsnPopup.css(pos);
+//
+//    //    this.$ulAsn.offset({top: 0, left: 1000});
+//
+//        var pos5a = this.$divAsnPopup.position();
+//        var pos5b = this.$divAsnPopup.offset();
+//
+//        var pos6a = this.$ulAsn.position();
+//        var pos6b = this.$ulAsn.offset();
+//
+//
+//        this.$formNav = $(".navbar-form");
+//        var pos7a = this.$formNav.position();
+//        var pos7b = this.$formNav.offset();
+//
+//        this.$divAsnPopup.position({
+//            my: "left top"
+//            ,at: "left top"
+//            ,of: ".navbar-form"
+//        });
+//        var z = 1;
     }
 
 

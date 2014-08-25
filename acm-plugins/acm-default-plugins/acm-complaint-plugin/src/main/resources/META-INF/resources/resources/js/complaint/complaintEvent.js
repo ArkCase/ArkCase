@@ -58,8 +58,6 @@ Complaint.Event = {
             Complaint.Service.retrieveDetail(complaintId);
         }
 
-        //Complaint.Object.activeTreeNode(node.key);
-
         Complaint.Object.showTab(node.key);
     }
     ,onSaveTitle: function(value) {
@@ -69,16 +67,9 @@ Complaint.Event = {
     }
     ,onSaveIncidentDate: function(value) {
         var c = Complaint.getComplaint();
-        var fullyear = value.getFullYear();
-        var month = value.getMonth();
-        var day = value.getDay();
-        var year = value.getYear();
-        var date0 = value.getDate();
-        var s = Acm.dateToString(value);
-
         c.created = Acm.dateToString(value);
         Complaint.Service.saveComplaint(c);
-    } //Acm.getDateFromDatetime(c.created)
+    }
     ,onSavePriority: function(value) {
         var c = Complaint.getComplaint();
         c.priority = value;
