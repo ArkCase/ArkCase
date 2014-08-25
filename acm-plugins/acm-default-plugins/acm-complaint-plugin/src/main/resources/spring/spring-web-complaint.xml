@@ -2,22 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
-
+       
     <bean id="complaintUiController" class="com.armedia.acm.plugins.complaint.web.ComplaintUiController">
         <property name="pageDescriptor" ref="complaintPageDescriptor"/>
         <property name="pageDescriptorWizard" ref="complaintWizardPageDescriptor"/>
         <property name="pageDescriptorList" ref="complaintListPageDescriptor"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
-		<property name="formsProperties" ref="acm-forms-properties" />		
+		<property name="formUrl" ref="formResource" />		
     </bean>
-    
-    <bean id="acm-forms-properties"
-		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-		<property name="ignoreResourceNotFound" value="true" />
-        <property name="location">
-        	<value>classpath:acm/acm-forms.properties</value>
-        </property>
-	</bean>
-    
+        
 </beans>
 

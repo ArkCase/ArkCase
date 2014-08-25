@@ -291,7 +291,7 @@
                     <a href="#" class="font-bold">Documents</a>
                     <input type="file" name="files[]" multiple style="display:none;"/>                                    	
                     <select class="input-sm form-control input-s-sm inline v-middle pull-right" id="createNewForm">
-	                    <option value="0">Select option</option>
+	                    <option value="0">Select Form</option>
 	                    <option value="0">Report of Investigation</option>
                 	</select>
                     
