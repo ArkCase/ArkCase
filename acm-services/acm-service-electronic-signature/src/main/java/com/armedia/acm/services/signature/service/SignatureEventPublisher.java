@@ -1,15 +1,10 @@
 package com.armedia.acm.services.signature.service;
 
-import javax.servlet.http.HttpSession;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.security.core.Authentication;
-
 import com.armedia.acm.services.signature.model.ApplicationSignatureEvent;
-import com.armedia.acm.services.signature.model.Signature;
 
 public class SignatureEventPublisher  implements ApplicationEventPublisherAware
 {
