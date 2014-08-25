@@ -7,6 +7,16 @@
  */
 Search.Object = {
     initialize : function() {
+//        var items = $(document).items();
+//        var searchDefStr = items.properties("searchDef").itemValue();
+//        this.searchDef = $.parseJSON(searchDefStr);
+//
+//        this.$divSearchQuery = $("#searchQuery").parent();
+//        Search.Page.buildPanel(this.searchDef);
+//
+//        this.$chkToggle = $("input[type='checkbox']");
+//        this.$chkToggle.on("click", function(e) {Search.Event.onClickToggle(this);});
+
         this.$asideSubNav = $("#subNav");
 
         this.$lnkToggleSubNav = $("a[href='#subNav']");
@@ -80,6 +90,16 @@ Search.Object = {
 
         this.$divResults = $("#divResults");
         Search.Object.createJTableResults(this.$divResults);
+    }
+
+
+    ,slideToggle: function(id) {
+        var $chkSwitch = $("#" + id);
+        var $divSibling = $chkSwitch.closest(".form-group").find(">div:last-child");
+        $divSibling.slideToggle();
+    }
+    ,appendHtmlDivSearchQuery: function(html) {
+        this.$divSearchQuery.after(html);
     }
 
     ,showSubNav: function(show) {
