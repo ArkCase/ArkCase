@@ -83,6 +83,7 @@
             </list>
         </property>
     </bean>
+
     <bean id="taskObjectType" class="com.armedia.acm.core.AcmObjectType">
         <property name="name" value="Task"/>
         <property name="description" value="A unit of work that must be completed."/>
@@ -400,6 +401,7 @@
             </map>
         </property>
         <property name="muleClient" ref="muleClient"/>
+        <property name="dataAccessEntryService" ref="dataAccessEntryService"/>
         <property name="propertyFileManager">
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
