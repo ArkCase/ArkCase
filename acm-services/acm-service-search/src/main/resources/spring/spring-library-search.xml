@@ -72,9 +72,7 @@
     </bean>
 
     <bean id="taskToQuickSearchJsonConverter"
-          class="com.armedia.acm.services.search.service.TaskToQuickSearchJsonConverter">
-        <property name="dataAccessEntryService" ref="dataAccessEntryService"/>
-    </bean>
+          class="com.armedia.acm.services.search.service.TaskToQuickSearchJsonConverter"/>
 
     <!-- event handlers -->
     <bean id="sendAdHocTaskCreateToSolrAction" class="com.armedia.acm.event.EventResponse">

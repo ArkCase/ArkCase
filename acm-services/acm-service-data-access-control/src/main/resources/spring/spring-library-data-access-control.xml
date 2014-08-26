@@ -51,8 +51,6 @@
     
     <bean id="acmAccessControlDefaultDao" class="com.armedia.acm.services.dataaccess.dao.AcmAccessControlDefaultDao"/>
 
-    <bean id="acmAccessControlEntryDao" class="com.armedia.acm.services.dataaccess.dao.AcmAccessControlEntryDao"/>
-
     <bean id="dataAccessDefaultGenerator" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessDefaultGeneratorImpl">
         <property name="allUserAccessDiscretionaryUpdateAllowed" value="true"/>
         <property name="allUsersAccess" value="DENY"/>
@@ -72,10 +70,6 @@
     <bean id="dataAccessDefaultService" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessDefaultServiceImpl">
         <property name="accessControlDefaultDao" ref="acmAccessControlDefaultDao"/>
         <property name="generator" ref="dataAccessDefaultGenerator"/>
-    </bean>
-
-    <bean id="dataAccessEntryService" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessEntryServiceImpl">
-        <property name="accessControlEntryDao" ref="acmAccessControlEntryDao"/>
     </bean>
 
     <bean id="dataAccessDefaultLauncher" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessDefaultLauncher">
