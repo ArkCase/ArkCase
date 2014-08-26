@@ -4,6 +4,10 @@
 target
 atlassian-ide-plugin.xml
 
+*.project
+*.classpath
+.settings/
+
 # Package Files #
 *.jar
 *.war
