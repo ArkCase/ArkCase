@@ -6,8 +6,8 @@
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
 
-    <%--<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_angular}/css/sample.min.0a2f966c.css" />--%>
-    <link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_angular}/css/ng-table.css"/>
+    <link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_angular}/css/sample.test.css" />
+
     <!--[if lte IE 8]>
       <script>
         document.createElement('adf-dashboard');
@@ -33,6 +33,7 @@
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular.min.7931140c.js"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular-route.min.7d4fa7e4.js"></script>
+    <link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_angular}/css/ng-table.css"/>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/ng-table.js"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/sample.js"></script>
 </jsp:attribute>
