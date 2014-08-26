@@ -1,6 +1,8 @@
 package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.activiti.AcmTaskEvent;
+import com.armedia.acm.services.dataaccess.model.AcmAccess;
+import com.armedia.acm.services.dataaccess.service.DataAccessEntryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mule.api.annotations.param.Payload;
@@ -19,6 +21,8 @@ public class TaskToQuickSearchJsonConverter
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private static final String TASK_TYPE = "TASK";
+    private DataAccessEntryService dataAccessEntryService;
+
 
     // This method is used by Mule when sending tasks to SOLR. Don't act on IDEA's not-used warning.
     public String toQuickSearchJson(
@@ -43,6 +47,10 @@ public class TaskToQuickSearchJsonConverter
         quickSearchMap.put("parent_object_type_s", event.getParentObjectType());
         quickSearchMap.put(SearchConstants.SOLR_OBJECT_TYPE_FIELD_NAME, TASK_TYPE);
 
+        // retrieve acm read access for object and enrich business object map with acls
+        AcmAccess acmAccess = getDataAccessEntryService().getAcmReadAccess((Long)quickSearchMap.get("object_id_s"), TASK_TYPE, (String)quickSearchMap.get("status_s"));
+        acmAccess.enrichWithAcls(quickSearchMap);
+
         // We have to send SOLR a JSON array.  If we send a JSON object, SOLR will interpret it as a SOLR command,
         // instead of a document to be indexed.
         ObjectMapper mapper = new ObjectMapperFactory().createObjectMapper();
@@ -55,5 +63,13 @@ public class TaskToQuickSearchJsonConverter
         }
         return json;
 
+    }
+
+    public DataAccessEntryService getDataAccessEntryService() {
+        return dataAccessEntryService;
+    }
+
+    public void setDataAccessEntryService(DataAccessEntryService dataAccessEntryService) {
+        this.dataAccessEntryService = dataAccessEntryService;
     }
 }
