@@ -101,6 +101,8 @@
 <div class="wrapper dk  clearfix">
     <div class="pull-right inline">
         <div class="btn-group">
+       		<!-- TODO: AJ TO HELP, when data-toggle is modal, the tooltip won't come up -->
+            <button class="btn btn-default btn-sm" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="i i-checkmark"></i></button>
             <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete"><i class="i i-checkmark"></i></button>
             <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Reject"><i class="i i-cancel"></i></button>
             <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
@@ -509,5 +511,34 @@
 </jsp:body>
 </t:layout>
 
+
+
+
+<!-- Modal -->
+<!-- TODO this should be moved to a common jspf file -->
+<div class="modal fade" id="signatureModal" tabindex="-1" role="dialog" aria-labelledby="signatureModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="signatureModalLabel">Electronically Sign</h4>
+      </div>
+      <%-- Using a form post ajax submit --%>
+      <form id="signatureConfirmForm" method="post" >
+	      <div class="modal-body">
+	        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam.  	      	
+	      	<div class="clearfix">
+		      <label for="confirmPassword">Password</label>
+		      <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Password" >
+		    </div>
+	      </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="signatureConfirmBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 

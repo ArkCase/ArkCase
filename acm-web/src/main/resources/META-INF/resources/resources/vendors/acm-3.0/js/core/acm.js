@@ -232,12 +232,52 @@ var Acm = Acm || {
         }
     }
 
+//Untested code, commented for now.
+// http://www.w3schools.com/HTML/html5_webworkers.asp
+//
+//    ,Timer: {
+//        startWorker: function() {
+//            if(typeof(Worker) !== "undefined") {
+//                if(typeof(this._worker) == "undefined") {
+//                    this._worker = new Worker("acmTimer.js");
+//                }
+//                this._worker.onmessage = function(event) {
+//                    Console.log("" + event.data);
+//                };
+//            } else {
+//                Console.log("Sorry! No Web Worker support.");
+//            }
+//        }
+//        ,stopWorker: function() {
+//            this._worker.terminate();
+//        }
+//    }
+//    ,SessionData: function(name) {
+//        this.name = name;
+//    }
+
     ,CacheFifo: function(maxSize) {
         this.maxSize = maxSize;
         this.reset();
     }
 
 };
+
+//data stored in SessionStorage
+//Acm.SessionData.prototype = {
+//    getName: function() {
+//        return this.name;
+//    }
+//    ,get: function() {
+//        var data = sessionStorage.getItem(this.name);
+//        var item = ("null" === data)? null : JSON.parse(data);
+//        return item;
+//    }
+//    ,set: function(data) {
+//        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
+//        sessionStorage.setItem(this.name, item);
+//    }
+//}
 
 //simple first in first out aging cache
 Acm.CacheFifo.prototype = {

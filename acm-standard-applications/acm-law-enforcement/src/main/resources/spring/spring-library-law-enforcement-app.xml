@@ -83,6 +83,7 @@
             </list>
         </property>
     </bean>
+
     <bean id="taskObjectType" class="com.armedia.acm.core.AcmObjectType">
         <property name="name" value="Task"/>
         <property name="description" value="A unit of work that must be completed."/>
@@ -205,6 +206,7 @@
             </list>
         </property>
     </bean>
+
     <!-- end of task states -->
 
 
@@ -227,8 +229,22 @@
         <property name="url" value="/api/{version}/plugin/task/completeTask/{taskId}"/>
         <property name="requiredPrivilege" value="acm-task-complete"/>
     </bean>
+    <bean id="taskSignAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Sign"/>
+        <property name="iconName" value="fa-check"/>
+        <property name="url" value="/api/{version}/plugin/task/signTask/{taskId}"/>
+        <property name="requiredPrivilege" value="acm-task-sign"/>
+    </bean>
     <!-- end of task actions -->
-
+    
+    
+    <!-- Electronic Signature Actions -->
+    <bean id="signatureConfirmAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Sign"/>
+        <property name="iconName" value="fa-check"/>
+        <property name="url" value="/api/{version}/plugin/signature/confirm/{objectType}/{objectId}"/>
+        <property name="requiredPrivilege" value="acm-signature-confirm"/>
+    </bean>
 
     <!-- Actions -->
     <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
@@ -400,6 +416,7 @@
             </map>
         </property>
         <property name="muleClient" ref="muleClient"/>
+        <property name="dataAccessEntryService" ref="dataAccessEntryService"/>
         <property name="propertyFileManager">
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>

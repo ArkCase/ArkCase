@@ -184,6 +184,11 @@ Complaint.JTable = {
                 c.originator.description = record.description;
                 //$s.jtable('load');
             }
+            ,formCreated: function (event, data) {
+                //to be used for typeahead in future
+                var a = data;
+                var z = 1;
+            }
         });
     }
 

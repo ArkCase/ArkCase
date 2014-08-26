@@ -10,12 +10,14 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_RETRIEVED, this.onListRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_RETRIEVED, this.onDetailRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_COMPLETED, this.onTaskCompleted);
+        Acm.Dispatcher.addEventListener(this.EVENT_TASK_SIGNED, this.onTaskSigned);
     }
 
     ,EVENT_LIST_RETRIEVED		: "task-list-retrieved"
     ,EVENT_DETAIL_RETRIEVED		: "task-list-detail-retrieved"
     ,EVENT_TASK_COMPLETED		: "task-list-task-completed"
-
+    ,EVENT_TASK_SIGNED			: "task-list-task-signed"
+    		
     ,onListRetrieved : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve task list:"  +response.errorMsg);
@@ -49,6 +51,19 @@ TaskList.Callback = {
                     App.gotoPage(TaskList.Page.URL_DASHBOARD);
                 } else {
                     //todo: remove item from local copy list, no need to call service to retrieve list
+                    TaskList.Service.listTask(App.getUserName());
+                }
+            }
+        }
+    }
+    ,onTaskSigned : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to electronically sign task:"  +response.errorMsg);
+        } else {
+            if (Acm.isNotEmpty(response.taskId)) {
+                if (TaskList.isSingleObject()) {
+                    App.gotoPage(TaskList.Page.URL_DASHBOARD);
+                } else {
                     TaskList.Service.listTask(App.getUserName());
                 }
             }
