@@ -33,9 +33,9 @@
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular.min.7931140c.js"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular-route.min.7d4fa7e4.js"></script>
-    <link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_angular}/css/ng-table.css"/>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/moment.min.js"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/ng-table.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/sample.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/sample.test.js"></script>
 </jsp:attribute>
 
 <jsp:body>
