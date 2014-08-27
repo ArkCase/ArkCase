@@ -46,6 +46,12 @@
             <artifactId>acm-web</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        
+        <!-- preconditions -->
+        <dependency>
+            <groupId>com.google.collections</groupId>
+            <artifactId>google-collections</artifactId>
+        </dependency>
 
 		<!-- spring -->
 		<dependency>
