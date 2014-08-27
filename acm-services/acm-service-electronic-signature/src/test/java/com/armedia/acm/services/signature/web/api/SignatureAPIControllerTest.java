@@ -1,6 +1,7 @@
 package com.armedia.acm.services.signature.web.api;
 
 import com.armedia.acm.services.signature.dao.SignatureDao;
+import com.armedia.acm.services.signature.exception.AcmSignatureException;
 import com.armedia.acm.services.signature.model.ApplicationSignatureEvent;
 import com.armedia.acm.services.signature.model.Signature;
 import com.armedia.acm.services.signature.service.SignatureEventPublisher;
@@ -74,14 +75,15 @@ public class SignatureAPIControllerTest extends EasyMockSupport {
 		String ipAddress = "ipAddress";
 		String password = "password";
 
-		Signature found = new Signature();
-		found.setObjectId(objectId);
+		Signature foundSignature = new Signature();
+		foundSignature.setObjectId(objectId);
 
+		Capture<Signature> signatureToSave = new Capture<>();
 		Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
 
 		mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-		// expect(mockSignatureDao.save(eq(mockAuthentication), eq(taskId))).andReturn(found);
+		expect(mockSignatureDao.save(capture(signatureToSave))).andReturn(foundSignature);
 		mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
 		// MVC test classes must call getName() somehow
 		expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
@@ -121,41 +123,46 @@ public class SignatureAPIControllerTest extends EasyMockSupport {
 		assertTrue(event.isSucceeded());
 	}
 
-	// @Test
-	// public void signTask_exception() throws Exception
-	// {
-	// Long taskId = 500L;
-	// String ipAddress = "ipAddress";
-	//
-	// AcmTask found = new AcmTask();
-	// found.setTaskId(taskId);
-	//
-	// Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
-	//
-	// mockHttpSession.setAttribute("acm_ip_address", ipAddress);
-	//
-	// //expect(mockTaskDao.completeTask(eq(mockAuthentication),
-	// eq(taskId))).andThrow(new AcmTaskException("testException"));
-	// mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
-	// // MVC test classes must call getName() somehow
-	// expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
-	//
-	// replayAll();
-	//
-	// mockMvc.perform(
-	// post("/api/v1/plugin/task/signTask/{taskId}", taskId)
-	// .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-	// .session(mockHttpSession)
-	// .principal(mockAuthentication))
-	// .andExpect(status().isBadRequest())
-	// .andExpect(content().contentType(MediaType.TEXT_PLAIN));
-	//
-	// verifyAll();
-	//
-	// AcmApplicationTaskEvent event = capturedEvent.getValue();
-	// assertEquals(taskId, event.getObjectId());
-	// assertEquals("TASK", event.getObjectType());
-	// assertFalse(event.isSucceeded());
-	// }
+	@Test
+	 public void signTask_exception() throws Exception
+	 {
+		Long objectId = 500L;
+		String objectType = "task";
+		String ipAddress = "ipAddress";
+		String password = "password";
+
+		Signature foundSignature = new Signature();
+		foundSignature.setObjectId(objectId);
+
+		Capture<Signature> signatureToSave = new Capture<>();
+		Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
+
+		mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+
+		expect(mockSignatureDao.save(capture(signatureToSave))).andThrow(new RuntimeException("testException"));
+		mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
+		// MVC test classes must call getName() somehow
+		expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
+
+		replayAll();
+
+		// To see details on the HTTP calls, change .andReturn() to .andDo(print())
+		MvcResult result = mockMvc
+				.perform(
+						post("/api/v1/plugin/signature/confirm/{objectType}/{objectId}", objectType, objectId)
+								.param("confirmPassword", password)
+								.contentType(
+										MediaType.APPLICATION_FORM_URLENCODED)
+								.session(mockHttpSession)
+								.principal(mockAuthentication)).andReturn();
+
+		verifyAll();
+
+		ApplicationSignatureEvent event = capturedEvent.getValue();
+		assertEquals(objectId, event.getObjectId());
+		assertEquals(objectType, event.getObjectType());
+		assertFalse(event.isSucceeded());
+
+	 }
 
 }

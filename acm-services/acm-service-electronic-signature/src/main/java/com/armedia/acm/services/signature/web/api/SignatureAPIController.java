@@ -2,6 +2,7 @@ package com.armedia.acm.services.signature.web.api;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.signature.dao.SignatureDao;
+import com.armedia.acm.services.signature.exception.AcmSignatureException;
 import com.armedia.acm.services.signature.model.ApplicationSignatureEvent;
 import com.armedia.acm.services.signature.model.Signature;
 import com.armedia.acm.services.signature.service.SignatureEventPublisher;
@@ -45,18 +46,27 @@ public class SignatureAPIController
         
         try
         {       	
-        	// TODO sign task by authenticating against ldap
-        	Signature signed = new Signature();
-        		
-        	// TODO Save the data to the db
-        	signed.setObjectId(objectId);
-        	signed.setObjectType(objectType);
+        	String user = authentication.getName();
         	
-            //AcmTask signed = getSignatureDao().save(authentication, objectType, objectId);
+        	// TODO sign task by authenticating against ldap
+        	boolean isCorrectPassword = true;
+        	
+        	Signature signature = new Signature();
+        	
+        	if (!isCorrectPassword)
+        	{
+        		throw new AcmSignatureException("Password was incorrect");
+        	}
+        	// persist to db
+        	signature.setObjectId(objectId);
+        	signature.setObjectType(objectType);
+        	signature.setSignedBy(user);
+        	
+            Signature savedSignature = getSignatureDao().save(signature);
 
-            publishSignatureEvent(authentication, httpSession, signed, true);
+            publishSignatureEvent(authentication, httpSession, signature, true);
 
-            return signed;
+            return signature;
         }
         catch (Exception e)
         {
@@ -68,15 +78,7 @@ public class SignatureAPIController
 
             throw new AcmUserActionFailedException("sign", objectType, objectId, e.getMessage(), e);
         }
-//        catch (AcmSignatureException e)
-//        {
-//            // gen up a fake task so we can audit the failure
-//            AcmTask fakeTask = new AcmTask();
-//            fakeTask.setobjectId(objectId);
-//            publishSignatureEvent(authentication, httpSession, fakeTask, false);
-//
-//            throw new AcmUserActionFailedException("sign", objectType, objectId, e.getMessage(), e);
-//        }
+
     }
     
     protected void publishSignatureEvent(
