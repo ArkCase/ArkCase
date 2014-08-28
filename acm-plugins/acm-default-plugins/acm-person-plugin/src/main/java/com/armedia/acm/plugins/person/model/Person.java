@@ -2,9 +2,11 @@ package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import static javax.persistence.CascadeType.ALL;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -21,13 +23,8 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlTransient;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static javax.persistence.CascadeType.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by armdev on 4/7/14.
@@ -101,7 +98,7 @@ public class Person implements Serializable
     private List<PersonAlias> personAliases = new ArrayList<>();
     
     @OneToMany(cascade = ALL, mappedBy ="person")
-    private List<PersonAssociation> personAssociation = new ArrayList<>();
+    private List<PersonAssociation> personAssociations = new ArrayList<>();
     
     @PrePersist
     protected void beforeInsert()
@@ -114,6 +111,16 @@ public class Person implements Serializable
         if ( getStatus() == null || getStatus().trim().isEmpty() )
         {
             setStatus("ACTIVE");
+        }     
+       
+        if ( getCreated() == null )
+        {
+            setCreated(new Date());
+        }
+
+        if ( getModified() == null )
+        {
+            setModified(new Date());
         }
     }
 
@@ -190,11 +197,20 @@ public class Person implements Serializable
                 contactMethod.setCreator(creator);
             }
         }
-        for( PersonAlias personAlias : getPersonAliases() )
+        
+        for ( PersonAlias personAlias : getPersonAliases() )
         {
             if ( personAlias.getCreator() == null )
             {
                 personAlias.setCreator(creator);
+            }
+        }
+        
+        for ( PersonAssociation persAssoc : getPersonAssociations() )
+        {
+            if ( persAssoc.getCreator() == null )
+            {
+                persAssoc.setCreator(creator);
             }
         }
     }
@@ -229,10 +245,17 @@ public class Person implements Serializable
         {
             contactMethod.setModifier(modifier);
         }
+        
         for ( PersonAlias personAlias : getPersonAliases() )
         {
             personAlias.setModifier(modifier);
         }
+        
+        for ( PersonAssociation persAssoc : getPersonAssociations() )
+        {
+            persAssoc.setModifier(modifier);
+        }
+        
     }
 
     public Long getId()
@@ -309,20 +332,20 @@ public class Person implements Serializable
         }
     }
 
-    // use @XmlTransient to prevent recursive XML when serializing containers that refer to this person
-    @XmlTransient
-    public List<PersonAssociation> getPersonAssociation()
+    public List<PersonAssociation> getPersonAssociations()
     {
-        return personAssociation;
+        return personAssociations;
     }
 
-    public void setPersonAssociation(List<PersonAssociation> personAssociation)
+    public void setPersonAssociations(List<PersonAssociation> personAssociations)
     {
-        this.personAssociation = personAssociation;
+        this.personAssociations = personAssociations;
         
-        for(PersonAssociation personAssoc : personAssociation)
+        for(PersonAssociation personAssoc : personAssociations)
         {
             personAssoc.setPerson(this);
+//            personAssoc.setParentId(getId());            
+//            personAssoc.setParentType("PERSON");
         }
     }
    

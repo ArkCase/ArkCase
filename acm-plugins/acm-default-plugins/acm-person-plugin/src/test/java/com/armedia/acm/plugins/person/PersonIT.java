@@ -18,7 +18,17 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
-        "/spring/spring-library-person.xml"})
+                                   "/spring/spring-library-person.xml",
+                                   "/spring/spring-library-person-plugin-test.xml",
+                                   "/spring/spring-library-mule-context-manager.xml",
+                                   "/spring/spring-library-activiti-actions.xml",
+                                   "/spring/spring-library-activemq.xml",
+                                   "/spring/spring-library-activiti-configuration.xml",
+                                   "/spring/spring-library-folder-watcher.xml",
+                                   "/spring/spring-library-cmis-configuration.xml",
+                                   "/spring/spring-library-drools-monitor.xml",
+                                   "/spring/spring-library-ecm-file.xml"
+                                   })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonIT
 {
@@ -42,9 +52,15 @@ public class PersonIT
         p.setStatus("testStatus");
 
         Person saved = personDao.save(p);
+        Integer deletedCount = personDao.DeletePersonById(958L);
+        
+        
 
         assertNotNull(saved.getId());
 
         log.info("Person ID: " + saved.getId());
+        log.info("delete detail: " + deletedCount);
     }
+    
+    
 }

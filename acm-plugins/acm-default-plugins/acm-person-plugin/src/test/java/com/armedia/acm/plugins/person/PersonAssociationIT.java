@@ -4,9 +4,9 @@ import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
-                                   "/spring/spring-library-person.xml"})
+                                   "/spring/spring-library-person.xml",
+                                   "/spring/spring-library-person-plugin-test.xml",
+                                   "/spring/spring-library-mule-context-manager.xml",
+                                   "/spring/spring-library-activiti-actions.xml",
+                                   "/spring/spring-library-activemq.xml",
+                                   "/spring/spring-library-activiti-configuration.xml",
+                                   "/spring/spring-library-folder-watcher.xml",
+                                   "/spring/spring-library-cmis-configuration.xml",
+                                   "/spring/spring-library-drools-monitor.xml",
+                                   "/spring/spring-library-ecm-file.xml"
+                                  })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonAssociationIT 
 {
@@ -41,7 +51,7 @@ public class PersonAssociationIT
 
         Person person = new Person();
         
-      
+        person.setId(952L);
         person.setModifier("testModifier");
         person.setCreator("testCreator");
         person.setCreated(new Date());
@@ -64,9 +74,20 @@ public class PersonAssociationIT
         perAssoc.setModified(new Date());
 
         PersonAssociation saved = personAssocDao.save(perAssoc);
+        List<Person> personList = personAssocDao.findPersonByParentIdAndParentType("COMPLAINT", 999L);
+                                  
+        
+        for ( Person pn : personList )
+        {
+            log.debug("person id " + pn.getId());
+        }
+        
+        Integer deleteCount =  personAssocDao.deletePersonByIdFromPersonAssociation(952L);
 
         assertNotNull(saved.getId());
 
+        log.info("person id to be deleted :", deleteCount);
         em.flush();
+        
     }
 }
