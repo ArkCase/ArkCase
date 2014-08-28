@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+
+    <flow name="savePerson" doc:name="Save Person">
+        <description>Saves a complaint (creates new complaint if it has not been saved
+            previously).  The payload must be a Complaint entity object.  The return message&quot;s
+            payload is the (possibly updated) complaint; i.e. for a new complaint, the return payload&quot;s
+            ID fields are populated.</description>
+        <vm:inbound-endpoint
+                address="vm://savePerson.in"
+                exchange-pattern="request-response"
+                doc:name="Save Person">
+        </vm:inbound-endpoint>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>
+
+
+        <timer-interceptor/>
+
+        <set-property doc:name="Added or Updated?"
+                      propertyName="PersonAdded" value="#[payload.Id == null]"/>
+        <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>
+
+        <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
+        <scripting:transformer name="savePersonCreatorModifierTransformer">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+                    String user = message.getInboundProperty("acmUser") == null ? null :
+                        message.getInboundProperty("acmUser").name;
+                    if ( user != null )
+                    {
+                        payload.creator = payload.creator == null ? user : payload.creator;
+                        payload.modifier = payload.modifier == null ? user : payload.modifier;
+                    }
+                    return payload;
+                    ]]>
+                </scripting:text>
+            </scripting:script>
+
+        </scripting:transformer>
+
+        <!-- Tell mule to call the save method ( DAO ). The property must go in the inbound scope.  The only way to do it is to set an outbound
+             property, then call an outbound endpoint (thereby starting a new flow).
+        -->
+        <set-property propertyName="daoMethod" value="save"/>
+        <vm:outbound-endpoint address="vm://personDao.in" exchange-pattern="request-response"/>
+
+
+        <catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.plugins.person" message="Exception saving: #[exception.message]"/>
+            <set-property propertyName="saveException" value="#[exception]"/>
+        </catch-exception-strategy>
+
+    </flow>
+
+    <flow name="personDao" processingStrategy="synchronous">
+        <vm:inbound-endpoint address="vm://personDao.in" exchange-pattern="request-response"/>
+
+        <logger level="TRACE" category="com.armedia.acm.plugins.person" message="Calling Person DAO"/>
+
+        <component doc:name="Person DAO">
+            <property-entry-point-resolver property="daoMethod"/>
+            <spring-object bean="acmPersonDao"/>
+        </component>
+    </flow>
+
+</mule>

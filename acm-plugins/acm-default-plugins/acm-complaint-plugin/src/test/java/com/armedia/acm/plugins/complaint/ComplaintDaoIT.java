@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
         "/spring/spring-library-complaint-plugin-test.xml",
         "/spring/spring-library-complaint.xml",
+        "/spring/spring-library-person.xml",
         "/spring/spring-library-mule-context-manager.xml",
         "/spring/spring-library-activiti-actions.xml",
         "/spring/spring-library-activemq.xml",

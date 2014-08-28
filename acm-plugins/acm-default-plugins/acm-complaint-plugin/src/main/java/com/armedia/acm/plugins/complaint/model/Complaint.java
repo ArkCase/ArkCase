@@ -119,7 +119,7 @@ public class Complaint implements Serializable, AcmObject
     
     @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_person_assoc_parent_id")
-    private List<PersonAssociation> personAssoc = new ArrayList<>();
+    private List<PersonAssociation> personAssociations = new ArrayList<>();
 
 
     public Complaint()
@@ -145,9 +145,9 @@ public class Complaint implements Serializable, AcmObject
         {
             childObject.setParentId(complaintId);
         }
-        for ( PersonAssociation perAssoc : personAssoc )
+        for ( PersonAssociation persAssoc : personAssociations)
         {
-            perAssoc.setParentId(complaintId);
+            persAssoc.setParentId(complaintId);
         }
     }
 
@@ -256,15 +256,6 @@ public class Complaint implements Serializable, AcmObject
                 oa.setCreated(created);
             }
         }
-        for ( PersonAssociation pa : personAssoc )
-        {
-            if (pa.getCreated() == null)
-            {
-                pa.setCreated(created);
-            }
-        }
-
-
     }
 
     public String getCreator()
@@ -292,7 +283,8 @@ public class Complaint implements Serializable, AcmObject
                 oa.setCreator(creator);
             }
         }
-        for ( PersonAssociation pa : personAssoc )
+        
+        for ( PersonAssociation pa : personAssociations )
         {
             if ( pa.getCreator() == null )
             {
@@ -326,14 +318,8 @@ public class Complaint implements Serializable, AcmObject
                 oa.setModified(modified);
             }
         }
-        for ( PersonAssociation pa : personAssoc )
-        {
-            if ( pa.getModified() == null ) 
-            {
-                pa.setModified(modified);
-            }
-        }
-    }
+
+   }
 
     public String getModifier()
     {
@@ -362,7 +348,7 @@ public class Complaint implements Serializable, AcmObject
             }
         }
         
-        for ( PersonAssociation pa : personAssoc )
+        for ( PersonAssociation pa : personAssociations )
         {
             if ( pa.getModifier() == null )
             {
@@ -450,20 +436,24 @@ public class Complaint implements Serializable, AcmObject
         return "Complaint";
     }
 
-    public List<PersonAssociation> getPersonAssociation() 
+    public List<PersonAssociation> getPersonAssociations() 
     {
-        return personAssoc;
+        return personAssociations;
     }
 
-    public void setPersonAssociation(List<PersonAssociation> personAssociation) 
+    public void setPersonAssociations(List<PersonAssociation> personAssociations) 
     {
-               
-        this.personAssoc = personAssociation;
-        for ( PersonAssociation perAssoc : personAssociation )
+        this.personAssociations = personAssociations;
+    
+        for ( PersonAssociation perAssoc : personAssociations )
         {
-            perAssoc.setParentType("COMPLAINT");
             perAssoc.setParentId(getComplaintId());
+            perAssoc.setParentType("COMPLAINT");
+            perAssoc.setPerson(getOriginator());
         }
-    } 
+       
+    
+    }
+    
     
 }
