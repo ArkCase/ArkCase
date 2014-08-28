@@ -42,7 +42,7 @@ public class GetDashboardConfigAPIController {
             Authentication authentication,
             HttpSession session
     ) throws AcmDashboardException, AcmObjectNotFoundException {
-        String userId = (String) authentication.getName();
+        String userId = (String) authentication.getName().toLowerCase();
         if (log.isInfoEnabled()) {
             log.info("Finding dashboard configuration for user '" + userId + "'");
         }

@@ -4796,23 +4796,26 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
     function($scope, $filter, $http, ngTableParams) {
         var url = App.Object.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
         $http.get(url).success(function(rawData) {
-           var dataT=_.map(rawData,function(row){
+           // var isData = false;
+            dataT=_.map(rawData,function(row){
                 row=_.clone(row)
                 row.due=moment(row.dueDate, "YYYY MM D").toDate()
                 row.id=parseInt(row.taskId)
+                row.status = row.taskStartDate != null ? "In Progress" : "Not Started"
                 return row
             })
+            $scope.isData = dataT.length > 0 ? true : false
             $scope.tableParams = new ngTableParams({
                 page: 1,
                 count: 5,
-                defaultSort: {
+                sorting: {
                     due: "asc"
                 }
             }, {
                 total: dataT.length,
                 getData: function($defer, params) {
-                    var filteredData = params.filter() ? $filter("filter")(dataT, params.filter()) : dataT,
-                        orderedData = params.sorting() ? $filter("orderBy")(filteredData, params.orderBy()) : dataT;
+                   // var filteredData = params.filter() ? $filter("filter")(dataT, params.filter()) : dataT,
+                       var orderedData = params.sorting() ? $filter("orderBy")(dataT, params.orderBy()) : dataT;
                     params.total(orderedData.length), $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()))
                 }
             })
@@ -4834,12 +4837,13 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
     function($scope, $filter, $http, ngTableParams) {
         var url = App.Object.getContextPath() + "/api/latest/plugin/complaint/forUser/" + App.Object.getUserName();
         $http.get(url).success(function(rawData) {
-            var dataC=_.map(rawData,function(row){
+             dataC=_.map(rawData,function(row){
                 row=_.clone(row)
 //                row.due=moment(row.dueDate, "YYYY MM D").toDate()
                 row.id=parseInt(row.complaintId)
                 return row
             })
+            $scope.isDataC = dataC.length > 0 ? true  : false
             $scope.tableParams = new ngTableParams({
                 page: 1,
                 count: 5,
@@ -4849,8 +4853,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             }, {
                 total: dataC.length,
                 getData: function($defer, params) {
-                    var filteredData = params.filter() ? $filter("filter")(dataC, params.filter()) : dataC,
-                        orderedData = params.sorting() ? $filter("orderBy")(filteredData, params.orderBy()) : dataC;
+                  //  var filteredData = params.filter() ? $filter("filter")(dataC, params.filter()) : dataC,
+                      var  orderedData = params.sorting() ? $filter("orderBy")(dataC, params.orderBy()) : dataC;
                     params.total(orderedData.length), $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()))
                 }
             })
@@ -10951,18 +10955,29 @@ Showdown.converter = function(converter_options) {
             $templateCache.put("scripts/widgets/markdown/markdown.html", '<div class="markdown" btf-markdown="config.content"></div>'),
 
             $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
-            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div ng-controller="myComplaintsCtrl"><table ng-table="tableParams" show-filter="true" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'ID\'" sortable="\'id\'">{{complaint.id}}</td><td data-title="\'Title\'" sortable="\'title\'" filter="{ \'title\': \'text\' }">{{complaint.complaintTitle}}</td><td data-title="\'Priority\'" sortable="\'priority\'" filter="{ \'priority\': \'text\' }">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'created\'" filter="{ \'created\': \'text\' }">{{complaint.created}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div>'),
+            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div class="alert alert-info" ng-controller="myComplaintsCtrl" ng-if="!isDataC"><p style="text-align:center;">No complaints created by you</p></div><div ng-controller="myComplaintsCtrl" ng-if="isDataC"><table ng-table="tableParams" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'ID\'" sortable="\'id\'">{{complaint.id}}</td><td data-title="\'Title\'" sortable="\'title\'">{{complaint.complaintTitle}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'created\'">{{complaint.created}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div>'),
+
+            //This si with filters
+//            $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
+//            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div ng-controller="myComplaintsCtrl"><table ng-table="tableParams" show-filter="true" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'ID\'" sortable="\'id\'">{{complaint.id}}</td><td data-title="\'Title\'" sortable="\'title\'" filter="{ \'title\': \'text\' }">{{complaint.complaintTitle}}</td><td data-title="\'Priority\'" sortable="\'priority\'" filter="{ \'priority\': \'text\' }">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'created\'" filter="{ \'created\': \'text\' }">{{complaint.created}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div>'),
 //<label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url">
 
             $templateCache.put("scripts/widgets/mytasks/edit.html", '<form role="form"><div class="form-group"></div></form>'),
-            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="mytasks"><div ng-controller="myTasksCtrl"><table ng-table="tableParams" show-filter="true" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'" filter="{ \'title\': \'text\' }">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'" filter="{ \'priority\': \'text\' }">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'" filter="{ \'due\': \'text\' }">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.completed}}</td></tr></table></div></div>'),
+            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="mytasks"><div class="alert alert-info" ng-controller="myTasksCtrl" ng-if="!isData"><p style="text-align:center;">No active tasks assigned</p></div><div ng-controller="myTasksCtrl" ng-if="isData"><table ng-table="tableParams" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.status}}</td></tr></table></div></div>'),
 //<label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url">
+
+
+            //This is with filters
+//            $templateCache.put("scripts/widgets/mytasks/edit.html", '<form role="form"><div class="form-group"></div></form>'),
+//            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="mytasks"><div ng-controller="myTasksCtrl"><table ng-table="tableParams" show-filter="true" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'" filter="{ \'title\': \'text\' }">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'" filter="{ \'priority\': \'text\' }">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'" filter="{ \'due\': \'text\' }">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.completed}}</td></tr></table></div></div>'),
 
             $templateCache.put("scripts/widgets/news/edit.html", '<form role="form"><div class="form-group"><label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url"></div></form>'),
             $templateCache.put("scripts/widgets/news/news.html", '<div class="news"><div class="alert alert-info" ng-if="!feed">Please insert a feed url in the widget configuration</div><h4><a ng-href="{{feed.link}}" target="_blank">{{feed.title}}</a></h4><ul><li ng-repeat="entry in feed.entries"><a ng-href="{{entry.link}}" target="_blank">{{entry.title}}</a></li></ul></div>'),
             $templateCache.put("scripts/widgets/randommsg/randommsg.html", "<blockquote><p>{{msg.text}}</p><small>{{msg.author}}</small></blockquote>"),
+
             $templateCache.put("scripts/widgets/teamtaskworkload/edit.html", '<form role="form"><div class="form-group"><label for="path">Team Task Workload</label><input type="text" class="form-control" id="path" ng-model="config.path" placeholder="Enter Path (username/reponame)"></div></form>'),
             $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="!chartConfig">Please insert a repository path in the widget configuration</div><div ng-if="chartConfig"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
+
             $templateCache.put("scripts/widgets/weather/edit.html", '<form role="form"><div class="form-group"><label for="location">Location</label><input type="location" class="form-control" id="location" ng-model="config.location" placeholder="Enter location"></div></form>'),
             $templateCache.put("scripts/widgets/weather/weather.html", '<div class="text-center"><div class="alert alert-info" ng-if="!data">Please insert a location in the widget configuration</div><div class="weather" ng-if="data"><h4>{{data.name}} ({{data.sys.country}})</h4><dl><dt>Temprature:</dt><dd>{{data.main.temp | number:2}}</dd></dl></div></div>'),
             $templateCache.put("partials/sample.html", '<adf-dashboard name="{{name}}" structure="4-8" adf-model="model">')
