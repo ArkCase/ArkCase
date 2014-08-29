@@ -47,6 +47,8 @@ public interface TaskDao
      */
     List<AcmTask> dueSpecificDateTasks(NumberOfDays numberOfDaysFromToday);
 
+//    List<AcmTask> betweenNowAndaSpecificDueDateTasks(NumberOfDays numberOfDaysFromToday);
+
     /**
      * List of all tasks assigned to all users that due date is before today, sorted by descending due date.
      * @return

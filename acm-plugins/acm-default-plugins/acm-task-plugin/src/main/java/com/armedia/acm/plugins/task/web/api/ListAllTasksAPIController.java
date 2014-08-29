@@ -39,14 +39,14 @@ public class ListAllTasksAPIController {
             Authentication authentication,
             HttpSession session
     ) throws AcmListObjectsFailedException {
-        if ( log.isInfoEnabled()) {
-            log.info("Finding tasks assigned to all users ");
-        }
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         try {
             List<AcmTask> retval = null;
             switch (AcmTasksForAPeriod.getTasksForPeriodByText(due)){
                 case ALL:
+                    if ( log.isInfoEnabled()) {
+                        log.info("Finding tasks assigned to all users ");
+                    }
                     retval = getTaskDao().allTasks();
                     break;
                  case PAST_DUE:
