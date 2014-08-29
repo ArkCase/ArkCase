@@ -17,6 +17,19 @@ Complaint.Event = {
             Complaint.Service.listComplaint(treeInfo);
         }
 
+        var data = App.Object.getApprovers();
+        if (Acm.isEmpty(data)) {
+            App.Service.getApprovers();
+        }
+        data = App.Object.getComplaintTypes();
+        if (Acm.isEmpty(data)) {
+            App.Service.getComplaintTypes();
+        }
+        data = App.Object.getPriorities();
+        if (Acm.isEmpty(data)) {
+            App.Service.getPriorities();
+        }
+
         Acm.keepTrying(Complaint.Event._tryInitAssignee, 8, 200);
         Acm.keepTrying(Complaint.Event._tryInitPriority, 8, 200);
         Acm.keepTrying(Complaint.Event._tryInitComplaintType, 8, 200);
