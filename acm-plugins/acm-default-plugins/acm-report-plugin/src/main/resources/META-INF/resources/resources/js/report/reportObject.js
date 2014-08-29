@@ -6,7 +6,10 @@
  * @author jwu
  */
 Report.Object = {
+	
     initialize : function() {
+        var items = $(document).items();
+        this.$complaintReportUrl = items.properties("complaintReportUrl").itemValue();
         this.$selReport = $("#selectReport");
 
         this.$edtStartDate = $("#startDate");
@@ -23,6 +26,8 @@ Report.Object = {
 
         //this.$btnTest = $("#test");
         //this.$btnTest.click(function(e) {Report.Event.onClickBtnTest(e);});
+        
+        this.$mainContentSel = $("#mainContent");
     }
     ,getValueStartDate: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtStartDate);

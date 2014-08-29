@@ -8,13 +8,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-    <artifactId>acm-orbeon-configuration</artifactId>
-    <name>Tool Integrations: Orbeon Configuration</name>
-    <description>Define the Orbeon broker via Spring configuration</description>
+    <artifactId>acm-form-configuration</artifactId>
+    <name>Tool Integrations: Form Configuration</name>
+    <description>Define the form broker via Spring configuration</description>
 
     <dependencies>
-        <!-- orbeon -->
-
+		<!-- orbeon -->
+		<!-- frevvo -->
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>

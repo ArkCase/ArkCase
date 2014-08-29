@@ -5,6 +5,9 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
+    <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="complaintReportUrl">${complaintReportUrl}</span>
+    </div>
 </jsp:attribute>
 
 
@@ -46,7 +49,7 @@
                                                 <option >Report 1</option>
                                                 <option>Report 2</option>
                                                 <option>Report 3</option>
-                                                <option>Report 4</option>
+                                                <option>Complaint Report</option>
                                             </select>
                                             <div class="line line-dashed b-b line-lg pull-in"></div>
                                             <label for="priority"  class="label">Date Range</label>
@@ -71,7 +74,7 @@
                                     </section>
                                 </aside>
                                 <aside>
-                                    <section class="vbox">
+                                    <section class="vbox" id="mainContent">
                                         <header class="header bg-white b-b clearfix">
                                             <div class="row m-t-sm">
                                                 <div class="col-sm-6 m-b-xs"> <a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default active"><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>
@@ -149,6 +152,7 @@
                                             </div>
                                         </footer>
                                     </section>
+                                    <iframe src="" name="report_iframe" style="width:100%; height:100%;"></iframe>
                                 </aside>
                             </section>
                         </section>
@@ -169,8 +173,7 @@
                 test
                 <input type="button" value="Test" id="test" />
 
-    </section>
-
+    		</section>
         </section>
     </section>
 </jsp:body>

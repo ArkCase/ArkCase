@@ -279,7 +279,7 @@
     </div>
 </div>
 
-<div class="tab-pane " id="documents">
+<div class="tab-pane " id="documents" style="width:100%; height:100%;">
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a" id='secDocDocuments'>
@@ -384,6 +384,7 @@
         </div>
     </div>
 -->
+<iframe src="" name="form_iframe" style="width:100%; height:100%; border: 0"></iframe>
 </div>
 <div class="tab-pane" id="tasks">
     <div class="row">
