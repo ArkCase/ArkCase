@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.armedia.acm.form.config.FormName;
+import com.armedia.acm.forms.roi.model.FormName;
 import com.armedia.acm.form.config.FormUrl;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.web.AcmPageDescriptor;

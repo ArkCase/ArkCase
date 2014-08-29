@@ -1,6 +1,5 @@
 package com.armedia.acm.pentaho.config;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -22,9 +21,8 @@ public class PentahoReportUrl implements ReportUrl{
 		return reportsProperties;
 	}
 
-	public void setReportsProperties(Map<String, Object> formProperties) {
-		System.out.println("formProperties: " + formProperties);
-		this.reportsProperties = formProperties;
+	public void setReportsProperties(Map<String, Object> reportProperties) {
+		this.reportsProperties = reportProperties;
 	}
 
 	@Override
