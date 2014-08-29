@@ -3,6 +3,8 @@ package com.armedia.acm.plugins.task.web.api;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.AcmTasksForAPeriod;
+import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import org.slf4j.Logger;
@@ -30,9 +32,10 @@ public class ListAllTasksAPIController {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/list/{due}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmTask> tasksForUser(
+            @PathVariable("due") String due,
             Authentication authentication,
             HttpSession session
     ) throws AcmListObjectsFailedException {
@@ -41,7 +44,28 @@ public class ListAllTasksAPIController {
         }
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         try {
-            List<AcmTask> retval = getTaskDao().allTasks();
+            List<AcmTask> retval = null;
+            switch (AcmTasksForAPeriod.getTasksForPeriodByText(due)){
+                case ALL:
+                    retval = getTaskDao().allTasks();
+                    break;
+                 case PAST_DUE:
+                     retval = getTaskDao().pastDueTasks();
+                     break;
+                 case DUE_TOMORROW:
+                     retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.ONE_DAY);
+                     break;
+                 case DUE_IN_7_DAYS:
+                     retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.SEVEN_DAYS);
+                     break;
+                 case DUE_IN_30_DAYS:
+                     retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.THIRTY_DAYS);
+                     break;
+                default:
+                    retval = getTaskDao().allTasks();
+                    break;
+            }
+
             for ( AcmTask task : retval ) {
                 AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "searchResult",
                         authentication.getName(), true, ipAddress);

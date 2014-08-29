@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.task.service;
 
+import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.NumberOfDays;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
@@ -38,6 +40,18 @@ public interface TaskDao
      * @return
      */
     List<AcmTask> allTasks();
+
+    /**
+     * List of all tasks assigned to all users that due date is until numberOfDaysFromToday, sorted by descending due date.
+     * @return
+     */
+    List<AcmTask> dueSpecificDateTasks(NumberOfDays numberOfDaysFromToday);
+
+    /**
+     * List of all tasks assigned to all users that due date is before today, sorted by descending due date.
+     * @return
+     */
+    List<AcmTask> pastDueTasks();
 
     AcmTask findById(Long taskId) throws AcmTaskException;
 }
