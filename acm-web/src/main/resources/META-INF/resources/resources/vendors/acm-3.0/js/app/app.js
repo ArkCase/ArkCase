@@ -13,12 +13,6 @@ var App = App || {
         Acm.deferred(App.Event.onPostInit);
     }
 
-//    ,Object : {}
-//    ,Event : {}
-//    ,Service : {}
-//    ,Callback : {}
-
-
     ,OBJTYPE_CASE:        "Case"
     ,OBJTYPE_COMPLAINT:   "Complaint"
     ,OBJTYPE_TASK:        "Task"
@@ -38,6 +32,7 @@ var App = App || {
     }
 
 
+    //fix me: make it plugin independent
     ,getComplaintTreeInfo: function() {
         var data = sessionStorage.getItem("AcmComplaintTreeInfo");
         if (Acm.isEmpty(data)) {

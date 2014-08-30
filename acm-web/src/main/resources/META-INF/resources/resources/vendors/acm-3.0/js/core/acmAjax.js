@@ -9,7 +9,26 @@ Acm.Ajax = {
     initialize: function() {
     }
 
-    ,asyncGetWithData : function(url, data, callback) {
+    ,deferredGet : function(url, callback, data) {
+        var arg = {type: 'GET'
+            ,url: url
+            ,dataType: 'json'
+        };
+        if (data) {
+            arg.data = data;
+        }
+        return $.Deferred(function ($dfd) {
+            arg.success = function (response) {
+                $dfd.resolve(response);
+            };
+            arg.error = function () {
+                $dfd.reject();
+            }
+            jQuery.ajax(arg);
+        });
+    }
+
+    ,asyncGetWithData : function(url, callback, data) {
         jQuery.ajax({type: 'GET'
             ,url: url
             ,async: true
@@ -26,18 +45,23 @@ Acm.Ajax = {
         });
     }
 
+    //,asyncGet : function(url, callback, data) {
 	,asyncGet : function(url, callback) {
-	    jQuery.ajax({type: 'GET'
-	        ,url: url
-	        ,async: true
-	        ,dataType: 'json'
-	        ,success: function(response) {
-	            Acm.Dispatcher.triggerEvent(callback, response);
-	        }
-	        ,error: function(xhr, status, error) {
-	            Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
-	        }
-	    });
+        var arg = {type: 'GET'
+            ,url: url
+            ,async: true
+            ,dataType: 'json'
+            ,success: function(response) {
+                Acm.Dispatcher.triggerEvent(callback, response);
+            }
+            ,error: function(xhr, status, error) {
+                Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
+            }
+        };
+//        if (data) {
+//            arg.data = data;
+//        }
+	    jQuery.ajax(arg);
 	}
 
     ,syncGet : function(url, callback) {
