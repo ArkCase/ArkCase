@@ -49,16 +49,16 @@ public class ListAllTasksAPIController {
                     }
                     retval = getTaskDao().allTasks();
                     break;
-                 case PAST_DUE:
+                case PAST_DUE:
                      retval = getTaskDao().pastDueTasks();
                      break;
-                 case DUE_TOMORROW:
+                case DUE_TOMORROW:
                      retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.ONE_DAY);
                      break;
-                 case DUE_IN_7_DAYS:
+                case DUE_IN_7_DAYS:
                      retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.SEVEN_DAYS);
                      break;
-                 case DUE_IN_30_DAYS:
+                case DUE_IN_30_DAYS:
                      retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.THIRTY_DAYS);
                      break;
                 default:

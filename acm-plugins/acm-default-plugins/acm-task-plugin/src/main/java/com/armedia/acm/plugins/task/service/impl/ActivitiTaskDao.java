@@ -201,29 +201,6 @@ class ActivitiTaskDao implements TaskDao
         return retval;
     }
 
-//    @Override
-//    public List<AcmTask> betweenNowAndaSpecificDueDateTasks(NumberOfDays numberOfDaysFromToday) {
-//        if (log.isInfoEnabled()) {
-//            log.info(String.format("Finding all tasks for all users which due date is until %s from today", numberOfDaysFromToday.getnDays()));
-//        }
-//        List<Task> activitiTasks =
-//                getActivitiTaskService().createTaskQuery().includeProcessVariables().
-//                        dueAfter(new Date()).dueBefore(shiftDateFromToday(numberOfDaysFromToday.getNumOfDays())).list();
-//
-//        if (log.isDebugEnabled()) {
-//            log.debug("Found '" + activitiTasks.size() + "' tasks for all users which due date is until " + numberOfDaysFromToday.getnDays() + " from today");
-//        }
-//
-//        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
-//
-//        for (Task activitiTask : activitiTasks) {
-//            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
-//
-//            retval.add(acmTask);
-//        }
-//        return retval;
-//    }
-
     @Override
     public List<AcmTask> dueSpecificDateTasks(NumberOfDays numberOfDaysFromToday) {
         if (log.isInfoEnabled()) {
@@ -241,29 +218,9 @@ class ActivitiTaskDao implements TaskDao
 
         for (Task activitiTask : activitiTasks) {
             AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
-
             retval.add(acmTask);
         }
         return retval;
-//        if (log.isInfoEnabled()) {
-//            log.info(String.format("Finding all tasks for all users which due date is until %s from today", numberOfDaysFromToday.getnDays()));
-//        }
-//        List<Task> activitiTasks =
-//                getActivitiTaskService().createTaskQuery().includeProcessVariables().
-//                        dueDate(shiftDateFromToday(numberOfDaysFromToday.getNumOfDays())).list();
-//
-//        if (log.isDebugEnabled()) {
-//            log.debug("Found '" + activitiTasks.size() + "' tasks for all users which due date is until " + numberOfDaysFromToday.getnDays() + " from today");
-//        }
-//
-//        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
-//
-//        for (Task activitiTask : activitiTasks) {
-//            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
-//
-//            retval.add(acmTask);
-//        }
-//        return retval;
     }
 
     @Override

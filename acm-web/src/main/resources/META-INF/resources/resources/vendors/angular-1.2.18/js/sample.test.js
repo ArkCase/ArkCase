@@ -4836,7 +4836,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
     }
 ]).controller("myComplaintsCtrl", ["$scope", "$filter", "$http", "ngTableParams",
     function($scope, $filter, $http, ngTableParams) {
-        var url = App.Object.getContextPath() + "/api/latest/plugin/complaint/forUser/tester"// + App.Object.getUserName();
+        var url = App.Object.getContextPath() + "/api/latest/plugin/complaint/forUser/" + App.Object.getUserName();
         $http.get(url).success(function(rawData) {
              dataC=_.map(rawData,function(row){
                 row=_.clone(row)
@@ -10883,6 +10883,7 @@ Showdown.converter = function(converter_options) {
                 var deferred = $q.defer(),
                     url = App.Object.getContextPath() + "/api/latest/plugin/task/list/"+due;
                 return $http.get(url).success(function(data) {
+
                     data ? deferred.resolve(data) : deferred.reject()
                 }).error(function() {
                     deferred.reject()
@@ -10892,6 +10893,8 @@ Showdown.converter = function(converter_options) {
     }
 ]).controller("teamTaskWorkloadCtrl", ["$scope", "config", "tasks",
     function($scope, config, tasks) {
+        $scope.showChart = tasks.length> 0 ? true : false;
+
         var options = [
             {
                 idO: "all", nameO: "All"
@@ -10908,12 +10911,14 @@ Showdown.converter = function(converter_options) {
             {
                 idO: "dueInAMonth", nameO:"Due in 30 Days"
             }];
+
         var chartTitle;
         angular.forEach(options, function(option) {
             if(option.idO == config.due){
                 chartTitle = option.nameO;
             }
         });
+        $scope.chartTitle=chartTitle;
         var data = {};
         angular.forEach(tasks, function(task) {
             var user = task.assignee;
@@ -11001,10 +11006,10 @@ Showdown.converter = function(converter_options) {
             $templateCache.put("scripts/widgets/randommsg/randommsg.html", "<blockquote><p>{{msg.text}}</p><small>{{msg.author}}</small></blockquote>"),
 
             $templateCache.put("scripts/widgets/teamtaskworkload/edit.html", '<form role="form"><div class="form-group"><label for="path">Select Due Date Period</label><select type="text" class="form-control" id="due" ng-model="config.due"><option value="all" ng-selected="selected">All</option><option value="pastDue">Past Due</option><option value="dueTomorrow" >Due Tomorrow</option><option value="dueInAWeek">Due in 7 Days</option><option value="dueInAMonth">Due in 30 Days</option></select></div></form>'),
-            $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="!chartConfig">Currently, there are no outstanding tasks for any user</div><div ng-if="chartConfig"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
+            $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="showChart==false"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">Currently, there are no outstanding tasks for any user</p></div><div ng-if="showChart"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
 
             $templateCache.put("scripts/widgets/weather/edit.html", '<form role="form"><div class="form-group"><label for="location">Location</label><input type="location" class="form-control" id="location" ng-model="config.location" placeholder="Enter location"></div></form>'),
-            $templateCache.put("scripts/widgets/weather/weather.html", '<div class="text-center"><div class="alert alert-info" ng-if="!data">Please insert a location in the widget configuration</div><div class="weather" ng-if="data"><h4>{{data.name}} ({{data.sys.country}})</h4><dl><dt>Temprature:</dt><dd>{{data.main.temp | number:2}}</dd></dl></div></div>'),
+            $templateCache.put("scripts/widgets/weather/weather.html", '<div class="text-center"><div class="alert alert-info" ng-if="!data"><p style="text-align:center;">Please insert a location in the widget configuration</div><div class="weather" ng-if="data"><h4>{{data.name}} ({{data.sys.country}})</h4><dl><dt>Temprature:</dt><dd>{{data.main.temp | number:2}}</dd></dl></div></div>'),
             $templateCache.put("partials/sample.html", '<adf-dashboard name="{{name}}" structure="4-8" adf-model="model">')
     }
 ]);
