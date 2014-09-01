@@ -61,6 +61,22 @@ public class Person implements Serializable
     @Column(name = "cm_family_name")
     private String familyName;
 
+    @Column(name = "cm_person_hair_color")
+    private String hairColor;
+
+    @Column(name = "cm_person_eye_color")
+    private String eyeColor;
+
+    @Column(name = "cm_person_height_inches")
+    private Long heightInInches;
+
+    @Column(name = "cm_person_weight_pounds")
+    private Long weightInPounds;
+
+    @Column(name = "cm_person_date_of_birth")
+    @Temporal(TemporalType.DATE)
+    private Date dateOfBirth;
+
     @Column(name = "cm_person_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
@@ -355,6 +371,54 @@ public class Person implements Serializable
 //            personAssoc.setParentType("PERSON");
         }
     }
-   
 
+    public String getHairColor()
+    {
+        return hairColor;
+    }
+
+    public void setHairColor(String hairColor)
+    {
+        this.hairColor = hairColor;
+    }
+
+    public String getEyeColor()
+    {
+        return eyeColor;
+    }
+
+    public void setEyeColor(String eyeColor)
+    {
+        this.eyeColor = eyeColor;
+    }
+
+    public Long getHeightInInches()
+    {
+        return heightInInches;
+    }
+
+    public void setHeightInInches(Long heightInInches)
+    {
+        this.heightInInches = heightInInches;
+    }
+
+    public Long getWeightInPounds()
+    {
+        return weightInPounds;
+    }
+
+    public void setWeightInPounds(Long weightInPounds)
+    {
+        this.weightInPounds = weightInPounds;
+    }
+
+    public Date getDateOfBirth()
+    {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth)
+    {
+        this.dateOfBirth = dateOfBirth;
+    }
 }
