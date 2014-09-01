@@ -2,11 +2,9 @@ package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import static javax.persistence.CascadeType.ALL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -23,8 +21,13 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static javax.persistence.CascadeType.*;
 
 /**
  * Created by armdev on 4/7/14.
@@ -332,6 +335,8 @@ public class Person implements Serializable
         }
     }
 
+    // use @XmlTransient to prevent recursive XML when serializing containers that refer to this person
+    @XmlTransient
     public List<PersonAssociation> getPersonAssociations()
     {
         return personAssociations;
