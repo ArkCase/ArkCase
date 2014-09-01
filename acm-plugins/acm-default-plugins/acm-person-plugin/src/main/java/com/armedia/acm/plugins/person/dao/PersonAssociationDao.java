@@ -57,8 +57,24 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
     public EntityManager getEntityManager() {
         return entityManager;
     }
-    
 
+
+    public Person findPersonByPersonAssociationId(Long personAssociationId)
+    {
+        Query personInAssociation = getEntityManager().createQuery(
+            "SELECT person " +
+                    "FROM  PersonAssociation personAssociation, " +
+                    "      Person person " +
+                    "WHERE personAssociation.id = :personAssociationId " +
+                    "AND   personAssociation.person.id = person.id"
+        );
+
+        personInAssociation.setParameter("personAssociationId", personAssociationId);
+
+        Person found = (Person) personInAssociation.getSingleResult();
+
+        return found;
+    }
 }
 
 
