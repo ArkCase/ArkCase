@@ -348,5 +348,24 @@
             <column name="cm_person_date_married" type="DATE"/>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="17-rename-and-change-constraints-personAssoc-table" author="tsedalu">
+        <renameColumn tableName="acm_person_assoc" oldColumnName="cm_person_associ_id" newColumnName="cm_person_assoc_id"/>
+        <dropNotNullConstraint tableName="acm_person_assoc" columnName="cm_person_assoc_person_desc"/>
+    </changeSet>
+    
+    <changeSet id="18-insert-in-to-person-type_lu-table" author="tsedalu">
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Complainant"/>
+            <column name="cm_order" valueNumeric="3"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
 
