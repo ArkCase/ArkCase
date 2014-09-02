@@ -3,6 +3,7 @@
 
 	<classpath>
 		<dir name="${workspace.home}/ACM3/acm-plugins/acm-default-plugins/acm-report-plugin/target/classes">
+        </dir>
 	</classpath>
 
     <web>
