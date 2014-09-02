@@ -342,5 +342,11 @@
             <column name="cm_person_eye_color" type="VARCHAR(256)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="17-acm-person-add-date-married" author="dmiller">
+        <addColumn tableName="acm_person">
+            <column name="cm_person_date_married" type="DATE"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 
