@@ -3,15 +3,21 @@ package com.armedia.acm.plugins.complaint;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
-
+import com.armedia.acm.plugins.person.model.PersonAssociation;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by armdev on 4/8/14.
  */
 public class ComplaintFactory
 {
+    private Logger log = LoggerFactory.getLogger(getClass());
+    
     public Complaint complaint()
     {
         Complaint complaint = new Complaint();
@@ -25,12 +31,29 @@ public class ComplaintFactory
         complaint.setModified(new Date());
         complaint.setModifier("testModifier");
 
-        Person p = complaint.getOriginator();
+        PersonAssociation pa = complaint.getOriginator();
+        
+        Person p = new Person();
         p.setFamilyName("Person");
         p.setGivenName("ACM");
         p.setStatus("testStatus");
+        p.setCreator("ann-acm");
+        p.setModifier("ann-acm");
 
-        complaint.setOriginator(p);
+        pa.setPerson(p);
+        pa.setPersonDescription("Simple Description");
+        pa.setPersonType("Originator");
+
+        complaint.setOriginator(pa);
+        
+        PersonAssociation personAssoc = new PersonAssociation();
+        
+        personAssoc.setPerson(p);
+        personAssoc.setPersonType("Complainant");
+        personAssoc.setPersonDescription("Short Description");
+        
+        List <PersonAssociation> listPersonAssoc = complaint.getPersonAssociations();
+        listPersonAssoc.add(pa);
 
         ObjectAssociation oa = new ObjectAssociation();
         oa.setTargetId(12345L);
@@ -40,6 +63,7 @@ public class ComplaintFactory
         oa.setModifier("testModifier");
 
         complaint.addChildObject(oa);
+        complaint.setPersonAssociations(listPersonAssoc);
 
         return complaint;
     }
