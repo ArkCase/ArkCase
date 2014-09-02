@@ -4599,7 +4599,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             controller: "sample01Ctrl",
             resolve: {
                 model: function($q, $http) {
-                    var q = $q.defer(),
+                    var q = $q.defer();
+                        //$scope.tasksUrl = App.Object.getContextPath()+ "/plugin/task#{{task.taskId}}";
                         url = App.Object.getContextPath() + "/api/latest/plugin/dashboard/get";
                     return $http.get(url).success(function(data) {
                         q.resolve(data.dashboardConfig);
@@ -4629,10 +4630,11 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
         $scope.name = "sample-01";
         $scope.model = angular.fromJson(model);
         $scope.collapsible = !1;
-
+        appRoot = App.Object.getContextPath();
+        $scope.appRoot =  appRoot;
         $scope.$on("adfDashboardChanged", function(event, name, model) {
             localStorageService.set(name, model);
-            var url = App.Object.getContextPath() + "/api/latest/plugin/dashboard/set",
+            var url = appRoot + "/api/latest/plugin/dashboard/set",
                 postObject = new Object;
             postObject.dashboardConfig = JSON.stringify(model), $http({
                 method: "POST",
@@ -4802,6 +4804,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 row.due=moment(row.dueDate, "YYYY MM D").toDate()
                 row.id=parseInt(row.taskId)
                 row.status = row.taskStartDate != null ? "In Progress" : "Not Started"
+                row.taskUrl = App.Object.getContextPath() + "/plugin/task/";
                 return row
             })
             $scope.isData = dataT.length > 0 ? true : false
@@ -4841,6 +4844,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 row=_.clone(row)
 //                row.due=moment(row.dueDate, "YYYY MM D").toDate()
                 row.id=parseInt(row.complaintId)
+                row.complaintUrl = App.Object.getContextPath() + "/plugin/complaint/";
                 return row
             })
             $scope.isDataC = dataC.length > 0 ? true  : false
@@ -10858,11 +10862,12 @@ Showdown.converter = function(converter_options) {
 ]), angular.module("sample.widgets.teamtaskworkload", ["adf.provider", "highcharts-ng"]).config(["dashboardProvider",
     function(dashboardProvider) {
         var widget = {
+            title: "Team Task Workload ",
             templateUrl: "scripts/widgets/teamtaskworkload/teamtaskworkload.html",
             reload: !0,
             resolve: {
-                tasks: function(teamTaskWorkloadService) {
-                    return teamTaskWorkloadService.getTasks()
+                tasks: function(teamTaskWorkloadService, config) {
+                    return teamTaskWorkloadService.getTasks(config.due)
                 }
             },
             edit: {
@@ -10870,7 +10875,6 @@ Showdown.converter = function(converter_options) {
             }
         };
         dashboardProvider.widget("teamTaskWorkload", angular.extend({
-            title: "Team Task Workload",
             description: "Displays tasks per user as pie chart",
             controller: "teamTaskWorkloadCtrl"
         }, widget))
@@ -10878,10 +10882,11 @@ Showdown.converter = function(converter_options) {
 ]).service("teamTaskWorkloadService", ["$q", "$http",
     function($q, $http) {
         return {
-            getTasks: function() {
+            getTasks: function(due) {
                 var deferred = $q.defer(),
-                    url = App.Object.getContextPath() + "/api/latest/plugin/task/list";
+                    url = App.Object.getContextPath() + "/api/latest/plugin/task/list/"+due;
                 return $http.get(url).success(function(data) {
+
                     data ? deferred.resolve(data) : deferred.reject()
                 }).error(function() {
                     deferred.reject()
@@ -10891,6 +10896,32 @@ Showdown.converter = function(converter_options) {
     }
 ]).controller("teamTaskWorkloadCtrl", ["$scope", "config", "tasks",
     function($scope, config, tasks) {
+        $scope.showChart = tasks.length> 0 ? true : false;
+
+        var options = [
+            {
+                idO: "all", nameO: "All"
+            },
+            {
+                idO: "pastDue", nameO:"Past Due"
+            },
+            {
+                idO: "dueTomorrow", nameO:"Due Tomorrow"
+            },
+            {
+                idO: "dueInAWeek", nameO:"Due in 7 Days"
+            },
+            {
+                idO: "dueInAMonth", nameO:"Due in 30 Days"
+            }];
+
+        var chartTitle;
+        angular.forEach(options, function(option) {
+            if(option.idO == config.due){
+                chartTitle = option.nameO;
+            }
+        });
+        $scope.chartTitle=chartTitle;
         var data = {};
         angular.forEach(tasks, function(task) {
             var user = task.assignee;
@@ -10918,7 +10949,7 @@ Showdown.converter = function(converter_options) {
                 plotShadow: !1
             },
             title: {
-                text: config.path
+                text: chartTitle
             },
             plotOptions: {
                 pie: {
@@ -10934,7 +10965,7 @@ Showdown.converter = function(converter_options) {
             },
             series: [{
                 type: "pie",
-                name: config.path,
+                name: chartTitle,
                 data: seriesData
             }]
         })
@@ -10955,15 +10986,17 @@ Showdown.converter = function(converter_options) {
             $templateCache.put("scripts/widgets/markdown/markdown.html", '<div class="markdown" btf-markdown="config.content"></div>'),
 
             $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
-            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div class="alert alert-info" ng-controller="myComplaintsCtrl" ng-if="!isDataC"><p style="text-align:center;">No complaints created by you</p></div><div ng-controller="myComplaintsCtrl" ng-if="isDataC"><table ng-table="tableParams" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'ID\'" sortable="\'id\'">{{complaint.id}}</td><td data-title="\'Title\'" sortable="\'title\'">{{complaint.complaintTitle}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'created\'">{{complaint.created}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div>'),
+            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div class="alert alert-info" ng-controller="myComplaintsCtrl" ng-if="!isDataC"><p style="text-align:center;">No complaints created by you</p></div><div ng-controller="myComplaintsCtrl" ng-if="isDataC"><table ng-table="tableParams" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'ID\'" sortable="\'id\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.id}}</a></td><td data-title="\'Title\'" sortable="\'complaintTitle\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintTitle}}</a></td><td data-title="\'Priority\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'created\'">{{complaint.created}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div>'),
 
             //This si with filters
 //            $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
 //            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div ng-controller="myComplaintsCtrl"><table ng-table="tableParams" show-filter="true" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'ID\'" sortable="\'id\'">{{complaint.id}}</td><td data-title="\'Title\'" sortable="\'title\'" filter="{ \'title\': \'text\' }">{{complaint.complaintTitle}}</td><td data-title="\'Priority\'" sortable="\'priority\'" filter="{ \'priority\': \'text\' }">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'created\'" filter="{ \'created\': \'text\' }">{{complaint.created}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div>'),
 //<label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url">
 
+
+
             $templateCache.put("scripts/widgets/mytasks/edit.html", '<form role="form"><div class="form-group"></div></form>'),
-            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="mytasks"><div class="alert alert-info" ng-controller="myTasksCtrl" ng-if="!isData"><p style="text-align:center;">No active tasks assigned</p></div><div ng-controller="myTasksCtrl" ng-if="isData"><table ng-table="tableParams" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.status}}</td></tr></table></div></div>'),
+            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="mytasks"><div class="alert alert-info" ng-controller="myTasksCtrl" ng-if="!isData"><p style="text-align:center;">No active tasks assigned</p></div><div ng-controller="myTasksCtrl" ng-if="isData"><table ng-table="tableParams" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.status}}</td></tr></table></div></div>'),
 //<label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url">
 
 
@@ -10975,11 +11008,11 @@ Showdown.converter = function(converter_options) {
             $templateCache.put("scripts/widgets/news/news.html", '<div class="news"><div class="alert alert-info" ng-if="!feed">Please insert a feed url in the widget configuration</div><h4><a ng-href="{{feed.link}}" target="_blank">{{feed.title}}</a></h4><ul><li ng-repeat="entry in feed.entries"><a ng-href="{{entry.link}}" target="_blank">{{entry.title}}</a></li></ul></div>'),
             $templateCache.put("scripts/widgets/randommsg/randommsg.html", "<blockquote><p>{{msg.text}}</p><small>{{msg.author}}</small></blockquote>"),
 
-            $templateCache.put("scripts/widgets/teamtaskworkload/edit.html", '<form role="form"><div class="form-group"><label for="path">Team Task Workload</label><input type="text" class="form-control" id="path" ng-model="config.path" placeholder="Enter Path (username/reponame)"></div></form>'),
-            $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="!chartConfig">Please insert a repository path in the widget configuration</div><div ng-if="chartConfig"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
+            $templateCache.put("scripts/widgets/teamtaskworkload/edit.html", '<form role="form"><div class="form-group"><label for="path">Select Due Date Period</label><select type="text" class="form-control" id="due" ng-model="config.due"><option value="all" ng-selected="selected">All</option><option value="pastDue">Past Due</option><option value="dueTomorrow" >Due Tomorrow</option><option value="dueInAWeek">Due in 7 Days</option><option value="dueInAMonth">Due in 30 Days</option></select></div></form>'),
+            $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="showChart==false"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">Currently, there are no outstanding tasks for any user</p></div><div ng-if="showChart"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
 
             $templateCache.put("scripts/widgets/weather/edit.html", '<form role="form"><div class="form-group"><label for="location">Location</label><input type="location" class="form-control" id="location" ng-model="config.location" placeholder="Enter location"></div></form>'),
-            $templateCache.put("scripts/widgets/weather/weather.html", '<div class="text-center"><div class="alert alert-info" ng-if="!data">Please insert a location in the widget configuration</div><div class="weather" ng-if="data"><h4>{{data.name}} ({{data.sys.country}})</h4><dl><dt>Temprature:</dt><dd>{{data.main.temp | number:2}}</dd></dl></div></div>'),
+            $templateCache.put("scripts/widgets/weather/weather.html", '<div class="text-center"><div class="alert alert-info" ng-if="!data"><p style="text-align:center;">Please insert a location in the widget configuration</div><div class="weather" ng-if="data"><h4>{{data.name}} ({{data.sys.country}})</h4><dl><dt>Temprature:</dt><dd>{{data.main.temp | number:2}}</dd></dl></div></div>'),
             $templateCache.put("partials/sample.html", '<adf-dashboard name="{{name}}" structure="4-8" adf-model="model">')
     }
 ]);

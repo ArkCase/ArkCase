@@ -332,5 +332,21 @@
             </column>
          </createTable>
      </changeSet>
+
+    <changeSet id="16-acm-person-add-person-attributes" author="dmiller">
+        <addColumn tableName="acm_person">
+            <column name="cm_person_date_of_birth" type="DATE"/>
+            <column name="cm_person_height_inches" type="NUMBER(32,0)"/>
+            <column name="cm_person_weight_pounds" type="NUMBER(32,0)"/>
+            <column name="cm_person_hair_color" type="VARCHAR(256)"/>
+            <column name="cm_person_eye_color" type="VARCHAR(256)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="17-acm-person-add-date-married" author="dmiller">
+        <addColumn tableName="acm_person">
+            <column name="cm_person_date_married" type="DATE"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 

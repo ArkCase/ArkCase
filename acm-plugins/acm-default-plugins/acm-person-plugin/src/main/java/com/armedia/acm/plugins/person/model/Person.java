@@ -2,11 +2,9 @@ package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import static javax.persistence.CascadeType.ALL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -23,12 +21,19 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static javax.persistence.CascadeType.*;
 
 /**
  * Created by armdev on 4/7/14.
  */
+@XmlRootElement
 @Entity
 @Table(name = "acm_person")
 public class Person implements Serializable
@@ -55,6 +60,26 @@ public class Person implements Serializable
 
     @Column(name = "cm_family_name")
     private String familyName;
+
+    @Column(name = "cm_person_hair_color")
+    private String hairColor;
+
+    @Column(name = "cm_person_eye_color")
+    private String eyeColor;
+
+    @Column(name = "cm_person_height_inches")
+    private Long heightInInches;
+
+    @Column(name = "cm_person_weight_pounds")
+    private Long weightInPounds;
+
+    @Column(name = "cm_person_date_of_birth")
+    @Temporal(TemporalType.DATE)
+    private Date dateOfBirth;
+
+    @Column(name = "cm_person_date_married")
+    @Temporal(TemporalType.DATE)
+    private Date dateMarried;
 
     @Column(name = "cm_person_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -332,6 +357,8 @@ public class Person implements Serializable
         }
     }
 
+    // use @XmlTransient to prevent recursive XML when serializing containers that refer to this person
+    @XmlTransient
     public List<PersonAssociation> getPersonAssociations()
     {
         return personAssociations;
@@ -348,6 +375,64 @@ public class Person implements Serializable
 //            personAssoc.setParentType("PERSON");
         }
     }
-   
 
+    public String getHairColor()
+    {
+        return hairColor;
+    }
+
+    public void setHairColor(String hairColor)
+    {
+        this.hairColor = hairColor;
+    }
+
+    public String getEyeColor()
+    {
+        return eyeColor;
+    }
+
+    public void setEyeColor(String eyeColor)
+    {
+        this.eyeColor = eyeColor;
+    }
+
+    public Long getHeightInInches()
+    {
+        return heightInInches;
+    }
+
+    public void setHeightInInches(Long heightInInches)
+    {
+        this.heightInInches = heightInInches;
+    }
+
+    public Long getWeightInPounds()
+    {
+        return weightInPounds;
+    }
+
+    public void setWeightInPounds(Long weightInPounds)
+    {
+        this.weightInPounds = weightInPounds;
+    }
+
+    public Date getDateOfBirth()
+    {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth)
+    {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public Date getDateMarried()
+    {
+        return dateMarried;
+    }
+
+    public void setDateMarried(Date dateMarried)
+    {
+        this.dateMarried = dateMarried;
+    }
 }

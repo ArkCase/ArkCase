@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.HistoryService;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 class ActivitiTaskDao implements TaskDao
@@ -25,6 +28,8 @@ class ActivitiTaskDao implements TaskDao
     private RepositoryService activitiRepositoryService;
     private Logger log = LoggerFactory.getLogger(getClass());
     private HistoryService activitiHistoryService;
+
+
 
     @Override
     @Transactional
@@ -171,13 +176,60 @@ class ActivitiTaskDao implements TaskDao
     }
 
     @Override
+    public List<AcmTask> pastDueTasks() {
+        if ( log.isInfoEnabled() )
+        {
+            log.info("Finding all tasks for all users that due date was before today");
+        }
+        List<Task> activitiTasks =
+                getActivitiTaskService().createTaskQuery().includeProcessVariables().
+                        dueBefore(new Date()).list();
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Found '" + activitiTasks.size() + "' tasks for all users with past due date");
+        }
+
+        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
+
+        for ( Task activitiTask : activitiTasks )
+        {
+            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
+
+            retval.add(acmTask);
+        }
+        return retval;
+    }
+
+    @Override
+    public List<AcmTask> dueSpecificDateTasks(NumberOfDays numberOfDaysFromToday) {
+        if (log.isInfoEnabled()) {
+            log.info(String.format("Finding all tasks for all users which due date is until %s from today", numberOfDaysFromToday.getnDays()));
+        }
+        List<Task> activitiTasks =
+                getActivitiTaskService().createTaskQuery().includeProcessVariables().
+                        dueAfter(new Date()).dueBefore(shiftDateFromToday(numberOfDaysFromToday.getNumOfDays())).list();
+
+        if (log.isDebugEnabled()) {
+            log.debug("Found '" + activitiTasks.size() + "' tasks for all users which due date is between today and " + numberOfDaysFromToday.getnDays() + " from today");
+        }
+
+        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
+
+        for (Task activitiTask : activitiTasks) {
+            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
+            retval.add(acmTask);
+        }
+        return retval;
+    }
+
+    @Override
     public AcmTask findById(Long taskId) throws AcmTaskException
     {
         if ( log.isInfoEnabled() )
         {
             log.info("Finding task with ID '" + taskId + "'");
         }
-
         AcmTask retval;
 
         Task activitiTask =
@@ -289,6 +341,16 @@ class ActivitiTaskDao implements TaskDao
         {
             acmTask.setAdhocTask(true);
         }
+    }
+
+    private Date shiftDateFromToday(int daysFromToday){
+        Date nextDate;
+        Date today = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(today);
+        cal.add(Calendar.DATE,daysFromToday);
+        nextDate = cal.getTime();
+        return nextDate;
     }
 
     protected void extractProcessVariables(Task activitiTask, AcmTask acmTask)
