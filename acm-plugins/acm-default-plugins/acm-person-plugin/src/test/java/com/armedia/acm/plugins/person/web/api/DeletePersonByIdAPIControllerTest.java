@@ -35,11 +35,10 @@ public class DeletePersonByIdAPIControllerTest extends EasyMockSupport
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
 
-    private DeletePersonByIdAPIController unit;
+    private DeletePersonByPersonIdAPIController unit;
 
     private PersonDao mockPersonDao;
     private PersonAssociationDao mockPersonAssociationDao;
-    private PersonEventPublisher mockPersonEventPublisher;
     private Authentication mockAuthentication;
 
     @Autowired
@@ -54,7 +53,7 @@ public class DeletePersonByIdAPIControllerTest extends EasyMockSupport
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
 
-        unit = new DeletePersonByIdAPIController();
+        unit = new DeletePersonByPersonIdAPIController();
 
         unit.setPersonDao(mockPersonDao);
         unit.setPersonAssociationDao(mockPersonAssociationDao);
