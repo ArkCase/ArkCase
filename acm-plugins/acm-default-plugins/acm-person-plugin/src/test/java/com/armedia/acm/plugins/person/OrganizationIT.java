@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.person.web;
+package com.armedia.acm.plugins.person;
 
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;

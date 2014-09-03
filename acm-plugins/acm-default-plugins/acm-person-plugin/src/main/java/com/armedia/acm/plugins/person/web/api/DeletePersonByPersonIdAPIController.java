@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @RequestMapping({ "/api/v1/plugin/person", "/api/latest/plugin/person" })
-public class DeletePersonByIdAPIController
+public class DeletePersonByPersonIdAPIController
 {
     private PersonDao personDao;
     private PersonAssociationDao personAssociationDao;
