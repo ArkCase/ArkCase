@@ -6,7 +6,8 @@ import com.armedia.acm.services.signature.exception.AcmSignatureException;
 import com.armedia.acm.services.signature.model.ApplicationSignatureEvent;
 import com.armedia.acm.services.signature.model.Signature;
 import com.armedia.acm.services.signature.service.SignatureEventPublisher;
-
+import com.armedia.acm.services.users.service.ldap.LdapAuthenticateManager;
+import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ public class SignatureAPIController
 {
     private SignatureDao signatureDao;
     private SignatureEventPublisher signatureEventPublisher;
+    private LdapAuthenticateManager ldapAuthenticateManager;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -46,27 +48,31 @@ public class SignatureAPIController
         
         try
         {       	
-        	String user = authentication.getName();
-        	
-        	// TODO sign task by authenticating against ldap
-        	boolean isCorrectPassword = true;
-        	
-        	Signature signature = new Signature();
-        	
-        	if (!isCorrectPassword)
+        	if (StringUtils.isBlank(password)) 
         	{
-        		throw new AcmSignatureException("Password was incorrect");
+        		throw new AcmSignatureException("Password blank");
         	}
+        	
+        	String userName = authentication.getName();
+        	
+        	// authenticate user/password against ldap service(s)
+        	Boolean isAuthenticated = getLdapAuthenticateManager().authenticate(userName, password);
+        	if (!isAuthenticated)
+        	{
+        		throw new AcmSignatureException("Password incorrect");
+        	}
+        	
         	// persist to db
+        	Signature signature = new Signature();
         	signature.setObjectId(objectId);
         	signature.setObjectType(objectType);
-        	signature.setSignedBy(user);
+        	signature.setSignedBy(userName);
         	
             Signature savedSignature = getSignatureDao().save(signature);
 
-            publishSignatureEvent(authentication, httpSession, signature, true);
+            publishSignatureEvent(authentication, httpSession, savedSignature, true);
 
-            return signature;
+            return savedSignature;
         }
         catch (Exception e)
         {
@@ -109,5 +115,14 @@ public class SignatureAPIController
 		this.signatureEventPublisher = signatureEventPublisher;
 	}
 
+	public LdapAuthenticateManager getLdapAuthenticateManager() {
+		return ldapAuthenticateManager;
+	}
+
+	public void setLdapAuthenticateManager(
+			LdapAuthenticateManager ldapAuthenticateManager) {
+		this.ldapAuthenticateManager = ldapAuthenticateManager;
+	}
+	
 }
 

@@ -6,6 +6,7 @@
     <bean id="acmSignatureAPIController" class="com.armedia.acm.services.signature.web.api.SignatureAPIController">
         <property name="signatureDao" ref="acmSignatureDao"/>
         <property name="signatureEventPublisher" ref="acmSignatureEventPublisher"/>
+        <property name="ldapAuthenticateManager" ref="acmLdapAuthenticateManager"/>
     </bean>
     
 </beans>

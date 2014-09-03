@@ -21,6 +21,11 @@
 			<artifactId>acm-service-data</artifactId>
 			<version>${acm.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-users</artifactId>
+            <version>${acm.version}</version>
+        </dependency>		
 		<dependency>
 			<groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
 			<artifactId>acm-object-association-plugin</artifactId>
