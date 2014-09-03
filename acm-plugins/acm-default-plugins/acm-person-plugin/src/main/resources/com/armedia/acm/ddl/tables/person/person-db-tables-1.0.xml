@@ -358,7 +358,7 @@
         <insert tableName="acm_person_type_lu">
             <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
             <column name="cm_value" value="Complainant"/>
-            <column name="cm_order" valueNumeric="3"/>
+            <column name="cm_order" valueNumeric="4"/>
             <column name="cm_status" value="ACTIVE"/>
             <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
             <column name="cm_creator" valueComputed="USER"/>
