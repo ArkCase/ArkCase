@@ -91,7 +91,7 @@ public class Complaint implements Serializable, AcmObject
     // only one person, so a ManyToOne mapping makes sense here.
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_originator_id")
-    private Person originator;
+    private PersonAssociation originator;
 
     /**
      * This field is only used when the complaint is created. Usually it will be null.  Use the ecmFolderId
@@ -141,13 +141,19 @@ public class Complaint implements Serializable, AcmObject
             setStatus("DRAFT");
         }
 
+        if ( getOriginator() != null )
+        {
+            personAssociationResolver(getOriginator());
+        }
+
         for ( ObjectAssociation childObject : childObjects )
         {
             childObject.setParentId(complaintId);
         }
         for ( PersonAssociation persAssoc : personAssociations)
         {
-            persAssoc.setParentId(complaintId);
+            personAssociationResolver(persAssoc);
+            //persAssoc.setParentId(complaintId);
         }
     }
 
@@ -256,6 +262,13 @@ public class Complaint implements Serializable, AcmObject
                 oa.setCreated(created);
             }
         }
+        for ( PersonAssociation pa : personAssociations )
+        {
+            if ( pa.getCreated() == null )
+            {
+                pa.setCreated(created);
+            }
+        }
     }
 
     public String getCreator()
@@ -318,6 +331,13 @@ public class Complaint implements Serializable, AcmObject
                 oa.setModified(modified);
             }
         }
+        for ( PersonAssociation pa : personAssociations)
+        {
+            if ( pa.getModified() == null )
+            {
+                pa.setModified(modified);
+            }
+        }
 
    }
 
@@ -367,17 +387,16 @@ public class Complaint implements Serializable, AcmObject
         this.status = status;
     }
 
-    public Person getOriginator()
+    public PersonAssociation getOriginator()
     {
-        if ( originator == null )
-        {
-            originator = new Person();
+        if (originator == null) {
+            originator = new PersonAssociation();
         }
 
         return originator;
     }
 
-    public void setOriginator(Person originator)
+    public void setOriginator(PersonAssociation originator)
     {
         this.originator = originator;
     }
@@ -441,19 +460,17 @@ public class Complaint implements Serializable, AcmObject
         return personAssociations;
     }
 
-    public void setPersonAssociations(List<PersonAssociation> personAssociations) 
-    {
+    public void setPersonAssociations(List<PersonAssociation> personAssociations) {
         this.personAssociations = personAssociations;
+    }   
     
-        for ( PersonAssociation perAssoc : personAssociations )
-        {
-            perAssoc.setParentId(getComplaintId());
-            perAssoc.setParentType("COMPLAINT");
-            perAssoc.setPerson(getOriginator());
+    private void personAssociationResolver (PersonAssociation personAssoc)
+    {
+        personAssoc.setParentId(getComplaintId());
+        personAssoc.setParentType("COMPLAINT");
+    
         }
        
-    
-    }
     
     
 }

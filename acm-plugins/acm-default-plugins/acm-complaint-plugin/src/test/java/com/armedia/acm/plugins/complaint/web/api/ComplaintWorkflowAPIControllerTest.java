@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -78,7 +79,13 @@ public class ComplaintWorkflowAPIControllerTest extends EasyMockSupport
         address.setState("VA");
         address.setStreetAddress("8221 Old Courthouse Road");
         person.getAddresses().add(address);
-        complaint.setOriginator(person);
+       
+         PersonAssociation personAssoc = new PersonAssociation();
+        personAssoc.setPerson(person);
+        personAssoc.setPersonDescription("sample Description");
+        personAssoc.setPersonType("Originator");
+
+        complaint.setOriginator(personAssoc);
 
         complaint.setApprovers(Arrays.asList("user1", "user2"));
 

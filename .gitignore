@@ -20,3 +20,4 @@ acm-plugins/acm-default-plugins/acm-report-plugin/src/main/resources/rebel.xml
 acm-services/acm-service-authentication-token/src/main/resources/rebel.xml
 acm-plugins/acm-extra-plugins/acm-alfresco-rma-integration/src/main/resources/rebel.xml
 acm-services/acm-service-authentication-token/src/main/resources/rebel.xml
+acm-plugins/acm-default-plugins/acm-report-plugin/src/main/resources/rebel.xml

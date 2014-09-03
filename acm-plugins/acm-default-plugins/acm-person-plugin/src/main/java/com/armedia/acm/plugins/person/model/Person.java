@@ -77,6 +77,10 @@ public class Person implements Serializable
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
+    @Column(name = "cm_person_date_married")
+    @Temporal(TemporalType.DATE)
+    private Date dateMarried;
+
     @Column(name = "cm_person_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
@@ -420,5 +424,15 @@ public class Person implements Serializable
     public void setDateOfBirth(Date dateOfBirth)
     {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public Date getDateMarried()
+    {
+        return dateMarried;
+    }
+
+    public void setDateMarried(Date dateMarried)
+    {
+        this.dateMarried = dateMarried;
     }
 }

@@ -4,22 +4,6 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-complaint-person-foreign-key" author="dmiller" runAlways="true" >
-        <preConditions onFail="MARK_RAN" >
-            <not>
-                <foreignKeyConstraintExists foreignKeyName="fk_cmpl_person_id"/>
-            </not>
-        </preConditions>
-        <addForeignKeyConstraint baseTableName="acm_complaint"
-                                 baseColumnNames="cm_originator_id"
-                                 constraintName="fk_cmpl_person_id"
-                                 referencedTableName="acm_person"
-                                 referencedColumnNames="cm_person_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
-
-    </changeSet>
-
     <changeSet id="02-complaint-type-foreign-key" author="dmiller">
         <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_complaint_type"
                                  constraintName="fk_cmpl_type"
@@ -38,5 +22,19 @@
                                  initiallyDeferred="true"/>
     </changeSet>
 
+    <changeSet id="04-drop-fk-cmpl-person-id-and-add-new-fk" author="tsedalu" failOnError="false"> 
+        <dropForeignKeyConstraint baseTableName="acm_complaint"                                  
+                                  constraintName="fk_cmpl_person_id"/>
+        
+        <addForeignKeyConstraint baseTableName="acm_complaint" 
+                                 baseColumnNames="cm_originator_id" 
+                                 constraintName="fk_cmpl_personAssoc_id" 
+                                 referencedTableName="acm_person_assoc" 
+                                 referencedColumnNames="cm_person_assoc_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>                  
+    </changeSet>
+    
+    
 </databaseChangeLog>
 

@@ -31,7 +31,7 @@ public class PersonAssociation implements Serializable
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @Column(name = "cm_person_associ_id")
+    @Column(name = "cm_person_assoc_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -107,6 +107,10 @@ public class PersonAssociation implements Serializable
 
     public Person getPerson()
     {
+        if ( person == null )
+        {
+            person = new Person();
+        }
         return person;
     }
 
@@ -173,6 +177,11 @@ public class PersonAssociation implements Serializable
     public void setCreator(String creator) 
     {
         this.creator = creator;
+        
+        if ( getPerson() != null )
+        {
+            getPerson().setCreator(creator);
+        }
     }
 
     public Date getModified() {
@@ -192,6 +201,11 @@ public class PersonAssociation implements Serializable
     public void setModifier(String modifier) 
     {
         this.modifier = modifier;
+        
+        if ( getPerson() != null )
+        {
+            getPerson().setModifier(modifier);
+        }
     }
 
     
