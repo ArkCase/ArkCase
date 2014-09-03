@@ -9,7 +9,7 @@ Acm.Ajax = {
     initialize: function() {
     }
 
-    ,deferredGet : function(url, callback, data) {
+    ,deferredGet : function(url, data) {
         var arg = {type: 'GET'
             ,url: url
             ,dataType: 'json'
