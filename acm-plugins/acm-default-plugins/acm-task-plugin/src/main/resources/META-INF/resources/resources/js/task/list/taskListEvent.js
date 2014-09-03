@@ -44,6 +44,7 @@ TaskList.Event = {
     ,onClickBtnSignConfirm : function(e) {
         var taskId = Task.getTaskId();
 
+        // hide the modal window that holds the form
         var sigModal = TaskList.Object.getSignatureModal();
         $(sigModal).modal('hide');
 
