@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @RequestMapping({ "/api/v1/plugin/signature", "/api/latest/plugin/signature" })
@@ -32,13 +31,12 @@ public class SignatureAPIController
 
     @RequestMapping(value = "/confirm/{objectType}/{objectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Signature signTask(
+    public Signature signObject(
     		@PathVariable("objectType") String objectType,
             @PathVariable("objectId") Long objectId,
             @RequestParam(value="confirmPassword", required=true) String password,
             Authentication authentication,
-            HttpSession httpSession,
-            HttpServletResponse response
+            HttpSession httpSession
     ) throws AcmUserActionFailedException
     {
         if ( log.isInfoEnabled() )
@@ -59,7 +57,7 @@ public class SignatureAPIController
         	Boolean isAuthenticated = getLdapAuthenticateManager().authenticate(userName, password);
         	if (!isAuthenticated)
         	{
-        		throw new AcmSignatureException("Password incorrect");
+        		throw new AcmSignatureException("Could not authenticate with the password provided");
         	}
         	
         	// persist to db
