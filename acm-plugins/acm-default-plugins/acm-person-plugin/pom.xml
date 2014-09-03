@@ -77,6 +77,11 @@
             <version>${acm.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.armedia.acm.acm-tool-integrations</groupId>-->
+            <!--<artifactId>acm-orbeon-configuration</artifactId>-->
+            <!--<version>${acm.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-form-configuration</artifactId>

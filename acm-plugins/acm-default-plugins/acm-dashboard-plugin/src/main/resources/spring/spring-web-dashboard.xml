@@ -5,6 +5,7 @@
 
     <bean id="dashboardUiController" class="com.armedia.acm.plugins.dashboard.web.DashboardUiController">
         <property name="pageDescriptor" ref="dashboardPageDescriptor"/>
+        <property name="dashboardPlugin" ref="dashboardPlugin"/>
     </bean>
 </beans>
 
