@@ -4,12 +4,12 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by armdev on 4/8/14.
@@ -42,7 +42,7 @@ public class ComplaintFactory
 
         pa.setPerson(p);
         pa.setPersonDescription("Simple Description");
-        pa.setPersonType("Originator");
+        pa.setPersonType("Subject");
 
         complaint.setOriginator(pa);
         
