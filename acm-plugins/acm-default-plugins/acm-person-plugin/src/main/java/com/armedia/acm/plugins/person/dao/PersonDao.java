@@ -10,7 +10,7 @@ import javax.persistence.Query;
 public class PersonDao extends AcmAbstractDao<Person>
 {
         
-     @PersistenceContext
+    @PersistenceContext
     private EntityManager entityManager;
      
     @Override
