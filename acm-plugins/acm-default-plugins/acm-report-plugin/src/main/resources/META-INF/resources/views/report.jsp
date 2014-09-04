@@ -1,13 +1,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
-
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title>${pageDescriptor.title}</title>
-    <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="complaintReportUrl">${complaintReportUrl}</span>
-    </div>
 </jsp:attribute>
 
 
@@ -46,17 +43,17 @@
                                             <label for="priority"  class="label">Report</label>
                                             <select name="priority" class="form-control" id ="selectReport">
                                                 <option>Choose Report</option>
-                                                <option >Report 1</option>
-                                                <option>Report 2</option>
-                                                <option>Report 3</option>
-                                                <option>Complaint Report</option>
+                                                <c:forEach items="${reportUrlsMap}" var="entry">
+                            						<option title="${entry.key}" value="${entry.value}">${entry.key}</option>
+                                            	</c:forEach>
                                             </select>
                                             <div class="line line-dashed b-b line-lg pull-in"></div>
-                                            <label for="priority"  class="label">Date Range</label>
+                                            <label for="Case Number"  class="label">Case Number</label>
+                                            <input id="caseNumber" type="text" class="form-control" placeholder="Case Number"  >
+                                            <div class="line line-dashed b-b line-lg pull-in"></div>                                            
+                                            <label for="Data Range"  class="label">Date Range</label>
                                             <div class="clearfix"></div>
                                             <label class="label col-sm-3">From</label>
-
-
                                             <div class="col-sm-9">
                                                 <input class="datepicker-input form-control" type="text" id = "startDate" value= "" data-date-format="dd-mm-yyyy" >
                                             </div>

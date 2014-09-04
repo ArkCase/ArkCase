@@ -14,24 +14,38 @@ Report.Event = {
     ,onClickBtnTest: function(e) {
         alert("test clicked");
     }
+    
+    /**
+     * on Click gets the selected option text which is the report name
+     */
     ,onClickBtnGenerateReport: function(e) {
-        var reportName = Report.Object.getSelectedValueSelReport()
-//        var startDate = Report.Object.getValueStartDate();
-//        var endDate = Report.Object.getValueEndDate();
-//        Acm.Dialog.info(reportName + "<br>" +  startDate + "</br>" + endDate);
-
+        var reportName = Report.Object.getSelectedTextSelReport();
         this.openReport(reportName);
     }
     
+    /**
+     * Based on the report name, do validation if needed, and formulate the url,
+     * then make the report rendering request.
+     * 
+     */
     ,openReport : function(reportName) {
+    	var pageUrl;
+    	pageUrl = Report.Object.getSelectedValueSelReport();
+    	
+        if (reportName === Report.Object.BILLING_REPORT) {
+        	var validCaseNumber = Report.Rule.validateCaseNumber(Report.Object.$caseNumber.val());
+        	if ( validCaseNumber ) {
+            	pageUrl = pageUrl +"?caseNumber=" + Report.Object.$caseNumber.val(); 
+        	}
+        	else {
+                Acm.Dialog.error("Case number field was blank or invalid. Please enter a valid case number.");
+                return false;
+        	}
+        }
 
-        if(reportName === "Complaint Report") {
-        	
-        	pageUrl = Report.Object.$complaintReportUrl;
-        	var mainContent = Report.Object.$mainContentSel;
-        	mainContent.hide();
-        	window.open(pageUrl, 'report_iframe');
-        }    	
+    	var mainContent = Report.Object.$mainContentSel;
+    	mainContent.hide();
+    	window.open(pageUrl, 'report_iframe');
     }
     
 };
