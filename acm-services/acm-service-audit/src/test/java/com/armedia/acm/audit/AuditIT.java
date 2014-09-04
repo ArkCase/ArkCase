@@ -1,3 +1,5 @@
+package com.armedia.acm.audit;
+
 import com.armedia.commons.audit.AuditActivity;
 import org.junit.Before;
 import org.junit.Test;
