@@ -99,28 +99,24 @@ Acm.Ajax = {
         });
     }
     
+    /*
+     * This is an ajax form data submit, not a <form> with a form submit button type of submit.
+     */
     ,asyncPostForm : function(url, form, callback) {
-    	$(form).submit(function(e)
-    	{
-    	    var postData = $(this).serializeArray();
-    	    
-	        jQuery.ajax({type: 'POST'
-	            ,url: url
-	            ,async: true
-	            ,data : postData
-	            ,contentType: "application/x-www-form-urlencoded; charset=UTF-8"
-	            ,success: function(response) {
-	                Acm.Dispatcher.triggerEvent(callback, response);
-	            }
-	            ,error: function(xhr, status, error) {
-	                Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
-	            }
-	        });
-        
-		    e.preventDefault(); //STOP default action
-		});
-    	
-    	$(form).submit(); //Submit form
+	    var postData = $(form).serializeArray();
+    
+        jQuery.ajax({type: 'POST'
+            ,url: url
+            ,async: true
+            ,data : postData
+            ,contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+            ,success: function(response) {
+                Acm.Dispatcher.triggerEvent(callback, response);
+            }
+            ,error: function(xhr, status, error) {
+                Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
+            }
+        });
     }
 
 	,asyncPut : function(url, param, callback) {

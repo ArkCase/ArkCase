@@ -125,6 +125,14 @@ public class Person implements Serializable
     @OneToMany(cascade = ALL, mappedBy ="person")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
     
+    @ManyToMany
+    @JoinTable(
+            name = "acm_person_organization",
+            joinColumns = { @JoinColumn(name="cm_person_id", referencedColumnName = "cm_person_id") },
+            inverseJoinColumns = { @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") }
+    )
+    private List<Organization> organizations = new ArrayList<>();
+    
     @PrePersist
     protected void beforeInsert()
     {
@@ -238,6 +246,14 @@ public class Person implements Serializable
                 persAssoc.setCreator(creator);
             }
         }
+        
+        for ( Organization organization : getOrganizations() )
+        {
+            if ( organization.getCreator() == null )
+            {
+                organization.setCreator(creator);
+            }
+        }
     }
 
     public Date getModified()
@@ -279,6 +295,11 @@ public class Person implements Serializable
         for ( PersonAssociation persAssoc : getPersonAssociations() )
         {
             persAssoc.setModifier(modifier);
+        }
+        
+        for ( Organization organization : getOrganizations() )
+        {
+            organization.setModifier(modifier);
         }
         
     }
@@ -371,8 +392,6 @@ public class Person implements Serializable
         for(PersonAssociation personAssoc : personAssociations)
         {
             personAssoc.setPerson(this);
-//            personAssoc.setParentId(getId());            
-//            personAssoc.setParentType("PERSON");
         }
     }
 
@@ -435,4 +454,13 @@ public class Person implements Serializable
     {
         this.dateMarried = dateMarried;
     }
+
+    public List<Organization> getOrganizations() {
+        return organizations;
+    }
+
+    public void setOrganizations(List<Organization> organizations) {
+        this.organizations = organizations;
+    }
+    
 }

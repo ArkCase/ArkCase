@@ -6,7 +6,8 @@ import com.armedia.acm.services.signature.exception.AcmSignatureException;
 import com.armedia.acm.services.signature.model.ApplicationSignatureEvent;
 import com.armedia.acm.services.signature.model.Signature;
 import com.armedia.acm.services.signature.service.SignatureEventPublisher;
-
+import com.armedia.acm.services.users.service.ldap.LdapAuthenticateManager;
+import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @RequestMapping({ "/api/v1/plugin/signature", "/api/latest/plugin/signature" })
@@ -25,18 +25,18 @@ public class SignatureAPIController
 {
     private SignatureDao signatureDao;
     private SignatureEventPublisher signatureEventPublisher;
+    private LdapAuthenticateManager ldapAuthenticateManager;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/confirm/{objectType}/{objectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Signature signTask(
+    public Signature signObject(
     		@PathVariable("objectType") String objectType,
             @PathVariable("objectId") Long objectId,
             @RequestParam(value="confirmPassword", required=true) String password,
             Authentication authentication,
-            HttpSession httpSession,
-            HttpServletResponse response
+            HttpSession httpSession
     ) throws AcmUserActionFailedException
     {
         if ( log.isInfoEnabled() )
@@ -46,27 +46,31 @@ public class SignatureAPIController
         
         try
         {       	
-        	String user = authentication.getName();
-        	
-        	// TODO sign task by authenticating against ldap
-        	boolean isCorrectPassword = true;
-        	
-        	Signature signature = new Signature();
-        	
-        	if (!isCorrectPassword)
+        	if (StringUtils.isBlank(password)) 
         	{
-        		throw new AcmSignatureException("Password was incorrect");
+        		throw new AcmSignatureException("Password blank");
         	}
+        	
+        	String userName = authentication.getName();
+        	
+        	// authenticate user/password against ldap service(s)
+        	Boolean isAuthenticated = getLdapAuthenticateManager().authenticate(userName, password);
+        	if (!isAuthenticated)
+        	{
+        		throw new AcmSignatureException("Could not authenticate with the password provided");
+        	}
+        	
         	// persist to db
+        	Signature signature = new Signature();
         	signature.setObjectId(objectId);
         	signature.setObjectType(objectType);
-        	signature.setSignedBy(user);
+        	signature.setSignedBy(userName);
         	
             Signature savedSignature = getSignatureDao().save(signature);
 
-            publishSignatureEvent(authentication, httpSession, signature, true);
+            publishSignatureEvent(authentication, httpSession, savedSignature, true);
 
-            return signature;
+            return savedSignature;
         }
         catch (Exception e)
         {
@@ -109,5 +113,14 @@ public class SignatureAPIController
 		this.signatureEventPublisher = signatureEventPublisher;
 	}
 
+	public LdapAuthenticateManager getLdapAuthenticateManager() {
+		return ldapAuthenticateManager;
+	}
+
+	public void setLdapAuthenticateManager(
+			LdapAuthenticateManager ldapAuthenticateManager) {
+		this.ldapAuthenticateManager = ldapAuthenticateManager;
+	}
+	
 }
 

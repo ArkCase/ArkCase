@@ -101,8 +101,11 @@
 <div class="wrapper dk  clearfix">
     <div class="pull-right inline">
         <div class="btn-group">
-       		<!-- TODO: AJ TO HELP, when data-toggle is modal, the tooltip won't come up -->
-            <button class="btn btn-default btn-sm" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="i i-checkmark"></i></button>
+       		<!-- TODO: AJ TO HELP, when data-toggle is modal, the tooltip won't come up 
+       		TODO:  Only display the sign when the object hasn't been signed yet
+       		TODO:  Show signature panel somewhere
+       		-->
+            <button class="btn btn-default btn-sm" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
             <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete"><i class="i i-checkmark"></i></button>
             <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Reject"><i class="i i-cancel"></i></button>
             <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>

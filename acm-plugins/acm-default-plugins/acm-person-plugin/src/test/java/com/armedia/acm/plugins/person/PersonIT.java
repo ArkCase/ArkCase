@@ -52,15 +52,15 @@ public class PersonIT
         p.setStatus("testStatus");
 
         Person saved = personDao.save(p);
-        Integer deletedCount = personDao.DeletePersonById(958L);
-        
-        
 
         assertNotNull(saved.getId());
+
+        Integer deletedCount = personDao.deletePersonById(saved.getId());
+        
 
         log.info("Person ID: " + saved.getId());
         log.info("delete detail: " + deletedCount);
     }
-    
+ 
     
 }

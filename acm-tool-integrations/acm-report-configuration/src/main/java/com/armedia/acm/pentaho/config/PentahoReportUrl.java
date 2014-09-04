@@ -29,7 +29,7 @@ public class PentahoReportUrl implements ReportUrl{
 	public String getNewReportUrl(String reportName) {
 		return getReportUrlPath(reportName);
 	}
-
+	
 	public String getReportURL() {
         //form url data
         StringBuilder builder = new StringBuilder();

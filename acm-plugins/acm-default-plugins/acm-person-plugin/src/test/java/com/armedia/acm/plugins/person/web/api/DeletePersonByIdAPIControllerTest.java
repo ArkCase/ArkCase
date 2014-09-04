@@ -35,11 +35,10 @@ public class DeletePersonByIdAPIControllerTest extends EasyMockSupport
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
 
-    private deletePersonByIdAPIController unit;
+    private DeletePersonByPersonIdAPIController unit;
 
     private PersonDao mockPersonDao;
     private PersonAssociationDao mockPersonAssociationDao;
-    private PersonEventPublisher mockPersonEventPublisher;
     private Authentication mockAuthentication;
 
     @Autowired
@@ -54,7 +53,7 @@ public class DeletePersonByIdAPIControllerTest extends EasyMockSupport
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
 
-        unit = new deletePersonByIdAPIController();
+        unit = new DeletePersonByPersonIdAPIController();
 
         unit.setPersonDao(mockPersonDao);
         unit.setPersonAssociationDao(mockPersonAssociationDao);
@@ -70,7 +69,7 @@ public class DeletePersonByIdAPIControllerTest extends EasyMockSupport
         /*
          * expect that only one person with a given id is deleted.
          */
-        expect(mockPersonDao.DeletePersonById(personId)).andReturn(1);
+        expect(mockPersonDao.deletePersonById(personId)).andReturn(1);
    
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -94,7 +93,7 @@ public class DeletePersonByIdAPIControllerTest extends EasyMockSupport
     {
         Long personId = 958L;
 
-        expect(mockPersonDao.DeletePersonById(personId)).andThrow(new PersistenceException());
+        expect(mockPersonDao.deletePersonById(personId)).andThrow(new PersistenceException());
         
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");

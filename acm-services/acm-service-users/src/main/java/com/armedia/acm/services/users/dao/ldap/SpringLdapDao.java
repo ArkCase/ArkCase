@@ -2,10 +2,12 @@ package com.armedia.acm.services.users.dao.ldap;
 
 import com.armedia.acm.services.users.model.AcmLdapEntity;
 import com.armedia.acm.services.users.model.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapEntityContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.GroupMembersContextMapper;
 import com.armedia.acm.services.users.model.ldap.SimpleAuthenticationSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.AuthenticationSource;
@@ -25,7 +27,10 @@ public class SpringLdapDao
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public LdapTemplate buildLdapTemplate(final AcmLdapSyncConfig syncConfig)
+    /*
+     * This builds the ldap template from the base AcmLdapConfig
+     */
+    public LdapTemplate buildLdapTemplate(final AcmLdapConfig syncConfig)
     {
         AuthenticationSource authenticationSource = null;
 

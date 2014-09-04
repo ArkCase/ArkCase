@@ -19,17 +19,12 @@ public class PersonDao extends AcmAbstractDao<Person>
         return Person.class;
     }
     
-    public Integer DeletePersonById(Long id)
+    public Integer deletePersonById(Long id)
     {
         Query deletePersonById = getEntityManager().createQuery(              
                     "DELETE FROM Person person " +
                             "WHERE person.id = :personId"                                    
                        );
-         Query deletePersonByIdFromAssociation = getEntityManager().createQuery(              
-                    "DELETE FROM PersonAssociation personAssociation " +
-                            "WHERE personAssociation.person.id = :personId"                                    
-                       );
-          deletePersonByIdFromAssociation.setParameter("personId", id);
       Integer  deletedCount =  deletePersonById.setParameter("personId", id).executeUpdate(); 
        /**
         *  this will return the count of the person deleted the association will checked after the personAssociation 

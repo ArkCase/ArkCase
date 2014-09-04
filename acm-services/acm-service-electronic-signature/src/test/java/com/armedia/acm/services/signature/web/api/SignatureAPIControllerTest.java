@@ -1,10 +1,10 @@
 package com.armedia.acm.services.signature.web.api;
 
 import com.armedia.acm.services.signature.dao.SignatureDao;
-import com.armedia.acm.services.signature.exception.AcmSignatureException;
 import com.armedia.acm.services.signature.model.ApplicationSignatureEvent;
 import com.armedia.acm.services.signature.model.Signature;
 import com.armedia.acm.services.signature.service.SignatureEventPublisher;
+import com.armedia.acm.services.users.service.ldap.LdapAuthenticateManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.easymock.Capture;
@@ -29,8 +29,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { 
@@ -40,12 +38,14 @@ public class SignatureAPIControllerTest extends EasyMockSupport {
 
 	private MockMvc mockMvc;
 	private MockHttpSession mockHttpSession;
+	private Authentication mockAuthentication;
 
 	private SignatureAPIController unit;
 
 	private SignatureDao mockSignatureDao;
 	private SignatureEventPublisher mockSignatureEventPublisher;
-	private Authentication mockAuthentication;
+	private LdapAuthenticateManager mockLdapAuthenticateManager;
+	
 
 	@Autowired
 	private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -56,6 +56,7 @@ public class SignatureAPIControllerTest extends EasyMockSupport {
 	public void setUp() throws Exception {
 		mockSignatureDao = createMock(SignatureDao.class);
 		mockSignatureEventPublisher = createMock(SignatureEventPublisher.class);
+		mockLdapAuthenticateManager = createMock(LdapAuthenticateManager.class);
 		mockHttpSession = new MockHttpSession();
 		mockAuthentication = createMock(Authentication.class);
 
@@ -63,30 +64,34 @@ public class SignatureAPIControllerTest extends EasyMockSupport {
 
 		unit.setSignatureDao(mockSignatureDao);
 		unit.setSignatureEventPublisher(mockSignatureEventPublisher);
+		unit.setLdapAuthenticateManager(mockLdapAuthenticateManager);
 
 		mockMvc = MockMvcBuilders.standaloneSetup(unit)
 				.setHandlerExceptionResolvers(exceptionResolver).build();
 	}
 
 	@Test
-	public void signObject_Task() throws Exception {
+	public void signObject_Task_authenticated() throws Exception {
 		Long objectId = 500L;
-		String objectType = "task";
+		String objectType = "TASK";
 		String ipAddress = "ipAddress";
 		String password = "password";
-
+		String userName = "userName";
+		
 		Signature foundSignature = new Signature();
 		foundSignature.setObjectId(objectId);
+		foundSignature.setObjectType(objectType);
 
 		Capture<Signature> signatureToSave = new Capture<>();
 		Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
 
 		mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
+		expect(mockLdapAuthenticateManager.authenticate(userName, password)).andReturn(true);
 		expect(mockSignatureDao.save(capture(signatureToSave))).andReturn(foundSignature);
 		mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
 		// MVC test classes must call getName() somehow
-		expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
+		expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
 
 		replayAll();
 
@@ -122,14 +127,55 @@ public class SignatureAPIControllerTest extends EasyMockSupport {
 		assertEquals(objectType, event.getObjectType());
 		assertTrue(event.isSucceeded());
 	}
+	
+	@Test
+	public void signObject_Task_notauthenticated() throws Exception {
+		Long objectId = 500L;
+		String objectType = "TASK";
+		String ipAddress = "ipAddress";
+		String password = "password";
+		String userName = "userName";
+		
+		Signature foundSignature = new Signature();
+		foundSignature.setObjectId(objectId);
+
+		Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
+
+		mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+
+		expect(mockLdapAuthenticateManager.authenticate(userName, password)).andReturn(false);
+		mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
+		// MVC test classes must call getName() somehow
+		expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
+
+		replayAll();
+
+		// To see details on the HTTP calls, change .andReturn() to .andDo(print())
+		MvcResult result = mockMvc
+				.perform(
+						post("/api/v1/plugin/signature/confirm/{objectType}/{objectId}", objectType, objectId)
+								.param("confirmPassword", password)
+								.contentType(
+										MediaType.APPLICATION_FORM_URLENCODED)
+								.session(mockHttpSession)
+								.principal(mockAuthentication)).andReturn();
+
+		verifyAll();
+
+		ApplicationSignatureEvent event = capturedEvent.getValue();
+		assertEquals(objectId, event.getObjectId());
+		assertEquals(objectType, event.getObjectType());
+		assertFalse(event.isSucceeded());
+	}
 
 	@Test
 	 public void signTask_exception() throws Exception
 	 {
 		Long objectId = 500L;
-		String objectType = "task";
+		String objectType = "TASK";
 		String ipAddress = "ipAddress";
 		String password = "password";
+		String userName = "userName";
 
 		Signature foundSignature = new Signature();
 		foundSignature.setObjectId(objectId);
@@ -138,11 +184,12 @@ public class SignatureAPIControllerTest extends EasyMockSupport {
 		Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
 
 		mockHttpSession.setAttribute("acm_ip_address", ipAddress);
-
+		
+		expect(mockLdapAuthenticateManager.authenticate(userName, password)).andReturn(true);
 		expect(mockSignatureDao.save(capture(signatureToSave))).andThrow(new RuntimeException("testException"));
 		mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
 		// MVC test classes must call getName() somehow
-		expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
+		expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
 
 		replayAll();
 

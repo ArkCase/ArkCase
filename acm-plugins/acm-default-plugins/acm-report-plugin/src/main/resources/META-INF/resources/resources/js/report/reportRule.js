@@ -8,5 +8,15 @@
 Report.Rule = {
     initialize : function() {
     }
+
+	,validateCaseNumber : function(caseNumber) {
+
+		if ( undefined === caseNumber || caseNumber === "" || caseNumber === "Case Number" ) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 };
 
