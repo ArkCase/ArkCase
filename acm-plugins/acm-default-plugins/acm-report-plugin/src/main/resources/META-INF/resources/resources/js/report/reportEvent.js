@@ -42,8 +42,23 @@ Report.Event = {
                 return false;
         	}
         }
+        else {
+            var startDate = Acm.Object.getValue($("#startDate"));
+            var endDate = Acm.Object.getValue($("#endDate"));
+            
+            startDate = startDate.replace(/\//g, "-");
+            endDate = endDate.replace(/\//g, "-");
 
-    	var mainContent = Report.Object.$mainContentSel;
+            if (pageUrl.indexOf("?") <= -1) {
+                pageUrl = pageUrl +"?startDate=" + startDate + "&endDate=" + endDate; 
+            } else {
+                pageUrl = pageUrl +"&startDate=" + startDate + "&endDate=" + endDate; 
+            }
+            
+            // Incident Category, Priority, Owner not added since DB clarification is needed.
+            
+        }
+        var mainContent = Report.Object.$mainContentSel;
     	mainContent.hide();
     	window.open(pageUrl, 'report_iframe');
     }
