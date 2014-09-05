@@ -4815,6 +4815,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     due: "asc"
                 }
             }, {
+                counts: [5,10,25,50],
                 total: dataT.length,
                 getData: function($defer, params) {
                    // var filteredData = params.filter() ? $filter("filter")(dataT, params.filter()) : dataT,
@@ -4855,6 +4856,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     created: "asc"
                 }
             }, {
+                counts: [5,10,25,50],
                 total: dataC.length,
                 getData: function($defer, params) {
                   //  var filteredData = params.filter() ? $filter("filter")(dataC, params.filter()) : dataC,
@@ -10915,7 +10917,7 @@ Showdown.converter = function(converter_options) {
                 idO: "dueInAMonth", nameO:"Due in 30 Days"
             }];
 
-        var chartTitle;
+        var chartTitle =  "All";
         angular.forEach(options, function(option) {
             if(option.idO == config.due){
                 chartTitle = option.nameO;
@@ -11013,6 +11015,7 @@ Showdown.converter = function(converter_options) {
 
             $templateCache.put("scripts/widgets/weather/edit.html", '<form role="form"><div class="form-group"><label for="location">Location</label><input type="location" class="form-control" id="location" ng-model="config.location" placeholder="Enter location"></div></form>'),
             $templateCache.put("scripts/widgets/weather/weather.html", '<div class="text-center"><div class="alert alert-info" ng-if="!data"><p style="text-align:center;">Please insert a location in the widget configuration</div><div class="weather" ng-if="data"><h4>{{data.name}} ({{data.sys.country}})</h4><dl><dt>Temprature:</dt><dd>{{data.main.temp | number:2}}</dd></dl></div></div>'),
+
             $templateCache.put("partials/sample.html", '<adf-dashboard name="{{name}}" structure="4-8" adf-model="model">')
     }
 ]);
