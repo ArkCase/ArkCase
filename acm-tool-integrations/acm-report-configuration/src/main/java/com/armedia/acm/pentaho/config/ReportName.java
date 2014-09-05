@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public enum ReportName {
+	CLOSE_CASE_REPORT("Close Case Report"),
+	OPEN_CASE_REPORT("Open Case Report"),
 	COMPLAINT_REPORT("Complaint Report"),
 	BILLING_REPORT("Billing Report");
 
