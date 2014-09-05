@@ -189,6 +189,30 @@
             </section>
         </div>
     </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <section class="panel b-a ">
+                <div class="panel-heading b-b bg-info">
+                    <ul class="nav nav-pills pull-right">
+                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                    </ul>
+                    </span> <a href="#" class="font-bold">Electronic Signatures</a> </div>
+                <div class="panel-body max-200 no-padder">
+                    <table class="table table-striped th-sortable table-hover">
+                        <thead>
+                        <tr>
+                            <th>Signed By</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody id="signatureList">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-12">
@@ -205,7 +229,8 @@
                         </li>
                         <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                     </ul>
-                    <a href="#" class="font-bold">Notes</a> </div>
+                    <a href="#" class="font-bold">Notes</a> 
+                </div>
                 <div class="panel-body max-200">
                     <ul class="list-group list-group-lg no-bg auto">
                         <a href="#" class="list-group-item clearfix"> <span class="pull-left thumb-sm avatar m-r"> <img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/a4.png" alt="John said"> <i class="on b-white bottom"></i> </span> <span class="clear"> <small class="text-muted pull-right">5m ago</small> <span>Judy Hsu</span> <small class="text-muted clear text-ellipsis">Sample notes go here.</small> </span> </a>
