@@ -4611,7 +4611,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             templateUrl: "partials/sample.html",
             controller: "sample02Ctrl"
         }).otherwise({
-            redirectTo: "/sample/01"
+            redirectTo: "/"
         })
     }
 ]).controller("navigationCtrl", ["$scope", "$location",
