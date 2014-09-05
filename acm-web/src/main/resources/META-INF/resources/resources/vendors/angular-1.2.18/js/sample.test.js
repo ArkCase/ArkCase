@@ -4594,7 +4594,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
         })
     }.call(this), angular.module("sample", ["adf", "sample.widgets.mytasks", "sample.widgets.mycomplaints", "sample.widgets.teamtaskworkload", "LocalStorageModule", "structures", "sample-01", "sample-02", "ngRoute", "ngTable"]).config(["$routeProvider", "localStorageServiceProvider",
     function($routeProvider, localStorageServiceProvider) {
-        localStorageServiceProvider.setPrefix("adf"), $routeProvider.when("/sample/01", {
+        localStorageServiceProvider.setPrefix("adf"), $routeProvider.when("/", {
             templateUrl: "partials/sample.html",
             controller: "sample01Ctrl",
             resolve: {
