@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @RequestMapping({ "/api/v1/plugin/person", "/api/latest/plugin/person" })
-public class deletePersonByIdAPIController
+public class DeletePersonByIdAPIController
 {
     private PersonDao personDao;
     private PersonAssociationDao personAssociationDao;
@@ -45,7 +45,7 @@ public class deletePersonByIdAPIController
         {
 
             
-            Integer deletedPerson = getPersonDao().DeletePersonById(personId);
+            Integer deletedPerson = getPersonDao().deletePersonById(personId);
                  log.info("delete person by id count", deletedPerson);
             
                   if ( deletedPerson < 1)
