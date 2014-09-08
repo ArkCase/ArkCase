@@ -9,8 +9,4 @@
         <property name="ldapAuthenticateManager" ref="acmLdapAuthenticateManager"/>
     </bean>
     
-    <bean id="acmFindSignatureByTypeByIdAPIController" class="com.armedia.acm.services.signature.web.api.FindSignaturesByTypeByIdAPIController">
-        <property name="signatureDao" ref="acmSignatureDao"/>
-    </bean>
-    
 </beans>

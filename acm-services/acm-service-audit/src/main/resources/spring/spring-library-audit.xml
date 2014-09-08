@@ -19,6 +19,4 @@
         </property>
     </bean>
 
-    <bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>
-
 </beans>

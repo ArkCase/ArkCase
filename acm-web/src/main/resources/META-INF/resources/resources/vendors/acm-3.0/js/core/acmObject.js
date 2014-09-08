@@ -77,13 +77,6 @@ Acm.Object = {
         }
         return v;
     }
-    ,getSelectedText : function($s) {
-        var v = $s.find("option:selected").text();
-        if ("placeholder" == v) {
-            v = "";
-        }
-        return v;    	
-    }
     ,setSelectValue : function($s, value) {
         $s.find("option").filter(function() {
 //    	jQuery("select" + id + " option").filter(function() {
@@ -100,11 +93,6 @@ Acm.Object = {
     //ignore first option, which is instruction
     ,getSelectValueIgnoreFirst: function($s) {
         var selected = Acm.Object.getSelectValue($s);
-        var firstOpt = $s.find("option:first").val();
-        return (selected == firstOpt)? null : selected;
-    }
-    ,getSelectTextIgnoreFirst: function($s) {
-        var selected = Acm.Object.getSelectedText($s);
         var firstOpt = $s.find("option:first").val();
         return (selected == firstOpt)? null : selected;
     }

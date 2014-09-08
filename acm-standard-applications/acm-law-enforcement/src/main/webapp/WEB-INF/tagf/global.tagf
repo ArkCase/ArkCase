@@ -20,10 +20,7 @@
 <c:set var="vd_jasmine"          scope="session" value="jasmine-2.0"/>
 <c:set var="vd_jquery"           scope="session" value="jquery-1.11.0"/>
 <c:set var="vd_jquery_ui"        scope="session" value="jquery-ui-1.10.3"/>
-
 <c:set var="vd_jtable"           scope="session" value="jtable-2.4.0"/>
-<c:set var="js_jtable"           scope="session" value="jquery.jtable.js"/>
-
 <c:set var="vd_jvectormap"       scope="session" value="jvectormap"/>
 <c:set var="vd_knob"             scope="session" value="knob-1.2.8"/>
 <c:set var="vd_maps"             scope="session" value="maps"/>
@@ -41,10 +38,7 @@
 <c:set var="vd_upload"           scope="session" value="upload-5.40.1"/>
 <c:set var="vd_wizard"           scope="session" value="wizard"/>
 <c:set var="vd_wysiwyg"          scope="session" value="wysiwyg"/>
-
 <c:set var="vd_x_editable"       scope="session" value="x-editable-1.5.1"/>
-<c:set var="js_x_editable"       scope="session" value="bootstrap-editable.min.js"/>
-
 <c:set var="vd_font_awesome"     scope="session" value="font-awesome-4.1.0"/>
 <c:set var="vd_underscore"       scope="session" value="underscore-1.6.0"/>
 <c:set var="vd_fancytree"        scope="session" value="fancytree-2.2.0"/>

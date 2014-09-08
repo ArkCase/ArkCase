@@ -21,39 +21,42 @@
                         <c:forEach var="navTab" items="${acm_application.navigatorTabs}">
                             <c:set var="requiredPrivilege" value="${navTab.requiredPrivilege}" scope="page"/>
                             <c:if test="${acm_privileges[requiredPrivilege]}">
-                                <li class="">
-                                        <c:choose>
-                                            <c:when test="${navTab.actionName == 'Administration'}">
-                                            <%--<a href="<c:url value='${navTab.url}' />" class="auto">--%>
-
-                                            <li class="">
-                                                <a href="<c:url value='${navTab.url}' />" class="auto" data-target=".admin-collapse" data-toggle="collapse">
-                                                        <i class="fa <c:url value='${navTab.iconName}' /> icon">
-                                                        </i>
-                                                        <span class="font-bold">${navTab.actionName}</span>
-                                                    </a>
-                                                    <ul class="nav admin-collapse">
-                                                        <li> <a href="<c:url value='/plugin/admin/access' />"> <i class="i i-circle-sm"></i> <span>Access Control Policy</span> </a> </li>
-                                                        <li> <a href="<c:url value='/plugin/admin/locks' />"> <i class="i i-circle-sm"></i> <span>Object Locks</span> </a> </li>
-                                                    </ul>
-                                                </li>                                            
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a href="<c:url value='${navTab.url}' />" class="auto">
-                                                <i class="i <c:url value='${navTab.iconName}' /> icon"> </i>
-                                                <span class="font-bold">
-                                                    ${navTab.actionName}
-                                                </span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </a>
-                                </li>
+                                <li class=""> <a href="<c:url value='${navTab.url}' />" class="auto"> <i class="i <c:url value='${navTab.iconName}' /> icon"> </i> <span class="font-bold">${navTab.actionName}</span> </a> </li>
                             </c:if>
                         </c:forEach>
                     </ul>
                     <div class="line dk hidden-nav-xs"></div>
+                    <div class="text-muted text-xs hidden-nav-xs padder m-t-sm m-b-sm">Admin</div>
+                    <ul class="nav">
+                        <li>
+                            <a href="<c:url value='/plugin/admin/access' />">
+                            <%--<a href="access.html">--%>
+                                <i class="i i-circle-sm"></i>
+                                <span>Access Control Policy</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<c:url value='/plugin/admin/locks' />">
+                                <%--<a href="locks.html">--%>
+                                <i class="i i-circle-sm"></i>
+                                <span>Object Locks</span>
+                            </a>
+                        </li>
+                    </ul>
+
+
+                    <div class="line dk hidden-nav-xs"></div>
+                    <div class="text-muted text-xs hidden-nav-xs padder m-t-sm m-b-sm">Temporary</div>
+                    <ul class="nav">
+                        <li>
+                            <a href="<c:url value='/plugin/complaint/old' />">
+                                <i class="i i-notice"></i>
+                                <span>Old complaint page</span>
+                            </a>
+                        </li>
+                    </ul>
                 </nav>
-			<!-- / nav -->
+                <!-- / nav -->
             </div>
         </section>
         <footer class="footer hidden-xs no-padder text-center-nav-xs"> <a href="#nav" data-toggle="class:nav-xs" class="btn btn-icon icon-muted btn-inactive m-l-xs m-r-xs"> <i class="i i-circleleft text"></i> <i class="i i-circleright text-active"></i> </a> </footer>

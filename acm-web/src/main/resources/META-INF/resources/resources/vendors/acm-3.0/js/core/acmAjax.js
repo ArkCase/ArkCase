@@ -103,7 +103,7 @@ Acm.Ajax = {
      * This is an ajax form data submit, not a <form> with a form submit button type of submit.
      */
     ,asyncPostForm : function(url, form, callback) {
-	    var postData = $(form).serializeArray();
+	    var postData = $(this).serializeArray();
     
         jQuery.ajax({type: 'POST'
             ,url: url
