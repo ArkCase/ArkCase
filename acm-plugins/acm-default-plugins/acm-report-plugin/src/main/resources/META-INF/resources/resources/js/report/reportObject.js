@@ -15,6 +15,7 @@ Report.Object = {
         var items = $(document).items();
         this.$selReport = $("#selectReport");
         this.$caseNumber = $("#caseNumber");
+        this.$caseNumberLbl = $("#caseNumberlbl");
         
         this.$edtStartDate = $("#startDate");
         this.setValueStartDate(Acm.getCurrentDay());
@@ -29,7 +30,8 @@ Report.Object = {
         //this.$btnTest = $("#test");
         //this.$btnTest.click(function(e) {Report.Event.onClickBtnTest(e);});
         
-        this.$mainContentSel = $("#mainContent");
+        this.$mainContentSel = $("#ReportMeassge");
+    	this.registerChangeSelNewReportEvents();
 
     }
     ,getValueStartDate: function() {
@@ -59,6 +61,25 @@ Report.Object = {
     ,setValueEndDate: function(val) {
         Acm.Object.setValueDatePicker(this.$edtEndDate, val);
     }
+    
+    /**
+     * Register the new report selector changed event
+     */
+	,registerChangeSelNewReportEvents: function() {
+        Report.Event.onChangeBillingReport(false);
+
+    	this.$selReport.change(function(e) {
+    		var reportName = $(this).find('option:selected').text();
+    		
+    		if ( reportName === Report.Object.BILLING_REPORT) {
+    			Report.Event.onChangeBillingReport(true);    			
+    		}
+    		else {
+    			Report.Event.onChangeBillingReport(false);    			    			
+    		}
+    	});
+	}
+    
 };
 
 

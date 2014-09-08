@@ -35,7 +35,7 @@ Report.Event = {
         if (reportName === Report.Object.BILLING_REPORT) {
         	var validCaseNumber = Report.Rule.validateCaseNumber(Report.Object.$caseNumber.val());
         	if ( validCaseNumber ) {
-            	pageUrl = pageUrl +"?caseNumber=" + Report.Object.$caseNumber.val(); 
+            	pageUrl = pageUrl +"&caseNumber=" + Report.Object.$caseNumber.val(); 
         	}
         	else {
                 Acm.Dialog.error("Case number field was blank or invalid. Please enter a valid case number.");
@@ -58,9 +58,17 @@ Report.Event = {
             // Incident Category, Priority, Owner not added since DB clarification is needed.
             
         }
+
         var mainContent = Report.Object.$mainContentSel;
     	mainContent.hide();
     	window.open(pageUrl, 'report_iframe');
     }
     
+    /**
+     * Toggle show or hide the case data fields.
+     */
+    ,onChangeBillingReport : function(show) {
+        Acm.Object.show(Report.Object.$caseNumber, show);
+        Acm.Object.show(Report.Object.$caseNumberLbl, show);
+    }
 };
