@@ -133,8 +133,7 @@
             <div class="wrapper bg-empty  clearfix">
                 <div class="pull-right inline">
                     <div class="btn-group">
-			       		<!-- TODO: AJ TO HELP, when data-toggle is modal, the tooltip won't come up 
-			       		TODO:  Show signature panel somewhere
+			       		<!-- TODO: when data-toggle is modal, the tooltip won't come up 
 			       		-->
 			            <button class="btn btn-default btn-sm" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
                         <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete Task"><i class="fa fa-check"></i></button>
