@@ -46,6 +46,8 @@ TaskList.Object = {
             }
         });
         
+        this.$signatureList     = $("#signatureList");
+        
         // forms
         this.$signatureForm     = $("#signatureConfirmForm");
         
@@ -115,6 +117,10 @@ TaskList.Object = {
 //            this.setHrefLnkAttachedToObject(App.getContextPath() + "/plugin/complaint/" + t.attachedToObjectId);
 //        }
 
+    }
+    ,setSignatureList: function(val) {
+        this.$signatureList.empty();
+        this.$signatureList.append(val);
     }
     ,getSignatureForm: function() {
         return this.$signatureForm;

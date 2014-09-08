@@ -6,6 +6,8 @@
  * @author jwu
  */
 Report.Object = {
+    OPEN_CASE_REPORT : "Open Case Report",
+    CLOSE_CASE_REPORT : "Close Case Report",
     COMPLAINT_REPORT : "Complaint Report",
     BILLING_REPORT : "Billing Report",
     
