@@ -42,9 +42,6 @@ var Acm = Acm || {
 	,isNotEmpty: function (val) {
 	    return !this.isEmpty(val);
 	}
-	,isArrayEmpty: function (arr) {
-	    return arr.length === 0;
-	}
 	,goodValue: function (val, replacement)  {
 	    var replacedWith = (undefined === replacement) ? "" : replacement;
 	    return this.isEmpty(val) ? replacedWith : val;

@@ -16,23 +16,10 @@
         </property>
     </bean>
     
-    <bean id="acmSignatureFindPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-signature-find"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
-                <value>ROLE_ANALYST</value>
-            </list>
-        </property>
-    </bean>
-    
     <bean id="acmSignatureEventPublisher" class="com.armedia.acm.services.signature.service.SignatureEventPublisher"/>
 
-    <bean id="acmSignatureConfirmPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
-        <property name="pluginName" value="Signature Confirm Service Plugin"/>
+    <bean id="acmElectronicSignaturePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="Electronic Signature Service Plugin"/>
         <property name="privileges">
             <list>
                 <ref bean="acmSignatureConfirmPrivilege"/>
@@ -44,24 +31,6 @@
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/signature/confirm/{objectType}/{objectId}"/>
                     <property name="requiredPrivilege" ref="acmSignatureConfirmPrivilege"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
-    
-    <bean id="acmSignatureFindPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
-        <property name="pluginName" value="Signature Find Service Plugin"/>
-        <property name="privileges">
-            <list>
-                <ref bean="acmSignatureFindPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="acmFindSignatureUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/signature/find/{objectType}/{objectId}"/>
-                    <property name="requiredPrivilege" ref="acmSignatureFindPrivilege"/>
                 </bean>
             </list>
         </property>

@@ -11,14 +11,12 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_RETRIEVED, this.onDetailRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_COMPLETED, this.onTaskCompleted);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_SIGNED, this.onTaskSigned);
-        Acm.Dispatcher.addEventListener(this.EVENT_LIST_BYTYPEBYID_RETRIEVED, this.onFindByTypeByIdRetrieved);
     }
 
     ,EVENT_LIST_RETRIEVED		: "task-list-retrieved"
     ,EVENT_DETAIL_RETRIEVED		: "task-list-detail-retrieved"
     ,EVENT_TASK_COMPLETED		: "task-list-task-completed"
     ,EVENT_TASK_SIGNED			: "task-list-task-signed"
-    ,EVENT_LIST_BYTYPEBYID_RETRIEVED : "task-list-signature-byTypeById-retrieved"
     		
     ,onListRetrieved : function(Callback, response) {
         if (response.hasError) {
@@ -41,8 +39,6 @@ TaskList.Callback = {
                 var task = response;
                 Task.setTask(task);
                 TaskList.Object.updateDetail(task);
-                
-                // TODO:  check for signatures for task, this function is not called right now so won't implement here
             }
         }
     }
@@ -64,24 +60,13 @@ TaskList.Callback = {
         if (response.hasError) {
             Acm.Dialog.error("Failed to electronically sign task:"  +response.errorMsg);
         } else {
-        	var taskId = response.objectId;
-            if (Acm.isNotEmpty(taskId)) {
+            if (Acm.isNotEmpty(response.taskId)) {
                 if (TaskList.isSingleObject()) {
                     App.gotoPage(TaskList.Page.URL_DASHBOARD);
                 } else {
                     TaskList.Service.listTask(App.getUserName());
-                    
-                    // refresh signature
-                    TaskList.Service.findSignatureByTypeById(taskId);
                 }
             }
-        }
-    }
-    ,onFindByTypeByIdRetrieved : function(Callback, response) {
-        if (response.hasError) {
-            Acm.Dialog.error("Failed to retrieve signature list by type and by id:" + response.errorMsg);
-        } else {
-        	TaskList.Page.buildSignatureList(response);
         }
     }
 };

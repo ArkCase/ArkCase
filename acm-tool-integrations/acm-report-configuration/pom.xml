@@ -14,15 +14,7 @@
 
     <dependencies>
         <!-- pentaho -->
-        <!-- Others -->
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
+
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>

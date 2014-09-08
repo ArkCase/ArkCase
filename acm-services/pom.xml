@@ -27,7 +27,8 @@
         <module>acm-service-orbeon-forms</module>
         <module>acm-service-authentication-token</module>
     	<module>acm-service-electronic-signature</module>
-  </modules>
+    	<module>acm-service-frevvo-forms</module>
+    </modules>
 
 
 </project>

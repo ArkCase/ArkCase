@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import com.armedia.acm.web.AcmPageDescriptor;
 
-@RequestMapping({"/plugin/dashboard", "/", "/home"})
+@RequestMapping({"/plugin/dashboard", "/"})
 public class DashboardUiController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
