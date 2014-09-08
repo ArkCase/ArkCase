@@ -300,8 +300,11 @@
         <property name="requiredPrivilege" value="acm-dashboard"/>
     </bean>
     <bean id="adminNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Admin"/>
-        <property name="iconName" value="i-settings"/>
+        <property name="actionName" value="Administration"/>
+        <!--<property name="iconName" value="i-settings"/>-->
+
+        <property name="iconName" value="fa-wrench"/>
+
         <property name="url" value="/plugin/admin"/>
         <property name="requiredPrivilege" value="acm-admin"/>
     </bean>
