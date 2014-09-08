@@ -52,15 +52,6 @@
                         </c:forEach>
                     </ul>
                     <div class="line dk hidden-nav-xs"></div>
-                    <div class="text-muted text-xs hidden-nav-xs padder m-t-sm m-b-sm">Temporary</div>
-                    <ul class="nav">
-                        <li>
-                            <a href="<c:url value='/plugin/complaint/old' />">
-                                <i class="i i-notice"></i>
-                                <span>Old complaint page</span>
-                            </a>
-                        </li>
-                    </ul>
                 </nav>
 			<!-- / nav -->
             </div>
