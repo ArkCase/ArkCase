@@ -149,7 +149,7 @@
                                             </div>
                                         </footer>
                                     </section>
-                                    <iframe src="" name="report_iframe" style="width:100%; height:100%;"></iframe>
+                                    <iframe src="" name="report_iframe" style="width:100%; height:100%;" frameborder="0"></iframe>
                                 </aside>
                             </section>
                         </section>
