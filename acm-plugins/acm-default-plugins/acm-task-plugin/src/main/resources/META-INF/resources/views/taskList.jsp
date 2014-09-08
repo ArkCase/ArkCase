@@ -40,8 +40,8 @@
     <%--</script>--%>
 
     <!-- X-Editable -->
-    <link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
-    <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css" type="text/css"/>
+    <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/${js_x_editable}"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -95,394 +95,137 @@
 </aside>
 <!-- /.aside -->
 <!-- .aside -->
+
+
+
+
 <aside id="email-content" class="bg-light lter">
-<section class="vbox">
-<section class="scrollable">
-<div class="wrapper dk  clearfix">
-    <div class="pull-right inline">
-        <div class="btn-group">
-       		<!-- TODO: AJ TO HELP, when data-toggle is modal, the tooltip won't come up 
-       		TODO:  Only display the sign when the object hasn't been signed yet
-       		TODO:  Show signature panel somewhere
-       		-->
-            <button class="btn btn-default btn-sm" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
-            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete"><i class="i i-checkmark"></i></button>
-            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Reject"><i class="i i-cancel"></i></button>
-            <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-            <ul class="dropdown-menu pull-right">
-                <li><a href="#">Other menu items</a></li>
-            </ul>
-        </div>
-        <a href="#nav, #chat" class="inline animated btn btn-default btn-sm " data-toggle="class:nav-xs, show"><i class="fa  fa-columns"></i></a> </div>
-    <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Task Title"> Sample Task Title</a> (6423) <em> from (2014-03-12321)</em></h4>
-</div>
-<div>
-<div class="wrapper">
-<div class="row">
-    <div class="col-xs-6">
-        <div class="panel b-a  bg-gradient">
-            <div class="padder-v text-center clearfix">
-                <div class="col-xs-4 b-r">
-                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>
-                    <small class="text-muted">Due Date</small> </div>
-                <div class="col-xs-4 b-r">
-                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>
-                    <small class="text-muted">Priority</small> </div>
-                <div class="col-xs-4">
-                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>
-                    <small class="text-muted">Assigned To</small> </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xs-3">
-        <div class="panel b-a  bg-gradient">
-            <div class="padder-v text-center clearfix">
-                <div class="col-xs-12">
-                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>
-                    <small class="text-muted">Subject Type</small> </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xs-3 ">
-        <div class="panel b-a bg-gradient">
-            <div class="padder-v text-center clearfix">
-                <div class="col-xs-12">
-                    <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
-                    <small class="text-muted">Status</small> </div>
-            </div>
-        </div>
-    </div>
-</div>
-<section class="panel panel-default">
-<header class="panel-heading bg-light">
-    <ul class="nav nav-tabs nav-justified">
-        <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
-        <li><a href="#references" data-toggle="tab">References</a></li>
-        <li><a href="#history" data-toggle="tab">History</a></li>
-    </ul>
-</header>
-<div class="panel-body">
-<div class="tab-content">
-<div class="tab-pane active" id="details">
-    <div class="row">
-        <div class="col-md-12">
-            <section class="panel b-a ">
-                <div class="panel-heading b-b bg-info">
-                    <ul class="nav nav-pills pull-right">
-                        <li>
-                            <div class="btn-group padder-v2">
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>
-                                <ul class="dropdown-menu pull-right">
-                                    <li><a href="#">Other menu items</a></li>
-                                </ul>
+    <section class="vbox">
+        <section class="scrollable">
+            <div class="wrapper dk  clearfix">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="">
+                            <div class=" clearfix">
+                                <div class="col-xs-4 b-r">
+                                    <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a></div>
+                                    <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
+                                <div class="col-xs-2 b-r">
+                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
+                                    <small class="text-muted">Incident Date</small></div>
+                                <div class="col-xs-1 b-r">
+                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
+                                    <small class="text-muted">Priority</small></div>
+                                <div class="col-xs-2 b-r">
+                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">AJ McClary</a></div>
+                                    <small class="text-muted">Assigned To</small></div>
+                                <div class="col-xs-2 b-r">
+                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
+                                    <small class="text-muted">Subject Type</small></div>
+                                <div class="col-xs-1">
+                                    <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
+                                    <small class="text-muted">Status</small></div>
                             </div>
-                        </li>
-                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                    </ul>
-                    </span> <a href="#" class="font-bold">Details</a> </div>
-                <div class="panel-body">
-                    <div class="complaintDetails">
-                        <p>Task description</p>
+                        </div>
                     </div>
                 </div>
-            </section>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <section class="panel b-a">
-                <div class="panel-heading b-b bg-info">
-                    <ul class="nav nav-pills pull-right">
-                        <li>
-                            <div class="btn-group padder-v2">
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-comments-o"></i> New</button>
-                                <ul class="dropdown-menu pull-right">
-                                    <li><a href="#">Other menu items</a></li>
+            </div>
+            <div class="wrapper bg-empty  clearfix">
+                <div class="pull-right inline">
+                    <div class="btn-group">
+			       		<!-- TODO: when data-toggle is modal, the tooltip won't come up 
+			       		-->
+			            <button class="btn btn-default btn-sm" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
+                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete Task"><i class="fa fa-check"></i></button>
+                    </div>
+                </div>
+                <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> Sample Task Subject</a> (12321)</h4>
+                <hr/>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="">
+                            <div class=" clearfix">
+                                <div class="col-xs-2 b-r">
+                                    <div class="h4 font-bold"><a href="#">0%</a></div>
+                                    <small class="text-muted">Complete</small></div>
+                                <div class="col-xs-2 b-r">
+                                    <div class="h4 font-bold"><a href="#">AJ McClary</a></div>
+                                    <small class="text-muted">Owner</small></div>
+                                <div class="col-xs-2 b-r">
+                                    <div class="h4 font-bold"><a href="#">High</a></div>
+                                    <small class="text-muted">Priority</small></div>
+                                <div class="col-xs-2 b-r">
+                                    <div class="h4 font-bold"><a href="#">MM/DD/YYYY</a></div>
+                                    <small class="text-muted">Start Date</small></div>
+                                <div class="col-xs-2 b-r">
+                                    <div class="h4 font-bold"><a href="#">MM/DD/YYYY</a></div>
+                                    <small class="text-muted">Due Date</small></div>
+                                <div class="col-xs-2">
+                                    <div class="h4 font-bold"><a href="#">ASSIGNED</a></div>
+                                    <small class="text-muted">Status</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div class="row">
+                    <div class="col-md-12">
+                        <section class="panel b-a ">
+                            <div class="panel-heading b-b bg-info">
+                                <ul class="nav nav-pills pull-right">
+                                    <li>
+                                        <div class="btn-group padder-v2">
+                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>
+                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li><a href="#">Other menu items</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li> </li>
                                 </ul>
+                                </span> <a href="#" class="font-bold">Task Details</a></div>
+                            <div class="panel-body">
+                                <div class="complaintDetails">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
+                                    <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
+                                </div>
                             </div>
-                        </li>
-                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                    </ul>
-                    <a href="#" class="font-bold">Notes</a> </div>
-                <div class="panel-body max-200">
-                    <ul class="list-group list-group-lg no-bg auto">
-                        <a href="#" class="list-group-item clearfix"> <span class="pull-left thumb-sm avatar m-r"> <img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/a4.png" alt="John said"> <i class="on b-white bottom"></i> </span> <span class="clear"> <small class="text-muted pull-right">5m ago</small> <span>Judy Hsu</span> <small class="text-muted clear text-ellipsis">Sample notes go here.</small> </span> </a>
-                    </ul>
+                        </section>
+                    </div>
                 </div>
-            </section>
-        </div>
-    </div>
-</div>
-
-<div class="tab-pane" id="references">
-    <div class="row">
-        <div class="col-md-12">
-            <section class="panel b-a">
-                <div class="panel-heading b-b bg-info">
-                    <ul class="nav nav-pills pull-right">
-                        <li>
-                            <div class="btn-group padder-v2">
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Reference"><i class="i i-notice"></i> New</button>
-                            </div>
-                        </li>
-                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                    </ul>
-                    <a href="#" class="font-bold">Complaints</a> </div>
-                <div class="panel-body max-200 no-padder">
-                    <table class="table table-striped th-sortable table-hover">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Created</th>
-                            <th>Priority</th>
-                            <th>Due</th>
-                            <th>Status</th>
-                            <th>Direction</th>
-                            <th width="9%">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="odd gradeA">
-                            <td>[ID]</td>
-                            <td>[Title]</td>
-                            <td>[Created]</td>
-                            <td>[Priority]</td>
-                            <td>[Due]</td>
-                            <td>[Status]</td>
-                            <td>[Direction]</td>
-                            <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <section class="panel b-a">
-                <div class="panel-heading b-b bg-info">
-                    <ul class="nav nav-pills pull-right">
-                        <li>
-                            <div class="btn-group padder-v2">
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Reference"><i class="i i-folder"></i> New</button>
-                            </div>
-                        </li>
-                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                    </ul>
-                    <a href="#" class="font-bold">Cases</a> </div>
-                <div class="panel-body max-200 no-padder">
-                    <table class="table table-striped th-sortable table-hover">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Created</th>
-                            <th>Priority</th>
-                            <th>Due</th>
-                            <th>Status</th>
-                            <th>Direction</th>
-                            <th width="9%">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="odd gradeA">
-                            <td>[ID]</td>
-                            <td>[Title]</td>
-                            <td>[Created]</td>
-                            <td>[Priority]</td>
-                            <td>[Due]</td>
-                            <td>[Status]</td>
-                            <td>[Direction]</td>
-                            <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <section class="panel b-a">
-                <div class="panel-heading b-b bg-info">
-                    <ul class="nav nav-pills pull-right">
-                        <li>
-                            <div class="btn-group padder-v2">
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Reference"><i class="i i-checkmark"></i> New</button>
-                            </div>
-                        </li>
-                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                    </ul>
-                    <a href="#" class="font-bold">Tasks</a> </div>
-                <div class="panel-body max-200 no-padder">
-                    <table class="table table-striped th-sortable table-hover">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Created</th>
-                            <th>Priority</th>
-                            <th>Due</th>
-                            <th>Status</th>
-                            <th>Direction</th>
-                            <th width="9%">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="odd gradeA">
-                            <td>[ID]</td>
-                            <td>[Title]</td>
-                            <td>[Created]</td>
-                            <td>[Priority]</td>
-                            <td>[Due]</td>
-                            <td>[Status]</td>
-                            <td>[Direction]</td>
-                            <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <section class="panel b-a">
-                <div class="panel-heading b-b bg-info">
-                    <ul class="nav nav-pills pull-right">
-                        <li>
-                            <div class="btn-group padder-v2">
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Reference"><i class="i i-file"></i> New</button>
-                            </div>
-                        </li>
-                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                    </ul>
-                    <a href="#" class="font-bold">Documents</a> </div>
-                <div class="panel-body max-200 no-padder">
-                    <table class="table table-striped th-sortable table-hover">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Created</th>
-                            <th>Priority</th>
-                            <th>Due</th>
-                            <th>Status</th>
-                            <th>Direction</th>
-                            <th width="9%">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="odd gradeA">
-                            <td>[ID]</td>
-                            <td>[Title]</td>
-                            <td>[Created]</td>
-                            <td>[Priority]</td>
-                            <td>[Due]</td>
-                            <td>[Status]</td>
-                            <td>[Direction]</td>
-                            <td><button class="btn btn-default btn-xs" data-toggle="tooltip" data-title="Delete Record"><i class="fa fa-trash-o"></i></button></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-    </div>
-</div>
-<div class="tab-pane" id="history">
-    <section class="panel panel-default">
-        <div class="row wrapper">
-            <div class="col-sm-4 m-b-xs">
-                <select class="input-sm form-control input-s-sm inline v-middle">
-                    <option value="0">Action</option>
-                    <option value="1">Export to Excel</option>
-                </select>
-                <button class="btn btn-sm btn-default">Apply</button>
+                
+                
+			    <div class="row">
+			        <div class="col-md-12">
+			            <section class="panel b-a ">
+			                <div class="panel-heading b-b bg-info">
+			                    <ul class="nav nav-pills pull-right">
+			                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+			                    </ul>
+			                    </span> <a href="#" class="font-bold">Electronic Signatures</a> </div>
+			                <div class="panel-body max-200 no-padder">
+			                    <table class="table table-striped th-sortable table-hover">
+			                        <thead>
+			                        <tr>
+			                            <th>Signed By</th>
+			                            <th>Date</th>
+			                        </tr>
+			                        </thead>
+			                        <tbody id="signatureList">
+			                        </tbody>
+			                    </table>
+			                </div>
+			            </section>
+			        </div>
+			    </div>                
+                
+                
             </div>
-            <div class="col-sm-5 m-b-xs">
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-sm btn-default active">
-                        <input type="radio" name="options" id="option1">
-                        Today </label>
-                    <label class="btn btn-sm btn-default">
-                        <input type="radio" name="options" id="option2">
-                        This Week </label>
-                    <label class="btn btn-sm btn-default">
-                        <input type="radio" name="options" id="option2">
-                        This Month </label>
-                </div>
             </div>
-            <div class="col-sm-3">
-                <div class="input-group">
-                    <input type="text" class="input-sm form-control" placeholder="Search">
-                                        <span class="input-group-btn">
-                                        <button class="btn btn-sm btn-default" type="button">Go!</button>
-                                        </span> </div>
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-striped b-t b-light">
-                <thead>
-                <tr>
-                    <th width="20"><label class="checkbox m-n i-checks">
-                        <input type="checkbox">
-                        <i></i></label></th>
-                    <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                    <th>User</th>
-                    <th>Role</th>
-                    <th>Date/Time</th>
-                    <th>Type</th>
-                    <th width="30">Read?</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><label class="checkbox m-n i-checks">
-                        <input type="checkbox" name="post[]">
-                        <i></i></label></td>
-                    <td>David Miller created a document and assigned it to you.</td>
-                    <td>David Miller</td>
-                    <td>Supervisor</td>
-                    <td>4/23/2014 12:00:00</td>
-                    <td>Document</td>
-                    <td><a href="#" class="active" data-toggle="class"><i class="fa fa-check text-success text-active"></i><i class="fa fa-times text-danger text"></i></a></td>
-                </tr>
-                </tr>
-
-                </tbody>
-            </table>
-        </div>
-        <footer class="panel-footer">
-            <div class="row">
-                <div class="col-sm-8 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small> </div>
-                <div class="col-sm-4 text-right text-center-xs">
-                    <ul class="pagination pagination-sm m-t-none m-b-none">
-                        <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-        </footer>
+        </section>
     </section>
-</div>
-</div>
-</div>
-</section>
-</div>
-</div>
-</div>
-</section>
-</section>
 </aside>
 <!-- /.aside -->
 
@@ -507,12 +250,22 @@
         </footer>
     </section>
 </aside>
+
+
+
+
+
+
+
+
+
 </section>
 </section>
 </section>
 </section>
 </jsp:body>
 </t:layout>
+
 
 
 
@@ -543,5 +296,4 @@
     </div>
   </div>
 </div>
-
 

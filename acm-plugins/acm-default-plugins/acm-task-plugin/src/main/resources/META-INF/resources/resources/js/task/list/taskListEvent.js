@@ -35,6 +35,9 @@ TaskList.Event = {
             TaskList.Object.updateDetail(t);
             Task.setTaskId(taskId);
             TaskList.Object.hiliteSelectedItem(taskId);
+            
+            // check for signatures
+            TaskList.Service.findSignatureByTypeById(taskId);
         }
     }
     ,onClickBtnComplete : function(e) {

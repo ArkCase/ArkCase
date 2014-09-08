@@ -15,7 +15,6 @@ public class ReportUiController
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmPageDescriptor pageDescriptor;
 	private ReportUrl reportUrl;
-	private static final String COMPLAINT_REPORT = "COMPLAINT_REPORT";
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showReportPage()
@@ -23,11 +22,11 @@ public class ReportUiController
         ModelAndView retval = new ModelAndView();
         retval.setViewName("report");
         retval.addObject("pageDescriptor", getPageDescriptor());
-        log.debug("Report url: " + reportUrl.getNewReportUrl(COMPLAINT_REPORT));
-        retval.addObject("complaintReportUrl", reportUrl.getNewReportUrl(COMPLAINT_REPORT));
+        retval.addObject("reportUrlsMap", reportUrl.getNewReportUrlList());
+        
         return retval;
     }
-
+    
     public AcmPageDescriptor getPageDescriptor() {
         return pageDescriptor;
     }

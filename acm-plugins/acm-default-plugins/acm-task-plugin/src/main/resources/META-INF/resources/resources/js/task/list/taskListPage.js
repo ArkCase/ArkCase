@@ -11,7 +11,7 @@ TaskList.Page = {
 
     ,buildTaskList: function(arr) {
         var html = "";
-        if (Acm.isNotEmpty(arr)) {
+        if (!Acm.isArrayEmpty(arr)) {
             var len = arr.length;
             for (var i = 0; i < len; i++) {
                 var t = arr[i];
@@ -37,5 +37,20 @@ TaskList.Page = {
         TaskList.Object.registerClickListItemEvents();
 
         TaskList.Event.doClickLnkListItem();
+    }
+    ,buildSignatureList: function(arr) {
+        var html = "";
+        if (!Acm.isArrayEmpty(arr)) {
+            var len = arr.length;
+            for (var i = 0; i < len; i++) {
+                var t = arr[i];         
+                html += '<tr class="odd gradeA"><td>' + t.signedBy + '</td><td>' + Acm.getDateFromDatetime(t.signedDate) +'</td></tr>';
+            }
+        }
+        else {
+        	html += '<tr class="odd gradeA"><td>None</td></tr>';
+        }
+        
+        TaskList.Object.setSignatureList(html);
     }
 };

@@ -229,12 +229,6 @@
         <property name="url" value="/api/{version}/plugin/task/completeTask/{taskId}"/>
         <property name="requiredPrivilege" value="acm-task-complete"/>
     </bean>
-    <bean id="taskSignAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Sign"/>
-        <property name="iconName" value="fa-check"/>
-        <property name="url" value="/api/{version}/plugin/task/signTask/{taskId}"/>
-        <property name="requiredPrivilege" value="acm-task-sign"/>
-    </bean>
     <!-- end of task actions -->
     
     
@@ -244,6 +238,12 @@
         <property name="iconName" value="fa-check"/>
         <property name="url" value="/api/{version}/plugin/signature/confirm/{objectType}/{objectId}"/>
         <property name="requiredPrivilege" value="acm-signature-confirm"/>
+    </bean>
+    <bean id="signatureFindAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Find"/>
+        <property name="iconName" value="fa-check"/>
+        <property name="url" value="/api/{version}/plugin/signature/find/{objectType}/{objectId}"/>
+        <property name="requiredPrivilege" value="acm-signature-find"/>
     </bean>
 
     <!-- Actions -->
@@ -300,8 +300,11 @@
         <property name="requiredPrivilege" value="acm-dashboard"/>
     </bean>
     <bean id="adminNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Admin"/>
-        <property name="iconName" value="i-settings"/>
+        <property name="actionName" value="Administration"/>
+        <!--<property name="iconName" value="i-settings"/>-->
+
+        <property name="iconName" value="fa-wrench"/>
+
         <property name="url" value="/plugin/admin"/>
         <property name="requiredPrivilege" value="acm-admin"/>
     </bean>

@@ -31,7 +31,7 @@ public class Signature {
     private Date signedDate;
     
     @Column(name = "cm_signature_user", nullable = false, insertable = true, updatable = true)
-    private String signedBy; // TODO need to support a list
+    private String signedBy;
     
     //TODO private String digitalSignature;
     

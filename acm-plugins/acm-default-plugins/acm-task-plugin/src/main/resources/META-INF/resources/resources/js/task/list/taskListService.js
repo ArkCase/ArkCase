@@ -13,6 +13,7 @@ TaskList.Service = {
     ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/task/byId/"
     ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask/"
     ,API_SIGN_TASK         	   : "/api/latest/plugin/signature/confirm/"
+    ,API_FIND_BYTASKBYID_TASK_SIGNATURE : "/api/latest/plugin/signature/find/"
 
     ,listTask : function(user) {
         Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK + user
@@ -35,5 +36,10 @@ TaskList.Service = {
     	var theForm = TaskList.Object.getSignatureForm();
     	
     	Acm.Ajax.asyncPostForm(formURL, theForm, TaskList.Callback.EVENT_TASK_SIGNED);
+    }
+    ,findSignatureByTypeById : function(taskId) {
+    	var url = App.getContextPath() + this.API_FIND_BYTASKBYID_TASK_SIGNATURE + Task.getObjectType() + "/" + taskId;
+    	
+        Acm.Ajax.asyncGet(url, TaskList.Callback.EVENT_LIST_BYTYPEBYID_RETRIEVED);
     }
 }
