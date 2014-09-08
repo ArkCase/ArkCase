@@ -4801,7 +4801,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
            // var isData = false;
             dataT=_.map(rawData,function(row){
                 row=_.clone(row)
-                row.due=moment(row.dueDate, "YYYY MM D").toDate()
+                //row.due=moment(row.dueDate, "YYYY MM D").toDate()
+                row.due=moment(row.dueDate).format('MM/DD/YYYY');
                 row.id=parseInt(row.taskId)
                 row.status = row.taskStartDate != null ? "In Progress" : "Not Started"
                 row.taskUrl = App.Object.getContextPath() + "/plugin/task/";
@@ -4843,8 +4844,9 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
         $http.get(url).success(function(rawData) {
              dataC=_.map(rawData,function(row){
                 row=_.clone(row)
-//                row.due=moment(row.dueDate, "YYYY MM D").toDate()
-                row.id=parseInt(row.complaintId)
+                //row.due=moment(row.dueDate, "YYYY MM D").toDate()
+                row.complaintCreated=moment(row.created).format('MM/DD/YYYY');
+                row.id=parseInt(row.complaintId);
                 row.complaintUrl = App.Object.getContextPath() + "/plugin/complaint/";
                 return row
             })
@@ -10988,7 +10990,7 @@ Showdown.converter = function(converter_options) {
             $templateCache.put("scripts/widgets/markdown/markdown.html", '<div class="markdown" btf-markdown="config.content"></div>'),
 
             $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
-            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div class="alert alert-info" ng-controller="myComplaintsCtrl" ng-if="!isDataC"><p style="text-align:center;">No complaints created by you</p></div><div ng-controller="myComplaintsCtrl" ng-if="isDataC"><div style="overflow-x: auto;"><table ng-table="tableParams" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'ID\'" sortable="\'id\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.id}}</a></td><td data-title="\'Title\'" sortable="\'complaintTitle\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintTitle}}</a></td><td data-title="\'Priority\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'created\'">{{complaint.created}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div></div>'),
+            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div class="alert alert-info" ng-controller="myComplaintsCtrl" ng-if="!isDataC"><p style="text-align:center;">No complaints created by you</p></div><div ng-controller="myComplaintsCtrl" ng-if="isDataC"><div style="overflow-x: auto;"><table ng-table="tableParams" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'ID\'" sortable="\'id\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.id}}</a></td><td data-title="\'Title\'" sortable="\'complaintTitle\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintTitle}}</a></td><td data-title="\'Priority\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'complaintCreated\'">{{complaint.complaintCreated}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div></div>'),
 
             //This si with filters
 //            $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
