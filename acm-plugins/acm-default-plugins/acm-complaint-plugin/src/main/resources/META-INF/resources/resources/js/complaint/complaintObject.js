@@ -98,12 +98,8 @@ Complaint.Object = {
             ,"tabInitiator"
             ,"tabPeople"
             ,"tabNotes"
-            ,"tabPending"
-            ,"tabApproved"
-            ,"tabRejected"
-            ,"tabUnassigned"
-            ,"tabAssigned"
-            ,"tabCompleted"
+            ,"tabDocuments"
+            ,"tabTasks"
             ,"tabRefComplaints"
             ,"tabRefCases"
             ,"tabRefTasks"
@@ -266,20 +262,8 @@ Complaint.Object = {
     //tabPeople         - pcip     - [pageId].[complaintId].ip
     //tabPeople         - pcipc    - [pageId].[complaintId].ip.[personId]
     //tabNotes          - pcin     - [pageId].[complaintId].in
-    // [p,a,r]          - pcd      - [pageId].[complaintId].d
-    //tabPending        - pcdp     - [pageId].[complaintId].dp
-    //tabPending        - pcdpc    - [pageId].[complaintId].dp.[docId]
-    //tabApproved       - pcda     - [pageId].[complaintId].da
-    //tabApproved       - pcdac    - [pageId].[complaintId].da.[docId]
-    //tabRejected       - pcdr     - [pageId].[complaintId].dr
-    //tabRejected       - pcdrc    - [pageId].[complaintId].dr.[docId]
-    // [u,a,c]          - pct      - [pageId].[complaintId].t
-    //tabUnassigned     - pctu     - [pageId].[complaintId].tu
-    //tabUnassigned     - pctuc    - [pageId].[complaintId].tu.[taskId]
-    //tabAssigned       - pcta     - [pageId].[complaintId].ta
-    //tabAssigned       - pctac    - [pageId].[complaintId].ta.[taskId]
-    //tabCompleted      - pctc     - [pageId].[complaintId].tc
-    //tabCompleted      - pctcc    - [pageId].[complaintId].tc.[taskId]
+    //tabDocuments      - pcd      - [pageId].[complaintId].d
+    //tabTasks          - pct      - [pageId].[complaintId].t
     // [c,s,t,d]        - pcr      - [pageId].[complaintId].r
     //tabRefComplaints  - pcrc     - [pageId].[complaintId].rc
     //tabRefCases       - pcrs     - [pageId].[complaintId].rs
@@ -319,12 +303,8 @@ Complaint.Object = {
             ,"tabInitiator"
             ,"tabPeople"
             ,"tabNotes"
-            ,"tabPending"
-            ,"tabApproved"
-            ,"tabRejected"
-            ,"tabUnassigned"
-            ,"tabAssigned"
-            ,"tabCompleted"
+            ,"tabDocuments"
+            ,"tabTasks"
             ,"tabRefComplaints"
             ,"tabRefCases"
             ,"tabRefTasks"
@@ -343,26 +323,8 @@ Complaint.Object = {
         ,pcip: ["tabPeople"]
         ,pcipc: ["tabPeople"]
         ,pcin: ["tabNotes"]
-        ,pcd: ["tabPending"
-            ,"tabApproved"
-            ,"tabRejected"
-        ]
-        ,pcdp: ["tabPending"]
-        ,pcdpc: ["tabPending"]
-        ,pcda: ["tabApproved"]
-        ,pcdac: ["tabApproved"]
-        ,pcdr: ["tabRejected"]
-        ,pcdrc: ["tabRejected"]
-        ,pct: ["tabUnassigned"
-            ,"tabAssigned"
-            ,"tabCompleted"
-        ]
-        ,pctu: ["tabUnassigned"]
-        ,pctuc: ["tabUnassigned"]
-        ,pcta: ["tabAssigned"]
-        ,pctac: ["tabAssigned"]
-        ,pctc: ["tabCompleted"]
-        ,pctcc: ["tabCompleted"]
+        ,pcd: ["tabDocuments"]
+        ,pct: ["tabTasks"]
         ,pcr: ["tabRefComplaints"
             ,"tabRefCases"
             ,"tabRefTasks"
@@ -471,7 +433,11 @@ Complaint.Object = {
                 var acmIcon = null; //node.data.acmIcon;
                 var nodeType = Complaint.Object.getNodeTypeByKey(key);
                 if ("pc" == nodeType) {
-                    acmIcon = "<i class='i i-notice'></i>" //"i-notice icon"
+                    acmIcon = "<i class='i i-notice'></i>"; //"i-notice icon"
+                } else if ("pcd" == nodeType) {
+                    acmIcon = "<i class='i i-file'></i>";
+                } else if ("pct" == nodeType) {
+                    acmIcon = "<i class='i i-checkmark'></i>";
                 } else if ("prevPage" == nodeType) {
                     acmIcon = "<i class='i i-arrow-up'></i>";
                 } else if ("nextPage" == nodeType) {
@@ -550,34 +516,13 @@ Complaint.Object = {
                             })
 
 
-                        .addBranch({key: pageId + "." + c.complaintId + ".d"                   //level 2: /Complaint/Documents
+                        .addLeaf({key: pageId + "." + c.complaintId + ".d"                   //level 2: /Complaint/Documents
                             ,title: "Documents"
-                            ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".dp"                //level 3: /Complaint/Documents/Pending
-                                ,title: "Pending"
-                            })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".da"                //level 3: /Complaint/Documents/Approved
-                                ,title: "Approved"
-                            })
-                            .addLeafLast({key: pageId + "." + c.complaintId + ".dr"            //level 3: /Complaint/Documents/Rejected
-                                ,title: "Rejected"
-                            })
 
-
-                        .addBranch({key: pageId + "." + c.complaintId + ".t"                   //level 2: /Complaint/Tasks
+                        .addLeaf({key: pageId + "." + c.complaintId + ".t"                   //level 2: /Complaint/Tasks
                                 ,title: "Tasks"
-                                ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".tu"                //level 3: /Complaint/Tasks/Unassigned
-                                ,title: "Unassigned"
-                            })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".ta"                //level 3: /Complaint/Tasks/Assigned
-                                ,title: "Assigned"
-                            })
-                            .addLeafLast({key: pageId + "." + c.complaintId + ".tu"            //level 3: /Complaint/Tasks/Completed
-                                ,title: "Completed"
-                            })
 
 
                         .addBranch({key: pageId + "." + c.complaintId + ".r"                   //level 2: /Complaint/References
