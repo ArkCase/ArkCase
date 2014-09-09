@@ -47,16 +47,9 @@ Acm.Dialog = {
     }
 
     //
-    // Usage example:
-    // Acm.Dialog.confirm("Are you sure?"
-    //     ,function(result) {
-    //         if (result == true) {
-    //             alert("Do it");
-    //         } else {
-    //             alert("Do nothing");
-    //         }
-    //     }
-    //     ,"My Title"
+    // callback example:
+    // function(result) {
+    //    alert("callback result:" + result);
     // }
     //
     ,confirm: function(msg, callback, title){

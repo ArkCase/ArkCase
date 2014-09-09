@@ -37,8 +37,8 @@ Complaint.Object = {
 
         this.$lnkIncident       = $("#incident");
         this.$lnkIncident.editable({placement: 'bottom'
-            ,format: 'mm/dd/yyyy'
-            ,viewformat: 'mm/dd/yyyy'
+            ,format: 'yyyy-mm-dd'
+            ,viewformat: 'yyyy/mm/dd'
             ,datepicker: {
                 weekStart: 1
             }

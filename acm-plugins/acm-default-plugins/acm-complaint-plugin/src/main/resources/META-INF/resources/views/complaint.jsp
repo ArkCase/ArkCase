@@ -92,7 +92,7 @@
                                         <li><a href="#">Approved Complaint</a></li>
                                         <li><a href="#">Complaint From Group</a></li>
                                         <li><a href="#">Closed or Expired Complaint</a></li>
-                                        <li><a href="#">New Complaint</a></li>
+                                        <li><a href="<c:url value='/'/>plugin/complaint/wizard">New Complaint</a></li>
                                     </ul>
                                 </div>
                             </header>

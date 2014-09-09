@@ -39,8 +39,8 @@ TaskList.Object = {
 
         this.$lnkTitle.editable({placement: 'right'});
         this.$lnkDueDate.editable({placement: 'bottom'
-            ,format: 'mm/dd/yyyy'
-            ,viewformat: 'mm/dd/yyyy'
+            ,format: 'yyyy-mm-dd'
+            ,viewformat: 'yyyy/mm/dd'
             ,datepicker: {
                 weekStart: 1
             }

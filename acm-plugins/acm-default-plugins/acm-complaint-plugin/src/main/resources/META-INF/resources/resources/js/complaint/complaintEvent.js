@@ -80,7 +80,7 @@ Complaint.Event = {
     }
     ,onSaveIncidentDate: function(value) {
         var c = Complaint.getComplaint();
-        c.created = Acm.xDateToDatetime(value);
+        c.created = Acm.dateToString(value);
         Complaint.Service.saveComplaint(c);
     }
     ,onSavePriority: function(value) {
