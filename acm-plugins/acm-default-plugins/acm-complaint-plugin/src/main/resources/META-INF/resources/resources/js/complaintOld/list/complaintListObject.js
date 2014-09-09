@@ -62,8 +62,8 @@ ComplaintList.Object = {
         //$.fn.editable.defaults.url = '/post';
         this.$lnkTitle.editable({placement: 'right'});
         this.$lnkIncident.editable({placement: 'bottom'
-            ,format: 'yyyy-mm-dd'
-            ,viewformat: 'yyyy/mm/dd'
+            ,format: 'mm/dd/yyyy'
+            ,viewformat: 'mm/dd/yyyy'
             ,datepicker: {
                 weekStart: 1
             }

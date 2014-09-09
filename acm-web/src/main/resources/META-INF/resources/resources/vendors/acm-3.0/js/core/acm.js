@@ -157,30 +157,38 @@ var Acm = Acm || {
     ,getDateFromDatetime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
-            d = dt.substr(0, 10);
+            //d = dt.substr(0, 10);
+            var year  = dt.substr(0, 4);
+            var month = dt.substr(5, 2);
+            var day   = dt.substr(8, 2);
+            d = month + "/" + day + "/" + year;
         }
         return d;
     }
     ,getCurrentDay: function() {
         var d = new Date();
-        return this.dateToYyyymmdd(d);
+        return this.dateToString(d);
     }
     //get day string in "yyyy-mm-dd" format
     //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
-    ,dateToYyyymmdd: function(d) {
+    ,dateToString: function(d) {
         if (null == d) {
             return "";
         }
         var month = d.getMonth()+1;
         var day = d.getDate();
         var year = d.getFullYear();
-        return year
-            + "-" + this._padZero(month)
-            + "-" + this._padZero(day)
+        return this._padZero(month)
+            + "/" + this._padZero(day)
+            + "/" + year
             ;
+//        return year
+//            + "-" + this._padZero(month)
+//            + "-" + this._padZero(day)
+//            ;
     }
     //parameter d from x-editable date format, both getDate() and getMonth() are zero based
-    ,dateToString: function(d) {
+    ,xDateToDatetime: function(d) {
         if (null == d) {
             return "";
         }
