@@ -22,7 +22,7 @@ public interface AcmTaskEvent extends Serializable
 
     Long getObjectId();
     
-    Integer getPriority();
+    String getPriority();
     
     Long getParentObjectId();
     

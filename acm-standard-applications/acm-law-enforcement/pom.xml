@@ -166,11 +166,6 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-orbeon-forms</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-frevvo-forms</artifactId>
             <version>${acm.version}</version>
         </dependency>

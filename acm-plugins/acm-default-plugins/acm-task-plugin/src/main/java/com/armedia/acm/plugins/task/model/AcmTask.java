@@ -8,7 +8,7 @@ import java.util.Date;
 public class AcmTask implements AcmObject
 {
     private Long taskId;
-    private int priority;
+    private String priority;
     private String title;
     private Date dueDate;
     private String attachedToObjectType;
@@ -17,6 +17,9 @@ public class AcmTask implements AcmObject
     private String businessProcessName;
     private boolean adhocTask;
     private boolean completed;
+    private String status;
+    private int percentComplete;
+    private String details;
 
     private Date taskStartDate;
     private Date taskFinishedDate;
@@ -32,12 +35,12 @@ public class AcmTask implements AcmObject
         this.taskId = taskId;
     }
 
-    public int getPriority()
+    public String getPriority()
     {
         return priority;
     }
 
-    public void setPriority(int priority)
+    public void setPriority(String priority)
     {
         this.priority = priority;
     }
@@ -150,6 +153,36 @@ public class AcmTask implements AcmObject
     public void setTaskDurationInMillis(Long taskDurationInMillis)
     {
         this.taskDurationInMillis = taskDurationInMillis;
+    }
+
+    public String getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
+    }
+
+    public int getPercentComplete()
+    {
+        return percentComplete;
+    }
+
+    public void setPercentComplete(int percentComplete)
+    {
+        this.percentComplete = percentComplete;
+    }
+
+    public String getDetails()
+    {
+        return details;
+    }
+
+    public void setDetails(String details)
+    {
+        this.details = details;
     }
 
     @Override

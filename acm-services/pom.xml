@@ -24,7 +24,6 @@
         <module>acm-service-plugin-manager</module>
         <module>acm-service-search</module>
         <module>acm-service-users</module>
-        <module>acm-service-orbeon-forms</module>
         <module>acm-service-authentication-token</module>
     	<module>acm-service-electronic-signature</module>
     	<module>acm-service-frevvo-forms</module>
