@@ -69,8 +69,8 @@ TaskList.Callback = {
                 if (TaskList.isSingleObject()) {
                     App.gotoPage(TaskList.Page.URL_DASHBOARD);
                 } else {
-                    TaskList.Service.listTask(App.getUserName());
-                    
+                	// no need to call service to retrieve list on signing, also keeps user on the current task in the list
+                
                     // refresh signature
                     TaskList.Service.findSignatureByTypeById(taskId);
                 }

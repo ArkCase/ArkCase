@@ -20,7 +20,7 @@
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
     
     <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/jtable/blue/jtable.css" type="text/css"/>
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
 
 </jsp:attribute>
@@ -99,13 +99,13 @@
 -->
 
                 </section>
-                <footer class="footer bg-info clearfix">
+                <!-- <footer class="footer bg-info clearfix">
                     <form class="m-t-sm pull-right">
                         <div class="input-group">
                             <button class="btn btn-sm btn-default" type="button">Save Changes</button>
                         </div>
                     </form>
-                </footer>
+                </footer> -->
             </section>
         </section>
     </jsp:body>

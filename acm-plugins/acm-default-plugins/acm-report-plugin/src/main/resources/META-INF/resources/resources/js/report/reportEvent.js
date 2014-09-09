@@ -58,9 +58,17 @@ Report.Event = {
             // Incident Category, Priority, Owner not added since DB clarification is needed.
             
         }
+
         var mainContent = Report.Object.$mainContentSel;
     	mainContent.hide();
     	window.open(pageUrl, 'report_iframe');
     }
     
+    /**
+     * Toggle show or hide the case data fields.
+     */
+    ,onChangeBillingReport : function(show) {
+        Acm.Object.show(Report.Object.$caseNumber, show);
+        Acm.Object.show(Report.Object.$caseNumberLbl, show);
+    }
 };

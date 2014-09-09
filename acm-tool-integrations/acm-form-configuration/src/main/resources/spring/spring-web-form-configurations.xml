@@ -11,9 +11,16 @@
         local-override="false"
         order="1"/>
     	   
-    <bean id="formResource" class="com.armedia.acm.orbeon.config.OrbeonFormUrl">
+    <bean id="formResource" class="com.armedia.acm.frevvo.config.FrevvoFormUrl">
+        <property name="properties" ref="acm-forms-properties"/>
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+    </bean>
+
+	<!-- 
+	<bean id="formResource" class="com.armedia.acm.orbeon.config.OrbeonFormUrl">
         <property name="formProperties" ref="acm-forms-properties"/>
     </bean>
+     -->
 
     <bean id="acm-forms-properties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
