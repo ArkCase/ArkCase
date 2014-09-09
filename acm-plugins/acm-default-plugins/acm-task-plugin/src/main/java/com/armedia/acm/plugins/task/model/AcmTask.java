@@ -155,6 +155,36 @@ public class AcmTask implements AcmObject
         this.taskDurationInMillis = taskDurationInMillis;
     }
 
+    public String getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
+    }
+
+    public int getPercentComplete()
+    {
+        return percentComplete;
+    }
+
+    public void setPercentComplete(int percentComplete)
+    {
+        this.percentComplete = percentComplete;
+    }
+
+    public String getDetails()
+    {
+        return details;
+    }
+
+    public void setDetails(String details)
+    {
+        this.details = details;
+    }
+
     @Override
     @JsonIgnore
     public String getObjectType()

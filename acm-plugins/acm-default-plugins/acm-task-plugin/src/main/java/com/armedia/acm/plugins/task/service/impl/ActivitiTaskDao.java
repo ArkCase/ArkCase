@@ -34,6 +34,7 @@ class ActivitiTaskDao implements TaskDao
     public AcmTask createAdHocTask(AcmTask in) throws AcmTaskException
     {
         Task activitiTask = getActivitiTaskService().newTask();
+
         activitiTask.setAssignee(in.getAssignee());
         Integer activitiPriority = activitiPriorityFromAcmPriority(in.getPriority());
         activitiTask.setPriority(activitiPriority);
@@ -43,6 +44,16 @@ class ActivitiTaskDao implements TaskDao
         try
         {
             getActivitiTaskService().saveTask(activitiTask);
+
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_TYPE", in.getAttachedToObjectType());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_ID", in.getAttachedToObjectId());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), in.getAttachedToObjectType(), in.getAttachedToObjectId());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "START_DATE", in.getTaskStartDate());
+            String status = in.getStatus() == null ? "ASSIGNED" : in.getStatus();
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "TASK_STATUS", status);
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "PERCENT_COMPLETE", in.getPercentComplete());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "DETAILS", in.getDetails());
+
             in.setTaskId(Long.valueOf(activitiTask.getId()));
             return in;
         }
@@ -67,7 +78,12 @@ class ActivitiTaskDao implements TaskDao
 
         String strTaskId = String.valueOf(taskId);
 
-        Task existingTask = getActivitiTaskService().createTaskQuery().taskId(strTaskId).singleResult();
+        Task existingTask = getActivitiTaskService().
+                createTaskQuery().
+                includeProcessVariables().
+                includeTaskLocalVariables().
+                taskId(strTaskId).
+                singleResult();
 
         verifyTaskExists(taskId, existingTask);
 
@@ -128,9 +144,13 @@ class ActivitiTaskDao implements TaskDao
             log.info("Finding all tasks for user '" + user + "'");
         }
 
-        List<Task> activitiTasks =
-                getActivitiTaskService().createTaskQuery().taskAssignee(user).includeProcessVariables().
-                        orderByDueDate().desc().list();
+        List<Task> activitiTasks = getActivitiTaskService().
+                createTaskQuery().
+                taskAssignee(user).
+                includeProcessVariables().
+                includeTaskLocalVariables().
+                orderByDueDate().desc().
+                list();
 
         if ( log.isDebugEnabled() )
         {
@@ -154,9 +174,12 @@ class ActivitiTaskDao implements TaskDao
         {
             log.info("Finding all tasks for all users '");
         }
-        List<Task> activitiTasks =
-                getActivitiTaskService().createTaskQuery().includeProcessVariables().
-                        orderByDueDate().desc().list();
+        List<Task> activitiTasks = getActivitiTaskService().
+                createTaskQuery().
+                includeProcessVariables().
+                includeTaskLocalVariables().
+                orderByDueDate().desc().
+                list();
 
         if ( log.isDebugEnabled() )
         {
@@ -180,9 +203,12 @@ class ActivitiTaskDao implements TaskDao
         {
             log.info("Finding all tasks for all users that due date was before today");
         }
-        List<Task> activitiTasks =
-                getActivitiTaskService().createTaskQuery().includeProcessVariables().
-                        dueBefore(new Date()).list();
+        List<Task> activitiTasks = getActivitiTaskService().
+                createTaskQuery().
+                includeProcessVariables().
+                includeTaskLocalVariables().
+                dueBefore(new Date()).
+                list();
 
         if ( log.isDebugEnabled() )
         {
@@ -202,20 +228,28 @@ class ActivitiTaskDao implements TaskDao
 
     @Override
     public List<AcmTask> dueSpecificDateTasks(NumberOfDays numberOfDaysFromToday) {
-        if (log.isInfoEnabled()) {
+        if (log.isInfoEnabled())
+        {
             log.info(String.format("Finding all tasks for all users which due date is until %s from today", numberOfDaysFromToday.getnDays()));
         }
-        List<Task> activitiTasks =
-                getActivitiTaskService().createTaskQuery().includeProcessVariables().
-                        dueAfter(new Date()).dueBefore(shiftDateFromToday(numberOfDaysFromToday.getNumOfDays())).list();
 
-        if (log.isDebugEnabled()) {
+        List<Task> activitiTasks = getActivitiTaskService().
+                createTaskQuery().
+                includeProcessVariables().
+                includeTaskLocalVariables().
+                dueAfter(new Date()).
+                dueBefore(shiftDateFromToday(numberOfDaysFromToday.getNumOfDays())).
+                list();
+
+        if (log.isDebugEnabled())
+        {
             log.debug("Found '" + activitiTasks.size() + "' tasks for all users which due date is between today and " + numberOfDaysFromToday.getnDays() + " from today");
         }
 
         List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
 
-        for (Task activitiTask : activitiTasks) {
+        for (Task activitiTask : activitiTasks)
+        {
             AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
             retval.add(acmTask);
         }
@@ -231,8 +265,12 @@ class ActivitiTaskDao implements TaskDao
         }
         AcmTask retval;
 
-        Task activitiTask =
-                getActivitiTaskService().createTaskQuery().taskId(String.valueOf(taskId)).includeProcessVariables().singleResult();
+        Task activitiTask = getActivitiTaskService().
+                createTaskQuery().
+                taskId(String.valueOf(taskId)).
+                includeProcessVariables().
+                includeTaskLocalVariables().
+                singleResult();
         if ( activitiTask != null )
         {
             retval = acmTaskFromActivitiTask(activitiTask);
@@ -240,9 +278,12 @@ class ActivitiTaskDao implements TaskDao
         }
         else
         {
-            HistoricTaskInstance hti =
-                    getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(String.valueOf(taskId)).
-                            includeProcessVariables().singleResult();
+            HistoricTaskInstance hti = getActivitiHistoryService().
+                    createHistoricTaskInstanceQuery().
+                    taskId(String.valueOf(taskId)).
+                    includeProcessVariables().
+                    includeTaskLocalVariables().
+                    singleResult();
 
             if ( hti != null )
             {
@@ -278,6 +319,13 @@ class ActivitiTaskDao implements TaskDao
             retval.setAttachedToObjectType((String) hti.getProcessVariables().get("OBJECT_TYPE"));
         }
 
+        if ( hti.getTaskLocalVariables() != null )
+        {
+            Map<String, Object> taskLocal = hti.getTaskLocalVariables();
+
+            extractTaskLocalVariables(retval, taskLocal);
+        }
+
         String pid = hti.getProcessDefinitionId();
         if ( pid != null )
         {
@@ -300,6 +348,31 @@ class ActivitiTaskDao implements TaskDao
         }
 
         return retval;
+    }
+
+    private void extractTaskLocalVariables(AcmTask acmTask, Map<String, Object> taskLocal)
+    {
+        if ( acmTask.getAttachedToObjectId() == null )
+        {
+            Long objectId = (Long) taskLocal.get("OBJECT_ID");
+            acmTask.setAttachedToObjectId(objectId);
+        }
+        if ( acmTask.getAttachedToObjectType() == null )
+        {
+            String objectType = (String) taskLocal.get("OBJECT_TYPE");
+            acmTask.setAttachedToObjectType(objectType);
+        }
+        Date startDate = (Date) taskLocal.get("START_DATE");
+        acmTask.setTaskStartDate(startDate);
+
+        String status = (String) taskLocal.get("TASK_STATUS");
+        acmTask.setStatus(status);
+
+        Integer percentComplete = (Integer) taskLocal.get("PERCENT_COMPLETE");
+        acmTask.setPercentComplete(percentComplete);
+
+        String details = (String) taskLocal.get("DETAILS");
+        acmTask.setDetails(details);
     }
 
     private String acmPriorityFromActivitiPriority(int priority)
@@ -344,6 +417,11 @@ class ActivitiTaskDao implements TaskDao
         acmTask.setAssignee(activitiTask.getAssignee());
 
         extractProcessVariables(activitiTask, acmTask);
+
+        if ( activitiTask.getTaskLocalVariables() != null )
+        {
+            extractTaskLocalVariables(acmTask, activitiTask.getTaskLocalVariables());
+        }
 
         findBusinessProcessName(activitiTask, acmTask);
 
