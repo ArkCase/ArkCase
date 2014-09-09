@@ -17,10 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 class ActivitiTaskDao implements TaskDao
 {
@@ -28,6 +25,7 @@ class ActivitiTaskDao implements TaskDao
     private RepositoryService activitiRepositoryService;
     private Logger log = LoggerFactory.getLogger(getClass());
     private HistoryService activitiHistoryService;
+    private Map<String, Integer> priorityLevelToNumberMap;
 
 
 
@@ -37,7 +35,8 @@ class ActivitiTaskDao implements TaskDao
     {
         Task activitiTask = getActivitiTaskService().newTask();
         activitiTask.setAssignee(in.getAssignee());
-        activitiTask.setPriority(in.getPriority());
+        Integer activitiPriority = activitiPriorityFromAcmPriority(in.getPriority());
+        activitiTask.setPriority(activitiPriority);
         activitiTask.setDueDate(in.getDueDate());
         activitiTask.setName(in.getTitle());
 
@@ -268,7 +267,8 @@ class ActivitiTaskDao implements TaskDao
 
         retval.setTaskId(Long.valueOf(hti.getId()));
         retval.setDueDate(hti.getDueDate());
-        retval.setPriority(hti.getPriority());
+        String taskPriority = acmPriorityFromActivitiPriority(hti.getPriority());
+        retval.setPriority(taskPriority);
         retval.setTitle(hti.getName());
         retval.setAssignee(hti.getAssignee());
 
@@ -302,13 +302,44 @@ class ActivitiTaskDao implements TaskDao
         return retval;
     }
 
+    private String acmPriorityFromActivitiPriority(int priority)
+    {
+        String defaultPriority = "Medium";
+
+        for ( Map.Entry<String, Integer> acmToActiviti : getPriorityLevelToNumberMap().entrySet() )
+        {
+            if ( acmToActiviti.getValue().equals(priority) )
+            {
+                return acmToActiviti.getKey();
+            }
+        }
+
+        return defaultPriority;
+    }
+
+    private Integer activitiPriorityFromAcmPriority(String acmPriority)
+    {
+        Integer defaultPriority = 50;
+
+        for ( Map.Entry<String, Integer> acmToActiviti : getPriorityLevelToNumberMap().entrySet() )
+        {
+            if ( acmToActiviti.getKey().equals(acmPriority) )
+            {
+                return acmToActiviti.getValue();
+            }
+        }
+
+        return defaultPriority;
+    }
+
     protected AcmTask acmTaskFromActivitiTask(Task activitiTask)
     {
         AcmTask acmTask = new AcmTask();
 
         acmTask.setTaskId(Long.valueOf(activitiTask.getId()));
         acmTask.setDueDate(activitiTask.getDueDate());
-        acmTask.setPriority(activitiTask.getPriority());
+        String taskPriority = acmPriorityFromActivitiPriority(activitiTask.getPriority());
+        acmTask.setPriority(taskPriority);
         acmTask.setTitle(activitiTask.getName());
         acmTask.setAssignee(activitiTask.getAssignee());
 
@@ -390,5 +421,15 @@ class ActivitiTaskDao implements TaskDao
     public HistoryService getActivitiHistoryService()
     {
         return activitiHistoryService;
+    }
+
+    public Map<String, Integer> getPriorityLevelToNumberMap()
+    {
+        return priorityLevelToNumberMap;
+    }
+
+    public void setPriorityLevelToNumberMap(Map<String, Integer> priorityLevelToNumberMap)
+    {
+        this.priorityLevelToNumberMap = priorityLevelToNumberMap;
     }
 }

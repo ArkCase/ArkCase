@@ -148,6 +148,14 @@
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
         <property name="activitiHistoryService" ref="activitiHistoryService"/>
+        <property name="priorityLevelToNumberMap">
+            <map>
+                <entry key="Low" value="10"/>
+                <entry key="Medium" value="50"/>
+                <entry key="High" value="70"/>
+                <entry key="Expedite" value="90"/>
+            </map>
+        </property>
     </bean>
 
     <bean id="taskEventPublisher" class="com.armedia.acm.plugins.task.service.TaskEventPublisher"/>

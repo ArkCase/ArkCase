@@ -60,9 +60,13 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         unit = new ActivitiTaskDao();
 
+        Map<String, Integer> acmPriorityToActivitiPriority = new HashMap<>();
+        acmPriorityToActivitiPriority.put("Medium", 50);
+
         unit.setActivitiTaskService(mockTaskService);
         unit.setActivitiRepositoryService(mockRepositoryService);
         unit.setActivitiHistoryService(mockHistoryService);
+        unit.setPriorityLevelToNumberMap(acmPriorityToActivitiPriority);
     }
 
     @Test
@@ -74,7 +78,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         Date started = new Date();
         Date ended = new Date();
         long taskDuration = 9876543L;
-        int priority = 22;
+        String acmPriority = "Medium";
+        int activitiPriority = 50;
         String title = "task Title";
         String processId = "processId";
         String processName = "processName";
@@ -105,7 +110,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockTask.getId()).andReturn(taskId.toString());
         expect(mockTask.getDueDate()).andReturn(dueDate);
-        expect(mockTask.getPriority()).andReturn(priority);
+        expect(mockTask.getPriority()).andReturn(activitiPriority);
         expect(mockTask.getName()).andReturn(title);
         expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
         expect(mockTask.getProcessDefinitionId()).andReturn(processId);
@@ -125,6 +130,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertNotNull(completed);
         assertEquals(taskId, completed.getTaskId());
         assertTrue(completed.isCompleted());
+        assertEquals(acmPriority, completed.getPriority());
     }
 
     @Test
@@ -133,7 +139,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String user = "user";
         Long taskId = 500L;
         Date dueDate = new Date();
-        int priority = 22;
+        String acmPriority = "Medium";
+        int activitiPriority = 50;
         String title = "task Title";
         String processId = "processId";
         String processName = "processName";
@@ -152,7 +159,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockTask.getId()).andReturn(taskId.toString());
         expect(mockTask.getDueDate()).andReturn(dueDate);
-        expect(mockTask.getPriority()).andReturn(priority);
+        expect(mockTask.getPriority()).andReturn(activitiPriority);
         expect(mockTask.getName()).andReturn(title);
         expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
         expect(mockTask.getAssignee()).andReturn(user);
@@ -172,7 +179,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         assertEquals(taskId, task.getTaskId());
         assertEquals(dueDate, task.getDueDate());
-        assertEquals(priority, task.getPriority());
+        assertEquals(acmPriority, task.getPriority());
         assertEquals(title, task.getTitle());
         assertEquals(objectId, task.getAttachedToObjectId());
         assertEquals(objectType, task.getAttachedToObjectType());
@@ -188,7 +195,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String user = "user";
         Long taskId = 500L;
         Date dueDate = new Date();
-        int priority = 22;
+        String acmPriority = "Medium";
+        int activitiPriority = 50;
         Date started = new Date();
         Date ended = new Date();
         long taskDuration = 9876543L;
@@ -219,7 +227,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockHistoricTaskInstance.getId()).andReturn(taskId.toString());
         expect(mockHistoricTaskInstance.getDueDate()).andReturn(dueDate);
-        expect(mockHistoricTaskInstance.getPriority()).andReturn(priority);
+        expect(mockHistoricTaskInstance.getPriority()).andReturn(activitiPriority);
         expect(mockHistoricTaskInstance.getName()).andReturn(title);
         expect(mockHistoricTaskInstance.getProcessVariables()).andReturn(pvars).atLeastOnce();
         expect(mockHistoricTaskInstance.getAssignee()).andReturn(user);
@@ -239,7 +247,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         assertEquals(taskId, task.getTaskId());
         assertEquals(dueDate, task.getDueDate());
-        assertEquals(priority, task.getPriority());
+        assertEquals(acmPriority, task.getPriority());
         assertEquals(title, task.getTitle());
         assertEquals(objectId, task.getAttachedToObjectId());
         assertEquals(objectType, task.getAttachedToObjectType());
@@ -287,7 +295,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         Long taskId = 500L;
         Date dueDate = new Date();
-        int priority = 22;
+        String acmPriority = "Medium";
+        int activitiPriority = 50;
         String title = "task Title";
         String processId = "processId";
         String processName = "processName";
@@ -308,7 +317,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockTask.getId()).andReturn(taskId.toString());
         expect(mockTask.getDueDate()).andReturn(dueDate);
-        expect(mockTask.getPriority()).andReturn(priority);
+        expect(mockTask.getPriority()).andReturn(activitiPriority);
         expect(mockTask.getName()).andReturn(title);
         expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
         expect(mockTask.getAssignee()).andReturn(user);
@@ -332,7 +341,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         assertEquals(taskId, found.getTaskId());
         assertEquals(dueDate, found.getDueDate());
-        assertEquals(priority, found.getPriority());
+        assertEquals(acmPriority, found.getPriority());
         assertEquals(title, found.getTitle());
         assertEquals(objectId, found.getAttachedToObjectId());
         assertEquals(objectType, found.getAttachedToObjectType());
