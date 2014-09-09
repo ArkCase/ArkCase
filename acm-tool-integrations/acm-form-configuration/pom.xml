@@ -13,7 +13,6 @@
     <description>Define the form broker via Spring configuration</description>
 
     <dependencies>
-		<!-- orbeon -->
 		<!-- frevvo -->
         <!-- spring -->
         
