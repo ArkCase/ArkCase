@@ -1,8 +1,11 @@
 package com.armedia.acm.plugins.person.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +19,12 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by armdev on 7/28/14.
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "acm_person_alias")
 public class PersonAlias implements Serializable
@@ -40,16 +50,43 @@ public class PersonAlias implements Serializable
     @JoinColumn(name="cm_person_id", nullable = false) 
     private Person person;
 
+    @XmlElements({
+		@XmlElement(name="aliasType"),
+		@XmlElement(name="initiatorAliasType"),
+		@XmlElement(name="peopleAliasType")
+		
+	})
     @Column(name = "cm_person_alias_type")
     private String aliasType;
+    
+    @Transient
+    private List<String> aliasTypes;
 
+    @XmlElements({
+		@XmlElement(name="aliasValue"),
+		@XmlElement(name="initiatorAliasValue"),
+		@XmlElement(name="peopleAliasValue")
+		
+	})
     @Column(name = "cm_person_alias_value")
     private String aliasValue;
 
+    @XmlElements({
+		@XmlElement(name="created"),
+		@XmlElement(name="initiatorAliasDate"),
+		@XmlElement(name="peopleAliasDate")
+		
+	})
     @Column(name = "cm_person_alias_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
+    @XmlElements({
+		@XmlElement(name="creator"),
+		@XmlElement(name="initiatorAliasAddedBy"),
+		@XmlElement(name="peopleAliasAddedBy")
+		
+	})
     @Column(name = "cm_person_alias_creator", insertable = true, updatable = false)
     private String creator;
 
@@ -115,10 +152,16 @@ public class PersonAlias implements Serializable
     public void setAliasType(String aliasType) {
         this.aliasType = aliasType;
     }
-
     
+	public List<String> getAliasTypes() {
+		return aliasTypes;
+	}
 
-    public String getAliasValue() 
+	public void setAliasTypes(List<String> aliasTypes) {
+		this.aliasTypes = aliasTypes;
+	}
+
+	public String getAliasValue() 
     {
         return aliasValue;
     }

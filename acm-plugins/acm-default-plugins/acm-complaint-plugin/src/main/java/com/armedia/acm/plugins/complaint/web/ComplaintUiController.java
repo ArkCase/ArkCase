@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.armedia.acm.forms.roi.model.FormName;
 import com.armedia.acm.form.config.FormUrl;
+import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.web.AcmPageDescriptor;
 
@@ -87,6 +88,9 @@ public class ComplaintUiController
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintWizard");
         retval.addObject("pageDescriptor",  getPageDescriptorWizard());
+        
+        retval.addObject("newComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.COMPLAINT));
+        
         return retval;
 
     }
