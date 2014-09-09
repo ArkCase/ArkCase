@@ -4816,7 +4816,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     due: "asc"
                 }
             }, {
-                counts: [5,10,25,50],
+                counts:[], // [5,10,25,50],
                 total: dataT.length,
                 getData: function($defer, params) {
                    // var filteredData = params.filter() ? $filter("filter")(dataT, params.filter()) : dataT,
@@ -4858,7 +4858,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     created: "asc"
                 }
             }, {
-                counts: [5,10,25,50],
+                counts: [],//[5,10,25,50],
                 total: dataC.length,
                 getData: function($defer, params) {
                   //  var filteredData = params.filter() ? $filter("filter")(dataC, params.filter()) : dataC,
