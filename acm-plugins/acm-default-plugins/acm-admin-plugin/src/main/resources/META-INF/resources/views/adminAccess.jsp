@@ -99,13 +99,13 @@
 -->
 
                 </section>
-                <footer class="footer bg-info clearfix">
+                <!-- <footer class="footer bg-info clearfix">
                     <form class="m-t-sm pull-right">
                         <div class="input-group">
                             <button class="btn btn-sm btn-default" type="button">Save Changes</button>
                         </div>
                     </form>
-                </footer>
+                </footer> -->
             </section>
         </section>
     </jsp:body>
