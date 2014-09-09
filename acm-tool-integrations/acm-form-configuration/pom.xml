@@ -13,13 +13,47 @@
     <description>Define the form broker via Spring configuration</description>
 
     <dependencies>
-		<!-- orbeon -->
 		<!-- frevvo -->
         <!-- spring -->
+        
+        <!-- acm -->
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-authentication-token</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-users</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <artifactId>spring-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		
+		<!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>

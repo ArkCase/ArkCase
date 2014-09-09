@@ -13,7 +13,7 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
     private String description;
     private Date dueDate;
     private String taskEvent;
-    private Integer priority;
+    private String priority;
     private Long parentObjectId;
     private String parentObjectType;
 
@@ -32,9 +32,27 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
         setDescription(source.getDescription());
         setDueDate(source.getDueDate());
         setTaskEvent(taskEvent);
-        setPriority(source.getPriority());
+        setPriority(determinePriority(source.getPriority()));
         setParentObjectId(parentObjectId);
         setParentObjectType(parentObjectType);
+    }
+
+    private String determinePriority(int priority)
+    {
+        if ( priority < 50 )
+        {
+            return "Low";
+        }
+        else if ( priority < 70 )
+        {
+            return "Medium";
+        }
+        else if ( priority < 90 )
+        {
+            return "High";
+        }
+
+        return "Expedite";
     }
 
     @Override
@@ -92,11 +110,11 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
     }
 
     @Override
-    public Integer getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Integer priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 

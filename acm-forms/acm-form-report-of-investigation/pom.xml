@@ -13,11 +13,6 @@
     <description>Report of investigation form.</description>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>com.armedia.acm.acm-tool-integrations</groupId>-->
-            <!--<artifactId>acm-orbeon-configuration</artifactId>-->
-            <!--<version>${acm.version}</version>-->
-        <!--</dependency>-->
 
         <!-- spring -->
         <dependency>

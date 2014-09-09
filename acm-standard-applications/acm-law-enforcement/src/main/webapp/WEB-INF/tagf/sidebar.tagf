@@ -51,7 +51,7 @@
                             </c:if>
                         </c:forEach>
                     </ul>
-                    <div class="line dk hidden-nav-xs"></div>
+                    <%--<div class="line dk hidden-nav-xs"></div>
                     <div class="text-muted text-xs hidden-nav-xs padder m-t-sm m-b-sm">Temporary</div>
                     <ul class="nav">
                         <li>
@@ -60,7 +60,7 @@
                                 <span>Old complaint page</span>
                             </a>
                         </li>
-                    </ul>
+                    </ul>--%>
                 </nav>
 			<!-- / nav -->
             </div>

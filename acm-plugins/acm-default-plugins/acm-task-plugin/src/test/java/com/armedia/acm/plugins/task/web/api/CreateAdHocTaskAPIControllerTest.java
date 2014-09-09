@@ -24,6 +24,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
+import java.util.Date;
+
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -74,6 +76,12 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
 
         AcmTask adHoc = new AcmTask();
         adHoc.setAssignee("assignee");
+        adHoc.setAttachedToObjectType("COMPLAINT");
+        adHoc.setDetails("details");
+        adHoc.setPercentComplete(23);
+        adHoc.setStatus("ASSIGNED");
+        adHoc.setTaskStartDate(new Date());
+        adHoc.setTitle("title");
 
         AcmTask found = new AcmTask();
         found.setAssignee(adHoc.getAssignee());

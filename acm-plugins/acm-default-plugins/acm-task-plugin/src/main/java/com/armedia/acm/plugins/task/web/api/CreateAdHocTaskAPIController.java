@@ -31,8 +31,7 @@ public class CreateAdHocTaskAPIController
     public AcmTask createAdHocTask(
             @RequestBody AcmTask in,
             Authentication authentication,
-            HttpSession httpSession,
-            HttpServletResponse response
+            HttpSession httpSession
     ) throws AcmCreateObjectFailedException
     {
         if ( log.isInfoEnabled() )

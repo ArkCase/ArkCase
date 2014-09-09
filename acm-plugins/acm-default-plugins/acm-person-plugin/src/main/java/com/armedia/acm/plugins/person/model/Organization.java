@@ -1,8 +1,11 @@
 package com.armedia.acm.plugins.person.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +19,12 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by armdev on 09/03/14.
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "acm_organization")
 public class Organization implements Serializable
@@ -35,16 +45,43 @@ public class Organization implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long organizationId;
    
+    @XmlElements({
+		@XmlElement(name="organizationType"),
+		@XmlElement(name="initiatorOrganizationType"),
+		@XmlElement(name="peopleOrganizationType")
+		
+	})
     @Column(name = "cm_organization_type")
     private String organizationType;
+    
+    @Transient
+    private List<String> organizationTypes;
 
+    @XmlElements({
+		@XmlElement(name="name"),
+		@XmlElement(name="initiatorOrganizationName"),
+		@XmlElement(name="peopleOrganizationName")
+		
+	})
     @Column(name = "cm_organization_value")
     private String organizationValue;
 
+    @XmlElements({
+		@XmlElement(name="created"),
+		@XmlElement(name="initiatorOrganizationDate"),
+		@XmlElement(name="peopleOrganizationDate")
+		
+	})
     @Column(name = "cm_organization_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
+    @XmlElements({
+		@XmlElement(name="creator"),
+		@XmlElement(name="initiatorOrganizationAddedBy"),
+		@XmlElement(name="peopleOrganizationAddedBy")
+		
+	})
     @Column(name = "cm_organization_creator", insertable = true, updatable = false)
     private String creator;
 
@@ -100,8 +137,15 @@ public class Organization implements Serializable
     public void setOrganizationType(String organizationType) {
         this.organizationType = organizationType;
     }
+	public List<String> getOrganizationTypes() {
+		return organizationTypes;
+	}
+	
+	public void setOrganizationTypes(List<String> organizationTypes) {
+		this.organizationTypes = organizationTypes;
+	}
 
-    public String getOrganizationValue() {
+	public String getOrganizationValue() {
         return organizationValue;
     }
 
