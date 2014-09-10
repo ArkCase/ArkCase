@@ -415,5 +415,66 @@
             <column name="cm_organization_id"/>
         </createIndex>
     </changeSet>
+
+    <changeSet id="21-update-person-type-lookup-table" author="dmiller">
+        <update tableName="acm_person">
+            <column name="cm_person_type_id"/>
+            <where>cm_person_type_id is not null</where>
+        </update>
+        <update tableName="acm_person_assoc">
+            <column name="cm_person_assoc_person_type" value="Complaintant"/>
+            <where>cm_person_assoc_person_type = 'Complainant'</where>
+        </update>
+        <update tableName="acm_person_type_lu">
+            <column name="cm_value" value="Complaintant"/>
+            <where>cm_value = 'Complainant'</where>
+        </update>
+        <delete tableName="acm_person_type_lu">
+            <where>cm_value = 'Others'</where>
+        </delete>
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Initiator"/>
+            <column name="cm_order" valueNumeric="10"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Wrongdoer"/>
+            <column name="cm_order" valueNumeric="20"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="22-update-person-alias-lookup-table" author="dmiller">
+        <insert tableName="acm_person_alias_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="FKA"/>
+            <column name="cm_order" valueNumeric="10"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_person_alias_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Married"/>
+            <column name="cm_order" valueNumeric="20"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
 
