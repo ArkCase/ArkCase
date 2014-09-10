@@ -56,5 +56,9 @@ public abstract class FrevvoFormAbstractService {
 		
 		return obj;
 	}
-	
+
+    public Authentication getAuthentication()
+    {
+        return authentication;
+    }
 }

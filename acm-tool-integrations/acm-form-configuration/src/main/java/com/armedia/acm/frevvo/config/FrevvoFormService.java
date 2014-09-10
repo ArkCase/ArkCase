@@ -22,7 +22,7 @@ public interface FrevvoFormService {
 
 	public Object init();
 	public Object get(String action);
-	public boolean save(String xml, Map<String, MultipartFile> attachemnts);
+	public boolean save(String xml, Map<String, MultipartFile> attachemnts) throws Exception;
 	public void setProperties(Map<String, Object> properties);
 	public void setRequest(HttpServletRequest request);
 	public void setAuthentication(Authentication authentication);

@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -44,8 +45,12 @@ import com.google.gson.GsonBuilder;
 public class ComplaintService extends FrevvoFormAbstractService implements FrevvoFormService {
 
 	private Logger LOG = LoggerFactory.getLogger(ComplaintService.class);
-	
-	public ComplaintService() {
+
+    private SaveComplaintTransaction saveComplaintTransaction;
+
+    private ComplaintFactory complaintFactory = new ComplaintFactory();
+
+    public ComplaintService() {
 		
 	}
 
@@ -79,15 +84,30 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	}
 
 	@Override
-	public boolean save(String xml, Map<String, MultipartFile> attachments) {
+	public boolean save(String xml, Map<String, MultipartFile> attachments) throws Exception
+    {
 		Complaint complaint = (Complaint) convertFromXMLToObject(xml, Complaint.class);
-		
-		// TODO: Save Complaint to database and save attachments
+
+        complaint = saveComplaint(complaint);
+
+		// TODO: save attachments
 		
 		return false;
 	}
 
-	@Override
+    protected Complaint saveComplaint(Complaint complaint) throws MuleException
+    {
+        com.armedia.acm.plugins.complaint.model.Complaint acmComplaint = getComplaintFactory().asAcmComplaint(complaint);
+
+        acmComplaint = getSaveComplaintTransaction().saveComplaint(acmComplaint, getAuthentication());
+
+        complaint.setComplaintId(acmComplaint.getComplaintId());
+        complaint.setComplaintNumber(acmComplaint.getComplaintNumber());
+
+        return complaint;
+    }
+
+    @Override
 	public void setProperties(Map<String, Object> properties) {
 		this.properties = properties;
 	}
@@ -102,6 +122,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	public void setAuthentication(Authentication authentication) {
 		this.authentication = authentication;		
 	}
+
+
 	
 	@Override
 	public void setAuthenticationTokenService(
@@ -319,5 +341,19 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 		return null;
 	}
-	
+
+    public SaveComplaintTransaction getSaveComplaintTransaction()
+    {
+        return saveComplaintTransaction;
+    }
+
+    public void setSaveComplaintTransaction(SaveComplaintTransaction saveComplaintTransaction)
+    {
+        this.saveComplaintTransaction = saveComplaintTransaction;
+    }
+
+    public ComplaintFactory getComplaintFactory()
+    {
+        return complaintFactory;
+    }
 }

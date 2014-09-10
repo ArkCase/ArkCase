@@ -18,6 +18,7 @@
 		<property name="properties" ref="acm-form-properties" />
 		<property name="authenticationTokenService" ref="authenticationTokenService" />
 		<property name="userDao" ref="userJpaDao" />
+        <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
 	</bean>
 
 </beans>
