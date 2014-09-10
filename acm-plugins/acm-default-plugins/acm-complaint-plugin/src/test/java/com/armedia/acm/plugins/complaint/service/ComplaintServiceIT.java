@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.complaint.Complaint;
+import com.armedia.acm.plugins.complaint.model.complaint.Contact;
+import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,6 +66,18 @@ public class ComplaintServiceIT
         frevvoComplaint.setDate(now);
         frevvoComplaint.setPriority("High");
 
+        Contact initiator = new Contact();
+        MainInformation initMainInfo = new MainInformation();
+        initiator.setMainInformation(initMainInfo);
+        frevvoComplaint.setInitiator(initiator);
+
+        initMainInfo.setAnonimuos("true");
+        initMainInfo.setDescription("initDesc");
+        initMainInfo.setFirstName("init first");
+        initMainInfo.setLastName("init last");
+        initMainInfo.setTitle("mr.");
+        initMainInfo.setType("Complainant");
+
         Complaint savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
 
         assertNotNull(savedFrevvoComplaint.getComplaintId());
@@ -74,6 +88,14 @@ public class ComplaintServiceIT
         assertEquals(frevvoComplaint.getComplaintDescription(), acmComplaint.getDetails());
         assertEquals(frevvoComplaint.getDate().toString(), acmComplaint.getIncidentDate().toString());
         assertEquals(frevvoComplaint.getPriority(), acmComplaint.getPriority());
+
+        assertNotNull(acmComplaint.getOriginator());
+        assertEquals(initMainInfo.getFirstName(), acmComplaint.getOriginator().getPerson().getGivenName());
+        assertEquals(initMainInfo.getLastName(), acmComplaint.getOriginator().getPerson().getFamilyName());
+        assertEquals(initMainInfo.getTitle(), acmComplaint.getOriginator().getPerson().getTitle());
+        assertEquals(initMainInfo.getType(), acmComplaint.getOriginator().getPersonType());
+        assertEquals(initMainInfo.getDescription(), acmComplaint.getOriginator().getPersonDescription());
+
 
 
     }
