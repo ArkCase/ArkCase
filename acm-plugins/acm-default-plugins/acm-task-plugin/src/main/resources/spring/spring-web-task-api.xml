@@ -26,4 +26,9 @@
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
     </bean>
 
+    <bean id="saveTaskAPIController" class="com.armedia.acm.plugins.task.web.api.SaveTaskAPIController">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
+    </bean>
+
 </beans>

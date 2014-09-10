@@ -50,6 +50,11 @@
                     <property name="requiredPrivilege" ref="acmTaskCreatePrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/task/save/{taskId}"/>
+                    <property name="requiredPrivilege" ref="acmTaskCreatePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/task/wizard"/>
                     <property name="requiredPrivilege" ref="acmTaskCreatePrivilege"/>
