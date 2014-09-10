@@ -331,31 +331,31 @@
 
 
                                     <div class="row" id="tabRefComplaints" style="display:none;">
-                                        Other Complaints
+                                        <%--Other Complaints--%>
                                     </div>
 
                                     <div class="row" id="tabRefCases" style="display:none;">
-                                        Other Cases
+                                        <%--Other Cases--%>
                                     </div>
 
                                     <div class="row" id="tabRefTasks" style="display:none;">
-                                        Other Tasks
+                                        <%--Other Tasks--%>
                                     </div>
 
                                     <div class="row" id="tabRefDocuments" style="display:none;">
-                                        Other Documents
+                                        <%--Other Documents--%>
                                     </div>
 
                                     <div class="row" id="tabApprovers" style="display:none;">
-                                        Approvers
+                                        <%--Approvers--%>
                                     </div>
 
                                     <div class="row" id="tabCollaborators" style="display:none;">
-                                        Collaborators
+                                        <%--Collaborators--%>
                                     </div>
 
                                     <div class="row" id="tabWatchers" style="display:none;">
-                                        Watchers
+                                        <%--Watchers--%>
                                     </div>
 
                                 </div>

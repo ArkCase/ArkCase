@@ -18,22 +18,18 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
     "classpath:/spring/spring-web-acm-web.xml",
-    "classpath:/spring/spring-library-person-plugin-test.xml",
-    "/spring/spring-library-data-source.xml"
+    "classpath:/spring/spring-library-person-plugin-test.xml"    
 })
-@TransactionConfiguration(transactionManager="transactionManager", defaultRollback=true)
-@Transactional
+
 public class DeletePersonByIdAPIControllerTest extends EasyMockSupport 
 {
 
@@ -65,7 +61,6 @@ public class DeletePersonByIdAPIControllerTest extends EasyMockSupport
     }
 
     @Test
-    @Transactional
     public void deletePersonById() throws Exception 
     {                        
           Long personId =958L;         
@@ -90,7 +85,6 @@ public class DeletePersonByIdAPIControllerTest extends EasyMockSupport
     }
 
     @Test
-    @Transactional
     public void deletePersonById_notFound() throws Exception {
                         
           Long personId =958L;        
