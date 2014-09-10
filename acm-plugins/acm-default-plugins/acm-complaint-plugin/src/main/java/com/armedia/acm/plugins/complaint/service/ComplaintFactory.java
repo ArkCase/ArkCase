@@ -41,5 +41,15 @@ public class ComplaintFactory
         {
             p.getPersonAliases().add(contact.getAlias());
         }
+
+        if ( contact.getLocation() != null && ! contact.getLocation().isEmpty() )
+        {
+            p.getAddresses().addAll(contact.getLocation());
+        }
+
+        if ( contact.getOrganization() != null && ! contact.getOrganization().isEmpty() )
+        {
+            p.getOrganizations().addAll(contact.getOrganization());
+        }
     }
 }
