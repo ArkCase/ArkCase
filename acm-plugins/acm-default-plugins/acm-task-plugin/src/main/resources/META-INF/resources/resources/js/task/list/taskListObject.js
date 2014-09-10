@@ -46,13 +46,13 @@ TaskList.Object = {
             }
         });
         
-        this.$signatureList     = $("#signatureList");
+        this.$listSignature     = $("#signatureList");
         
         // forms
-        this.$signatureForm     = $("#signatureConfirmForm");
+        this.$formSignature     = $("#signatureConfirmForm");
         
         // modals
-        this.$signConfirmModal  = $("#signatureModal");
+        this.$modalSignConfirm  = $("#signatureModal");
 
 
         /*this.$lnkPriority.editable({placement: 'bottom'
@@ -119,14 +119,14 @@ TaskList.Object = {
 
     }
     ,setSignatureList: function(val) {
-        this.$signatureList.empty();
-        this.$signatureList.append(val);
+        this.$listSignature.empty();
+        this.$listSignature.append(val);
     }
     ,getSignatureForm: function() {
-        return this.$signatureForm;
+        return this.$formSignature;
     }
     ,getSignatureModal: function() {
-        return this.$signConfirmModal;
+        return this.$modalSignConfirm;
     }
     ,getHtmlUlTasks: function() {
         return Acm.Object.getHtml(this.$ulTasks);

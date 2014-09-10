@@ -36,7 +36,7 @@ public class PersonAssociation implements Serializable
     private Long id;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne( fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="cm_person_assoc_person_id", nullable = false) 
     private Person person;
     

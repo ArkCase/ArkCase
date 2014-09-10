@@ -15,9 +15,9 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
 
     <flow name="savePerson" doc:name="Save Person">
-        <description>Saves a complaint (creates new complaint if it has not been saved
-            previously).  The payload must be a Complaint entity object.  The return message&quot;s
-            payload is the (possibly updated) complaint; i.e. for a new complaint, the return payload&quot;s
+        <description> Saves a complaint (creates new person if it has not been saved
+            previously).  The payload must be a Person entity object.  The return message&quot;s
+            payload is the (possibly updated) person; i.e. for a new perosn, the return payload&quot;s
             ID fields are populated.</description>
         <vm:inbound-endpoint
                 address="vm://savePerson.in"
