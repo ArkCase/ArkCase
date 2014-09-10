@@ -54,4 +54,6 @@ public interface TaskDao
     List<AcmTask> pastDueTasks();
 
     AcmTask findById(Long taskId) throws AcmTaskException;
+
+    AcmTask save(AcmTask in) throws AcmTaskException;
 }

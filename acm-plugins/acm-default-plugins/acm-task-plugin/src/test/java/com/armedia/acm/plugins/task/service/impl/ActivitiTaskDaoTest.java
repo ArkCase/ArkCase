@@ -63,11 +63,68 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         Map<String, Integer> acmPriorityToActivitiPriority = new HashMap<>();
         acmPriorityToActivitiPriority.put("Medium", 50);
+        acmPriorityToActivitiPriority.put("Low", 30);
 
         unit.setActivitiTaskService(mockTaskService);
         unit.setActivitiRepositoryService(mockRepositoryService);
         unit.setActivitiHistoryService(mockHistoryService);
         unit.setPriorityLevelToNumberMap(acmPriorityToActivitiPriority);
+    }
+
+    @Test
+    public void save() throws Exception
+    {
+        Long taskId = 500L;
+        String assignee = "assignee";
+        String priority = "Low";
+        Date due = new Date();
+        String title = "title";
+        String objectType = "objectType";
+        Long objectId = 400L;
+        Date start = new Date();
+        String status = "status";
+        Integer percentComplete = 25;
+        String details = "details";
+
+        AcmTask in = new AcmTask();
+        in.setTaskId(taskId);
+        in.setAssignee(assignee);
+        in.setTaskStartDate(start);
+        in.setStatus(status);
+        in.setDetails(details);
+        in.setDueDate(due);
+        in.setPriority(priority);
+        in.setTitle(title);
+        in.setAttachedToObjectId(objectId);
+        in.setAttachedToObjectType(objectType);
+        in.setPercentComplete(percentComplete);
+
+        expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.taskId(taskId.toString())).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.singleResult()).andReturn(mockTask);
+
+        mockTask.setAssignee(assignee);
+        mockTask.setPriority(30);
+        mockTask.setDueDate(due);
+        mockTask.setName(title);
+
+
+        mockTaskService.saveTask(mockTask);
+
+        expect(mockTask.getId()).andReturn(taskId.toString()).atLeastOnce();
+        mockTaskService.setVariableLocal(taskId.toString(), "OBJECT_TYPE", objectType);
+        mockTaskService.setVariableLocal(taskId.toString(), objectType, objectId);
+        mockTaskService.setVariableLocal(taskId.toString(), "OBJECT_ID", objectId);
+        mockTaskService.setVariableLocal(taskId.toString(), "START_DATE", start);
+        mockTaskService.setVariableLocal(taskId.toString(), "TASK_STATUS", status);
+        mockTaskService.setVariableLocal(taskId.toString(), "PERCENT_COMPLETE", percentComplete);
+        mockTaskService.setVariableLocal(taskId.toString(), "DETAILS", details);
+
+        replayAll();
+
+        unit.save(in);
+
+        verifyAll();
     }
 
     @Test
@@ -145,7 +202,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertNotNull(completed.getTaskStartDate());
         assertEquals("taskStatus", completed.getStatus());
         assertEquals("task details", completed.getDetails());
-        assertEquals(75, completed.getPercentComplete());
+        assertEquals(Integer.valueOf(75), completed.getPercentComplete());
     }
 
     @Test
@@ -214,7 +271,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertNotNull(task.getTaskStartDate());
         assertEquals("taskStatus", task.getStatus());
         assertEquals("task details", task.getDetails());
-        assertEquals(50, task.getPercentComplete());
+        assertEquals(Integer.valueOf(50), task.getPercentComplete());
     }
 
     @Test
@@ -296,7 +353,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertNotNull(task.getTaskStartDate());
         assertEquals("taskStatus", task.getStatus());
         assertEquals("details", task.getDetails());
-        assertEquals(50, task.getPercentComplete());
+        assertEquals(Integer.valueOf(50), task.getPercentComplete());
     }
 
     @Test
@@ -404,7 +461,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertNotNull(found.getTaskStartDate());
         assertEquals("taskStatus", found.getStatus());
         assertEquals("details", found.getDetails());
-        assertEquals(25, found.getPercentComplete());
+        assertEquals(Integer.valueOf(25), found.getPercentComplete());
 
     }
 }

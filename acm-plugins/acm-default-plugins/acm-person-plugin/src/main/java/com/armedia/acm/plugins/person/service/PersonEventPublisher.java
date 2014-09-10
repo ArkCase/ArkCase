@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
-import com.armedia.acm.plugins.person.model.ListPersonEvent;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAddEvent;
 import com.armedia.acm.plugins.person.model.PersonPersistenceEvent;
@@ -49,22 +48,4 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(personPersistenceEvent);
     }
 
-    public void publishfindPersonByParentIdAndParentType(
-               Person source,
-               Authentication authentication,
-               String ipAddress,
-               boolean succeeded)
-    {
-        ListPersonEvent event = new ListPersonEvent(source);
-        
-        String user =authentication.getName();
-        event.setUserId(user);
-        event.setIpAddress(ipAddress);
-        event.setSucceeded(succeeded);
-        
-        eventPublisher.publishEvent(event);
-       
-    }
-    
-   
 }

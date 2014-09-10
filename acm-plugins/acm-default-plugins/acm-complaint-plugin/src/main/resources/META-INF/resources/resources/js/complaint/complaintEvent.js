@@ -107,20 +107,20 @@ Complaint.Event = {
         c.details = html;
         Complaint.Service.saveComplaint(c);
     }
-    ,onClickSpanAddDocument: function(e) {
-        var report = Complaint.Object.getSelectReport();
-        var token = Complaint.Object.setToken();
-        var c = Complaint.getComplaint();
-
-        var url = "http://10.21.4.149/orbeon/fr/acm/roi-form/new"
-            + "?acm_ticket=" + token
-            + "&complaint_id=" + c.complaintId
-            + "&complaint_number=" + c.complaintNumber
-            + "&complaint_title=" + c.complaintTitle
-            + "&complaint_priority=" + c.priority;
-
-        window.location.href = url;
-    }
+//    ,onClickSpanAddDocument: function(e) {
+//        var report = Complaint.Object.getSelectReport();
+//        var token = Complaint.Object.setToken();
+//        var c = Complaint.getComplaint();
+//
+//        var url = "http://10.21.4.149/orbeon/fr/acm/roi-form/new"
+//            + "?acm_ticket=" + token
+//            + "&complaint_id=" + c.complaintId
+//            + "&complaint_number=" + c.complaintNumber
+//            + "&complaint_title=" + c.complaintTitle
+//            + "&complaint_priority=" + c.priority;
+//
+//        window.location.href = url;
+//    }
 
     ,onClickBtnTaskAssign : function(e) {
         alert("onClickBtnTaskAssign");

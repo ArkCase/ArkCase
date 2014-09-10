@@ -1,10 +1,8 @@
 package com.armedia.acm.plugins.person.web.api;
 
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
-import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.plugins.person.service.PersonEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Date;
@@ -44,9 +42,7 @@ public class ListPersonAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
-    private PersonDao mockPersonDao;
-    private PersonAssociationDao mockPersonAssociationDao;
-    private PersonEventPublisher mockEventPublisher;
+    private PersonAssociationDao mockPersonAssociationDao;    
     private MockHttpSession mockHttpSession;
 
     @Autowired
@@ -64,20 +60,16 @@ public class ListPersonAPIControllerTest extends EasyMockSupport
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
         mockAuthentication = createMock(Authentication.class);
-        mockPersonDao = createMock(PersonDao.class);
-        mockPersonAssociationDao = createMock(PersonAssociationDao.class);
-        mockEventPublisher = createMock(PersonEventPublisher.class);
+        mockPersonAssociationDao = createMock(PersonAssociationDao.class);      
         mockHttpSession = new MockHttpSession();
 
-        unit.setPersonDao(mockPersonDao);
-        unit.setPersonAssociationDao(mockPersonAssociationDao);
-        unit.setEventPublisher(mockEventPublisher);
+        unit.setPersonAssociationDao(mockPersonAssociationDao);        
     }
 
     @Test
     public void ListPerson() throws Exception
     {
-        Long parentId = 500L;
+        Long parentId = 1329L;
         String parentType = "COMPLAINT";
         
         Person person = new Person();
@@ -93,7 +85,7 @@ public class ListPersonAPIControllerTest extends EasyMockSupport
         
         PersonAssociation persAssoc = new PersonAssociation();
         persAssoc.setId(600l);
-        persAssoc.setParentId(500L);
+        persAssoc.setParentId(1329L);
         persAssoc.setPersonType("COMPLAINT");
         persAssoc.setPerson(person);
         persAssoc.setPersonType("Subject");
@@ -105,17 +97,14 @@ public class ListPersonAPIControllerTest extends EasyMockSupport
              
         Person prsn = new Person();
         prsn.setFamilyName("testPerson");
-        
-              
+                      
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
         expect(mockPersonAssociationDao.findPersonByParentIdAndParentType(parentType, parentId)).andReturn(Arrays.asList(prsn));
 
         mockHttpSession.setAttribute("acm_ip_address", "acm_ip_address");
-
-        mockEventPublisher.publishfindPersonByParentIdAndParentType(prsn, mockAuthentication, "acm_ip_address",true);
-
+      
         replayAll();
 
         MvcResult result = mockMvc.perform(
@@ -131,9 +120,6 @@ public class ListPersonAPIControllerTest extends EasyMockSupport
         assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
 
         String json = result.getResponse().getContentAsString();
-
-       // List <Person> fromJson = new ObjectMapper().readValue(json, new TypeReference<List <Person>>() {});
-
         ObjectMapper mapper = new ObjectMapper();
         List<Person> fromJson = mapper.readValue(
                                 json,
@@ -144,14 +130,12 @@ public class ListPersonAPIControllerTest extends EasyMockSupport
         
         log.info("person Id", fromJson.size());
         log.info("person Family name", fromJson.get(0).getFamilyName());
-    }
-
-    
+    }  
 
     @Test
     public void listPerson_exception() throws Exception
     {
-        Long parentId = 500L;
+        Long parentId = 1329L;
         String parentType = "COMPLAINT";
         
         Person person = new Person();
@@ -167,8 +151,8 @@ public class ListPersonAPIControllerTest extends EasyMockSupport
         
         PersonAssociation persAssoc = new PersonAssociation();
         persAssoc.setId(600l);
-        persAssoc.setParentId(parentId);
-        persAssoc.setPersonType(parentType);
+        persAssoc.setParentId(1329L);
+        persAssoc.setPersonType("COMPLAINT");
         persAssoc.setPerson(person);
         persAssoc.setPersonType("Subject");
         persAssoc.setPersonDescription("long and athletic");
@@ -176,17 +160,13 @@ public class ListPersonAPIControllerTest extends EasyMockSupport
         persAssoc.setCreator("testCreator");
         persAssoc.setCreated(new Date());
         persAssoc.setModified(new Date());     
-        
-             
-//        Person prsn = new Person();
-              
+
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
         expect(mockPersonAssociationDao.findPersonByParentIdAndParentType(parentType, parentId)).andThrow(new QueryTimeoutException("test exception"));;
 
         mockHttpSession.setAttribute("acm_ip_address", "acm_ip_address");
-
        
         replayAll();
 

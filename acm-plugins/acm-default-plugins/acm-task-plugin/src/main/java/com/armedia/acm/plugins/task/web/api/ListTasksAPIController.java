@@ -57,6 +57,7 @@ public class ListTasksAPIController
         }
         catch (Exception e)
         {
+            log.error("List Tasks Failed: " + e.getMessage(), e);
             throw new AcmListObjectsFailedException("task", e.getMessage(), e);
         }
 

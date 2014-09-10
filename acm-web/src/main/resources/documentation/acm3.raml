@@ -10,6 +10,11 @@ securitySchemes:
   - spring_security_basic_auth:
       description: ACM3 uses Spring Security basic authentication for service users.    
       type: Basic Authentication  
+  - acm_token_authentication:
+      description: Acquire a token by calling /api/v1/authenticationtoken using Basic Authentication. 
+        This will return a text/plain response with the token text.  Include this token in any other 
+        service invocation by adding "acm_ticket=<token>" to the query string.
+      type: x-Token Authentication
 
 /plugin:
   /complaint:
@@ -20,42 +25,49 @@ securitySchemes:
         application/json:
           example: |
             {
-              "complaintId": null,
-              "originator": {
-                "id": null,
-                "title": "Mr.",
-                "givenName": "John",
-                "familyName": "Doe",
-                "company": "Contoso",
-                "addresses": [
-                  {
-                    "type": "home",
-                    "streetAddress": "123 Main St.",
-                    "streetAddress2": null,
-                    "city": "Peoria",
-                    "state": "IL",
-                    "zip": "12345"
-                  }
-                ],
-                "contactMethods": [
-                  {
-                    "type": "Mobile Phone",
-                    "value": "123-456-7890"
-                  },
-                  {
-                    "type": "Personal E-mail",
-                    "value": "john.doe@gmail.com"
-                  }
-                ],
-                "securityTags": ["Anonymous", "Confidential", "Top Secret"],
-                "personAliases": [
-                {
+             "complaintId": null,      
+             "complaintNumber": "20140806_193",
+             "originator": {
                   "id": null,
-                  "aliasType": "Nick Name",
-                  "aliasValue": "Nick"
-                }
-                ]		                 
-              }
+                  "personType": "Complainant",
+                  "personDescription": "Sample Description",
+                  "person": {
+                        "id": null,
+                        "title": "Mr.",
+                        "givenName": "John",
+                        "familyName": "Doe",
+                        "company": "Contoso",
+                        "addresses": [{
+                              "type": "home",
+                              "streetAddress": "123 Main St.",
+                              "streetAddress2": null,
+                              "city": "Peoria",
+                              "state": "IL",
+                              "zip": "12345"
+                           }],
+                         "contactMethods": [{
+                                "type": "Mobile Phone",
+                                "value": "123-456-7890"
+                                  },
+                                  {
+                                "type": "Personal E-mail",
+                                "value": "john.doe@gmail.com"
+                                  }],
+                        "securityTags": ["Anonymous",
+                                       "Confidential",
+                                       "Top Secret"],
+                        "personAliases": [{
+                             "id": null,
+                              "aliasType": "Nick Name",
+                              "aliasValue": "Nick"
+                        }]
+                      }
+                    },
+                "personAssociations": [{
+                  "id": null,
+                  "personType": "Subject",
+                  "personDescription": "Simple Description"
+                }]        
             }
       responses:
         200:
@@ -64,51 +76,35 @@ securitySchemes:
             application/json:
               example: |
                 {
-                  "complaintId": 555,
-                  "complaintNumber": "20140424_555",
-                  "complaintStatus": "DRAFT",
+                  "complaintId": 1443,
+                  "complaintNumber": "20140804_193",
+                  "status": "DRAFT",
                   "originator": {
-                    "id": 556,
-                    "status": "ACTIVE",
-                    "title": "Mr.",
-                    "givenName": "John",
-                    "familyName": "Doe",
-                    "company": "Contoso",
-                    "addresses": [
-                      {
-                        "id": 557,
-                        "type": "home",
-                        "streetAddress": "123 Main St.",
-                        "streetAddress2": null,
-                        "city": "Peoria",
-                        "state": "IL",
-                        "zip": "12345"
-                      }
-                    ],
-                    "contactMethods": [
-                      {
-                        "id": 558,
-                        "type": "Mobile Phone",
-                        "value": "123-456-7890"
-                      },
-                      {
-                        "id": 559,
-                        "type": "Personal E-mail",
-                        "value": "john.doe@gmail.com"
-                      }
-                    ],
-                    "securityTags": ["Anonymous", "Confidential", "Top Secret"],
-                    "personAliases": [
-                     {
-                        "id": 560,
-                        "aliasType": "Nick Name",
-                        "aliasValue": "Nick"
-                    }
-                    ]
-                  }              
+                        "id": 1444,
+                        "parentId": 1443,
+                        "personType": "Complainant",
+                        "parentType": "COMPLAINT",
+                        "personDescription": "Sample Description",
+                        "created": "2014-09-02T18:09:49.140+0000",
+                        "creator": "ann-acm",
+                        "modified": "2014-09-02T18:09:49.141+0000",
+                        "modifier": "ann-acm"
+                  },
+                  "childObjects": [],
+                  "approvers": null,
+                  "personAssociations": [{
+                        "id": 1447,
+                        "parentId": 1443,
+                        "personType": "Subject",
+                        "parentType": "COMPLAINT",
+                        "personDescription": "Simple Description",
+                        "created": "2014-09-02T18:09:49.140+0000",
+                        "creator": "ann-acm",
+                        "modified": "2014-09-02T18:09:49.141+0000",
+                        "modifier": "ann-acm"
+                      }]
                 }
-                  
-              
+                             
       
         400:
           description: Usually means the request body was invalid (did not match the expected JSON format).  The response body will be empty.
@@ -358,10 +354,16 @@ securitySchemes:
           application/json:
             example: |
               {
-                "priority":50,
-                "title":"The Task Title",
-                "dueDate":"2014-06-03",
-                "assignee":"ebmillar",
+                "priority" : "Low",  // can be Low, Medium, High, Expedite
+                "title" : "Task Created on 9/9/2014",
+                "dueDate" : "2014-09-12",
+                "attachedToObjectType" : "COMPLAINT",
+                "attachedToObjectId" : 2835,
+                "assignee" : "samuel-acm",
+                "status" : null,   // will be set to ASSIGNED if left null
+                "percentComplete" : 10,
+                "details" : "<strong>details</strong>",
+                "taskStartDate" : "2014-09-10"
               }
         responses:
           200: 
@@ -370,24 +372,79 @@ securitySchemes:
               application/json:
                 example: |
                   {
-                    "taskId":2801,
-                    "priority":50,
-                    "title":"The Task Title",
-                    "dueDate":"2014-06-03T00:00:00.000+0000",
-                    "attachedToObjectType":null,
-                    "attachedToObjectId":null,
-                    "assignee":"ebmillar",
-                    "businessProcessName":null,
-                    "adhocTask":false,
-                    "completed":false,
-                    "taskStartDate":null,
-                    "taskFinishedDate":null,
-                    "taskDurationInMillis":null
+                    "taskId" : 17401,
+                    "priority" : "Medium",
+                    "title" : "Task Created on 9/10/2014",
+                    "dueDate" : "2014-09-15T00:00:00.000+0000",
+                    "attachedToObjectType" : "COMPLAINT",
+                    "attachedToObjectId" : 2835,
+                    "assignee" : "samuel-acm",
+                    "businessProcessName" : null,
+                    "adhocTask" : false,
+                    "completed" : false,
+                    "status" : null,
+                    "percentComplete" : 0,
+                    "details" : "<strong>details</strong>",
+                    "taskStartDate" : "2014-09-10T00:00:00.000+0000",
+                    "taskFinishedDate" : null,
+                    "taskDurationInMillis" : null
                   }
-            
-          
           400:
             description: Task could not be created; perhaps the request body was invalid.
+    /save/{taskId}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      uriParameters:
+        taskId:
+          description: Task ID of the task to be updated.
+          required: true
+          type: number          
+      post:
+        description: POST request to save the task
+        body:
+          application/json:
+            example: |
+              {
+                "taskId" : 17401,
+                "priority" : "High",
+                "title" : "Task Updated on 9/10/2014",
+                "dueDate" : "2014-09-15T00:00:00.000+0000",
+                "attachedToObjectType" : "COMPLAINT",
+                "attachedToObjectId" : 2835,
+                "assignee" : "samuel-acm",
+                "businessProcessName" : null,
+                "adhocTask" : false,
+                "completed" : false,
+                "status" : null,
+                "percentComplete" : 20,
+                "details" : "<strong>updated details</strong>",
+                "taskStartDate" : "2014-09-10T00:00:00.000+0000",
+                "taskFinishedDate" : null,
+                "taskDurationInMillis" : null
+              }
+        responses:
+          200: 
+            description: Task updated successfully. The response is the updated task.
+            body:
+              application/json:
+                example: |
+                  {
+                    "taskId" : 17401,
+                    "priority" : "High",
+                    "title" : "Task Updated on 9/10/2014",
+                    "dueDate" : "2014-09-15T00:00:00.000+0000",
+                    "attachedToObjectType" : "COMPLAINT",
+                    "attachedToObjectId" : 2835,
+                    "assignee" : "samuel-acm",
+                    "businessProcessName" : null,
+                    "adhocTask" : false,
+                    "completed" : false,
+                    "status" : null,
+                    "percentComplete" : 20,
+                    "details" : "<strong>updated details</strong>",
+                    "taskStartDate" : "2014-09-10T00:00:00.000+0000",
+                    "taskFinishedDate" : null,
+                    "taskDurationInMillis" : null
+                  }
     /byId/{taskId}:
       securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
       get:
@@ -399,21 +456,23 @@ securitySchemes:
               application/json:
                 example: |
                   {
-                    "taskId":2801,
-                    "priority":50,
-                    "title":"The Task Title",
-                    "dueDate":"2014-06-03T00:00:00.000+0000",
-                    "attachedToObjectType":null,
-                    "attachedToObjectId":null,
-                    "assignee":"ebmillar",
-                    "businessProcessName":null,
-                    "adhocTask":true,
-                    "completed":true,
-                    "taskStartDate":"2014-06-04T14:46:46.472+0000",
-                    "taskFinishedDate":"2014-06-04T17:45:49.822+0000",
-                    "taskDurationInMillis":10743350
+                    "taskId" : 17401,
+                    "priority" : "High",
+                    "title" : "Task Updated on 9/10/2014",
+                    "dueDate" : "2014-09-15T00:00:00.000+0000",
+                    "attachedToObjectType" : "COMPLAINT",
+                    "attachedToObjectId" : 2835,
+                    "assignee" : "samuel-acm",
+                    "businessProcessName" : null,
+                    "adhocTask" : true,
+                    "completed" : false,
+                    "status" : "ASSIGNED",
+                    "percentComplete" : 20,
+                    "details" : "<strong>updated details</strong>",
+                    "taskStartDate" : "2014-09-10T00:00:00.000+0000",
+                    "taskFinishedDate" : null,
+                    "taskDurationInMillis" : null
                   }
-          
           500:
             description: Could not get the task details; task does not exist, or an Activiti error
             body:
