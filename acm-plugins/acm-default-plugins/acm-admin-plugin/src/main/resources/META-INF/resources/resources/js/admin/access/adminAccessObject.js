@@ -114,22 +114,40 @@ AdminAccess.Object = {
                     }, objectState: {
                         title: 'State', width: '3%'
                         ,edit: false
+                        ,options: [
+                                   { Value: 'ACTIVE', DisplayText: 'Active' }, 
+                                   { Value: 'ASSIGNED', DisplayText: 'Assigned' }, 
+                                   { Value: 'COMPLETE', DisplayText: 'Complete' }, 
+                                   { Value: 'DRAFT', DisplayText: 'Draft' },
+                                   { Value: 'IN APPROVAL', DisplayText: 'In Approval' },
+                                   { Value: 'UNASSIGNED', DisplayText: 'Unassigned' }
+                                  ]
                     }, accessLevel: {
                         title: 'Access Level', width: '5%'
                         ,edit: false
+                        ,options: [
+                                   { Value: 'Add Document', DisplayText: 'Add Document' }, 
+                                   { Value: 'Add Item', DisplayText: 'Add Item' }, 
+                                   { Value: 'Approve Complaint', DisplayText: 'Approve Complaint' }, 
+                                   { Value: 'delete', DisplayText: 'Delete' }, 
+                                   { Value: 'read', DisplayText: 'Read' },
+                                   { Value: 'Save', DisplayText: 'Save' },
+                                   { Value: 'Submit for Approval', DisplayText: 'Submit for Approval' },
+                                   { Value: 'update', DisplayText: 'Update' }
+                                  ]
                     }, accessorType: {
                         title: 'Accessor Type', width: '5%'
                         ,edit: false
                     }, accessDecision: {
                         title: 'Access Decision',
                         width: '5%'
-                        ,options: [{ Value: 'GRANT', DisplayText: 'GRANT' }, { Value: 'DENY', DisplayText: 'DENY' }, { Value: 'MANDATORY_DENY', DisplayText: 'MANDATORY DENY' }]
+                        ,options: [{ Value: 'GRANT', DisplayText: 'Grant' }, { Value: 'DENY', DisplayText: 'Deny' }, { Value: 'MANDATORY_DENY', DisplayText: 'Mandatory Deny' }]
 
                        // ,options: ['GRANT' , 'DENY', 'MANDATORY_DENY']
                     }, allowDiscretionaryUpdate: {
                         title: 'Allow Discretionary Update',
                         width: '5%'
-                        ,options: ["true" , "false"]
+                        ,options: [{ Value: 'true', DisplayText: 'True' } , { Value: 'false', DisplayText: 'False' }]
                     }
 
                 } //end field
