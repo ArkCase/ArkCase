@@ -18,7 +18,7 @@ public class AcmTask implements AcmObject
     private boolean adhocTask;
     private boolean completed;
     private String status;
-    private int percentComplete;
+    private Integer percentComplete;
     private String details;
 
     private Date taskStartDate;
@@ -165,12 +165,12 @@ public class AcmTask implements AcmObject
         this.status = status;
     }
 
-    public int getPercentComplete()
+    public Integer getPercentComplete()
     {
         return percentComplete;
     }
 
-    public void setPercentComplete(int percentComplete)
+    public void setPercentComplete(Integer percentComplete)
     {
         this.percentComplete = percentComplete;
     }

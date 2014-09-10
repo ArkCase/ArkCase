@@ -145,7 +145,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertNotNull(completed.getTaskStartDate());
         assertEquals("taskStatus", completed.getStatus());
         assertEquals("task details", completed.getDetails());
-        assertEquals(75, completed.getPercentComplete());
+        assertEquals(Integer.valueOf(75), completed.getPercentComplete());
     }
 
     @Test
@@ -214,7 +214,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertNotNull(task.getTaskStartDate());
         assertEquals("taskStatus", task.getStatus());
         assertEquals("task details", task.getDetails());
-        assertEquals(50, task.getPercentComplete());
+        assertEquals(Integer.valueOf(50), task.getPercentComplete());
     }
 
     @Test
@@ -296,7 +296,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertNotNull(task.getTaskStartDate());
         assertEquals("taskStatus", task.getStatus());
         assertEquals("details", task.getDetails());
-        assertEquals(50, task.getPercentComplete());
+        assertEquals(Integer.valueOf(50), task.getPercentComplete());
     }
 
     @Test
@@ -404,7 +404,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertNotNull(found.getTaskStartDate());
         assertEquals("taskStatus", found.getStatus());
         assertEquals("details", found.getDetails());
-        assertEquals(25, found.getPercentComplete());
+        assertEquals(Integer.valueOf(25), found.getPercentComplete());
 
     }
 }
