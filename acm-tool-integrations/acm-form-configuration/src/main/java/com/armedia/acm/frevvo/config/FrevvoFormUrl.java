@@ -21,9 +21,10 @@ public class FrevvoFormUrl implements FormUrl {
 
 	private Logger LOG = LoggerFactory.getLogger(FrevvoFormUrl.class);
 	
-	private static final String HOST = "frevvo.host";
-	private static final String PORT = "frevvo.port";
-	private static final String URI = "frevvo.uri";
+	public static final String SERVICE = "frevvo.service.baseUrl";
+	public static final String HOST = "frevvo.host";
+	public static final String PORT = "frevvo.port";
+	public static final String URI = "frevvo.uri";
 
 	private Map<String, Object> properties;
 	private AuthenticationTokenService authenticationTokenService;
@@ -90,6 +91,7 @@ public class FrevvoFormUrl implements FormUrl {
 		String type = (String) properties.get(formName + ".type");
 		String id = (String) properties.get(formName + ".id");
 		String token = this.authenticationTokenService.getTokenForAuthentication(authentication);
+		String service = (String) properties.get(SERVICE);
 		
 		if (tenant != null) {
 			uri = uri.replace("{tenant}", tenant);			
@@ -113,6 +115,10 @@ public class FrevvoFormUrl implements FormUrl {
 		
 		if (token != null) {
 			uri = uri.replace("{acm_ticket}", token);
+		}
+		
+		if (service != null) {
+			uri = uri.replace("{frevvo_service_baseUrl}", service);
 		}
 		
 		String url = getBaseUrl() + uri; 
