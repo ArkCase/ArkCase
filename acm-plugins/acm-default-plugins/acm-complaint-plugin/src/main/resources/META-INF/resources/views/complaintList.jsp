@@ -285,15 +285,13 @@
             <section class="panel b-a" id='secDocDocuments'>
                 <div class="panel-heading b-b bg-info"> 
                 
-<!-- comment it for now. replaced by teh New Form link below
-                 	<span class="pull-right">New</span>
- -->                    
+                 	<span class="pull-right">New</span>                   
                     <a href="#" class="font-bold">Documents</a>
                     <input type="file" name="files[]" multiple style="display:none;"/>                                    	
-                    <select class="input-sm form-control input-s-sm inline v-middle pull-right" id="createNewForm">
+<!--                     <select class="input-sm form-control input-s-sm inline v-middle pull-right" id="createNewForm">
 	                    <option value="0">Select Form</option>
 	                    <option value="0">Report of Investigation</option>
-                	</select>
+                	</select> -->
                     
                 </div>
                 <div class="panel-body max-200 no-padder">

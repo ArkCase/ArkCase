@@ -65,9 +65,9 @@ Complaint.Object = {
 
         this.$divDocuments      = $("#divDocuments");
         Complaint.JTable.createJTableDocuments(this.$divDocuments);
-        this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
-        this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
-        Complaint.Page.fillReportSelection();
+//        this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+//        this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
+//        //Complaint.Page.fillReportSelection();
 
         this.$divTasks          = $("#divTasks");
         Complaint.JTable.createJTableTasks(this.$divTasks);
