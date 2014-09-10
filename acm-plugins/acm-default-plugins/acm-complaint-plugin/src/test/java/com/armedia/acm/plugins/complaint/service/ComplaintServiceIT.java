@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.complaint.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
+import com.armedia.acm.plugins.person.model.PersonAlias;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,16 +68,23 @@ public class ComplaintServiceIT
         frevvoComplaint.setPriority("High");
 
         Contact initiator = new Contact();
+        frevvoComplaint.setInitiator(initiator);
+
         MainInformation initMainInfo = new MainInformation();
         initiator.setMainInformation(initMainInfo);
-        frevvoComplaint.setInitiator(initiator);
+
+        PersonAlias alias = new PersonAlias();
+        initiator.setAlias(alias);
 
         initMainInfo.setAnonimuos("true");
         initMainInfo.setDescription("initDesc");
         initMainInfo.setFirstName("init first");
         initMainInfo.setLastName("init last");
         initMainInfo.setTitle("mr.");
-        initMainInfo.setType("Complainant");
+        initMainInfo.setType("Complaintant");
+
+        alias.setAliasType("Nick Name");
+        alias.setAliasValue("init alias");
 
         Complaint savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
 
@@ -95,6 +103,12 @@ public class ComplaintServiceIT
         assertEquals(initMainInfo.getTitle(), acmComplaint.getOriginator().getPerson().getTitle());
         assertEquals(initMainInfo.getType(), acmComplaint.getOriginator().getPersonType());
         assertEquals(initMainInfo.getDescription(), acmComplaint.getOriginator().getPersonDescription());
+
+        assertNotNull(acmComplaint.getOriginator().getPerson().getPersonAliases());
+        assertEquals(1, acmComplaint.getOriginator().getPerson().getPersonAliases().size());
+        PersonAlias acmPa = acmComplaint.getOriginator().getPerson().getPersonAliases().get(0);
+        assertEquals(alias.getAliasType(), acmPa.getAliasType());
+        assertEquals(alias.getAliasValue(), acmPa.getAliasValue());
 
 
 

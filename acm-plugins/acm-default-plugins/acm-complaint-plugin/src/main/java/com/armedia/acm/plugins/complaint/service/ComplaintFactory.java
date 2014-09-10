@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.complaint.service;
 
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 
@@ -22,13 +23,23 @@ public class ComplaintFactory
             pa.setPerson(p);
             retval.setOriginator(pa);
 
-            pa.setPersonDescription(formComplaint.getInitiator().getMainInformation().getDescription());
-            pa.setPersonType(formComplaint.getInitiator().getMainInformation().getType());
-            p.setTitle(formComplaint.getInitiator().getMainInformation().getTitle());
-            p.setGivenName(formComplaint.getInitiator().getMainInformation().getFirstName());
-            p.setFamilyName(formComplaint.getInitiator().getMainInformation().getLastName());
+            populatePerson(formComplaint.getInitiator(), pa, p);
         }
 
         return retval;
+    }
+
+    private void populatePerson(Contact contact, PersonAssociation pa, Person p)
+    {
+        pa.setPersonDescription(contact.getMainInformation().getDescription());
+        pa.setPersonType(contact.getMainInformation().getType());
+        p.setTitle(contact.getMainInformation().getTitle());
+        p.setGivenName(contact.getMainInformation().getFirstName());
+        p.setFamilyName(contact.getMainInformation().getLastName());
+
+        if ( contact.getAlias() != null )
+        {
+            p.getPersonAliases().add(contact.getAlias());
+        }
     }
 }

@@ -154,6 +154,11 @@ public class Person implements Serializable
         {
             setModified(new Date());
         }
+
+        for ( PersonAlias pa : getPersonAliases() )
+        {
+            pa.setPerson(this);
+        }
     }
 
     @PreUpdate
