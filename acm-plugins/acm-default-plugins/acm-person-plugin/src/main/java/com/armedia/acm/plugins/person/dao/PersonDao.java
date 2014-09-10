@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.person.model.Person;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 
 public class PersonDao extends AcmAbstractDao<Person>
@@ -12,6 +13,8 @@ public class PersonDao extends AcmAbstractDao<Person>
         
     @PersistenceContext
     private EntityManager entityManager;
+    
+    
      
     @Override
     protected Class<Person> getPersistenceClass()
@@ -19,28 +22,23 @@ public class PersonDao extends AcmAbstractDao<Person>
         return Person.class;
     }
     
-    public Integer deletePersonById(Long id)
-    {
-        Query deletePersonById = getEntityManager().createQuery(              
-                    "DELETE FROM Person person " +
+    @Transactional
+    public void deletePersonById(Long id)
+    {           
+        Query queryToDelete = getEntityManager().createQuery(              
+                    "SELECT person " +"FROM Person person " +
                             "WHERE person.id = :personId"                                    
                        );
-      Integer  deletedCount =  deletePersonById.setParameter("personId", id).executeUpdate(); 
-       /**
-        *  this will return the count of the person deleted the association will checked after the personAssociation 
-        *  table works
-        */
-      
-        return deletedCount;
-    
-    }
-
-    public EntityManager getEntityManager() {
+        queryToDelete.setParameter("personId", id); 
+        
+       Person personToBeDeleted = (Person) queryToDelete.getSingleResult();
+        entityManager.remove(personToBeDeleted);
+        
+    }  
+     
+    public EntityManager getEntityManager() 
+    {
         return entityManager;
     }
-
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-   
+      
 }

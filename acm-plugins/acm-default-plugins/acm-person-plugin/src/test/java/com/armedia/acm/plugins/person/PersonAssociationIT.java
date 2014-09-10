@@ -60,6 +60,17 @@ public class PersonAssociationIT
         person.setGivenName("ACM");
         person.setStatus("testStatus");
         
+         Person per = new Person();
+        
+        per.setId(950L);
+        per.setModifier("testModifier");
+        per.setCreator("testCreator");
+        per.setCreated(new Date());
+        per.setModified(new Date());
+        per.setFamilyName("Person");
+        per.setGivenName("ACM");
+        per.setStatus("testStatus");
+        
 
         PersonAssociation perAssoc = new PersonAssociation();
 
@@ -72,21 +83,32 @@ public class PersonAssociationIT
         perAssoc.setCreator("testCreator");
         perAssoc.setCreated(new Date());
         perAssoc.setModified(new Date());
+        
+        PersonAssociation personAssoc = new PersonAssociation();
+
+        personAssoc.setParentId(999L);
+        personAssoc.setParentType("COMPLAINT");
+        personAssoc.setPerson(per);
+        personAssoc.setPersonType("Subject");
+        personAssoc.setPersonDescription("long and athletic");
+        personAssoc.setModifier("testModifier");
+        personAssoc.setCreator("testCreator");
+        personAssoc.setCreated(new Date());
+        personAssoc.setModified(new Date());
 
         PersonAssociation saved = personAssocDao.save(perAssoc);
+                                  personAssocDao.save(personAssoc);
+        
         List<Person> personList = personAssocDao.findPersonByParentIdAndParentType("COMPLAINT", 999L);
-                                  
+        
+        log.debug(" the size of list returned: " + personList.size());     
         
         for ( Person pn : personList )
         {
-            log.debug("person id " + pn.getId());
+            log.debug("person id " + pn.getId());           
         }
-        
-        Integer deleteCount =  personAssocDao.deletePersonByIdFromPersonAssociation(952L);
-
+                
         assertNotNull(saved.getId());
-
-        log.info("person id to be deleted :", deleteCount);
         em.flush();
         
     }
