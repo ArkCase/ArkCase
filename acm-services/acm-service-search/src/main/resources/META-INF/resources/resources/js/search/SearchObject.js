@@ -294,7 +294,7 @@ Search.Object = {
 
         AcmEx.Object.jTableCreatePaging($jt
             ,{
-                title: 'Tasks'
+                title: 'Search Results'
                 //,defaultSorting: 'Name ASC'
                 ,selecting: true //Enable selecting
                 ,multiselect: true //Allow multiple selecting

@@ -107,7 +107,7 @@ Complaint.JTable = {
                     // var rc = {"Result": "OK", "Records": []};
                     var c = Complaint.getComplaint();
                     if (c) {
-                        if (Acm.isEmpty(c.originator)) {
+                        if (Acm.isNotEmpty(c.originator)) {
                             rc.Records[0].id = c.originator.id;
                             rc.Records[0].title = c.originator.title;
                             rc.Records[0].givenName = c.originator.givenName;
@@ -754,7 +754,7 @@ Complaint.JTable = {
                    // var rc = {"Result": "OK", "Records": []};
                     var c = Complaint.getComplaint();
                     if (c) {
-                        if (Acm.isEmpty(c.originator)) {
+                        if (Acm.isNotEmpty(c.originator)) {
                             rc.Records[0].id = c.originator.id;
                             rc.Records[0].title = c.originator.title;
                             rc.Records[0].givenName = c.originator.givenName;
@@ -1411,7 +1411,7 @@ Complaint.JTable = {
                     var rc = {"Result": "OK", "Records": []};
                     var c = Complaint.getComplaint();
                     if (c) {
-                        if (Acm.isEmpty(c.childObjects)) {
+                        if (Acm.isNotEmpty(c.childObjects)) {
                             for (var i = 0; i < c.childObjects; i++) {
                                 var childObject = c.childObjects[i];
                                 var record = {};
