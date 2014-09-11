@@ -19,6 +19,7 @@
 		<property name="authenticationTokenService" ref="authenticationTokenService" />
 		<property name="userDao" ref="userJpaDao" />
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
 	</bean>
 
 </beans>

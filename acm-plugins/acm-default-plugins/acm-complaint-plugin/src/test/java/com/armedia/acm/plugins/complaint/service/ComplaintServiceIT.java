@@ -72,6 +72,7 @@ public class ComplaintServiceIT
         frevvoComplaint.setComplaintDescription("<strong>description</strong>");
         frevvoComplaint.setDate(now);
         frevvoComplaint.setPriority("High");
+        frevvoComplaint.setComplaintTitle("complaint title");
 
         Contact initiator = new Contact();
         frevvoComplaint.setInitiator(initiator);
@@ -193,10 +194,12 @@ public class ComplaintServiceIT
         assertNotNull(acmComplaint.getDetails());
         assertNotNull(acmComplaint.getIncidentDate());
         assertNotNull(acmComplaint.getPriority());
+        assertNotNull(acmComplaint.getComplaintTitle());
 
         assertEquals(frevvoComplaint.getComplaintDescription(), acmComplaint.getDetails());
         assertEquals(frevvoComplaint.getDate().toString(), acmComplaint.getIncidentDate().toString());
         assertEquals(frevvoComplaint.getPriority(), acmComplaint.getPriority());
+        assertEquals(frevvoComplaint.getComplaintTitle(), acmComplaint.getComplaintTitle());
     }
 
     private void verifyOrganizations(Organization organization, PersonAssociation pa)

@@ -41,8 +41,9 @@ public class Complaint {
 	private String location;
 	private Contact initiator;
 	private List<Contact> people;
-	
-	/**
+    private String cmisFolderId;
+
+    /**
 	 * @return the complaintId
 	 */
 	public Long getComplaintId() {
@@ -251,5 +252,14 @@ public class Complaint {
 	public void setPeople(List<Contact> people) {
 		this.people = people;
 	}
-	
+
+    public String getCmisFolderId()
+    {
+        return cmisFolderId;
+    }
+
+    public void setCmisFolderId(String cmisFolderId)
+    {
+        this.cmisFolderId = cmisFolderId;
+    }
 }

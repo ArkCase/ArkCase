@@ -15,6 +15,7 @@ public class ComplaintFactory
         retval.setDetails(formComplaint.getComplaintDescription());
         retval.setIncidentDate(formComplaint.getDate());
         retval.setPriority(formComplaint.getPriority());
+        retval.setComplaintTitle(formComplaint.getComplaintTitle());
 
         if ( formComplaint.getInitiator() != null )
         {

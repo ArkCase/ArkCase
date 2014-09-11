@@ -13,6 +13,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -49,6 +51,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     private SaveComplaintTransaction saveComplaintTransaction;
 
     private ComplaintFactory complaintFactory = new ComplaintFactory();
+    private EcmFileService ecmFileService;
+    private String servletContextPath;
 
     public ComplaintService() {
 		
@@ -90,10 +94,37 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         complaint = saveComplaint(complaint);
 
-		// TODO: save attachments
+		saveAttachments(complaint, attachments);
 		
 		return false;
 	}
+
+    private void saveAttachments(Complaint complaint, Map<String, MultipartFile> attachments)
+    {
+        if ( attachments != null )
+        {
+            for ( Map.Entry<String, MultipartFile> attachment : attachments.entrySet() )
+            {
+                try
+                {
+                    getEcmFileService().upload(
+                            attachment.getValue(),
+                            "application/json",
+                            getServletContextPath(),
+                            getAuthentication(),
+                            complaint.getCmisFolderId(),
+                            "COMPLAINT",
+                            complaint.getComplaintId(),
+                            complaint.getComplaintNumber()
+                    );
+                }
+                catch (AcmCreateObjectFailedException e)
+                {
+                    LOG.error("Could not upload file: " + e.getMessage(), e);
+                }
+            }
+        }
+    }
 
     protected Complaint saveComplaint(Complaint complaint) throws MuleException
     {
@@ -103,6 +134,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         complaint.setComplaintId(acmComplaint.getComplaintId());
         complaint.setComplaintNumber(acmComplaint.getComplaintNumber());
+        complaint.setCmisFolderId(acmComplaint.getEcmFolderId());
 
         return complaint;
     }
@@ -352,8 +384,29 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         this.saveComplaintTransaction = saveComplaintTransaction;
     }
 
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
+        this.ecmFileService = ecmFileService;
+    }
+
     public ComplaintFactory getComplaintFactory()
     {
         return complaintFactory;
+    }
+
+
+    public EcmFileService getEcmFileService()
+    {
+        return ecmFileService;
+    }
+
+    public String getServletContextPath()
+    {
+        return servletContextPath;
+    }
+
+    public void setServletContextPath(String servletContextPath)
+    {
+        this.servletContextPath = servletContextPath;
     }
 }
