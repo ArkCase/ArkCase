@@ -110,6 +110,11 @@ AdminAccess.Object = {
                         title: 'Object Type', width: '3%'
                         ,edit: false
                         //,sorting : true
+                        ,options: [
+                                   { Value: 'Complaint', DisplayText: 'Complaint' }, 
+                                   { Value: 'Task', DisplayText: 'Task' }, 
+                                   { Value: 'caseFile', DisplayText: 'Case File' }
+                                  ]
 
                     }, objectState: {
                         title: 'State', width: '3%'
@@ -120,6 +125,7 @@ AdminAccess.Object = {
                                    { Value: 'COMPLETE', DisplayText: 'Complete' }, 
                                    { Value: 'DRAFT', DisplayText: 'Draft' },
                                    { Value: 'IN APPROVAL', DisplayText: 'In Approval' },
+                                   { Value: 'Scheduled', DisplayText: 'Scheduled' },
                                    { Value: 'UNASSIGNED', DisplayText: 'Unassigned' }
                                   ]
                     }, accessLevel: {
