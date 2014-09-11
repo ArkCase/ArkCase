@@ -4811,12 +4811,12 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             $scope.isData = dataT.length > 0 ? true : false
             $scope.tableParams = new ngTableParams({
                 page: 1,
-                count: 5,
+                count: 3,
                 sorting: {
                     due: "asc"
                 }
             }, {
-                counts:[], // [5,10,25,50],
+                counts:[3,5,10], // [5,10,25,50],
                 total: dataT.length,
                 getData: function($defer, params) {
                    // var filteredData = params.filter() ? $filter("filter")(dataT, params.filter()) : dataT,
@@ -4853,13 +4853,13 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             $scope.isDataC = dataC.length > 0 ? true  : false
             $scope.tableParams = new ngTableParams({
                 page: 1,
-                count: 5,
+                count: 3,
                 sorting: {
                     created: "asc"
                 }
             }, {
                 $scope: $scope,
-                counts: [],//[5,10,25,50],
+                counts: [3,5,10],//[5,10,25,50],
                 total: dataC.length,
                 getData: function($defer, params) {
                   //  var filteredData = params.filter() ? $filter("filter")(dataC, params.filter()) : dataC,
