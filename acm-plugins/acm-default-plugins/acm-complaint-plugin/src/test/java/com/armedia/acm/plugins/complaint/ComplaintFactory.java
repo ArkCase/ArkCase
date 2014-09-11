@@ -31,6 +31,7 @@ public class ComplaintFactory
         complaint.setModified(new Date());
         complaint.setModifier("testModifier");
 
+        complaint.setOriginator(new PersonAssociation());
         PersonAssociation pa = complaint.getOriginator();
         
         Person p = new Person();
@@ -43,6 +44,8 @@ public class ComplaintFactory
         pa.setPerson(p);
         pa.setPersonDescription("Simple Description");
         pa.setPersonType("Subject");
+        pa.setCreator("originatorCreator");
+        pa.setModifier("originatorModifier");
 
         complaint.setOriginator(pa);
         

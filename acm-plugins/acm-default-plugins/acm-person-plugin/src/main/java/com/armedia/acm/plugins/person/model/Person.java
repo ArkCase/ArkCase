@@ -27,8 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static javax.persistence.CascadeType.*;
+import javax.persistence.CascadeType;
 
 /**
  * Created by armdev on 4/7/14.
@@ -119,10 +118,10 @@ public class Person implements Serializable
     @Column(name = "cm_security_tag")
     private List<String> securityTags = new ArrayList<>();
     
-    @OneToMany(cascade=ALL, mappedBy="person")   
+    @OneToMany(cascade= CascadeType.ALL, orphanRemoval = true, mappedBy="person")   
     private List<PersonAlias> personAliases = new ArrayList<>();
     
-    @OneToMany(cascade = ALL, mappedBy ="person")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
     
     @ManyToMany
@@ -154,6 +153,11 @@ public class Person implements Serializable
         if ( getModified() == null )
         {
             setModified(new Date());
+        }
+
+        for ( PersonAlias pa : getPersonAliases() )
+        {
+            pa.setPerson(this);
         }
     }
 

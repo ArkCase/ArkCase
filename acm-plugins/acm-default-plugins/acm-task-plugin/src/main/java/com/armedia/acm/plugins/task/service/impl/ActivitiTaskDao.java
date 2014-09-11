@@ -35,6 +35,44 @@ class ActivitiTaskDao implements TaskDao
     {
         Task activitiTask = getActivitiTaskService().newTask();
 
+        return updateExistingActivitiTask(in, activitiTask);
+    }
+
+    @Override
+    @Transactional
+    public AcmTask save(AcmTask in) throws AcmTaskException
+    {
+        Task activitiTask = getActivitiTaskService().createTaskQuery().taskId(in.getTaskId().toString()).singleResult();
+        if ( activitiTask != null )
+        {
+            return updateExistingActivitiTask(in, activitiTask);
+        }
+
+        // task must have been completed.  Try finding the historic task; but historical tasks can't be updated, so
+        // even if we find it we have to throw an exception
+        {
+            HistoricTaskInstance hti = getActivitiHistoryService().
+                    createHistoricTaskInstanceQuery().
+                    taskId(in.getTaskId().toString()).
+                    singleResult();
+
+            if ( hti == null )
+            {
+                // no such task!
+                throw new AcmTaskException("No such task with id '" + in.getTaskId() + "'");
+            }
+            else
+            {
+                throw new AcmTaskException("Task with id '" + in.getTaskId() + "' has already been completed and so " +
+                        "it cannot be updated.");
+            }
+        }
+
+
+    }
+
+    private AcmTask updateExistingActivitiTask(AcmTask in, Task activitiTask) throws AcmTaskException
+    {
         activitiTask.setAssignee(in.getAssignee());
         Integer activitiPriority = activitiPriorityFromAcmPriority(in.getPriority());
         activitiTask.setPriority(activitiPriority);

@@ -389,10 +389,6 @@ public class Complaint implements Serializable, AcmObject
 
     public PersonAssociation getOriginator()
     {
-        if (originator == null) {
-            originator = new PersonAssociation();
-        }
-
         return originator;
     }
 
@@ -468,8 +464,7 @@ public class Complaint implements Serializable, AcmObject
     {
         personAssoc.setParentId(getComplaintId());
         personAssoc.setParentType("COMPLAINT");
-    
-        }
+    }
        
     
     

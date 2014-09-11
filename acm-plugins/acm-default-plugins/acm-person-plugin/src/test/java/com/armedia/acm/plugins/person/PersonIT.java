@@ -55,11 +55,10 @@ public class PersonIT
 
         assertNotNull(saved.getId());
 
-        Integer deletedCount = personDao.deletePersonById(saved.getId());
+        personDao.deletePersonById(saved.getId());
         
 
-        log.info("Person ID: " + saved.getId());
-        log.info("delete detail: " + deletedCount);
+        log.info("Person ID: " + saved.getId());        
     }
  
     

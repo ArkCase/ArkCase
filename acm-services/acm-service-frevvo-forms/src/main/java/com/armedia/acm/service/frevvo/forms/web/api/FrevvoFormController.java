@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -45,6 +46,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private Map<String, Object> properties;
 	private AuthenticationTokenService authenticationTokenService;
 	private UserDao userDao;
+
+    private SaveComplaintTransaction saveComplaintTransaction;
 	
 	@RequestMapping(value = "/{formName}/init", method = RequestMethod.GET)
     public void doInit(Authentication authentication, 
@@ -54,7 +57,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		LOG.info("Initialization form \"" + formName + "\"");
 		
 		// Create and initialize appropriate service for given form name
-		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName);
+		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this);
 		frevvoFormService.setProperties(properties);
 		frevvoFormService.setRequest(request);
 		frevvoFormService.setAuthentication(authentication);
@@ -86,7 +89,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		LOG.info("Execute action \"" + action + "\" for form \"" + formName + "\"");
 		
 		// Create and initialize appropriate service for given form name
-		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName);
+		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this);
 		frevvoFormService.setProperties(properties);
 		frevvoFormService.setRequest(request);
 		frevvoFormService.setAuthentication(authentication);
@@ -122,7 +125,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		LOG.info("Save form \"" + formName + "\"");
 
 		// Create and initialize appropriate service for given form name
-		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName);
+		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this);
 		frevvoFormService.setProperties(properties);
 		frevvoFormService.setRequest(request);
 		frevvoFormService.setAuthentication(authentication);
@@ -193,5 +196,14 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
-	
+
+    public SaveComplaintTransaction getSaveComplaintTransaction()
+    {
+        return saveComplaintTransaction;
+    }
+
+    public void setSaveComplaintTransaction(SaveComplaintTransaction saveComplaintTransaction)
+    {
+        this.saveComplaintTransaction = saveComplaintTransaction;
+    }
 }

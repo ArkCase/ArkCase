@@ -27,7 +27,7 @@ public class SavePersonAPIController {
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Person AddPerson(
+    public Person addPerson(
             @RequestBody Person in,
             Authentication auth
     ) throws AcmCreateObjectFailedException

@@ -4,15 +4,17 @@
  */
 package com.armedia.acm.plugins.complaint.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
+import com.armedia.acm.frevvo.config.FrevvoFormUrl;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.complaint.CommunicationDevice;
 import com.armedia.acm.plugins.complaint.model.complaint.Complaint;
@@ -31,6 +34,8 @@ import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 /**
@@ -40,8 +45,12 @@ import com.armedia.acm.services.users.model.AcmUser;
 public class ComplaintService extends FrevvoFormAbstractService implements FrevvoFormService {
 
 	private Logger LOG = LoggerFactory.getLogger(ComplaintService.class);
-	
-	public ComplaintService() {
+
+    private SaveComplaintTransaction saveComplaintTransaction;
+
+    private ComplaintFactory complaintFactory = new ComplaintFactory();
+
+    public ComplaintService() {
 		
 	}
 
@@ -75,15 +84,30 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	}
 
 	@Override
-	public boolean save(String xml, Map<String, MultipartFile> attachments) {
+	public boolean save(String xml, Map<String, MultipartFile> attachments) throws Exception
+    {
 		Complaint complaint = (Complaint) convertFromXMLToObject(xml, Complaint.class);
-		
-		// TODO: Save Complaint to database and save attachments
+
+        complaint = saveComplaint(complaint);
+
+		// TODO: save attachments
 		
 		return false;
 	}
 
-	@Override
+    protected Complaint saveComplaint(Complaint complaint) throws MuleException
+    {
+        com.armedia.acm.plugins.complaint.model.Complaint acmComplaint = getComplaintFactory().asAcmComplaint(complaint);
+
+        acmComplaint = getSaveComplaintTransaction().saveComplaint(acmComplaint, getAuthentication());
+
+        complaint.setComplaintId(acmComplaint.getComplaintId());
+        complaint.setComplaintNumber(acmComplaint.getComplaintNumber());
+
+        return complaint;
+    }
+
+    @Override
 	public void setProperties(Map<String, Object> properties) {
 		this.properties = properties;
 	}
@@ -98,6 +122,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	public void setAuthentication(Authentication authentication) {
 		this.authentication = authentication;		
 	}
+
+
 	
 	@Override
 	public void setAuthenticationTokenService(
@@ -122,6 +148,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 				String token = this.authenticationTokenService.getTokenForAuthentication(authentication);
 				
 				builder.append("<p0:form xmlns:p0=\"http://www.frevvo.com/schemas/" + formType + "\">");
+				builder.append("<serviceBaseUrl>" + this.properties.get(FrevvoFormUrl.SERVICE) + "</serviceBaseUrl>");	
 				// TODO: Init form data if needed
 				if (token != null && !"".equals(token)) {
 					builder.append("<acm_ticket>" + token + "</acm_ticket>");					
@@ -144,27 +171,15 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		// TODO: These are hardcoded values. Read from database or somewhere else
 		
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy");
-		String date = sdf.format(new Date());
-		
 		String userId = authentication.getName();
         AcmUser user = userDao.findByUserId(userId);
 		
 		Contact initiator = new Contact();
 
 		MainInformation mainInformation = new MainInformation();
-		List<String> titles = new ArrayList<String>();	
-		titles.add("mr=Mr");
-		titles.add("mrs=Mrs");
-		titles.add("ms=Ms");
-		titles.add("miss=Miss");
-		List<String> types = new ArrayList<String>();	
-		types.add("initiator=Initiator");
-		types.add("complaintant=Complaintant");
-		types.add("subject=Subject");
-		types.add("witness=Witness");
-		types.add("wrongdoer=Wrongdoer");
-		types.add("other=Other");
+		List<String> titles = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".titles"), ",");
+		List<String> types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".types"), ",");
+		
 		mainInformation.setTitles(titles);
 		mainInformation.setAnonimuos("true");
 		mainInformation.setTypes(types);
@@ -172,16 +187,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 		List<CommunicationDevice> communicationDevices = new ArrayList<CommunicationDevice>();
 		CommunicationDevice communicatoinDevice = new CommunicationDevice();
-		types = new ArrayList<String>();
-		types.add("homePhone=Home phone");
-		types.add("cellPhone=Cell phone");
-		types.add("officePhone=Office phone");
-		types.add("pager=Pager");
-		types.add("email=Email");
-		types.add("instantMessenger=Instant messenger");
-		types.add("socialMedia=Social media");
-		types.add("website=Website");
-		types.add("blog=Blog");
+		types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".deviceTypes"), ",");
+		
 		communicatoinDevice.setTypes(types);
 		communicatoinDevice.setDate(new Date());
 		communicatoinDevice.setCreator(user.getFullName());
@@ -189,10 +196,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 		List<Organization> organizationInformations = new ArrayList<Organization>();
 		Organization organizationInformation = new Organization();
-		types = new ArrayList<String>();
-		types.add("nonProfit=Non-profit");
-		types.add("government=Government");
-		types.add("corporation=Corporatione");
+		types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".organizationTypes"), ",");
+		
 		organizationInformation.setOrganizationTypes(types);
 		organizationInformation.setCreated(new Date());
 		organizationInformation.setCreator(user.getFullName());
@@ -200,9 +205,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 		List<PostalAddress> locationInformations = new ArrayList<PostalAddress>();
 		PostalAddress locationInformation = new PostalAddress();
-		types = new ArrayList<String>();
-		types.add("business=Business");
-		types.add("home=Home");
+		types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".locationTypes"), ",");
+		
 		locationInformation.setTypes(types);
 		locationInformation.setCreated(new Date());
 		locationInformation.setCreator(user.getFullName());
@@ -210,9 +214,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 
 		PersonAlias aliasInformation = new PersonAlias();
-		types = new ArrayList<String>();
-		types.add("fka=FKA");
-		types.add("married=Married");
+		types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".aliasTypes"), ",");
+		
 		aliasInformation.setAliasTypes(types);
 		aliasInformation.setCreated(new Date());
 		aliasInformation.setCreator(user.getFullName());
@@ -224,7 +227,10 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		initiator.setLocation(locationInformations);
 		initiator.setAlias(aliasInformation);
 		
-		JSONObject json = new JSONObject(initiator);
+		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		String jsonString = gson.toJson(initiator);
+		
+		JSONObject json = new JSONObject(jsonString);
 		
 		return json;
 		
@@ -235,42 +241,27 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		// TODO: These are hardcoded values. Read from database or somewhere else
 		
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy");
-		String date = sdf.format(new Date());
-		
 		String userId = authentication.getName();
         AcmUser user = userDao.findByUserId(userId);
 		
-		Contact initiator = new Contact();
+		Contact people = new Contact();
 		
 		MainInformation mainInformation = new MainInformation();
-		List<String> titles = new ArrayList<String>();	
-		titles.add("mr=Mr");
-		titles.add("mrs=Mrs");
-		titles.add("ms=Ms");
-		titles.add("miss=Miss");
-		List<String> types = new ArrayList<String>();	
-		types.add("complaintant=Complaintant");
-		types.add("subject=Subject");
-		types.add("witness=Witness");
-		types.add("wrongdoer=Wrongdoer");
-		types.add("other=Other");
+		List<String> titles = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".titles"), ",");
+		List<String> types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".types"), ",");	
+		
+		if (types != null && types.size() > 0){
+			types.remove(0);
+		}
+		
 		mainInformation.setTitles(titles);
 		mainInformation.setAnonimuos("true");
 		mainInformation.setTypes(types);
 		
 		List<CommunicationDevice> communicationDevices = new ArrayList<CommunicationDevice>();
 		CommunicationDevice communicatoinDevice = new CommunicationDevice();
-		types = new ArrayList<String>();
-		types.add("homePhone=Home phone");
-		types.add("cellPhone=Cell phone");
-		types.add("officePhone=Office phone");
-		types.add("pager=Pager");
-		types.add("email=Email");
-		types.add("instantMessenger=Instant messenger");
-		types.add("socialMedia=Social media");
-		types.add("website=Website");
-		types.add("blog=Blog");
+		types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".deviceTypes"), ",");	
+		
 		communicatoinDevice.setTypes(types);
 		communicatoinDevice.setDate(new Date());
 		communicatoinDevice.setCreator(user.getFullName());
@@ -278,10 +269,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 		List<Organization> organizationInformations = new ArrayList<Organization>();
 		Organization organizationInformation = new Organization();
-		types = new ArrayList<String>();
-		types.add("nonProfit=Non-profit");
-		types.add("government=Government");
-		types.add("corporation=Corporatione");
+		types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".organizationTypes"), ",");
+		
 		organizationInformation.setOrganizationTypes(types);
 		organizationInformation.setCreated(new Date());
 		organizationInformation.setCreator(user.getFullName());
@@ -289,30 +278,31 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 		List<PostalAddress> locationInformations = new ArrayList<PostalAddress>();
 		PostalAddress locationInformation = new PostalAddress();
-		types = new ArrayList<String>();
-		types.add("business=Business");
-		types.add("home=Home");
+		types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".locationTypes"), ",");
+		
 		locationInformation.setTypes(types);
 		locationInformation.setCreated(new Date());
 		locationInformation.setCreator(user.getFullName());
 		locationInformations.add(locationInformation);
 		
 		PersonAlias aliasInformation = new PersonAlias();
-		types = new ArrayList<String>();
-		types.add("fka=FKA");
-		types.add("married=Married");
+		types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".aliasTypes"), ",");
+		
 		aliasInformation.setAliasTypes(types);
 		aliasInformation.setCreated(new Date());
 		aliasInformation.setCreator(user.getFullName());
 		
 		
-		initiator.setMainInformation(mainInformation);
-		initiator.setCommunicationDevice(communicationDevices);
-		initiator.setOrganization(organizationInformations);
-		initiator.setLocation(locationInformations);
-		initiator.setAlias(aliasInformation);
+		people.setMainInformation(mainInformation);
+		people.setCommunicationDevice(communicationDevices);
+		people.setOrganization(organizationInformations);
+		people.setLocation(locationInformations);
+		people.setAlias(aliasInformation);
 		
-		JSONObject json = new JSONObject(initiator);
+		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		String jsonString = gson.toJson(people);
+		
+		JSONObject json = new JSONObject(jsonString);
 		
 		return json;
 		
@@ -324,29 +314,9 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 		Complaint complaint = new Complaint();
 		
-		List<String> categories = new ArrayList<String>();
-		
-		categories.add("1=Category 1");
-		categories.add("2=Category 2");
-		categories.add("3=Category 3");
-		categories.add("4=Category 4");
-		
-		List<String> priorities = new ArrayList<String>();
-		
-		priorities.add("low=Low");
-		priorities.add("medium=Medium");
-		priorities.add("high=High");
-		priorities.add("expedite=Expedite");
-		
-		List<String> frequencies = new ArrayList<String>();
-		
-		frequencies.add("once=Once");
-		frequencies.add("ongoing=Ongoing");
-		frequencies.add("intermittent=Intermittent");
-		frequencies.add("other=Other (free form)");
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy");
-		String date = sdf.format(new Date());
+		List<String> categories = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".categories"), ",");	
+		List<String> priorities = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".priorities"), ",");
+		List<String> frequencies = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".frequencies"), ",");
 		
 		complaint.setCategories(categories);
 		complaint.setPriorities(priorities);
@@ -354,10 +324,36 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		complaint.setDate(new Date());
 		complaint.setPriority("low");
 		
-		JSONObject json = new JSONObject(complaint);
+		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		String jsonString = gson.toJson(complaint);
+		
+		JSONObject json = new JSONObject(jsonString);
 		
 		return json;
 		
 	}
 	
+	private List<String> convertToList(String source, String delimiter){
+		if (source != null && !"".equals(source)) {
+			String[] sourceArray = source.split(delimiter);
+			return new LinkedList<String>(Arrays.asList(sourceArray)); 
+		}
+		
+		return null;
+	}
+
+    public SaveComplaintTransaction getSaveComplaintTransaction()
+    {
+        return saveComplaintTransaction;
+    }
+
+    public void setSaveComplaintTransaction(SaveComplaintTransaction saveComplaintTransaction)
+    {
+        this.saveComplaintTransaction = saveComplaintTransaction;
+    }
+
+    public ComplaintFactory getComplaintFactory()
+    {
+        return complaintFactory;
+    }
 }
