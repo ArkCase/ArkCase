@@ -181,7 +181,7 @@
                     <div class="col-sm-4">
                         <label class="label">Start Date</label>
 
-                        <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                        <input class="datepicker-input form-control" type="text" value="" data-date-format="dd-mm-yyyy" placeholder="dd-mm-yyyy">
 
                     </div>
                     <div class="col-sm-8">
@@ -198,7 +198,7 @@
                     <div class="col-sm-4">
                         <label class="label ">Due Date</label>
 
-                        <input class="datepicker-input form-control"  type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                        <input class="datepicker-input form-control"  type="text" value="" data-date-format="dd-mm-yyyy" placeholder="dd-mm-yyyy">
 
                     </div>
                     <div class="col-sm-4">
@@ -223,10 +223,7 @@
                 <div class="row wrapper">
                     <div class="col-sm-12">
                         <label class="label">Notes</label>
-                        <div class="complaintDetails"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
-
-                            <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
-
+                        <div class="complaintDetails">
                         </div>
 
                     </div>
@@ -239,7 +236,7 @@
             <div class="row text-center-xs padder-v2">
 
                 <div class="col-md-12 text-right text-center-xs">
-                    <button class="btn btn-primary" type="button">Save</button>
+                    <button class="btn btn-primary" type="button" id="saveBtn">Save</button>
                 </div>
             </div>
         </footer>
