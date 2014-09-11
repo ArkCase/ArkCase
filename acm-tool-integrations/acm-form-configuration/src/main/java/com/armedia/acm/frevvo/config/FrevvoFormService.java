@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -22,7 +23,7 @@ public interface FrevvoFormService {
 
 	public Object init();
 	public Object get(String action);
-	public boolean save(String xml, Map<String, MultipartFile> attachemnts) throws Exception;
+	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachemnts) throws Exception;
 	public void setProperties(Map<String, Object> properties);
 	public void setRequest(HttpServletRequest request);
 	public void setAuthentication(Authentication authentication);

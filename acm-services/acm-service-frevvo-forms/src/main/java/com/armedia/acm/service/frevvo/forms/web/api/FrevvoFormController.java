@@ -144,8 +144,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 					IOUtils.copy(formDataFile.getInputStream(), writer, Charset.forName("UTF-8"));
 					String xml = writer.toString();
 					
-					multipartRequest.getFileMap().remove("form");
-					frevvoFormService.save(xml, multipartRequest.getFileMap());
+					frevvoFormService.save(xml, multipartRequest.getMultiFileMap());
 				}
 			}	        
 		}catch(Exception e){

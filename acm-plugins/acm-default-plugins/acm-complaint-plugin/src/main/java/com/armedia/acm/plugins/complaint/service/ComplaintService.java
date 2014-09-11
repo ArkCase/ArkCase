@@ -15,11 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
@@ -88,7 +90,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	}
 
 	@Override
-	public boolean save(String xml, Map<String, MultipartFile> attachments) throws Exception
+	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception
     {
 		Complaint complaint = (Complaint) convertFromXMLToObject(xml, Complaint.class);
 
@@ -99,29 +101,35 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		return false;
 	}
 
-    private void saveAttachments(Complaint complaint, Map<String, MultipartFile> attachments)
+    private void saveAttachments(Complaint complaint, MultiValueMap<String, MultipartFile> attachments)
     {
         if ( attachments != null )
         {
-            for ( Map.Entry<String, MultipartFile> attachment : attachments.entrySet() )
+            for ( Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet() )
             {
-                try
-                {
-                    getEcmFileService().upload(
-                            attachment.getValue(),
-                            "application/json",
-                            getServletContextPath(),
-                            getAuthentication(),
-                            complaint.getCmisFolderId(),
-                            "COMPLAINT",
-                            complaint.getComplaintId(),
-                            complaint.getComplaintNumber()
-                    );
-                }
-                catch (AcmCreateObjectFailedException e)
-                {
-                    LOG.error("Could not upload file: " + e.getMessage(), e);
-                }
+            	final List<MultipartFile> attachmentsList = entry.getValue();
+            	
+            	if (attachmentsList != null && attachmentsList.size() > 0) {
+            		for (final MultipartFile attachment : attachmentsList) {
+		                try
+		                {
+		                    getEcmFileService().upload(
+		                    		attachment,
+		                            "application/json",
+		                            getServletContextPath(),
+		                            getAuthentication(),
+		                            complaint.getCmisFolderId(),
+		                            "COMPLAINT",
+		                            complaint.getComplaintId(),
+		                            complaint.getComplaintNumber()
+		                    );
+		                }
+		                catch (AcmCreateObjectFailedException e)
+		                {
+		                    LOG.error("Could not upload file: " + e.getMessage(), e);
+		                }
+            		}
+            	}
             }
         }
     }
