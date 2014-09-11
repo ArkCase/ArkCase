@@ -22,6 +22,7 @@ public class Complaint {
 	
 	private Long complaintId;
 	private String complaintNumber;
+	private String complaintTitle;
 	private String category;
 	private List<String> categories;
 	private String complaintDescription;
@@ -69,6 +70,20 @@ public class Complaint {
 		this.complaintNumber = complaintNumber;
 	}
 	
+	/**
+	 * @return the complaintTitle
+	 */
+	public String getComplaintTitle() {
+		return complaintTitle;
+	}
+
+	/**
+	 * @param complaintTitle the complaintTitle to set
+	 */
+	public void setComplaintTitle(String complaintTitle) {
+		this.complaintTitle = complaintTitle;
+	}
+
 	/**
 	 * @return the category
 	 */

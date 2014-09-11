@@ -13,9 +13,17 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "acm_contact_method")
 public class ContactMethod implements Serializable
@@ -28,10 +36,22 @@ public class ContactMethod implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @XmlElements({
+		@XmlElement(name="created"),
+		@XmlElement(name="initiatorDeviceDate"),
+		@XmlElement(name="peopleDeviceDate")
+		
+	})
     @Column(name = "cm_contact_method_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
+    @XmlElements({
+		@XmlElement(name="creator"),
+		@XmlElement(name="initiatorDeviceAddedBy"),
+		@XmlElement(name="peopleDeviceAddedBy")
+		
+	})
     @Column(name = "cm_contact_method_creator", insertable = true, updatable = false)
     private String creator;
 
@@ -45,9 +65,24 @@ public class ContactMethod implements Serializable
     @Column(name = "cm_contact_method_status")
     private String status;
 
+    @XmlElements({
+		@XmlElement(name="type"),
+		@XmlElement(name="initiatorDeviceType"),
+		@XmlElement(name="peopleDeviceType")
+		
+	})
     @Column(name = "cm_contact_type")
     private String type;
+    
+    @Transient
+    private List<String> types;
 
+    @XmlElements({
+		@XmlElement(name="value"),
+		@XmlElement(name="initiatorDeviceValue"),
+		@XmlElement(name="peopleDeviceValue")
+		
+	})
     @Column(name = "cm_contact_value")
     private String value;
 
@@ -146,8 +181,16 @@ public class ContactMethod implements Serializable
     {
         this.type = type;
     }
+    
+	public List<String> getTypes() {
+		return types;
+	}
+	
+	public void setTypes(List<String> types) {
+		this.types = types;
+	}
 
-    public String getValue()
+	public String getValue()
     {
         return value;
     }

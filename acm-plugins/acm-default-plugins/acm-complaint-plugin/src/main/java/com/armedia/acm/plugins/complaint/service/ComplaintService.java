@@ -24,8 +24,8 @@ import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.frevvo.config.FrevvoFormUrl;
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.plugins.complaint.model.complaint.CommunicationDevice;
 import com.armedia.acm.plugins.complaint.model.complaint.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
@@ -183,14 +183,14 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		mainInformation.setTitles(titles);
 		mainInformation.setAnonimuos("true");
 		mainInformation.setTypes(types);
-		mainInformation.setType("initiator");
+		mainInformation.setType("Initiator");
 		
-		List<CommunicationDevice> communicationDevices = new ArrayList<CommunicationDevice>();
-		CommunicationDevice communicatoinDevice = new CommunicationDevice();
+		List<ContactMethod> communicationDevices = new ArrayList<ContactMethod>();
+		ContactMethod communicatoinDevice = new ContactMethod();
 		types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".deviceTypes"), ",");
 		
 		communicatoinDevice.setTypes(types);
-		communicatoinDevice.setDate(new Date());
+		communicatoinDevice.setCreated(new Date());
 		communicatoinDevice.setCreator(user.getFullName());
 		communicationDevices.add(communicatoinDevice);
 		
@@ -258,12 +258,12 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		mainInformation.setAnonimuos("true");
 		mainInformation.setTypes(types);
 		
-		List<CommunicationDevice> communicationDevices = new ArrayList<CommunicationDevice>();
-		CommunicationDevice communicatoinDevice = new CommunicationDevice();
+		List<ContactMethod> communicationDevices = new ArrayList<ContactMethod>();
+		ContactMethod communicatoinDevice = new ContactMethod();
 		types = convertToList((String) this.properties.get(FrevvoFormName.COMPLAINT + ".deviceTypes"), ",");	
 		
 		communicatoinDevice.setTypes(types);
-		communicatoinDevice.setDate(new Date());
+		communicatoinDevice.setCreated(new Date());
 		communicatoinDevice.setCreator(user.getFullName());
 		communicationDevices.add(communicatoinDevice);
 		
@@ -322,7 +322,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		complaint.setPriorities(priorities);
 		complaint.setFrequencies(frequencies);
 		complaint.setDate(new Date());
-		complaint.setPriority("low");
+		complaint.setPriority("Low");
 		
 		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
 		String jsonString = gson.toJson(complaint);
