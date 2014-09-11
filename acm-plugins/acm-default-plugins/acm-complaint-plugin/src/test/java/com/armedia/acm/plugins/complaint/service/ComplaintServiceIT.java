@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.complaint.Complaint;
@@ -22,6 +23,7 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations =
@@ -74,27 +76,90 @@ public class ComplaintServiceIT
         Contact initiator = new Contact();
         frevvoComplaint.setInitiator(initiator);
 
+        populateContact(initiator, "Complaintant");
+
+        Contact witness = new Contact();
+        frevvoComplaint.setPeople(Arrays.asList(witness));
+        populateContact(witness, "Witness");
+
+        assertEquals("Witness first", frevvoComplaint.getPeople().get(0).getMainInformation().getFirstName());
+        assertEquals("Complaintant first", frevvoComplaint.getInitiator().getMainInformation().getFirstName());
+
+        Complaint savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
+
+        assertNotNull(savedFrevvoComplaint.getComplaintId());
+        assertNotNull(savedFrevvoComplaint.getComplaintNumber());
+
+        com.armedia.acm.plugins.complaint.model.Complaint acmComplaint = dao.find(savedFrevvoComplaint.getComplaintId());
+
+        assertNotNull(acmComplaint);
+        verifyComplaint(frevvoComplaint, acmComplaint);
+
+        verifyContact(frevvoComplaint.getInitiator(), acmComplaint.getOriginator());
+
+        assertEquals(2, acmComplaint.getPersonAssociations().size());
+
+
+        boolean witnessFound = false;
+        for ( PersonAssociation pa : acmComplaint.getPersonAssociations() )
+        {
+            if ( "Witness".equals(pa.getPersonType()) )
+            {
+                witnessFound = true;
+                verifyContact(frevvoComplaint.getPeople().get(0), pa);
+            }
+        }
+
+        assertTrue(witnessFound);
+
+
+
+    }
+
+    private void verifyContact(Contact contact, PersonAssociation personAssociation)
+    {
+        assertNotNull(personAssociation);
+        verifyContactMainInfo(contact.getMainInformation(), personAssociation);
+
+        assertNotNull(personAssociation.getPerson().getPersonAliases());
+        verifyContactAlias(contact.getAlias(), personAssociation);
+
+        assertNotNull(personAssociation.getPerson().getAddresses());
+        verifyAddresses(contact.getLocation().get(0), personAssociation);
+
+        assertNotNull(personAssociation.getPerson().getOrganizations());
+        verifyOrganizations(contact.getOrganization().get(0), personAssociation);
+
+        assertNotNull(personAssociation.getPerson().getContactMethods());
+        verifyContactMethods(contact.getCommunicationDevice().get(0), personAssociation);
+    }
+
+    private void populateContact(Contact in, String personType)
+    {
         MainInformation initMainInfo = new MainInformation();
-        initiator.setMainInformation(initMainInfo);
+        in.setMainInformation(initMainInfo);
 
         PersonAlias alias = new PersonAlias();
-        initiator.setAlias(alias);
+        in.setAlias(alias);
 
         PostalAddress location = new PostalAddress();
-        initiator.setLocation(Arrays.asList(location));
+        in.setLocation(Arrays.asList(location));
 
         Organization organization = new Organization();
-        initiator.setOrganization(Arrays.asList(organization));
+        in.setOrganization(Arrays.asList(organization));
+
+        ContactMethod contactMethod = new ContactMethod();
+        in.setCommunicationDevice(Arrays.asList(contactMethod));
 
         initMainInfo.setAnonimuos("true");
-        initMainInfo.setDescription("initDesc");
-        initMainInfo.setFirstName("init first");
-        initMainInfo.setLastName("init last");
+        initMainInfo.setDescription(personType + " Desc");
+        initMainInfo.setFirstName(personType + " first");
+        initMainInfo.setLastName(personType + " last");
         initMainInfo.setTitle("mr.");
-        initMainInfo.setType("Complaintant");
+        initMainInfo.setType(personType);
 
         alias.setAliasType("Nick Name");
-        alias.setAliasValue("init alias");
+        alias.setAliasValue(personType + " alias");
 
         location.setType("type");
         location.setCity("city");
@@ -107,35 +172,40 @@ public class ComplaintServiceIT
         organization.setOrganizationType("org type");
         organization.setOrganizationValue("org value");
 
-        Complaint savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
+        contactMethod.setType("contact type");
+        contactMethod.setValue("contact value");
+    }
 
-        assertNotNull(savedFrevvoComplaint.getComplaintId());
+    private void verifyContactMethods(ContactMethod contactMethod, PersonAssociation pa)
+    {
+        assertEquals(1, pa.getPerson().getContactMethods().size());
+        ContactMethod cm = pa.getPerson().getContactMethods().get(0);
 
-        com.armedia.acm.plugins.complaint.model.Complaint acmComplaint = dao.find(savedFrevvoComplaint.getComplaintId());
+        assertNotNull(cm.getValue());
+        assertNotNull(cm.getType());
 
-        assertNotNull(acmComplaint);
+        assertEquals(contactMethod.getValue(), cm.getValue());
+        assertEquals(contactMethod.getType(), cm.getType());
+    }
+
+    private void verifyComplaint(Complaint frevvoComplaint, com.armedia.acm.plugins.complaint.model.Complaint acmComplaint)
+    {
+        assertNotNull(acmComplaint.getDetails());
+        assertNotNull(acmComplaint.getIncidentDate());
+        assertNotNull(acmComplaint.getPriority());
+
         assertEquals(frevvoComplaint.getComplaintDescription(), acmComplaint.getDetails());
         assertEquals(frevvoComplaint.getDate().toString(), acmComplaint.getIncidentDate().toString());
         assertEquals(frevvoComplaint.getPriority(), acmComplaint.getPriority());
-
-        assertNotNull(acmComplaint.getOriginator());
-        verifyContactMainInfo(initMainInfo, acmComplaint.getOriginator());
-
-        assertNotNull(acmComplaint.getOriginator().getPerson().getPersonAliases());
-        verifyContactAlias(alias, acmComplaint.getOriginator());
-
-        assertNotNull(acmComplaint.getOriginator().getPerson().getAddresses());
-        verifyAddresses(location, acmComplaint.getOriginator());
-
-        assertNotNull(acmComplaint.getOriginator().getPerson().getOrganizations());
-        verifyOrganizations(organization, acmComplaint.getOriginator());
-
     }
 
     private void verifyOrganizations(Organization organization, PersonAssociation pa)
     {
         assertEquals(1, pa.getPerson().getOrganizations().size());
         Organization org = pa.getPerson().getOrganizations().get(0);
+
+        assertNotNull(org.getOrganizationValue());
+        assertNotNull(org.getOrganizationType());
 
         assertEquals(organization.getOrganizationValue(), org.getOrganizationValue());
         assertEquals(organization.getOrganizationType(), org.getOrganizationType());
@@ -145,6 +215,13 @@ public class ComplaintServiceIT
     {
         assertEquals(1, pa.getPerson().getAddresses().size());
         PostalAddress addr = pa.getPerson().getAddresses().get(0);
+
+        assertNotNull(addr.getCity());
+        assertNotNull(addr.getZip());
+        assertNotNull(addr.getStreetAddress());
+        assertNotNull(addr.getStreetAddress2());
+        assertNotNull(addr.getState());
+        assertNotNull(addr.getCountry());
 
         assertEquals(location.getCity(), addr.getCity());
         assertEquals(location.getCountry(), addr.getCountry());
@@ -159,12 +236,22 @@ public class ComplaintServiceIT
     {
         assertEquals(1, pa.getPerson().getPersonAliases().size());
         PersonAlias acmPa = pa.getPerson().getPersonAliases().get(0);
+
+        assertNotNull(acmPa.getAliasType());
+        assertNotNull(acmPa.getAliasValue());
+
         assertEquals(alias.getAliasType(), acmPa.getAliasType());
         assertEquals(alias.getAliasValue(), acmPa.getAliasValue());
     }
 
     private void verifyContactMainInfo(MainInformation initMainInfo, PersonAssociation pa)
     {
+        assertNotNull(pa.getPerson().getGivenName());
+        assertNotNull(pa.getPerson().getFamilyName());
+        assertNotNull(pa.getPerson().getTitle());
+        assertNotNull(pa.getPersonType());
+        assertNotNull(pa.getPersonDescription());
+
         assertEquals(initMainInfo.getFirstName(), pa.getPerson().getGivenName());
         assertEquals(initMainInfo.getLastName(), pa.getPerson().getFamilyName());
         assertEquals(initMainInfo.getTitle(), pa.getPerson().getTitle());

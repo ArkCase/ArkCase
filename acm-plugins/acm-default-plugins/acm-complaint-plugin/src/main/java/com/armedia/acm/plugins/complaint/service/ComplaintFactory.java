@@ -26,6 +26,20 @@ public class ComplaintFactory
             populatePerson(formComplaint.getInitiator(), pa, p);
         }
 
+        if ( formComplaint.getPeople() != null )
+        {
+            for ( Contact person : formComplaint.getPeople() )
+            {
+                PersonAssociation pa = new PersonAssociation();
+                Person p = new Person();
+                pa.setPerson(p);
+                retval.getPersonAssociations().add(pa);
+
+                populatePerson(person, pa, p);
+
+            }
+        }
+
         return retval;
     }
 
@@ -50,6 +64,11 @@ public class ComplaintFactory
         if ( contact.getOrganization() != null && ! contact.getOrganization().isEmpty() )
         {
             p.getOrganizations().addAll(contact.getOrganization());
+        }
+
+        if ( contact.getCommunicationDevice() != null && ! contact.getCommunicationDevice().isEmpty() )
+        {
+            p.getContactMethods().addAll(contact.getCommunicationDevice());
         }
     }
 }
