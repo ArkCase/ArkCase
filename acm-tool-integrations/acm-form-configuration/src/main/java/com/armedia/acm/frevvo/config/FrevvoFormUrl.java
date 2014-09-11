@@ -41,7 +41,7 @@ public class FrevvoFormUrl implements FormUrl {
 			LOG.error("Frevvo Host is not defined.");
 		}
 		
-		if (port != null) {
+		if (port != null && !"".equals(port)) {
 			url = url + ":" + port;
 		}else {
 			LOG.warn("Frevvo port number is not defined. Maybe is not needed.");
