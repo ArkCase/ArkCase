@@ -648,9 +648,15 @@ app.directive('ngTable', ['$compile', '$q', '$parse',
 
                         element.find('thead').remove();
 
-                        element.addClass('ng-table')
-                            .prepend(headerTemplate)
-                            .after(paginationTemplate);
+//                        element.addClass('ng-table')
+//                            .prepend(headerTemplate)
+//                            .after(paginationTemplate);
+
+
+                           element.addClass('ng-table')
+                               .prepend(headerTemplate)
+                               .before(paginationTemplate)
+                            //.after(paginationTemplate);
 
                         $compile(headerTemplate)(scope);
                         $compile(paginationTemplate)(scope);
