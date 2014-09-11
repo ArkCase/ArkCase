@@ -4858,6 +4858,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     created: "asc"
                 }
             }, {
+                $scope: $scope,
                 counts: [],//[5,10,25,50],
                 total: dataC.length,
                 getData: function($defer, params) {
@@ -10990,7 +10991,9 @@ Showdown.converter = function(converter_options) {
             $templateCache.put("scripts/widgets/markdown/markdown.html", '<div class="markdown" btf-markdown="config.content"></div>'),
 
             $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
-            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div class="alert alert-info" ng-controller="myComplaintsCtrl" ng-if="!isDataC"><p style="text-align:center;">No complaints created by you</p></div><div ng-controller="myComplaintsCtrl" ng-if="isDataC"><div style="overflow-x: auto;"><table ng-table="tableParams" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'ID\'" sortable="\'id\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.id}}</a></td><td data-title="\'Title\'" sortable="\'complaintTitle\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintTitle}}</a></td><td data-title="\'Priority\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'complaintCreated\'">{{complaint.complaintCreated}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div></div>'),
+            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div class="alert alert-info" ng-controller="myComplaintsCtrl" ng-if="!isDataC"><p style="text-align:center;">No complaints created by you</p></div><div ng-controller="myComplaintsCtrl" ng-if="isDataC"><div style="overflow-x: auto;">' +
+                //'<div ng-table-pagination="tableParams" template-url="\'ng-table\/pager.html\'"></div>' +
+                '<table ng-table="tableParams" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'Complaint Number\'" sortable="\'complaintNumber\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintNumber}}</a></td><td data-title="\'Title\'" sortable="\'complaintTitle\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintTitle}}</a></td><td data-title="\'Priority\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'complaintCreated\'">{{complaint.complaintCreated}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div></div>'),
 
             //This si with filters
 //            $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
