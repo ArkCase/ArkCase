@@ -16,7 +16,8 @@ TaskWizard.Object = {
             t.attachedToObjectId = parseInt(parentId);
 
         }
-        this.$btnSave          = $("button[data-title='Save']");
+//        this.$btnSave          = $("button[data-title='Save']");
+        this.$btnSave          = $("#saveBtn");
         this.$btnSave.click(function(e) {TaskWizard.Event.onClickBtnSave(e);});
 
         this.$selOwners        = $("select[name='owner']");
