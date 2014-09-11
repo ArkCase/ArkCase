@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.PersonAlias;
@@ -35,7 +36,7 @@ public class Contact {
 		@XmlElement(name="peopleCommunicationDevice")
 		
 	})
-	private List<CommunicationDevice> communicationDevice;
+	private List<ContactMethod> communicationDevice;
 
 	@XmlElements({
 		@XmlElement(name="organization"),
@@ -86,17 +87,17 @@ public class Contact {
 	/**
 	 * @return the communicationDevice
 	 */
-	public List<CommunicationDevice> getCommunicationDevice() {
+	public List<ContactMethod> getCommunicationDevice() {
 		return communicationDevice;
 	}
-	
+
 	/**
 	 * @param communicationDevice the communicationDevice to set
 	 */
-	public void setCommunicationDevice(List<CommunicationDevice> communicationDevice) {
+	public void setCommunicationDevice(List<ContactMethod> communicationDevice) {
 		this.communicationDevice = communicationDevice;
 	}
-	
+
 	/**
 	 * @return the organization
 	 */
