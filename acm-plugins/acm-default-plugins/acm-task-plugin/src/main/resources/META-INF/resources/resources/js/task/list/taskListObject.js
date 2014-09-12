@@ -39,6 +39,7 @@ TaskList.Object = {
 
         this.$lnkTitle.editable({placement: 'right'});
         this.$lnkDueDate.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,format: 'mm/dd/yyyy'
             ,viewformat: 'mm/dd/yyyy'
             ,datepicker: {
@@ -187,8 +188,9 @@ TaskList.Object = {
             choices.push(opt);
         });
 
-        this.$lnkPriority.editable({placement: 'bottom', value:"",
-            source: choices
+        this.$lnkPriority.editable({placement: 'bottom', value:"",emptytext: "Unknown",
+
+        source: choices
         })
     }
     ,initAssignee: function(data) {
@@ -200,7 +202,7 @@ TaskList.Object = {
             choices.push(opt);
         });
 
-        this.$lnkAssigned.editable({placement: 'bottom', value: "",
+        this.$lnkAssigned.editable({placement: 'bottom', value: "",emptytext: "Unknown",
             source: choices
         });
     }
@@ -213,7 +215,7 @@ TaskList.Object = {
             choices.push(opt);
         });
 
-        this.$lnkComplaintType.editable({placement: 'bottom', value: "",
+        this.$lnkComplaintType.editable({placement: 'bottom', value: "",emptytext: "Unknown",
             source: choices
         });
     }

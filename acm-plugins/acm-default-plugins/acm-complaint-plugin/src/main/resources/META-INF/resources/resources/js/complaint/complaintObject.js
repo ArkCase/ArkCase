@@ -29,6 +29,7 @@ Complaint.Object = {
 
         this.$lnkTitle          = $("#caseTitle");
         this.$lnkTitle.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,success: function(response, newValue) {
                 Complaint.Event.onSaveTitle(newValue);
             }
@@ -37,6 +38,7 @@ Complaint.Object = {
 
         this.$lnkIncident       = $("#incident");
         this.$lnkIncident.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,format: 'mm/dd/yyyy'
             ,viewformat: 'mm/dd/yyyy'
             ,datepicker: {
@@ -134,6 +136,7 @@ Complaint.Object = {
         });
 
         this.$lnkAssigned.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,value: ""
             ,source: choices
             ,success: function(response, newValue) {
@@ -151,6 +154,7 @@ Complaint.Object = {
         });
 
         this.$lnkComplaintType.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,value: ""
             ,source: choices
             ,success: function(response, newValue) {
@@ -168,6 +172,7 @@ Complaint.Object = {
         });
 
         this.$lnkPriority.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,value: ""
             ,source: choices
             ,success: function(response, newValue) {
