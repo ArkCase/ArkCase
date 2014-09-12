@@ -151,7 +151,7 @@
                     <div class="col-sm-6">
                         <label  class="label">Assign To</label>
 
-                        <select data-placeholder="Choose Assignees..." id="approvers" class="choose-approvers form-control" multiple style="width:350px;" >
+                        <select data-placeholder="Choose Assignees..." id="assignee" class="choose-approvers form-control" multiple style="width:350px;" >
                             <option value=""></option>
                             <option value="David Miller">David Miller</option>
                             <option value="James Bailey">James Bailey</option>
@@ -164,7 +164,7 @@
 
                     <div class="col-sm-6">
                         <label  class="label">Associate with Complaint or Case</label>
-                        <input type="text" class="input-sm form-control" placeholder="Complaint or Case #">
+                        <input type="text" class="input-sm form-control" placeholder="Complaint or Case #" id="complaintId">
                     </div>
                 </div>
 
@@ -172,7 +172,7 @@
                 <div class="row wrapper">
                     <div class="col-sm-12">
                         <label  class="label">Subject</label>
-                        <input type="text" class="input-sm form-control" placeholder="Subject">
+                        <input type="text" class="input-sm form-control" placeholder="Subject" id="subject">
                     </div>
                 </div>
 
@@ -180,13 +180,12 @@
                 <div class="row wrapper">
                     <div class="col-sm-4">
                         <label class="label">Start Date</label>
-
-                        <input class="datepicker-input form-control" type="text" value="" data-date-format="dd-mm-yyyy" placeholder="dd-mm-yyyy">
+                        <input class="datepicker-input form-control" type="text" value="" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" id="startDate">
 
                     </div>
                     <div class="col-sm-8">
                         <label class="label">Status</label>
-                        <select class="input-sm form-control inline v-middle" >
+                        <select class="input-sm form-control inline v-middle" id="statusSel">
                             <option value="0">Select Status</option>
                             <option value="1">Pending</option>
                         </select>
@@ -198,38 +197,33 @@
                     <div class="col-sm-4">
                         <label class="label ">Due Date</label>
 
-                        <input class="datepicker-input form-control"  type="text" value="" data-date-format="dd-mm-yyyy" placeholder="dd-mm-yyyy">
+                        <input class="datepicker-input form-control"  type="text" value="" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" id="dueDate">
 
                     </div>
                     <div class="col-sm-4">
                         <label class="label">Priority</label>
-                        <select class="input-sm form-control inline v-middle">
+                        <select class="input-sm form-control inline v-middle" id="prioritySel">
 
                             <option value="0">Select Priority</option>
                             <option value="1">Low</option>
-                            <option value="1">Medium</option>
-                            <option value="1">High</option>
-                            <option value="1">Expedited</option>
+                            <option value="2">Medium</option>
+                            <option value="3">High</option>
+                            <option value="4">Expedited</option>
                         </select>
                     </div>
                     <div class="col-sm-4">
                         <label class="label">% Complete</label>
-                        <input type="text" class="input-sm form-control" placeholder="% Complete">
+                        <input type="text" class="input-sm form-control" placeholder="% Complete" id="completedStatus">
                     </div>
                 </div>
-
-
-
                 <div class="row wrapper">
                     <div class="col-sm-12">
                         <label class="label">Notes</label>
-                        <div class="complaintDetails">
+                        <div class="complaintDetails" id="taskDetail">
                         </div>
 
                     </div>
                 </div>
-
-
             </section>
         </section>
         <footer class="footer bg-white b-t">

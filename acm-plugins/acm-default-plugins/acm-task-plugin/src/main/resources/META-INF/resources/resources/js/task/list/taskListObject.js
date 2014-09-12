@@ -149,8 +149,7 @@ TaskList.Object = {
         Acm.Object.setTextNodeText(this.$h4TitleHeader, txt, 1);
     }
     ,setValueLnkDueDate: function(txt) {
-        Acm.Object.setText(this.$lnkDueDate, txt);
-        //this.$lnkDueDate.editable("setValue", txt);
+        this.$lnkDueDate.editable("setValue", txt, true);
     }
     ,setValueLnkPriority: function(txt) {
         var priorityValue;

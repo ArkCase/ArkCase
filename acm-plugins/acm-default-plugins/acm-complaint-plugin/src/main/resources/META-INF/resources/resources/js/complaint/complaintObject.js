@@ -182,8 +182,7 @@ Complaint.Object = {
         Acm.Object.setText(this.$lnkComplaintNum, txt);
     }
     ,setValueLnkIncident: function(txt) {
-        Acm.Object.setText(this.$lnkIncident, txt);
-        //this.$lnkIncident.editable("setValue", txt);
+        this.$lnkIncident.editable("setValue", txt, true);   //true - convert txt to internal format (Date Object)
     }
     ,setValueLnkPriority: function(txt) {
         this.$lnkPriority.editable("setValue", txt);
