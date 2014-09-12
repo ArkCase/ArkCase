@@ -4592,7 +4592,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 }
             ]
         })
-    }.call(this), angular.module("sample", ["adf", "sample.widgets.mytasks", "sample.widgets.mycomplaints", "sample.widgets.teamtaskworkload", "LocalStorageModule", "structures", "sample-01", "sample-02", "ngRoute", "ngTable"]).config(["$routeProvider", "localStorageServiceProvider",
+    }.call(this), angular.module("sample", ["adf", "sample.widgets.mytasks", "sample.widgets.mycomplaints", "sample.widgets.news", "sample.widgets.weather", "sample.widgets.teamtaskworkload", "LocalStorageModule", "structures", "sample-01", "sample-02", "ngRoute", "ngTable"]).config(["$routeProvider", "localStorageServiceProvider",
     function($routeProvider, localStorageServiceProvider) {
         localStorageServiceProvider.setPrefix("adf"), $routeProvider.when("/", {
             templateUrl: "partials/sample.html",
@@ -10873,6 +10873,9 @@ Showdown.converter = function(converter_options) {
             resolve: {
                 tasks: function(teamTaskWorkloadService, config) {
                     return teamTaskWorkloadService.getTasks(config.due)
+                },
+                complaints : function(newComplaintsService, config){
+                    return newComplaintsService.getComplaints()
                 }
             },
             edit: {
@@ -10882,14 +10885,32 @@ Showdown.converter = function(converter_options) {
         dashboardProvider.widget("teamTaskWorkload", angular.extend({
             description: "Displays tasks per user as pie chart",
             controller: "teamTaskWorkloadCtrl"
+        }, widget)).widget("newComplaints", angular.extend({
+            description: "Displays new compliants in the last 30 days as chart",
+            controller: "newComplaintsCtrl"
         }, widget))
+    }
+]).service("newComplaintsService", ["$q", "$http",
+    function($q, $http) {
+        return {
+            getTasks: function(due) {
+                var deferred = $q.defer(),
+                    url = App.Object.getContextPath() + "/api/latest/plugin/task/list/"+due;
+                return $http.get(url).success(function(data) {
+
+                    data ? deferred.resolve(data) : deferred.reject()
+                }).error(function() {
+                    deferred.reject()
+                }), deferred.promise
+            }
+        }
     }
 ]).service("teamTaskWorkloadService", ["$q", "$http",
     function($q, $http) {
         return {
             getTasks: function(due) {
                 var deferred = $q.defer(),
-                    url = App.Object.getContextPath() + "/api/latest/plugin/task/list/"+due;
+                    url = App.Object.getContextPath() + "/api/latest/plugin/complaints/list/"+due;
                 return $http.get(url).success(function(data) {
 
                     data ? deferred.resolve(data) : deferred.reject()
