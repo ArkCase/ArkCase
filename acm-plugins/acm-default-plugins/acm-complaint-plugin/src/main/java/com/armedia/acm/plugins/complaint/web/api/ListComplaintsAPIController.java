@@ -49,7 +49,7 @@ public class ListComplaintsAPIController {
                     complaints = getComplaintDao().listComplaintsByTimePeriod(TimePeriod.SEVEN_DAYS);
                     break;
                 case LAST_MONTH:
-                    complaints = getComplaintDao().listComplaintsByTimePeriod(TimePeriod.THIRTY_DAYS);
+                        complaints = getComplaintDao().listComplaintsByTimePeriod(TimePeriod.THIRTY_DAYS);
                     break;
                 case LAST_THREE_MONTH:
                     complaints = getComplaintDao().listComplaintsByTimePeriod(TimePeriod.TRHEE_MONTHS);

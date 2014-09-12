@@ -10867,7 +10867,7 @@ Showdown.converter = function(converter_options) {
 ]), angular.module("sample.widgets.teamtaskworkload", ["adf.provider", "highcharts-ng"]).config(["dashboardProvider",
     function(dashboardProvider) {
         var widget = {
-            title: "Team Task Workload ",
+
             templateUrl: "scripts/widgets/teamtaskworkload/teamtaskworkload.html",
             reload: !0,
             resolve: {
@@ -10883,14 +10883,30 @@ Showdown.converter = function(converter_options) {
             }
         };
         dashboardProvider.widget("teamTaskWorkload", angular.extend({
+            title: "Team Task Workload",
             description: "Displays tasks per user as pie chart",
             controller: "teamTaskWorkloadCtrl"
         }, widget)).widget("newComplaints", angular.extend({
-            description: "Displays new compliants in the last 30 days as chart",
+            title: "New Complaints",
+            description: "Displays new complaints in the last 30 days as chart",
             controller: "newComplaintsCtrl"
         }, widget))
     }
 ]).service("newComplaintsService", ["$q", "$http",
+    function($q, $http) {
+        return {
+            getComplaints: function() {
+                var deferred = $q.defer(),
+                    url = App.Object.getContextPath() + "/api/latest/plugin/complaint/list/lastYear";
+                return $http.get(url).success(function(data) {
+                    data ? deferred.resolve(data) : deferred.reject()
+                }).error(function() {
+                    deferred.reject()
+                }), deferred.promise
+            }
+        }
+    }
+]).service("teamTaskWorkloadService", ["$q", "$http",
     function($q, $http) {
         return {
             getTasks: function(due) {
@@ -10905,20 +10921,44 @@ Showdown.converter = function(converter_options) {
             }
         }
     }
-]).service("teamTaskWorkloadService", ["$q", "$http",
-    function($q, $http) {
-        return {
-            getTasks: function(due) {
-                var deferred = $q.defer(),
-                    url = App.Object.getContextPath() + "/api/latest/plugin/complaints/list/"+due;
-                return $http.get(url).success(function(data) {
-
-                    data ? deferred.resolve(data) : deferred.reject()
-                }).error(function() {
-                    deferred.reject()
-                }), deferred.promise
-            }
+]).controller("newComplaintsCtrl", ["$scope", "config", "complaints",
+    function($scope, config, complaints) {
+        $scope.showChart = complaints.length> 0 ? true : false;
+        function parseDate(input) {
+            var parts = input.split("-");
+            return Date.UTC(parts[0], parts[1] - 1, parts[2])
         }
+        var data = {};
+        angular.forEach(complaints, function(complaint) {
+            var day = complaint.created;//commit.commit.author.date;
+            day = day.substring(0, day.indexOf("T")), data[day] ? data[day] ++ : data[day] = 1
+        });
+        var seriesData = [];
+        angular.forEach(data, function(count, day) {
+            seriesData.push([parseDate(day), count])
+        }), seriesData.sort(function(a, b) {
+            return a[0] - b[0]
+        }), complaints && ($scope.chartConfig = {
+            chart: {
+                type: "spline"
+            },
+            title: {
+                text: "Complaints creation history"
+            },
+            xAxis: {
+                type: "datetime"
+            },
+            yAxis: {
+                title: {
+                    text: "complaints"
+                },
+                min: 0
+            },
+            series: [{
+                name: "test name",//config.due,
+                data: seriesData
+            }]
+        })
     }
 ]).controller("teamTaskWorkloadCtrl", ["$scope", "config", "tasks",
     function($scope, config, tasks) {
