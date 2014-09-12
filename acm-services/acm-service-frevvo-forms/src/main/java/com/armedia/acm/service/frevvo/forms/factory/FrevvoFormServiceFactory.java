@@ -9,6 +9,8 @@ import com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.security.core.Authentication;
+
 
 /**
  * @author riste.tutureski
@@ -16,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class FrevvoFormServiceFactory {
 
-	public static FrevvoFormService getService(String name, FrevvoFormController frevvoFormController, HttpServletRequest request)
+	public static FrevvoFormService getService(String name, FrevvoFormController frevvoFormController, HttpServletRequest request, Authentication authentication)
     {
 		
 		if ("complaint".equals(name))
@@ -28,6 +30,12 @@ public class FrevvoFormServiceFactory {
             service.setSaveComplaintTransaction(frevvoFormController.getSaveComplaintTransaction());
             service.setEcmFileService(frevvoFormController.getEcmFileService());
             service.setServletContextPath(contextPath);
+            service.setProperties(frevvoFormController.getProperties());
+            service.setRequest(request);
+            service.setAuthentication(authentication);
+            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
+            service.setUserDao(frevvoFormController.getUserDao());
+            
             return service;
 		}
 		
