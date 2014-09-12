@@ -59,12 +59,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		LOG.info("Initialization form \"" + formName + "\"");
 		
 		// Create and initialize appropriate service for given form name
-		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request);
-		frevvoFormService.setProperties(properties);
-		frevvoFormService.setRequest(request);
-		frevvoFormService.setAuthentication(authentication);
-		frevvoFormService.setAuthenticationTokenService(authenticationTokenService);
-		frevvoFormService.setUserDao(userDao);
+		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request, authentication);
 		
 		// Initialize some data that should be shown on the form (if there should be any) - this is happen while form is loading for the first time
 		String result = (String) frevvoFormService.init();	
@@ -91,12 +86,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		LOG.info("Execute action \"" + action + "\" for form \"" + formName + "\"");
 		
 		// Create and initialize appropriate service for given form name
-		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request);
-		frevvoFormService.setProperties(properties);
-		frevvoFormService.setRequest(request);
-		frevvoFormService.setAuthentication(authentication);
-		frevvoFormService.setAuthenticationTokenService(authenticationTokenService);
-		frevvoFormService.setUserDao(userDao);
+		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request, authentication);
 		
 		// Initialize some data that should be shown on the form (if there should be any) - this is happening after form is loaded
 		Object result = frevvoFormService.get(action);
@@ -127,12 +117,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		LOG.info("Save form \"" + formName + "\"");
 
 		// Create and initialize appropriate service for given form name
-		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request);
-		frevvoFormService.setProperties(properties);
-		frevvoFormService.setRequest(request);
-		frevvoFormService.setAuthentication(authentication);
-		frevvoFormService.setAuthenticationTokenService(authenticationTokenService);
-		frevvoFormService.setUserDao(userDao);
+		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request, authentication);
 		
 		try{
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
