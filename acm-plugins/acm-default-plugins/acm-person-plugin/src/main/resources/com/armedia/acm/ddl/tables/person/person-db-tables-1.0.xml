@@ -354,18 +354,18 @@
         <dropNotNullConstraint tableName="acm_person_assoc" columnName="cm_person_assoc_person_desc"/>
     </changeSet>
     
-    <changeSet id="18-insert-in-to-person-type_lu-table" author="tsedalu">
-        <insert tableName="acm_person_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Complainant"/>
-            <column name="cm_order" valueNumeric="4"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-    </changeSet>
+    <!--<changeSet id="18-insert-in-to-person-type_lu-table" author="tsedalu">-->
+        <!--<insert tableName="acm_person_type_lu">-->
+            <!--<column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>-->
+            <!--<column name="cm_value" value="Complainant"/>-->
+            <!--<column name="cm_order" valueNumeric="4"/>-->
+            <!--<column name="cm_status" value="ACTIVE"/>-->
+            <!--<column name="cm_created" valueComputed="SYSTIMESTAMP"/>-->
+            <!--<column name="cm_creator" valueComputed="USER"/>-->
+            <!--<column name="cm_modified" valueComputed="SYSTIMESTAMP"/>-->
+            <!--<column name="cm_modifier" valueComputed="USER"/>-->
+        <!--</insert>-->
+    <!--</changeSet>-->
     
     <changeSet id="19-create-organization-table" author="tsedalu">
         <createTable tableName="acm_organization">
