@@ -4253,6 +4253,9 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     compileWidget($scope, $element)
                 }), $scope.$on("widgetReload", function() {
                     compileWidget($scope, $element)
+                }), $scope.$on("widgetTableBasedReload", function(event, args) {
+                       $scope.numberOfRows = args,
+                    compileWidget($scope, $element)
                 })
             }
         }
@@ -4282,7 +4285,14 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 $element.remove()
             }, $scope.reload = function() {
                 $scope.$broadcast("widgetReload")
-            }, $scope.edit = function() {
+            },
+
+                $scope.reloadTableBased = function(number) {
+                  //  $scope.numberOfRows = number,
+                    $scope.$broadcast("widgetTableBasedReload", number)
+                },
+
+                $scope.edit = function() {
                 var editScope = $scope.$new(),
                     opts = {
                         scope: editScope,
@@ -4789,6 +4799,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             description: "Displays a user tasks",
             templateUrl: "scripts/widgets/mytasks/mytasks.html",
             controller: "myTasksCtrl",
+            tableBased: true,
             edit: {
                 templateUrl: "scripts/widgets/mytasks/edit.html"
             }
@@ -4797,6 +4808,10 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
 ]).controller("myTasksCtrl", ["$scope", "$filter", "$http", "ngTableParams",
     function($scope, $filter, $http, ngTableParams) {
         var url = App.Object.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
+        var nOfRows = 5;
+        if($scope.numberOfRows) {
+            nOfRows = $scope.numberOfRows;
+        }
         $http.get(url).success(function(rawData) {
            // var isData = false;
             dataT=_.map(rawData,function(row){
@@ -4811,7 +4826,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             $scope.isData = dataT.length > 0 ? true : false
             $scope.tableParams = new ngTableParams({
                 page: 1,
-                count: 3,
+                count: nOfRows,
                 sorting: {
                     due: "asc"
                 }
@@ -4833,6 +4848,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             description: "Displays complaints created by user",
             templateUrl: "scripts/widgets/mycomplaints/mycomplaints.html",
             controller: "myComplaintsCtrl",
+            tableBased: true,
             edit: {
                 templateUrl: "scripts/widgets/mycomplaints/edit.html"
             }
@@ -4841,6 +4857,10 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
 ]).controller("myComplaintsCtrl", ["$scope", "$filter", "$http", "ngTableParams",
     function($scope, $filter, $http, ngTableParams) {
         var url = App.Object.getContextPath() + "/api/latest/plugin/complaint/forUser/" + App.Object.getUserName();
+        var nOfRows = 5;
+        if($scope.numberOfRows) {
+            nOfRows = $scope.numberOfRows;
+        }
         $http.get(url).success(function(rawData) {
              dataC=_.map(rawData,function(row){
                 row=_.clone(row)
@@ -4853,7 +4873,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             $scope.isDataC = dataC.length > 0 ? true  : false
             $scope.tableParams = new ngTableParams({
                 page: 1,
-                count: 3,
+                count: nOfRows,
                 sorting: {
                     created: "asc"
                 }
@@ -11039,7 +11059,32 @@ Showdown.converter = function(converter_options) {
 ]), angular.module("adf").run(["$templateCache",
     function($templateCache) {
         "use strict";
-        $templateCache.put("../src/templates/dashboard-edit.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">Edit Dashboard</h4></div><div class="modal-body"><form role="form"><div class="form-group"><label for="dashboardTitle">Title</label><input type="text" class="form-control" id="dashboardTitle" ng-model="model.title" required></div><div class="form-group"><label>Structure</label><div class="radio" ng-repeat="(key, structure) in structures"><label><input type="radio" value="{{key}}" ng-model="model.structure" ng-change="changeStructure(key, structure)">{{key}}</label></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'), $templateCache.put("../src/templates/dashboard.html", '<div class="dashboard-container"><h1>{{model.title}} <span style="font-size: 16px" class="pull-right"><a href="" ng-if="editMode" title="add new widget" ng-click="addWidgetDialog()"><i class="fa fa-plus-circle"></i></a> <a href="" ng-if="editMode" title="edit dashboard" ng-click="editDashboardDialog()"><i class="fa fa-cog"></i></a> <a href="" title="{{editMode ? \'disable edit mode\' : \'enable edit mode\'}}" ng-click="toggleEditMode()"><i class="fa fa-edit"></i></a></span></h1><div class="dashboard" ng-class="editClass"><div ng-repeat="row in model.rows" class="row" ng-class="row.styleClass"><div ng-repeat="col in row.columns" class="column" ng-class="col.styleClass" ui-sortable="sortableOptions" ng-model="col.widgets"><div class="widgets" ng-repeat="definition in col.widgets"><adf-widget definition="definition" column="col" edit-mode="{{editMode}}" collapsible="collapsible"></div></div></div></div></div>'), $templateCache.put("../src/templates/widget-add.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">Add new widget</h4></div><div class="modal-body"><div style="display: inline-block"><dl class="dl-horizontal"><dt ng-repeat-start="(key, widget) in widgets"><a href="" ng-click="addWidget(key)">{{widget.title}}</a></dt><dd ng-repeat-end="" ng-if="widget.description">{{widget.description}}</dd></dl></div></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'), $templateCache.put("../src/templates/widget-edit.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">{{widget.title}}</h4></div><div class="modal-body"><form role="form"><div class="form-group"><label for="widgetTitle">Title</label><input type="text" class="form-control" id="widgetTitle" ng-model="definition.title" placeholder="Enter title" required></div></form><div ng-if="widget.edit"><adf-widget-content model="definition" content="widget.edit"></div></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'), $templateCache.put("../src/templates/widget.html", '<div class="widget panel panel-default"><div class="panel-heading"><h3 class="panel-title">{{definition.title}} <span class="pull-right"><a href="" title="reload widget content" ng-if="widget.reload" ng-click="reload()"><i class="fa fa-refresh"></i></a>  <a href="" title="change widget location" ng-if="editMode"><i class="fa fa-arrows"></i></a>  <a href="" title="collapse widget" ng-show="collapsible && !isCollapsed" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-minus"></i></a>  <a href="" title="expand widget" ng-show="collapsible && isCollapsed" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-plus"></i></a>  <a href="" title="edit widget configuration" ng-click="edit()" ng-if="editMode"><i class="fa fa-cog"></i></a>  <a href="" title="remove widget" ng-click="close()" ng-if="editMode"><i class="fa fa-times"></i></a></span></h3></div><div class="panel-body" collapse="isCollapsed"><adf-widget-content model="definition" content="widget"></div></div>')
+        $templateCache.put("../src/templates/dashboard-edit.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">Edit Dashboard</h4></div><div class="modal-body"><form role="form"><div class="form-group"><label for="dashboardTitle">Title</label><input type="text" class="form-control" id="dashboardTitle" ng-model="model.title" required></div><div class="form-group"><label>Structure</label><div class="radio" ng-repeat="(key, structure) in structures"><label><input type="radio" value="{{key}}" ng-model="model.structure" ng-change="changeStructure(key, structure)">{{key}}</label></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'),
+            $templateCache.put("../src/templates/dashboard.html", '<div class="dashboard-container"><h1>{{model.title}} <span style="font-size: 16px" class="pull-right"><a href="" ng-if="editMode" title="add new widget" ng-click="addWidgetDialog()"><i class="fa fa-plus-circle"></i></a> <a href="" ng-if="editMode" title="edit dashboard" ng-click="editDashboardDialog()"><i class="fa fa-cog"></i></a> <a href="" title="{{editMode ? \'disable edit mode\' : \'enable edit mode\'}}" ng-click="toggleEditMode()"><i class="fa fa-edit"></i></a></span></h1><div class="dashboard" ng-class="editClass"><div ng-repeat="row in model.rows" class="row" ng-class="row.styleClass"><div ng-repeat="col in row.columns" class="column" ng-class="col.styleClass" ui-sortable="sortableOptions" ng-model="col.widgets"><div class="widgets" ng-repeat="definition in col.widgets"><adf-widget definition="definition" column="col" edit-mode="{{editMode}}" collapsible="collapsible"></div></div></div></div></div>'),
+
+            $templateCache.put("../src/templates/widget-add.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">Add new widget</h4></div><div class="modal-body"><div style="display: inline-block"><dl class="dl-horizontal"><dt ng-repeat-start="(key, widget) in widgets"><a href="" ng-click="addWidget(key)">{{widget.title}}</a></dt><dd ng-repeat-end="" ng-if="widget.description">{{widget.description}}</dd></dl></div></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'),
+            $templateCache.put("../src/templates/widget-edit.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">{{widget.title}}</h4></div><div class="modal-body"><form role="form"><div class="form-group"><label for="widgetTitle">Title</label><input type="text" class="form-control" id="widgetTitle" ng-model="definition.title" placeholder="Enter title" required></div></form><div ng-if="widget.edit"><adf-widget-content model="definition" content="widget.edit"></div></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'),
+            $templateCache.put("../src/templates/widget.html",
+                '<div class="widget panel panel-default">' +
+                    '<div class="panel-heading">' +
+                        '<h3 class="panel-title">{{definition.title}} ' +
+                            '<span class="pull-right">' +
+                                '<a href="" title="reload widget content" ng-if="widget.reload" ng-click="reload()"><i class="fa fa-refresh"></i></a>  ' +
+                                '<a href="" title="reload widget content" ng-if="widget.tableBased" ng-click="reloadTableBased(5)">5</a>  ' +
+                                '<a href="" title="reload widget content" ng-if="widget.tableBased" ng-click="reloadTableBased(10)">10</a>  ' +
+                                '<a href="" title="reload widget content" ng-if="widget.tableBased" ng-click="reloadTableBased(25)">25</a>  ' +
+                                '<a href="" title="change widget location" ng-if="editMode"><i class="fa fa-arrows"></i></a>  ' +
+                                '<a href="" title="collapse widget" ng-show="collapsible && !isCollapsed" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-minus"></i></a>' +
+                                '<a href="" title="expand widget" ng-show="collapsible && isCollapsed" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-plus"></i></a>  ' +
+                                '<a href="" title="edit widget configuration" ng-click="edit()" ng-if="editMode"><i class="fa fa-cog"></i></a>  ' +
+                                '<a href="" title="remove widget" ng-click="close()" ng-if="editMode"><i class="fa fa-times"></i></a>' +
+                            '</span>' +
+                        '</h3>' +
+                    '</div>' +
+                    '<div class="panel-body" collapse="isCollapsed">' +
+                        '<adf-widget-content model="definition" content="widget">' +
+                    '</div>' +
+                '</div>')
     }
 ]), angular.module("sample").run(["$templateCache",
     function($templateCache) {
@@ -11074,6 +11119,8 @@ Showdown.converter = function(converter_options) {
 
             $templateCache.put("scripts/widgets/news/edit.html", '<form role="form"><div class="form-group"><label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url"></div></form>'),
             $templateCache.put("scripts/widgets/news/news.html", '<div class="news"><div class="alert alert-info" ng-if="!feed">Please insert a feed url in the widget configuration</div><h4><a ng-href="{{feed.link}}" target="_blank">{{feed.title}}</a></h4><ul><li ng-repeat="entry in feed.entries"><a ng-href="{{entry.link}}" target="_blank">{{entry.title}}</a></li></ul></div>'),
+
+
             $templateCache.put("scripts/widgets/randommsg/randommsg.html", "<blockquote><p>{{msg.text}}</p><small>{{msg.author}}</small></blockquote>"),
 
             $templateCache.put("scripts/widgets/teamtaskworkload/edit.html", '<form role="form"><div class="form-group"><label for="path">Select Due Date Period</label><select type="text" class="form-control" id="due" ng-model="config.due"><option value="all" ng-selected="selected">All</option><option value="pastDue">Past Due</option><option value="dueTomorrow" >Due Tomorrow</option><option value="dueInAWeek">Due in 7 Days</option><option value="dueInAMonth">Due in 30 Days</option></select></div></form>'),
