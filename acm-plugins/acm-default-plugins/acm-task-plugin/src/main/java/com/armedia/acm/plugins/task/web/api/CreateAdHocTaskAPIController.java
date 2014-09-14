@@ -41,6 +41,7 @@ public class CreateAdHocTaskAPIController
 
         try
         {
+        	in.setOwner(authentication.getName());
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
 
             publishAdHocTaskCreatedEvent(authentication, httpSession, adHocTask, true);
