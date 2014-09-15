@@ -334,6 +334,11 @@
         <property name="descShort" value="Dashboard"/>
         <property name="descLong" value="Dashboard"/>
     </bean>
+    <bean id="profilePageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Profile | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Profile"/>
+        <property name="descLong" value="Profile"/>
+    </bean>
     <bean id="adminPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
         <property name="title" value="Admin | ACM | Armedia Case Management"/>
         <property name="descShort" value="Admin"/>

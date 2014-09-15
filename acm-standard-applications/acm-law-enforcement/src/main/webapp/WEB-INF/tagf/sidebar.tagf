@@ -6,7 +6,7 @@
                     <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">${acm_user.fullName}</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
                         <ul class="dropdown-menu animated fadeInRight m-t-xs">
                             <span class="arrow top hidden-nav-xs"></span>
-                            <li> <a href="profile.html">My Profile</a> </li>
+                            <li> <a href="<c:url value='/plugin/profile'/>">My Profile</a> </li>
                             <li> <a href="#">Switch User</a> </li>
                             <li class="divider"></li>
                             <li> <a href="<c:url value='/logout'/>">Logout</a> </li>

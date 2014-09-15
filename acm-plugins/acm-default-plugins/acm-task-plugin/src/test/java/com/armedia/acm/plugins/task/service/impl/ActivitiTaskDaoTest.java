@@ -85,6 +85,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String status = "status";
         Integer percentComplete = 25;
         String details = "details";
+        String owner = "owner";
 
         AcmTask in = new AcmTask();
         in.setTaskId(taskId);
@@ -98,6 +99,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         in.setAttachedToObjectId(objectId);
         in.setAttachedToObjectType(objectType);
         in.setPercentComplete(percentComplete);
+        in.setOwner(owner);
+        in.setCreateDate(start);
 
         expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
         expect(mockTaskQuery.taskId(taskId.toString())).andReturn(mockTaskQuery);
@@ -107,7 +110,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTask.setPriority(30);
         mockTask.setDueDate(due);
         mockTask.setName(title);
-
+        mockTask.setOwner(owner); 
+        expect(mockTask.getCreateTime()).andReturn(start);
 
         mockTaskService.saveTask(mockTask);
 
@@ -164,6 +168,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockTask.getAssignee()).andReturn(user).atLeastOnce();
         expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
+        expect(mockTask.getCreateTime()).andReturn(null);
+        expect(mockTask.getOwner()).andReturn(user);
 
         mockTaskService.complete(String.valueOf(taskId));
 
@@ -244,6 +250,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
         expect(mockTask.getAssignee()).andReturn(user);
         expect(mockTask.getProcessDefinitionId()).andReturn(processId);
+        expect(mockTask.getCreateTime()).andReturn(null);
+        expect(mockTask.getOwner()).andReturn(user);
 
         expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
@@ -431,7 +439,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
         expect(mockTask.getAssignee()).andReturn(user);
         expect(mockTask.getProcessDefinitionId()).andReturn(processId);
-
+        expect(mockTask.getCreateTime()).andReturn(null);
+        expect(mockTask.getOwner()).andReturn(user);
+           
         expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);

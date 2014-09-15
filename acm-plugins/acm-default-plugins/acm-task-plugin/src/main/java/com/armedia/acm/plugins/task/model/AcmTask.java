@@ -14,13 +14,14 @@ public class AcmTask implements AcmObject
     private String attachedToObjectType;
     private Long attachedToObjectId;
     private String assignee;
+    private String owner;					//creator
     private String businessProcessName;
     private boolean adhocTask;
     private boolean completed;
     private String status;
     private Integer percentComplete;
     private String details;
-
+    private Date createDate;
     private Date taskStartDate;
     private Date taskFinishedDate;
     private Long taskDurationInMillis;
@@ -191,4 +192,20 @@ public class AcmTask implements AcmObject
     {
         return "Task";
     }
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 }

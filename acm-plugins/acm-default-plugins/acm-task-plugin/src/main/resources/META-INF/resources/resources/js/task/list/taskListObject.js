@@ -30,15 +30,19 @@ TaskList.Object = {
         this.$lnkTitle          = $("#caseTitle");
         this.$h4TitleHeader     = $("#caseTitle").parent();
 
-        this.$lnkDueDate        = $("#incident");
+        this.$perCompleted		= $("#percentageCompleted");
+        this.$lnkStartDate      = $("#startDate");
+        this.$lnkDueDate        = $("#dueDate");
         this.$lnkPriority       = $("#priority");
+        this.$lnkOwner          = $("#taskOwner");
         this.$lnkAssigned       = $("#assigned");
         this.$lnkComplaintType  = $("#type");
         this.$lnkStatus         = $("#status");
-
+        this.$linkDetails		= $("#details");
 
         this.$lnkTitle.editable({placement: 'right'});
         this.$lnkDueDate.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,format: 'mm/dd/yyyy'
             ,viewformat: 'mm/dd/yyyy'
             ,datepicker: {
@@ -54,70 +58,13 @@ TaskList.Object = {
         // modals
         this.$modalSignConfirm  = $("#signatureModal");
 
-
-        /*this.$lnkPriority.editable({placement: 'bottom'
-            ,value: 50
-        });*/
-
-
-
-//old stuff
-//        this.$divDetails                = $(".taskDetails");
-//
-//        this.$edtTaskId                 = $("#taskId");
-//        this.$edtTitle                  = $("#title");
-//        this.$edtPriority               = $("#priority");
-//        this.$edtDueDate                = $("#dueDate");
-//        this.$edtAssignee               = $("#assignee");
-//        //this.$chkAdhocTask              = $("#adhocTask");
-//        this.$edtAdhocTask              = $("#adhocTask");
-//        this.$edtBusinessProcessName    = $("#businessProcessName");
-////        this.$edtAttachedToObjectType   = $("#attachedToObjectType");
-////        this.$edtAttachedToObjectId     = $("#attachedToObjectId");
-//        this.$divExtra                  = $("#divExtra");
-//
-//        this.lnkAttachedToObject        = this.$divExtra.find("a");
-//        this.scanAttachedToObjectType   = this.$divExtra.find("a > scan:first");
-//        this.scanAttachedToObjectId     = this.$divExtra.find("a > scan:last");
     }
 
 
     ,showAsideTasks: function(show) {
         Acm.Object.show(this.$asideTasks, show);
     }
-    ,updateDetail: function(t) {
-        this.setValueLnkTitle(t.title);
-        this.setTextTitleHeader(" (" + Acm.getDateFromDatetime(t.dueDate) + ")");
 
-        this.setValueLnkDueDate(Acm.getDateFromDatetime(t.dueDate));
-        this.setValueLnkPriority(t.priority);
-        this.setValueLnkAssigned(t.assignee);
-        //this.setValueLnkComplaintType(c.complaintType);
-        //this.setTextLnkStatus(c.status);
-
-//old stuff
-//        this.setValueEdtTitle(t.title);
-//        this.setValueEdtPriority(t.priority);
-//        this.setValueEdtDueDate(Acm.getDateFromDatetime(t.dueDate));
-//        this.setValueEdtAssignee(t.assignee);
-//        this.setValueEdtTaskId(t.taskId);
-//
-//        //this.setCheckedChkAdhocTask(t.adhocTask);
-//        if (t.adhocTask) {
-//            this.setValueEdtAdhocTask("Yes");
-//            this.showDivExtra(false);
-//        } else {
-//            this.setValueEdtAdhocTask("No");
-//            this.showDivExtra(true);
-//            this.setValueEdtBusinessProcessName(t.businessProcessName);
-////            this.setValueEdtAttachedToObjectType(t.attachedToObjectType);
-////            this.setValueEdtAttachedToObjectId(t.attachedToObjectId);
-//            this.setTextNodeScanAttachedToObjectType(t.attachedToObjectType);
-//            this.setTextNodeScanAttachedToObjectId(t.attachedToObjectId);
-//            this.setHrefLnkAttachedToObject(App.getContextPath() + "/plugin/complaint/" + t.attachedToObjectId);
-//        }
-
-    }
     ,setSignatureList: function(val) {
         this.$listSignature.empty();
         this.$listSignature.append(val);
@@ -148,9 +95,29 @@ TaskList.Object = {
     ,setTextTitleHeader: function(txt) {
         Acm.Object.setTextNodeText(this.$h4TitleHeader, txt, 1);
     }
-    ,setValueLnkDueDate: function(txt) {
-        Acm.Object.setText(this.$lnkDueDate, txt);
-        //this.$lnkDueDate.editable("setValue", txt);
+    ,setValueLnkPerCompleted : function(txt) {
+    	if ( txt ) {
+        	this.$perCompleted.editable("setValue", txt + "%")    		
+    	}
+    	else {
+        	this.$perCompleted.editable("setValue", "0%")    		    		
+    	}
+    }
+    ,setValueLnkStartDate : function(date) {
+    	if ( date ) {
+            this.$lnkStartDate.editable("setValue", date, true);    	    		
+    	}
+    	else {
+            this.$lnkStartDate.editable("setValue", "Unknown", true);    	    		    		
+    	}
+    }
+    ,setValueLnkDueDate: function(date) {
+    	if ( date ) {
+            this.$lnkDueDate.editable("setValue", date, true);
+    	}
+    	else {
+            this.$lnkDueDate.editable("setValue", "Unknown", true);
+    	}
     }
     ,setValueLnkPriority: function(txt) {
         var priorityValue;
@@ -174,11 +141,6 @@ TaskList.Object = {
     ,setValueLnkComplaintType: function(txt) {
         this.$lnkComplaintType.editable("setValue", txt);
     }
-    ,setTextLnkStatus: function(txt) {
-        Acm.Object.setText(this.$lnkStatus, txt);
-    }
-
-
     ,initPriority: function(data){
         var choices = []; //[{value: "", text: "Choose Priority"}];
         $.each(data,function(idx,val){
@@ -188,8 +150,9 @@ TaskList.Object = {
             choices.push(opt);
         });
 
-        this.$lnkPriority.editable({placement: 'bottom', value:"",
-            source: choices
+        this.$lnkPriority.editable({placement: 'bottom', value:"",emptytext: "Unknown",
+
+        source: choices
         })
     }
     ,initAssignee: function(data) {
@@ -201,7 +164,7 @@ TaskList.Object = {
             choices.push(opt);
         });
 
-        this.$lnkAssigned.editable({placement: 'bottom', value: "",
+        this.$lnkAssigned.editable({placement: 'bottom', value: "",emptytext: "Unknown",
             source: choices
         });
     }
@@ -214,7 +177,7 @@ TaskList.Object = {
             choices.push(opt);
         });
 
-        this.$lnkComplaintType.editable({placement: 'bottom', value: "",
+        this.$lnkComplaintType.editable({placement: 'bottom', value: "",emptytext: "Unknown",
             source: choices
         });
     }
@@ -230,6 +193,45 @@ TaskList.Object = {
         });
     }
 
+    ,setValueAssignedStatus : function(status) {
+    	if ( status ) {
+            this.$lnkStatus.editable("setValue", "Assigned");    	    		
+    	}
+    	else {
+            this.$lnkStatus.editable("setValue", "Unassigned");    	    		    		
+    	}
+    	
+    }
+    
+    ,setValueTaskOwner : function(owner) {
+    	if ( owner ) {
+            this.$lnkOwner.editable("setValue", owner, false);    	    		
+    	}
+    	else {
+            this.$lnkOwner.editable("setValue", "Unknown", false);    	    		    		
+    	}
+    	
+    }
+    ,setValueDetails : function(details) {
+    	if ( details ) {
+            //this.$linkDetails.editable("setValue", details, false);    		
+    		Acm.Object.setHtml(this.$linkDetails, details);   		
+    	}
+    	else {
+    		Acm.Object.setHtml(this.$linkDetails, "");   		
+    	}
+    }
+    ,updateDetail: function(t) {
+        this.setValueLnkTitle(t.title);
+        this.setValueLnkPerCompleted(t.percentComplete);
+        this.setValueLnkStartDate(Acm.getDateFromDatetime(t.taskStartDate));
+        this.setValueLnkDueDate(Acm.getDateFromDatetime(t.dueDate));
+        this.setValueLnkPriority(t.priority);
+        this.setValueLnkAssigned(t.assignee);
+        this.setValueTaskOwner(t.owner);
+        this.setValueAssignedStatus(t.assignee);
+        this.setValueDetails(t.details);
+    }
 
 //============= Old Stuff ==========================
     ,setValueEdtTitle: function(val) {
