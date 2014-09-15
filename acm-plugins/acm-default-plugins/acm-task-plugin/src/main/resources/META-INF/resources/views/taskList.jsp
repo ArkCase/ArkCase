@@ -80,7 +80,9 @@
         <section class="scrollable hover">
             <ul class="list-group auto no-radius m-b-none m-t-n-xxs list-group-lg" id="ulTasks">
             </ul>
-            <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Load More...</a> </section>
+            <!-- Load more tasks action -->
+<!--             <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Load More...</a>
+ -->        </section>
         <footer class="footer dk clearfix">
             <form class="m-t-sm">
                 <div class="input-group">
@@ -107,7 +109,7 @@
                     <div class="col-xs-12">
                         <div class="">
                             <div class=" clearfix">
-                                <div class="col-xs-4 b-r">
+<!--                                 <div class="col-xs-4 b-r">
                                     <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a></div>
                                     <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
                                 <div class="col-xs-2 b-r">
@@ -125,7 +127,7 @@
                                 <div class="col-xs-1">
                                     <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
                                     <small class="text-muted">Status</small></div>
-                            </div>
+ -->                            </div>
                         </div>
                     </div>
                 </div>
@@ -139,29 +141,29 @@
                         <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete Task"><i class="fa fa-check"></i></button>
                     </div>
                 </div>
-                <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> Sample Task Subject</a> (12321)</h4>
+                <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"></a></h4>
                 <hr/>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="">
                             <div class=" clearfix">
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#">0%</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="percentageCompleted"></a></div>
                                     <small class="text-muted">Complete</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#">AJ McClary</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="taskOwner"></a></div>
                                     <small class="text-muted">Owner</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#">High</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="priority"></a></div>
                                     <small class="text-muted">Priority</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#">MM/DD/YYYY</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="startDate"></a></div>
                                     <small class="text-muted">Start Date</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#">MM/DD/YYYY</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="dueDate"></a></div>
                                     <small class="text-muted">Due Date</small></div>
                                 <div class="col-xs-2">
-                                    <div class="h4 font-bold"><a href="#">ASSIGNED</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="status"></a></div>
                                     <small class="text-muted">Status</small></div>
                             </div>
                         </div>
@@ -183,12 +185,11 @@
                                             </ul>
                                         </div>
                                     </li>
-                                    <li> </li>
                                 </ul>
-                                </span> <a href="#" class="font-bold">Task Details</a></div>
+                                <a href="#" class="font-bold">Task Details</a>
+                            </div>
                             <div class="panel-body">
-                                <div class="complaintDetails">
-                                </div>
+                                <div class="complaintDetails" id="details"></div>
                             </div>
                         </section>
                     </div>

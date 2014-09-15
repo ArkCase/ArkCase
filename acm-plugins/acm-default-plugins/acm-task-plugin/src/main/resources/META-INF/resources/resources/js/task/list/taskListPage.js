@@ -24,12 +24,18 @@ TaskList.Page = {
 //                    + t.title + "</strong></small></a><input type='hidden' value='" + t.taskId + "' /> </li>";
 
                 html += "<li class='list-group-item'><a href='#' class='thumb-sm pull-left m-r-sm'> <img src='"
-                    + App.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a1.png" + "' class='img-circle'> </a>"
-                    + "<a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
-                    //+ Acm.getDateFromDatetime(t.dueDate) + "</small><strong class='block'>"
-                    + "[Date Created]" + "</small><strong class='block'>"
-                    + t.title + "</strong><small>"
-                    + "[Created By]" + "</small></a><input type='hidden' value='" + t.taskId + "' /> </li>";
+                    + App.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a1.png" + "' class='img-circle'>"
+                    + "</a>"
+                    + "<a href='#' class='clear text-ellipsis'>"
+                    + "<strong class='block'>"
+                    + t.title + "</strong>"
+                    + "<small>"
+                    + "Created Date: " + Acm.getDateFromDatetime(t.createDate)
+                    + "</small></br>" 
+                    + "<small>"
+                    + "Created By: " + t.owner + "</small>"
+                    + "</a>"
+                    + "<input type='hidden' value='" + t.taskId + "' /> </li>";
             }
         }
 

@@ -29,6 +29,7 @@ Complaint.Object = {
 
         this.$lnkTitle          = $("#caseTitle");
         this.$lnkTitle.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,success: function(response, newValue) {
                 Complaint.Event.onSaveTitle(newValue);
             }
@@ -37,6 +38,7 @@ Complaint.Object = {
 
         this.$lnkIncident       = $("#incident");
         this.$lnkIncident.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,format: 'mm/dd/yyyy'
             ,viewformat: 'mm/dd/yyyy'
             ,datepicker: {
@@ -146,6 +148,7 @@ Complaint.Object = {
         });
 
         this.$lnkAssigned.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,value: ""
             ,source: choices
             ,success: function(response, newValue) {
@@ -163,6 +166,7 @@ Complaint.Object = {
         });
 
         this.$lnkComplaintType.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,value: ""
             ,source: choices
             ,success: function(response, newValue) {
@@ -180,6 +184,7 @@ Complaint.Object = {
         });
 
         this.$lnkPriority.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,value: ""
             ,source: choices
             ,success: function(response, newValue) {
@@ -194,8 +199,7 @@ Complaint.Object = {
         Acm.Object.setText(this.$lnkComplaintNum, txt);
     }
     ,setValueLnkIncident: function(txt) {
-        Acm.Object.setText(this.$lnkIncident, txt);
-        //this.$lnkIncident.editable("setValue", txt);
+        this.$lnkIncident.editable("setValue", txt, true);   //true - convert txt to internal format (Date Object)
     }
     ,setValueLnkPriority: function(txt) {
         this.$lnkPriority.editable("setValue", txt);
