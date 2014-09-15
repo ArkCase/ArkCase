@@ -214,7 +214,8 @@ TaskList.Object = {
     }
     ,setValueDetails : function(details) {
     	if ( details ) {
-            this.$linkDetails.editable("setValue", details, false);    		
+            //this.$linkDetails.editable("setValue", details, false);    		
+    		Acm.Object.setHtml(this.$linkDetails, details);   		
     	}
     	else {
     		Acm.Object.setHtml(this.$linkDetails, "");   		
