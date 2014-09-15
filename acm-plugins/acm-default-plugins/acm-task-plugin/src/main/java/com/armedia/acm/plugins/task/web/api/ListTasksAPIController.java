@@ -45,14 +45,15 @@ public class ListTasksAPIController
         try
         {
             List<AcmTask> retval = getTaskDao().tasksForUser(user);
-
+            //to do: we also should get back the tasks that owner by this user
             for ( AcmTask task : retval )
             {
                 AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "searchResult",
                         authentication.getName(), true, ipAddress);
                 getTaskEventPublisher().publishTaskEvent(event);
+                
             }
-
+            
             return retval;
         }
         catch (Exception e)
