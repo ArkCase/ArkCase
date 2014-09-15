@@ -21,6 +21,7 @@
         <module>acm-person-plugin</module>
         <module>acm-admin-plugin</module>
         <module>acm-report-plugin</module>
+        <module>acm-profile-plugin</module>
     </modules>
 
 
