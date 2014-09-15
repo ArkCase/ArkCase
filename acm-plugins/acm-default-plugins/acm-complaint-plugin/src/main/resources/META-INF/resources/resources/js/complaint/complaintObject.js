@@ -65,9 +65,9 @@ Complaint.Object = {
 
         this.$divDocuments      = $("#divDocuments");
         Complaint.JTable.createJTableDocuments(this.$divDocuments);
-//        this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
-//        this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
-//        //Complaint.Page.fillReportSelection();
+        this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+		this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
+        Complaint.Page.fillReportSelection();
 
         this.$divTasks          = $("#divTasks");
         Complaint.JTable.createJTableTasks(this.$divTasks);
@@ -76,6 +76,10 @@ Complaint.Object = {
 
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
+        
+        var formUrls = new Object();
+        formUrls["roi"] = $('#roiFormUrl').val();
+        this.setFormUrls(formUrls);
     }
 
     ,_token: ""
@@ -84,6 +88,14 @@ Complaint.Object = {
     }
     ,setToken: function(token) {
         this._token = token;
+    }
+    
+    ,_formUrls: null
+    ,getFormUrls: function() {
+    	return this._formUrls;
+    }
+    ,setFormUrls: function(formUrls) {
+    	this._formUrls = formUrls;
     }
 
     ,beforeSpanAddDocument: function(html) {

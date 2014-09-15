@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.armedia.acm.forms.roi.model.FormName;
 import com.armedia.acm.form.config.FormUrl;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -34,6 +33,9 @@ public class ComplaintUiController
 
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         retval.addObject("token", token);
+        
+        retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
+        
         return retval;
     }
 
@@ -47,7 +49,7 @@ public class ComplaintUiController
 
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         retval.addObject("token", token);
-        retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FormName.CREATE_ROI));
+        retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         
         log.debug("Security token: " + token);
         return retval;
@@ -66,7 +68,7 @@ public class ComplaintUiController
         
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         retval.addObject("token", token);
-        retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FormName.CREATE_ROI));
+        retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         
         log.debug("Security token: " + token);
         return retval;

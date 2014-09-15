@@ -13,6 +13,18 @@
     <description>Report of investigation form.</description>
 
     <dependencies>
+    	<!-- acm -->
+    	<dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-form-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-complaint-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>
@@ -74,6 +86,13 @@
             <artifactId>jdbc</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+		
     </dependencies>
 
 
