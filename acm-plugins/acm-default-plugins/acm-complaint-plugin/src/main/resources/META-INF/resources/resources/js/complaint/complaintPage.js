@@ -16,7 +16,7 @@ Complaint.Page = {
     ,fillReportSelection: function() {
         var html = "<span>"
             + "<select class='input-sm form-control input-s-sm inline v-middle'>"
-            + "<option value='0'>Report of Investigation</option>"
+            + "<option value='roi'>Report of Investigation</option>"
             + "</select>"
             + "</span>";
         Complaint.Object.beforeSpanAddDocument(html);
