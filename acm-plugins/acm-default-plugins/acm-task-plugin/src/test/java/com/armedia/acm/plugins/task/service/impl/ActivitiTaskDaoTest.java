@@ -110,7 +110,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTask.setPriority(30);
         mockTask.setDueDate(due);
         mockTask.setName(title);
-        mockTask.setOwner(owner); 
+        mockTask.setOwner(owner);
         expect(mockTask.getCreateTime()).andReturn(start);
 
         mockTaskService.saveTask(mockTask);
@@ -441,7 +441,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getProcessDefinitionId()).andReturn(processId);
         expect(mockTask.getCreateTime()).andReturn(null);
         expect(mockTask.getOwner()).andReturn(user);
-           
+
         expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);

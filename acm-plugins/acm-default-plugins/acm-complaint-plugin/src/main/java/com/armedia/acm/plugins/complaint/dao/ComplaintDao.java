@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.complaint.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
+import com.armedia.acm.plugins.complaint.model.TimePeriod;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
@@ -10,6 +11,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +36,19 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
 
         return results;
 
+    }
+
+    public List<ComplaintListView> listComplaintsByTimePeriod(TimePeriod timePeriod) {
+        CriteriaBuilder builder = getEm().getCriteriaBuilder();
+        CriteriaQuery<ComplaintListView> query = builder.createQuery(ComplaintListView.class);
+        Root<ComplaintListView> clv = query.from(ComplaintListView.class);
+        query.select(clv).where(builder.greaterThanOrEqualTo(clv.<Date>get("created"), shiftDateFromToday(timePeriod.getNumOfDays())));
+
+        // TODO: parameterized order by
+        query.orderBy(builder.desc(clv.get("created")));
+        TypedQuery<ComplaintListView> dbQuery = getEm().createQuery(query);
+        List<ComplaintListView> results = dbQuery.getResultList();
+        return results;
     }
 
     public List<ComplaintListView> listAllUserComplaints(String userId) {
@@ -70,5 +85,15 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
     protected Class<Complaint> getPersistenceClass()
     {
         return Complaint.class;
+    }
+
+    private Date shiftDateFromToday(int daysFromToday){
+        Date nextDate;
+        Date today = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(today);
+        cal.add(Calendar.DATE,-daysFromToday);
+        nextDate = cal.getTime();
+        return nextDate;
     }
 }
