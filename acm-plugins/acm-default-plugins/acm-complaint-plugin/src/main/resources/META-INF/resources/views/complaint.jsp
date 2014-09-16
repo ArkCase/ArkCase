@@ -254,6 +254,7 @@
                                         <div class="col-md-12">
                                             <section class="panel b-a">
                                                 <div id="divDocuments" style="width:100%"></div>
+                                                <input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />
                                             </section>
                                         </div>
                                     </div>

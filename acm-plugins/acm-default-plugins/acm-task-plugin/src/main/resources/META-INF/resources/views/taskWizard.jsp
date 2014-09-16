@@ -153,12 +153,18 @@
 
                         <select data-placeholder="Choose Assignees..." id="assignee" class="choose-approvers form-control" multiple style="width:350px;" >
                             <option value=""></option>
+                            <option value="albert-acm">Albert Acm</option>
+                            <option value="ann-acm">Ann Acm</option>
+                            <option value="AJ McClary">AJ McClary</option>
+                            <option value="charles-acm">Charles Acm</option>
                             <option value="David Miller">David Miller</option>
+                            <option value="ian-acm">Ian Acm</option>
                             <option value="James Bailey">James Bailey</option>
+                            <option value="Jim Nasr">Jim Nasr</option>
                             <option value="Judy Hsu">Judy Hsu</option>
                             <option value="Ronda Ringo">Ronda Ringo</option>
-                            <option value="AJ McClary">AJ McClary</option>
-                            <option value="Jim Nasr">Jim Nasr</option>
+                            <option value="sally-acm">Sally Acm</option>
+                            <option value="samuel-acm">Samuel Acm</option>
                         </select>
                     </div>
 

@@ -12,8 +12,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -47,6 +49,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private Map<String, Object> properties;
 	private AuthenticationTokenService authenticationTokenService;
 	private UserDao userDao;
+	private ComplaintDao complaintDao;
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
@@ -183,7 +186,21 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		this.userDao = userDao;
 	}
 
-    public SaveComplaintTransaction getSaveComplaintTransaction()
+    /**
+	 * @return the complaintDao
+	 */
+	public ComplaintDao getComplaintDao() {
+		return complaintDao;
+	}
+
+	/**
+	 * @param complaintDao the complaintDao to set
+	 */
+	public void setComplaintDao(ComplaintDao complaintDao) {
+		this.complaintDao = complaintDao;
+	}
+
+	public SaveComplaintTransaction getSaveComplaintTransaction()
     {
         return saveComplaintTransaction;
     }
