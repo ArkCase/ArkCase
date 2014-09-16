@@ -110,6 +110,7 @@ TaskList.Event = {
         t.title = value;
         var data = this.getTaskData(t);
     	TaskList.Service.listTaskSaveDetail(data.taskId, data);
+    	TaskList.Page.updateActiveTaskTitle(taskId, value);
     }
     
     /**
@@ -165,17 +166,53 @@ TaskList.Event = {
         t.status = value;
         this.executeSaveTask(t);
     }
+    
+    /**
+     * Open the detail section editor
+     */
+    ,onClickBtnEditDetails: function(e) {
+        TaskList.Object.editDivDetails();
+    }
 
+    /**
+     * Cancel and close the detail section editor
+     */
+    ,onClickBtnCancelDetails: function(e) {
+        TaskList.Object.cancelEditDivDetails();
+    }
+
+    /**
+     * Save the detail section update to backend
+     */
+    ,onClickBtnSaveDetails : function(e) {
+        var t = this.getSelectedTask();
+        var value = TaskList.Object.saveDivDetails();
+        t.details = value;
+        this.executeSaveTask(t);    	
+    }
+    /////////////////////////////////////////////////////////////////////////////////
+    // This section should move to the request object file
+    /////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Get the current selected taskid and find the task object
+     */
     ,getSelectedTask : function () {
         var taskId = Task.getTaskId();
         return TaskList.findTask(taskId);
     }
     
+    /**
+     * Execute the save task object
+     */
     ,executeSaveTask : function(task) {
         var data = this.getTaskData(task);
     	TaskList.Service.listTaskSaveDetail(data.taskId, data);
     }
     
+    /**
+     * Setup the task object to be saved. We have to send
+     * all the attributes of the task object to the backend.
+     */
     ,getTaskData : function(t) {
         var data = {};
         data.assignee = t.assignee;
