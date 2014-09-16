@@ -60,7 +60,7 @@
                             <div class="col-xs-6 text-center">
                                 <div class="inline">
                                     <div class="thumb-lg avatar">
-                                        <img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/a5.png" class="dker">
+                                        <img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/ann.jpg" class="dker">
                                     </div>
                                     <div class="h4 m-t m-b-xs font-bold text-lt">Ann Administrator</div>
                                     <small class="text-muted m-b">Agent</small>
