@@ -21,6 +21,7 @@
 		<property name="complaintDao" ref="acmComplaintDao" />
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
         <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="caseFileDao" ref="caseFileDao" />
 	</bean>
 
 </beans>
