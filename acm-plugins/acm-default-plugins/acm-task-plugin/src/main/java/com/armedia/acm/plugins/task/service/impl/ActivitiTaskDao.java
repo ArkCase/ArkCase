@@ -74,6 +74,7 @@ class ActivitiTaskDao implements TaskDao
     private AcmTask updateExistingActivitiTask(AcmTask in, Task activitiTask) throws AcmTaskException
     {
         activitiTask.setAssignee(in.getAssignee());
+        activitiTask.setOwner(in.getOwner());
         Integer activitiPriority = activitiPriorityFromAcmPriority(in.getPriority());
         activitiTask.setPriority(activitiPriority);
         activitiTask.setDueDate(in.getDueDate());
@@ -93,6 +94,7 @@ class ActivitiTaskDao implements TaskDao
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "DETAILS", in.getDetails());
 
             in.setTaskId(Long.valueOf(activitiTask.getId()));
+            in.setCreateDate(activitiTask.getCreateTime());
             return in;
         }
         catch (ActivitiException e)
@@ -453,6 +455,8 @@ class ActivitiTaskDao implements TaskDao
         acmTask.setPriority(taskPriority);
         acmTask.setTitle(activitiTask.getName());
         acmTask.setAssignee(activitiTask.getAssignee());
+        acmTask.setCreateDate(activitiTask.getCreateTime());
+        acmTask.setOwner(activitiTask.getOwner());
 
         extractProcessVariables(activitiTask, acmTask);
 
