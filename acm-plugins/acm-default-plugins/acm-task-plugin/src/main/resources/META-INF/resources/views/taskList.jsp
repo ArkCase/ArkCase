@@ -141,29 +141,29 @@
                         <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete Task"><i class="fa fa-check"></i></button>
                     </div>
                 </div>
-                <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"></a></h4>
+                <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
                 <hr/>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="">
                             <div class=" clearfix">
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="percentageCompleted"></a></div>
-                                    <small class="text-muted">Complete</small></div>
+                                    <div class="h4 font-bold"><a href="#" id="percentageCompleted" data-type="text" data-pk="1" data-title="Enter % of Completion"></a></div>
+                                    <small class="text-muted">% of Completion</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="taskOwner"></a></div>
+                                    <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="text" data-pk="1" data-title="Enter Owner"></a></div>
                                     <small class="text-muted">Owner</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="priority"></a></div>
+                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="text" data-pk="1" data-title="Enter priority"></a></div>
                                     <small class="text-muted">Priority</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="startDate"></a></div>
+                                    <div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-title="Enter Start Date"></a></div>
                                     <small class="text-muted">Start Date</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="dueDate"></a></div>
+                                    <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
                                     <small class="text-muted">Due Date</small></div>
                                 <div class="col-xs-2">
-                                    <div class="h4 font-bold"><a href="#" id="status"></a></div>
+                                    <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-title="Enter Task Status"></a></div>
                                     <small class="text-muted">Status</small></div>
                             </div>
                         </div>

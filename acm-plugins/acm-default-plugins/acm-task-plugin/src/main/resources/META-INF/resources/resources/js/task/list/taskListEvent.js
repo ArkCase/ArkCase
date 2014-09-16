@@ -100,4 +100,104 @@ TaskList.Event = {
             return false;
         }
     }
+
+    /**
+     * Save title value changed
+     */
+    ,onSaveTitle : function(value) {
+        var taskId = Task.getTaskId();
+        var t = TaskList.findTask(taskId);
+        t.title = value;
+        var data = this.getTaskData(t);
+    	TaskList.Service.listTaskSaveDetail(data.taskId, data);
+    }
+    
+    /**
+     * Save owner value changed
+     */
+    ,onSaveOwner : function(value) {
+        var t = this.getSelectedTask();
+        t.owner = value;
+        this.executeSaveTask(t);
+    }
+    
+    /**
+     * Save percentage completed value changed
+     */
+    ,onSavePerComplete : function(value) {
+        var t = this.getSelectedTask();
+        t.percentComplete = value;
+        this.executeSaveTask(t);
+    }
+
+    /**
+     * Save priority value changed
+     */
+    ,onSavePriority : function(value) {
+        var t = this.getSelectedTask();
+        t.priority = value;
+        this.executeSaveTask(t);
+    }
+
+    /**
+     * Save start date value changed
+     */
+    ,onSaveStartDate : function(value) {
+        var t = this.getSelectedTask();
+        t.taskStartDate = Acm.xDateToDatetime(value);
+        this.executeSaveTask(t);
+    }
+    
+    /**
+     * Save start date value changed
+     */
+    ,onSaveDueDate : function(value) {
+        var t = this.getSelectedTask();
+        t.dueDate = Acm.xDateToDatetime(value);
+        this.executeSaveTask(t);
+    }
+    
+    /**
+     * Save start date value changed
+     */
+    ,onSaveStatus : function(value) {
+        var t = this.getSelectedTask();
+        t.status = value;
+        this.executeSaveTask(t);
+    }
+
+    ,getSelectedTask : function () {
+        var taskId = Task.getTaskId();
+        return TaskList.findTask(taskId);
+    }
+    
+    ,executeSaveTask : function(task) {
+        var data = this.getTaskData(task);
+    	TaskList.Service.listTaskSaveDetail(data.taskId, data);
+    }
+    
+    ,getTaskData : function(t) {
+        var data = {};
+        data.assignee = t.assignee;
+        data.owner = t.owner;
+        data.attachedToObjectType = "COMPLAINT";
+        data.attachedToObjectId = t.attachedToObjectId;
+        data.title = t.title;
+        data.taskStartDate = t.taskStartDate;
+        data.status = t.status;
+        //data.priority = this.getValueEdtPriority();
+        data.dueDate = t.dueDate;
+        data.priority = t.priority;
+        data.percentComplete = t.percentComplete;
+        data.details = t.details;
+        data.adhocTask = true;
+
+        data.taskId = t.taskId;
+        data.businessProcessName = t.businessProcessName;
+        data.completed = t.completed;
+        data.taskFinishedDate = t.taskFinishedDate;
+        data.taskDurationInMillis = t.taskDurationInMillis;
+        return data;
+    }
+    
 };
