@@ -1,22 +1,30 @@
 package com.armedia.acm.plugins.complaint.service;
 
-
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ComplaintFactory
 {
     public Complaint asAcmComplaint(com.armedia.acm.plugins.complaint.model.complaint.Complaint formComplaint)
     {
         Complaint retval = new Complaint();
-
+        
         retval.setDetails(formComplaint.getComplaintDescription());
         retval.setIncidentDate(formComplaint.getDate());
         retval.setPriority(formComplaint.getPriority());
         retval.setComplaintTitle(formComplaint.getComplaintTitle());
-
+        
+        Calendar  cal = Calendar.getInstance();
+        cal.setTime(formComplaint.getDate());
+        cal.add(Calendar.DATE, 3);
+        
+        Date dueDate = cal.getTime();        
+        retval.setDueDate(dueDate);
+        
         if ( formComplaint.getInitiator() != null )
         {
             PersonAssociation pa = new PersonAssociation();
