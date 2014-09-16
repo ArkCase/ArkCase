@@ -17,6 +17,10 @@ TaskList.Object = {
             TaskList.setSingleObject(false);
         }
 
+        this.$noTaskFoundMeassge = $("#noTaskFoundMeassge");
+        this.showObject(this.$noTaskFoundMeassge, false);
+        this.$taskDetailView	 = $("#taskDetailView");
+        
         this.$ulTasks           = $("#ulTasks");
         this.$asideTasks        = this.$ulTasks.closest("aside");
 
@@ -113,6 +117,10 @@ TaskList.Object = {
 
     ,showAsideTasks: function(show) {
         Acm.Object.show(this.$asideTasks, show);
+    }
+    
+    ,showObject : function(obj, show) {
+        Acm.Object.show(obj, show);    	
     }
 
     ,setSignatureList: function(val) {

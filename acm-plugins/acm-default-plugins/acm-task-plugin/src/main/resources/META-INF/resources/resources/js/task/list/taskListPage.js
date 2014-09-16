@@ -9,10 +9,16 @@ TaskList.Page = {
     initialize : function() {
     }
 
+	/**
+	 * Build the task list on the left panel with attributes like task title, created date, and created by. register each task
+	 * object for the click event. Populate the right side task details panel. If no task was listed, hide the right side
+	 * panel and display a no task was found message.
+	 */
     ,buildTaskList: function(arr) {
         var html = "";
         if (!Acm.isArrayEmpty(arr)) {
             var len = arr.length;
+
             for (var i = 0; i < len; i++) {
                 var t = arr[i];
                 if (0 == i) {
@@ -33,13 +39,19 @@ TaskList.Page = {
                     + "</a>"
                     + "<input type='hidden' value='" + t.taskId + "' /> </li>";
             }
+
+            TaskList.Object.setHtmlUlTasks(html);
+        	TaskList.Object.registerClickListItemEvents();
+        	TaskList.Event.doClickLnkListItem();
         }
+        else {
+        	TaskList.Object.showObject(TaskList.Object.$taskDetailView, false);
+        	TaskList.Object.showObject(TaskList.Object.$noTaskFoundMeassge, true);
+            Acm.Dialog.alert("No task assigned to you was found.");
 
-        TaskList.Object.setHtmlUlTasks(html);
-        TaskList.Object.registerClickListItemEvents();
-
-        TaskList.Event.doClickLnkListItem();
+        }    
     }
+    
     ,buildSignatureList: function(arr) {
         var html = "";
         if (!Acm.isArrayEmpty(arr)) {
