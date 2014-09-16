@@ -107,20 +107,17 @@ Complaint.Event = {
         c.details = html;
         Complaint.Service.saveComplaint(c);
     }
-//    ,onClickSpanAddDocument: function(e) {
-//        var report = Complaint.Object.getSelectReport();
-//        var token = Complaint.Object.setToken();
-//        var c = Complaint.getComplaint();
-//
-//        var url = "http://10.21.4.149/orbeon/fr/acm/roi-form/new"
-//            + "?acm_ticket=" + token
-//            + "&complaint_id=" + c.complaintId
-//            + "&complaint_number=" + c.complaintNumber
-//            + "&complaint_title=" + c.complaintTitle
-//            + "&complaint_priority=" + c.priority;
-//
-//        window.location.href = url;
-//    }
+    ,onClickSpanAddDocument: function(e) {
+        var report = Complaint.Object.getSelectReport();
+        var token = Complaint.Object.setToken();
+        var c = Complaint.getComplaint();
+
+        var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()[report] : '';
+        if (url != '') {
+        	url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
+        	this._showPopup(url, "", 810, $(window).height() - 30);        	
+        }
+    }
 
     ,onClickBtnTaskAssign : function(e) {
         alert("onClickBtnTaskAssign");
@@ -159,6 +156,24 @@ Complaint.Event = {
             return true;
         } else {
             return false;
+        }
+    }
+    
+    ,_showPopup: function(url, title, w, h) {
+        
+        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+        width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+        height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+        var top = ((height / 2) - (h / 2)) + dualScreenTop;
+        var newWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+        
+        if (window.focus) {
+            newWindow.focus();
         }
     }
 

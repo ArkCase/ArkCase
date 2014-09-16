@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.service.frevvo.forms.factory;
 
+import com.armedia.acm.forms.roi.service.ROIService;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController;
@@ -35,6 +36,24 @@ public class FrevvoFormServiceFactory {
             service.setAuthentication(authentication);
             service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
             service.setUserDao(frevvoFormController.getUserDao());
+            
+            return service;
+		}
+		
+		if ("roi".equals(name))
+        {
+            String contextPath = request.getServletContext().getContextPath();
+
+            ROIService service = new ROIService();
+
+            service.setEcmFileService(frevvoFormController.getEcmFileService());
+            service.setServletContextPath(contextPath);
+            service.setProperties(frevvoFormController.getProperties());
+            service.setRequest(request);
+            service.setAuthentication(authentication);
+            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
+            service.setUserDao(frevvoFormController.getUserDao());
+            service.setComplaintDao(frevvoFormController.getComplaintDao());
             
             return service;
 		}
