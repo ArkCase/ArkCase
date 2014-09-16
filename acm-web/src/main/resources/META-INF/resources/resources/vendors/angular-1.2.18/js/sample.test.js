@@ -4218,7 +4218,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 content = $scope.content;
             $element.html(dashboard.loadingTemplate);
             var templateScope = $scope.$new();
-            model.config || (model.config = {}), templateScope.config = model.config;
+            model.config ||
+            (model.config = {}), templateScope.config = model.config;
             var base = {
                     $scope: templateScope,
                     widget: model,
@@ -4254,8 +4255,9 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 }), $scope.$on("widgetReload", function() {
                     compileWidget($scope, $element)
                 }), $scope.$on("widgetTableBasedReload", function(event, args) {
-                       $scope.numberOfRows = args,
+                    $scope.numberOfRows = args,
                     compileWidget($scope, $element)
+                //    $scope.$broadcast("adfDashboardChanged")
                 })
             }
         }
@@ -4798,22 +4800,82 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             title: "My Tasks",
             description: "Displays a user tasks",
             templateUrl: "scripts/widgets/mytasks/mytasks.html",
-            controller: "myTasksCtrl",
             tableBased: true,
+//            resolve: {
+//                usertasks: function(myTasksService, config) {
+//                        return  myTasksService.get();
+//                        }
+//            },
+            controller: "myTasksCtrl",
             edit: {
                 templateUrl: "scripts/widgets/mytasks/edit.html"
             }
         })
     }
-]).controller("myTasksCtrl", ["$scope", "$filter", "$http", "ngTableParams",
+])
+//    service("myTasksService", ["$q", "$http",
+//    function($q, $http) {
+//        return {
+//            get : function(){
+//                var deferred = $q.defer(),
+//                    url = App.Object.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
+//                $http.get(url).success(function(dataTasks) {
+//                    alert("IN"),
+//                    dataTasks ? deferred.resolve(dataTasks) : deferred.reject()
+//                }).error(function() {
+//                    alert("ERROR"),
+//                    deferred.reject()
+//                }), deferred.promise
+//            }
+//        }
+//    }
+//])
+    .controller("myTasksCtrl", ["$scope", "$filter", "$http", "ngTableParams",//  "config", //"usertasks",
     function($scope, $filter, $http, ngTableParams) {
         var url = App.Object.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
+
+//        $scope.usertasks = usertasks;
+//           config.rowsT = config.rowsT ? config.rowsT :  5;
+//        var nOfRows = config.rowsT;
+//        if($scope.numberOfRows) {
+//            nOfRows = $scope.numberOfRows;
+//                config.rowsT = nOfRows;
+//        }
+//        //$http.get(url).success(function(rawData) {
+//           // var isData = false;
+//            dataT=_.map($scope.usertasks,function(row){
+//                row=_.clone(row)
+//                //row.due=moment(row.dueDate, "YYYY MM D").toDate()
+//                row.due = moment(row.dueDate).format('MM/DD/YYYY');
+//                row.id = parseInt(row.taskId)
+//                row.status = row.taskStartDate != null ? "In Progress" : "Not Started"
+//                row.taskUrl = App.Object.getContextPath() + "/plugin/task/";
+//                return row
+//            })
+//            $scope.isData = dataT.length > 0 ? true : false
+//            $scope.tableParams = new ngTableParams({
+//                page: 1,
+//                count: nOfRows,
+//                sorting: {
+//                    due: "asc"
+//                }
+//            }, {
+//                counts:[3,5,10], // [5,10,25,50],
+//                total: dataT.length,
+//                getData: function($defer, params) {
+//                   // var filteredData = params.filter() ? $filter("filter")(dataT, params.filter()) : dataT,
+//                       var orderedData = params.sorting() ? $filter("orderBy")(dataT, params.orderBy()) : dataT;
+//                    params.total(orderedData.length), $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()))
+//                }
+//            })
+//        //})
+//    }
         var nOfRows = 5;
         if($scope.numberOfRows) {
             nOfRows = $scope.numberOfRows;
         }
         $http.get(url).success(function(rawData) {
-           // var isData = false;
+            // var isData = false;
             dataT=_.map(rawData,function(row){
                 row=_.clone(row)
                 //row.due=moment(row.dueDate, "YYYY MM D").toDate()
@@ -4834,8 +4896,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 counts:[3,5,10], // [5,10,25,50],
                 total: dataT.length,
                 getData: function($defer, params) {
-                   // var filteredData = params.filter() ? $filter("filter")(dataT, params.filter()) : dataT,
-                       var orderedData = params.sorting() ? $filter("orderBy")(dataT, params.orderBy()) : dataT;
+                    // var filteredData = params.filter() ? $filter("filter")(dataT, params.filter()) : dataT,
+                    var orderedData = params.sorting() ? $filter("orderBy")(dataT, params.orderBy()) : dataT;
                     params.total(orderedData.length), $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()))
                 }
             })
@@ -10917,7 +10979,7 @@ Showdown.converter = function(converter_options) {
         return {
             getComplaints: function() {
                 var deferred = $q.defer(),
-                    url = App.Object.getContextPath() + "/api/latest/plugin/complaint/list/lastYear";
+                    url = App.Object.getContextPath() + "/api/latest/plugin/complaint/list/lastMonth";
                 return $http.get(url).success(function(data) {
                     data ? deferred.resolve(data) : deferred.reject()
                 }).error(function() {
@@ -11108,8 +11170,8 @@ Showdown.converter = function(converter_options) {
 
 
 
-            $templateCache.put("scripts/widgets/mytasks/edit.html", '<form role="form"><div class="form-group"></div></form>'),
-            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="mytasks"><div class="alert alert-info" ng-controller="myTasksCtrl" ng-if="!isData"><p style="text-align:center;">No active tasks assigned</p></div><div ng-controller="myTasksCtrl" ng-if="isData"><div style="overflow-x: auto;"><table ng-table="tableParams" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.status}}</td></tr></table></div></div></div>'),
+            $templateCache.put("scripts/widgets/mytasks/edit.html", '<form role="form"><div class="form-group" ><input type="text" class="form-control" id="rowsT" ng-model="config.rowsT" placeholder="Enter Default Row Numbers"></div></form>'),
+            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="mytasks"><div class="alert alert-info"  ng-controller="myTasksCtrl" ng-if="!isData"><p style="text-align:center;">No active tasks assigned</p></div><div ng-controller="myTasksCtrl" ng-if="isData"><div style="overflow-x: auto;"><table  ng-table="tableParams" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.status}}</td></tr></table></div></div></div>'),
 //<label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url">
 
 
@@ -11131,4 +11193,4 @@ Showdown.converter = function(converter_options) {
 
             $templateCache.put("partials/sample.html", '<adf-dashboard name="{{name}}" structure="4-8" adf-model="model">')
     }
-]);
+])
