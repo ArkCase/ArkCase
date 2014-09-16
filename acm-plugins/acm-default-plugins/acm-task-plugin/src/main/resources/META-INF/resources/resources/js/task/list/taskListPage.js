@@ -19,15 +19,11 @@ TaskList.Page = {
                     Task.setTaskId(t.taskId);
                 }
 
-//                html += "<li class='list-group-item'><a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
-//                    + Acm.getDateFromDatetime(t.dueDate) + "</small><strong class='block'>"
-//                    + t.title + "</strong></small></a><input type='hidden' value='" + t.taskId + "' /> </li>";
-
                 html += "<li class='list-group-item'><a href='#' class='thumb-sm pull-left m-r-sm'> <img src='"
                     + App.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a1.png" + "' class='img-circle'>"
                     + "</a>"
                     + "<a href='#' class='clear text-ellipsis'>"
-                    + "<strong class='block'>"
+                    + "<strong class='block' id='titleName" + t.taskId +"'>"
                     + t.title + "</strong>"
                     + "<small>"
                     + "Created Date: " + Acm.getDateFromDatetime(t.createDate)
@@ -58,5 +54,13 @@ TaskList.Page = {
         }
         
         TaskList.Object.setSignatureList(html);
+    }
+    
+    /**
+     * Change the title text of the active task of the tasks list view
+     */
+    ,updateActiveTaskTitle : function(taskId, title) {
+    	var titleSel = $("#titleName" + taskId);
+    	titleSel.text(title);
     }
 };
