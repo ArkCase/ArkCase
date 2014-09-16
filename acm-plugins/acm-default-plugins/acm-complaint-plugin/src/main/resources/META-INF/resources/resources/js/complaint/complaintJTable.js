@@ -122,12 +122,18 @@ Complaint.JTable = {
                     var record = Acm.urlToJson(postData);
                     var c = Complaint.getComplaint();
                     var rc = {"Result": "OK", "Record": {}};
-                    rc.Record.id = c.originator.id;    // (record.id) is empty, do not assign;
-                    rc.Record.title = record.title;
-                    rc.Record.givenName = record.givenName;
-                    rc.Record.familyName = record.familyName;
-                    rc.Record.type = record.type;
-                    rc.Record.description = record.description;
+                    if (c) {
+                        var originatorId = 0;
+                        if (c.originator && c.originator.id) {
+                            originatorId = c.originator.id;
+                        }
+                        rc.Record.id = originatorId;    // (record.id) is empty, do not assign;
+                        rc.Record.title = record.title;
+                        rc.Record.givenName = record.givenName;
+                        rc.Record.familyName = record.familyName;
+                        rc.Record.type = record.type;
+                        rc.Record.description = record.description;
+                    }
                     return rc;
                 }
             }
@@ -177,12 +183,15 @@ Complaint.JTable = {
                 // var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                 var record = data.record;
                 var c = Complaint.getComplaint();
+                if (!c.originator) {
+                    c.originator = {id: 0};
+                }
                 c.originator.title = record.title;
                 c.originator.givenName = record.givenName;
                 c.originator.familyName = record.familyName;
                 c.originator.type = record.type;
                 c.originator.description = record.description;
-                //$s.jtable('load');
+                Complaint.Service.saveComplaint(c);
             }
             ,formCreated: function (event, data) {
                 //to be used for typeahead in future

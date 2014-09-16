@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.armedia.acm.ecms.casefile.dao.CaseFileDao;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -50,6 +51,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private AuthenticationTokenService authenticationTokenService;
 	private UserDao userDao;
 	private ComplaintDao complaintDao;
+	private CaseFileDao caseFileDao;
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
@@ -198,6 +200,20 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	 */
 	public void setComplaintDao(ComplaintDao complaintDao) {
 		this.complaintDao = complaintDao;
+	}
+
+	/**
+	 * @return the caseFileDao
+	 */
+	public CaseFileDao getCaseFileDao() {
+		return caseFileDao;
+	}
+
+	/**
+	 * @param caseFileDao the caseFileDao to set
+	 */
+	public void setCaseFileDao(CaseFileDao caseFileDao) {
+		this.caseFileDao = caseFileDao;
 	}
 
 	public SaveComplaintTransaction getSaveComplaintTransaction()
