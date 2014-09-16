@@ -109,13 +109,12 @@ Complaint.Event = {
     }
     ,onClickSpanAddDocument: function(e) {
         var report = Complaint.Object.getSelectReport();
-        var token = Complaint.Object.setToken();
         var c = Complaint.getComplaint();
 
         var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()[report] : '';
-        if (url != '') {
-        	url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
-        	this._showPopup(url, "", 810, $(window).height() - 30);        	
+        if (url != null && url != '') {
+        	url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
+        	this._showPopup(url, "", 860, $(window).height() - 30);        	
         }
     }
 

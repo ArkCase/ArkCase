@@ -9,12 +9,31 @@ package com.armedia.acm.forms.roi.model;
  */
 public class ReportDetails {
 
+	private String type;
 	private Long complaintId;
 	private String complaintNumber;
 	private String complaintTitle;
 	private String complaintPriority;
+	private Long caseId;
+	private String caseNumber;
+	private String caseTitle;
 	private String summary;
 	
+	
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	/**
 	 * @return the complaintId
 	 */
@@ -71,6 +90,48 @@ public class ReportDetails {
 		this.complaintPriority = complaintPriority;
 	}
 	
+	/**
+	 * @return the caseId
+	 */
+	public Long getCaseId() {
+		return caseId;
+	}
+
+	/**
+	 * @param caseId the caseId to set
+	 */
+	public void setCaseId(Long caseId) {
+		this.caseId = caseId;
+	}
+
+	/**
+	 * @return the caseNumber
+	 */
+	public String getCaseNumber() {
+		return caseNumber;
+	}
+
+	/**
+	 * @param caseNumber the caseNumber to set
+	 */
+	public void setCaseNumber(String caseNumber) {
+		this.caseNumber = caseNumber;
+	}
+
+	/**
+	 * @return the caseTitle
+	 */
+	public String getCaseTitle() {
+		return caseTitle;
+	}
+
+	/**
+	 * @param caseTitle the caseTitle to set
+	 */
+	public void setCaseTitle(String caseTitle) {
+		this.caseTitle = caseTitle;
+	}
+
 	/**
 	 * @return the summary
 	 */
