@@ -101,9 +101,10 @@
 
 
 
-<aside id="email-content" class="bg-light lter">
+<aside class="bg-light lter">
     <section class="vbox">
-        <section class="scrollable">
+	    <h4 id="noTaskFoundMeassge" class="m-n">No task assigned to you was found.</h4>
+        <section id="taskDetailView" class="scrollable">
             <div class="wrapper dk  clearfix">
                 <div class="row">
                     <div class="col-xs-12">
@@ -204,7 +205,7 @@
 			                    <ul class="nav nav-pills pull-right">
 			                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
 			                    </ul>
-			                    </span> <a href="#" class="font-bold">Electronic Signatures</a> </div>
+			                    <a href="#" class="font-bold">Electronic Signatures</a> </div>
 			                <div class="panel-body max-200 no-padder">
 			                    <table class="table table-striped th-sortable table-hover">
 			                        <thead>
@@ -220,9 +221,6 @@
 			            </section>
 			        </div>
 			    </div>                
-                
-                
-            </div>
             </div>
         </section>
     </section>
