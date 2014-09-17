@@ -77,10 +77,12 @@ Complaint.Event = {
         var c = Complaint.getComplaint();
         c.complaintTitle = value;
         Complaint.Service.saveComplaint(c);
+
+        Complaint.Object.refreshComplaintTreeNode(c);
     }
     ,onSaveIncidentDate: function(value) {
         var c = Complaint.getComplaint();
-        c.created = Acm.xDateToDatetime(value);
+        c.incidentDate = Acm.xDateToDatetime(value);
         Complaint.Service.saveComplaint(c);
     }
     ,onSavePriority: function(value) {
@@ -90,13 +92,13 @@ Complaint.Event = {
     }
     ,onSaveAssigned: function(value) {
         var c = Complaint.getComplaint();
-        c.assignee = value;
-        Complaint.Service.saveComplaint(c);
+        //c.assignee = value;                 //fix meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+        //Complaint.Service.saveComplaint(c);
     }
     ,onSaveComplaintType: function(value) {
         var c = Complaint.getComplaint();
-        c.complaintType = value;
-        Complaint.Service.saveComplaint(c);
+        //c.complaintType = value;            //fix meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+        //Complaint.Service.saveComplaint(c);
     }
     ,onClickBtnEditDetails: function(e) {
         Complaint.Object.editDivDetails();
