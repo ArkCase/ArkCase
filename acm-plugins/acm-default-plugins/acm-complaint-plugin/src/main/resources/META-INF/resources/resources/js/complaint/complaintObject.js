@@ -232,7 +232,7 @@ Complaint.Object = {
         this.setValueLnkTitle(c.complaintTitle);
         //this.setTextH4TitleHeader(" (" + c.complaintNumber + ")");
         this.setValueLnkComplaintNum(c.complaintNumber);
-        this.setValueLnkIncident(Acm.getDateFromDatetime(c.created));
+        this.setValueLnkIncident(Acm.getDateFromDatetime(c.incidentDate));
         this.setValueLnkPriority(c.priority);
         this.setValueLnkAssigned(c.assignee);
         this.setValueLnkComplaintType(c.complaintType);
@@ -408,6 +408,23 @@ Complaint.Object = {
         }
         return parts;
     }
+    ,refreshComplaintTreeNode: function(c) {
+        if (!c) {
+            c = Complaint.getComplaint();
+        }
+        if (c && c.complaintId) {
+            var node = this.$tree.fancytree("getTree").getNodeByKey(this._getComplaintKey(c.complaintId));
+            if (node) {
+                node.setTitle(Acm.goodValue(c.complaintTitle));
+            }
+        }
+    }
+    ,_getComplaintKey: function(complaintId) {
+        var treeInfo = Complaint.Object.getTreeInfo();
+        var start = treeInfo.start;
+        var pageId = start.toString();
+        return pageId + "." + complaintId;
+    }
     ,refreshTree: function(key) {
         this.tree.reload().done(function(){
             if (Acm.isNotEmpty(key)) {
@@ -428,7 +445,7 @@ Complaint.Object = {
             }
             ,dblclick: function(event, data) {
                 var node = data.node;
-                alert("dblclick:(" + node.key + "," + node.title + ")");
+                //alert("dblclick:(" + node.key + "," + node.title + ")");
                 //node.setExpanded();
                 //toggleExpanded();
             }
