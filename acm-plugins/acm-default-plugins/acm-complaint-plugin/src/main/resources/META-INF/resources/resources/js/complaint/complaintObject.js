@@ -69,7 +69,7 @@ Complaint.Object = {
         Complaint.JTable.createJTableDocuments(this.$divDocuments);
         this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
 		this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
-        Complaint.Page.fillReportSelection();
+        //Complaint.Page.fillReportSelection();
 
         this.$divTasks          = $("#divTasks");
         Complaint.JTable.createJTableTasks(this.$divTasks);
@@ -83,6 +83,21 @@ Complaint.Object = {
         formUrls["roi"] = $('#roiFormUrl').val();
         this.setFormUrls(formUrls);
     }
+
+    ,getUrlFileUpload: function() {
+        return App.getContextPath() + ComplaintList.Service.API_UPLOAD_COMPLAINT_FILE;
+    }
+    ,getFormDataFileUpload: function() {
+        var fd = [{}];
+        fd[0].name = "complaintId";
+        fd[0].value = Complaint.getComplaintId();
+        return fd;
+    }
+    ,onSuccessFileUpload: function() {
+        ComplaintList.Object.removeUploadFileArea();
+        ComplaintList.Event.doClickLnkListItem();
+    }
+
 
     ,_token: ""
     ,getToken: function() {
@@ -659,7 +674,5 @@ Complaint.Object = {
     }
 
 };
-
-
 
 
