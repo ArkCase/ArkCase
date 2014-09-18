@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.armedia.acm.ecms.casefile.dao.CaseFileDao;
+import com.armedia.acm.ecms.casefile.model.CaseFile;
 import com.armedia.acm.forms.roi.model.ROIForm;
 import com.armedia.acm.forms.roi.model.ReportInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
@@ -28,6 +30,7 @@ public class ROIService extends FrevvoFormAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(ROIService.class);
 	private ComplaintDao complaintDao;
+	private CaseFileDao caseFileDao;
 	
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#init()
@@ -61,6 +64,11 @@ public class ROIService extends FrevvoFormAbstractService {
 	public boolean save(String xml,
 			MultiValueMap<String, MultipartFile> attachments) throws Exception {
 		
+		String ecmFolderId = null;
+		String parentObjectType = null;
+		Long parentObjectId = null;
+		String parentObjectName = null;
+		
 		ROIForm roiForm = (ROIForm) convertFromXMLToObject(xml, ROIForm.class);
 		
 		if (roiForm == null) {
@@ -68,14 +76,40 @@ public class ROIService extends FrevvoFormAbstractService {
 			return false;
 		}
 		
-		Complaint complaint = complaintDao.find(roiForm.getReportDetails().getComplaintId());
-		
-		if (complaint == null) {
-			LOG.warn("Cannot find complaint by given complaintId=" + roiForm.getReportDetails().getComplaintId());
+		if (roiForm.getReportDetails() == null || roiForm.getReportDetails().getType() == null) {
+			LOG.warn("Cannot read type of the ROI form. Should be 'complaint' or 'case'.");
 			return false;
 		}
 		
-		saveAttachments(attachments, complaint.getEcmFolderId(), FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), complaint.getComplaintNumber());
+		String type = roiForm.getReportDetails().getType();
+		
+		if ("complaint".equals(type)){
+			Complaint complaint = complaintDao.find(roiForm.getReportDetails().getComplaintId());
+			
+			if (complaint == null) {
+				LOG.warn("Cannot find complaint by given complaintId=" + roiForm.getReportDetails().getComplaintId());
+				return false;
+			}
+			
+			ecmFolderId = complaint.getEcmFolderId();
+			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
+			parentObjectId = complaint.getComplaintId();
+			parentObjectName = complaint.getComplaintNumber();			
+		}else if ("case".equals(type)){
+			CaseFile caseFile = caseFileDao.find(roiForm.getReportDetails().getCaseId());
+			
+			if (caseFile == null) {
+				LOG.warn("Cannot find case by given caseId=" + roiForm.getReportDetails().getCaseId());
+				return false;
+			}
+			
+			ecmFolderId = caseFile.getEcmFolderId();
+			parentObjectType = "CASE";
+			parentObjectId = caseFile.getId();
+			parentObjectName = caseFile.getCaseNumber();
+		}
+			
+		saveAttachments(attachments, ecmFolderId, parentObjectType, parentObjectId, parentObjectName);
 		
 		return true;
 	}
@@ -114,6 +148,20 @@ public class ROIService extends FrevvoFormAbstractService {
 	 */
 	public void setComplaintDao(ComplaintDao complaintDao) {
 		this.complaintDao = complaintDao;
+	}
+
+	/**
+	 * @return the caseFileDao
+	 */
+	public CaseFileDao getCaseFileDao() {
+		return caseFileDao;
+	}
+
+	/**
+	 * @param caseFileDao the caseFileDao to set
+	 */
+	public void setCaseFileDao(CaseFileDao caseFileDao) {
+		this.caseFileDao = caseFileDao;
 	}
 
 }
