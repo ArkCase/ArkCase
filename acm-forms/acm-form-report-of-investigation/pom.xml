@@ -25,6 +25,13 @@
             <artifactId>acm-complaint-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        
+        <!-- ecms demo -->
+        <dependency>
+            <groupId>com.armedia.acm.opm-ecms-demo</groupId>
+            <artifactId>ecms-plugin-fis-case-file</artifactId>
+            <version>${opm-ecms-demo.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>

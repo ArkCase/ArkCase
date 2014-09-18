@@ -1,12 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+       
+ 
+     <context:property-placeholder
+            properties-ref="_lawEnforcementAppProperties"
+            ignore-unresolvable="true"
+            local-override="false"
+            order="18372"/>
+
+    <bean id="_lawEnforcementAppProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/lawEnforcementApp.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="create.complaint.button.text">Complaint</prop>
+                <prop key="complaint.navigator.tab.text">Complaints</prop>
+                <prop key="complaint.list.page.title">Complaints | ACM | Armedia Case Management</prop>
+                <prop key="complaint.list.page.short.text">Complaints</prop>
+                <prop key="complaint.list.page.long.text">Complaints</prop>
+                <prop key="complaint.wizard.page.title">Complaint | ACM | Armedia Case Management</prop>
+                <prop key="complaint.wizard.page.short.text">New Complaint</prop>
+                <prop key="complaint.wizard.page.long.text">New Complaint</prop>
+            </props>
+        </property>
+    </bean>  
+       
+     <bean id="_complaintPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="${complaint.list.page.title}"/>
+        <property name="descShort" value="${complaint.list.page.short.text}"/>
+        <property name="descLong" value="${complaint.list.page.long.text}"/>
+    </bean>
+    
+    <bean id="_complaintListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="${complaint.list.page.title}"/>
+        <property name="descShort" value="${complaint.list.page.short.text}"/>
+        <property name="descLong" value="${complaint.list.page.long.text}"/>
+    </bean>
+    
+    <bean id="_complaintWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="${complaint.wizard.page.title}"/>
+        <property name="descShort" value="${complaint.wizard.page.short.text}"/>
+        <property name="descLong" value="${complaint.wizard.page.long.text}"/>
+    </bean>
        
     <bean id="complaintUiController" class="com.armedia.acm.plugins.complaint.web.ComplaintUiController">
-        <property name="pageDescriptor" ref="complaintPageDescriptor"/>
-        <property name="pageDescriptorWizard" ref="complaintWizardPageDescriptor"/>
-        <property name="pageDescriptorList" ref="complaintListPageDescriptor"/>
+        <property name="pageDescriptor" ref="_complaintPageDescriptor"/>
+        <property name="pageDescriptorWizard" ref="_complaintWizardPageDescriptor"/>
+        <property name="pageDescriptorList" ref="_complaintListPageDescriptor"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
 		<property name="formUrl" ref="formResource" />		
     </bean>
