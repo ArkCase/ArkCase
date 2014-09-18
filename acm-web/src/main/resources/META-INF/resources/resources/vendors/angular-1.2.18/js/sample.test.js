@@ -4766,6 +4766,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             title: "News",
             description: "Displays a RSS/Atom feed",
             templateUrl: "scripts/widgets/news/news.html",
+            reload: !0,
             controller: "newsCtrl",
             resolve: {
                 feed: function(newsService, config) {
@@ -4951,7 +4952,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             })
         })
     }
-]), angular.module("sample.widgets.weather", ["adf.provider"]).value("weatherServiceUrl", "http://api.openweathermap.org/data/2.5/weather?units=metric&callback=JSON_CALLBACK&q=").config(["dashboardProvider",
+]), angular.module("sample.widgets.weather", ["adf.provider"]).value("weatherServiceUrl",
+    "http://api.openweathermap.org/data/2.5/weather?units=metric&callback=JSON_CALLBACK&q=").config(["dashboardProvider",
     function(dashboardProvider) {
         dashboardProvider.widget("weather", {
             title: "Weather",
@@ -4960,7 +4962,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             controller: "weatherCtrl",
             reload: !0,
             resolve: {
-                data: function(weatcherService, config) {
+                weather: function(weatcherService, config) {
                     return config.location ? weatcherService.get(config.location) : void 0
                 }
             },
@@ -4975,19 +4977,60 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             get: function(location) {
                 var deferred = $q.defer(),
                     url = weatherServiceUrl + location;
+                var weather = { location: {}, temp: {}, clouds: null };
                 return $http.jsonp(url).success(function(data) {
-                    data && 200 === data.cod ? deferred.resolve(data) : deferred.reject()
-                }).error(function() {
+                    //data && 200 === data.cod ? deferred.resolve(data) : deferred.reject()
+                    if (data) {
+                        if (data.main) {
+                            weather.temp.current = data.main.temp*9/5 + 32;
+                            weather.temp.min = data.main.temp_min*9/5 + 32;
+                            weather.temp.max = data.main.temp_max*9/5 + 32;
+                            weather.location.city = data.name;
+                            weather.location.country = data.sys.country;
+                        }
+                        weather.clouds = data.clouds ? data.clouds.all : undefined;
+                    }
+                    data && 200 === data.cod ? deferred.resolve(weather) : deferred.reject()
+            }).error(function() {
                     deferred.reject()
                 }), deferred.promise
             }
         }
     }
-]).controller("weatherCtrl", ["$scope", "data",
-    function($scope, data) {
-        $scope.data = data
+]).filter('temp', function($filter) {
+        return function(input, precision) {
+            if (!precision) {
+                precision = 1;
+            }
+            var numberFilter = $filter('number');
+            return numberFilter(input, precision) + '\u00B0F';
+        };
+}).controller("weatherCtrl", ["$scope", "weather",
+    function($scope, weather) {
+        $scope.weather = weather
     }
-]), angular.module("sample.widgets.linklist", ["adf.provider"]).config(["dashboardProvider",
+]).directive('weatherIcon', function() {
+        return {
+            restrict: 'E', replace: true,
+            scope: {
+                cloudiness: '@'
+            },
+            controller: function ($scope) {
+                $scope.imgurl = function () {
+                    var baseUrl = 'https://ssl.gstatic.com/onebox/weather/128/';
+
+                    if ($scope.cloudiness < 20) {
+                        return baseUrl + 'sunny.png';
+                    } else if ($scope.cloudiness < 90) {
+                        return baseUrl + 'partly_cloudy.png';
+                    } else {
+                        return baseUrl + 'cloudy.png';
+                    }
+                };
+            },
+            template: '<div style="float:left"><img ng-src="{{ imgurl() }}"></div>'
+        };
+    }), angular.module("sample.widgets.linklist", ["adf.provider"]).config(["dashboardProvider",
     function(dashboardProvider) {
         dashboardProvider.widget("linklist", {
             title: "Links",
@@ -11189,7 +11232,14 @@ Showdown.converter = function(converter_options) {
             $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="showChart==false"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">Currently, there are no outstanding tasks for any user</p></div><div ng-if="showChart"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
 
             $templateCache.put("scripts/widgets/weather/edit.html", '<form role="form"><div class="form-group"><label for="location">Location</label><input type="location" class="form-control" id="location" ng-model="config.location" placeholder="Enter location"></div></form>'),
-            $templateCache.put("scripts/widgets/weather/weather.html", '<div class="text-center"><div class="alert alert-info" ng-if="!data"><p style="text-align:center;">Please insert a location in the widget configuration</div><div class="weather" ng-if="data"><h4>{{data.name}} ({{data.sys.country}})</h4><dl><dt>Temprature:</dt><dd>{{data.main.temp | number:2}}</dd></dl></div></div>'),
+            $templateCache.put("scripts/widgets/weather/weather.html", '<div class="text-center"><div class="alert alert-info" ng-if="!weather"><p style="text-align:center;">Please insert a location in the widget configuration</div>' +
+                '<div class="weather" ng-if="weather">' +
+                    '<h4>{{weather.location.city}} ({{weather.location.country}})</h4>' +
+                    '<weather-icon cloudiness="{{ weather.clouds }}"></weather-icon>' +
+                 //   '<dl><dt>Temprature:</dt><dd>{{weather.main.temp | number:2}}</dd></dl>' +
+                    '<h3>Current: {{ weather.temp.current | temp:2 }}</h3>' + //<h3>Current: {{ weather.temp.current | temp:2 }} F</h3>
+                    'min: {{ weather.temp.min }}, max: {{ weather.temp.max }}'+
+                '</div></div>'),
 
             $templateCache.put("partials/sample.html", '<adf-dashboard name="{{name}}" structure="4-8" adf-model="model">')
     }

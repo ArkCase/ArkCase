@@ -187,6 +187,26 @@ var Acm = Acm || {
 //            + "-" + this._padZero(day)
 //            ;
     }
+    ,getCurrentDayInternal: function() {
+        var d = new Date();
+        var month = d.getMonth()+1;
+        var day = d.getDate();
+        var year = d.getFullYear();
+        var hour = d.getHours();
+        var minute = d.getMinutes();
+        var second = d.getSeconds();
+        var ms = d.getMilliseconds();
+        return year
+            + "-" + this._padZero(month)
+            + "-" + this._padZero(day)
+            + "T" + this._padZero(hour)
+            + ":" + this._padZero(minute)
+            + ":" + this._padZero(second)
+            + "." + this._padZero(ms)
+            + "+0000"
+            ;
+    }
+
     //parameter d from x-editable date format, both getDate() and getMonth() are zero based
     ,xDateToDatetime: function(d) {
         if (null == d) {

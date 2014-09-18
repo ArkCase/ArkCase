@@ -21,6 +21,10 @@ AcmEx.Object = {
         $s.destroy();
         return aHtml;
     }
+    ,cancelSummerNote: function($s) {
+        $s.summernote({focus: false});
+        $s.destroy();
+    }
 
     //
     // JTable functions
