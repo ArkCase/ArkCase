@@ -110,15 +110,17 @@ Complaint.Event = {
         Complaint.Service.saveComplaint(c);
     }
     ,onClickSpanAddDocument: function(e) {
-        var report = Complaint.Object.getSelectReport();
-        var token = Complaint.Object.setToken();
-        var c = Complaint.getComplaint();
+//        var report = Complaint.Object.getSelectReport();
+//        var token = Complaint.Object.setToken();
+//        var c = Complaint.getComplaint();
+//
+//        var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()[report] : '';
+//        if (url != '') {
+//        	url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
+//        	this._showPopup(url, "", 810, $(window).height() - 30);
+//        }
 
-        var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()[report] : '';
-        if (url != '') {
-        	url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
-        	this._showPopup(url, "", 810, $(window).height() - 30);        	
-        }
+        alert("upload");
     }
 
     ,onClickBtnTaskAssign : function(e) {

@@ -1559,49 +1559,44 @@ Complaint.JTable = {
                                 return url;
                             }
                             ,function(data) {
-                                var jtData = null;
-                                var err = "Invalid search data";
-                                if (data) {
-                                    if (Acm.isNotEmpty(data.responseHeader)) {
-                                        var responseHeader = data.responseHeader;
-                                        if (Acm.isNotEmpty(responseHeader.status)) {
-                                            if (0 == responseHeader.status) {
-                                                var response = data.response;
-                                                //response.start should match to jtParams.jtStartIndex
-                                                //response.docs.length should be <= jtParams.jtPageSize
+                                var rc = {jtData: null, jtError: "Invalid task data"};
+                                if (data && data.response && data.responseHeader && Acm.isNotEmpty(data.responseHeader.status)) {
+                                    var responseHeader = data.responseHeader;
+                                    if (0 == responseHeader.status) {
+                                        //response.start should match to jtParams.jtStartIndex
+                                        //response.docs.length should be <= jtParams.jtPageSize
 
-                                                jtData = AcmEx.Object.jTableGetEmptyRecords();
-                                                for (var i = 0; i < response.docs.length; i++) {
-                                                    var Record = {};
-                                                    Record.id = response.docs[i].object_id_s;
-                                                    Record.title = Acm.goodValue(response.docs[i].name); //title_t ?
-                                                    Record.created = Acm.getDateFromDatetime(response.docs[i].create_dt);
-                                                    Record.priority = "[priority]";
-                                                    Record.dueDate = "[due]";
-                                                    Record.status = Acm.goodValue(response.docs[i].status_s);
-                                                    Record.assignee = "[assignee]";
-                                                    jtData.Records.push(Record);
+                                        rc.jtData = AcmEx.Object.jTableGetEmptyRecords();
+                                        var response = data.response;
+                                        for (var i = 0; i < response.docs.length; i++) {
+                                            var Record = {};
+                                            Record.id = response.docs[i].object_id_s;
+                                            Record.title = Acm.goodValue(response.docs[i].name); //title_t ?
+                                            Record.created = Acm.getDateFromDatetime(response.docs[i].create_dt);
+                                            Record.priority = "[priority]";
+                                            Record.dueDate = "[due]";
+                                            Record.status = Acm.goodValue(response.docs[i].status_s);
+                                            Record.assignee = "[assignee]";
+                                            rc.jtData.Records.push(Record);
 
-                                                }
-                                                jtData.TotalRecordCount = response.numFound;
+                                        }
+                                        rc.jtData.TotalRecordCount = Acm.goodValue(response.numFound, 0);
+                                        rc.jtError = null;
 
-
-                                            } else {
-                                                if (Acm.isNotEmpty(data.error)) {
-                                                    err = data.error.msg + "(" + data.error.code + ")";
-                                                }
-                                            }
+                                    } else {
+                                        if (Acm.isNotEmpty(data.error)) {
+                                            rc.jtError = data.error.msg + "(" + data.error.code + ")";
                                         }
                                     }
                                 }
 
-                                return {jtData: jtData, jtError: err};
+                                return rc;
                             }
                         );
                     }
 
                     ,createAction: function(postData, jtParams) {
-                        return AcmEx.Object.jTableGetEmptyRecords();
+                        return AcmEx.Object.jTableGetEmptyRecord();
                     }
                 }
 
