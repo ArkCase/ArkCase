@@ -17,6 +17,10 @@ TaskList.Object = {
             TaskList.setSingleObject(false);
         }
 
+        this.$noTaskFoundMeassge = $("#noTaskFoundMeassge");
+        this.showObject(this.$noTaskFoundMeassge, false);
+        this.$taskDetailView	 = $("#taskDetailView");
+        
         this.$ulTasks           = $("#ulTasks");
         this.$asideTasks        = this.$ulTasks.closest("aside");
 
@@ -93,6 +97,12 @@ TaskList.Object = {
         this.$lnkStatus.editable('disable');
         
         this.$linkDetails		= $("#details");
+        this.$btnEditDetails    = $("#detailEdit");
+        this.$btnCancelDetails    = $("#detailCancel");
+        this.$btnSaveDetails    = $("#detailSave");
+        this.$btnEditDetails.on("click", function(e) {TaskList.Event.onClickBtnEditDetails(e);});
+        this.$btnCancelDetails.on("click", function(e) {TaskList.Event.onClickBtnCancelDetails(e);});
+        this.$btnSaveDetails.on("click", function(e) {TaskList.Event.onClickBtnSaveDetails(e);});
         
         this.$listSignature     = $("#signatureList");
         
@@ -107,6 +117,10 @@ TaskList.Object = {
 
     ,showAsideTasks: function(show) {
         Acm.Object.show(this.$asideTasks, show);
+    }
+    
+    ,showObject : function(obj, show) {
+        Acm.Object.show(obj, show);    	
     }
 
     ,setSignatureList: function(val) {
@@ -261,7 +275,6 @@ TaskList.Object = {
     }
     ,setValueDetails : function(details) {
     	if ( details ) {
-            //this.$linkDetails.editable("setValue", details, false);    		
     		Acm.Object.setHtml(this.$linkDetails, details);   		
     	}
     	else {
@@ -278,6 +291,16 @@ TaskList.Object = {
         this.setValueTaskOwner(t.owner);
         this.setValueAssignedStatus(t.assignee);
         this.setValueDetails(t.details);
+    }
+
+    ,editDivDetails: function() {
+        AcmEx.Object.editSummerNote(this.$linkDetails);
+    }
+    ,cancelEditDivDetails: function() {
+        AcmEx.Object.cancelSummerNote(this.$linkDetails);
+    }
+    ,saveDivDetails: function() {
+        return AcmEx.Object.saveSummerNote(this.$linkDetails);
     }
 
 //============= Old Stuff ==========================

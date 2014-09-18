@@ -101,9 +101,10 @@
 
 
 
-<aside id="email-content" class="bg-light lter">
+<aside class="bg-light lter">
     <section class="vbox">
-        <section class="scrollable">
+	    <h4 id="noTaskFoundMeassge" class="m-n">No task assigned to you was found.</h4>
+        <section id="taskDetailView" class="scrollable">
             <div class="wrapper dk  clearfix">
                 <div class="row">
                     <div class="col-xs-12">
@@ -178,8 +179,9 @@
                                 <ul class="nav nav-pills pull-right">
                                     <li>
                                         <div class="btn-group padder-v2">
-                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>
-                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>
+                                            <button class="btn btn-default btn-sm" id="detailEdit" data-toggle="tooltip" data-title="Edit" ><i class="fa fa-pencil"></i></button>
+                                           	<button class="btn btn-default btn-sm" id="detailCancel" data-toggle="tooltip" data-title="Cancel" ><i class="fa fa-eject"></i></button>
+                                            <button class="btn btn-default btn-sm" id="detailSave" data-toggle="tooltip" data-title="Save" ><i class="fa fa-save"></i></button>
                                             <ul class="dropdown-menu pull-right">
                                                 <li><a href="#">Other menu items</a></li>
                                             </ul>
@@ -203,7 +205,7 @@
 			                    <ul class="nav nav-pills pull-right">
 			                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
 			                    </ul>
-			                    </span> <a href="#" class="font-bold">Electronic Signatures</a> </div>
+			                    <a href="#" class="font-bold">Electronic Signatures</a> </div>
 			                <div class="panel-body max-200 no-padder">
 			                    <table class="table table-striped th-sortable table-hover">
 			                        <thead>
@@ -219,9 +221,6 @@
 			            </section>
 			        </div>
 			    </div>                
-                
-                
-            </div>
             </div>
         </section>
     </section>
