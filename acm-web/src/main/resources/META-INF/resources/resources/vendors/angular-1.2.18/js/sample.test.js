@@ -4766,6 +4766,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             title: "News",
             description: "Displays a RSS/Atom feed",
             templateUrl: "scripts/widgets/news/news.html",
+            reload: !0,
             controller: "newsCtrl",
             resolve: {
                 feed: function(newsService, config) {
@@ -4981,9 +4982,9 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     //data && 200 === data.cod ? deferred.resolve(data) : deferred.reject()
                     if (data) {
                         if (data.main) {
-                            weather.temp.current = data.main.temp;
-                            weather.temp.min = data.main.temp_min;
-                            weather.temp.max = data.main.temp_max;
+                            weather.temp.current = data.main.temp*9/5 + 32;
+                            weather.temp.min = data.main.temp_min*9/5 + 32;
+                            weather.temp.max = data.main.temp_max*9/5 + 32;
                             weather.location.city = data.name;
                             weather.location.country = data.sys.country;
                         }
@@ -5002,13 +5003,13 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 precision = 1;
             }
             var numberFilter = $filter('number');
-            return numberFilter(input, precision) + '\u00B0C';
+            return numberFilter(input, precision) + '\u00B0F';
         };
 }).controller("weatherCtrl", ["$scope", "weather",
     function($scope, weather) {
         $scope.weather = weather
     }
-]).directive('weatherIcon', ['$scope', function($scope) {
+]).directive('weatherIcon', function() {
         return {
             restrict: 'E', replace: true,
             scope: {
@@ -5029,7 +5030,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             },
             template: '<div style="float:left"><img ng-src="{{ imgurl() }}"></div>'
         };
-    }]), angular.module("sample.widgets.linklist", ["adf.provider"]).config(["dashboardProvider",
+    }), angular.module("sample.widgets.linklist", ["adf.provider"]).config(["dashboardProvider",
     function(dashboardProvider) {
         dashboardProvider.widget("linklist", {
             title: "Links",
@@ -11236,7 +11237,7 @@ Showdown.converter = function(converter_options) {
                     '<h4>{{weather.location.city}} ({{weather.location.country}})</h4>' +
                     '<weather-icon cloudiness="{{ weather.clouds }}"></weather-icon>' +
                  //   '<dl><dt>Temprature:</dt><dd>{{weather.main.temp | number:2}}</dd></dl>' +
-                    '<h3>Current: {{ weather.temp.current | temp:2 }}</h3>' +
+                    '<h3>Current: {{ weather.temp.current | temp:2 }}</h3>' + //<h3>Current: {{ weather.temp.current | temp:2 }} F</h3>
                     'min: {{ weather.temp.min }}, max: {{ weather.temp.max }}'+
                 '</div></div>'),
 
