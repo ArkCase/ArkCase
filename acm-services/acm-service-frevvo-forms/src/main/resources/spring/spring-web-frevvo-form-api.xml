@@ -17,11 +17,11 @@
     <bean id="frevvoFormController" class="com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController">
 		<property name="properties" ref="acm-form-properties" />
 		<property name="authenticationTokenService" ref="authenticationTokenService" />
+		<property name="acmPluginManager" ref="acmPluginManager"/>
 		<property name="userDao" ref="userJpaDao" />
 		<property name="complaintDao" ref="acmComplaintDao" />
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="caseFileDao" ref="caseFileDao" />
 	</bean>
 
 </beans>
