@@ -29,6 +29,10 @@ public class ComplaintFactory
         
         Date dueDate = cal.getTime();        
         retval.setDueDate(dueDate);
+        retval.setComplaintType(formComplaint.getCategory());
+        retval.setTag(formComplaint.getComplaintTag());
+        retval.setFrequency(formComplaint.getFrequency());
+        retval.setLocation(formComplaint.getLocation());
         
         if ( formComplaint.getInitiator() != null )
         {
@@ -61,6 +65,8 @@ public class ComplaintFactory
     {
         pa.setPersonDescription(contact.getMainInformation().getDescription());
         pa.setPersonType(contact.getMainInformation().getType());
+        pa.setNotes(contact.getNotes());
+        
         p.setTitle(contact.getMainInformation().getTitle());
         p.setGivenName(contact.getMainInformation().getFirstName());
         p.setFamilyName(contact.getMainInformation().getLastName());
@@ -83,6 +89,11 @@ public class ComplaintFactory
         if ( contact.getCommunicationDevice() != null && ! contact.getCommunicationDevice().isEmpty() )
         {
             p.getContactMethods().addAll(contact.getCommunicationDevice());
+        }
+        
+         if ( contact.getMainInformation().getAnonimuos().equalsIgnoreCase("true") )
+        {
+            p.getSecurityTags().add("Anonymous");
         }
     }
     

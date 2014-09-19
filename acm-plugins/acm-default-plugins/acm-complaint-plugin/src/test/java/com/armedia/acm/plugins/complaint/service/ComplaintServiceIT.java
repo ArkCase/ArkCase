@@ -73,6 +73,10 @@ public class ComplaintServiceIT
         frevvoComplaint.setDate(now);
         frevvoComplaint.setPriority("High");
         frevvoComplaint.setComplaintTitle("complaint title");
+        frevvoComplaint.setCategory("Agricultural");
+        frevvoComplaint.setComplaintTag("No Tag");
+        frevvoComplaint.setFrequency("Ongoing");
+        frevvoComplaint.setLocation(" 1222 pennsylvania av");       
 
         Contact initiator = new Contact();
         frevvoComplaint.setInitiator(initiator);
