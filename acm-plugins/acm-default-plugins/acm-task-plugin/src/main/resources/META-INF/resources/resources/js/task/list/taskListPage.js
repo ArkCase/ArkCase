@@ -16,7 +16,7 @@ TaskList.Page = {
             for (var i = 0; i < len; i++) {
                 var t = arr[i];
                 if (0 == i) {
-                    Task.setTaskId(t.taskId);
+                    Task.setTaskId(t.object_id_s);
                 }
 
 //                html += "<li class='list-group-item'><a href='#' class='clear text-ellipsis'> <small class='pull-right'>"
@@ -28,14 +28,14 @@ TaskList.Page = {
                     + "</a>"
                     + "<a href='#' class='clear text-ellipsis'>"
                     + "<strong class='block'>"
-                    + t.title + "</strong>"
+                    + t.name + "</strong>"
                     + "<small>"
-                    + "Created Date: " + Acm.getDateFromDatetime(t.createDate)
+                    + "Created Date: " + Acm.getDateFromDatetime(t.create_dt)
                     + "</small></br>" 
                     + "<small>"
-                    + "Created By: " + t.owner + "</small>"
+                    + "Created By: " + t.owner_s + "</small>"
                     + "</a>"
-                    + "<input type='hidden' value='" + t.taskId + "' /> </li>";
+                    + "<input type='hidden' value='" + t.object_id_s + "' /> </li>";
             }
         }
 
@@ -54,7 +54,7 @@ TaskList.Page = {
             }
         }
         else {
-        	html += '<tr class="odd gradeA"><td>None</td></tr>';
+        	html += '<tr class="odd gradeA"><td>None</td><td>&nbsp;</td></tr>';
         }
         
         TaskList.Object.setSignatureList(html);

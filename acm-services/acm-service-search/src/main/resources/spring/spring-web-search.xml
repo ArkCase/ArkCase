@@ -14,6 +14,10 @@
     <bean id="SearchChildrenAPIController" class="com.armedia.acm.plugins.search.web.api.SearchChildrenAPIController">
         <property name="muleClient" ref="muleClient"/>
     </bean>
+    <bean id="searchObjectByTypeAPIController" class="com.armedia.acm.plugins.search.web.api.SearchObjectByTypeAPIController">
+        <property name="muleClient" ref="muleClient"/>
+        <property name="searchEventPublisher" ref="acmSearchEventPublisher" />
+    </bean>
 
     <bean id="searchDef-properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="file:${user.home}/.acm/searchDef.properties"/>

@@ -35,6 +35,7 @@
         <ehcache.version>2.6.9</ehcache.version>
         <fasterxml-jackson-core.version>2.4.0</fasterxml-jackson-core.version>
         <google-collections.version>1.0</google-collections.version>
+        <gson.version>1.7.1</gson.version>
         <h2.version>1.3.169</h2.version>
         <hibernate-validator.version>5.1.1.Final</hibernate-validator.version>
         <jackson-mapper-asl.version>1.9.13</jackson-mapper-asl.version>
@@ -810,6 +811,12 @@
                 <artifactId>jackson-annotations</artifactId>
                 <version>${fasterxml-jackson-core.version}</version>
             </dependency>
+            
+	        <dependency>
+	            <groupId>com.google.code.gson</groupId>
+	            <artifactId>gson</artifactId>
+	            <version>${gson.version}</version>
+	        </dependency>
 
             <!-- xml -->
             <dependency>

@@ -9,8 +9,7 @@ TaskList.Service = {
     initialize : function() {
     }
 
-    ,API_LIST_TASK             : "/api/latest/plugin/task/list/"
-    ,API_LIST_TASK             : "/api/latest/plugin/task/forUser/"
+    ,API_LIST_TASK             : "/api/latest/plugin/search/" + Task.getObjectType()
     ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/task/byId/"
     ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask/"
     ,API_SIGN_TASK         	   : "/api/latest/plugin/signature/confirm/"
@@ -18,13 +17,13 @@ TaskList.Service = {
 
 
     ,listTaskAll : function() {
-            Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK + "all"
+            Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK
                 ,TaskList.Callback.EVENT_LIST_RETRIEVED
             );
         }
 
    	,listTask : function(user) {
-        Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK + user
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK + "?assignee=" + user
             ,TaskList.Callback.EVENT_LIST_RETRIEVED
         );
     }

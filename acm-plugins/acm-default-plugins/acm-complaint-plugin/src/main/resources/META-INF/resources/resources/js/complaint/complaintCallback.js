@@ -16,25 +16,30 @@ Complaint.Callback = {
     ,EVENT_DETAIL_RETRIEVED		: "complaint-detail-retrieved"
     ,EVENT_COMPLAIN_SAVED		: "complaint-complaint-saved"
 
-    ,onListRetrieved : function(Callback, response) {
+    ,onListRetrieved : function(Callback, response) {   	
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve complaint list:" + response.errorMsg);
         } else {
+        	var responseData = response.response;
+        	
             var treeInfo = Complaint.Object.getTreeInfo();
             //todo: compare treeInfo with response, if not match do nothing (user click something else before result)
             //if (treeInfo.start != response start) {
             //  return;
             //}
-            treeInfo.total = 32;  //= response total
+            
+            
+            
+            treeInfo.total = responseData.numFound;  //= response total
 
-            var complaints = response;
+            var complaints = responseData.docs;
             var start = treeInfo.start;
             Complaint.cachePage.put(start, complaints);
 
             var key = treeInfo.initKey;
             if (null == key) {
                 if (0 < complaints.length) {
-                    var complaintId = complaints[0].complaintId;
+                    var complaintId = parseInt(complaints[0].object_id_s);
                     if (0 < complaintId) {
                         key = start + "." + complaintId;
                     }

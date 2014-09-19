@@ -448,7 +448,7 @@ public class Complaint implements Serializable, AcmObject
     @JsonIgnore
     public String getObjectType()
     {
-        return "Complaint";
+        return "COMPLAINT";
     }
 
     public List<PersonAssociation> getPersonAssociations() 

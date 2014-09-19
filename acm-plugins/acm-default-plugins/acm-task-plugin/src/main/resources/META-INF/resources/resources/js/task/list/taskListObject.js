@@ -60,7 +60,6 @@ TaskList.Object = {
 
     }
 
-
     ,showAsideTasks: function(show) {
         Acm.Object.show(this.$asideTasks, show);
     }
@@ -72,8 +71,8 @@ TaskList.Object = {
     ,getSignatureForm: function() {
         return this.$formSignature;
     }
-    ,getSignatureModal: function() {
-        return this.$modalSignConfirm;
+    ,hideSignatureModal: function() {
+        this.$modalSignConfirm.modal('hide');
     }
     ,getHtmlUlTasks: function() {
         return Acm.Object.getHtml(this.$ulTasks);
