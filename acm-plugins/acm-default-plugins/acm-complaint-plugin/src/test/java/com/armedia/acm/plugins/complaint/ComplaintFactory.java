@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,15 @@ public class ComplaintFactory
         complaint.setPriority("Expedite");
         complaint.setModified(new Date());
         complaint.setModifier("testModifier");
+        
+        Calendar  cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, 3);
+        
+        Date dueDate = cal.getTime();
+        complaint.setDueDate(dueDate);
+        
+        log.debug("the due date is set to: " + dueDate);
 
         complaint.setOriginator(new PersonAssociation());
         PersonAssociation pa = complaint.getOriginator();

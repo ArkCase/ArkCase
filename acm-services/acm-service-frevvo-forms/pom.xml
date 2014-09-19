@@ -31,6 +31,11 @@
             <artifactId>acm-complaint-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-forms</groupId>
+            <artifactId>acm-forms-roi</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
   	
 		 <!-- spring -->
         <dependency>

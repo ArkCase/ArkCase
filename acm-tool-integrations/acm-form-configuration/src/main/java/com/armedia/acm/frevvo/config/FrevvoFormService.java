@@ -24,7 +24,7 @@ public interface FrevvoFormService {
 
 	public Object init();
 	public Object get(String action);
-	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachemnts) throws Exception;
+	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception;
 	
 	public Map<String, Object> getProperties();
 	public void setProperties(Map<String, Object> properties);

@@ -42,6 +42,22 @@ public class Complaint {
 	private Contact initiator;
 	private List<Contact> people;
     private String cmisFolderId;
+    
+    @XmlElements({
+		@XmlElement(name="owners"),
+		@XmlElement(name="ownersItem")
+		
+	})
+    private List<Item> owners;
+    private List<String> ownersOptions;
+    
+    @XmlElements({
+		@XmlElement(name="followers"),
+		@XmlElement(name="followersItem")
+		
+	})
+    private List<Item> followers;
+    private List<String> followersOptions;
 
     /**
 	 * @return the complaintId
@@ -262,4 +278,61 @@ public class Complaint {
     {
         this.cmisFolderId = cmisFolderId;
     }
+
+	/**
+	 * @return the owners
+	 */
+	public List<Item> getOwners() {
+		return owners;
+	}
+
+	/**
+	 * @param owners the owners to set
+	 */
+	public void setOwners(List<Item> owners) {
+		this.owners = owners;
+	}
+
+	/**
+	 * @return the ownersOptions
+	 */
+	public List<String> getOwnersOptions() {
+		return ownersOptions;
+	}
+
+	/**
+	 * @param ownersOptions the ownersOptions to set
+	 */
+	public void setOwnersOptions(List<String> ownersOptions) {
+		this.ownersOptions = ownersOptions;
+	}
+
+	/**
+	 * @return the followers
+	 */
+	public List<Item> getFollowers() {
+		return followers;
+	}
+
+	/**
+	 * @param followers the followers to set
+	 */
+	public void setFollowers(List<Item> followers) {
+		this.followers = followers;
+	}
+
+	/**
+	 * @return the followersOptions
+	 */
+	public List<String> getFollowersOptions() {
+		return followersOptions;
+	}
+
+	/**
+	 * @param followersOptions the followersOptions to set
+	 */
+	public void setFollowersOptions(List<String> followersOptions) {
+		this.followersOptions = followersOptions;
+	}
+
 }

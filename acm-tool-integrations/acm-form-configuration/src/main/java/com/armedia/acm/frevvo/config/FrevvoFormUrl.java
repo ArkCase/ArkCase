@@ -90,6 +90,7 @@ public class FrevvoFormUrl implements FormUrl {
 		String applicationId = (String) properties.get(formName + ".application.id");
 		String type = (String) properties.get(formName + ".type");
 		String id = (String) properties.get(formName + ".id");
+		String mode = (String) properties.get(formName + ".mode");
 		String token = this.authenticationTokenService.getTokenForAuthentication(authentication);
 		String service = (String) properties.get(SERVICE);
 		
@@ -111,6 +112,10 @@ public class FrevvoFormUrl implements FormUrl {
 
 		if (id != null) {
 			uri = uri.replace("{id}", id);			
+		}
+		
+		if (mode != null) {
+			uri = uri.replace("{mode}", mode);			
 		}
 		
 		if (token != null) {

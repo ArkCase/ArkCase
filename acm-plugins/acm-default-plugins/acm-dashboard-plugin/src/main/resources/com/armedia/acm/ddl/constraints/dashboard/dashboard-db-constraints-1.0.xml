@@ -13,4 +13,22 @@
                              deferrable="true"
                              initiallyDeferred="true"/>
 </changeSet>
+
+    <changeSet id="02-widget-constraints" author="marst">
+        <addForeignKeyConstraint baseTableName="acm_widget_role"
+                                 baseColumnNames="cm_role_name"
+                                 constraintName="fk_widget_role_role_name"
+                                 referencedTableName="acm_role"
+                                 referencedColumnNames="cm_role_name"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+        <addForeignKeyConstraint baseTableName="acm_widget_role"
+                                 baseColumnNames="cm_widget_id"
+                                 constraintName="fk_widget_role_widget_id"
+                                 referencedTableName="acm_widget"
+                                 referencedColumnNames="cm_widget_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+
+    </changeSet>
 </databaseChangeLog>

@@ -1,15 +1,15 @@
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-create-complaint-table" author="dmiller">
         <createTable tableName="acm_complaint">
             <column name="cm_complaint_id" type="RAW(16)" defaultValueComputed="SYS_GUID()" >
                 <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_complaint"/>
+                    primaryKey="true"
+                    primaryKeyName="pk_complaint"/>
             </column>
             <column name="cm_complaint_status" type="VARCHAR(128)" defaultValue="DRAFT">
                 <constraints nullable="false"/>
@@ -94,9 +94,9 @@
         <createTable tableName="acm_complaint_type_lu">
             <column name="cm_id" type="NUMBER(32,0)">
                 <constraints
-                        nullable="false"
-                        primaryKey="true"
-                        primaryKeyName="pk_complaint_type"/>
+                    nullable="false"
+                    primaryKey="true"
+                    primaryKeyName="pk_complaint_type"/>
             </column>
             <column name="cm_value" type="VARCHAR(4000)">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_complaint_type"/>
@@ -124,9 +124,9 @@
         <createTable tableName="acm_complaint_priority_lu">
             <column name="cm_id" type="NUMBER(32,0)">
                 <constraints
-                        nullable="false"
-                        primaryKey="true"
-                        primaryKeyName="pk_complaint_priority"/>
+                    nullable="false"
+                    primaryKey="true"
+                    primaryKeyName="pk_complaint_priority"/>
             </column>
             <column name="cm_value" type="VARCHAR(4000)" >
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_priority_type"/>
@@ -275,7 +275,12 @@
             <column name="cm_complaint_modified"/>
         </createIndex>
     </changeSet>
-
+    
+    <changeSet id="11-insert-dueDate-in-complaint" author="tsedalu">
+        <addColumn tableName="acm_complaint"> 
+            <column name="cm_due_date" type="TIMESTAMP WITH TIME ZONE"/>
+        </addColumn>     
+    </changeSet>
 
 </databaseChangeLog>
 
