@@ -2,10 +2,14 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
+import com.armedia.acm.plugins.complaint.model.complaint.Item;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class ComplaintFactory
 {
@@ -17,6 +21,7 @@ public class ComplaintFactory
         retval.setIncidentDate(formComplaint.getDate());
         retval.setPriority(formComplaint.getPriority());
         retval.setComplaintTitle(formComplaint.getComplaintTitle());
+        retval.setApprovers(convertItemsToList(formComplaint.getOwners()));
         
         Calendar  cal = Calendar.getInstance();
         cal.setTime(formComplaint.getDate());
@@ -79,5 +84,19 @@ public class ComplaintFactory
         {
             p.getContactMethods().addAll(contact.getCommunicationDevice());
         }
+    }
+    
+    private List<String> convertItemsToList(List<Item> items){
+    	List<String> itemsString = new ArrayList<String>();
+    	
+    	if (items != null && items.size() > 0){
+    		for (int i = 0; i < items.size(); i++) {
+    			itemsString.add(items.get(i).getValue());
+    		}
+    	}else{
+    		return null;
+    	}
+    	
+    	return itemsString;
     }
 }

@@ -11238,7 +11238,7 @@ Showdown.converter = function(converter_options) {
                     '<weather-icon cloudiness="{{ weather.clouds }}"></weather-icon>' +
                  //   '<dl><dt>Temprature:</dt><dd>{{weather.main.temp | number:2}}</dd></dl>' +
                     '<h3>Current: {{ weather.temp.current | temp:2 }}</h3>' + //<h3>Current: {{ weather.temp.current | temp:2 }} F</h3>
-                    'min: {{ weather.temp.min }}, max: {{ weather.temp.max }}'+
+                    'min: {{ weather.temp.min | temp:2 }}, max: {{ weather.temp.max | temp:2 }}'+
                 '</div></div>'),
 
             $templateCache.put("partials/sample.html", '<adf-dashboard name="{{name}}" structure="4-8" adf-model="model">')

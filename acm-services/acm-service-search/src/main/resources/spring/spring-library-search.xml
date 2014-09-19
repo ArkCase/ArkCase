@@ -27,6 +27,8 @@
         </property>
     </bean>
 
+    <!-- event publishers -->
+    <bean id="acmSearchEventPublisher" class="com.armedia.acm.services.search.service.SearchEventPublisher"/>
     
     <bean id="searchPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
          <property name="pluginName" value="Search Plugin"/>
@@ -53,6 +55,11 @@
                     <property name="url" value="/api/{version}/plugin/search/children"/>
                     <property name="requiredPrivilege" ref="searchPrivilege"/>
                 </bean>
+                <bean id="objectTypeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/{objectType}"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
             </list>
         </property>
 
@@ -71,11 +78,12 @@
         </property>
     </bean>
 
+	<!-- services -->
     <bean id="taskToQuickSearchJsonConverter"
           class="com.armedia.acm.services.search.service.TaskToQuickSearchJsonConverter">
         <property name="dataAccessEntryService" ref="dataAccessEntryService"/>
     </bean>
-
+   
     <!-- event handlers -->
     <bean id="sendAdHocTaskCreateToSolrAction" class="com.armedia.acm.event.EventResponse">
         <property name="eventName" value="com.armedia.acm.app.task.create"/>
