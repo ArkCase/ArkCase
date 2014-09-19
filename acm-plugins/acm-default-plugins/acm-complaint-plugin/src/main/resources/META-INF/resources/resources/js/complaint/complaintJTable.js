@@ -1428,20 +1428,18 @@ Complaint.JTable = {
             ,paging: false
             ,actions: {
                 listAction: function(postData, jtParams) {
-                    var rc = {"Result": "OK", "Records": []};
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var c = Complaint.getComplaint();
-                    if (c) {
-                        if (Acm.isNotEmpty(c.childObjects)) {
-                            for (var i = 0; i < c.childObjects; i++) {
-                                var childObject = c.childObjects[i];
-                                var record = {};
-                                record.id = childObject.targetId;
-                                record.title = childObject.targetName;
-                                record.created = Acm.getDateFromDatetime(childObject.created);
-                                record.creator = childObject.creator;
-                                record.status = childObject.status;
-                                rc.Records.push(record);
-                            }
+                    if (c && c.childObjects) {
+                        for (var i = 0; i < c.childObjects; i++) {
+                            var childObject = c.childObjects[i];
+                            var record = {};
+                            record.id = Acm.goodValue(childObject.targetId, 0);
+                            record.title = Acm.goodValue(childObject.targetName);
+                            record.created = Acm.getDateFromDatetime(childObject.created);
+                            record.creator = Acm.goodValue(childObject.creator);
+                            record.status = Acm.goodValue(childObject.status);
+                            rc.Records.push(record);
                         }
                     }
                     return rc;
@@ -1462,7 +1460,7 @@ Complaint.JTable = {
                 }
                 ,updateAction: function(postData, jtParams) {
                     var record = Acm.urlToJson(postData);
-                    var rc = {"Result": "OK", "Record": {}};
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
                     //id,created,creator is readonly
                     //rc.Record.id = record.id;
                     //rc.Record.created = record.created;
@@ -1511,7 +1509,7 @@ Complaint.JTable = {
                 var c = Complaint.getComplaint();
                 if (c) {
                     if (c.childObjeccts) {
-                        if (0 < c.childObjects.length) {
+                        if (0 < c.childObjects.length && whichRow < c.childObjects.length) {
                             var childObject = c.childObjects[whichRow];
                             //id,created,creator is readonly
                             //childObject.Record.id = record.id;
@@ -1519,6 +1517,8 @@ Complaint.JTable = {
                             //childObject.Record.creator = record.creator;
                             childObject.Record.title = record.title;
                             childObject.Record.status = record.status;
+
+                            Complaint.Service.saveComplaint(c);
                         }
                     }
                 }
