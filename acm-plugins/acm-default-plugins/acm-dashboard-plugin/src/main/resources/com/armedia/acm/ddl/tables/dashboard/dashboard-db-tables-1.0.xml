@@ -25,5 +25,26 @@
 
     </changeSet>
 
+    <changeSet id="02-create-widget-tables" author="marst">
+        <createTable tableName="acm_widget">
+            <column name="cm_widget_id" type="NUMBER(32,0)"  >
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_widget"/>
+            </column>
+            <column name="cm_widget_name" type="VARCHAR(256)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="acm_widget_role">
+            <column name="cm_widget_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_role_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
 

@@ -67,9 +67,9 @@ Complaint.Object = {
 
         this.$divDocuments      = $("#divDocuments");
         Complaint.JTable.createJTableDocuments(this.$divDocuments);
-//        this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
-//        this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
-//        //Complaint.Page.fillReportSelection();
+        this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+		this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
+        //Complaint.Page.fillReportSelection();
 
         this.$divTasks          = $("#divTasks");
         Complaint.JTable.createJTableTasks(this.$divTasks);
@@ -78,7 +78,26 @@ Complaint.Object = {
 
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
+        
+        var formUrls = new Object();
+        formUrls["roi"] = $('#roiFormUrl').val();
+        this.setFormUrls(formUrls);
     }
+
+    ,getUrlFileUpload: function() {
+        return App.getContextPath() + ComplaintList.Service.API_UPLOAD_COMPLAINT_FILE;
+    }
+    ,getFormDataFileUpload: function() {
+        var fd = [{}];
+        fd[0].name = "complaintId";
+        fd[0].value = Complaint.getComplaintId();
+        return fd;
+    }
+    ,onSuccessFileUpload: function() {
+        ComplaintList.Object.removeUploadFileArea();
+        ComplaintList.Event.doClickLnkListItem();
+    }
+
 
     ,_token: ""
     ,getToken: function() {
@@ -86,6 +105,14 @@ Complaint.Object = {
     }
     ,setToken: function(token) {
         this._token = token;
+    }
+    
+    ,_formUrls: null
+    ,getFormUrls: function() {
+    	return this._formUrls;
+    }
+    ,setFormUrls: function(formUrls) {
+    	this._formUrls = formUrls;
     }
 
     ,beforeSpanAddDocument: function(html) {
@@ -220,7 +247,7 @@ Complaint.Object = {
         this.setValueLnkTitle(c.complaintTitle);
         //this.setTextH4TitleHeader(" (" + c.complaintNumber + ")");
         this.setValueLnkComplaintNum(c.complaintNumber);
-        this.setValueLnkIncident(Acm.getDateFromDatetime(c.created));
+        this.setValueLnkIncident(Acm.getDateFromDatetime(c.incidentDate));
         this.setValueLnkPriority(c.priority);
         this.setValueLnkAssigned(c.assignee);
         this.setValueLnkComplaintType(c.complaintType);
@@ -396,6 +423,23 @@ Complaint.Object = {
         }
         return parts;
     }
+    ,refreshComplaintTreeNode: function(c) {
+        if (!c) {
+            c = Complaint.getComplaint();
+        }
+        if (c && c.complaintId) {
+            var node = this.$tree.fancytree("getTree").getNodeByKey(this._getComplaintKey(c.complaintId));
+            if (node) {
+                node.setTitle(Acm.goodValue(c.complaintTitle));
+            }
+        }
+    }
+    ,_getComplaintKey: function(complaintId) {
+        var treeInfo = Complaint.Object.getTreeInfo();
+        var start = treeInfo.start;
+        var pageId = start.toString();
+        return pageId + "." + complaintId;
+    }
     ,refreshTree: function(key) {
         this.tree.reload().done(function(){
             if (Acm.isNotEmpty(key)) {
@@ -416,7 +460,7 @@ Complaint.Object = {
             }
             ,dblclick: function(event, data) {
                 var node = data.node;
-                alert("dblclick:(" + node.key + "," + node.title + ")");
+                //alert("dblclick:(" + node.key + "," + node.title + ")");
                 //node.setExpanded();
                 //toggleExpanded();
             }
@@ -632,7 +676,5 @@ Complaint.Object = {
     }
 
 };
-
-
 
 

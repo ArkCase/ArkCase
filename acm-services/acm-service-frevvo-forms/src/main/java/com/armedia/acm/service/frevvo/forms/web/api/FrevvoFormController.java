@@ -12,8 +12,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -24,7 +27,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -46,12 +48,14 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	
 	private Map<String, Object> properties;
 	private AuthenticationTokenService authenticationTokenService;
+	private AcmPluginManager acmPluginManager;
 	private UserDao userDao;
+	private ComplaintDao complaintDao;
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
 	
-	@RequestMapping(value = "/{formName}/init", method = RequestMethod.GET)
+	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
     		    		@PathVariable("formName") String formName,
     		    		HttpServletRequest request, HttpServletResponse response){
@@ -77,7 +81,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		
 	}
 	
-	@RequestMapping(value = "/{formName}/get/{action}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{formName}/get/{action}")
     public void doGet(Authentication authentication, 
     		    		@PathVariable("formName") String formName,
     		    		@PathVariable("action") String action,
@@ -170,6 +174,20 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	}
 
 	/**
+	 * @return the acmPluginManager
+	 */
+	public AcmPluginManager getAcmPluginManager() {
+		return acmPluginManager;
+	}
+
+	/**
+	 * @param acmPluginManager the acmPluginManager to set
+	 */
+	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
+		this.acmPluginManager = acmPluginManager;
+	}
+
+	/**
 	 * @return the userDao
 	 */
 	public UserDao getUserDao() {
@@ -183,7 +201,21 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		this.userDao = userDao;
 	}
 
-    public SaveComplaintTransaction getSaveComplaintTransaction()
+    /**
+	 * @return the complaintDao
+	 */
+	public ComplaintDao getComplaintDao() {
+		return complaintDao;
+	}
+
+	/**
+	 * @param complaintDao the complaintDao to set
+	 */
+	public void setComplaintDao(ComplaintDao complaintDao) {
+		this.complaintDao = complaintDao;
+	}
+
+	public SaveComplaintTransaction getSaveComplaintTransaction()
     {
         return saveComplaintTransaction;
     }

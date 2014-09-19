@@ -38,6 +38,10 @@
         <property name="eventPublisher" ref="complaintEventPublisher"/>
     </bean>
 
+    <bean id="listComplaintsAPIController" class="com.armedia.acm.plugins.complaint.web.api.ListComplaintsAPIController">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="eventPublisher" ref="complaintEventPublisher"/>
+    </bean>
 
 
 </beans>

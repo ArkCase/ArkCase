@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
@@ -31,8 +30,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import static javax.persistence.CascadeType.ALL;
-
 
 /**
  * Created by armdev on 4/4/14.
@@ -120,8 +117,11 @@ public class Complaint implements Serializable, AcmObject
     @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_person_assoc_parent_id")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
-
-
+    
+    @Column(name = "cm_due_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dueDate;
+    
     public Complaint()
     {
     }
@@ -465,7 +465,13 @@ public class Complaint implements Serializable, AcmObject
         personAssoc.setParentId(getComplaintId());
         personAssoc.setParentType("COMPLAINT");
     }
-       
-    
-    
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+          
 }

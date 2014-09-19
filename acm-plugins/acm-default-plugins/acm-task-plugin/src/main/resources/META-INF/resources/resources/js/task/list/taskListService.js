@@ -14,8 +14,16 @@ TaskList.Service = {
     ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask/"
     ,API_SIGN_TASK         	   : "/api/latest/plugin/signature/confirm/"
     ,API_FIND_BYTASKBYID_TASK_SIGNATURE : "/api/latest/plugin/signature/find/"
+    ,API_SAVE_DETAIL       				: "/api/latest/plugin/task/save/"
 
 
+    ,listTaskSaveDetail : function(taskId, data) {
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_DETAIL + taskId
+                ,JSON.stringify(data)
+                ,TaskList.Callback.EVENT_DETAIL_SAVED
+            );    	
+    }
+    
     ,listTaskAll : function() {
             Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK
                 ,TaskList.Callback.EVENT_LIST_RETRIEVED
