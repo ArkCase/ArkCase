@@ -90,6 +90,10 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         complaint.setComplaintId(acmComplaint.getComplaintId());
         complaint.setComplaintNumber(acmComplaint.getComplaintNumber());
         complaint.setCmisFolderId(acmComplaint.getEcmFolderId());
+        complaint.setCategory(acmComplaint.getComplaintType());
+        complaint.setComplaintTag(acmComplaint.getTag());
+        complaint.setFrequency(acmComplaint.getFrequency());
+        complaint.setLocation(acmComplaint.getLocation());
 
         return complaint;
     }

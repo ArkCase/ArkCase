@@ -65,6 +65,9 @@ public class PersonAssociation implements Serializable
 
     @Column(name = "cm_person_assoc_modifier")
     private String modifier;
+    
+    @Column(name = "cm_notes")
+    private String notes;
 
     @PrePersist
     protected void beforeInsert()
@@ -206,6 +209,16 @@ public class PersonAssociation implements Serializable
         {
             getPerson().setModifier(modifier);
         }
+    }
+
+    public String getNotes()
+    {
+        return notes;
+    }
+
+    public void setNotes(String notes) 
+    {
+        this.notes = notes;
     }
 
     

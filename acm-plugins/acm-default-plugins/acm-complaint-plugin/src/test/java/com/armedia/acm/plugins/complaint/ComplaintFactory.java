@@ -31,6 +31,9 @@ public class ComplaintFactory
         complaint.setPriority("Expedite");
         complaint.setModified(new Date());
         complaint.setModifier("testModifier");
+        complaint.setTag("noTag");
+        complaint.setFrequency("once");
+        complaint.setLocation("1121 goodluck st");
         
         Calendar  cal = Calendar.getInstance();
         cal.setTime(new Date());
