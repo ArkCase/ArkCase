@@ -9,7 +9,7 @@ Complaint.Service = {
     initialize : function() {
     }
 
-    ,API_LIST_COMPLAINT         : "/api/latest/plugin/complaint/list"
+    ,API_LIST_COMPLAINT         : "/api/latest/plugin/search/COMPLAINT"
     ,API_RETRIEVE_DETAIL        : "/api/latest/plugin/complaint/byId/"
     ,API_SAVE_COMPLAINT         : "/api/latest/plugin/complaint"
     ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"

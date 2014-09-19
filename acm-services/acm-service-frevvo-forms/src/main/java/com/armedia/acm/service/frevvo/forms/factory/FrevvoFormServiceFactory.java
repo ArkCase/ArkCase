@@ -36,6 +36,7 @@ public class FrevvoFormServiceFactory {
             service.setAuthentication(authentication);
             service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
             service.setUserDao(frevvoFormController.getUserDao());
+            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
             
             return service;
 		}
@@ -54,7 +55,6 @@ public class FrevvoFormServiceFactory {
             service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
             service.setUserDao(frevvoFormController.getUserDao());
             service.setComplaintDao(frevvoFormController.getComplaintDao());
-            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             
             return service;
 		}

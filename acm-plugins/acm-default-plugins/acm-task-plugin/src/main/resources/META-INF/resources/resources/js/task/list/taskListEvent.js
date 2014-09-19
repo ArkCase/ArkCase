@@ -32,12 +32,8 @@ TaskList.Event = {
         var taskId = Task.getTaskId();
         var t = TaskList.findTask(taskId);
         if (null != t) {
-            TaskList.Object.updateDetail(t);
-            Task.setTaskId(taskId);
-            TaskList.Object.hiliteSelectedItem(taskId);
-            
-            // check for signatures
-            TaskList.Service.findSignatureByTypeById(taskId);
+        	// get task details
+        	TaskList.Service.retrieveDetail(taskId);
         }
     }
     ,onClickBtnComplete : function(e) {
@@ -47,10 +43,7 @@ TaskList.Event = {
     ,onClickBtnSignConfirm : function(e) {
         var taskId = Task.getTaskId();
 
-        // hide the modal window that holds the form
-        var sigModal = TaskList.Object.getSignatureModal();
-        $(sigModal).modal('hide');
-
+        TaskList.Object.hideSignatureModal();
         TaskList.Service.signTask(taskId);
     }
     ,onClickBtnReject : function(e) {

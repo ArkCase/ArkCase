@@ -36,15 +36,19 @@ TaskList.Callback = {
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve task list:"  +response.errorMsg);
         } else {
-            TaskList.setTaskList(response);
-            TaskList.Page.buildTaskList(response);
+        	var responseData = response.response;
+        	var taskList = responseData.docs;
+        	
+            TaskList.setTaskList(taskList);
+            TaskList.Page.buildTaskList(taskList);
         }
     }
     ,onDetailRetrieved : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve task detail:"  +response.errorMsg);
         } else {
-            if (Acm.isNotEmpty(response.taskId)) {
+        	var taskId = response.taskId
+            if (Acm.isNotEmpty(taskId)) {
                 var curId = Task.getTaskId();
                 if (curId != response.taskId) {
                     return;         //user clicks another task before callback, do nothing
@@ -54,7 +58,12 @@ TaskList.Callback = {
                 Task.setTask(task);
                 TaskList.Object.updateDetail(task);
                 
-                // TODO:  check for signatures for task, this function is not called right now so won't implement here
+                Task.setTaskId(taskId);
+                TaskList.Object.hiliteSelectedItem(taskId);
+                
+                // check for signatures
+                TaskList.Service.findSignatureByTypeById(taskId);
+
             }
         }
     }

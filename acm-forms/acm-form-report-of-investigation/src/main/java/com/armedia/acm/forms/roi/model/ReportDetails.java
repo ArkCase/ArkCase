@@ -15,6 +15,7 @@ public class ReportDetails {
 	private String complaintTitle;
 	private String complaintPriority;
 	private Long caseId;
+	private String caseFolderId;
 	private String caseNumber;
 	private String caseTitle;
 	private String summary;
@@ -102,6 +103,20 @@ public class ReportDetails {
 	 */
 	public void setCaseId(Long caseId) {
 		this.caseId = caseId;
+	}
+
+	/**
+	 * @return the caseFolderId
+	 */
+	public String getCaseFolderId() {
+		return caseFolderId;
+	}
+
+	/**
+	 * @param caseFolderId the caseFolderId to set
+	 */
+	public void setCaseFolderId(String caseFolderId) {
+		this.caseFolderId = caseFolderId;
 	}
 
 	/**

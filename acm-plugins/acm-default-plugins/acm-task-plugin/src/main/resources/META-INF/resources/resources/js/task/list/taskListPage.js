@@ -21,23 +21,24 @@ TaskList.Page = {
 
             for (var i = 0; i < len; i++) {
                 var t = arr[i];
+                var taskId = t.object_id_s;
                 if (0 == i) {
-                    Task.setTaskId(t.taskId);
+                    Task.setTaskId(taskId);
                 }
 
                 html += "<li class='list-group-item'><a href='#' class='thumb-sm pull-left m-r-sm'> <img src='"
                     + App.getContextPath() + "/resources/vendors/acm-3.0/themes/basic/images/a1.png" + "' class='img-circle'>"
                     + "</a>"
                     + "<a href='#' class='clear text-ellipsis'>"
-                    + "<strong class='block' id='titleName" + t.taskId +"'>"
-                    + t.title + "</strong>"
+                    + "<strong class='block' id='titleName" + taskId +"'>"
+                    + t.name + "</strong>"
                     + "<small>"
-                    + "Created Date: " + Acm.getDateFromDatetime(t.createDate)
+                    + "Created Date: " + Acm.getDateFromDatetime(t.create_dt)
                     + "</small></br>" 
                     + "<small>"
-                    + "Created By: " + t.owner + "</small>"
+                    + "Created By: " + t.owner_s + "</small>"
                     + "</a>"
-                    + "<input type='hidden' value='" + t.taskId + "' /> </li>";
+                    + "<input type='hidden' value='" + taskId + "' /> </li>";
             }
 
             TaskList.Object.setHtmlUlTasks(html);
@@ -62,7 +63,7 @@ TaskList.Page = {
             }
         }
         else {
-        	html += '<tr class="odd gradeA"><td>None</td></tr>';
+        	html += '<tr class="odd gradeA"><td>None</td><td>&nbsp;</td></tr>';
         }
         
         TaskList.Object.setSignatureList(html);

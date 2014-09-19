@@ -522,73 +522,75 @@ Complaint.Object = {
                 }
 
 
+                // populaet complaint data
                 var pageId = start.toString();
                 for (var i = 0; i < complaints.length; i++) {
                     var c = complaints[i];
+                    var complaintId = parseInt(c.object_id_s);
 
-                    builder.addBranch({key: pageId + "." + c.complaintId                       //level 1: /Complaint
-                        ,title: c.complaintTitle
-                        ,tooltip: c.complaintNumber
+                    builder.addBranch({key: pageId + "." + complaintId                      //level 1: /Complaint
+                        ,title: c.title_t
+                        ,tooltip: c.name
                         ,expanded: false
                         ,acmIcon: "<i class='i i-notice'></i>" //"i-notice icon";
                     })
 
-                        .addBranch({key: pageId + "." + c.complaintId + ".i"                   //level 2: /Complaint/Incident
+                        .addBranch({key: pageId + "." + complaintId + ".i"                   //level 2: /Complaint/Incident
                             ,title: "Incident"
                             ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".id"                //level 3: /Complaint/Incident/Detail
+                            .addLeaf({key: pageId + "." + complaintId + ".id"                //level 3: /Complaint/Incident/Detail
                                 ,title: "Detail"
                             })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".ii"                //level 3: /Complaint/Incident/Initiator
+                            .addLeaf({key: pageId + "." + complaintId + ".ii"                //level 3: /Complaint/Incident/Initiator
                                 ,title: "Initiator"
                             })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".ip"                //level 3: /Complaint/Incident/People
+                            .addLeaf({key: pageId + "." + complaintId + ".ip"                //level 3: /Complaint/Incident/People
                                 ,title: "People"
                             })
-                            .addLeafLast({key: pageId + "." + c.complaintId + ".in"            //level 3: /Complaint/Incident/Notes
+                            .addLeafLast({key: pageId + "." + complaintId + ".in"            //level 3: /Complaint/Incident/Notes
                                 ,title: "Notes"
                             })
 
 
-                        .addLeaf({key: pageId + "." + c.complaintId + ".d"                   //level 2: /Complaint/Documents
+                        .addLeaf({key: pageId + "." + complaintId + ".d"                   //level 2: /Complaint/Documents
                             ,title: "Documents"
                         })
 
-                        .addLeaf({key: pageId + "." + c.complaintId + ".t"                   //level 2: /Complaint/Tasks
+                        .addLeaf({key: pageId + "." + complaintId + ".t"                   //level 2: /Complaint/Tasks
                                 ,title: "Tasks"
                         })
 
 
-                        .addBranch({key: pageId + "." + c.complaintId + ".r"                   //level 2: /Complaint/References
+                        .addBranch({key: pageId + "." + complaintId + ".r"                   //level 2: /Complaint/References
                             ,title: "References"
                             ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".rc"                //level 3: /Complaint/References/Complaints
+                            .addLeaf({key: pageId + "." + complaintId + ".rc"                //level 3: /Complaint/References/Complaints
                                 ,title: "Other Complaints"
                             })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".rs"                //level 3: /Complaint/References/Cases
+                            .addLeaf({key: pageId + "." + complaintId + ".rs"                //level 3: /Complaint/References/Cases
                                 ,title: "Other Cases"
                             })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".rt"                //level 3: /Complaint/References/Tasks
+                            .addLeaf({key: pageId + "." + complaintId + ".rt"                //level 3: /Complaint/References/Tasks
                                 ,title: "Other Tasks"
                             })
-                            .addLeafLast({key: pageId + "." + c.complaintId + ".rd"            //level 3: /Complaint/References/Documents
+                            .addLeafLast({key: pageId + "." + complaintId + ".rd"            //level 3: /Complaint/References/Documents
                                 ,title: "Other Documents"
                             })
 
 
-                        .addBranchLast({key: pageId + "." + c.complaintId + ".p"               //level 2: /Complaint/Participants
+                        .addBranchLast({key: pageId + "." + complaintId + ".p"               //level 2: /Complaint/Participants
                             ,title: "Participants"
                             ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".pa"                //level 3: /Complaint/Participants/Approvers
+                            .addLeaf({key: pageId + "." + complaintId + ".pa"                //level 3: /Complaint/Participants/Approvers
                                 ,title: "Approvers"
                             })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".pc"                //level 3: /Complaint/Participants/Collaborators
+                            .addLeaf({key: pageId + "." + complaintId + ".pc"                //level 3: /Complaint/Participants/Collaborators
                                 ,title: "Collaborators"
                             })
-                            .addLeafLast({key: pageId + "." + c.complaintId + ".pw"            //level 3: /Complaint/Participants/Watchers
+                            .addLeafLast({key: pageId + "." + complaintId + ".pw"            //level 3: /Complaint/Participants/Watchers
                                 ,title: "Watchers"
                             });
                 } //end for i
