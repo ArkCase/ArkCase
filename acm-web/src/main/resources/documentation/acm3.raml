@@ -574,6 +574,275 @@ securitySchemes:
               text/plain:
                 example:
                   Server encountered an exception.
+    /children:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      get:
+        description: Query the solr search index by parent object type, parent id, and children type to find.  The index contains only selected metadata and is smaller than the full index; so it should be faster to search.
+        queryParameters:
+          parentType:
+            description: The parent object type; must be a valid object type (i.e. COMPLAINT, TASK)
+            type: string
+            required: true
+          parentId:
+            description: The parent object id (i.e. COMPLAINT, TASK)
+            type: number
+            required: true
+          childType:
+            description: The child object type; must be a valid object type (i.e. TASK)
+            type: string
+            required: true
+          s:
+            description: The sort order.  The sort key must be a field in the Solr quick search index.  The key must be followed by " asc" or " desc".  Optional; default null.
+            type: string
+            required: false
+            example: last_modified asc
+          start:
+            description: The first matching result to be returned.  Useful for pagination.  Optional; default 0.
+            type: number
+            required: false
+            default: 0
+          n:
+            description: Number of results to be returned.  Useful for pagination.  Optional; default 10.
+            type: number
+            required: false
+            default: 10
+        responses:
+          200:
+            description: Normal response; includes either search results or an error message from Apache Solr.  The example response below includes both a "response" JSON object and an "error" JSON object.  Real responses only have one or the other; a "response" object for a successful search, and an "error" object if SOLR could not process the search.  
+            body:
+              application/json:
+                example: |
+                  {
+                    "responseHeader": {
+                      // 0 == success; there will be a response object (see below).  Any other value 
+                      // is an error (there will be an error object).
+                      "status": 0,
+                      "QTime": 0,
+                      "params": {
+                        "indent": "true",
+                        "q": "*:*",
+                        "_": "1403288137744",
+                        "wt": "json",
+                        "rows": "2"
+                      }
+                    },
+                    // NOTE: "response" object only exists if the status was 0.
+                    "response": {
+                      "numFound": 61,
+                      "start": 0,
+                      "docs": [
+                          {
+                            "id":"101-TASK",
+                            "status_s":"COMPLETE",
+                            "assignee_s":"ann-acm",
+                            "create_dt":"2014-08-22T10:22:21Z",
+                            "title_t":"First task",
+                            "priority_i":50,
+                            "name":"First task",
+                            "object_id_s":"101",
+                            "owner_s":"ann-acm",
+                            "object_type_s":"TASK",
+                            "_version_":1477147195492794368},
+                          {
+                            "id":"301-TASK",
+                            "status_s":"COMPLETE",
+                            "assignee_s":"ann-acm",
+                            "create_dt":"2014-08-22T14:50:02Z",
+                            "title_t":"Friday 2",
+                            "priority_i":50,
+                            "name":"Friday 2",
+                            "object_id_s":"301",
+                            "owner_s":"ann-acm",
+                            "object_type_s":"TASK",
+                            "_version_":1477164037241307136}
+                      ]
+                    }
+                    // NOTE: "error" object only exists if the status was NOT 0.
+                    "error": {
+                      "msg": "Can't determine a Sort Order (asc or desc) in sort spec 'sdf', pos=3",
+                      "code": 400
+                    }
+                  }
+          500:
+            description: The server could not process the search request (Apache Solr is down, or some other error).
+            body:
+              text/plain:
+                example:
+                  Server encountered an exception.
+    /{objectType}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      uriParameters:
+        objectType:
+          description: The object type; must be a valid object type (i.e. COMPLAINT, TASK)
+          required: true 
+          type: string
+      get:
+        description: Query the solr search index by objectType.  The index contains only selected metadata and is smaller than the full index; so it should be faster to search.
+        queryParameters:
+          s:
+            description: The sort order.  The sort key must be a field in the Solr quick search index.  The key must be followed by " asc" or " desc".  Optional; default null.
+            type: string
+            required: false
+            example: last_modified asc
+          start:
+            description: The first matching result to be returned.  Useful for pagination.  Optional; default 0.
+            type: number
+            required: false
+            default: 0
+          n:
+            description: Number of results to be returned.  Useful for pagination.  Optional; default 10.
+            type: number
+            required: false
+            default: 10
+          assignee:
+            description: The assignee for the object type.  Optional.
+            type: string
+            required: false
+            default: NA
+        responses:
+          200:
+            description: Normal response; includes either search results or an error message from Apache Solr.  The example response below includes both a "response" JSON object and an "error" JSON object.  Real responses only have one or the other; a "response" object for a successful search, and an "error" object if SOLR could not process the search.  
+            body:
+              application/json:
+                example: |
+                  {
+                    "responseHeader": {
+                      // 0 == success; there will be a response object (see below).  Any other value 
+                      // is an error (there will be an error object).
+                      "status": 0,
+                      "QTime": 0,
+                      "params": {
+                        "indent": "true",
+                        "q": "*:*",
+                        "_": "1403288137744",
+                        "wt": "json",
+                        "rows": "2"
+                      }
+                    },
+                    // NOTE: "response" object only exists if the status was 0.
+                    "response": {
+                      "numFound": 61,
+                      "start": 0,
+                      "docs": [
+                        {
+                          "id": "12-Complaint",
+                          "status_s": "DRAFT",
+                          "author": "ann-acm",
+                          "author_s": "ann-acm",
+                          "modifier_s": "ann-acm",
+                          "title": [
+                            "Test 20140502_12"
+                          ],
+                          "last_modified": "2014-05-02T11:30:27Z",
+                          "create_dt": "2014-05-02T11:30:27Z",
+                          "name": "20140502_12",
+                          "object_id_s": "12",
+                          "object_type_s": "COMPLAINT",
+                          "_version_": 1471373882636107800
+                        },
+                        {
+                          "id": "14-Complaint",
+                          "status_s": "DRAFT",
+                          "author": "ann-acm",
+                          "author_s": "ann-acm",
+                          "modifier_s": "ann-acm",
+                          "title": [
+                            "Test 20140502_14"
+                          ],
+                          "last_modified": "2014-05-02T11:39:21Z",
+                          "create_dt": "2014-05-02T11:39:21Z",
+                          "name": "20140502_14",
+                          "object_id_s": "14",
+                          "object_type_s": "COMPLAINT",
+                          "_version_": 1471373882844774400
+                        }
+                      ]
+                    }
+                    // NOTE: "error" object only exists if the status was NOT 0.
+                    "error": {
+                      "msg": "Can't determine a Sort Order (asc or desc) in sort spec 'sdf', pos=3",
+                      "code": 400
+                    }
+                  }
+          500:
+            description: The server could not process the search request (Apache Solr is down, or some other error).
+            body:
+              text/plain:
+                example:
+                  Server encountered an exception.
+
+  /signature:
+    /confirm/{objectType}/{objectId}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      uriParameters:
+        objectType:
+          description: The object type; must be a valid object type (i.e. COMPLAINT, TASK)
+          required: true 
+          type: string
+        objectId:
+          description: The object id
+          required: true 
+          type: number
+      post:
+        description: Validates an electronic signature password is valid against the user directory.  If yes, saves the record in the database.
+        queryParameters:
+          confirmPassword:
+            description: The user's password
+            type: string
+            required: true
+        responses:
+          200: 
+            description: expected response containing the signature information.
+            body:
+              application/json:
+                example: |
+                {
+                    "signatureId" : 293,
+                    "objectId" : 101,
+                    "objectType" : "TASK",
+                    "signedDate" : "2014-09-19T17:40:21.062+0000",
+                    "signedBy" : "ann-acm"
+                }
+    /find/{objectType}/{objectId}:
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      uriParameters:
+        objectType:
+          description: The object type; must be a valid object type (i.e. COMPLAINT, TASK)
+          required: true 
+          type: string
+        objectId:
+          description: The object id
+          required: true 
+          type: number
+      get:
+        description: Retrieves all electronic signature associated with the object type and object id.
+        responses:
+          200: 
+            description: expected response containing the list of electronic signatures.
+            body:
+              application/json:
+                example: |
+                [{
+                        "signatureId" : 293,
+                        "objectId" : 101,
+                        "objectType" : "TASK",
+                        "signedDate" : "2014-09-19T17:40:21.062+0000",
+                        "signedBy" : "ann-acm"
+                    }, {
+                        "signatureId" : 291,
+                        "objectId" : 101,
+                        "objectType" : "TASK",
+                        "signedDate" : "2014-09-17T14:48:11.436+0000",
+                        "signedBy" : "ann-acm"
+                    }, {
+                        "signatureId" : 290,
+                        "objectId" : 101,
+                        "objectType" : "TASK",
+                        "signedDate" : "2014-09-17T13:55:15.642+0000",
+                        "signedBy" : "ann-acm"
+                    }
+                ]
+                                   
 /users:
   /withPrivilege/{privilege}:
     securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
