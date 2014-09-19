@@ -81,6 +81,36 @@ TaskList.Object = {
             	TaskList.Event.onSavePriority(newValue);
             }
         });
+
+        this.$lnkPriority       = $("#priority");
+        this.$lnkPriority.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
+            ,success: function(response, newValue) {
+            	TaskList.Event.onSavePriority(newValue);
+            }
+        });
+        
+        this.$lnkOwner          = $("#taskOwner");
+        this.$lnkOwner.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
+            ,success: function(response, newValue) {
+            	TaskList.Event.onSaveOwner(newValue);
+            }
+        });
+        
+        this.$lnkAssigned       = $("#assigned");
+        this.$lnkComplaintType  = $("#type");
+        
+        this.$lnkStatus         = $("#status");
+        this.$lnkStatus.editable('disable');
+        
+        this.$linkDetails		= $("#details");
+        this.$btnEditDetails    = $("#detailEdit");
+        this.$btnCancelDetails    = $("#detailCancel");
+        this.$btnSaveDetails    = $("#detailSave");
+        this.$btnEditDetails.on("click", function(e) {TaskList.Event.onClickBtnEditDetails(e);});
+        this.$btnCancelDetails.on("click", function(e) {TaskList.Event.onClickBtnCancelDetails(e);});
+        this.$btnSaveDetails.on("click", function(e) {TaskList.Event.onClickBtnSaveDetails(e);});
         
         this.$lnkOwner          = $("#taskOwner");
         this.$lnkOwner.editable({placement: 'bottom'
