@@ -30,6 +30,8 @@
 
     <bean id="acmDashboardDao" class="com.armedia.acm.plugins.dashboard.dao.DashboardDao"/>
 
+    <bean id="acmWidgetDao" class="com.armedia.acm.plugins.dashboard.dao.WidgetDao"/>
+
     <bean id="acmUserDao" class="com.armedia.acm.services.users.dao.ldap.UserDao"/>
 
     <bean id="dashboardPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
