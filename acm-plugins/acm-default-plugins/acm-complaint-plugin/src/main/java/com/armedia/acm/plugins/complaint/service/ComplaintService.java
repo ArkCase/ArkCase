@@ -21,6 +21,7 @@ import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.frevvo.config.FrevvoFormUrl;
+import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.complaint.Complaint;
@@ -42,6 +43,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	private Logger LOG = LoggerFactory.getLogger(ComplaintService.class);
 
     private SaveComplaintTransaction saveComplaintTransaction;
+    private AcmPluginManager acmPluginManager;
 
     private ComplaintFactory complaintFactory = new ComplaintFactory();
 
@@ -59,19 +61,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		Object result = null;
 		
 		if (action != null) {
-			
-			if ("init-contact-fields".equals(action)) {
-				String contactFormType = getRequest().getParameter("type");
-				
-				if (contactFormType != null && "initiator".equals(contactFormType)){
-					result = this.initInitiatorFields();					
-				} else if (contactFormType != null && "people".equals(contactFormType)){
-					result = this.initPeopleFields();
-				}
-			}
-			
-			if ("init-incident-fields".equals(action)) {
-				result = this.initIncidentFields();
+			if ("init-form-data".equals(action)) {
+				result = initFormData();
 			}
 		}
 		
@@ -99,6 +90,10 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         complaint.setComplaintId(acmComplaint.getComplaintId());
         complaint.setComplaintNumber(acmComplaint.getComplaintNumber());
         complaint.setCmisFolderId(acmComplaint.getEcmFolderId());
+        complaint.setCategory(acmComplaint.getComplaintType());
+        complaint.setComplaintTag(acmComplaint.getTag());
+        complaint.setFrequency(acmComplaint.getFrequency());
+        complaint.setLocation(acmComplaint.getLocation());
 
         return complaint;
     }
@@ -133,10 +128,53 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		return result;
 	}
 	
-	public JSONObject initInitiatorFields() {
+	private JSONObject initFormData(){
+		List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege("acm-complaint-approve");
+        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
 		
-		// TODO: These are hardcoded values. Read from database or somewhere else
+		// Initiator, People and Incident initialization
+		Contact initiator = initInitiatorFields();
+		Contact people = initPeopleFields();
 		
+		List<Contact> peoples = new ArrayList<Contact>();
+		peoples.add(people);
+		
+		Complaint complaint = initIncidentFields();
+		
+		complaint.setInitiator(initiator);
+		complaint.setPeople(peoples);
+		
+		
+        // Owners Initialization		
+        if (users != null && users.size() > 0) {
+        	List<String> ownersOptions = new ArrayList<String>();
+        	for (int i = 0; i < users.size(); i++) {
+        		ownersOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
+        	}
+        	complaint.setOwnersOptions(ownersOptions);
+        }
+     
+		
+		// Followers Initialization
+        if (users != null && users.size() > 0) {
+        	List<String> followersOptions = new ArrayList<String>();
+        	for (int i = 0; i < users.size(); i++) {
+        		followersOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
+        	}
+        	complaint.setFollowersOptions(followersOptions);
+        }
+     
+			
+		
+		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		String jsonString = gson.toJson(complaint);
+		
+		JSONObject json = new JSONObject(jsonString);
+		
+		return json;
+	}
+	
+	private Contact initInitiatorFields() {		
 		
 		String userId = getAuthentication().getName();
         AcmUser user = getUserDao().findByUserId(userId);
@@ -194,20 +232,12 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		initiator.setLocation(locationInformations);
 		initiator.setAlias(aliasInformation);
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
-		String jsonString = gson.toJson(initiator);
-		
-		JSONObject json = new JSONObject(jsonString);
-		
-		return json;
+		return initiator;
 		
 	}
 	
-	public JSONObject initPeopleFields() {
-		
-		// TODO: These are hardcoded values. Read from database or somewhere else
-		
-		
+	private Contact initPeopleFields() {
+				
 		String userId = getAuthentication().getName();
         AcmUser user = getUserDao().findByUserId(userId);
 		
@@ -266,18 +296,11 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		people.setLocation(locationInformations);
 		people.setAlias(aliasInformation);
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
-		String jsonString = gson.toJson(people);
-		
-		JSONObject json = new JSONObject(jsonString);
-		
-		return json;
+		return people;
 		
 	}
 
-	public JSONObject initIncidentFields() {
-		
-		// TODO: These are hardcoded values. Read from database or somewhere else
+	private Complaint initIncidentFields() {
 		
 		Complaint complaint = new Complaint();
 		
@@ -291,18 +314,13 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		complaint.setDate(new Date());
 		complaint.setPriority("Low");
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
-		String jsonString = gson.toJson(complaint);
-		
-		JSONObject json = new JSONObject(jsonString);
-		
-		return json;
+		return complaint;
 		
 	}
 	
 	private List<String> convertToList(String source, String delimiter){
 		if (source != null && !"".equals(source)) {
-			String[] sourceArray = source.split(delimiter);
+			String[] sourceArray = source.split(delimiter, -1);
 			return new LinkedList<String>(Arrays.asList(sourceArray)); 
 		}
 		
@@ -323,4 +341,18 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     {
         return complaintFactory;
     }
+
+	/**
+	 * @return the acmPluginManager
+	 */
+	public AcmPluginManager getAcmPluginManager() {
+		return acmPluginManager;
+	}
+
+	/**
+	 * @param acmPluginManager the acmPluginManager to set
+	 */
+	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
+		this.acmPluginManager = acmPluginManager;
+	}
 }

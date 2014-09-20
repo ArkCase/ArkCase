@@ -26,6 +26,9 @@ public class FindAllComplaintsAPIController
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    /*
+     * NOTE:  TOBEREMOVED This has been replaced with the generic SearchObjectByTypeAPI to grab all complaints
+     */
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<ComplaintListView> retrieveListOfComplaints(

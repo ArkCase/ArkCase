@@ -35,7 +35,7 @@ var TaskList = TaskList || {
             var len = this._taskList.length;
             for (var i = 0; i < len; i++) {
                 var t = this._taskList[i];
-                if (taskId == t.taskId) {
+                if (taskId == t.object_id_s) {
                     found = t;
                     break;
                 }
