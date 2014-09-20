@@ -13,14 +13,15 @@ Complaint.FileUpload = {
         this.$upploadList.find("li").remove();
     }
     ,_jqXHR : undefined
-    ,useFileUpload: function($upload, $drop, $ul, $click, urlEvaluator, formDataEvaluator, successHandler) {
+    ,useFileUpload: function($upload, $drop, $input, $ul, $click, urlEvaluator, formDataEvaluator, successHandler) {
         this.$upploadList = $ul;
 
         $(function(){
             $click.click(function(){
                 // Simulate a click on the file input button
                 // to show the file browser dialog
-                $(this).parent().find('input').click();
+                //$(this).parent().find('input').click();
+                $input.click();
             });
 
             // Initialize the jQuery File Upload plugin
@@ -147,6 +148,39 @@ Complaint.FileUpload = {
 
 };
 
+//
+// code copied for Complaint.Object, in case to use file upload again
+//
+//,initialize() {
+//    //file upload without web form
+//    this.$spanAddDocument.unbind("click");
+//    this.$tableDocDocuments = this.$divDocuments.find("table.jtable");
+//    this.$upploadList = $('#upload ul');
+//    this.$upploadInput = $('#tabDocuments input[type="file"]');
+//    Complaint.FileUpload.useFileUpload(this.$divDocuments, this.$tableDocDocuments, this.$upploadInput, this.$upploadList, this.$spanAddDocument
+//        ,this.getUrlFileUpload
+//        ,this.getFormDataFileUpload
+//        ,this.onSuccessFileUpload
+//    );
+//}
+//
+//,getUrlFileUpload: function() {
+//    return App.getContextPath() + Complaint.Service.API_UPLOAD_COMPLAINT_FILE;
+//}
+//,getFormDataFileUpload: function() {
+//    var fd = [{}];
+//    fd[0].name = "complaintId";
+//    fd[0].value = Complaint.getComplaintId();
+//    return fd;
+//}
+//,onSuccessFileUpload: function() {
+//    Complaint.FileUpload.removeUploadFileArea();
+//
+//    var complaintId = Complaint.getComplaintId();
+//    if (0 < complaintId) {
+//        Complaint.Service.retrieveDetail(complaintId);
+//    }
+//}
 
 
 

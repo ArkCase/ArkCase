@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.armedia.acm.ecms.casefile.dao.CaseFileDao;
-import com.armedia.acm.ecms.casefile.model.CaseFile;
 import com.armedia.acm.forms.roi.model.ROIForm;
 import com.armedia.acm.forms.roi.model.ReportInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
@@ -30,7 +28,6 @@ public class ROIService extends FrevvoFormAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(ROIService.class);
 	private ComplaintDao complaintDao;
-	private CaseFileDao caseFileDao;
 	
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#init()
@@ -49,8 +46,8 @@ public class ROIService extends FrevvoFormAbstractService {
 		Object result = null;
 		
 		if (action != null) {
-			if ("init-roi-fields".equals(action)) {
-				result = initRoiFields();
+			if ("init-form-data".equals(action)) {
+				result = initFormData();
 			}
 		}
 		
@@ -95,18 +92,11 @@ public class ROIService extends FrevvoFormAbstractService {
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
 			parentObjectName = complaint.getComplaintNumber();			
-		}else if ("case".equals(type)){
-			CaseFile caseFile = caseFileDao.find(roiForm.getReportDetails().getCaseId());
-			
-			if (caseFile == null) {
-				LOG.warn("Cannot find case by given caseId=" + roiForm.getReportDetails().getCaseId());
-				return false;
-			}
-			
-			ecmFolderId = caseFile.getEcmFolderId();
+		}else if ("case".equals(type)){	
+			ecmFolderId = roiForm.getReportDetails().getCaseFolderId();
 			parentObjectType = "CASE";
-			parentObjectId = caseFile.getId();
-			parentObjectName = caseFile.getCaseNumber();
+			parentObjectId = roiForm.getReportDetails().getCaseId();
+			parentObjectName = roiForm.getReportDetails().getCaseNumber();
 		}
 			
 		saveAttachments(attachments, ecmFolderId, parentObjectType, parentObjectId, parentObjectName);
@@ -119,7 +109,7 @@ public class ROIService extends FrevvoFormAbstractService {
 	 * 
 	 * @return
 	 */
-	private JSONObject initRoiFields() {
+	private JSONObject initFormData() {
 		
 		ROIForm roiForm = new ROIForm();
 		ReportInformation reportInformation = new ReportInformation();
@@ -148,20 +138,6 @@ public class ROIService extends FrevvoFormAbstractService {
 	 */
 	public void setComplaintDao(ComplaintDao complaintDao) {
 		this.complaintDao = complaintDao;
-	}
-
-	/**
-	 * @return the caseFileDao
-	 */
-	public CaseFileDao getCaseFileDao() {
-		return caseFileDao;
-	}
-
-	/**
-	 * @param caseFileDao the caseFileDao to set
-	 */
-	public void setCaseFileDao(CaseFileDao caseFileDao) {
-		this.caseFileDao = caseFileDao;
 	}
 
 }
