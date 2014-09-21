@@ -6,17 +6,25 @@
  * @author jwu
  */
 Report.Object = {
+    CASE_SUMMARY_REPORT : "Case Summary Report",
     OPEN_CASE_REPORT : "Open Case Report",
     CLOSE_CASE_REPORT : "Close Case Report",
     COMPLAINT_REPORT : "Complaint Report",
     BILLING_REPORT : "Billing Report",
+    CHOOSE_REPORT : "Choose Report",
     
     initialize : function() {
         var items = $(document).items();
         this.$selReport = $("#selectReport");
+        
+        this.$caseNumberSection = $("#caseNumberSection");
         this.$caseNumber = $("#caseNumber");
         this.$caseNumberLbl = $("#caseNumberlbl");
         
+        this.$caseStatusSection = $("#caseStatusSection");
+        this.$selCaseStatus = $("#selectCaseStatus");
+        
+        this.$datepickerSection = $("#datepickerSection");
         this.$edtStartDate = $("#startDate");
         this.setValueStartDate(Acm.getCurrentDay());
 
@@ -24,6 +32,7 @@ Report.Object = {
         this.setValueEndDate(Acm.getCurrentDay());
         //$('#dateSelector').datepicker('disable');
 
+        this.$reportSubmitSection = $("#reportSubmitSection");
         this.$btnGenerateReport = $("#generateReport");
         this.$btnGenerateReport.click(function(e) {Report.Event.onClickBtnGenerateReport(e);});
 
@@ -32,6 +41,7 @@ Report.Object = {
         
         this.$mainContentSel = $("#ReportMeassge");
     	this.registerChangeSelNewReportEvents();
+    	Report.Rule.updateSearchPanel();
 
     }
     ,getValueStartDate: function() {
@@ -54,6 +64,20 @@ Report.Object = {
     ,getSelectedTextSelReport: function() {
         return Acm.Object.getSelectTextIgnoreFirst(this.$selReport);
     }
+
+    /**
+     * get the case status selected option value
+     */
+    ,getSelectedValueSelStatus: function() {
+        return Acm.Object.getSelectValueIgnoreFirst(this.$selCaseStatus);
+    }
+
+    /**
+     * get the case status selected option text/label
+     */
+    ,getSelectedTextSelStatus: function() {
+        return Acm.Object.getSelectTextIgnoreFirst(this.$selCaseStatus);
+    }
     
     ,setValueStartDate: function(val) {
         Acm.Object.setValueDatePicker(this.$edtStartDate, val);
@@ -66,17 +90,11 @@ Report.Object = {
      * Register the new report selector changed event
      */
 	,registerChangeSelNewReportEvents: function() {
-        Report.Event.onChangeBillingReport(false);
+		Report.Page.toggleBillingReportCriteria(false);
 
     	this.$selReport.change(function(e) {
     		var reportName = $(this).find('option:selected').text();
-    		
-    		if ( reportName === Report.Object.BILLING_REPORT) {
-    			Report.Event.onChangeBillingReport(true);    			
-    		}
-    		else {
-    			Report.Event.onChangeBillingReport(false);    			    			
-    		}
+    		Report.Rule.updateSearchPanel(reportName);
     	});
 	}
     
