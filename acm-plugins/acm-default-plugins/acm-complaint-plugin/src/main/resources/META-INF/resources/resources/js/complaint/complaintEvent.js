@@ -116,7 +116,7 @@ Complaint.Event = {
 
         var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()[report] : '';
         if (url != '') {
-        	url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
+        	url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
         	this._showPopup(url, "", 810, $(window).height() - 30);
         }
     }
