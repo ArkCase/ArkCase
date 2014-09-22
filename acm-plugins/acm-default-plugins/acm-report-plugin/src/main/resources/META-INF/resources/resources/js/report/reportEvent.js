@@ -43,16 +43,17 @@ Report.Event = {
         	}
         }
         else {
-            var startDate = Acm.Object.getValue($("#startDate"));
-            var endDate = Acm.Object.getValue($("#endDate"));
+        	var status = Report.Rule.validateCaseStatus(Report.Object.getSelectedValueSelStatus())
+            var startDate = Acm.Object.getValue(Report.Object.$edtStartDate);
+            var endDate = Acm.Object.getValue(Report.Object.$edtEndDate);
             
             startDate = startDate.replace(/\//g, "-");
             endDate = endDate.replace(/\//g, "-");
 
             if (pageUrl.indexOf("?") <= -1) {
-                pageUrl = pageUrl +"?startDate=" + startDate + "&endDate=" + endDate; 
+                pageUrl = pageUrl +"?startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status; 
             } else {
-                pageUrl = pageUrl +"&startDate=" + startDate + "&endDate=" + endDate; 
+                pageUrl = pageUrl +"&startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status;; 
             }
             
             // Incident Category, Priority, Owner not added since DB clarification is needed.
@@ -64,11 +65,4 @@ Report.Event = {
     	window.open(pageUrl, 'report_iframe');
     }
     
-    /**
-     * Toggle show or hide the case data fields.
-     */
-    ,onChangeBillingReport : function(show) {
-        Acm.Object.show(Report.Object.$caseNumber, show);
-        Acm.Object.show(Report.Object.$caseNumberLbl, show);
-    }
 };
