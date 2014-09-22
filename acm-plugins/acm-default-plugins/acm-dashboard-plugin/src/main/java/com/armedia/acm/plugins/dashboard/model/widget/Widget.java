@@ -37,4 +37,24 @@ public class Widget {
     public void setWidgetName(String widgetName) {
         this.widgetName = widgetName;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Widget)) return false;
+
+        Widget widget = (Widget) o;
+
+        if (!widgetId.equals(widget.widgetId)) return false;
+        if (!widgetName.equals(widget.widgetName)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = widgetId.hashCode();
+        result = 31 * result + widgetName.hashCode();
+        return result;
+    }
 }

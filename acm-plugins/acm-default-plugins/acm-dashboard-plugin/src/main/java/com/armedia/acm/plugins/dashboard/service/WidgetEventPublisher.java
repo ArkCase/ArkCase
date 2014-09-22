@@ -1,9 +1,7 @@
 package com.armedia.acm.plugins.dashboard.service;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
-import com.armedia.acm.plugins.dashboard.model.*;
 import com.armedia.acm.plugins.dashboard.model.widget.*;
-import com.armedia.acm.plugins.dashboard.web.api.GetWidgetsByUserRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,7 +24,7 @@ public class WidgetEventPublisher implements ApplicationEventPublisherAware {
         eventPublisher = applicationEventPublisher;
     }
 
-    public void publishWidgetdEvent(Widget source, Authentication authentication, boolean newWidget, boolean succeeded) {
+    public void publishWidgetEvent(Widget source, Authentication authentication, boolean newWidget, boolean succeeded) {
         if (log.isDebugEnabled()) {
             log.debug("Publishing a widget event.");
         }
@@ -37,6 +35,19 @@ public class WidgetEventPublisher implements ApplicationEventPublisherAware {
         }
         eventPublisher.publishEvent(widgetPersistenceEvent);
     }
+
+    public void publishWidgetRoleEvent(WidgetRole source, Authentication authentication, boolean newWidgetRole, boolean succeeded) {
+        if (log.isDebugEnabled()) {
+            log.debug("Publishing a widget event.");
+        }
+        WidgetRolePersistenceEvent widgetRolePersistenceEvent = newWidgetRole ? new WidgetRoleCreatedEvent(source) : new WidgetRoleUpdatedEvent(source);
+        widgetRolePersistenceEvent.setSucceeded(succeeded);
+        if(authentication.getDetails()!=null && authentication.getDetails() instanceof AcmAuthenticationDetails) {
+            widgetRolePersistenceEvent.setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
+        }
+        eventPublisher.publishEvent(widgetRolePersistenceEvent);
+    }
+
     public void publishGetWidgetsByUserRoles(List<Widget> source, Authentication authentication, String ipAddress, boolean succeeded) {
         if (log.isDebugEnabled()) {
             log.debug("Publishing a widget event. Get Widgets by User Roles Event");
@@ -48,4 +59,5 @@ public class WidgetEventPublisher implements ApplicationEventPublisherAware {
         getWidgetsByUserRoles.setSucceeded(succeeded);
         eventPublisher.publishEvent(getWidgetsByUserRoles);
     }
+
 }
