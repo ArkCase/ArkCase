@@ -47,8 +47,11 @@
 	                        <label for="Case Status"  class="label" id="caseStatuslbl">Case Status</label>
 	                        <select name="cStatus" class="form-control" id ="selectCaseStatus">
 	                            <option value="Choose Case Status">Choose Case Status</option>
+	                            <option value="ACTIVE">Active</option>
+	                            <option value="APPROVED">Approved</option>
 	                            <option value="CLOSE">Close</option>
 	                            <option value="DRAFT">Draft</option>
+	                            <option value="IN APPROVAL">In Approval</option>                                                
 	                            <option value="OPEN">Open</option>                                                
 		<%--                                                 <c:forEach items="${caseStatusMap}" var="entry">
 		                            						<option title="${entry.key}" value="${entry.value}">${entry.key}</option>
