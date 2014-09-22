@@ -16,4 +16,11 @@
         <property name="eventPublisher" ref="dashboardEventPublisher"/>
     </bean>
 
+    <bean id="getWidgetsByUserRoles"  class="com.armedia.acm.plugins.dashboard.web.api.GetWidgetsByUserRolesAPIController">
+        <property name="widgetDao" ref="acmWidgetDao"/>
+        <property name="dashboardPlugin" ref="dashboardPlugin"/>
+        <property name="userDao" ref="acmUserDao"/>
+        <property name="eventPublisher" ref="widgetEventPublisher"/>
+    </bean>
+
 </beans>
