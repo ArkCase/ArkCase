@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.dashboard.model;
+package com.armedia.acm.plugins.dashboard.model.widget;
 
 /**
 * Created by marjan.stefanoski on 9/12/2014.

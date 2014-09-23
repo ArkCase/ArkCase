@@ -117,11 +117,20 @@ public class Complaint implements Serializable, AcmObject
     @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_person_assoc_parent_id")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
-    
+
     @Column(name = "cm_due_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
+
+    @Column(name = "cm_tag")
+    private String tag;
     
+    @Column(name = "cm_frequency")
+    private String frequency;
+    
+    @Column(name = "cm_location")
+    private String location;
+        
     public Complaint()
     {
     }
@@ -465,13 +474,45 @@ public class Complaint implements Serializable, AcmObject
         personAssoc.setParentId(getComplaintId());
         personAssoc.setParentType("COMPLAINT");
     }
-
-    public Date getDueDate() {
+       
+    public Date getDueDate()
+    {
         return dueDate;
     }
-
-    public void setDueDate(Date dueDate) {
+    
+    public void setDueDate(Date dueDate) 
+    {
         this.dueDate = dueDate;
     }
-          
+    
+    public String getTag()
+    {
+        return tag;
+}
+
+    public void setTag(String tag)
+    {
+        this.tag = tag;
+    }
+
+    public String getFrequency() 
+    {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency)
+    {
+        this.frequency = frequency;
+    }
+
+    public String getLocation() 
+    {
+        return location;
+    }
+
+    public void setLocation(String location)
+    {
+        this.location = location;
+    }  
+    
 }

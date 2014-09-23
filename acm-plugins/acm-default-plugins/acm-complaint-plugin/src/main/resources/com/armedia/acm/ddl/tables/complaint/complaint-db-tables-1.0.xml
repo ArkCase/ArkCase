@@ -282,5 +282,13 @@
         </addColumn>     
     </changeSet>
 
+    <changeSet id="12-add-fields-in-acm-complaint-table" author="tsedalu">
+        <addColumn tableName="acm_complaint">
+            <column name="cm_tag" type="VARCHAR(1024)"/>
+            <column name="cm_frequency" type="VARCHAR(1024)"/>
+            <column name="cm_location" type="VARCHAR(1024)"/>            
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
