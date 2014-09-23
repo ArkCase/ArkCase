@@ -83,6 +83,7 @@ public class PersonAssociationIT
         perAssoc.setCreator("testCreator");
         perAssoc.setCreated(new Date());
         perAssoc.setModified(new Date());
+        perAssoc.setNotes("here a we can write our note");
         
         PersonAssociation personAssoc = new PersonAssociation();
 

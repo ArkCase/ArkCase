@@ -476,5 +476,12 @@
             <column name="cm_modifier" valueComputed="USER"/>
         </insert>
     </changeSet>
+    
+    <changeSet id="23-add-column-into-personAssoc-table" author="tsedalu">
+        <addColumn tableName="acm_person_assoc">
+           <column name="cm_notes" type="VARCHAR(4000)"/>                
+        </addColumn>
+    </changeSet>
+    
 </databaseChangeLog>
 
