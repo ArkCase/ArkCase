@@ -139,7 +139,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -194,7 +198,11 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+        
         <!-- servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
