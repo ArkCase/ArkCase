@@ -7,6 +7,7 @@
     <title>${pageDescriptor.title}</title>
     <div id="searchData" itemscope="true" style="display: none">
         <span itemprop="searchDef">${searchDef}</span>
+        <span itemprop="searchEx">${searchEx}</span>
     </div>
 </script>
 </jsp:attribute>
@@ -23,16 +24,6 @@
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
-    <%--<script src="<c:url value='/'/>resources/vendors/${vd_charts}/easypiechart/jquery.easy-pie-chart.js"></script>--%>
-    <%--<script src="<c:url value='/'/>resources/vendors/${vd_charts}/sparkline/jquery.sparkline.min.js"></script>--%>
-    <%--<script src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.min.js"></script>--%>
-    <%--<script src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.tooltip.min.js"></script>--%>
-    <%--<script src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.spline.js"></script>--%>
-    <%--<script src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.pie.min.js"></script>--%>
-    <%--<script src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.resize.js"></script>--%>
-    <%--<script src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/jquery.flot.grow.js"></script>--%>
-    <%--<script src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/demo.js"></script>--%>
-
     <!-- JTable -->
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
@@ -40,6 +31,7 @@
 
 <jsp:body>
 <section id="content">
+<p>hello, ${prop1.get("search.ex")}</p>
     <section class="hbox stretch">
         <aside class="aside-md bg-light dker b-r" id="subNav">
             <section class="vbox">
@@ -392,9 +384,6 @@
     </section>
 </section>
 
-<%--<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script>--%>
-<%--<script src="resources/js/datepicker/bootstrap-datepicker.js"></script>--%>
-
 <script>
 
     $('#chkComplaints').click(function(){
@@ -429,14 +418,6 @@
     #complaintFields, #caseFields, #taskFields, #docFields, #peopleFields { display:none}
 
 </style>
-
-
-<!-- Bootstrap -->
-<%--<script src="resources/js/bootstrap.js"></script>--%>
-<!-- App -->
-<%--<script src="resources/js/app.js"></script>--%>
-<%--<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script>--%>
-<%--<script src="resources/js/app.plugin.js"></script>--%>
 
 </jsp:body>
 </t:layout>
