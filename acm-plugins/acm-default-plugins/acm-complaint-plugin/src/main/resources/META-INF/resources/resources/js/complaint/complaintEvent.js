@@ -71,6 +71,8 @@ Complaint.Event = {
             Complaint.Service.retrieveDetail(complaintId);
         }
 
+
+
         Complaint.Object.showTab(node.key);
     }
     ,onSaveTitle: function(value) {
