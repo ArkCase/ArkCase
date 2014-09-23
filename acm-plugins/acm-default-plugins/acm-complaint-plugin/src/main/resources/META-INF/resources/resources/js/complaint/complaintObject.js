@@ -245,6 +245,8 @@ Complaint.Object = {
         this.refreshJTableInitiator();
         this.refreshJTableDocuments();
         this.refreshJTableTasks();
+        this.refreshJTablePeople();
+
     }
 
 
@@ -660,6 +662,9 @@ Complaint.Object = {
     }
     ,refreshJTableTasks: function() {
         AcmEx.Object.jTableLoad(this.$divTasks);
+    }
+    ,refreshJTablePeople: function() {
+        AcmEx.Object.jTableLoad(this.$divPeople);
     }
 
 };
