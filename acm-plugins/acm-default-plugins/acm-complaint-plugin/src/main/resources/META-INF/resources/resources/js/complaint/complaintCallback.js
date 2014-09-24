@@ -10,45 +10,51 @@ Complaint.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_RETRIEVED, this.onListRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_RETRIEVED, this.onDetailRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_COMPLAIN_SAVED, this.onComplaintSaved);
+        Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_PERSON_LIST_RETRIEVED, this.onComplaintPersonListRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_PERSON_SAVED, this.onPersonSaved);
+
     }
 
     ,EVENT_LIST_RETRIEVED		: "complaint-list-retrieved"
     ,EVENT_DETAIL_RETRIEVED		: "complaint-detail-retrieved"
     ,EVENT_COMPLAIN_SAVED		: "complaint-complaint-saved"
-
+    ,EVENT_COMPLAINT_PERSON_LIST_RETRIEVED : "complaint-person-list-retrieved"
+    ,EVENT_PERSON_SAVED         : "complaint-person-saved"
     ,onListRetrieved : function(Callback, response) {   	
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve complaint list:" + response.errorMsg);
         } else {
-        	var responseData = response.response;
-        	
-            var treeInfo = Complaint.Object.getTreeInfo();
-            //todo: compare treeInfo with response, if not match do nothing (user click something else before result)
-            //if (treeInfo.start != response start) {
-            //  return;
-            //}
-            
-            
-            
-            treeInfo.total = responseData.numFound;  //= response total
+            if (response && response.response && response.responseHeader) {
+                var responseData = response.response;
 
-            var complaints = responseData.docs;
-            var start = treeInfo.start;
-            Complaint.cachePage.put(start, complaints);
+                var treeInfo = Complaint.Object.getTreeInfo();
+                //todo: compare treeInfo with response, if not match do nothing (user click something else before result)
+                //if (treeInfo.start != response start) {
+                //  return;
+                //}
 
-            var key = treeInfo.initKey;
-            if (null == key) {
-                if (0 < complaints.length) {
-                    var complaintId = parseInt(complaints[0].object_id_s);
-                    if (0 < complaintId) {
-                        key = start + "." + complaintId;
+
+
+                treeInfo.total = responseData.numFound;  //= response total
+
+                var complaints = responseData.docs;
+                var start = treeInfo.start;
+                Complaint.cachePage.put(start, complaints);
+
+                var key = treeInfo.initKey;
+                if (null == key) {
+                    if (0 < complaints.length) {
+                        var complaintId = parseInt(complaints[0].object_id_s);
+                        if (0 < complaintId) {
+                            key = start + "." + complaintId;
+                        }
                     }
+                } else {
+                    treeInfo.initKey = null;
                 }
-            } else {
-                treeInfo.initKey = null;
+                Complaint.Object.refreshTree(key);
             }
-            Complaint.Object.refreshTree(key);
-        }
+        } //end outer else
     }
 
     ,onDetailRetrieved : function(Callback, response) {
@@ -75,7 +81,18 @@ Complaint.Callback = {
                     Complaint.Object.refreshTree(key);
                 }
 
+
                 Complaint.cacheComplaint.put(complaintId, complaint);
+
+                var people = Complaint.cachePersonList.get(complaintId);
+                if (people) {
+                    Complaint.Object.populateComplaint(complaint);
+                } else {
+                    Complaint.Service.retrievePersonListComplaint(complaintId);
+
+
+                }
+
                 Complaint.Object.populateComplaint(complaint);
             }
         }
@@ -88,5 +105,33 @@ Complaint.Callback = {
 //            }
         }
     }
+    ,onPersonSaved: function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to create or save person:" + response.errorMsg);
+//        } else {
+//            if (Acm.isNotEmpty(response.complaintId)) {
+//            }
+        }
+    }
 
+    ,onComplaintPersonListRetrieved : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to create or retrieve person list:" + response.errorMsg);
+        } else {
+            if (Acm.isNotEmpty(response)) {
+                var c = Complaint.getComplaint();
+                if(response){
+                    for(var i = 0;i < response.length; i++){
+                        if(response[i].personAssociations[0].personType == "Initiator"){
+                            c.originator.person = response[i];
+                        }
+                    }
+                    Complaint.Object.refreshJTableInitiator();
+                    Complaint.cachePersonList.put(c.complaintId,response);
+                    Complaint.Object.refreshJTablePeople();
+                }
+
+            }
+        }
+    }
 };

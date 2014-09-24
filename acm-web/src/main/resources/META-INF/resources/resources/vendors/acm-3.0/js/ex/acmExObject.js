@@ -32,6 +32,10 @@ AcmEx.Object = {
     ,JTABLE_DEFAULT_PAGE_SIZE: 8
     ,jTableGetEmptyRecords: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
     ,jTableGetEmptyRecord: function() { return {"Result": "OK","Record": {}};}
+    ,jTableSetTitle: function(title) {
+        //todo: passing $jt
+        Acm.Object.setText($(".jtable-title-text"), title);
+    }
     ,jTableLoad: function($jt) {
         $jt.jtable('load');
     }

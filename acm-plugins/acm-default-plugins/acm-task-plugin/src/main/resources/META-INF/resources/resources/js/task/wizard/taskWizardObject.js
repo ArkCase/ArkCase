@@ -37,9 +37,9 @@ TaskWizard.Object = {
         this.$selTaskFlags     = $("#taskFlags");
         this.$selTaskFlags.chosen();
 
-        this.$divDetail.summernote({
-            height: 300
-        });
+//        this.$divDetail.summernote({
+//            height: 300
+//        });
 
     }
 
@@ -134,8 +134,7 @@ TaskWizard.Object = {
         return Acm.Object.getSelectValue(this.$selTaskFlags);
     }
     ,getHtmlDivDetail: function() {
-    	return Acm.Object.getText(this.$divDetail);
-        //return AcmEx.Object.getSummerNote(this.$divDetail);
+        return AcmEx.Object.getSummerNote(this.$divDetail);
     }
 
     ,setTaskData : function(data) {
@@ -148,6 +147,7 @@ TaskWizard.Object = {
         t.taskId = data.taskId;
         t.attachedToObjectType = data.attachedToObjectType;
         t.attachedToObjectId = data.attachedToObjectId;
+        t.attachedToObjectName = data.attachedToObjectName;
         t.businessProcessName = data.businessProcessName;
         t.adhocTask = data.adhocTask;
         t.completed = data.completed;
@@ -161,7 +161,7 @@ TaskWizard.Object = {
         var t = Task.getTask();
         data.assignee = this.getSelectValueSelOwners();
         data.attachedToObjectType = "COMPLAINT";
-        data.attachedToObjectId = this.getValueEdtComplaint();
+        data.attachedToObjectName = this.getValueEdtComplaint();
         data.title = this.getValueEdtSubject();
         data.taskStartDate = this.getValueEdtStartDate();
         data.status = this.getSelectedTextSelStatus();

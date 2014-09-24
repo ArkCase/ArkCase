@@ -6,11 +6,5 @@
         </dir>
     </classpath>
 
-    <web>
-        <link target="/">
-            <dir name="${workspace.home}/ACM3/acm-tool-integrations/acm-form-configuration/src/main/resources/META-INF/resources">
-            </dir>
-        </link>
-    </web>
-	
+
 </application>
