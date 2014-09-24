@@ -1555,7 +1555,7 @@ Complaint.JTable = {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var c = Complaint.getComplaint();
                     if (c && c.childObjects) {
-                        for (var i = 0; i < c.childObjects; i++) {
+                        for (var i = 0; i < c.childObjects.length; i++) {
                             var childObject = c.childObjects[i];
                             var record = {};
                             record.id = Acm.goodValue(childObject.targetId, 0);

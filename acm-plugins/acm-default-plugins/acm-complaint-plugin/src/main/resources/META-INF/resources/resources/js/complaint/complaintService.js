@@ -28,7 +28,10 @@ Complaint.Service = {
         var s = treeInfo.s;
         var q = treeInfo.q;
 
-        Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_COMPLAINT
+        var url = App.getContextPath() + this.API_LIST_COMPLAINT;
+        url += "?start=" + treeInfo.start;
+        url += "&n=" + treeInfo.n;
+        Acm.Ajax.asyncGet(url
             ,Complaint.Callback.EVENT_LIST_RETRIEVED
         );
     }

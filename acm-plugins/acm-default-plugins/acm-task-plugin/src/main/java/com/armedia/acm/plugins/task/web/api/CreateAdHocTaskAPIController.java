@@ -1,7 +1,13 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
+import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -15,14 +21,18 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.SolrResponse;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class CreateAdHocTaskAPIController
 {
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
+    private MuleClient muleClient;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -42,11 +52,24 @@ public class CreateAdHocTaskAPIController
         try
         {
         	in.setOwner(authentication.getName());
+        	
+            //find the complaint id by name
+            String objectId = findObjectIdByName(in.getAttachedToObjectName(), authentication);
+            in.setAttachedToObjectId(Long.parseLong(objectId));
+
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
 
             publishAdHocTaskCreatedEvent(authentication, httpSession, adHocTask, true);
 
             return adHocTask;
+        }
+        catch (MuleException e)
+        {
+            // gen up a fake task so we can audit the failure
+            AcmTask fakeTask = new AcmTask();
+            fakeTask.setTaskId(null);  // no object id since the task could not be created
+            publishAdHocTaskCreatedEvent(authentication, httpSession, fakeTask, false);
+            throw new AcmCreateObjectFailedException("task", e.getMessage(), e);
         }
         catch (AcmTaskException e)
         {
@@ -57,7 +80,7 @@ public class CreateAdHocTaskAPIController
             throw new AcmCreateObjectFailedException("task", e.getMessage(), e);
         }
     }
-
+    
     protected void publishAdHocTaskCreatedEvent(
             Authentication authentication,
             HttpSession httpSession,
@@ -69,6 +92,59 @@ public class CreateAdHocTaskAPIController
         getTaskEventPublisher().publishTaskEvent(event);
     }
 
+    /**
+     * Find the complaint or case object id by the complaint or case name. The object id is 
+     * used to associate the task to a complaint or case.
+     * 
+     * @param name
+     * @param authentication
+     * @return
+     * @throws MuleException
+     */
+    private String findObjectIdByName(String name, Authentication authentication) throws MuleException {
+        String query = "name:" + name;
+        
+        //for now use both COMPLAINT and Complaint. But in the future only COMPLAINT is valid
+        query += " AND (object_type_s: COMPLAINT OR object_type_s: Complaint)";
+                
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
+        }
+     
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("query", query);
+        headers.put("firstRow", 0);
+        headers.put("maxRows", 10);
+        headers.put("sort", "");
+
+        MuleMessage response = getMuleClient().send("vm://quickSearchQuery.in", "", headers);
+        log.debug("Response type: " + response.getPayload().getClass());
+
+        SolrResponse solrResponse = getSolrData(response);
+        
+        if ( solrResponse == null ) {
+        	throw new NullPointerException("Object id not found.");
+        }
+        else {
+        	return solrResponse.getResponse().getDocs().get(0).getObject_id_s();
+        }
+    }
+    
+    /**
+     * Retrieve the solr data (json) of the given complaint or case
+     * 
+     * @param response
+     * @return
+     */
+    private SolrResponse getSolrData(MuleMessage response) {
+        String responsePayload = (String) response.getPayload();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        SolrResponse solrResponse = gson.fromJson(responsePayload, SolrResponse.class);
+        int numFound = solrResponse.getResponse().getNumFound();
+    	
+    	return numFound > 0? solrResponse : null;
+    }
 
     public TaskDao getTaskDao()
     {
@@ -89,5 +165,13 @@ public class CreateAdHocTaskAPIController
     {
         this.taskEventPublisher = taskEventPublisher;
     }
+
+	public MuleClient getMuleClient() {
+		return muleClient;
+	}
+
+	public void setMuleClient(MuleClient muleClient) {
+		this.muleClient = muleClient;
+	}
 
 }
