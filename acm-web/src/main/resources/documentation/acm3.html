@@ -1,4 +1,4 @@
-<!DOCTYPE HTML><html><head><title>ACM 3.0 API API documentation</title><meta http-equiv=X-UA-Compatible content="IE=edge"><meta http-equiv=Content-Type content="text/html; charset=utf-8"><meta name=generator content="https://github.com/kevinrenskers/raml2html 0.31.1"><link rel=stylesheet href=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css><link rel=stylesheet href=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css><script type=text/javascript src=http://code.jquery.com/jquery-1.11.0.min.js></script><script type=text/javascript src=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js></script><script type=text/javascript src=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js></script><script type=text/javascript>
+<!DOCTYPE HTML><html><head><title>ACM 3.0 API API documentation</title><meta http-equiv=X-UA-Compatible content="IE=edge"><meta http-equiv=Content-Type content="text/html; charset=utf-8"><meta name=generator content="https://github.com/kevinrenskers/raml2html 0.30.0"><link rel=stylesheet href=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css><link rel=stylesheet href=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css><script type=text/javascript src=http://code.jquery.com/jquery-1.11.0.min.js></script><script type=text/javascript src=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js></script><script type=text/javascript src=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js></script><script type=text/javascript>
         $(document).ready(function() {
             $('.page-header pre code, .top-resource-description pre code').each(function(i, block) {
                 hljs.highlightBlock(block);
@@ -107,360 +107,898 @@
         .method_description p:last-child {
             margin: 0;
         }
-    </style></head><body data-spy=scroll data-target=#sidebar><div class=container><div class=row><div class=col-md-9 role=main><div class=page-header><h1>ACM 3.0 API API documentation <small>version v1</small></h1><p>http://armdec6acm1.armedia.com/acm/api/v1</p></div><div class="panel panel-default"><div class=panel-heading><h3 id=_plugin class=panel-title>/plugin</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin><span class=parent></span>/plugin</a> <span class=methods></span></h4></div><div id=panel__plugin class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint><span class=parent>/plugin</span>/complaint</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_complaint_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Create a complaint based on the complaint originator&#39;s contact information</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin</span>/complaint</h4></div><div class=modal-body><div class="alert alert-info"><p>Create a complaint based on the complaint originator&#39;s contact information</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_post_request><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-     "complaintId": null,      
-     "complaintNumber": "20140806_193",
-     "originator": {
-          "id": null,
-          "personType": "Complainant",
-          "personDescription": "Sample Description",
-          "person": {
-                "id": null,
-                "title": "Mr.",
-                "givenName": "John",
-                "familyName": "Doe",
-                "company": "Contoso",
-                "addresses": [{
-                      "type": "home",
-                      "streetAddress": "123 Main St.",
-                      "streetAddress2": null,
-                      "city": "Peoria",
-                      "state": "IL",
-                      "zip": "12345"
-                   }],
-                 "contactMethods": [{
-                        "type": "Mobile Phone",
-                        "value": "123-456-7890"
-                          },
-                          {
-                        "type": "Personal E-mail",
-                        "value": "john.doe@gmail.com"
-                          }],
-                "securityTags": ["Anonymous",
-                               "Confidential",
-                               "Top Secret"],
-                "personAliases": [{
-                     "id": null,
-                      "aliasType": "Nick Name",
-                      "aliasValue": "Nick"
-                }]
+    </style></head><body data-spy=scroll data-target=#sidebar><div class=container><div class=row><div class=col-md-9 role=main><div class=page-header><h1>ACM 3.0 API API documentation <small>version v1</small></h1><p>http://armdec6acm1.armedia.com/acm/api/v1</p></div><div class="panel panel-default"><div class=panel-heading><h3 id=_plugin class=panel-title>/plugin</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin><span class=parent></span>/plugin</a> <span class=methods></span></h4></div><div id=panel__plugin class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint><span class=parent>/plugin</span>/complaint</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Create a complaint based on the complaint originator&#39;s contact information</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin</span>/complaint</h4></div><div class=modal-body><div class="alert alert-info"><p>Create a complaint based on the complaint originator&#39;s contact information</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_post_request><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+ "complaintId": null,      
+ "complaintNumber": "20140806_193",
+ "complaintType": "Agricultural",
+ "priority": "Medium",
+ "complaintTitle": "fire on the tree",
+ "details": "Sample Detail", 
+ "incidentDate": "2014-09-19T04:00:00.000+0000",
+ "status":"DRAFT",
+ "originator": {
+      "id": null,
+      "personType": "Initiator",
+      "personDescription": "Sample Description",
+      "notes":"sample note describing the person",
+      "person": {
+            "id": null,
+            "title": "Mr.",
+            "givenName": "John",
+            "familyName": "Doe",
+            "company": "Contoso",
+            "weightInPounds": 189,
+            "addresses": [{
+                  "type": "home",
+                  "streetAddress": "123 Main St.",
+                  "streetAddress2": null,
+                  "city": "Peoria",
+                  "state": "IL",
+                  "zip": "12345"
+               }],
+             "contactMethods": [{
+                    "type": "Mobile Phone",
+                    "value": "123-456-7890"
+                      },
+                      {
+                    "type": "Personal E-mail",
+                    "value": "john.doe@gmail.com"
+                      }],
+            "securityTags": ["Anonymous",
+                           "Confidential",
+                           "Top Secret"],
+            "personAliases": [{
+                 "id": null,
+                  "aliasType": "Nick Name",
+                  "aliasValue": "Nick"
+            }],
+            "organizations": [
+        {
+        "organizationId":null,
+        "organizationType": "sample",
+        "organizationValue": "tech net"
               }
-            },
-        "personAssociations": [{
-          "id": null,
-          "personType": "Subject",
-          "personDescription": "Simple Description"
-        }]        
-    }
-    </code></pre></div><div class=tab-pane id=_plugin_complaint_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response indicating the system created a new complaint</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-      "complaintId": 1443,
-      "complaintNumber": "20140804_193",
-      "status": "DRAFT",
-      "originator": {
-            "id": 1444,
-            "parentId": 1443,
-            "personType": "Complainant",
-            "parentType": "COMPLAINT",
-            "personDescription": "Sample Description",
-            "created": "2014-09-02T18:09:49.140+0000",
-            "creator": "ann-acm",
-            "modified": "2014-09-02T18:09:49.141+0000",
-            "modifier": "ann-acm"
-      },
-      "childObjects": [],
-      "approvers": null,
-      "personAssociations": [{
-            "id": 1447,
-            "parentId": 1443,
-            "personType": "Subject",
-            "parentType": "COMPLAINT",
-            "personDescription": "Simple Description",
-            "created": "2014-09-02T18:09:49.140+0000",
-            "creator": "ann-acm",
-            "modified": "2014-09-02T18:09:49.141+0000",
-            "modifier": "ann-acm"
-          }]
-    }
-                 
-    </code></pre><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the request body was invalid (did not match the expected JSON format). The response body will be empty.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_types><span class=parent>/plugin/complaint</span>/types</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_types_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_types class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage the list of complaint types.</p></div><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_complaint_types_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve array of valid complaint types.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_types_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/types</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve array of valid complaint types.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_types_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_types_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_types_get_request></div><div class=tab-pane id=_plugin_complaint_types_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response including the valid complaint types.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[ "Domestic Dispute", "Arson", "Better Business Dispute", "Government", "Local", "Agricultural", "Pollution" ]
-        </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_priorities><span class=parent>/plugin/complaint</span>/priorities</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_priorities_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_priorities class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage the list of complaint priorities.</p></div><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_complaint_priorities_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve array of valid complaint priorities.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_priorities_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/priorities</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve array of valid complaint priorities.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_priorities_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_priorities_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_priorities_get_request></div><div class=tab-pane id=_plugin_complaint_priorities_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response including the valid complaint priorities.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[ "Low", "Medium", "High" ]
-        </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_file><span class=parent>/plugin/complaint</span>/file</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_file_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_file class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage complaint files.</p></div><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_complaint_file_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Add a file to the complaint. Submitted form must include a complaintId element, and a file[] element with the files to be uploaded. Returns JSON suitable for consumption by the jQuery File Upload plugin.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_file_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/file</h4></div><div class=modal-body><div class="alert alert-info"><p>Add a file to the complaint. Submitted form must include a complaintId element, and a file[] element with the files to be uploaded. Returns JSON suitable for consumption by the jQuery File Upload plugin.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_file_post_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_file_post_request><h3>Body</h3><p><strong>Type: multipart/form-data</strong></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_byId__complaintId_><span class=parent>/plugin/complaint</span>/byId/{complaintId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_byId__complaintId__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_byId__complaintId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_complaint_byId__complaintId__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Lookup complaint details by complaint ID.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_byId__complaintId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/byId/{complaintId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Lookup complaint details by complaint ID.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_byId__complaintId__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_byId__complaintId__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_byId__complaintId__get_request><h3>URI Parameters</h3><ul><li><strong>complaintId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_complaint_byId__complaintId__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>expected response containing the desired complaint details</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-        "complaintId":739,
-        "complaintNumber":"20140603_739",
-        "complaintType":"Domestic Dispute",
-        "priority":"Medium",
-        "complaintTitle":null,
-        "details":"&lt;p&gt;&lt;br&gt;&lt;/p&gt;",
-        "incidentDate":"2013-02-12T00:00:00.000+0000",
-        "created":"2014-06-03T21:16:56.090+0000",
-        "creator":"ebmillar",
-        "modified":"2014-06-03T21:17:05.315+0000",
-        "modifier":"ebmillar",
-        "status":"DRAFT",
-        "originator":{
-          "id":740,
-          "title":"Mr.",
-          "company":null,
-          "status":"ACTIVE",
-          "givenName":"Bob",
-          "familyName":"Weir",
-          "created":"2014-06-03T21:16:56.090+0000",
-          "creator":"ebmillar",
-          "modified":"2014-06-03T21:16:56.090+0000",
-          "modifier":"ebmillar",
-          "addresses":[],
-          "contactMethods":[],
-          "securityTags":[]
+        ]
+          }
         },
-        "ecmFolderPath":null,
-        "ecmFolderId":"workspace://SpacesStore/7d240f67-023a-4059-b653-6bc06b2d58ab",
-        "childObjects":[],
-        "approvers":null
-        }
-        </code></pre><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the requested complaint does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Complaint ID 2739 not found.</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess><span class=parent>/plugin</span>/dataaccess</a> <span class=methods></span></h4></div><div id=panel__plugin_dataaccess class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess_accessControlDefaults><span class=parent>/plugin/dataaccess</span>/accessControlDefaults</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_dataaccess_accessControlDefaults class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a page of the default access controls.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_dataaccess_accessControlDefaults_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/dataaccess</span>/accessControlDefaults</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a page of the default access controls.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_dataaccess_accessControlDefaults_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_dataaccess_accessControlDefaults_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_dataaccess_accessControlDefaults_get_request><h3>Query Parameters</h3><ul><li><strong>s</strong> <em>(string)</em><p>A property to sort by. Must be one of the properties shown in the resultPage of the example response. Multiple values are allowed.</p></li><li><strong>start</strong> <em>(integer)</em><p>index of the first row to be returned. The first page starts at row 0.</p></li><li><strong>n</strong> <em>(integer)</em><p>maximum rows to be returned.</p></li></ul></div><div class=tab-pane id=_plugin_dataaccess_accessControlDefaults_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response. Includes integers for totalCount, startRow, and maxRows, and an array of default ACL objects.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-          "totalCount" : 98,    // total number of default access controls
-          "startRow" : 0,       // start row (from the request)
-          "maxRows" : 1,        // max rows (from the request)
-          "resultPage" : [{     // array of default access control objects
-              "id" : 1861,      // default access ID
-              "objectType" : "Complaint",                     // type of the object to be protected
-              "objectState" : "DRAFT",                        // object state this default access applies to
-              "accessLevel" : "Add Document",                 // the action protected by this default access
-              "accessorType" : "Complaint Group",             // the type of participant to whom this access applies
-              "accessDecision" : "GRANT",                     // whether access is permitted (GRANT, DENY, MANDATORY_GRANT, MANDATORY_DENY)
-              "allowDiscretionaryUpdate" : true,              // whether this access can be updated at runtime for any given object
-              "created" : "2014-07-09T18:03:16.826+0000",     // when the default access was created
-              "creator" : "ACL_SYSTEM_USER",                  // user id that created the access
-              "modified" : "2014-07-09T18:03:16.826+0000",    // when the default access was last modified
-              "modifier" : "ACL_SYSTEM_USER"                  // user id that modified the default access
-            }
-          ]
-        }
-        </code></pre><h2>HTTP status code <a href=http://httpstatus.es/403 target=_blank>403</a></h2><p>The user is not authorized to view the default access controls.</p><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>Somehow the server was not able to deliver the requested default access controls.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Some error text will be returned.
-        </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess_default__defaultAccessId_><span class=parent>/plugin/dataaccess</span>/default/{defaultAccessId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_dataaccess_default__defaultAccessId__post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_dataaccess_default__defaultAccessId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_dataaccess_default__defaultAccessId__post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Update the default access control with ID = the given defaultAccessId. Only the accessDecision and the allowDiscretionaryUpdate flag can be changed. The other fields are read-only. accessDecision can be GRANT, DENY, MANDATORY_GRANT, or MANDATORY_DENY.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_dataaccess_default__defaultAccessId__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/dataaccess</span>/default/{defaultAccessId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Update the default access control with ID = the given defaultAccessId. Only the accessDecision and the allowDiscretionaryUpdate flag can be changed. The other fields are read-only. accessDecision can be GRANT, DENY, MANDATORY_GRANT, or MANDATORY_DENY.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_dataaccess_default__defaultAccessId__post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_dataaccess_default__defaultAccessId__post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_dataaccess_default__defaultAccessId__post_request><h3>URI Parameters</h3><ul><li><strong>defaultAccessId</strong>: <em>required (string)</em></li></ul><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-          "id" : 500,
-          "objectType" : "Complaint",
-          "objectState" : "DRAFT",
-          "accessLevel" : "update",
-          "accessorType" : "Supervisor",
-          "accessDecision" : "GRANT",
-          "allowDiscretionaryUpdate" : true,
-        }
-        </code></pre></div><div class=tab-pane id=_plugin_dataaccess_default__defaultAccessId__post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>The default access control rule was updated successfully.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-          "id" : 500,
-          "objectType" : "type",
-          "objectState" : "state",
-          "accessLevel" : "accessLevel",
-          "accessorType" : "accessor",
-          "accessDecision" : "GRANT",
-          "allowDiscretionaryUpdate" : true,
-          "created" : "2014-06-03T21:16:56.090+0000",
-          "creator" : "creator",
-          "modified" : "2014-07-24T21:16:56.090+0000",
-          "modifier" : "modifier"
-        }
-        </code></pre><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>The requested default access control rule does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Could not update default access with ID = 500.
-        Server encountered exception: Default access with id &#x27;500&#x27; does not exist.
-        Exception type was: &#x27;com.armedia.acm.core.exceptions.AcmUserActionFailedException&#x27;.
-        </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task><span class=parent>/plugin</span>/task</a> <span class=methods></span></h4></div><div id=panel__plugin_task class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_forUser__user_><span class=parent>/plugin/task</span>/forUser/{user}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_forUser__user__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_forUser__user_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_task_forUser__user__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a list of active tasks for the specified user.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_forUser__user__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/forUser/{user}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a list of active tasks for the specified user.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_forUser__user__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_forUser__user__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_forUser__user__get_request><h3>URI Parameters</h3><ul><li><strong>user</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_task_forUser__user__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>expected response containing a list of tasks.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
-          {
-            "taskId":500,
-            "priority":0,
-            "title":"Example Task Title",
-            "dueDate":"2014-06-03",
-            "attachedToObjectType":"COMPLAINT",
-            "attachedToObjectId":495, 
-            "assignee":"ann-acm",
-            "businessProcessName":"cmComplaintWorkflow",
-            "adhocTask":false
-          }
-         ]
-        </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_completeTask__taskId_><span class=parent>/plugin/task</span>/completeTask/{taskId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_completeTask__taskId__post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_completeTask__taskId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_task_completeTask__taskId__post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Complete a task. Must be called by the task&#39;s current assignee.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_completeTask__taskId__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/completeTask/{taskId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Complete a task. Must be called by the task&#39;s current assignee.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_completeTask__taskId__post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_completeTask__taskId__post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_completeTask__taskId__post_request><h3>URI Parameters</h3><ul><li><strong>taskId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_task_completeTask__taskId__post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Task was successfully completed. JSON represents the historical task instance, with information as to when the task was started and completed.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-        "taskId":500,
-        "priority":50,
-        "title":"The Task Title",
-        "dueDate":"2014-06-03",
-        "attachedToObjectType":"COMPLAINT",
-        "attachedToObjectId":250,
-        "assignee":"ann-acm",
-        "businessProcessName":"Complaint Approval",
-        "adhocTask":false,
-        "completed":true,
-        "taskStartDate":"2014-06-02",
-        "taskFinishedDate":"2014-06-03",
-        "taskDurationInMillis":298392
-        }
-        </code></pre><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>The task could not be completed. Either the task ID does not represent an active task (task does not exist or is already closed), or the authenticated user is not the task assignee. T</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Task &#x27;500&#x27; does not exist or has already been completed.
-        </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_adHocTask><span class=parent>/plugin/task</span>/adHocTask</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_adHocTask_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_adHocTask class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_task_adHocTask_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Create a standalone task (not tied to a workflow or business process)</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_adHocTask_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/adHocTask</h4></div><div class=modal-body><div class="alert alert-info"><p>Create a standalone task (not tied to a workflow or business process)</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_adHocTask_post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_adHocTask_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_adHocTask_post_request><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-          "priority" : "Low",  // can be Low, Medium, High, Expedite
-          "title" : "Task Created on 9/9/2014",
-          "dueDate" : "2014-09-12",
-          "attachedToObjectType" : "COMPLAINT",
-          "attachedToObjectId" : 2835,
-          "assignee" : "samuel-acm",
-          "status" : null,   // will be set to ASSIGNED if left null
-          "percentComplete" : 10,
-          "details" : "&lt;strong&gt;details&lt;/strong&gt;",
-          "taskStartDate" : "2014-09-10"
-        }
-        </code></pre></div><div class=tab-pane id=_plugin_task_adHocTask_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Task created successfully. The response includes the new tasks&#39;s ID.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-          "taskId" : 17401,
-          "priority" : "Medium",
-          "title" : "Task Created on 9/10/2014",
-          "dueDate" : "2014-09-15T00:00:00.000+0000",
-          "attachedToObjectType" : "COMPLAINT",
-          "attachedToObjectId" : 2835,
-          "assignee" : "samuel-acm",
-          "businessProcessName" : null,
-          "adhocTask" : false,
-          "completed" : false,
-          "status" : null,
-          "percentComplete" : 0,
-          "details" : "&lt;strong&gt;details&lt;/strong&gt;",
-          "taskStartDate" : "2014-09-10T00:00:00.000+0000",
-          "taskFinishedDate" : null,
-          "taskDurationInMillis" : null
-        }
-        </code></pre><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Task could not be created; perhaps the request body was invalid.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_save__taskId_><span class=parent>/plugin/task</span>/save/{taskId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_save__taskId__post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_save__taskId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_task_save__taskId__post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>POST request to save the task</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_save__taskId__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/save/{taskId}</h4></div><div class=modal-body><div class="alert alert-info"><p>POST request to save the task</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_save__taskId__post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_save__taskId__post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_save__taskId__post_request><h3>URI Parameters</h3><ul><li><strong>taskId</strong>: <em>required (number)</em><p>Task ID of the task to be updated.</p></li></ul><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-          "taskId" : 17401,
-          "priority" : "High",
-          "title" : "Task Updated on 9/10/2014",
-          "dueDate" : "2014-09-15T00:00:00.000+0000",
-          "attachedToObjectType" : "COMPLAINT",
-          "attachedToObjectId" : 2835,
-          "assignee" : "samuel-acm",
-          "businessProcessName" : null,
-          "adhocTask" : false,
-          "completed" : false,
-          "status" : null,
-          "percentComplete" : 20,
-          "details" : "&lt;strong&gt;updated details&lt;/strong&gt;",
-          "taskStartDate" : "2014-09-10T00:00:00.000+0000",
-          "taskFinishedDate" : null,
-          "taskDurationInMillis" : null
-        }
-        </code></pre></div><div class=tab-pane id=_plugin_task_save__taskId__post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Task updated successfully. The response is the updated task.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-          "taskId" : 17401,
-          "priority" : "High",
-          "title" : "Task Updated on 9/10/2014",
-          "dueDate" : "2014-09-15T00:00:00.000+0000",
-          "attachedToObjectType" : "COMPLAINT",
-          "attachedToObjectId" : 2835,
-          "assignee" : "samuel-acm",
-          "businessProcessName" : null,
-          "adhocTask" : false,
-          "completed" : false,
-          "status" : null,
-          "percentComplete" : 20,
-          "details" : "&lt;strong&gt;updated details&lt;/strong&gt;",
-          "taskStartDate" : "2014-09-10T00:00:00.000+0000",
-          "taskFinishedDate" : null,
-          "taskDurationInMillis" : null
-        }
-        </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_byId__taskId_><span class=parent>/plugin/task</span>/byId/{taskId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_byId__taskId__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_byId__taskId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_task_byId__taskId__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get task details by the task ID.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_byId__taskId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/byId/{taskId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get task details by the task ID.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_byId__taskId__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_byId__taskId__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_byId__taskId__get_request><h3>URI Parameters</h3><ul><li><strong>taskId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_task_byId__taskId__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response; body includes the task details.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-          "taskId" : 17401,
-          "priority" : "High",
-          "title" : "Task Updated on 9/10/2014",
-          "dueDate" : "2014-09-15T00:00:00.000+0000",
-          "attachedToObjectType" : "COMPLAINT",
-          "attachedToObjectId" : 2835,
-          "assignee" : "samuel-acm",
-          "businessProcessName" : null,
-          "adhocTask" : true,
-          "completed" : false,
-          "status" : "ASSIGNED",
-          "percentComplete" : 20,
-          "details" : "&lt;strong&gt;updated details&lt;/strong&gt;",
-          "taskStartDate" : "2014-09-10T00:00:00.000+0000",
-          "taskFinishedDate" : null,
-          "taskDurationInMillis" : null
-        }
-        </code></pre><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>Could not get the task details; task does not exist, or an Activiti error</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Task with ID &#x27;92838&#x27; does not exist.</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_search><span class=parent>/plugin</span>/search</a> <span class=methods></span></h4></div><div id=panel__plugin_search class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_search_quickSearch><span class=parent>/plugin/search</span>/quickSearch</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_search_quickSearch_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_search_quickSearch class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_search_quickSearch_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Query the quickSearch search index. The Quicksearch index contains only selected metadata and is smaller than the full index; so it should be faster to search.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_search_quickSearch_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/search</span>/quickSearch</h4></div><div class=modal-body><div class="alert alert-info"><p>Query the quickSearch search index. The Quicksearch index contains only selected metadata and is smaller than the full index; so it should be faster to search.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_search_quickSearch_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_search_quickSearch_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_search_quickSearch_get_request><h3>Query Parameters</h3><ul><li><strong>q</strong> <em>required (string)</em><p>The query string; must be a valid Apache Solr query string.</p></li><li><strong>s</strong> <em>(string)</em><p>The sort order. The sort key must be a field in the Solr quick search index. The key must be followed by " asc" or " desc". Optional; default null.</p><p><strong>Example</strong>:</p><pre><code>last_modified asc</code></pre></li><li><strong>start</strong> <em>(number)</em><p>The first matching result to be returned. Useful for pagination. Optional; default 0.</p></li><li><strong>n</strong> <em>(number)</em><p>Number of results to be returned. Useful for pagination. Optional; default 10.</p></li></ul></div><div class=tab-pane id=_plugin_search_quickSearch_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response; includes either search results or an error message from Apache Solr. The example response below includes both a "response" JSON object and an "error" JSON object. Real responses only have one or the other; a "response" object for a successful search, and an "error" object if SOLR could not process the search.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-          "responseHeader": {
-            // 0 == success; there will be a response object (see below).  Any other value 
-            // is an error (there will be an error object).
-            "status": 0,
-            "QTime": 0,
-            "params": {
-              "indent": "true",
-              "q": "*:*",
-              "_": "1403288137744",
-              "wt": "json",
-              "rows": "2"
-            }
-          },
-          // NOTE: "response" object only exists if the status was 0.
-          "response": {
-            "numFound": 61,
-            "start": 0,
-            "docs": [
-              {
-                "id": "12-Complaint",
-                "status_s": "DRAFT",
-                "author": "ann-acm",
-                "author_s": "ann-acm",
-                "modifier_s": "ann-acm",
-                "title": [
-                  "Test 20140502_12"
-                ],
-                "last_modified": "2014-05-02T11:30:27Z",
-                "create_dt": "2014-05-02T11:30:27Z",
-                "name": "20140502_12",
-                "object_id_s": "12",
-                "object_type_s": "Complaint",
-                "_version_": 1471373882636107800
-              },
-              {
-                "id": "14-Complaint",
-                "status_s": "DRAFT",
-                "author": "ann-acm",
-                "author_s": "ann-acm",
-                "modifier_s": "ann-acm",
-                "title": [
-                  "Test 20140502_14"
-                ],
-                "last_modified": "2014-05-02T11:39:21Z",
-                "create_dt": "2014-05-02T11:39:21Z",
-                "name": "20140502_14",
-                "object_id_s": "14",
-                "object_type_s": "Complaint",
-                "_version_": 1471373882844774400
+    "personAssociations": [{
+      "id": null,
+      "personType": "Subject",
+      "personDescription": "Simple Description",
+      "person": {
+            "id": null,
+            "title": "Mr.",
+            "givenName": "John",
+            "familyName": "Doe",
+            "company": "Contoso",
+            "weightInPounds": 189,
+            "addresses": [{
+                  "type": "home",
+                  "streetAddress": "123 Main St.",
+                  "streetAddress2": null,
+                  "city": "Peoria",
+                  "state": "IL",
+                  "zip": "12345"
+               }],
+             "contactMethods": [{
+                    "type": "Mobile Phone",
+                    "value": "123-456-7890"
+                      },
+                      {
+                    "type": "Personal E-mail",
+                    "value": "john.doe@gmail.com"
+                      }],
+            "securityTags": ["Anonymous",
+                           "Confidential",
+                           "Top Secret"],
+            "personAliases": [{
+                 "id": null,
+                  "aliasType": "Nick Name",
+                  "aliasValue": "Nick"
+            }],
+            "organizations": [
+        {
+        "organizationId":null,
+        "organizationType": "sample",
+        "organizationValue": "tech net"
               }
-            ]
+        ]
           }
-          // NOTE: "error" object only exists if the status was NOT 0.
-          "error": {
-            "msg": "Can&#x27;t determine a Sort Order (asc or desc) in sort spec &#x27;sdf&#x27;, pos=3",
-            "code": 400
-          }
-        }
-        </code></pre><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>The server could not process the search request (Apache Solr is down, or some other error).</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Server encountered an exception.</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class=panel-heading><h3 id=_users class=panel-title>/users</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__users><span class=parent></span>/users</a> <span class=methods></span></h4></div><div id=panel__users class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__users_withPrivilege__privilege_><span class=parent>/users</span>/withPrivilege/{privilege}</a> <span class=methods><a href=# data-toggle=modal data-target=#_users_withPrivilege__privilege__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__users_withPrivilege__privilege_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_users_withPrivilege__privilege__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a list of users with the specified privilege. Used to obtain a list of users who are authorized to perform a certain action.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_users_withPrivilege__privilege__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/users</span>/withPrivilege/{privilege}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a list of users with the specified privilege. Used to obtain a list of users who are authorized to perform a certain action.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_users_withPrivilege__privilege__get_request data-toggle=tab>Request</a></li><li><a href=#_users_withPrivilege__privilege__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_users_withPrivilege__privilege__get_request><h3>URI Parameters</h3><ul><li><strong>privilege</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_users_withPrivilege__privilege__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>expected response containing the list of users with the requested privilege.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[{"userId":"OPIS_Admin","fullName":"OPIS Admin","firstName":"OPIS","lastName":"Admin"},
-     {"userId":"ann-acm","fullName":"Ann Administrator","firstName":"Ann","lastName":"Administrator"}]
-    </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__users_participantTypesForObjectTypeName__objectTypeName_><span class=parent>/users</span>/participantTypesForObjectTypeName/{objectTypeName}</a> <span class=methods><a href=# data-toggle=modal data-target=#_users_participantTypesForObjectTypeName__objectTypeName__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__users_participantTypesForObjectTypeName__objectTypeName_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_users_participantTypesForObjectTypeName__objectTypeName__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve the types of participants that can be assigned to a certain object type. For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_users_participantTypesForObjectTypeName__objectTypeName__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/users</span>/participantTypesForObjectTypeName/{objectTypeName}</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve the types of participants that can be assigned to a certain object type. For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_users_participantTypesForObjectTypeName__objectTypeName__get_request data-toggle=tab>Request</a></li><li><a href=#_users_participantTypesForObjectTypeName__objectTypeName__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_users_participantTypesForObjectTypeName__objectTypeName__get_request><h3>URI Parameters</h3><ul><li><strong>objectTypeName</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_users_participantTypesForObjectTypeName__objectTypeName__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response; a JSON array of participant types. The type property can be SINGLE_USER, MULTIPLE_USERS, SINGLE_LDAP_GROUP, MULTIPLE_LDAP_GROUPS, SINGLE_APPLICATION_ROLE, or MULTIPLE_APPLICATION_ROLES.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>[
+    }], 
+    "dueDate": "2014-09-22T04:00:00.000+0000",
+    "tag": "no tag",
+    "frequency": "low",
+    "location": "1234 straight line St, fallschurch va"        
+}
+</code></pre></small></p></div><div class=tab-pane id=_plugin_complaint_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response indicating the system created a new complaint</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "complaintId":2190,
+  "complaintNumber":"20140806_1938",
+  "complaintType":"Agricultural",
+  "priority":"Medium",
+  "complaintTitle":"fire on the tree",
+  "details":"Sample Detail",
+  "incidentDate":"2014-09-19T04:00:00.000+0000",
+  "created":"2014-09-22T20:06:52.018+0000",
+  "creator":"ann-acm",
+  "modified":"2014-09-22T20:06:52.018+0000",
+  "modifier":"ann-acm",
+  "status":"DRAFT",
+  "originator": {
+        "id":2191,
+        "parentId":2190,
+        "personType":"Initiator",
+        "parentType":"COMPLAINT",
+        "personDescription":"Sample Description",
+        "created":"2014-09-22T20:06:52.018+0000",
+        "creator":"ann-acm",
+        "modified":"2014-09-22T20:06:52.018+0000",
+        "modifier":"ann-acm",
+        "notes":"sample note describing the person"
+  },
+  "ecmFolderPath":"/Sites/acm/documentLibrary/Complaints/20140922_2190",
+  "ecmFolderId":"workspace://SpacesStore/75ab1031-515a-4e82-ac58-fd9cf09e7119",
+  "childObjects": [],
+  "approvers": null,
+  "personAssociations": [{
+        "id":2194,
+        "parentId":2190,
+        "personType": "Subject",
+        "parentType": "COMPLAINT",
+        "personDescription": "Simple Description",
+        "created": "2014-09-02T18:09:49.140+0000",
+        "creator": "ann-acm",
+        "modified": "2014-09-02T18:09:49.141+0000",
+        "modifier": "ann-acm"
+      }],
+"dueDate":"2014-09-22T04:00:00.000+0000",
+"tag":"no tag",
+"frequency":"low",
+"location":"1234 straight line St, fallschurch va"  
+}                                  
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the request body was invalid (did not match the expected JSON format). The response body will be empty.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_types><span class=parent>/plugin/complaint</span>/types</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_types_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_types class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage the list of complaint types.</p></div><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_types_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve array of valid complaint types.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_types_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/types</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve array of valid complaint types.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_types_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_types_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_types_get_request></div><div class=tab-pane id=_plugin_complaint_types_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response including the valid complaint types.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[ "Domestic Dispute", "Arson", "Better Business Dispute", "Government", "Local", "Agricultural", "Pollution" ]
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_priorities><span class=parent>/plugin/complaint</span>/priorities</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_priorities_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_priorities class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage the list of complaint priorities.</p></div><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_priorities_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve array of valid complaint priorities.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_priorities_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/priorities</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve array of valid complaint priorities.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_priorities_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_priorities_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_priorities_get_request></div><div class=tab-pane id=_plugin_complaint_priorities_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response including the valid complaint priorities.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[ "Low", "Medium", "High" ]
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_file><span class=parent>/plugin/complaint</span>/file</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_file_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_file class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage complaint files.</p></div><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_file_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Add a file to the complaint. Submitted form must include a complaintId element, and a file[] element with the files to be uploaded. Returns JSON suitable for consumption by the jQuery File Upload plugin.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_file_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/file</h4></div><div class=modal-body><div class="alert alert-info"><p>Add a file to the complaint. Submitted form must include a complaintId element, and a file[] element with the files to be uploaded. Returns JSON suitable for consumption by the jQuery File Upload plugin.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_file_post_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_file_post_request><h3>Body</h3><p><strong>Type: multipart/form-data</strong></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_byId__complaintId_><span class=parent>/plugin/complaint</span>/byId/{complaintId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_byId__complaintId__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_byId__complaintId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_byId__complaintId__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Lookup complaint details by complaint ID.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_byId__complaintId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/byId/{complaintId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Lookup complaint details by complaint ID.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_byId__complaintId__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_byId__complaintId__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_byId__complaintId__get_request><h3>URI Parameters</h3><ul><li><strong>complaintId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_complaint_byId__complaintId__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>expected response containing the desired complaint details</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+"complaintId":2045,
+"complaintNumber":"20140919_2045",
+"complaintType":"Agricultural",
+"priority":"Medium",
+"complaintTitle":"fighting was the cause",
+"details":"simple Detail",
+"incidentDate":"2014-09-19T04:00:00.000+0000",
+"created":"2014-09-19T12:33:53.830+0000",
+"creator":"ann-acm",
+"modified":"2014-09-19T12:33:53.830+0000",
+"modifier":"ann-acm",
+"status":"DRAFT",
+"originator":{
+      "id":2046,
+      "parentId":2045,
+      "personType":"Initiator",
+      "parentType":"COMPLAINT",
+      "personDescription":"Sample Description",
+      "created":"2014-09-19T12:33:53.830+0000",
+      "creator":"ann-acm",
+      "modified":"2014-09-19T12:33:53.830+0000",
+      "modifier":"ann-acm",
+      "notes":"simple note description"
+            },
+"ecmFolderPath":null,
+"ecmFolderId":"workspace://SpacesStore/7d240f67-023a-4059-b653-6bc06b2d58ab",
+"childObjects":[
       {
-        "name" : "Complaint Owner",
-        "description" : "The user who is responsible for completing the complaint.",
-        "type" : "SINGLE_USER",
-        "requiredOnACL" : true
-      }, 
-      {
-        "name" : "Complaint Supervisor",
-        "description" : "The user who has oversight over how the complaint is completed.",
-        "type" : "SINGLE_USER",
-        "requiredOnACL" : false
+      "associationId":2059,
+      "status":"ACTIVE",
+      "parentName":"20140919_2045",
+      "parentType":"COMPLAINT",
+      "parentId":2045,
+      "targetName":"form.xml",
+      "targetType":"FILE",
+      "targetId":2058,
+      "created":"2014-09-19T12:33:58.281+0000",
+      "creator":"ann-acm",
+      "modified":"2014-09-19T12:33:58.281+0000",
+      "modifier":"ann-acm"
       },
       {
-        "name" : "Complaint Group",
-        "description" : "The group responsible for this type of complaint.",
-        "type" : "SINGLE_LDAP_GROUP",
-        "requiredOnACL" : false
-      }, 
+      "associationId":2061,
+      "status":"ACTIVE",
+      "parentName":"20140919_2045",
+      "parentType":"COMPLAINT",
+      "parentId":2045,
+      "targetName":"Testing complaint.docx",
+      "targetType":"FILE",
+      "targetId":2060,
+      "created":"2014-09-19T12:34:04.816+0000",
+      "creator":"ann-acm",
+      "modified":"2014-09-19T12:34:04.816+0000",
+      "modifier":"ann-acm"
+      },
       {
-        "name" : "Complaint Approver",
-        "description" : "The users allowed to approve the complaint.",
-        "type" : "MULTIPLE_USERS",
-        "requiredOnACL" : false
+      "associationId":2063,
+      "status":"ACTIVE",
+      "parentName":"20140919_2045",
+      "parentType":"COMPLAINT",
+      "parentId":2045,
+      "targetName":"Complaint.pdf",
+      "targetType":"FILE",
+      "targetId":2062,
+      "created":"2014-09-19T12:34:07.979+0000",
+      "creator":"ann-acm",
+      "modified":"2014-09-19T12:34:07.979+0000",
+      "modifier":"ann-acm"
+      }
+      ],
+"approvers":null,
+"personAssociations":[
+        {
+        "id":2046,
+        "parentId":2045,
+        "personType":"Initiator",
+        "parentType":"COMPLAINT",
+        "personDescription":"Sample Description",
+        "created":"2014-09-19T12:33:53.830+0000",
+        "creator":"ann-acm",
+        "modified":"2014-09-19T12:33:53.830+0000",
+        "modifier":"ann-acm",
+        "notes":"sample note"
+        },
+        {
+        "id":2057,
+        "parentId":2045,
+        "personType":"Complaintant",
+        "parentType":"COMPLAINT",
+        "personDescription":"long and Athletic",
+        "created":"2014-09-19T12:33:53.830+0000",
+        "creator":"ann-acm",
+        "modified":"2014-09-19T12:33:53.830+0000",
+        "modifier":"ann-acm",
+        "notes":"simple note description."
+        }
+  ],
+  "dueDate":"2014-09-22T04:00:00.000+0000",
+  "tag":"couldn&#x27;t give",
+  "frequency":"Once",
+  "location":"8022 closeopen rd annandale va "
+}
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the requested complaint does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Complaint ID 2045 not found.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_person><span class=parent>/plugin</span>/person</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_person_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_person class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_person_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Create a person with all details</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_person_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin</span>/person</h4></div><div class=modal-body><div class="alert alert-info"><p>Create a person with all details</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_person_post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_person_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_person_post_request><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+    "id": 1884,
+    "title": "Mr.",
+    "givenName": "John",
+    "familyName": "Doe",
+    "company": "Armedia",
+    "hairColor":"white",
+    "eyeColor":"gray",
+    "heightInInches":1.9,
+    "weightInPounds":180,
+    "dateOfBirth":null,
+    "dateMarried":null,
+    "addresses": [{
+      "type": "home",
+      "streetAddress": "123 Main St.",
+      "streetAddress2": null,
+      "city": "Peoria",
+      "state": "IL",
+      "zip": "12345"
+    }],
+    "contactMethods": [{
+      "type": "Mobile Phone",
+      "value": "123-456-7890"
+    },
+    {
+      "type": "Personal E-mail",
+      "value": "john.doe@gmail.com"
+    }],
+    "securityTags": ["Anonymous",
+    "Confidential",
+    "Top Secret"],
+    "personAliases": [{
+      "id": null,
+      "aliasType": "Nick Name",
+      "aliasValue": "Nick"
+    }],
+    "organizations": [{
+      "organizationId": null,
+      "organizationType": "sample",
+      "organizationValue": "tech net"
+    }]
+}            
+</code></pre></small></p></div><div class=tab-pane id=_plugin_person_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response indicating the system created a new person</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "id":1884,
+  "title":"Mr.",
+  "company":"Armedia",
+  "status":null,
+  "givenName":"John",
+  "familyName":"Doe",
+  "hairColor":"white",
+  "eyeColor":"gray",
+  "heightInInches":1,
+  "weightInPounds":180,
+  "dateOfBirth":null,
+  "dateMarried":null,
+  "created":null,
+  "creator":"ann-acm",
+  "modified":"2014-09-23T19:27:53.466+0000",
+  "modifier":"ann-acm",
+  "addresses":[
+      {
+        "id":2283,
+        "created":"2014-09-23T19:27:53.319+0000",
+        "creator":"ann-acm",
+        "modified":"2014-09-23T19:27:53.319+0000",
+        "modifier":"ann-acm",
+        "status":"ACTIVE",
+        "type":"home",
+        "types":null,
+        "streetAddress":"123 Main St.",
+        "streetAddress2":null,
+        "city":"Peoria",
+        "state":"IL",
+        "zip":"12345",
+        "country":null
+        }
+        ],
+  "contactMethods":[
+    {
+      "id":2284,
+      "created":"2014-09-23T19:27:53.322+0000",
+      "creator":"ann-acm",
+      "modified":"2014-09-23T19:27:53.322+0000",
+      "modifier":"ann-acm",
+      "status":"ACTIVE",
+      "type":"Mobile Phone",
+      "types":null,
+      "value":"123-456-7890"
+      },
+      {
+      "id":2285,
+      "created":"2014-09-23T19:27:53.435+0000",
+      "creator":"ann-acm",
+      "modified":"2014-09-23T19:27:53.435+0000",
+      "modifier":"ann-acm",
+      "status":"ACTIVE",
+      "type":"Personal E-mail",
+      "types":null,
+      "value":"john.doe@gmail.com"
+      }
+      ],
+  "securityTags":[
+      "Anonymous",
+      "Confidential",
+      "Top Secret"
+      ],
+  "personAliases":[
+      {
+      "id":2287,
+      "aliasType":"Nick Name",
+      "aliasTypes":null,
+      "aliasValue":"Nick",
+      "created":"2014-09-23T19:27:53.448+0000",
+      "creator":"ann-acm",
+      "modified":"2014-09-23T19:27:53.448+0000",
+      "modifier":"ann-acm"
+      }
+      ],
+  "personAssociations":[
+  ],
+  "organizations":[
+      {
+      "organizationId":2286,
+      "organizationType":"sample",
+      "organizationTypes":null,
+      "organizationValue":"tech net",
+      "created":"2014-09-23T19:27:53.442+0000",
+      "creator":"ann-acm",
+      "modified":"2014-09-23T19:27:53.442+0000",
+      "modifier":"ann-acm"
+      }
+      ]
+  }
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the request body was invalid (did not match the expected JSON format). The response body will be empty.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_person_types><span class=parent>/plugin/person</span>/types</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_person_types_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_person_types class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage the list of person types.</p></div><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_person_types_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve array of valid person types.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_person_types_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/person</span>/types</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve array of valid person types.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_person_types_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_person_types_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_person_types_get_request></div><div class=tab-pane id=_plugin_person_types_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response including the valid person types.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[
+   "Subject",
+   "Witness",
+   "SpouseCohab",
+   "Complaintant",
+   "Initiator",
+   "Wrongdoer"
+]
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_person_find_assocId><span class=parent>/plugin/person</span>/find?assocId</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_person_find_assocId_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_person_find_assocId class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_person_find_assocId_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve a person using personAssociation Id. pass assocId=2046 as a parameter</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_person_find_assocId_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/person</span>/find?assocId</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve a person using personAssociation Id. pass assocId=2046 as a parameter</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_person_find_assocId_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_person_find_assocId_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_person_find_assocId_get_request></div><div class=tab-pane id=_plugin_person_find_assocId_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{                   
+    "id":2051,
+    "title":"mr",
+    "company":null,
+    "status":"ACTIVE",
+    "givenName":"king",
+    "familyName":"gregory",
+    "hairColor":null,
+    "eyeColor":null,
+    "heightInInches":null,
+    "weightInPounds":null,
+    "dateOfBirth":null,
+    "dateMarried":null,
+    "created":"2014-09-19T12:33:53.926+0000",
+    "creator":"ann-acm",
+    "modified":"2014-09-19T12:33:53.926+0000",
+    "modifier":"ann-acm",
+    "addresses":[
+        {
+          "id":2047,
+          "created":"2014-09-19T04:00:00.000+0000",
+          "creator":"Ann Administrator",
+          "modified":"2014-09-19T12:33:53.853+0000",
+          "modifier":"ann-acm",
+          "status":"ACTIVE",
+          "type":"Business",
+          "types":null,
+          "streetAddress":"90155 courthouse",
+          "streetAddress2":null,
+          "city":"vienna",
+          "state":"va",
+          "zip":null,
+          "country":null
+        }],
+    "contactMethods":[
+        {
+          "id":2048,
+          "created":"2014-09-19T04:00:00.000+0000",
+          "creator":"Ann Administrator",
+          "modified":"2014-09-19T12:33:53.902+0000",
+          "modifier":"ann-acm",
+          "status":"ACTIVE",
+          "type":"Home phone",
+          "types":null,
+          "value":"5555555555"
+        }],
+    "securityTags":[
+    ],
+    "personAliases":[
+        {
+          "id":2050,
+          "aliasType":"Married",
+          "aliasTypes":null,
+          "aliasValue":"king",
+          "created":"2014-09-19T04:00:00.000+0000",
+          "creator":"Ann Administrator",
+          "modified":"2014-09-19T12:33:53.915+0000",
+          "modifier":"ann-acm"
+        }],
+    "personAssociations":[
+        {
+          "id":2046,
+          "parentId":2045,
+          "personType":"Initiator",
+          "parentType":"COMPLAINT",
+          "personDescription":"Sample Description",
+          "created":"2014-09-19T12:33:53.830+0000",
+          "creator":"ann-acm",
+          "modified":"2014-09-19T12:33:53.830+0000",
+          "modifier":"ann-acm",
+          "notes":"A simple note Describing"
+      }],
+    "organizations":[
+         {
+          "organizationId":2049,
+          "organizationType":"Government",
+          "organizationTypes":null,
+          "organizationValue":"&lt;&gt;br&lt;&gt;",
+          "created":"2014-09-19T04:00:00.000+0000",
+          "creator":"Ann Administrator",
+          "modified":"2014-09-19T12:33:53.909+0000",
+          "modifier":"ann-acm"
+       }]
+                                           
+}
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the requested person does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>PersonAssociation ID 2046 not found.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_person_list__parentType___parentId_><span class=parent>/plugin/person</span>/list/{parentType}/{parentId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_person_list__parentType___parentId__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_person_list__parentType___parentId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_person_list__parentType___parentId__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve a person using parentType and parentId in the personAssociation</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_person_list__parentType___parentId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/person</span>/list/{parentType}/{parentId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve a person using parentType and parentId in the personAssociation</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_person_list__parentType___parentId__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_person_list__parentType___parentId__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_person_list__parentType___parentId__get_request><h3>URI Parameters</h3><ul><li><strong>parentType</strong>: <em>required (string)</em></li><li><strong>parentId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_person_list__parentType___parentId__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "id":2051,
+  "title":"mr",
+  "company":null,
+  "status":"ACTIVE",
+  "givenName":"richard",
+  "familyName":"mao",
+  "hairColor":null,
+  "eyeColor":null,
+  "heightInInches":null,
+  "weightInPounds":null,
+  "dateOfBirth":null,
+  "dateMarried":null,
+  "created":"2014-09-19T12:33:53.926+0000",
+  "creator":"ann-acm",
+  "modified":"2014-09-19T12:33:53.926+0000",
+  "modifier":"ann-acm",
+  "addresses":[
+        {
+            "id":2047,
+            "created":"2014-09-19T04:00:00.000+0000",
+            "creator":"Ann Administrator",
+            "modified":"2014-09-19T12:33:53.853+0000",
+            "modifier":"ann-acm",
+            "status":"ACTIVE",
+            "type":"Business",
+            "types":null,
+            "streetAddress":"90155 courthouse",
+            "streetAddress2":null,
+            "city":"vienna",
+            "state":"va",
+            "zip":null,
+            "country":null
+        }],
+  "contactMethods":[
+        {
+            "id":2048,
+            "created":"2014-09-19T04:00:00.000+0000",
+            "creator":"Ann Administrator",
+            "modified":"2014-09-19T12:33:53.902+0000",
+            "modifier":"ann-acm",
+            "status":"ACTIVE",
+            "type":"Home phone",
+            "types":null,
+            "value":"5555555555"
+        }],
+  "securityTags":[
+  ],
+  "personAliases":[
+        {
+            "id":2050,
+            "aliasType":"Married",
+            "aliasTypes":null,
+            "aliasValue":"king",
+            "created":"2014-09-19T04:00:00.000+0000",
+            "creator":"Ann Administrator",
+            "modified":"2014-09-19T12:33:53.915+0000",
+            "modifier":"ann-acm"
+        }],
+  "personAssociations":[
+        {
+            "id":2046,
+            "parentId":2045,
+            "personType":"Initiator",
+            "parentType":"COMPLAINT",
+            "personDescription":"Simple Description",
+            "created":"2014-09-19T12:33:53.830+0000",
+            "creator":"ann-acm",
+            "modified":"2014-09-19T12:33:53.830+0000",
+            "modifier":"ann-acm",
+            "notes":"Sample note"
+        }],
+  "organizations":[
+        {
+            "organizationId":2049,
+            "organizationType":"Government",
+            "organizationTypes":null,
+            "organizationValue":"Sample org value",
+            "created":"2014-09-19T04:00:00.000+0000",
+            "creator":"Ann Administrator",
+            "modified":"2014-09-19T12:33:53.909+0000",
+            "modifier":"ann-acm"
+        }
+        ]
+  },
+  {
+  "id":2056,
+  "title":"mr",
+  "company":null,
+  "status":"ACTIVE",
+  "givenName":"tim ",
+  "familyName":"howard ",
+  "hairColor":null,
+  "eyeColor":null,
+  "heightInInches":null,
+  "weightInPounds":null,
+  "dateOfBirth":null,
+  "dateMarried":null,
+  "created":"2014-09-19T12:33:53.968+0000",
+  "creator":"ann-acm",
+  "modified":"2014-09-19T12:33:53.968+0000",
+  "modifier":"ann-acm",
+  "addresses":[
+        {
+            "id":2052,
+            "created":"2014-09-19T04:00:00.000+0000",
+            "creator":"Ann Administrator",
+            "modified":"2014-09-19T12:33:53.957+0000",
+            "modifier":"ann-acm",
+            "status":"ACTIVE",
+            "type":"Home",
+            "types":null,
+            "streetAddress":"2563 comeandgetit rd ",
+            "streetAddress2":null,
+            "city":"Alexandria",
+            "state":"va",
+            "zip":null,
+            "country":null
+        }],
+  "contactMethods":[
+        {
+            "id":2053,
+            "created":"2014-09-19T04:00:00.000+0000",
+            "creator":"Ann Administrator",
+            "modified":"2014-09-19T12:33:53.959+0000",
+            "modifier":"ann-acm",
+            "status":"ACTIVE",
+            "type":"Home phone",
+            "types":null,
+            "value":"4444444444"
+        }],
+  "securityTags":[
+  ],
+  "personAliases":[
+        {
+            "id":2055,
+            "aliasType":"Married",
+            "aliasTypes":null,
+            "aliasValue":"kingofkings",
+            "created":"2014-09-19T04:00:00.000+0000",
+            "creator":"Ann Administrator",
+            "modified":"2014-09-19T12:33:53.964+0000",
+            "modifier":"ann-acm"
+        }],
+  "personAssociations":[
+        {
+            "id":2057,
+            "parentId":2045,
+            "personType":"Complaintant",
+            "parentType":"COMPLAINT",
+            "personDescription":"Sample Description",
+            "created":"2014-09-19T12:33:53.830+0000",
+            "creator":"ann-acm",
+            "modified":"2014-09-19T12:33:53.830+0000",
+            "modifier":"ann-acm",
+            "notes":"Sample note"
+        }],
+  "organizations":[
+        {
+            "organizationId":2054,
+            "organizationType":"Non-profit",
+            "organizationTypes":null,
+            "organizationValue":"billboard",
+            "created":"2014-09-19T04:00:00.000+0000",
+            "creator":"Ann Administrator",
+            "modified":"2014-09-19T12:33:53.962+0000",
+            "modifier":"ann-acm"
+        }]
+  }
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the requested person /persons does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>PersonAssociation  PARENTID OR PARENTTYPE are not found.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_person_delete__personId_><span class=parent>/plugin/person</span>/delete/{personId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_person_delete__personId__delete><span class="badge badge_delete">delete <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_person_delete__personId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_person_delete__personId__delete class=list-group-item><span class="badge badge_delete">delete <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Delete a person by personId</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_person_delete__personId__delete><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_delete">delete <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/person</span>/delete/{personId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Delete a person by personId</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_person_delete__personId__delete_request data-toggle=tab>Request</a></li><li><a href=#_plugin_person_delete__personId__delete_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_person_delete__personId__delete_request><h3>URI Parameters</h3><ul><li><strong>personId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_person_delete__personId__delete_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code> Deleting a person is successful  </code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the requested person does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>person with Id 2046 not found.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess><span class=parent>/plugin</span>/dataaccess</a> <span class=methods></span></h4></div><div id=panel__plugin_dataaccess class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess_accessControlDefaults><span class=parent>/plugin/dataaccess</span>/accessControlDefaults</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_dataaccess_accessControlDefaults class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a page of the default access controls.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_dataaccess_accessControlDefaults_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/dataaccess</span>/accessControlDefaults</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a page of the default access controls.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_dataaccess_accessControlDefaults_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_dataaccess_accessControlDefaults_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_dataaccess_accessControlDefaults_get_request><h3>Query Parameters</h3><ul><li><strong>s</strong> <em>(string)</em><p>A property to sort by. Must be one of the properties shown in the resultPage of the example response. Multiple values are allowed.</p></li><li><strong>start</strong> <em>(integer)</em><p>index of the first row to be returned. The first page starts at row 0.</p></li><li><strong>n</strong> <em>(integer)</em><p>maximum rows to be returned.</p></li></ul></div><div class=tab-pane id=_plugin_dataaccess_accessControlDefaults_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response. Includes integers for totalCount, startRow, and maxRows, and an array of default ACL objects.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "totalCount" : 98,    // total number of default access controls
+  "startRow" : 0,       // start row (from the request)
+  "maxRows" : 1,        // max rows (from the request)
+  "resultPage" : [{     // array of default access control objects
+      "id" : 1861,      // default access ID
+      "objectType" : "Complaint",                     // type of the object to be protected
+      "objectState" : "DRAFT",                        // object state this default access applies to
+      "accessLevel" : "Add Document",                 // the action protected by this default access
+      "accessorType" : "Complaint Group",             // the type of participant to whom this access applies
+      "accessDecision" : "GRANT",                     // whether access is permitted (GRANT, DENY, MANDATORY_GRANT, MANDATORY_DENY)
+      "allowDiscretionaryUpdate" : true,              // whether this access can be updated at runtime for any given object
+      "created" : "2014-07-09T18:03:16.826+0000",     // when the default access was created
+      "creator" : "ACL_SYSTEM_USER",                  // user id that created the access
+      "modified" : "2014-07-09T18:03:16.826+0000",    // when the default access was last modified
+      "modifier" : "ACL_SYSTEM_USER"                  // user id that modified the default access
+    }
+  ]
+}
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/403 target=_blank>403</a></h2><p>The user is not authorized to view the default access controls.</p><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>Somehow the server was not able to deliver the requested default access controls.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Some error text will be returned.
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess_default__defaultAccessId_><span class=parent>/plugin/dataaccess</span>/default/{defaultAccessId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_dataaccess_default__defaultAccessId__post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_dataaccess_default__defaultAccessId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_dataaccess_default__defaultAccessId__post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Update the default access control with ID = the given defaultAccessId. Only the accessDecision and the allowDiscretionaryUpdate flag can be changed. The other fields are read-only. accessDecision can be GRANT, DENY, MANDATORY_GRANT, or MANDATORY_DENY.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_dataaccess_default__defaultAccessId__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/dataaccess</span>/default/{defaultAccessId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Update the default access control with ID = the given defaultAccessId. Only the accessDecision and the allowDiscretionaryUpdate flag can be changed. The other fields are read-only. accessDecision can be GRANT, DENY, MANDATORY_GRANT, or MANDATORY_DENY.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_dataaccess_default__defaultAccessId__post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_dataaccess_default__defaultAccessId__post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_dataaccess_default__defaultAccessId__post_request><h3>URI Parameters</h3><ul><li><strong>defaultAccessId</strong>: <em>required (string)</em></li></ul><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "id" : 500,
+  "objectType" : "Complaint",
+  "objectState" : "DRAFT",
+  "accessLevel" : "update",
+  "accessorType" : "Supervisor",
+  "accessDecision" : "GRANT",
+  "allowDiscretionaryUpdate" : true,
+}
+</code></pre></small></p></div><div class=tab-pane id=_plugin_dataaccess_default__defaultAccessId__post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>The default access control rule was updated successfully.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "id" : 500,
+  "objectType" : "type",
+  "objectState" : "state",
+  "accessLevel" : "accessLevel",
+  "accessorType" : "accessor",
+  "accessDecision" : "GRANT",
+  "allowDiscretionaryUpdate" : true,
+  "created" : "2014-06-03T21:16:56.090+0000",
+  "creator" : "creator",
+  "modified" : "2014-07-24T21:16:56.090+0000",
+  "modifier" : "modifier"
+}
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>The requested default access control rule does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Could not update default access with ID = 500.
+Server encountered exception: Default access with id &#x27;500&#x27; does not exist.
+Exception type was: &#x27;com.armedia.acm.core.exceptions.AcmUserActionFailedException&#x27;.
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task><span class=parent>/plugin</span>/task</a> <span class=methods></span></h4></div><div id=panel__plugin_task class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_forUser__user_><span class=parent>/plugin/task</span>/forUser/{user}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_forUser__user__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_forUser__user_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_task_forUser__user__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a list of active tasks for the specified user.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_forUser__user__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/forUser/{user}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a list of active tasks for the specified user.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_forUser__user__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_forUser__user__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_forUser__user__get_request><h3>URI Parameters</h3><ul><li><strong>user</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_task_forUser__user__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>expected response containing a list of tasks.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[
+  {
+    "taskId":500,
+    "priority":0,
+    "title":"Example Task Title",
+    "dueDate":"2014-06-03",
+    "attachedToObjectType":"COMPLAINT",
+    "attachedToObjectId":495, 
+    "assignee":"ann-acm",
+    "businessProcessName":"cmComplaintWorkflow",
+    "adhocTask":false
+  }
+ ]
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_completeTask__taskId_><span class=parent>/plugin/task</span>/completeTask/{taskId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_completeTask__taskId__post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_completeTask__taskId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_task_completeTask__taskId__post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Complete a task. Must be called by the task&#39;s current assignee.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_completeTask__taskId__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/completeTask/{taskId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Complete a task. Must be called by the task&#39;s current assignee.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_completeTask__taskId__post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_completeTask__taskId__post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_completeTask__taskId__post_request><h3>URI Parameters</h3><ul><li><strong>taskId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_task_completeTask__taskId__post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Task was successfully completed. JSON represents the historical task instance, with information as to when the task was started and completed.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+"taskId":500,
+"priority":50,
+"title":"The Task Title",
+"dueDate":"2014-06-03",
+"attachedToObjectType":"COMPLAINT",
+"attachedToObjectId":250,
+"assignee":"ann-acm",
+"businessProcessName":"Complaint Approval",
+"adhocTask":false,
+"completed":true,
+"taskStartDate":"2014-06-02",
+"taskFinishedDate":"2014-06-03",
+"taskDurationInMillis":298392
+}
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>The task could not be completed. Either the task ID does not represent an active task (task does not exist or is already closed), or the authenticated user is not the task assignee. T</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Task &#x27;500&#x27; does not exist or has already been completed.
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_adHocTask><span class=parent>/plugin/task</span>/adHocTask</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_adHocTask_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_adHocTask class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_task_adHocTask_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Create a standalone task (not tied to a workflow or business process)</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_adHocTask_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/adHocTask</h4></div><div class=modal-body><div class="alert alert-info"><p>Create a standalone task (not tied to a workflow or business process)</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_adHocTask_post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_adHocTask_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_adHocTask_post_request><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "priority" : "Low",  // can be Low, Medium, High, Expedite
+  "title" : "Task Created on 9/9/2014",
+  "dueDate" : "2014-09-12",
+  "attachedToObjectType" : "COMPLAINT",
+  "attachedToObjectId" : 2835,
+  "assignee" : "samuel-acm",
+  "status" : null,   // will be set to ASSIGNED if left null
+  "percentComplete" : 10,
+  "details" : "&lt;strong&gt;details&lt;/strong&gt;",
+  "taskStartDate" : "2014-09-10"
+}
+</code></pre></small></p></div><div class=tab-pane id=_plugin_task_adHocTask_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Task created successfully. The response includes the new tasks&#39;s ID.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "taskId" : 17401,
+  "priority" : "Medium",
+  "title" : "Task Created on 9/10/2014",
+  "dueDate" : "2014-09-15T00:00:00.000+0000",
+  "attachedToObjectType" : "COMPLAINT",
+  "attachedToObjectId" : 2835,
+  "assignee" : "samuel-acm",
+  "businessProcessName" : null,
+  "adhocTask" : false,
+  "completed" : false,
+  "status" : null,
+  "percentComplete" : 0,
+  "details" : "&lt;strong&gt;details&lt;/strong&gt;",
+  "taskStartDate" : "2014-09-10T00:00:00.000+0000",
+  "taskFinishedDate" : null,
+  "taskDurationInMillis" : null
+}
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Task could not be created; perhaps the request body was invalid.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_save__taskId_><span class=parent>/plugin/task</span>/save/{taskId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_save__taskId__post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_save__taskId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_task_save__taskId__post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>POST request to save the task</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_save__taskId__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/save/{taskId}</h4></div><div class=modal-body><div class="alert alert-info"><p>POST request to save the task</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_save__taskId__post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_save__taskId__post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_save__taskId__post_request><h3>URI Parameters</h3><ul><li><strong>taskId</strong>: <em>required (number)</em><p>Task ID of the task to be updated.</p></li></ul><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "taskId" : 17401,
+  "priority" : "High",
+  "title" : "Task Updated on 9/10/2014",
+  "dueDate" : "2014-09-15T00:00:00.000+0000",
+  "attachedToObjectType" : "COMPLAINT",
+  "attachedToObjectId" : 2835,
+  "assignee" : "samuel-acm",
+  "businessProcessName" : null,
+  "adhocTask" : false,
+  "completed" : false,
+  "status" : null,
+  "percentComplete" : 20,
+  "details" : "&lt;strong&gt;updated details&lt;/strong&gt;",
+  "taskStartDate" : "2014-09-10T00:00:00.000+0000",
+  "taskFinishedDate" : null,
+  "taskDurationInMillis" : null
+}
+</code></pre></small></p></div><div class=tab-pane id=_plugin_task_save__taskId__post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Task updated successfully. The response is the updated task.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "taskId" : 17401,
+  "priority" : "High",
+  "title" : "Task Updated on 9/10/2014",
+  "dueDate" : "2014-09-15T00:00:00.000+0000",
+  "attachedToObjectType" : "COMPLAINT",
+  "attachedToObjectId" : 2835,
+  "assignee" : "samuel-acm",
+  "businessProcessName" : null,
+  "adhocTask" : false,
+  "completed" : false,
+  "status" : null,
+  "percentComplete" : 20,
+  "details" : "&lt;strong&gt;updated details&lt;/strong&gt;",
+  "taskStartDate" : "2014-09-10T00:00:00.000+0000",
+  "taskFinishedDate" : null,
+  "taskDurationInMillis" : null
+}
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_task_byId__taskId_><span class=parent>/plugin/task</span>/byId/{taskId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_task_byId__taskId__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_task_byId__taskId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_task_byId__taskId__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get task details by the task ID.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_task_byId__taskId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/task</span>/byId/{taskId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get task details by the task ID.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_task_byId__taskId__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_task_byId__taskId__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_task_byId__taskId__get_request><h3>URI Parameters</h3><ul><li><strong>taskId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_task_byId__taskId__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response; body includes the task details.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "taskId" : 17401,
+  "priority" : "High",
+  "title" : "Task Updated on 9/10/2014",
+  "dueDate" : "2014-09-15T00:00:00.000+0000",
+  "attachedToObjectType" : "COMPLAINT",
+  "attachedToObjectId" : 2835,
+  "assignee" : "samuel-acm",
+  "businessProcessName" : null,
+  "adhocTask" : true,
+  "completed" : false,
+  "status" : "ASSIGNED",
+  "percentComplete" : 20,
+  "details" : "&lt;strong&gt;updated details&lt;/strong&gt;",
+  "taskStartDate" : "2014-09-10T00:00:00.000+0000",
+  "taskFinishedDate" : null,
+  "taskDurationInMillis" : null
+}
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>Could not get the task details; task does not exist, or an Activiti error</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Task with ID &#x27;92838&#x27; does not exist.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_search><span class=parent>/plugin</span>/search</a> <span class=methods></span></h4></div><div id=panel__plugin_search class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_search_quickSearch><span class=parent>/plugin/search</span>/quickSearch</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_search_quickSearch_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_search_quickSearch class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_search_quickSearch_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Query the quickSearch search index. The Quicksearch index contains only selected metadata and is smaller than the full index; so it should be faster to search.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_search_quickSearch_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/search</span>/quickSearch</h4></div><div class=modal-body><div class="alert alert-info"><p>Query the quickSearch search index. The Quicksearch index contains only selected metadata and is smaller than the full index; so it should be faster to search.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_search_quickSearch_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_search_quickSearch_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_search_quickSearch_get_request><h3>Query Parameters</h3><ul><li><strong>q</strong> <em>required (string)</em><p>The query string; must be a valid Apache Solr query string.</p></li><li><strong>s</strong> <em>(string)</em><p>The sort order. The sort key must be a field in the Solr quick search index. The key must be followed by " asc" or " desc". Optional; default null.</p><p><small><strong>Example</strong>:<pre><code>last_modified asc</code></pre></small></p></li><li><strong>start</strong> <em>(number)</em><p>The first matching result to be returned. Useful for pagination. Optional; default 0.</p></li><li><strong>n</strong> <em>(number)</em><p>Number of results to be returned. Useful for pagination. Optional; default 10.</p></li></ul></div><div class=tab-pane id=_plugin_search_quickSearch_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response; includes either search results or an error message from Apache Solr. The example response below includes both a "response" JSON object and an "error" JSON object. Real responses only have one or the other; a "response" object for a successful search, and an "error" object if SOLR could not process the search.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+  "responseHeader": {
+    // 0 == success; there will be a response object (see below).  Any other value 
+    // is an error (there will be an error object).
+    "status": 0,
+    "QTime": 0,
+    "params": {
+      "indent": "true",
+      "q": "*:*",
+      "_": "1403288137744",
+      "wt": "json",
+      "rows": "2"
+    }
+  },
+  // NOTE: "response" object only exists if the status was 0.
+  "response": {
+    "numFound": 61,
+    "start": 0,
+    "docs": [
+      {
+        "id": "12-Complaint",
+        "status_s": "DRAFT",
+        "author": "ann-acm",
+        "author_s": "ann-acm",
+        "modifier_s": "ann-acm",
+        "title": [
+          "Test 20140502_12"
+        ],
+        "last_modified": "2014-05-02T11:30:27Z",
+        "create_dt": "2014-05-02T11:30:27Z",
+        "name": "20140502_12",
+        "object_id_s": "12",
+        "object_type_s": "Complaint",
+        "_version_": 1471373882636107800
+      },
+      {
+        "id": "14-Complaint",
+        "status_s": "DRAFT",
+        "author": "ann-acm",
+        "author_s": "ann-acm",
+        "modifier_s": "ann-acm",
+        "title": [
+          "Test 20140502_14"
+        ],
+        "last_modified": "2014-05-02T11:39:21Z",
+        "create_dt": "2014-05-02T11:39:21Z",
+        "name": "20140502_14",
+        "object_id_s": "14",
+        "object_type_s": "Complaint",
+        "_version_": 1471373882844774400
       }
     ]
-    </code></pre><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>The requested objectTypeName was not recognized.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>No such business object with name &#x27;unrecognized&#x27;
-    </code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class=panel-heading><h3 id=_authenticationtoken class=panel-title>/authenticationtoken</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__authenticationtoken><span class=parent></span>/authenticationtoken</a> <span class=methods><a href=# data-toggle=modal data-target=#_authenticationtoken_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__authenticationtoken class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_authenticationtoken_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve an authentication token that may be appended to subsequent requests. Such a token authenticates those future requests as the user that generated the token.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_authenticationtoken_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent></span>/authenticationtoken</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve an authentication token that may be appended to subsequent requests. Such a token authenticates those future requests as the user that generated the token.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_authenticationtoken_get_request data-toggle=tab>Request</a></li><li><a href=#_authenticationtoken_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_authenticationtoken_get_request></div><div class=tab-pane id=_authenticationtoken_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Successful response. The body consists of the authentication token. Append it to future service requests, e.g., /api/v1/<myservice>?acm_ticket=<token></token></myservice></p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>2cf2ab49-9ce9-45bd-a307-a452b24dd789</code></pre></div></div></div></div></div></div></div></div></div></div></div><div class=col-md-3><div id=sidebar class="hidden-print affix" role=complementary><ul class="nav nav-pills nav-stacked"><li><a href=#_plugin>/plugin</a></li><li><a href=#_users>/users</a></li><li><a href=#_authenticationtoken>/authenticationtoken</a></li></ul></div></div></div></div></body></html>
+  }
+  // NOTE: "error" object only exists if the status was NOT 0.
+  "error": {
+    "msg": "Can&#x27;t determine a Sort Order (asc or desc) in sort spec &#x27;sdf&#x27;, pos=3",
+    "code": 400
+  }
+}
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>The server could not process the search request (Apache Solr is down, or some other error).</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Server encountered an exception.</code></pre></small></p></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class=panel-heading><h3 id=_users class=panel-title>/users</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__users><span class=parent></span>/users</a> <span class=methods></span></h4></div><div id=panel__users class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__users_withPrivilege__privilege_><span class=parent>/users</span>/withPrivilege/{privilege}</a> <span class=methods><a href=# data-toggle=modal data-target=#_users_withPrivilege__privilege__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__users_withPrivilege__privilege_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_users_withPrivilege__privilege__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a list of users with the specified privilege. Used to obtain a list of users who are authorized to perform a certain action.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_users_withPrivilege__privilege__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/users</span>/withPrivilege/{privilege}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a list of users with the specified privilege. Used to obtain a list of users who are authorized to perform a certain action.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_users_withPrivilege__privilege__get_request data-toggle=tab>Request</a></li><li><a href=#_users_withPrivilege__privilege__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_users_withPrivilege__privilege__get_request><h3>URI Parameters</h3><ul><li><strong>privilege</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_users_withPrivilege__privilege__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>expected response containing the list of users with the requested privilege.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[{"userId":"OPIS_Admin","fullName":"OPIS Admin","firstName":"OPIS","lastName":"Admin"},
+ {"userId":"ann-acm","fullName":"Ann Administrator","firstName":"Ann","lastName":"Administrator"}]
+</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__users_participantTypesForObjectTypeName__objectTypeName_><span class=parent>/users</span>/participantTypesForObjectTypeName/{objectTypeName}</a> <span class=methods><a href=# data-toggle=modal data-target=#_users_participantTypesForObjectTypeName__objectTypeName__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__users_participantTypesForObjectTypeName__objectTypeName_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_users_participantTypesForObjectTypeName__objectTypeName__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve the types of participants that can be assigned to a certain object type. For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_users_participantTypesForObjectTypeName__objectTypeName__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/users</span>/participantTypesForObjectTypeName/{objectTypeName}</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve the types of participants that can be assigned to a certain object type. For example, a Case could have a Case Agent, a Supervisor, and a list of Approvers.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_users_participantTypesForObjectTypeName__objectTypeName__get_request data-toggle=tab>Request</a></li><li><a href=#_users_participantTypesForObjectTypeName__objectTypeName__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_users_participantTypesForObjectTypeName__objectTypeName__get_request><h3>URI Parameters</h3><ul><li><strong>objectTypeName</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_users_participantTypesForObjectTypeName__objectTypeName__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response; a JSON array of participant types. The type property can be SINGLE_USER, MULTIPLE_USERS, SINGLE_LDAP_GROUP, MULTIPLE_LDAP_GROUPS, SINGLE_APPLICATION_ROLE, or MULTIPLE_APPLICATION_ROLES.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[
+  {
+    "name" : "Complaint Owner",
+    "description" : "The user who is responsible for completing the complaint.",
+    "type" : "SINGLE_USER",
+    "requiredOnACL" : true
+  }, 
+  {
+    "name" : "Complaint Supervisor",
+    "description" : "The user who has oversight over how the complaint is completed.",
+    "type" : "SINGLE_USER",
+    "requiredOnACL" : false
+  },
+  {
+    "name" : "Complaint Group",
+    "description" : "The group responsible for this type of complaint.",
+    "type" : "SINGLE_LDAP_GROUP",
+    "requiredOnACL" : false
+  }, 
+  {
+    "name" : "Complaint Approver",
+    "description" : "The users allowed to approve the complaint.",
+    "type" : "MULTIPLE_USERS",
+    "requiredOnACL" : false
+  }
+]
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>The requested objectTypeName was not recognized.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>No such business object with name &#x27;unrecognized&#x27;
+</code></pre></small></p></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class=panel-heading><h3 id=_authenticationtoken class=panel-title>/authenticationtoken</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__authenticationtoken><span class=parent></span>/authenticationtoken</a> <span class=methods><a href=# data-toggle=modal data-target=#_authenticationtoken_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__authenticationtoken class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_authenticationtoken_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve an authentication token that may be appended to subsequent requests. Such a token authenticates those future requests as the user that generated the token.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_authenticationtoken_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent></span>/authenticationtoken</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve an authentication token that may be appended to subsequent requests. Such a token authenticates those future requests as the user that generated the token.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_authenticationtoken_get_request data-toggle=tab>Request</a></li><li><a href=#_authenticationtoken_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_authenticationtoken_get_request></div><div class=tab-pane id=_authenticationtoken_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Successful response. The body consists of the authentication token. Append it to future service requests, e.g., /api/v1/<myservice>?acm_ticket=<token></token></myservice></p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>2cf2ab49-9ce9-45bd-a307-a452b24dd789</code></pre></small></p></div></div></div></div></div></div></div></div></div></div></div><div class=col-md-3><div id=sidebar class="hidden-print affix" role=complementary><ul class="nav nav-pills nav-stacked"><li><a href=#_plugin>/plugin</a></li><li><a href=#_users>/users</a></li><li><a href=#_authenticationtoken>/authenticationtoken</a></li></ul></div></div></div></div></body></html>
