@@ -51,7 +51,7 @@ var Complaint = Complaint || {
 
 
 
-    ,_personTypes : ["Witness", "Subject", "Spouse"]
+    ,_personTypes : ["Initiator","Witness", "Subject", "Spouse"]
     ,getPersonTypes : function() {
         return this._personTypes;
     }

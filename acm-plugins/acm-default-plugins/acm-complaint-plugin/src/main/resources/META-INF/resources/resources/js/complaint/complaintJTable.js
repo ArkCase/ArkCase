@@ -780,17 +780,19 @@ Complaint.JTable = {
     }
     ,_makePersonRecord: function(people) {
 //        var rc = {"Result": "OK", "Records": [{id:0, title:"", givenName:"", familyName:"", type:""}]};
-        var rc = {"Result": "OK", "Records": []};
-        var Record = {};
+        var rc = AcmEx.Object.jTableGetEmptyRecords();
         for (var i = 0; i < people.length; i++) {
+            var Record = {};
             Record.id = Acm.goodValue(people[i].id);
             Record.title = Acm.goodValue(people[i].title);
             Record.givenName = Acm.goodValue(people[i].givenName);
             Record.familyName = Acm.goodValue(people[i].familyName);
-            Record.type = Acm.goodValue(people[i].personAssociations[0].personType);
+            Record.personType = Acm.goodValue(people[i].personAssociations[0].personType);
+            Record.description = Acm.goodValue(people[i].personAssociations[0].description);
+
             rc.Records.push(Record);
         }
-        rc.Records.TotalRecordCount = people.length;
+        rc.TotalRecordCount = people.length;
         return rc;
     }
     ,createJTablePeople: function($s) {
@@ -799,8 +801,8 @@ Complaint.JTable = {
             ,paging: false
             ,actions: {
                 listAction: function(postData, jtParams) {
-                    var rc = {"Result": "OK", "Records": [{id:0, title:"", givenName:"", familyName:"", type:"", description: ""}]};
-                    //var rc = {"Result": "OK", "Records": []};
+                    //var rc = {"Result": "OK", "Records": [{id:0, title:"", givenName:"", familyName:"", personType:"", description: ""}]};
+                    var rc = {"Result": "OK", "Records": []};
                     var c = Complaint.getComplaint();
                     if (c) {
                         var persons = Complaint.cachePersonList.get(c.complaintId);
@@ -858,7 +860,7 @@ Complaint.JTable = {
                     title: 'Last Name'
                     ,width: '15%'
                 }
-                ,type: {
+                ,personType: {
                     title: 'Type'
                     //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
                     ,options: Complaint.getPersonTypes()
@@ -927,6 +929,7 @@ Complaint.JTable = {
                 }
             }*/
         });
+
     }
 
     ,_closePeopleDevices: function($t, $row) {
