@@ -24,35 +24,37 @@ Complaint.Callback = {
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve complaint list:" + response.errorMsg);
         } else {
-        	var responseData = response.response;
-        	
-            var treeInfo = Complaint.Object.getTreeInfo();
-            //todo: compare treeInfo with response, if not match do nothing (user click something else before result)
-            //if (treeInfo.start != response start) {
-            //  return;
-            //}
-            
-            
-            
-            treeInfo.total = responseData.numFound;  //= response total
+            if (response && response.response && response.responseHeader) {
+                var responseData = response.response;
 
-            var complaints = responseData.docs;
-            var start = treeInfo.start;
-            Complaint.cachePage.put(start, complaints);
+                var treeInfo = Complaint.Object.getTreeInfo();
+                //todo: compare treeInfo with response, if not match do nothing (user click something else before result)
+                //if (treeInfo.start != response start) {
+                //  return;
+                //}
 
-            var key = treeInfo.initKey;
-            if (null == key) {
-                if (0 < complaints.length) {
-                    var complaintId = parseInt(complaints[0].object_id_s);
-                    if (0 < complaintId) {
-                        key = start + "." + complaintId;
+
+
+                treeInfo.total = responseData.numFound;  //= response total
+
+                var complaints = responseData.docs;
+                var start = treeInfo.start;
+                Complaint.cachePage.put(start, complaints);
+
+                var key = treeInfo.initKey;
+                if (null == key) {
+                    if (0 < complaints.length) {
+                        var complaintId = parseInt(complaints[0].object_id_s);
+                        if (0 < complaintId) {
+                            key = start + "." + complaintId;
+                        }
                     }
+                } else {
+                    treeInfo.initKey = null;
                 }
-            } else {
-                treeInfo.initKey = null;
+                Complaint.Object.refreshTree(key);
             }
-            Complaint.Object.refreshTree(key);
-        }
+        } //end outer else
     }
 
     ,onDetailRetrieved : function(Callback, response) {

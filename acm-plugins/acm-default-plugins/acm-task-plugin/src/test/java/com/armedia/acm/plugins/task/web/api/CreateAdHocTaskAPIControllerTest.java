@@ -10,6 +10,8 @@ import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mule.api.MuleMessage;
+import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -46,6 +50,8 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
     private TaskDao mockTaskDao;
     private TaskEventPublisher mockTaskEventPublisher;
     private Authentication mockAuthentication;
+    private MuleClient mockMuleClient;
+    private MuleMessage mockMuleMessage;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -59,8 +65,11 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
+        mockMuleClient = createMock(MuleClient.class);
+        mockMuleMessage = createMock(MuleMessage.class);
 
         unit = new CreateAdHocTaskAPIController();
+        unit.setMuleClient(mockMuleClient);
 
         unit.setTaskDao(mockTaskDao);
         unit.setTaskEventPublisher(mockTaskEventPublisher);
@@ -71,6 +80,18 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
     @Test
     public void createAdHocTask() throws Exception
     {
+        String name = "20140827_202";        
+        String query = "name:" + name;
+        query += " AND (object_type_s: COMPLAINT OR object_type_s: Complaint)";
+
+        String solrResponse = "{ \"responseHeader\": { \"status\": 0, \"QTime\": 5, \"params\": { \"indent\": \"true\", \"q\": \"name: 20140827_202,\", \"_\": \"1411491195199\", \"wt\": \"json\" } }, \"response\": { \"numFound\": 1, \"start\": 0, \"docs\": [ { \"status_s\": \"DRAFT\", \"create_dt\": \"2014-08-27T16:04:25Z\", \"title_t\": \"Test complaint for report\", \"object_id_s\": \"202\", \"owner_s\": \"ann-acm\", \"deny_acl_ss\": [ \"TEST-DENY-ACL\" ], \"object_type_s\": \"Complaint\", \"allow_acl_ss\": [ \"TEST-ALLOW-ACL\" ], \"id\": \"202-Complaint\", \"modifier_s\": \"ann-acm\", \"author\": \"ann-acm\", \"author_s\": \"ann-acm\", \"last_modified\": \"2014-08-27T16:04:25Z\", \"name\": \"20140827_202\", \"_version_\": 1477621708197200000 } ] } }  ";
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("query", query);
+        headers.put("firstRow", 0);
+        headers.put("maxRows", 10);
+        headers.put("sort", "");
+    	
         Long taskId = 500L;
         String ipAddress = "ipAddress";
 
@@ -82,6 +103,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         adHoc.setStatus("ASSIGNED");
         adHoc.setTaskStartDate(new Date());
         adHoc.setTitle("title");
+        adHoc.setAttachedToObjectName(name);
 
         AcmTask found = new AcmTask();
         found.setAssignee(adHoc.getAssignee());
@@ -96,6 +118,8 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockTaskDao.createAdHocTask(capture(taskSentToDao))).andReturn(found);
+        expect(mockMuleClient.send("vm://quickSearchQuery.in", "", headers)).andReturn(mockMuleMessage);
+        expect(mockMuleMessage.getPayload()).andReturn(solrResponse).atLeastOnce();
         mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 
         // MVC test classes must call getName() somehow
@@ -139,10 +163,23 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
     @Test
     public void createAdHocTask_exception() throws Exception
     {
+        String name = "20140827_202";        
+        String query = "name:" + name;
+        query += " AND (object_type_s: COMPLAINT OR object_type_s: Complaint)";
+
+        String solrResponse = "{ \"responseHeader\": { \"status\": 0, \"QTime\": 5, \"params\": { \"indent\": \"true\", \"q\": \"name: 20140827_202,\", \"_\": \"1411491195199\", \"wt\": \"json\" } }, \"response\": { \"numFound\": 1, \"start\": 0, \"docs\": [ { \"status_s\": \"DRAFT\", \"create_dt\": \"2014-08-27T16:04:25Z\", \"title_t\": \"Test complaint for report\", \"object_id_s\": \"202\", \"owner_s\": \"ann-acm\", \"deny_acl_ss\": [ \"TEST-DENY-ACL\" ], \"object_type_s\": \"Complaint\", \"allow_acl_ss\": [ \"TEST-ALLOW-ACL\" ], \"id\": \"202-Complaint\", \"modifier_s\": \"ann-acm\", \"author\": \"ann-acm\", \"author_s\": \"ann-acm\", \"last_modified\": \"2014-08-27T16:04:25Z\", \"name\": \"20140827_202\", \"_version_\": 1477621708197200000 } ] } }  ";
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("query", query);
+        headers.put("firstRow", 0);
+        headers.put("maxRows", 10);
+        headers.put("sort", "");
+        
         String ipAddress = "ipAddress";
 
         AcmTask adHoc = new AcmTask();
         adHoc.setAssignee("assignee");
+        adHoc.setAttachedToObjectName(name);
 
         Capture<AcmTask> taskSentToDao = new Capture<>();
         Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
@@ -153,6 +190,8 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockTaskDao.createAdHocTask(capture(taskSentToDao))).andThrow(new AcmTaskException("testException"));
+        expect(mockMuleClient.send("vm://quickSearchQuery.in", "", headers)).andReturn(mockMuleMessage);
+        expect(mockMuleMessage.getPayload()).andReturn(solrResponse).atLeastOnce();
         mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 
         // MVC test classes must call getName() somehow

@@ -12,6 +12,7 @@ public class AcmTask implements AcmObject
     private String title;
     private Date dueDate;
     private String attachedToObjectType;
+    private String attachedToObjectName;
     private Long attachedToObjectId;
     private String assignee;
     private String owner;					//creator
@@ -208,4 +209,30 @@ public class AcmTask implements AcmObject
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
+
+	public String getAttachedToObjectName() {
+		return attachedToObjectName;
+	}
+
+	public void setAttachedToObjectName(String attachedToObjectName) {
+		this.attachedToObjectName = attachedToObjectName;
+	}
+
+	@Override
+	public String toString() {
+		return "AcmTask [taskId=" + taskId + ", priority=" + priority
+				+ ", title=" + title + ", dueDate=" + dueDate
+				+ ", attachedToObjectType=" + attachedToObjectType
+				+ ", attachedToObjectName=" + attachedToObjectName
+				+ ", attachedToObjectId=" + attachedToObjectId + ", assignee="
+				+ assignee + ", owner=" + owner + ", businessProcessName="
+				+ businessProcessName + ", adhocTask=" + adhocTask
+				+ ", completed=" + completed + ", status=" + status
+				+ ", percentComplete=" + percentComplete + ", details="
+				+ details + ", createDate=" + createDate + ", taskStartDate="
+				+ taskStartDate + ", taskFinishedDate=" + taskFinishedDate
+				+ ", taskDurationInMillis=" + taskDurationInMillis + "]";
+	}
+	
+
 }
