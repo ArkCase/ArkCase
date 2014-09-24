@@ -90,8 +90,9 @@ public class ComplaintFactory
         {
             p.getContactMethods().addAll(contact.getCommunicationDevice());
         }
-        
-         if ( contact.getMainInformation().getAnonimuos().equalsIgnoreCase("true") )
+
+
+        if ( "true".equalsIgnoreCase(contact.getMainInformation().getAnonimuos()) )
         {
             p.getSecurityTags().add("Anonymous");
         }
