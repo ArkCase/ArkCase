@@ -2,7 +2,7 @@
 <html lang="en" class="app">
 <head>
 <meta charset="utf-8" />
-<title>Locks | ACM | Armedia Case Management</title>
+<title>Dashboard Configuration | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
@@ -99,7 +99,7 @@
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
               </nav>
-              <!-- / nav -->
+              <!-- / nav --> 
             </div>
           </section>
           <footer class="footer hidden-xs no-padder text-center-nav-xs"> <a href="#nav" data-toggle="class:nav-xs" class="btn btn-icon icon-muted btn-inactive m-l-xs m-r-xs"> <i class="i i-circleleft text"></i> <i class="i i-circleright text-active"></i></a></footer>
@@ -111,102 +111,87 @@
           <section class="scrollable padder">
             <section class="row m-b-md">
               <div class="col-sm-12">
-                <h3 class="m-b-xs text-black">Locks</h3>
+                <h3 class="m-b-xs text-black">Dashboard Configuration</h3>
               </div>
             </section>
             <section class="panel panel-default">
-              <div class="row wrapper">
-                <div class="col-sm-4">
-                  <label for="subjectType"  class="label">Type</label>
-                  <select name="subjectType" class="form-control">
-                    <option>Choose Type</option>
-                  </select>
-                  <label class="label">ID</label>
-                  <input type="text" class="form-control" placeholder="Enter ID">
-                  <br/>
-                  <button class="btn btn-sm btn-default" type="button">Search</button>
-                </div>
-                <div class="col-sm-4">
-                  <label class="label">Title</label>
-                  <input type="text" class="form-control" placeholder="Enter Title">
-                  <label class="label">Lock Owner</label>
-                  <input type="text" class="form-control" placeholder="Enter Username">
-                </div>
-                <div class="col-sm-4">
-                  <label class="label">Date Locked</label>
-                  <div class="clear"></div>
-                  <label class="label col-sm-2">From</label>
-                  <div class="col-sm-10">
-                    <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
-                  </div>
-                  <label class="label col-sm-2">To</label>
-                  <div class="col-sm-10">
-                    <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
-                  </div>
-                </div>
-              </div>
-              </div>
-            </section>
-            <section class="panel panel-default">
-              <div class="row wrapper">
-                <div class="col-sm-4 m-b-xs">
-                  <select class="input-sm form-control input-s-sm inline v-middle">
-                    <option value="0">Action</option>
-                    <option value="1">Release Locks</option>
-                  </select>
-                  <button class="btn btn-sm btn-default">Apply</button>
-                </div>
-                <div class="col-sm-5 m-b-xs"> </div>
-                <div class="col-sm-3"> </div>
-              </div>
               <div class="table-responsive">
                 <table class="table table-striped b-t b-light">
                   <thead>
                     <tr>
-                      <th width="20"><label class="checkbox m-n i-checks">
-                          <input type="checkbox">
-                          <i></i></label></th>
-                      <th>Type</th>
-                      <th class="th-sortable" data-toggle="class">ID <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                      <th class="th-sortable" data-toggle="class">Title <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                      <th class="th-sortable" data-toggle="class">User <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                      <th>Locked On</th>
-                      <th width="120">Release Lock</th>
+                      <th  class="th-sortable" data-toggle="class">Dashboard Widget<span class="th-sort"></span></th>
+                      <th width="1202"  class="th-sortable" data-toggle="class">Permissions<span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
+                      <th  class="th-sortable" width="50" data-toggle="class">&nbsp;</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td><label class="checkbox m-n i-checks">
-                          <input type="checkbox" name="post[]">
-                          <i></i></label></td>
-                      <td>Complaint</td>
-                      <td>123456</td>
-                      <td>Title example</td>
-                      <td>Username</td>
-                      <td>4/23/2014 12:00:00</td>
-                      <td><a href="#" class="active" data-toggle="class"><i class="fa fa-lock text-danger text-active"> Unlock</i><i class="fa fa-unlock text-success text"> Lock</i> </a></td>
+                      <td width="227">My Complaints</td>
+                      <td><select data-placeholder="Choose permissions..." id="permissions" class="choose-permissions form-control" multiple>
+                          <option>ROLE_INVESTIGATOR</option>
+                          <option> ROLE_ADMINISTRATOR</option>
+                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
+                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
+                          <option>ROLE_ANALYST</option>
+                          <option>ACM_ANALYST_DEV</option>
+                          <option>ACM_ADMINISTRATOR_DEV</option>
+                          <option>ACM_SUPERVISOR_DEV</option>
+                          <option>ACM_SUPERVISOR_DEV</option>
+                          <option>ACM_INVESTIGATOR_DEV</option>
+                        </select></td>
+                      <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
                     </tr>
-                      </tr>
-                    
+                    <tr>
+                      <td width="227">My Cases</td>
+                      <td><select data-placeholder="Choose permissions..." id="permissions" class="choose-permissions form-control" multiple>
+                          <option>ROLE_INVESTIGATOR</option>
+                          <option> ROLE_ADMINISTRATOR</option>
+                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
+                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
+                          <option>ROLE_ANALYST</option>
+                          <option>ACM_ANALYST_DEV</option>
+                          <option>ACM_ADMINISTRATOR_DEV</option>
+                          <option>ACM_SUPERVISOR_DEV</option>
+                          <option>ACM_SUPERVISOR_DEV</option>
+                          <option>ACM_INVESTIGATOR_DEV</option>
+                        </select></td>
+                      <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
+                    </tr>
+                    <tr>
+                      <td width="227">My Documents</td>
+                      <td><select data-placeholder="Choose permissions..." id="permissions" class="choose-permissions form-control" multiple>
+                          <option>ROLE_INVESTIGATOR</option>
+                          <option> ROLE_ADMINISTRATOR</option>
+                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
+                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
+                          <option>ROLE_ANALYST</option>
+                          <option>ACM_ANALYST_DEV</option>
+                          <option>ACM_ADMINISTRATOR_DEV</option>
+                          <option>ACM_SUPERVISOR_DEV</option>
+                          <option>ACM_SUPERVISOR_DEV</option>
+                          <option>ACM_INVESTIGATOR_DEV</option>
+                        </select></td>
+                      <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
+                    </tr>
+                    <tr>
+                      <td width="227">My Tasks</td>
+                      <td><select data-placeholder="Choose permissions..." id="permissions" class="choose-permissions form-control" multiple>
+                          <option>ROLE_INVESTIGATOR</option>
+                          <option> ROLE_ADMINISTRATOR</option>
+                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
+                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
+                          <option>ROLE_ANALYST</option>
+                          <option>ACM_ANALYST_DEV</option>
+                          <option>ACM_ADMINISTRATOR_DEV</option>
+                          <option>ACM_SUPERVISOR_DEV</option>
+                          <option>ACM_SUPERVISOR_DEV</option>
+                          <option>ACM_INVESTIGATOR_DEV</option>
+                        </select></td>
+                      <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
-              <footer class="panel-footer">
-                <div class="row">
-                  <div class="col-sm-8 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small> </div>
-                  <div class="col-sm-4 text-right text-center-xs">
-                    <ul class="pagination pagination-sm m-t-none m-b-none">
-                      <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                      <li><a href="#">1</a></li>
-                      <li><a href="#">2</a></li>
-                      <li><a href="#">3</a></li>
-                      <li><a href="#">4</a></li>
-                      <li><a href="#">5</a></li>
-                      <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
-                    </ul>
-                  </div>
-                </div>
-              </footer>
             </section>
           </section>
         </section>
@@ -220,6 +205,15 @@
 <!-- App --> 
 <script src="resources/js/app.js"></script> 
 <script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
-<script src="resources/js/app.plugin.js"></script>
+<script src="resources/js/app.plugin.js"></script> 
+<script src="resources/js/chosen.js" type="text/javascript" charset="utf-8"></script> 
+<script type="text/javascript">
+var config = {
+  '.choose-permissions' : {}
+}
+for (var selector in config) {
+  $(selector).chosen(config[selector]);
+}
+</script>
 </body>
 </html>
