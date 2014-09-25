@@ -2,8 +2,6 @@ package com.armedia.acm.plugins.dashboard.web.api;
 
 
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
-import com.armedia.acm.plugins.dashboard.model.Dashboard;
-import com.armedia.acm.plugins.dashboard.model.DashboardDto;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
