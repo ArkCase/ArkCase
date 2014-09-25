@@ -35,6 +35,7 @@
                                                     <ul class="nav admin-collapse">
                                                         <li> <a href="<c:url value='/plugin/admin/access' />"> <i class="i i-circle-sm"></i> <span>Access Control Policy</span> </a> </li>
                                                         <li> <a href="<c:url value='/plugin/admin/locks' />"> <i class="i i-circle-sm"></i> <span>Object Locks</span> </a> </li>
+                                                        <li> <a href="<c:url value='/plugin/admin/dashboard' />"> <i class="i i-circle-sm"></i> <span>Dashboard Config</span> </a> </li>
                                                     </ul>
                                                 </li>                                            
                                             </c:when>
