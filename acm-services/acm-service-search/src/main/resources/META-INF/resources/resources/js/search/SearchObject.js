@@ -7,34 +7,28 @@
  */
 Search.Object = {
     initialize : function() {
-//        var items = $(document).items();
-//        var searchExStr = items.properties("searchEx").itemValue();
-//        this.searchEx = $.parseJSON(searchExStr);
-//        this.$divSearchQuery = $("#searchQuery").parent();
-//        Search.Page.buildPanel(this.searchEx);
-//        this.setupSwitchAll();
-//
-//        this.$asideSubNav = $("#subNav");
-//
-//        this.$lnkToggleSubNav = $("a[href='#subNav']");
-//        //this.$lnkToggleSubNav.click(function(e) {Search.Event.onClickBtnToggleSubNav(e);});
-//
-//        this.$edtSearch     = $("#searchQuery");
-//        this.$btnSearch = this.$edtSearch.next().find("button");
-//        this.$btnSearch.on("click", function(e) {Search.Event.onClickBtnSearch(e, this);});
+        var items = $(document).items();
+        var searchExStr = items.properties("searchEx").itemValue();
+        this.searchEx = $.parseJSON(searchExStr);
+        this.$divSearchQuery = $("#searchQuery").parent();
+        Search.Page.buildPanel(this.searchEx);
+        this.useSwitches();
+        this.useDateFields();
+
+        this.$asideSubNav = $("#subNav");
+
+        this.$lnkToggleSubNav = $("a[href='#subNav']");
+        //this.$lnkToggleSubNav.click(function(e) {Search.Event.onClickBtnToggleSubNav(e);});
+
+        this.$edtSearch     = $("#searchQuery");
+        this.$btnSearch = this.$edtSearch.next().find("button");
+        this.$btnSearch.on("click", function(e) {Search.Event.onClickBtnSearch(e, this);});
 
         this.$divResults = $("#divResults");
         Search.Object.createJTableResults(this.$divResults);
     }
 
-    ,setupSwitch: function(id) {
-        var $chkSwitch = $("#" + id);
-        $chkSwitch.click(function(){
-            var $divSibling = $chkSwitch.closest(".form-group").find(">div:last-child");
-            $divSibling.slideToggle();
-        });
-    }
-    ,setupSwitchAll: function() {
+    ,useSwitches: function() {
         $(".form-group").each(function( index ) {
             var $chkSwitch = $(this).find("label.switch input");
             $chkSwitch.click(function(){
@@ -42,6 +36,24 @@ Search.Object = {
                 $divSibling.slideToggle();
             });
         });
+    }
+    ,useDateFields: function() {
+        $(".datepicker-input").datepicker();
+    }
+    ,_findDetailLink: function(objectType) {
+        if (this.searchEx) {
+            var link = null;
+            for (var i = 0; i < this.searchEx.length; i++) {
+                var pluginEx = this.searchEx[i];
+                if (pluginEx.objectType && pluginEx.detailLink) {
+                    if (objectType == pluginEx.objectType) {
+                        link = pluginEx.detailLink;
+                        break;
+                    }
+                }
+            }
+        }
+        return link;
     }
     ,appendHtmlDivSearchQuery: function(html) {
         this.$divSearchQuery.after(html);
@@ -57,8 +69,6 @@ Search.Object = {
 
         $(".form-group").each(function( index ) {
             var $chkSwitch = $(this).find("label.switch input");
-            var switchOn2 = $chkSwitch.attr("checked");
-            var switchOn1 = $chkSwitch.prop("checked");
             var switchOn = Acm.Object.isChecked($chkSwitch);
             if (1 == $chkSwitch.length) {
                 $(this).find(".form-control").each(function( cidx ) {
@@ -125,7 +135,7 @@ Search.Object = {
                                 var jtData = null;
                                 var err = "Invalid search data";
                                 if (data) {
-                                    if (Acm.isNotEmpty(data.responseHeader)) {
+                                    if (data.responseHeader && data.response) {
                                         var responseHeader = data.responseHeader;
                                         if (Acm.isNotEmpty(responseHeader.status)) {
                                             if (0 == responseHeader.status) {
@@ -134,18 +144,19 @@ Search.Object = {
                                                 //response.docs.length should be <= jtParams.jtPageSize
 
                                                 jtData = AcmEx.Object.jTableGetEmptyRecords();
-                                                for (var i = 0; i < response.docs.length; i++) {
-                                                    var Record = {};
-                                                    Record.id = response.docs[i].object_id_s;
-                                                    Record.name = Acm.goodValue(response.docs[i].name);
-                                                    Record.type = Acm.goodValue(response.docs[i].object_type_s);
-                                                    Record.title = Acm.goodValue(response.docs[i].title_t);
-                                                    Record.owner = Acm.goodValue(response.docs[i].owner_s);
-                                                    Record.created = Acm.goodValue(response.docs[i].create_dt);
-                                                    jtData.Records.push(Record);
-
+                                                if (response.docs) {
+                                                    for (var i = 0; i < response.docs.length; i++) {
+                                                        var Record = {};
+                                                        Record.id = response.docs[i].object_id_s;
+                                                        Record.name = Acm.goodValue(response.docs[i].name);
+                                                        Record.type = Acm.goodValue(response.docs[i].object_type_s);
+                                                        Record.title = Acm.goodValue(response.docs[i].title_t);
+                                                        Record.owner = Acm.goodValue(response.docs[i].owner_s);
+                                                        Record.created = Acm.goodValue(response.docs[i].create_dt);
+                                                        jtData.Records.push(Record);
+                                                    }
                                                 }
-                                                jtData.TotalRecordCount = response.numFound;
+                                                jtData.TotalRecordCount = Acm.goodValue(response.numFound, 0);
 
 
                                             } else {
@@ -194,8 +205,7 @@ Search.Object = {
                                 url += "/plugin/task/" + data.record.id;
                             } else if (App.OBJTYPE_DOCUMENT == data.record.type) {
                                 url += "/plugin/document/" + data.record.id;
-                            }
-                            else if (App.OBJTYPE_PEOPLE == data.record.type) {
+                            } else if (App.OBJTYPE_PEOPLE == data.record.type) {
                                 url += "/plugin/people/" + data.record.id;
                             }
                             var $lnk = $("<a href='" + url + "'>" + data.record.name + "</a>");
@@ -205,7 +215,7 @@ Search.Object = {
                     }
                     ,type: {
                         title: 'Type'
-                        ,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
+                        //,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
                         ,sorting: false
                     }
                     ,title: {

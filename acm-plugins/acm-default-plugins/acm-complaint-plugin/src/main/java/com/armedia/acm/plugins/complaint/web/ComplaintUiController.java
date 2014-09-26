@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.complaint.web;
 
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -15,16 +14,12 @@ import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.web.AcmPageDescriptor;
 
-import java.util.Map;
-import java.util.Properties;
 
 @RequestMapping("/plugin/complaint")
 public class ComplaintUiController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private AcmPlugin acmPlugin;
-    private Properties pluginProperties;
     private AcmPageDescriptor pageDescriptor;
     private AcmPageDescriptor pageDescriptorWizard;
     private AcmPageDescriptor pageDescriptorList;
@@ -41,15 +36,6 @@ public class ComplaintUiController
         retval.addObject("token", token);
         
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
-
-//jwu: code research and test , please keep
-//        String p1 = pluginProperties.getProperty("search.ext");
-//        String p2 = pluginProperties.getProperty("complaint.list.page.title");
-//
-//        String name = acmPlugin.getPluginName();
-//        Map<String, Object> props = acmPlugin.getPluginProperties();
-//        Object p3 = props.get("search.ext");
-//        //String p4 = p3.toString();
 
         return retval;
     }
@@ -153,19 +139,4 @@ public class ComplaintUiController
 		this.formUrl = formUrl;
 	}
 
-    public Properties getPluginProperties() {
-        return pluginProperties;
-    }
-
-    public void setPluginProperties(Properties pluginProperties) {
-        this.pluginProperties = pluginProperties;
-    }
-
-    public AcmPlugin getAcmPlugin() {
-        return acmPlugin;
-    }
-
-    public void setAcmPlugin(AcmPlugin acmPlugin) {
-        this.acmPlugin = acmPlugin;
-    }
 }
