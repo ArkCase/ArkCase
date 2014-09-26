@@ -294,8 +294,13 @@ public class Person implements Serializable
         for ( PersonAlias personAlias : getPersonAliases() )
         {
             personAlias.setModifier(modifier);
-        }    
-       
+        }
+        
+        for ( PersonAssociation persAssoc : getPersonAssociations() )
+        {
+            persAssoc.setModifier(modifier);
+        }
+        
         for ( Organization organization : getOrganizations() )
         {
             organization.setModifier(modifier);
