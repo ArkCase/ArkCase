@@ -3,8 +3,13 @@ package com.armedia.acm.plugins.complaint;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
+import java.util.Calendar;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -12,6 +17,8 @@ import java.util.UUID;
  */
 public class ComplaintFactory
 {
+    private Logger log = LoggerFactory.getLogger(getClass());
+    
     public Complaint complaint()
     {
         Complaint complaint = new Complaint();
@@ -24,13 +31,45 @@ public class ComplaintFactory
         complaint.setPriority("Expedite");
         complaint.setModified(new Date());
         complaint.setModifier("testModifier");
+        complaint.setTag("noTag");
+        complaint.setFrequency("once");
+        complaint.setLocation("1121 goodluck st");
+        
+        Calendar  cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, 3);
+        
+        Date dueDate = cal.getTime();
+        complaint.setDueDate(dueDate);
+        
+        log.debug("the due date is set to: " + dueDate);
 
-        Person p = complaint.getOriginator();
+        complaint.setOriginator(new PersonAssociation());
+        PersonAssociation pa = complaint.getOriginator();
+        
+        Person p = new Person();
         p.setFamilyName("Person");
         p.setGivenName("ACM");
         p.setStatus("testStatus");
+        p.setCreator("ann-acm");
+        p.setModifier("ann-acm");
 
-        complaint.setOriginator(p);
+        pa.setPerson(p);
+        pa.setPersonDescription("Simple Description");
+        pa.setPersonType("Subject");
+        pa.setCreator("originatorCreator");
+        pa.setModifier("originatorModifier");
+
+        complaint.setOriginator(pa);
+        
+        PersonAssociation personAssoc = new PersonAssociation();
+        
+        personAssoc.setPerson(p);
+        personAssoc.setPersonType("Complainant");
+        personAssoc.setPersonDescription("Short Description");
+        
+        List <PersonAssociation> listPersonAssoc = complaint.getPersonAssociations();
+        listPersonAssoc.add(pa);
 
         ObjectAssociation oa = new ObjectAssociation();
         oa.setTargetId(12345L);
@@ -40,6 +79,7 @@ public class ComplaintFactory
         oa.setModifier("testModifier");
 
         complaint.addChildObject(oa);
+        complaint.setPersonAssociations(listPersonAssoc);
 
         return complaint;
     }

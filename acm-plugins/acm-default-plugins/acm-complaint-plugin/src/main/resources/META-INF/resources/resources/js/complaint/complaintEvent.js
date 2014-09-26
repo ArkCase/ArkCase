@@ -17,6 +17,19 @@ Complaint.Event = {
             Complaint.Service.listComplaint(treeInfo);
         }
 
+        var data = App.Object.getApprovers();
+        if (Acm.isEmpty(data)) {
+            App.Service.getApprovers();
+        }
+        data = App.Object.getComplaintTypes();
+        if (Acm.isEmpty(data)) {
+            App.Service.getComplaintTypes();
+        }
+        data = App.Object.getPriorities();
+        if (Acm.isEmpty(data)) {
+            App.Service.getPriorities();
+        }
+
         Acm.keepTrying(Complaint.Event._tryInitAssignee, 8, 200);
         Acm.keepTrying(Complaint.Event._tryInitPriority, 8, 200);
         Acm.keepTrying(Complaint.Event._tryInitComplaintType, 8, 200);
@@ -58,16 +71,20 @@ Complaint.Event = {
             Complaint.Service.retrieveDetail(complaintId);
         }
 
+
+
         Complaint.Object.showTab(node.key);
     }
     ,onSaveTitle: function(value) {
         var c = Complaint.getComplaint();
         c.complaintTitle = value;
         Complaint.Service.saveComplaint(c);
+
+        Complaint.Object.refreshComplaintTreeNode(c);
     }
     ,onSaveIncidentDate: function(value) {
         var c = Complaint.getComplaint();
-        c.created = Acm.dateToString(value);
+        c.incidentDate = Acm.xDateToDatetime(value);
         Complaint.Service.saveComplaint(c);
     }
     ,onSavePriority: function(value) {
@@ -77,13 +94,13 @@ Complaint.Event = {
     }
     ,onSaveAssigned: function(value) {
         var c = Complaint.getComplaint();
-        c.assignee = value;
-        Complaint.Service.saveComplaint(c);
+        //c.assignee = value;                 //fix meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+        //Complaint.Service.saveComplaint(c);
     }
     ,onSaveComplaintType: function(value) {
         var c = Complaint.getComplaint();
-        c.complaintType = value;
-        Complaint.Service.saveComplaint(c);
+        //c.complaintType = value;            //fix meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+        //Complaint.Service.saveComplaint(c);
     }
     ,onClickBtnEditDetails: function(e) {
         Complaint.Object.editDivDetails();
@@ -99,14 +116,11 @@ Complaint.Event = {
         var token = Complaint.Object.setToken();
         var c = Complaint.getComplaint();
 
-        var url = "http://10.21.4.149/orbeon/fr/acm/roi-form/new"
-            + "?acm_ticket=" + token
-            + "&complaint_id=" + c.complaintId
-            + "&complaint_number=" + c.complaintNumber
-            + "&complaint_title=" + c.complaintTitle
-            + "&complaint_priority=" + c.priority;
-
-        window.location.href = url;
+        var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()[report] : '';
+        if (url != '') {
+        	url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
+        	this._showPopup(url, "", 810, $(window).height() - 30);
+        }
     }
 
     ,onClickBtnTaskAssign : function(e) {
@@ -147,6 +161,35 @@ Complaint.Event = {
         } else {
             return false;
         }
+    }
+    
+    ,_showPopup: function(url, title, w, h) {
+        
+        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+        width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+        height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+        var top = ((height / 2) - (h / 2)) + dualScreenTop;
+        var newWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+        
+        if (window.focus) {
+            newWindow.focus();
+        }
+        
+        this._checkClosePopup(newWindow);
+    }
+    
+    ,_checkClosePopup: function(newWindow){
+        var timer = setInterval(function() {
+            if(newWindow.closed) {
+                clearInterval(timer);
+                Complaint.Object.refreshJTableDocuments();
+            }
+        }, 1000);
     }
 
 };

@@ -45,6 +45,10 @@
         <property name="validating" value="false"/>
         <property name="suppressNamespaces" value="true"/>
     </bean>
+    
+    <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="packagesToScan" value="com.armedia.**"/>
+    </bean>
 
     <bean id="contentNegotiationManager"
           class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
@@ -69,8 +73,8 @@
 
             <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
             <bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
-                <property name="marshaller" ref="castorXmlMarshaller"/>
-                <property name="unmarshaller" ref="castorXmlMarshaller"/>
+                <property name="marshaller" ref="jaxb2Marshaller"/>
+                <property name="unmarshaller" ref="jaxb2Marshaller"/>
             </bean>
             <bean class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter"/>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>

@@ -279,21 +279,19 @@
     </div>
 </div>
 
-<div class="tab-pane " id="documents">
+<div class="tab-pane " id="documents" style="width:100%; height:100%;">
     <div class="row">
         <div class="col-md-12">
             <section class="panel b-a" id='secDocDocuments'>
                 <div class="panel-heading b-b bg-info"> 
                 
-<!-- comment it for now. replaced by teh New Form link below
-                 	<span class="pull-right">New</span>
- -->                    
+                 	<span class="pull-right">New</span>                   
                     <a href="#" class="font-bold">Documents</a>
                     <input type="file" name="files[]" multiple style="display:none;"/>                                    	
-                    <select class="input-sm form-control input-s-sm inline v-middle pull-right" id="createNewForm">
-	                    <option value="0">Select option</option>
+<!--                     <select class="input-sm form-control input-s-sm inline v-middle pull-right" id="createNewForm">
+	                    <option value="0">Select Form</option>
 	                    <option value="0">Report of Investigation</option>
-                	</select>
+                	</select> -->
                     
                 </div>
                 <div class="panel-body max-200 no-padder">
@@ -384,6 +382,7 @@
         </div>
     </div>
 -->
+<iframe src="" name="form_iframe" style="width:100%; height:100%; border: 0"></iframe>
 </div>
 <div class="tab-pane" id="tasks">
     <div class="row">

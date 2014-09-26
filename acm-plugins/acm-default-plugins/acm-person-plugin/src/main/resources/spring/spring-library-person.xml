@@ -6,9 +6,122 @@
     <bean id="acmPersonDao" class="com.armedia.acm.plugins.person.dao.PersonDao"/>
     <bean id="acmPersonAliasDao" class="com.armedia.acm.plugins.person.dao.PersonAliasDao"/>
     <bean id="acmPersonAssociationDao" class="com.armedia.acm.plugins.person.dao.PersonAssociationDao"/>
+    <bean id ="acmOrganizationDao" class ="com.armedia.acm.plugins.person.dao.OrganizationDao"/>
           
     <bean id="personTypeTable" class="com.armedia.acm.configuration.LookupTableDescriptor">
         <property name="tableName" value="acm_person_type_lu"/>
         <property name="description" value="Valid person types."/>
+    </bean>
+    
+    <bean id="savePersonTransaction" class="com.armedia.acm.plugins.person.service.SavePersonTransaction">
+        <property name="muleClient" ref="muleClient"/>
+    </bean>
+    
+    <bean id="personEventPublisher" class="com.armedia.acm.plugins.person.service.PersonEventPublisher"/>
+            
+    <bean id ="personPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="Person Plugin"/>
+        <property name="privileges">            
+            <list>
+                <ref bean="acmPersonSavePrivilege"/>
+                <ref bean="acmPersonFindPrivilege"/>
+                <ref bean="acmPersonDeletePrivilege"/>
+                <ref bean="acmPersonListPrivilege"/>
+                <ref bean="acmPersonTypesPrivilege"/>
+            </list>
+            
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/person"/>
+                    <property name="requiredPrivilege" ref="acmPersonSavePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/person/find"/>
+                    <property name="requiredPrivilege" ref="acmPersonFindPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/plugin/person/delete/{personId}"/>
+                    <property name="requiredPrivilege" ref="acmPersonDeletePrivilege"/>                        
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/person/list/{parentType}/{parentId}"/>
+                    <property name="requiredPrivilege" ref="acmPersonListPrivilege"/>                        
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/person/types"/>
+                    <property name="requiredPrivilege" ref="acmPersonTypesPrivilege"/>                        
+                </bean>
+                
+            </list>
+
+        </property>
+            
+    </bean>
+        
+    <bean id="acmPersonSavePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-person-save"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_INVESTIGATOR</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmPersonFindPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-person-find"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_ANALYST</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="acmPersonDeletePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-person-delete"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_INVESTIGATOR</value>                
+            </list>
+        </property>
+    </bean>
+    <bean id="acmPersonListPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-person-List"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_ANALYST</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="acmPersonTypesPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-person-values"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_ANALYST</value>
+            </list>
+        </property>
     </bean>
 </beans>

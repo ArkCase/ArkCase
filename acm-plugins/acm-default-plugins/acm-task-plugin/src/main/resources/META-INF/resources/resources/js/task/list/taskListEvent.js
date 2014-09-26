@@ -32,14 +32,19 @@ TaskList.Event = {
         var taskId = Task.getTaskId();
         var t = TaskList.findTask(taskId);
         if (null != t) {
-            TaskList.Object.updateDetail(t);
-            Task.setTaskId(taskId);
-            TaskList.Object.hiliteSelectedItem(taskId);
+        	// get task details
+        	TaskList.Service.retrieveDetail(taskId);
         }
     }
     ,onClickBtnComplete : function(e) {
         var taskId = Task.getTaskId();
         TaskList.Service.completeTask(taskId);
+    }
+    ,onClickBtnSignConfirm : function(e) {
+        var taskId = Task.getTaskId();
+
+        TaskList.Object.hideSignatureModal();
+        TaskList.Service.signTask(taskId);
     }
     ,onClickBtnReject : function(e) {
         alert("onClickBtnReject");
@@ -88,4 +93,141 @@ TaskList.Event = {
             return false;
         }
     }
+
+    /**
+     * Save title value changed
+     */
+    ,onSaveTitle : function(value) {
+        var taskId = Task.getTaskId();
+        var t = TaskList.findTask(taskId);
+        t.title = value;
+        var data = this.getTaskData(t);
+    	TaskList.Service.listTaskSaveDetail(data.taskId, data);
+    	TaskList.Page.updateActiveTaskTitle(taskId, value);
+    }
+    
+    /**
+     * Save owner value changed
+     */
+    ,onSaveOwner : function(value) {
+        var t = this.getSelectedTask();
+        t.owner = value;
+        this.executeSaveTask(t);
+    }
+    
+    /**
+     * Save percentage completed value changed
+     */
+    ,onSavePerComplete : function(value) {
+        var t = this.getSelectedTask();
+        t.percentComplete = value;
+        this.executeSaveTask(t);
+    }
+
+    /**
+     * Save priority value changed
+     */
+    ,onSavePriority : function(value) {
+        var t = this.getSelectedTask();
+        t.priority = value;
+        this.executeSaveTask(t);
+    }
+
+    /**
+     * Save start date value changed
+     */
+    ,onSaveStartDate : function(value) {
+        var t = this.getSelectedTask();
+        t.taskStartDate = Acm.xDateToDatetime(value);
+        this.executeSaveTask(t);
+    }
+    
+    /**
+     * Save start date value changed
+     */
+    ,onSaveDueDate : function(value) {
+        var t = this.getSelectedTask();
+        t.dueDate = Acm.xDateToDatetime(value);
+        this.executeSaveTask(t);
+    }
+    
+    /**
+     * Save start date value changed
+     */
+    ,onSaveStatus : function(value) {
+        var t = this.getSelectedTask();
+        t.status = value;
+        this.executeSaveTask(t);
+    }
+    
+    /**
+     * Open the detail section editor
+     */
+    ,onClickBtnEditDetails: function(e) {
+        TaskList.Object.editDivDetails();
+    }
+
+    /**
+     * Cancel and close the detail section editor
+     */
+    ,onClickBtnCancelDetails: function(e) {
+        TaskList.Object.cancelEditDivDetails();
+    }
+
+    /**
+     * Save the detail section update to backend
+     */
+    ,onClickBtnSaveDetails : function(e) {
+        var t = this.getSelectedTask();
+        var value = TaskList.Object.saveDivDetails();
+        t.details = value;
+        this.executeSaveTask(t);    	
+    }
+    /////////////////////////////////////////////////////////////////////////////////
+    // This section should move to the request object file
+    /////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Get the current selected taskid and find the task object
+     */
+    ,getSelectedTask : function () {
+        var taskId = Task.getTaskId();
+        return TaskList.findTask(taskId);
+    }
+    
+    /**
+     * Execute the save task object
+     */
+    ,executeSaveTask : function(task) {
+        var data = this.getTaskData(task);
+    	TaskList.Service.listTaskSaveDetail(data.taskId, data);
+    }
+    
+    /**
+     * Setup the task object to be saved. We have to send
+     * all the attributes of the task object to the backend.
+     */
+    ,getTaskData : function(t) {
+        var data = {};
+        data.assignee = t.assignee;
+        data.owner = t.owner;
+        data.attachedToObjectType = "COMPLAINT";
+        data.attachedToObjectId = t.attachedToObjectId;
+        data.title = t.title;
+        data.taskStartDate = t.taskStartDate;
+        data.status = t.status;
+        //data.priority = this.getValueEdtPriority();
+        data.dueDate = t.dueDate;
+        data.priority = t.priority;
+        data.percentComplete = t.percentComplete;
+        data.details = t.details;
+        data.adhocTask = true;
+
+        data.taskId = t.taskId;
+        data.businessProcessName = t.businessProcessName;
+        data.completed = t.completed;
+        data.taskFinishedDate = t.taskFinishedDate;
+        data.taskDurationInMillis = t.taskDurationInMillis;
+        return data;
+    }
+    
 };

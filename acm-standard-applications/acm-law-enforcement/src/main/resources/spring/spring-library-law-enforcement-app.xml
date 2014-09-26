@@ -83,6 +83,7 @@
             </list>
         </property>
     </bean>
+
     <bean id="taskObjectType" class="com.armedia.acm.core.AcmObjectType">
         <property name="name" value="Task"/>
         <property name="description" value="A unit of work that must be completed."/>
@@ -205,6 +206,7 @@
             </list>
         </property>
     </bean>
+
     <!-- end of task states -->
 
 
@@ -228,7 +230,21 @@
         <property name="requiredPrivilege" value="acm-task-complete"/>
     </bean>
     <!-- end of task actions -->
-
+    
+    
+    <!-- Electronic Signature Actions -->
+    <bean id="signatureConfirmAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Sign"/>
+        <property name="iconName" value="fa-check"/>
+        <property name="url" value="/api/{version}/plugin/signature/confirm/{objectType}/{objectId}"/>
+        <property name="requiredPrivilege" value="acm-signature-confirm"/>
+    </bean>
+    <bean id="signatureFindAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Find"/>
+        <property name="iconName" value="fa-check"/>
+        <property name="url" value="/api/{version}/plugin/signature/find/{objectType}/{objectId}"/>
+        <property name="requiredPrivilege" value="acm-signature-find"/>
+    </bean>
 
     <!-- Actions -->
     <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
@@ -284,8 +300,11 @@
         <property name="requiredPrivilege" value="acm-dashboard"/>
     </bean>
     <bean id="adminNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Admin"/>
-        <property name="iconName" value="i-settings"/>
+        <property name="actionName" value="Administration"/>
+        <!--<property name="iconName" value="i-settings"/>-->
+
+        <property name="iconName" value="fa-wrench"/>
+
         <property name="url" value="/plugin/admin"/>
         <property name="requiredPrivilege" value="acm-admin"/>
     </bean>
@@ -314,6 +333,11 @@
         <property name="title" value="Dashboard | ACM | Armedia Case Management"/>
         <property name="descShort" value="Dashboard"/>
         <property name="descLong" value="Dashboard"/>
+    </bean>
+    <bean id="profilePageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
+        <property name="title" value="Profile | ACM | Armedia Case Management"/>
+        <property name="descShort" value="Profile"/>
+        <property name="descLong" value="Profile"/>
     </bean>
     <bean id="adminPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
         <property name="title" value="Admin | ACM | Armedia Case Management"/>
@@ -382,7 +406,7 @@
           init-method="initBean">
         <property name="lastUpdatedPropertyFileLocation" value="${user.home}/.acm/complaintSolrLastMod.properties"/>
         <property name="entityClass" ref="complaintClass"/>
-        <property name="objectType" value="Complaint"/>
+        <property name="objectType" value="COMPLAINT"/>
         <property name="batchSize" value="50"/>
         <property name="idProperty" value="complaintId"/>
         <property name="ownerProperty" value="author"/>
@@ -400,6 +424,7 @@
             </map>
         </property>
         <property name="muleClient" ref="muleClient"/>
+        <property name="dataAccessEntryService" ref="dataAccessEntryService"/>
         <property name="propertyFileManager">
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>

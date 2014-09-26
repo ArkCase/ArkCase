@@ -1,17 +1,19 @@
 package com.armedia.acm.plugins.complaint.web;
 
-import java.util.Properties;
-
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
-import com.armedia.acm.web.AcmPageDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.armedia.acm.form.config.FormUrl;
+import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.web.AcmPageDescriptor;
+
 
 @RequestMapping("/plugin/complaint")
 public class ComplaintUiController
@@ -22,8 +24,8 @@ public class ComplaintUiController
     private AcmPageDescriptor pageDescriptorWizard;
     private AcmPageDescriptor pageDescriptorList;
     private AuthenticationTokenService authenticationTokenService;
-	private Properties formsProperties;
-
+	private FormUrl formUrl;
+	
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openComplaints(Authentication auth) {
         ModelAndView retval = new ModelAndView();
@@ -32,6 +34,9 @@ public class ComplaintUiController
 
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         retval.addObject("token", token);
+        
+        retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
+
         return retval;
     }
 
@@ -45,10 +50,9 @@ public class ComplaintUiController
 
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         retval.addObject("token", token);
-        String roiFormUrl = getFormsProperties().get("form.roi.url").toString();
-        retval.addObject("roiFormUrl", roiFormUrl);
+        retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         
-        log.debug("Security token: " + token + "; ROI Form Url: " + roiFormUrl);
+        log.debug("Security token: " + token);
         return retval;
     }
 
@@ -65,10 +69,9 @@ public class ComplaintUiController
         
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         retval.addObject("token", token);
-        String roiFormUrl = getFormsProperties().get("form.roi.url").toString();
-        retval.addObject("roiFormUrl", roiFormUrl);
+        retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         
-        log.debug("Security token: " + token + "; ROI Form Url: " + roiFormUrl);
+        log.debug("Security token: " + token);
         return retval;
     }
 
@@ -88,6 +91,9 @@ public class ComplaintUiController
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintWizard");
         retval.addObject("pageDescriptor",  getPageDescriptorWizard());
+        
+        retval.addObject("newComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.COMPLAINT));
+        
         return retval;
 
     }
@@ -125,12 +131,12 @@ public class ComplaintUiController
 		this.authenticationTokenService = authenticationTokenService;
 	}
 
-	public Properties getFormsProperties() {
-		return formsProperties;
+	public FormUrl getFormUrl() {
+		return formUrl;
 	}
 
-	public void setFormsProperties(Properties formsProperties) {
-		this.formsProperties = formsProperties;
+	public void setFormUrl(FormUrl formUrl) {
+		this.formUrl = formUrl;
 	}
 
 }

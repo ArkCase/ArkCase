@@ -1,6 +1,8 @@
 package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.services.dataaccess.model.AcmAccess;
+import com.armedia.acm.services.dataaccess.service.DataAccessEntryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mule.api.MuleException;
@@ -49,6 +51,8 @@ public class AcmQuickSearchJpaSolrGenerator
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private DataAccessEntryService dataAccessEntryService;
 
     /**
      * The entity class to query from the database; must be a JPA entity class.
@@ -286,8 +290,9 @@ public class AcmQuickSearchJpaSolrGenerator
 
         for ( Object[] properties : businessObjects )
         {
-            // allocate three extra map entries: one for object type, one for ID, one for object owner
-            Map<String, Object> objectMap = new HashMap<>(properties.length + 3);
+            // allocate five extra map entries: one for object type, one for ID, one for object owner,
+            // one for allow acls, and one for deny acls
+            Map<String, Object> objectMap = new HashMap<>(properties.length + 5);
             objectMap.put(SearchConstants.SOLR_OBJECT_TYPE_FIELD_NAME, objectType);
 
 
@@ -304,9 +309,14 @@ public class AcmQuickSearchJpaSolrGenerator
 
                 objectMap.put(quickSearchKey, value);
             }
-
             objectMap.put(SOLR_ID_PROPERTY, objectMap.get("object_id_s") + "-" + getObjectType());
             objectMap.put(SOLR_OBJECT_OWNER_PROPERTY, objectMap.get(getOwnerProperty()));
+
+            // enhance business object map with read access controls
+            // retrieve acm read access for object and enrich business object map with acls
+            AcmAccess acmAccess = getDataAccessEntryService().getAcmReadAccess((Long)objectMap.get("object_id_s"), getObjectType(), (String)objectMap.get("status_s"));
+            acmAccess.enrichWithAcls(objectMap);
+
             retval.add(objectMap);
         }
 
@@ -483,5 +493,13 @@ public class AcmQuickSearchJpaSolrGenerator
     public void setOwnerProperty(String ownerProperty)
     {
         this.ownerProperty = ownerProperty;
+    }
+
+    public DataAccessEntryService getDataAccessEntryService() {
+        return dataAccessEntryService;
+    }
+
+    public void setDataAccessEntryService(DataAccessEntryService dataAccessEntryService) {
+        this.dataAccessEntryService = dataAccessEntryService;
     }
 }

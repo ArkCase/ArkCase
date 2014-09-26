@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.0.12</version>
+        <version>3.0.13</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -73,6 +73,11 @@
             <artifactId>acm-cmis-configuration</artifactId>
             <version>${acm.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-form-configuration</artifactId>
+            <version>${acm.version}</version>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
@@ -240,6 +245,11 @@
             <artifactId>spring-oxm</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
 
     </dependencies>
 

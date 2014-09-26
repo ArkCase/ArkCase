@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.0.12</version>
+        <version>3.0.13</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,6 +26,11 @@
             <artifactId>acm-service-event</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-data-source</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>
@@ -39,6 +44,16 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- jpa -->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>javax.persistence</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.jpa</artifactId>
         </dependency>
 
         <!-- logging -->

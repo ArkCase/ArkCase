@@ -27,6 +27,7 @@ public abstract class AcmAbstractDao<T>
         if ( found != null )
         {
             em.refresh(found);
+            em.detach(found);
         }
 
         return found;

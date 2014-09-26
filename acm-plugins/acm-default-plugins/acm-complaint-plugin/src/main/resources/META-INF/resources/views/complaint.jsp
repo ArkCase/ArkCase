@@ -34,8 +34,8 @@
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
 
     <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/jtable/blue/jtable.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
 
 
     <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
@@ -44,8 +44,8 @@
     <script src="<c:url value='/'/>resources/vendors/${vd_contextmenu}/jquery.ui-contextmenu.js"></script>
 
     <!-- X-Editable -->
-    <link href="<c:url value='/'/>resources/vendors/${vd_x_editable}/css/bootstrap-editable.css" rel="stylesheet">
-    <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/bootstrap-editable.min.js"></script>
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css" type="text/css"/>
+    <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/${js_x_editable}"></script>
 
 /////////////////////////////////////////////////////////////////////
 <style>
@@ -92,7 +92,7 @@
                                         <li><a href="#">Approved Complaint</a></li>
                                         <li><a href="#">Complaint From Group</a></li>
                                         <li><a href="#">Closed or Expired Complaint</a></li>
-                                        <li><a href="#">New Complaint</a></li>
+                                        <li><a href="<c:url value='/'/>plugin/complaint/wizard">New Complaint</a></li>
                                     </ul>
                                 </div>
                             </header>
@@ -250,208 +250,76 @@
                                     </div>
 
 
-                                    <div class="row" id="tabPending" style="display:none;">
+                                    <div class="row" id="tabDocuments" style="display:none;">
                                         <div class="col-md-12">
                                             <section class="panel b-a">
                                                 <div id="divDocuments" style="width:100%"></div>
+                                                <input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />
                                             </section>
                                         </div>
                                     </div>
 
 
-                                    <div class="row" id="tabApproved" style="display:none;">
+
+                                    <div class="row" id="tabTasks" style="display:none;">
                                         <div class="col-md-12">
                                             <section class="panel b-a">
-                                                <div class="panel-heading b-b bg-info">
-                                                    <ul class="nav nav-pills pull-right">
-                                                        <li style="margin-right:5px">
-                                                            <div class="btn-group" style="margin-top:4px;">
-                                                                <button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown">Filter</span> <span class="caret"></span> </button>
-                                                                <ul class="dropdown-menu dropdown-select">
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 1</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 2</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 3</a></li>
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="btn-group padder-v2">
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
-                                                            </div>
-                                                        </li>
-                                                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                                    </ul>
-                                                    <a href="#" class="font-bold">Documents [Status] </a> </div>
-                                                <div class="panel-body max-200 no-padder">
-                                                    <table class="table table-striped th-sortable table-hover">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Title</th>
-                                                            <th>Created</th>
-                                                            <th>Author</th>
-                                                            <th>Priority</th>
-                                                            <th>Due</th>
-                                                            <th>Status</th>
-                                                            <th width="10%">Action</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr class="odd gradeA">
-                                                            <td>[ID]</td>
-                                                            <td>[Title]</td>
-                                                            <td>[Created]</td>
-                                                            <td>[Author]</td>
-                                                            <td>[Priority]</td>
-                                                            <td>[Due]</td>
-                                                            <td>[Status]</td>
-                                                            <td><select class="input-sm form-control input-s-sm inline v-middle">
-                                                                <option value="0">Choose Action</option>
-                                                                <option value="1">Delete</option>
-                                                                <option value="1">Approve</option>
-                                                                <option value="1">Reject</option>
-                                                            </select></td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </section>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row" id="tabRejected" style="display:none;">
-                                        <div class="col-md-12">
-                                            <section class="panel b-a">
-                                                <div class="panel-heading b-b bg-info">
-                                                    <ul class="nav nav-pills pull-right">
-                                                        <li style="margin-right:5px">
-                                                            <div class="btn-group" style="margin-top:4px;">
-                                                                <button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown">Filter</span> <span class="caret"></span> </button>
-                                                                <ul class="dropdown-menu dropdown-select">
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 1</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 2</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 3</a></li>
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="btn-group padder-v2">
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
-                                                            </div>
-                                                        </li>
-                                                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                                    </ul>
-                                                    <a href="#" class="font-bold">Documents [Status] </a> </div>
-                                                <div class="panel-body max-200 no-padder">
-                                                    <table class="table table-striped th-sortable table-hover">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Title</th>
-                                                            <th>Created</th>
-                                                            <th>Author</th>
-                                                            <th>Priority</th>
-                                                            <th>Due</th>
-                                                            <th>Status</th>
-                                                            <th width="10%">Action</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr class="odd gradeA">
-                                                            <td>[ID]</td>
-                                                            <td>[Title]</td>
-                                                            <td>[Created]</td>
-                                                            <td>[Author]</td>
-                                                            <td>[Priority]</td>
-                                                            <td>[Due]</td>
-                                                            <td>[Status]</td>
-                                                            <td><select class="input-sm form-control input-s-sm inline v-middle">
-                                                                <option value="0">Choose Action</option>
-                                                                <option value="1">Delete</option>
-                                                                <option value="1">Approve</option>
-                                                                <option value="1">Reject</option>
-                                                            </select></td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </section>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row" id="tabUnassigned" style="display:none;">
-                                        <div class="col-md-12">
-                                            <section class="panel b-a">
-                                                <div class="panel-heading b-b bg-info">
-                                                    <ul class="nav nav-pills pull-right">
-                                                        <li style="margin-right:5px">
-                                                            <div class="btn-group" style="margin-top:4px;">
-                                                                <button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown">Filter</span> <span class="caret"></span> </button>
-                                                                <ul class="dropdown-menu dropdown-select">
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 1</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 2</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 3</a></li>
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="btn-group padder-v2">
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="i i-checkmark"></i> New</button>
-                                                            </div>
-                                                        </li>
-                                                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                                    </ul>
-                                                    <a href="#" class="font-bold">Tasks [Status]</a> </div>
-                                                <div class="panel-body max-200 no-padder">
-                                                    <table class="table table-striped th-sortable table-hover">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Title</th>
-                                                            <th>Created</th>
-                                                            <th>Priority</th>
-                                                            <th>Due</th>
-                                                            <th>Status</th>
-                                                            <th width="10%">Action</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr class="odd gradeA">
-                                                            <td>[ID]</td>
-                                                            <td>[Title]</td>
-                                                            <td>[Created]</td>
-                                                            <td>[Priority]</td>
-                                                            <td>[Due]</td>
-                                                            <td>[Status]</td>
-                                                            <td><select class="input-sm form-control input-s-sm inline v-middle">
-                                                                <option value="0">Choose Action</option>
-                                                                <option value="1">Assign</option>
-                                                                <option value="1">Delete</option>
-                                                            </select></td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                <%--<div class="panel-heading b-b bg-info">--%>
+                                                    <%--<ul class="nav nav-pills pull-right">--%>
+                                                        <%--<li style="margin-right:5px">--%>
+                                                            <%--<div class="btn-group" style="margin-top:4px;">--%>
+                                                                <%--<button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown">Filter</span> <span class="caret"></span> </button>--%>
+                                                                <%--<ul class="dropdown-menu dropdown-select">--%>
+                                                                    <%--<li><a href="#">--%>
+                                                                        <%--<input type="radio" name="b">--%>
+                                                                        <%--Filter 1</a></li>--%>
+                                                                    <%--<li><a href="#">--%>
+                                                                        <%--<input type="radio" name="b">--%>
+                                                                        <%--Filter 2</a></li>--%>
+                                                                    <%--<li><a href="#">--%>
+                                                                        <%--<input type="radio" name="b">--%>
+                                                                        <%--Filter 3</a></li>--%>
+                                                                <%--</ul>--%>
+                                                            <%--</div>--%>
+                                                        <%--</li>--%>
+                                                        <%--<li>--%>
+                                                            <%--<div class="btn-group padder-v2">--%>
+                                                                <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="i i-checkmark"></i> New</button>--%>
+                                                            <%--</div>--%>
+                                                        <%--</li>--%>
+                                                        <%--<li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>--%>
+                                                    <%--</ul>--%>
+                                                    <%--<a href="#" class="font-bold">Tasks [Status]</a> </div>--%>
+                                                <%--<div class="panel-body max-200 no-padder">--%>
+                                                    <%--<table class="table table-striped th-sortable table-hover">--%>
+                                                        <%--<thead>--%>
+                                                        <%--<tr>--%>
+                                                            <%--<th>ID</th>--%>
+                                                            <%--<th>Title</th>--%>
+                                                            <%--<th>Created</th>--%>
+                                                            <%--<th>Priority</th>--%>
+                                                            <%--<th>Due</th>--%>
+                                                            <%--<th>Status</th>--%>
+                                                            <%--<th width="10%">Action</th>--%>
+                                                        <%--</tr>--%>
+                                                        <%--</thead>--%>
+                                                        <%--<tbody>--%>
+                                                        <%--<tr class="odd gradeA">--%>
+                                                            <%--<td>[ID]</td>--%>
+                                                            <%--<td>[Title]</td>--%>
+                                                            <%--<td>[Created]</td>--%>
+                                                            <%--<td>[Priority]</td>--%>
+                                                            <%--<td>[Due]</td>--%>
+                                                            <%--<td>[Status]</td>--%>
+                                                            <%--<td><select class="input-sm form-control input-s-sm inline v-middle">--%>
+                                                                <%--<option value="0">Choose Action</option>--%>
+                                                                <%--<option value="1">Assign</option>--%>
+                                                                <%--<option value="1">Delete</option>--%>
+                                                            <%--</select></td>--%>
+                                                        <%--</tr>--%>
+                                                        <%--</tbody>--%>
+                                                    <%--</table>--%>
+                                                <%--</div>--%>
 
                                                 <div class="panel-body max-200 no-padder">
                                                     <div id="divTasks" style="width:100%"></div>
@@ -461,161 +329,34 @@
                                     </div>
 
 
-                                    <div class="row" id="tabAssigned" style="display:none;">
-                                        <div class="col-md-12">
-                                            <section class="panel b-a">
-                                                <div class="panel-heading b-b bg-info">
-                                                    <ul class="nav nav-pills pull-right">
-                                                        <li style="margin-right:5px">
-                                                            <div class="btn-group" style="margin-top:4px;">
-                                                                <button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown">Filter</span> <span class="caret"></span> </button>
-                                                                <ul class="dropdown-menu dropdown-select">
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 1</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 2</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 3</a></li>
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="btn-group padder-v2">
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="i i-checkmark"></i> New</button>
-                                                            </div>
-                                                        </li>
-                                                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                                    </ul>
-                                                    <a href="#" class="font-bold">Tasks [Status]</a> </div>
-                                                <div class="panel-body max-200 no-padder">
-                                                    <table class="table table-striped th-sortable table-hover">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Title</th>
-                                                            <th>Created</th>
-                                                            <th>Priority</th>
-                                                            <th>Due</th>
-                                                            <th>Status</th>
-                                                            <th width="10%">Action</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr class="odd gradeA">
-                                                            <td>[ID]</td>
-                                                            <td>[Title]</td>
-                                                            <td>[Created]</td>
-                                                            <td>[Priority]</td>
-                                                            <td>[Due]</td>
-                                                            <td>[Status]</td>
-                                                            <td><select class="input-sm form-control input-s-sm inline v-middle">
-                                                                <option value="0">Choose Action</option>
-                                                                <option value="1">Assign</option>
-                                                                <option value="1">Delete</option>
-                                                            </select></td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </section>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row" id="tabCompleted" style="display:none;">
-                                        <div class="col-md-12">
-                                            <section class="panel b-a">
-                                                <div class="panel-heading b-b bg-info">
-                                                    <ul class="nav nav-pills pull-right">
-                                                        <li style="margin-right:5px">
-                                                            <div class="btn-group" style="margin-top:4px;">
-                                                                <button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown">Filter</span> <span class="caret"></span> </button>
-                                                                <ul class="dropdown-menu dropdown-select">
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 1</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 2</a></li>
-                                                                    <li><a href="#">
-                                                                        <input type="radio" name="b">
-                                                                        Filter 3</a></li>
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="btn-group padder-v2">
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="i i-checkmark"></i> New</button>
-                                                            </div>
-                                                        </li>
-                                                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                                    </ul>
-                                                    <a href="#" class="font-bold">Tasks [Status]</a> </div>
-                                                <div class="panel-body max-200 no-padder">
-                                                    <table class="table table-striped th-sortable table-hover">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Title</th>
-                                                            <th>Created</th>
-                                                            <th>Priority</th>
-                                                            <th>Due</th>
-                                                            <th>Status</th>
-                                                            <th width="10%">Action</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr class="odd gradeA">
-                                                            <td>[ID]</td>
-                                                            <td>[Title]</td>
-                                                            <td>[Created]</td>
-                                                            <td>[Priority]</td>
-                                                            <td>[Due]</td>
-                                                            <td>[Status]</td>
-                                                            <td><select class="input-sm form-control input-s-sm inline v-middle">
-                                                                <option value="0">Choose Action</option>
-                                                                <option value="1">Assign</option>
-                                                                <option value="1">Delete</option>
-                                                            </select></td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </section>
-                                        </div>
-                                    </div>
-
 
 
                                     <div class="row" id="tabRefComplaints" style="display:none;">
-                                        Other Complaints
+                                        <%--Other Complaints--%>
                                     </div>
 
                                     <div class="row" id="tabRefCases" style="display:none;">
-                                        Other Cases
+                                        <%--Other Cases--%>
                                     </div>
 
                                     <div class="row" id="tabRefTasks" style="display:none;">
-                                        Other Tasks
+                                        <%--Other Tasks--%>
                                     </div>
 
                                     <div class="row" id="tabRefDocuments" style="display:none;">
-                                        Other Documents
+                                        <%--Other Documents--%>
                                     </div>
 
                                     <div class="row" id="tabApprovers" style="display:none;">
-                                        Approvers
+                                        <%--Approvers--%>
                                     </div>
 
                                     <div class="row" id="tabCollaborators" style="display:none;">
-                                        Collaborators
+                                        <%--Collaborators--%>
                                     </div>
 
                                     <div class="row" id="tabWatchers" style="display:none;">
-                                        Watchers
+                                        <%--Watchers--%>
                                     </div>
 
                                 </div>

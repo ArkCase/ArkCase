@@ -5,6 +5,7 @@
 
     <bean id="reportUiController" class="com.armedia.acm.plugins.report.web.ReportUiController">
         <property name="pageDescriptor" ref="reportPageDescriptor"/>
+		<property name="reportUrl" ref="reportResource" />		
     </bean>
 </beans>
 

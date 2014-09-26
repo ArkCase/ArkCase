@@ -23,30 +23,35 @@ public class AcmSpringMvcErrorManager
     @ExceptionHandler(AcmObjectNotFoundException.class)
     public void handleException(HttpServletResponse response, AcmObjectNotFoundException e)
     {
+        log.error("Object Not Found: " + e.getMessage(), e);
         sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmUserActionFailedException.class)
     public void handleException(HttpServletResponse response, AcmUserActionFailedException e)
     {
+        log.error("User Action Failed: " + e.getMessage(), e);
         sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmCreateObjectFailedException.class)
     public void handleCreateObjectFailed(HttpServletResponse response, AcmCreateObjectFailedException e)
     {
+        log.error("Create Object Failed: " + e.getMessage(), e);
         sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmListObjectsFailedException.class)
     public void handleListObjectsFailed(HttpServletResponse response, AcmListObjectsFailedException e)
     {
+        log.error("List Objects Failed: " + e.getMessage(), e);
         sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmNotAuthorizedException.class)
     public void handleNotAuthorized(HttpServletResponse response, AcmNotAuthorizedException e)
     {
+        log.error("Not Authorized: " + e.getMessage(), e);
         sendResponse(HttpStatus.FORBIDDEN, response, e.getMessage());
     }
 

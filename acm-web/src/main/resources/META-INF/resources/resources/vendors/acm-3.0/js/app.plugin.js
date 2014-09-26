@@ -148,16 +148,16 @@
 		$('.count', $el).fadeOut().fadeIn().text($v+1);
 		$($msg).hide().prependTo($el.find('.list-group')).slideDown().css('display','block');
 	}
-	var $msg = '<a href="#" class="media list-group-item">'+
-                  '<span class="pull-left thumb-sm text-center">'+
-                    '<i class="fa fa-file fa-2x text-success"></i>'+
-                  '</span>'+
-                  '<span class="media-body block m-b-none">'+
-                    'David Miller assigned a document to you.<br>'+
-                    '<small class="text-muted">1 minutes ago</small>'+
-                  '</span>'+
-                '</a>';	
-  setTimeout(function(){addMsg($msg);}, 1500);
+//	var $msg = '<a href="#" class="media list-group-item">'+
+//                  '<span class="pull-left thumb-sm text-center">'+
+//                    '<i class="fa fa-file fa-2x text-success"></i>'+
+//                  '</span>'+
+//                  '<span class="media-body block m-b-none">'+
+//                    'David Miller assigned a document to you.<br>'+
+//                    '<small class="text-muted">1 minutes ago</small>'+
+//                  '</span>'+
+//                '</a>';
+//  setTimeout(function(){addMsg($msg);}, 1500);
 
 	//chosen
 	$(".chosen-select").length && $(".chosen-select").chosen();

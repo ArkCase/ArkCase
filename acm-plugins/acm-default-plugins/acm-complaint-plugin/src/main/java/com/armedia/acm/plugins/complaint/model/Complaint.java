@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
@@ -31,8 +30,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import static javax.persistence.CascadeType.ALL;
-
 
 /**
  * Created by armdev on 4/4/14.
@@ -91,7 +88,7 @@ public class Complaint implements Serializable, AcmObject
     // only one person, so a ManyToOne mapping makes sense here.
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_originator_id")
-    private Person originator;
+    private PersonAssociation originator;
 
     /**
      * This field is only used when the complaint is created. Usually it will be null.  Use the ecmFolderId
@@ -119,9 +116,21 @@ public class Complaint implements Serializable, AcmObject
     
     @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_person_assoc_parent_id")
-    private List<PersonAssociation> personAssoc = new ArrayList<>();
+    private List<PersonAssociation> personAssociations = new ArrayList<>();
 
+    @Column(name = "cm_due_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dueDate;
 
+    @Column(name = "cm_tag")
+    private String tag;
+    
+    @Column(name = "cm_frequency")
+    private String frequency;
+    
+    @Column(name = "cm_location")
+    private String location;
+        
     public Complaint()
     {
     }
@@ -141,13 +150,19 @@ public class Complaint implements Serializable, AcmObject
             setStatus("DRAFT");
         }
 
+        if ( getOriginator() != null )
+        {
+            personAssociationResolver(getOriginator());
+        }
+
         for ( ObjectAssociation childObject : childObjects )
         {
             childObject.setParentId(complaintId);
         }
-        for ( PersonAssociation perAssoc : personAssoc )
+        for ( PersonAssociation persAssoc : personAssociations)
         {
-            perAssoc.setParentId(complaintId);
+            personAssociationResolver(persAssoc);
+            //persAssoc.setParentId(complaintId);
         }
     }
 
@@ -256,15 +271,13 @@ public class Complaint implements Serializable, AcmObject
                 oa.setCreated(created);
             }
         }
-        for ( PersonAssociation pa : personAssoc )
+        for ( PersonAssociation pa : personAssociations )
         {
-            if (pa.getCreated() == null)
+            if ( pa.getCreated() == null )
             {
                 pa.setCreated(created);
             }
         }
-
-
     }
 
     public String getCreator()
@@ -292,7 +305,8 @@ public class Complaint implements Serializable, AcmObject
                 oa.setCreator(creator);
             }
         }
-        for ( PersonAssociation pa : personAssoc )
+        
+        for ( PersonAssociation pa : personAssociations )
         {
             if ( pa.getCreator() == null )
             {
@@ -326,14 +340,15 @@ public class Complaint implements Serializable, AcmObject
                 oa.setModified(modified);
             }
         }
-        for ( PersonAssociation pa : personAssoc )
+        for ( PersonAssociation pa : personAssociations)
         {
-            if ( pa.getModified() == null ) 
+            if ( pa.getModified() == null )
             {
                 pa.setModified(modified);
             }
         }
-    }
+
+   }
 
     public String getModifier()
     {
@@ -362,7 +377,7 @@ public class Complaint implements Serializable, AcmObject
             }
         }
         
-        for ( PersonAssociation pa : personAssoc )
+        for ( PersonAssociation pa : personAssociations )
         {
             if ( pa.getModifier() == null )
             {
@@ -381,17 +396,12 @@ public class Complaint implements Serializable, AcmObject
         this.status = status;
     }
 
-    public Person getOriginator()
+    public PersonAssociation getOriginator()
     {
-        if ( originator == null )
-        {
-            originator = new Person();
-        }
-
         return originator;
     }
 
-    public void setOriginator(Person originator)
+    public void setOriginator(PersonAssociation originator)
     {
         this.originator = originator;
     }
@@ -447,23 +457,62 @@ public class Complaint implements Serializable, AcmObject
     @JsonIgnore
     public String getObjectType()
     {
-        return "Complaint";
+        return "COMPLAINT";
     }
 
-    public List<PersonAssociation> getPersonAssociation() 
+    public List<PersonAssociation> getPersonAssociations() 
     {
-        return personAssoc;
+        return personAssociations;
     }
 
-    public void setPersonAssociation(List<PersonAssociation> personAssociation) 
+    public void setPersonAssociations(List<PersonAssociation> personAssociations) {
+        this.personAssociations = personAssociations;
+    }   
+    
+    private void personAssociationResolver (PersonAssociation personAssoc)
     {
-               
-        this.personAssoc = personAssociation;
-        for ( PersonAssociation perAssoc : personAssociation )
-        {
-            perAssoc.setParentType("COMPLAINT");
-            perAssoc.setParentId(getComplaintId());
-        }
-    } 
+        personAssoc.setParentId(getComplaintId());
+        personAssoc.setParentType("COMPLAINT");
+    }
+       
+    public Date getDueDate()
+    {
+        return dueDate;
+    }
+    
+    public void setDueDate(Date dueDate) 
+    {
+        this.dueDate = dueDate;
+    }
+    
+    public String getTag()
+    {
+        return tag;
+}
+
+    public void setTag(String tag)
+    {
+        this.tag = tag;
+    }
+
+    public String getFrequency() 
+    {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency)
+    {
+        this.frequency = frequency;
+    }
+
+    public String getLocation() 
+    {
+        return location;
+    }
+
+    public void setLocation(String location)
+    {
+        this.location = location;
+    }  
     
 }

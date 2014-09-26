@@ -4,9 +4,9 @@ import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
-                                   "/spring/spring-library-person.xml"})
+                                   "/spring/spring-library-person.xml",
+                                   "/spring/spring-library-person-plugin-test.xml",
+                                   "/spring/spring-library-mule-context-manager.xml",
+                                   "/spring/spring-library-activiti-actions.xml",
+                                   "/spring/spring-library-activemq.xml",
+                                   "/spring/spring-library-activiti-configuration.xml",
+                                   "/spring/spring-library-folder-watcher.xml",
+                                   "/spring/spring-library-cmis-configuration.xml",
+                                   "/spring/spring-library-drools-monitor.xml",
+                                   "/spring/spring-library-ecm-file.xml"
+                                  })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonAssociationIT 
 {
@@ -41,7 +51,7 @@ public class PersonAssociationIT
 
         Person person = new Person();
         
-      
+        person.setId(952L);
         person.setModifier("testModifier");
         person.setCreator("testCreator");
         person.setCreated(new Date());
@@ -49,6 +59,17 @@ public class PersonAssociationIT
         person.setFamilyName("Person");
         person.setGivenName("ACM");
         person.setStatus("testStatus");
+        
+         Person per = new Person();
+        
+        per.setId(950L);
+        per.setModifier("testModifier");
+        per.setCreator("testCreator");
+        per.setCreated(new Date());
+        per.setModified(new Date());
+        per.setFamilyName("Person");
+        per.setGivenName("ACM");
+        per.setStatus("testStatus");
         
 
         PersonAssociation perAssoc = new PersonAssociation();
@@ -62,11 +83,34 @@ public class PersonAssociationIT
         perAssoc.setCreator("testCreator");
         perAssoc.setCreated(new Date());
         perAssoc.setModified(new Date());
+        perAssoc.setNotes("here a we can write our note");
+        
+        PersonAssociation personAssoc = new PersonAssociation();
+
+        personAssoc.setParentId(999L);
+        personAssoc.setParentType("COMPLAINT");
+        personAssoc.setPerson(per);
+        personAssoc.setPersonType("Subject");
+        personAssoc.setPersonDescription("long and athletic");
+        personAssoc.setModifier("testModifier");
+        personAssoc.setCreator("testCreator");
+        personAssoc.setCreated(new Date());
+        personAssoc.setModified(new Date());
 
         PersonAssociation saved = personAssocDao.save(perAssoc);
-
+                                  personAssocDao.save(personAssoc);
+        
+        List<Person> personList = personAssocDao.findPersonByParentIdAndParentType("COMPLAINT", 999L);
+        
+        log.debug(" the size of list returned: " + personList.size());     
+        
+        for ( Person pn : personList )
+        {
+            log.debug("person id " + pn.getId());           
+        }
+                
         assertNotNull(saved.getId());
-
         em.flush();
+        
     }
 }

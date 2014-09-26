@@ -16,7 +16,7 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     private String description;
     private Date dueDate;
     private String taskEvent;
-    private Integer priority;
+    private String priority;
     private Long parentObjectId;
     private String parentObjectType;
 
@@ -110,11 +110,11 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     }
 
     @Override
-    public Integer getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Integer priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
