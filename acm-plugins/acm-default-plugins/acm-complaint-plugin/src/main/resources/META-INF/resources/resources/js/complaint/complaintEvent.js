@@ -179,6 +179,17 @@ Complaint.Event = {
         if (window.focus) {
             newWindow.focus();
         }
+        
+        this._checkClosePopup(newWindow);
+    }
+    
+    ,_checkClosePopup: function(newWindow){
+        var timer = setInterval(function() {
+            if(newWindow.closed) {
+                clearInterval(timer);
+                Complaint.Object.refreshJTableDocuments();
+            }
+        }, 1000);
     }
 
 };
