@@ -40,6 +40,15 @@ public class AdminUiController
         return retval;
     }
 
+    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+    public ModelAndView showDashboardPage()
+    {
+        ModelAndView retval = new ModelAndView();
+        retval.setViewName("adminDashboard");
+        retval.addObject("pageDescriptor", getPageDescriptor());
+        return retval;
+    }
+
     public AcmPageDescriptor getPageDescriptor() {
         return pageDescriptor;
     }
