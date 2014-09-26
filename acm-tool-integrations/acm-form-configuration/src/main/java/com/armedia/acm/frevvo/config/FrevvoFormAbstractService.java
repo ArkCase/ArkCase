@@ -5,6 +5,7 @@
 package com.armedia.acm.frevvo.config;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.file.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
@@ -152,8 +154,10 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 					for (final MultipartFile attachment : attachmentsList) {
 						try
 						{
-		                    getEcmFileService().upload(
-		                    		attachment,
+							AcmMultipartFile file = new AcmMultipartFile(attachment.getName(), attachment.getOriginalFilename(), attachment.getContentType(), attachment.isEmpty(), attachment.getSize(), attachment.getBytes(), attachment.getInputStream(), true);
+		                   
+							getEcmFileService().upload(
+		                    		file,
 		                            "application/json",
 		                            getServletContextPath(),
 		                            getAuthentication(),
@@ -167,6 +171,10 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			            {
 			                LOG.error("Could not upload file: " + e.getMessage(), e);
 				        }
+						catch(IOException e1)
+						{
+							LOG.error("Could not create AcmMultipartFile object: " + e1.getMessage(), e1);
+						}
 					}
 				}
 			}
