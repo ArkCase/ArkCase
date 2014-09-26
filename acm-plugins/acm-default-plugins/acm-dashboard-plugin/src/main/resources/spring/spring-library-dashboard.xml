@@ -30,6 +30,8 @@
 
     <bean id="acmDashboardDao" class="com.armedia.acm.plugins.dashboard.dao.DashboardDao"/>
 
+    <bean id="acmWidgetDao" class="com.armedia.acm.plugins.dashboard.dao.WidgetDao"/>
+
     <bean id="acmUserDao" class="com.armedia.acm.services.users.dao.ldap.UserDao"/>
 
     <bean id="dashboardPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
@@ -61,6 +63,13 @@
                     <property name="url" value="/api/{version}/plugin/dashboard/set/"/>
                     <property name="requiredPrivilege" ref="dashboardPrivilege"/>
                 </bean>
+
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <!--create dashboard get config service-->
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/dashboard/widgets/get"/>
+                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
+                </bean>
             </list>
         </property>
 
@@ -80,5 +89,6 @@
     </bean>
 
   <bean id="dashboardEventPublisher" class="com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher"/>
+  <bean id="widgetEventPublisher" class="com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher"/>
 
 </beans>

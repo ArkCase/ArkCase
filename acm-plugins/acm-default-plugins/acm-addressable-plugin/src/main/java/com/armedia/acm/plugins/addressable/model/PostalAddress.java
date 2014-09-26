@@ -13,9 +13,17 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "acm_postal_address")
 public class PostalAddress implements Serializable
@@ -30,10 +38,22 @@ public class PostalAddress implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @XmlElements({
+		@XmlElement(name="created"),
+		@XmlElement(name="initiatorLocationDate"),
+		@XmlElement(name="peopleLocationDate")
+		
+	})
     @Column(name = "cm_address_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
+    @XmlElements({
+		@XmlElement(name="creator"),
+		@XmlElement(name="initiatorLocationAddedBy"),
+		@XmlElement(name="peopleLocationAddedBy")
+		
+	})
     @Column(name = "cm_address_creator", insertable = true, updatable = false)
     private String creator;
 
@@ -47,21 +67,54 @@ public class PostalAddress implements Serializable
     @Column(name = "cm_address_status")
     private String status;
 
+    @XmlElements({
+		@XmlElement(name="type"),
+		@XmlElement(name="initiatorLocationType"),
+		@XmlElement(name="peopleLocationType")
+		
+	})
     @Column(name = "cm_address_type")
     private String type;
+    
+    @Transient
+    private List<String> types;
 
+    @XmlElements({
+		@XmlElement(name="streetAddress"),
+		@XmlElement(name="initiatorLocationAddress"),
+		@XmlElement(name="peopleLocationAddress")
+		
+	})
     @Column(name = "cm_street_address")
     private String streetAddress;
 
     @Column(name = "cm_street_address_extra")
     private String streetAddress2;
 
+    @XmlElements({
+		@XmlElement(name="city"),
+		@XmlElement(name="initiatorLocationCity"),
+		@XmlElement(name="peopleLocationCity")
+		
+	})
     @Column(name = "cm_locality")
     private String city;
 
+    @XmlElements({
+		@XmlElement(name="state"),
+		@XmlElement(name="initiatorLocationState"),
+		@XmlElement(name="peopleLocationState")
+		
+	})
     @Column(name = "cm_region")
     private String state;
 
+    @XmlElements({
+		@XmlElement(name="zip"),
+		@XmlElement(name="initiatorLocationZip"),
+		@XmlElement(name="peopleLocationZip")
+		
+	})
     @Column(name = "cm_postal_code")
     private String zip;
 
@@ -164,8 +217,16 @@ public class PostalAddress implements Serializable
     {
         this.type = type;
     }
+    
+	public List<String> getTypes() {
+		return types;
+	}
 
-    public String getStreetAddress()
+	public void setTypes(List<String> types) {
+		this.types = types;
+	}
+
+	public String getStreetAddress()
     {
         return streetAddress;
     }

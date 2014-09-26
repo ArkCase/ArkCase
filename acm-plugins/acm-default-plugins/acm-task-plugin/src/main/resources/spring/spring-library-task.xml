@@ -50,6 +50,11 @@
                     <property name="requiredPrivilege" ref="acmTaskCreatePrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/task/save/{taskId}"/>
+                    <property name="requiredPrivilege" ref="acmTaskCreatePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/task/wizard"/>
                     <property name="requiredPrivilege" ref="acmTaskCreatePrivilege"/>
@@ -71,7 +76,7 @@
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property value="GET" name="httpMethod"/>
-                    <property value="/api/{version}/plugin/task/list" name="url"/>
+                    <property value="/api/{version}/plugin/task/list/{due}" name="url"/>
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
@@ -148,6 +153,14 @@
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
         <property name="activitiHistoryService" ref="activitiHistoryService"/>
+        <property name="priorityLevelToNumberMap">
+            <map>
+                <entry key="Low" value="10"/>
+                <entry key="Medium" value="50"/>
+                <entry key="High" value="70"/>
+                <entry key="Expedite" value="90"/>
+            </map>
+        </property>
     </bean>
 
     <bean id="taskEventPublisher" class="com.armedia.acm.plugins.task.service.TaskEventPublisher"/>

@@ -7,15 +7,13 @@
  */
 Search.Object = {
     initialize : function() {
-//        var items = $(document).items();
-//        var searchDefStr = items.properties("searchDef").itemValue();
-//        this.searchDef = $.parseJSON(searchDefStr);
-//
-//        this.$divSearchQuery = $("#searchQuery").parent();
-//        Search.Page.buildPanel(this.searchDef);
-//
-//        this.$chkToggle = $("input[type='checkbox']");
-//        this.$chkToggle.on("click", function(e) {Search.Event.onClickToggle(this);});
+        var items = $(document).items();
+        var searchExStr = items.properties("searchEx").itemValue();
+        this.searchEx = $.parseJSON(searchExStr);
+        this.$divSearchQuery = $("#searchQuery").parent();
+        Search.Page.buildPanel(this.searchEx);
+        this.useSwitches();
+        this.useDateFields();
 
         this.$asideSubNav = $("#subNav");
 
@@ -23,83 +21,69 @@ Search.Object = {
         //this.$lnkToggleSubNav.click(function(e) {Search.Event.onClickBtnToggleSubNav(e);});
 
         this.$edtSearch     = $("#searchQuery");
-        this.$chkComplaints = $("#chkComplaints");
-        this.$chkCases      = $("#chkCases");
-        this.$chkTasks      = $("#chkTasks");
-        this.$chkDocuments  = $("#chkDocuments");
-        this.$chkPeople  = $("#chkPeople");
-
-        //Complaint
-        this.$edtComplaintTitle = $("#edtComplaintTitle");
-        this.$edtComplaintID = $("#edtComplaintID");
-        this.$edtComplaintDateStartRange = $("#edtComplaintDateStartRange");
-        this.$edtComplaintDateEndRange = $("#edtComplaintDateEndRange");
-        this.$selComplaintPriority = $("#selComplaintPriority");
-        this.$selComplaintAssignee = $("#selComplaintAssignee");
-        this.$selComplaintSubjectType = $("#selComplaintSubjectType");
-        this.$selComplaintStatus = $("#selComplaintStatus");
-
-        //Case
-        this.$edtCaseTitle = $("#edtCaseTitle");
-        this.$edtCaseID = $("#edtCaseID");
-        this.$edtCaseDateStartRange = $("#edtCaseDateStartRange");
-        this.$edtCaseDateEndRange = $("#edtCaseDateEndRange");
-        this.$selCasePriority = $("#selCasePriority");
-        this.$selCaseAssignee = $("#selCaseAssignee");
-        this.$selCaseSubjectType = $("#selCaseSubjectType");
-        this.$selCaseStatus = $("#selCaseStatus");
-
-        //Task
-        this.$edtTaskTitle = $("#edtTaskTitle");
-        this.$edtTaskID = $("#edtTaskID");
-        this.$edtTaskDateStartRange = $("#edtTaskDateStartRange");
-        this.$edtTaskDateEndRange = $("#edtTaskDateEndRange");
-        this.$selTaskPriority = $("#selTaskPriority");
-        this.$selTaskAssignee = $("#selTaskAssignee");
-        this.$selTaskSubjectType = $("#selTaskSubjectType");
-        this.$selTaskStatus = $("#selTaskStatus");
-
-        //Document
-        this.$edtDocumentTitle = $("#edtDocumentTitle");
-        this.$edtDocumentID = $("#edtDocumentID");
-        this.$edtDocumentDateStartRange = $("#edtDocumentDateStartRange");
-        this.$edtDocumentDateEndRange = $("#edtDocumentDateEndRange");
-        this.$selDocumentPriority = $("#selDocumentPriority");
-        this.$selDocumentAssignee = $("#selDocumentAssignee");
-        this.$selDocumentFormType = $("#selDocumentFormType");
-        this.$selDocumentStatus = $("#selDocumentStatus");
-
-        //People
-        this.$edtPeopleTitle = $("#edtPeopleTitle");
-        this.$edtPeopleFirstName = $("#edtPeopleFirstName");
-        this.$edtPeopleLastName = $("#edtPeopleLastName");
-        this.$selPeopleType = $("#selPeopleType");
-        this.$edtPeoplePhoneNumber = $("#edtPeoplePhoneNumber");
-        this.$edtPeopleOrganization = $("#edtPeopleOrganization");
-        this.$edtPeopleAddress = $("#edtPeopleAddress");
-        this.$edtPeopleCity = $("#edtPeopleCity");
-        this.$selPeopleState = $("#selPeopleState");
-        this.$edtPeopleZIPCode = $("#edtPeopleZIPCode");
-
-
         this.$btnSearch = this.$edtSearch.next().find("button");
-        this.$btnSearch.click(function(e) {Search.Event.onClickBtnSearch(e);});
-        this.$btnSearch.click(function(e) {Search.Event.onClickBtnSearchComplaints(e);});
-
-//        this.$tabResults = $("table");
+        this.$btnSearch.on("click", function(e) {Search.Event.onClickBtnSearch(e, this);});
 
         this.$divResults = $("#divResults");
         Search.Object.createJTableResults(this.$divResults);
     }
 
-
-    ,slideToggle: function(id) {
-        var $chkSwitch = $("#" + id);
-        var $divSibling = $chkSwitch.closest(".form-group").find(">div:last-child");
-        $divSibling.slideToggle();
+    ,useSwitches: function() {
+        $(".form-group").each(function( index ) {
+            var $chkSwitch = $(this).find("label.switch input");
+            $chkSwitch.click(function(){
+                var $divSibling = $chkSwitch.closest(".form-group").find(">div:last-child");
+                $divSibling.slideToggle();
+            });
+        });
+    }
+    ,useDateFields: function() {
+        $(".datepicker-input").datepicker();
+    }
+    ,_findDetailLink: function(objectType) {
+        if (this.searchEx) {
+            var link = null;
+            for (var i = 0; i < this.searchEx.length; i++) {
+                var pluginEx = this.searchEx[i];
+                if (pluginEx.objectType && pluginEx.detailLink) {
+                    if (objectType == pluginEx.objectType) {
+                        link = pluginEx.detailLink;
+                        break;
+                    }
+                }
+            }
+        }
+        return link;
     }
     ,appendHtmlDivSearchQuery: function(html) {
         this.$divSearchQuery.after(html);
+    }
+
+    ,getValueEdtSearch: function() {
+        return Acm.Object.getPlaceHolderInput(this.$edtSearch);
+    }
+
+    ,getData: function() {
+        var data = {};
+        var searchTerm = this.getValueEdtSearch();
+
+        $(".form-group").each(function( index ) {
+            var $chkSwitch = $(this).find("label.switch input");
+            var switchOn = Acm.Object.isChecked($chkSwitch);
+            if (1 == $chkSwitch.length) {
+                $(this).find(".form-control").each(function( cidx ) {
+                    var isOn = switchOn;
+                    var val = $(this).val();
+                    var term = $(this).attr("term");
+                    var id = $(this).attr("id");
+                    var z = 1;
+                });
+            }
+
+            var z = 1;
+        });
+
+        return data;
     }
 
     ,showSubNav: function(show) {
@@ -111,182 +95,13 @@ Search.Object = {
         }
     }
 
-//    ,resetTableResults: function() {
-//        this.$tabResults.find("tbody > tr").remove();
-//    }
-//    ,addRowTableResults: function(row) {
-//        this.$tabResults.find("tbody:last").append(row);
-//    }
 
-    //getters Complaints
-    ,getValueComplaintTitle: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtComplaintTitle);
-    }
-    ,getValueComplaintID: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtComplaintID);
-    }
-    ,getValueComplaintDateStartRange: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtComplaintDateStartRange);
-    }
-    ,getValueComplaintDateEndRange: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$edtComplaintDateEndRange );
-    }
-    ,getValueComplaintPriority: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selComplaintPriority);
-    }
-    ,getValueComplaintAssignee: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selComplaintAssignee);
-    }
-    ,getValueComplaintSubjectType: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selComplaintSubjectType);
-    }
-    ,getValueComplaintStatus: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selComplaintStatus);
-    }
-
-    //getters Cases
-    ,getValueCaseTitle: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtCaseTitle);
-    }
-    ,getValueCaseID: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtCaseID);
-    }
-    ,getValueCaseDateStartRange: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtCaseDateStartRange);
-    }
-    ,getValueCaseDateEndRange: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$edtCaseDateEndRange );
-    }
-    ,getValueCasePriority: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selCasePriority);
-    }
-    ,getValueCaseAssignee: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selCaseAssignee);
-    }
-    ,getValueCaseSubjectType: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selCaseSubjectType);
-    }
-    ,getValueCaseStatus: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selCaseStatus);
-    }
-
-    //getters Tasks
-    ,getValueTaskTitle: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtTaskTitle);
-    }
-    ,getValueTaskID: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtTaskID);
-    }
-    ,getValueTaskDateStartRange: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtTaskDateStartRange);
-    }
-    ,getValueTaskDateEndRange: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$edtTaskDateEndRange );
-    }
-    ,getValueTaskPriority: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selTaskPriority);
-    }
-    ,getValueTaskAssignee: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selTaskAssignee);
-    }
-    ,getValueTaskSubjectType: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selTaskSubjectType);
-    }
-    ,getValueTaskStatus: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selTaskStatus);
-    }
-
-    //getters Documents
-    ,getValueDocumentTitle: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtDocumentTitle);
-    }
-    ,getValueDocumentID: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtDocumentID);
-    }
-    ,getValueDocumentDateStartRange: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtDocumentDateStartRange);
-    }
-    ,getValueDocumentDateEndRange: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$edtDocumentDateEndRange );
-    }
-    ,getValueDocumentPriority: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selDocumentPriority);
-    }
-    ,getValueDocumentAssignee: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selDocumentAssignee);
-    }
-    ,getValueDocumentFormType: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selDocumentFormType);
-    }
-    ,getValueDocumentStatus: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selDocumentStatus);
-    }
-
-
-    //getters People
-    ,getValuePeopleTitle: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtPeopleTitle);
-    }
-    ,getValuePeopleFirstName: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtPeopleFirstName);
-    }
-    ,getValuePeopleLastName: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtPeopleLastName);
-    }
-    ,getValuePeopleDateEndRange: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$edtPeopleDateEndRange );
-    }
-    ,getValuePeopleType: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selPeopleType);
-    }
-    ,getValuePeoplePhoneNumber: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$edtPeoplePhoneNumber);
-    }
-    ,getValuePeopleOrganization: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$edtPeopleOrganization);
-    }
-    ,getValuePeopleAddress: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$edtPeopleAddress);
-    }
-    ,getValuePeopleCity: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$edtPeopleCity);
-    }
-    ,getValuePeopleState: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$selPeopleState);
-    }
-    ,getValuePeopleZIPCode: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$edtPeopleZIPCode);
-    }
-
-
-
-
-    ,getValueEdtSearch: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtSearch);
-    }
-    ,isCheckChkComplaints: function() {
-        return Acm.Object.isChecked(this.$chkComplaints);
-    }
-    ,isCheckChkCases: function() {
-        return Acm.Object.isChecked(this.$chkCases);
-    }
-    ,isCheckChkTasks: function() {
-        return Acm.Object.isChecked(this.$chkTasks);
-    }
-    ,isCheckChkDocuments: function() {
-        return Acm.Object.isChecked(this.$chkDocuments);
-    }
-    ,isCheckChkPeople: function() {
-        return Acm.Object.isChecked(this.$chkPeople);
-    }
     ,setTableTitle: function(title) {
         Acm.Object.setText($(".jtable-title-text"), title);
+        //AcmEx.Object.jTableSetTitle(this.$divResults, title);
     }
-
-
     ,reloadJTableResults: function() {
-        var $s = this.$divResults;
-        $s.jtable('load');
+        AcmEx.Object.jTableLoad(this.$divResults);
     }
     ,createJTableResults: function($jt) {
         var sortMap = {};
@@ -294,7 +109,7 @@ Search.Object = {
 
         AcmEx.Object.jTableCreatePaging($jt
             ,{
-                title: 'Tasks'
+                title: 'Search Results'
                 //,defaultSorting: 'Name ASC'
                 ,selecting: true //Enable selecting
                 ,multiselect: true //Allow multiple selecting
@@ -303,6 +118,11 @@ Search.Object = {
 
                 ,actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
+                        var term = Topbar.Object.getQuickSearchTerm();
+                        if (Acm.isEmpty(term)) {
+                            return AcmEx.Object.jTableGetEmptyRecords();
+                        }
+
                         return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
                             ,function() {
                                 var term = Topbar.Object.getQuickSearchTerm();
@@ -315,7 +135,7 @@ Search.Object = {
                                 var jtData = null;
                                 var err = "Invalid search data";
                                 if (data) {
-                                    if (Acm.isNotEmpty(data.responseHeader)) {
+                                    if (data.responseHeader && data.response) {
                                         var responseHeader = data.responseHeader;
                                         if (Acm.isNotEmpty(responseHeader.status)) {
                                             if (0 == responseHeader.status) {
@@ -324,18 +144,19 @@ Search.Object = {
                                                 //response.docs.length should be <= jtParams.jtPageSize
 
                                                 jtData = AcmEx.Object.jTableGetEmptyRecords();
-                                                for (var i = 0; i < response.docs.length; i++) {
-                                                    var Record = {};
-                                                    Record.id = response.docs[i].object_id_s;
-                                                    Record.name = Acm.goodValue(response.docs[i].name);
-                                                    Record.type = Acm.goodValue(response.docs[i].object_type_s);
-                                                    Record.title = Acm.goodValue(response.docs[i].title_t);
-                                                    Record.owner = Acm.goodValue(response.docs[i].owner_s);
-                                                    Record.created = Acm.goodValue(response.docs[i].create_dt);
-                                                    jtData.Records.push(Record);
-
+                                                if (response.docs) {
+                                                    for (var i = 0; i < response.docs.length; i++) {
+                                                        var Record = {};
+                                                        Record.id = response.docs[i].object_id_s;
+                                                        Record.name = Acm.goodValue(response.docs[i].name);
+                                                        Record.type = Acm.goodValue(response.docs[i].object_type_s);
+                                                        Record.title = Acm.goodValue(response.docs[i].title_t);
+                                                        Record.owner = Acm.goodValue(response.docs[i].owner_s);
+                                                        Record.created = Acm.goodValue(response.docs[i].create_dt);
+                                                        jtData.Records.push(Record);
+                                                    }
                                                 }
-                                                jtData.TotalRecordCount = response.numFound;
+                                                jtData.TotalRecordCount = Acm.goodValue(response.numFound, 0);
 
 
                                             } else {
@@ -384,8 +205,7 @@ Search.Object = {
                                 url += "/plugin/task/" + data.record.id;
                             } else if (App.OBJTYPE_DOCUMENT == data.record.type) {
                                 url += "/plugin/document/" + data.record.id;
-                            }
-                            else if (App.OBJTYPE_PEOPLE == data.record.type) {
+                            } else if (App.OBJTYPE_PEOPLE == data.record.type) {
                                 url += "/plugin/people/" + data.record.id;
                             }
                             var $lnk = $("<a href='" + url + "'>" + data.record.name + "</a>");
@@ -395,7 +215,7 @@ Search.Object = {
                     }
                     ,type: {
                         title: 'Type'
-                        ,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
+                        //,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
                         ,sorting: false
                     }
                     ,title: {

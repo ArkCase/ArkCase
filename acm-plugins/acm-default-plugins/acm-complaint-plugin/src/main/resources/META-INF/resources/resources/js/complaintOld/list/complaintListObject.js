@@ -46,6 +46,7 @@ ComplaintList.Object = {
         //this.$upploadList       = $('#secDocDocuments ul');
         this.$upploadList       = $('#upload ul');
         this._useFileUpload(this.$secDocDocuments, this.$tableDocDocuments, this.$upploadList, this.$lnkNewDoc);
+        //,_useFileUpload: function($upload, $drop, $ul, $click) {}
 
         this.$tableTasks        = $("div#tasks>div>div>section>div>table");
         this.$lnkNewTasks       = $("div#tasks>div>div>section>div>span");
@@ -62,8 +63,8 @@ ComplaintList.Object = {
         //$.fn.editable.defaults.url = '/post';
         this.$lnkTitle.editable({placement: 'right'});
         this.$lnkIncident.editable({placement: 'bottom'
-            ,format: 'yyyy-mm-dd'
-            ,viewformat: 'yyyy/mm/dd'
+            ,format: 'mm/dd/yyyy'
+            ,viewformat: 'mm/dd/yyyy'
             ,datepicker: {
                 weekStart: 1
             }
@@ -1483,19 +1484,7 @@ ComplaintList.Object = {
 
         });
     }
-    
-    /**
-     * Register the new form selector changed event
-     */
-	,registerChangeSelNewFormEvents: function() {
-    	this.$createNewFormSel.change(function(e) {
-    		var formName = $(this).find('option:selected').text();
-    		
-    		if ( formName === ComplaintList.Object.$ROI_FORM_NAME) {
-            	ComplaintList.Event.onChangeSelForm(e);    			
-    		}
-    	});
-	}
+
 };
 
 

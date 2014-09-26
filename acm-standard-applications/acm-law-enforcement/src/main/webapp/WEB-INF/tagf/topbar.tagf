@@ -38,17 +38,26 @@
             </div>
         </div>
     </form>
-    <ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user user">
-        <li class="hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-chat3"></i> <span class="badge badge-sm up bg-danger count">0</span> </a>
-            <section class="dropdown-menu aside-xl animated flipInY">
-                <section class="panel bg-white">
-                    <header class="panel-heading b-light bg-light"> <strong>You have <span class="count">0</span> notifications</strong> </header>
-                    <div class="list-group list-group-alt"> </div>
-                    <footer class="panel-footer text-sm"> <a href="#" class="pull-right"><i class="fa fa-cog"></i></a> <a href="#notes" data-toggle="class:show animated fadeInRight">See all acitivity</a> </footer>
+    <%--<div class="asn">--%>
+        <ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user user">
+            <%--<li class="hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-chat3"></i> <span class="badge badge-sm up bg-danger count">0</span> </a>--%>
+            <li class="hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-chat3"></i> <span class="badge badge-sm up count">0</span> </a>
+                <section class="dropdown-menu aside-xl animated flipInY">
+                    <section class="panel bg-white">
+                        <header class="panel-heading b-light bg-light"> <strong>You have <span class="count">0</span> notifications</strong> </header>
+                        <div class="list-group list-group-alt"> </div>
+                        <footer class="panel-footer text-sm"> <a href="#" class="pull-right"><i class="fa fa-cog"></i></a> <a href="#notes" data-toggle="class:show animated fadeInRight">See all acitivity</a> </footer>
+                    </section>
                 </section>
-            </section>
-        </li>
-    </ul>
+            </li>
+        </ul>
+        <%--<div class="asn-popup" style="display:none;">ASN popup</div>--%>
+    <%--</div>--%>
+    <%--<div class="asn-popup">ASN popup</div>--%>
+    <%--<div><input type="button" value="test1" id="test1"/></div>--%>
+    <%--<div><input type="button" value="test2" id="test2"/></div>--%>
+    <%--<div><input type="button" value="test3 add" id="test3"/></div>--%>
+    <%--<div><input type="button" value="test4 remove" id="test4"/></div>--%>
 </header>
 
 

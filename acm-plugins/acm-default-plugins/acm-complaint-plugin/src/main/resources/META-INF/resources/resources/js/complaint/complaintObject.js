@@ -29,6 +29,7 @@ Complaint.Object = {
 
         this.$lnkTitle          = $("#caseTitle");
         this.$lnkTitle.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,success: function(response, newValue) {
                 Complaint.Event.onSaveTitle(newValue);
             }
@@ -37,8 +38,9 @@ Complaint.Object = {
 
         this.$lnkIncident       = $("#incident");
         this.$lnkIncident.editable({placement: 'bottom'
-            ,format: 'yyyy-mm-dd'
-            ,viewformat: 'yyyy/mm/dd'
+            ,emptytext: "Unknown"
+            ,format: 'mm/dd/yyyy'
+            ,viewformat: 'mm/dd/yyyy'
             ,datepicker: {
                 weekStart: 1
             }
@@ -66,7 +68,7 @@ Complaint.Object = {
         this.$divDocuments      = $("#divDocuments");
         Complaint.JTable.createJTableDocuments(this.$divDocuments);
         this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
-        this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
+		this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
         Complaint.Page.fillReportSelection();
 
         this.$divTasks          = $("#divTasks");
@@ -76,7 +78,13 @@ Complaint.Object = {
 
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
+        
+        var formUrls = new Object();
+        formUrls["roi"] = $('#roiFormUrl').val();
+        this.setFormUrls(formUrls);
     }
+
+
 
     ,_token: ""
     ,getToken: function() {
@@ -84,6 +92,14 @@ Complaint.Object = {
     }
     ,setToken: function(token) {
         this._token = token;
+    }
+    
+    ,_formUrls: null
+    ,getFormUrls: function() {
+    	return this._formUrls;
+    }
+    ,setFormUrls: function(formUrls) {
+    	this._formUrls = formUrls;
     }
 
     ,beforeSpanAddDocument: function(html) {
@@ -98,12 +114,8 @@ Complaint.Object = {
             ,"tabInitiator"
             ,"tabPeople"
             ,"tabNotes"
-            ,"tabPending"
-            ,"tabApproved"
-            ,"tabRejected"
-            ,"tabUnassigned"
-            ,"tabAssigned"
-            ,"tabCompleted"
+            ,"tabDocuments"
+            ,"tabTasks"
             ,"tabRefComplaints"
             ,"tabRefCases"
             ,"tabRefTasks"
@@ -138,6 +150,7 @@ Complaint.Object = {
         });
 
         this.$lnkAssigned.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,value: ""
             ,source: choices
             ,success: function(response, newValue) {
@@ -155,6 +168,7 @@ Complaint.Object = {
         });
 
         this.$lnkComplaintType.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,value: ""
             ,source: choices
             ,success: function(response, newValue) {
@@ -172,6 +186,7 @@ Complaint.Object = {
         });
 
         this.$lnkPriority.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,value: ""
             ,source: choices
             ,success: function(response, newValue) {
@@ -186,8 +201,7 @@ Complaint.Object = {
         Acm.Object.setText(this.$lnkComplaintNum, txt);
     }
     ,setValueLnkIncident: function(txt) {
-        Acm.Object.setText(this.$lnkIncident, txt);
-        //this.$lnkIncident.editable("setValue", txt);
+        this.$lnkIncident.editable("setValue", txt, true);   //true - convert txt to internal format (Date Object)
     }
     ,setValueLnkPriority: function(txt) {
         this.$lnkPriority.editable("setValue", txt);
@@ -220,7 +234,7 @@ Complaint.Object = {
         this.setValueLnkTitle(c.complaintTitle);
         //this.setTextH4TitleHeader(" (" + c.complaintNumber + ")");
         this.setValueLnkComplaintNum(c.complaintNumber);
-        this.setValueLnkIncident(Acm.getDateFromDatetime(c.created));
+        this.setValueLnkIncident(Acm.getDateFromDatetime(c.incidentDate));
         this.setValueLnkPriority(c.priority);
         this.setValueLnkAssigned(c.assignee);
         this.setValueLnkComplaintType(c.complaintType);
@@ -231,6 +245,8 @@ Complaint.Object = {
         this.refreshJTableInitiator();
         this.refreshJTableDocuments();
         this.refreshJTableTasks();
+        this.refreshJTablePeople();
+
     }
 
 
@@ -266,20 +282,8 @@ Complaint.Object = {
     //tabPeople         - pcip     - [pageId].[complaintId].ip
     //tabPeople         - pcipc    - [pageId].[complaintId].ip.[personId]
     //tabNotes          - pcin     - [pageId].[complaintId].in
-    // [p,a,r]          - pcd      - [pageId].[complaintId].d
-    //tabPending        - pcdp     - [pageId].[complaintId].dp
-    //tabPending        - pcdpc    - [pageId].[complaintId].dp.[docId]
-    //tabApproved       - pcda     - [pageId].[complaintId].da
-    //tabApproved       - pcdac    - [pageId].[complaintId].da.[docId]
-    //tabRejected       - pcdr     - [pageId].[complaintId].dr
-    //tabRejected       - pcdrc    - [pageId].[complaintId].dr.[docId]
-    // [u,a,c]          - pct      - [pageId].[complaintId].t
-    //tabUnassigned     - pctu     - [pageId].[complaintId].tu
-    //tabUnassigned     - pctuc    - [pageId].[complaintId].tu.[taskId]
-    //tabAssigned       - pcta     - [pageId].[complaintId].ta
-    //tabAssigned       - pctac    - [pageId].[complaintId].ta.[taskId]
-    //tabCompleted      - pctc     - [pageId].[complaintId].tc
-    //tabCompleted      - pctcc    - [pageId].[complaintId].tc.[taskId]
+    //tabDocuments      - pcd      - [pageId].[complaintId].d
+    //tabTasks          - pct      - [pageId].[complaintId].t
     // [c,s,t,d]        - pcr      - [pageId].[complaintId].r
     //tabRefComplaints  - pcrc     - [pageId].[complaintId].rc
     //tabRefCases       - pcrs     - [pageId].[complaintId].rs
@@ -319,12 +323,8 @@ Complaint.Object = {
             ,"tabInitiator"
             ,"tabPeople"
             ,"tabNotes"
-            ,"tabPending"
-            ,"tabApproved"
-            ,"tabRejected"
-            ,"tabUnassigned"
-            ,"tabAssigned"
-            ,"tabCompleted"
+            ,"tabDocuments"
+            ,"tabTasks"
             ,"tabRefComplaints"
             ,"tabRefCases"
             ,"tabRefTasks"
@@ -343,26 +343,8 @@ Complaint.Object = {
         ,pcip: ["tabPeople"]
         ,pcipc: ["tabPeople"]
         ,pcin: ["tabNotes"]
-        ,pcd: ["tabPending"
-            ,"tabApproved"
-            ,"tabRejected"
-        ]
-        ,pcdp: ["tabPending"]
-        ,pcdpc: ["tabPending"]
-        ,pcda: ["tabApproved"]
-        ,pcdac: ["tabApproved"]
-        ,pcdr: ["tabRejected"]
-        ,pcdrc: ["tabRejected"]
-        ,pct: ["tabUnassigned"
-            ,"tabAssigned"
-            ,"tabCompleted"
-        ]
-        ,pctu: ["tabUnassigned"]
-        ,pctuc: ["tabUnassigned"]
-        ,pcta: ["tabAssigned"]
-        ,pctac: ["tabAssigned"]
-        ,pctc: ["tabCompleted"]
-        ,pctcc: ["tabCompleted"]
+        ,pcd: ["tabDocuments"]
+        ,pct: ["tabTasks"]
         ,pcr: ["tabRefComplaints"
             ,"tabRefCases"
             ,"tabRefTasks"
@@ -430,6 +412,23 @@ Complaint.Object = {
         }
         return parts;
     }
+    ,refreshComplaintTreeNode: function(c) {
+        if (!c) {
+            c = Complaint.getComplaint();
+        }
+        if (c && c.complaintId) {
+            var node = this.$tree.fancytree("getTree").getNodeByKey(this._getComplaintKey(c.complaintId));
+            if (node) {
+                node.setTitle(Acm.goodValue(c.complaintTitle));
+            }
+        }
+    }
+    ,_getComplaintKey: function(complaintId) {
+        var treeInfo = Complaint.Object.getTreeInfo();
+        var start = treeInfo.start;
+        var pageId = start.toString();
+        return pageId + "." + complaintId;
+    }
     ,refreshTree: function(key) {
         this.tree.reload().done(function(){
             if (Acm.isNotEmpty(key)) {
@@ -450,7 +449,7 @@ Complaint.Object = {
             }
             ,dblclick: function(event, data) {
                 var node = data.node;
-                alert("dblclick:(" + node.key + "," + node.title + ")");
+                //alert("dblclick:(" + node.key + "," + node.title + ")");
                 //node.setExpanded();
                 //toggleExpanded();
             }
@@ -471,7 +470,11 @@ Complaint.Object = {
                 var acmIcon = null; //node.data.acmIcon;
                 var nodeType = Complaint.Object.getNodeTypeByKey(key);
                 if ("pc" == nodeType) {
-                    acmIcon = "<i class='i i-notice'></i>" //"i-notice icon"
+                    acmIcon = "<i class='i i-notice'></i>"; //"i-notice icon"
+                } else if ("pcd" == nodeType) {
+                    acmIcon = "<i class='i i-file'></i>";
+                } else if ("pct" == nodeType) {
+                    acmIcon = "<i class='i i-checkmark'></i>";
                 } else if ("prevPage" == nodeType) {
                     acmIcon = "<i class='i i-arrow-up'></i>";
                 } else if ("nextPage" == nodeType) {
@@ -521,94 +524,75 @@ Complaint.Object = {
                 }
 
 
+                // populaet complaint data
                 var pageId = start.toString();
                 for (var i = 0; i < complaints.length; i++) {
                     var c = complaints[i];
+                    var complaintId = parseInt(c.object_id_s);
 
-                    builder.addBranch({key: pageId + "." + c.complaintId                       //level 1: /Complaint
-                        ,title: c.complaintTitle
-                        ,tooltip: c.complaintNumber
+                    builder.addBranch({key: pageId + "." + complaintId                      //level 1: /Complaint
+                        ,title: c.title_t
+                        ,tooltip: c.name
                         ,expanded: false
                         ,acmIcon: "<i class='i i-notice'></i>" //"i-notice icon";
                     })
 
-                        .addBranch({key: pageId + "." + c.complaintId + ".i"                   //level 2: /Complaint/Incident
+                        .addBranch({key: pageId + "." + complaintId + ".i"                   //level 2: /Complaint/Incident
                             ,title: "Incident"
                             ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".id"                //level 3: /Complaint/Incident/Detail
+                            .addLeaf({key: pageId + "." + complaintId + ".id"                //level 3: /Complaint/Incident/Detail
                                 ,title: "Detail"
                             })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".ii"                //level 3: /Complaint/Incident/Initiator
+                            .addLeaf({key: pageId + "." + complaintId + ".ii"                //level 3: /Complaint/Incident/Initiator
                                 ,title: "Initiator"
                             })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".ip"                //level 3: /Complaint/Incident/People
+                            .addLeaf({key: pageId + "." + complaintId + ".ip"                //level 3: /Complaint/Incident/People
                                 ,title: "People"
                             })
-                            .addLeafLast({key: pageId + "." + c.complaintId + ".in"            //level 3: /Complaint/Incident/Notes
+                            .addLeafLast({key: pageId + "." + complaintId + ".in"            //level 3: /Complaint/Incident/Notes
                                 ,title: "Notes"
                             })
 
 
-                        .addBranch({key: pageId + "." + c.complaintId + ".d"                   //level 2: /Complaint/Documents
+                        .addLeaf({key: pageId + "." + complaintId + ".d"                   //level 2: /Complaint/Documents
                             ,title: "Documents"
-                            ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".dp"                //level 3: /Complaint/Documents/Pending
-                                ,title: "Pending"
-                            })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".da"                //level 3: /Complaint/Documents/Approved
-                                ,title: "Approved"
-                            })
-                            .addLeafLast({key: pageId + "." + c.complaintId + ".dr"            //level 3: /Complaint/Documents/Rejected
-                                ,title: "Rejected"
-                            })
 
-
-                        .addBranch({key: pageId + "." + c.complaintId + ".t"                   //level 2: /Complaint/Tasks
+                        .addLeaf({key: pageId + "." + complaintId + ".t"                   //level 2: /Complaint/Tasks
                                 ,title: "Tasks"
-                                ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".tu"                //level 3: /Complaint/Tasks/Unassigned
-                                ,title: "Unassigned"
-                            })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".ta"                //level 3: /Complaint/Tasks/Assigned
-                                ,title: "Assigned"
-                            })
-                            .addLeafLast({key: pageId + "." + c.complaintId + ".tu"            //level 3: /Complaint/Tasks/Completed
-                                ,title: "Completed"
-                            })
 
 
-                        .addBranch({key: pageId + "." + c.complaintId + ".r"                   //level 2: /Complaint/References
+                        .addBranch({key: pageId + "." + complaintId + ".r"                   //level 2: /Complaint/References
                             ,title: "References"
                             ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".rc"                //level 3: /Complaint/References/Complaints
+                            .addLeaf({key: pageId + "." + complaintId + ".rc"                //level 3: /Complaint/References/Complaints
                                 ,title: "Other Complaints"
                             })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".rs"                //level 3: /Complaint/References/Cases
+                            .addLeaf({key: pageId + "." + complaintId + ".rs"                //level 3: /Complaint/References/Cases
                                 ,title: "Other Cases"
                             })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".rt"                //level 3: /Complaint/References/Tasks
+                            .addLeaf({key: pageId + "." + complaintId + ".rt"                //level 3: /Complaint/References/Tasks
                                 ,title: "Other Tasks"
                             })
-                            .addLeafLast({key: pageId + "." + c.complaintId + ".rd"            //level 3: /Complaint/References/Documents
+                            .addLeafLast({key: pageId + "." + complaintId + ".rd"            //level 3: /Complaint/References/Documents
                                 ,title: "Other Documents"
                             })
 
 
-                        .addBranchLast({key: pageId + "." + c.complaintId + ".p"               //level 2: /Complaint/Participants
+                        .addBranchLast({key: pageId + "." + complaintId + ".p"               //level 2: /Complaint/Participants
                             ,title: "Participants"
                             ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".pa"                //level 3: /Complaint/Participants/Approvers
+                            .addLeaf({key: pageId + "." + complaintId + ".pa"                //level 3: /Complaint/Participants/Approvers
                                 ,title: "Approvers"
                             })
-                            .addLeaf({key: pageId + "." + c.complaintId + ".pc"                //level 3: /Complaint/Participants/Collaborators
+                            .addLeaf({key: pageId + "." + complaintId + ".pc"                //level 3: /Complaint/Participants/Collaborators
                                 ,title: "Collaborators"
                             })
-                            .addLeafLast({key: pageId + "." + c.complaintId + ".pw"            //level 3: /Complaint/Participants/Watchers
+                            .addLeafLast({key: pageId + "." + complaintId + ".pw"            //level 3: /Complaint/Participants/Watchers
                                 ,title: "Watchers"
                             });
                 } //end for i
@@ -679,9 +663,10 @@ Complaint.Object = {
     ,refreshJTableTasks: function() {
         AcmEx.Object.jTableLoad(this.$divTasks);
     }
+    ,refreshJTablePeople: function() {
+        AcmEx.Object.jTableLoad(this.$divPeople);
+    }
 
 };
-
-
 
 

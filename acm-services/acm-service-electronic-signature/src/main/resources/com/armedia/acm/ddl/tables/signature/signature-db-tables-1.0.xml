@@ -1,0 +1,35 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-signature-table" author="jhsu">
+        <createTable tableName="acm_signature">
+            <column name="cm_signature_id" type="NUMBER(32,0)" valueComputed="SYS_GUID()" >
+                <constraints
+                    primaryKey="true"
+                    primaryKeyName="pk_signature"/>
+            </column>
+            <column name="cm_object_id" type="NUMBER(32,0)" valueComputed="SYS_GUID()" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_signature_datetime" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_signature_user" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+		<!-- TODO what other indexes on what to efficiently search on -->
+        <createIndex tableName="acm_signature" indexName="idx_signature_object_id">
+            <column name="cm_object_id"/>
+        </createIndex>
+    </changeSet>
+    
+</databaseChangeLog>
+

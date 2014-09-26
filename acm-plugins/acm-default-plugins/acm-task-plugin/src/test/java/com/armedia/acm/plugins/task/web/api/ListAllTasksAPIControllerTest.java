@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,6 +71,194 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport {
     }
 
     @Test
+    public  void dueInAMonthTasksTest()  throws Exception  {
+        String user = "user";
+
+        AcmTask userTask = new AcmTask();
+        userTask.setTaskId(500L);
+        userTask.setDueDate(new Date());
+        String ipAddress = "ipAddress";
+
+
+        expect(mockTaskDao.dueSpecificDateTasks(NumberOfDays.THIRTY_DAYS)).andReturn(Arrays.asList(userTask));
+        mockTaskEventPublisher.publishTaskEvent(anyObject(AcmApplicationTaskEvent.class));
+
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(
+                get("/api/v1/plugin/task/list/dueInAMonth")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .principal(mockAuthentication)
+                        .session(mockHttpSession))
+                .andReturn();
+
+        verifyAll();
+
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
+
+        String returned = result.getResponse().getContentAsString();
+
+        log.info("results: " + returned);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        List<AcmTask> foundTasks = objectMapper.readValue(returned,
+                objectMapper.getTypeFactory().constructParametricType(List.class, AcmTask.class));
+
+        assertEquals(1, foundTasks.size());
+
+        AcmTask found = foundTasks.get(0);
+        assertEquals(userTask.getTaskId(), found.getTaskId());
+    }
+
+    @Test
+    public  void dueInAWeekTasksTest()  throws Exception  {
+        String user = "user";
+
+        AcmTask userTask = new AcmTask();
+        userTask.setTaskId(500L);
+        userTask.setDueDate(new Date());
+        String ipAddress = "ipAddress";
+
+
+        expect(mockTaskDao.dueSpecificDateTasks(NumberOfDays.SEVEN_DAYS)).andReturn(Arrays.asList(userTask));
+        mockTaskEventPublisher.publishTaskEvent(anyObject(AcmApplicationTaskEvent.class));
+
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(
+                get("/api/v1/plugin/task/list/dueInAWeek")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .principal(mockAuthentication)
+                        .session(mockHttpSession))
+                .andReturn();
+
+        verifyAll();
+
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
+
+        String returned = result.getResponse().getContentAsString();
+
+        log.info("results: " + returned);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        List<AcmTask> foundTasks = objectMapper.readValue(returned,
+                objectMapper.getTypeFactory().constructParametricType(List.class, AcmTask.class));
+
+        assertEquals(1, foundTasks.size());
+
+        AcmTask found = foundTasks.get(0);
+        assertEquals(userTask.getTaskId(), found.getTaskId());
+    }
+
+    @Test
+    public  void dueTomorrowTasksTest()  throws Exception  {
+        String user = "user";
+
+        AcmTask userTask = new AcmTask();
+        userTask.setTaskId(500L);
+        userTask.setDueDate(new Date());
+        String ipAddress = "ipAddress";
+
+
+        expect(mockTaskDao.dueSpecificDateTasks(NumberOfDays.ONE_DAY)).andReturn(Arrays.asList(userTask));
+        mockTaskEventPublisher.publishTaskEvent(anyObject(AcmApplicationTaskEvent.class));
+
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(
+                get("/api/v1/plugin/task/list/dueTomorrow")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .principal(mockAuthentication)
+                        .session(mockHttpSession))
+                .andReturn();
+
+        verifyAll();
+
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
+
+        String returned = result.getResponse().getContentAsString();
+
+        log.info("results: " + returned);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        List<AcmTask> foundTasks = objectMapper.readValue(returned,
+                objectMapper.getTypeFactory().constructParametricType(List.class, AcmTask.class));
+
+        assertEquals(1, foundTasks.size());
+
+        AcmTask found = foundTasks.get(0);
+        assertEquals(userTask.getTaskId(), found.getTaskId());
+    }
+
+    @Test
+    public void pastDueTasksTest() throws Exception  {
+        String user = "user";
+
+        AcmTask userTask = new AcmTask();
+        userTask.setTaskId(500L);
+        userTask.setDueDate(new Date());
+        String ipAddress = "ipAddress";
+
+
+        expect(mockTaskDao.pastDueTasks()).andReturn(Arrays.asList(userTask));
+        mockTaskEventPublisher.publishTaskEvent(anyObject(AcmApplicationTaskEvent.class));
+
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(
+                get("/api/v1/plugin/task/list/pastDue")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .principal(mockAuthentication)
+                        .session(mockHttpSession))
+                .andReturn();
+
+        verifyAll();
+
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
+
+        String returned = result.getResponse().getContentAsString();
+
+        log.info("results: " + returned);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        List<AcmTask> foundTasks = objectMapper.readValue(returned,
+                objectMapper.getTypeFactory().constructParametricType(List.class, AcmTask.class));
+
+        assertEquals(1, foundTasks.size());
+
+        AcmTask found = foundTasks.get(0);
+        assertEquals(userTask.getTaskId(), found.getTaskId());
+    }
+
+    @Test
     public void allTasks() throws Exception
     {
         String user = "user";
@@ -91,7 +280,7 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport {
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/task/list")
+                get("/api/v1/plugin/task/list/all")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .principal(mockAuthentication)
                         .session(mockHttpSession))

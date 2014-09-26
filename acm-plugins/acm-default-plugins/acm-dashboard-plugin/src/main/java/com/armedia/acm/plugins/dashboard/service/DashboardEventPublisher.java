@@ -30,7 +30,9 @@ public class DashboardEventPublisher implements ApplicationEventPublisherAware {
         eventPublisher.publishEvent(dashboardPersistenceEvent);
     }
     public void publishGetDashboardByUserIdEvent(Dashboard source, Authentication authentication, String ipAddress, boolean succeeded) {
-
+        if (log.isDebugEnabled()) {
+            log.debug("Publishing a dashboard event. Get Dashboard by User Id Event");
+        }
         GetDashbordByUserIdEvent getDashbordByUserIdEvent = new GetDashbordByUserIdEvent(source);
         String user = authentication.getName();
         getDashbordByUserIdEvent.setUserId(user);

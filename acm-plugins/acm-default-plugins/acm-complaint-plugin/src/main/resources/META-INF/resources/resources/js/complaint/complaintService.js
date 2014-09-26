@@ -9,12 +9,15 @@ Complaint.Service = {
     initialize : function() {
     }
 
-    ,API_LIST_COMPLAINT         : "/api/latest/plugin/complaint/list"
+    ,API_LIST_COMPLAINT         : "/api/latest/plugin/search/COMPLAINT"
     ,API_RETRIEVE_DETAIL        : "/api/latest/plugin/complaint/byId/"
     ,API_SAVE_COMPLAINT         : "/api/latest/plugin/complaint"
     ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
     ,API_UPLOAD_COMPLAINT_FILE  : "/api/latest/plugin/complaint/file"
     ,API_RETRIEVE_TASKS         : "/api/latest/plugin/search/children?parentType=COMPLAINT&childType=TASK&parentId="
+    ,API_RETRIEVE_PERSON_LIST_COMPLAINT   : "/api/latest/plugin/person/list/complaint/"
+    ,API_SAVE_PERSON            : "/api/latest/plugin/person"
+
 
 
     ,listComplaint : function(treeInfo) {
@@ -25,7 +28,10 @@ Complaint.Service = {
         var s = treeInfo.s;
         var q = treeInfo.q;
 
-        Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_COMPLAINT
+        var url = App.getContextPath() + this.API_LIST_COMPLAINT;
+        url += "?start=" + treeInfo.start;
+        url += "&n=" + treeInfo.n;
+        Acm.Ajax.asyncGet(url
             ,Complaint.Callback.EVENT_LIST_RETRIEVED
         );
     }
@@ -38,6 +44,17 @@ Complaint.Service = {
         Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_COMPLAINT
             ,JSON.stringify(data)
             ,Complaint.Callback.EVENT_COMPLAIN_SAVED
+        );
+    }
+    ,savePerson: function(data){
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_PERSON
+            ,JSON.stringify(data)
+            ,Complaint.Callback.EVENT_PERSON_SAVED
+        );
+    }
+    ,retrievePersonListComplaint : function(parentId) {
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_PERSON_LIST_COMPLAINT + parentId
+            ,Complaint.Callback.EVENT_COMPLAINT_PERSON_LIST_RETRIEVED
         );
     }
 

@@ -19,5 +19,5 @@
         <property name="listOfValuesService" ref="listOfValuesService"/>
         <property name="typesDescriptor" ref="formTypeTable"/>
     </bean>
-    
+
 </beans>

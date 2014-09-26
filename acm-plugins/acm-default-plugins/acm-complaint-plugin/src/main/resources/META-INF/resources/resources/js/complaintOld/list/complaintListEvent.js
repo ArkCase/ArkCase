@@ -157,7 +157,7 @@ ComplaintList.Event = {
 
     	var pageUrl = ComplaintList.Object.$roiFormUrl + "?acm_ticket=" + ComplaintList.Object.$token 
     		+ "&complaint_id=" + complaint_id + "&complaint_number="+ complaint_number 
-    		+ "&complaint_title=" + complaint_title + "&complaint_priority" + complaint_priority;
-    	
-    	window.open(pageUrl, "_self");
+    		+ "&complaint_title=" + complaint_title + "&complaint_priority=" + complaint_priority;
+    	window.open(pageUrl, 'form_iframe');
+    	//window.open(pageUrl, "_self");
     }};

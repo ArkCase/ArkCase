@@ -8,16 +8,21 @@ import java.util.Date;
 public class AcmTask implements AcmObject
 {
     private Long taskId;
-    private int priority;
+    private String priority;
     private String title;
     private Date dueDate;
     private String attachedToObjectType;
+    private String attachedToObjectName;
     private Long attachedToObjectId;
     private String assignee;
+    private String owner;					//creator
     private String businessProcessName;
     private boolean adhocTask;
     private boolean completed;
-
+    private String status;
+    private Integer percentComplete;
+    private String details;
+    private Date createDate;
     private Date taskStartDate;
     private Date taskFinishedDate;
     private Long taskDurationInMillis;
@@ -32,12 +37,12 @@ public class AcmTask implements AcmObject
         this.taskId = taskId;
     }
 
-    public int getPriority()
+    public String getPriority()
     {
         return priority;
     }
 
-    public void setPriority(int priority)
+    public void setPriority(String priority)
     {
         this.priority = priority;
     }
@@ -152,10 +157,82 @@ public class AcmTask implements AcmObject
         this.taskDurationInMillis = taskDurationInMillis;
     }
 
+    public String getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
+    }
+
+    public Integer getPercentComplete()
+    {
+        return percentComplete;
+    }
+
+    public void setPercentComplete(Integer percentComplete)
+    {
+        this.percentComplete = percentComplete;
+    }
+
+    public String getDetails()
+    {
+        return details;
+    }
+
+    public void setDetails(String details)
+    {
+        this.details = details;
+    }
+
     @Override
     @JsonIgnore
     public String getObjectType()
     {
         return "Task";
     }
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public String getAttachedToObjectName() {
+		return attachedToObjectName;
+	}
+
+	public void setAttachedToObjectName(String attachedToObjectName) {
+		this.attachedToObjectName = attachedToObjectName;
+	}
+
+	@Override
+	public String toString() {
+		return "AcmTask [taskId=" + taskId + ", priority=" + priority
+				+ ", title=" + title + ", dueDate=" + dueDate
+				+ ", attachedToObjectType=" + attachedToObjectType
+				+ ", attachedToObjectName=" + attachedToObjectName
+				+ ", attachedToObjectId=" + attachedToObjectId + ", assignee="
+				+ assignee + ", owner=" + owner + ", businessProcessName="
+				+ businessProcessName + ", adhocTask=" + adhocTask
+				+ ", completed=" + completed + ", status=" + status
+				+ ", percentComplete=" + percentComplete + ", details="
+				+ details + ", createDate=" + createDate + ", taskStartDate="
+				+ taskStartDate + ", taskFinishedDate=" + taskFinishedDate
+				+ ", taskDurationInMillis=" + taskDurationInMillis + "]";
+	}
+	
+
 }

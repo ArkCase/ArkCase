@@ -4218,7 +4218,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 content = $scope.content;
             $element.html(dashboard.loadingTemplate);
             var templateScope = $scope.$new();
-            model.config || (model.config = {}), templateScope.config = model.config;
+            model.config ||
+            (model.config = {}), templateScope.config = model.config;
             var base = {
                     $scope: templateScope,
                     widget: model,
@@ -4253,6 +4254,10 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     compileWidget($scope, $element)
                 }), $scope.$on("widgetReload", function() {
                     compileWidget($scope, $element)
+                }), $scope.$on("widgetTableBasedReload", function(event, args) {
+                    $scope.numberOfRows = args,
+                    compileWidget($scope, $element)
+                //    $scope.$broadcast("adfDashboardChanged")
                 })
             }
         }
@@ -4282,7 +4287,14 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 $element.remove()
             }, $scope.reload = function() {
                 $scope.$broadcast("widgetReload")
-            }, $scope.edit = function() {
+            },
+
+                $scope.reloadTableBased = function(number) {
+                  //  $scope.numberOfRows = number,
+                    $scope.$broadcast("widgetTableBasedReload", number)
+                },
+
+                $scope.edit = function() {
                 var editScope = $scope.$new(),
                     opts = {
                         scope: editScope,
@@ -4592,14 +4604,15 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 }
             ]
         })
-    }.call(this), angular.module("sample", ["adf", "sample.widgets.mytasks", "sample.widgets.mycomplaints", "sample.widgets.teamtaskworkload", "LocalStorageModule", "structures", "sample-01", "sample-02", "ngRoute", "ngTable"]).config(["$routeProvider", "localStorageServiceProvider",
+    }.call(this), angular.module("sample", ["adf", "sample.widgets.mytasks", "sample.widgets.mycomplaints", "sample.widgets.news", "sample.widgets.weather", "sample.widgets.teamtaskworkload", "LocalStorageModule", "structures", "sample-01", "sample-02", "ngRoute", "ngTable"]).config(["$routeProvider", "localStorageServiceProvider",
     function($routeProvider, localStorageServiceProvider) {
-        localStorageServiceProvider.setPrefix("adf"), $routeProvider.when("/sample/01", {
+        localStorageServiceProvider.setPrefix("adf"), $routeProvider.when("/", {
             templateUrl: "partials/sample.html",
             controller: "sample01Ctrl",
             resolve: {
                 model: function($q, $http) {
-                    var q = $q.defer(),
+                    var q = $q.defer();
+                        //$scope.tasksUrl = App.Object.getContextPath()+ "/plugin/task#{{task.taskId}}";
                         url = App.Object.getContextPath() + "/api/latest/plugin/dashboard/get";
                     return $http.get(url).success(function(data) {
                         q.resolve(data.dashboardConfig);
@@ -4610,7 +4623,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             templateUrl: "partials/sample.html",
             controller: "sample02Ctrl"
         }).otherwise({
-            redirectTo: "/sample/01"
+            redirectTo: "/"
         })
     }
 ]).controller("navigationCtrl", ["$scope", "$location",
@@ -4629,10 +4642,11 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
         $scope.name = "sample-01";
         $scope.model = angular.fromJson(model);
         $scope.collapsible = !1;
-
+        appRoot = App.Object.getContextPath();
+        $scope.appRoot =  appRoot;
         $scope.$on("adfDashboardChanged", function(event, name, model) {
             localStorageService.set(name, model);
-            var url = App.Object.getContextPath() + "/api/latest/plugin/dashboard/set",
+            var url = appRoot + "/api/latest/plugin/dashboard/set",
                 postObject = new Object;
             postObject.dashboardConfig = JSON.stringify(model), $http({
                 method: "POST",
@@ -4752,6 +4766,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             title: "News",
             description: "Displays a RSS/Atom feed",
             templateUrl: "scripts/widgets/news/news.html",
+            reload: !0,
             controller: "newsCtrl",
             resolve: {
                 feed: function(newsService, config) {
@@ -4786,27 +4801,104 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             title: "My Tasks",
             description: "Displays a user tasks",
             templateUrl: "scripts/widgets/mytasks/mytasks.html",
+            tableBased: true,
+//            resolve: {
+//                usertasks: function(myTasksService, config) {
+//                        return  myTasksService.get();
+//                        }
+//            },
             controller: "myTasksCtrl",
             edit: {
                 templateUrl: "scripts/widgets/mytasks/edit.html"
             }
         })
     }
-]).controller("myTasksCtrl", ["$scope", "$filter", "$http", "ngTableParams",
+])
+//    service("myTasksService", ["$q", "$http",
+//    function($q, $http) {
+//        return {
+//            get : function(){
+//                var deferred = $q.defer(),
+//                    url = App.Object.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
+//                $http.get(url).success(function(dataTasks) {
+//                    alert("IN"),
+//                    dataTasks ? deferred.resolve(dataTasks) : deferred.reject()
+//                }).error(function() {
+//                    alert("ERROR"),
+//                    deferred.reject()
+//                }), deferred.promise
+//            }
+//        }
+//    }
+//])
+    .controller("myTasksCtrl", ["$scope", "$filter", "$http", "ngTableParams",//  "config", //"usertasks",
     function($scope, $filter, $http, ngTableParams) {
         var url = App.Object.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
-        $http.get(url).success(function(data) {
+
+//        $scope.usertasks = usertasks;
+//           config.rowsT = config.rowsT ? config.rowsT :  5;
+//        var nOfRows = config.rowsT;
+//        if($scope.numberOfRows) {
+//            nOfRows = $scope.numberOfRows;
+//                config.rowsT = nOfRows;
+//        }
+//        //$http.get(url).success(function(rawData) {
+//           // var isData = false;
+//            dataT=_.map($scope.usertasks,function(row){
+//                row=_.clone(row)
+//                //row.due=moment(row.dueDate, "YYYY MM D").toDate()
+//                row.due = moment(row.dueDate).format('MM/DD/YYYY');
+//                row.id = parseInt(row.taskId)
+//                row.status = row.taskStartDate != null ? "In Progress" : "Not Started"
+//                row.taskUrl = App.Object.getContextPath() + "/plugin/task/";
+//                return row
+//            })
+//            $scope.isData = dataT.length > 0 ? true : false
+//            $scope.tableParams = new ngTableParams({
+//                page: 1,
+//                count: nOfRows,
+//                sorting: {
+//                    due: "asc"
+//                }
+//            }, {
+//                counts:[3,5,10], // [5,10,25,50],
+//                total: dataT.length,
+//                getData: function($defer, params) {
+//                   // var filteredData = params.filter() ? $filter("filter")(dataT, params.filter()) : dataT,
+//                       var orderedData = params.sorting() ? $filter("orderBy")(dataT, params.orderBy()) : dataT;
+//                    params.total(orderedData.length), $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()))
+//                }
+//            })
+//        //})
+//    }
+        var nOfRows = 5;
+        if($scope.numberOfRows) {
+            nOfRows = $scope.numberOfRows;
+        }
+        $http.get(url).success(function(rawData) {
+            // var isData = false;
+            dataT=_.map(rawData,function(row){
+                row=_.clone(row)
+                //row.due=moment(row.dueDate, "YYYY MM D").toDate()
+                row.due=moment(row.dueDate).format('MM/DD/YYYY');
+                row.id=parseInt(row.taskId)
+                row.status = row.taskStartDate != null ? "In Progress" : "Not Started"
+                row.taskUrl = App.Object.getContextPath() + "/plugin/task/";
+                return row
+            })
+            $scope.isData = dataT.length > 0 ? true : false
             $scope.tableParams = new ngTableParams({
                 page: 1,
-                count: 5,
+                count: nOfRows,
                 sorting: {
                     due: "asc"
                 }
             }, {
-                total: data.length,
+                counts:[3,5,10], // [5,10,25,50],
+                total: dataT.length,
                 getData: function($defer, params) {
-                    var filteredData = params.filter() ? $filter("filter")(data, params.filter()) : data,
-                        orderedData = params.sorting() ? $filter("orderBy")(filteredData, params.orderBy()) : data;
+                    // var filteredData = params.filter() ? $filter("filter")(dataT, params.filter()) : dataT,
+                    var orderedData = params.sorting() ? $filter("orderBy")(dataT, params.orderBy()) : dataT;
                     params.total(orderedData.length), $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()))
                 }
             })
@@ -4819,6 +4911,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             description: "Displays complaints created by user",
             templateUrl: "scripts/widgets/mycomplaints/mycomplaints.html",
             controller: "myComplaintsCtrl",
+            tableBased: true,
             edit: {
                 templateUrl: "scripts/widgets/mycomplaints/edit.html"
             }
@@ -4827,24 +4920,40 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
 ]).controller("myComplaintsCtrl", ["$scope", "$filter", "$http", "ngTableParams",
     function($scope, $filter, $http, ngTableParams) {
         var url = App.Object.getContextPath() + "/api/latest/plugin/complaint/forUser/" + App.Object.getUserName();
-        $http.get(url).success(function(data) {
+        var nOfRows = 5;
+        if($scope.numberOfRows) {
+            nOfRows = $scope.numberOfRows;
+        }
+        $http.get(url).success(function(rawData) {
+             dataC=_.map(rawData,function(row){
+                row=_.clone(row)
+                //row.due=moment(row.dueDate, "YYYY MM D").toDate()
+                row.complaintCreated=moment(row.created).format('MM/DD/YYYY');
+                row.id=parseInt(row.complaintId);
+                row.complaintUrl = App.Object.getContextPath() + "/plugin/complaint/";
+                return row
+            })
+            $scope.isDataC = dataC.length > 0 ? true  : false
             $scope.tableParams = new ngTableParams({
                 page: 1,
-                count: 5,
+                count: nOfRows,
                 sorting: {
                     created: "asc"
                 }
             }, {
-                total: data.length,
+                $scope: $scope,
+                counts: [3,5,10],//[5,10,25,50],
+                total: dataC.length,
                 getData: function($defer, params) {
-                    var filteredData = params.filter() ? $filter("filter")(data, params.filter()) : data,
-                        orderedData = params.sorting() ? $filter("orderBy")(filteredData, params.orderBy()) : data;
+                  //  var filteredData = params.filter() ? $filter("filter")(dataC, params.filter()) : dataC,
+                      var  orderedData = params.sorting() ? $filter("orderBy")(dataC, params.orderBy()) : dataC;
                     params.total(orderedData.length), $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()))
                 }
             })
         })
     }
-]), angular.module("sample.widgets.weather", ["adf.provider"]).value("weatherServiceUrl", "http://api.openweathermap.org/data/2.5/weather?units=metric&callback=JSON_CALLBACK&q=").config(["dashboardProvider",
+]), angular.module("sample.widgets.weather", ["adf.provider"]).value("weatherServiceUrl",
+    "http://api.openweathermap.org/data/2.5/weather?units=metric&callback=JSON_CALLBACK&q=").config(["dashboardProvider",
     function(dashboardProvider) {
         dashboardProvider.widget("weather", {
             title: "Weather",
@@ -4853,7 +4962,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             controller: "weatherCtrl",
             reload: !0,
             resolve: {
-                data: function(weatcherService, config) {
+                weather: function(weatcherService, config) {
                     return config.location ? weatcherService.get(config.location) : void 0
                 }
             },
@@ -4868,19 +4977,60 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             get: function(location) {
                 var deferred = $q.defer(),
                     url = weatherServiceUrl + location;
+                var weather = { location: {}, temp: {}, clouds: null };
                 return $http.jsonp(url).success(function(data) {
-                    data && 200 === data.cod ? deferred.resolve(data) : deferred.reject()
-                }).error(function() {
+                    //data && 200 === data.cod ? deferred.resolve(data) : deferred.reject()
+                    if (data) {
+                        if (data.main) {
+                            weather.temp.current = data.main.temp*9/5 + 32;
+                            weather.temp.min = data.main.temp_min*9/5 + 32;
+                            weather.temp.max = data.main.temp_max*9/5 + 32;
+                            weather.location.city = data.name;
+                            weather.location.country = data.sys.country;
+                        }
+                        weather.clouds = data.clouds ? data.clouds.all : undefined;
+                    }
+                    data && 200 === data.cod ? deferred.resolve(weather) : deferred.reject()
+            }).error(function() {
                     deferred.reject()
                 }), deferred.promise
             }
         }
     }
-]).controller("weatherCtrl", ["$scope", "data",
-    function($scope, data) {
-        $scope.data = data
+]).filter('temp', function($filter) {
+        return function(input, precision) {
+            if (!precision) {
+                precision = 1;
+            }
+            var numberFilter = $filter('number');
+            return numberFilter(input, precision) + '\u00B0F';
+        };
+}).controller("weatherCtrl", ["$scope", "weather",
+    function($scope, weather) {
+        $scope.weather = weather
     }
-]), angular.module("sample.widgets.linklist", ["adf.provider"]).config(["dashboardProvider",
+]).directive('weatherIcon', function() {
+        return {
+            restrict: 'E', replace: true,
+            scope: {
+                cloudiness: '@'
+            },
+            controller: function ($scope) {
+                $scope.imgurl = function () {
+                    var baseUrl = 'https://ssl.gstatic.com/onebox/weather/128/';
+
+                    if ($scope.cloudiness < 20) {
+                        return baseUrl + 'sunny.png';
+                    } else if ($scope.cloudiness < 90) {
+                        return baseUrl + 'partly_cloudy.png';
+                    } else {
+                        return baseUrl + 'cloudy.png';
+                    }
+                };
+            },
+            template: '<div style="float:left"><img ng-src="{{ imgurl() }}"></div>'
+        };
+    }), angular.module("sample.widgets.linklist", ["adf.provider"]).config(["dashboardProvider",
     function(dashboardProvider) {
         dashboardProvider.widget("linklist", {
             title: "Links",
@@ -10842,11 +10992,15 @@ Showdown.converter = function(converter_options) {
 ]), angular.module("sample.widgets.teamtaskworkload", ["adf.provider", "highcharts-ng"]).config(["dashboardProvider",
     function(dashboardProvider) {
         var widget = {
+
             templateUrl: "scripts/widgets/teamtaskworkload/teamtaskworkload.html",
             reload: !0,
             resolve: {
-                tasks: function(teamTaskWorkloadService) {
-                    return teamTaskWorkloadService.getTasks()
+                tasks: function(teamTaskWorkloadService, config) {
+                    return teamTaskWorkloadService.getTasks(config.due)
+                },
+                complaints : function(newComplaintsService, config){
+                    return newComplaintsService.getComplaints()
                 }
             },
             edit: {
@@ -10857,14 +11011,18 @@ Showdown.converter = function(converter_options) {
             title: "Team Task Workload",
             description: "Displays tasks per user as pie chart",
             controller: "teamTaskWorkloadCtrl"
+        }, widget)).widget("newComplaints", angular.extend({
+            title: "New Complaints",
+            description: "Displays new complaints in the last 30 days as chart",
+            controller: "newComplaintsCtrl"
         }, widget))
     }
-]).service("teamTaskWorkloadService", ["$q", "$http",
+]).service("newComplaintsService", ["$q", "$http",
     function($q, $http) {
         return {
-            getTasks: function() {
+            getComplaints: function() {
                 var deferred = $q.defer(),
-                    url = App.Object.getContextPath() + "/api/latest/plugin/task/list";
+                    url = App.Object.getContextPath() + "/api/latest/plugin/complaint/list/lastMonth";
                 return $http.get(url).success(function(data) {
                     data ? deferred.resolve(data) : deferred.reject()
                 }).error(function() {
@@ -10873,8 +11031,88 @@ Showdown.converter = function(converter_options) {
             }
         }
     }
+]).service("teamTaskWorkloadService", ["$q", "$http",
+    function($q, $http) {
+        return {
+            getTasks: function(due) {
+                var deferred = $q.defer(),
+                    url = App.Object.getContextPath() + "/api/latest/plugin/task/list/"+due;
+                return $http.get(url).success(function(data) {
+
+                    data ? deferred.resolve(data) : deferred.reject()
+                }).error(function() {
+                    deferred.reject()
+                }), deferred.promise
+            }
+        }
+    }
+]).controller("newComplaintsCtrl", ["$scope", "config", "complaints",
+    function($scope, config, complaints) {
+        $scope.showChart = complaints.length> 0 ? true : false;
+        function parseDate(input) {
+            var parts = input.split("-");
+            return Date.UTC(parts[0], parts[1] - 1, parts[2])
+        }
+        var data = {};
+        angular.forEach(complaints, function(complaint) {
+            var day = complaint.created;//commit.commit.author.date;
+            day = day.substring(0, day.indexOf("T")), data[day] ? data[day] ++ : data[day] = 1
+        });
+        var seriesData = [];
+        angular.forEach(data, function(count, day) {
+            seriesData.push([parseDate(day), count])
+        }), seriesData.sort(function(a, b) {
+            return a[0] - b[0]
+        }), complaints && ($scope.chartConfig = {
+            chart: {
+                type: "spline"
+            },
+            title: {
+                text: "Complaints creation history"
+            },
+            xAxis: {
+                type: "datetime"
+            },
+            yAxis: {
+                title: {
+                    text: "complaints"
+                },
+                min: 0
+            },
+            series: [{
+                name: "test name",//config.due,
+                data: seriesData
+            }]
+        })
+    }
 ]).controller("teamTaskWorkloadCtrl", ["$scope", "config", "tasks",
     function($scope, config, tasks) {
+        $scope.showChart = tasks.length> 0 ? true : false;
+
+        var options = [
+            {
+                idO: "all", nameO: "All"
+            },
+            {
+                idO: "pastDue", nameO:"Past Due"
+            },
+            {
+                idO: "dueTomorrow", nameO:"Due Tomorrow"
+            },
+            {
+                idO: "dueInAWeek", nameO:"Due in 7 Days"
+            },
+            {
+                idO: "dueInAMonth", nameO:"Due in 30 Days"
+            }];
+
+        var chartTitle =  "All";
+        angular.forEach(options, function(option) {
+            if(option.idO == config.due){
+                chartTitle = option.nameO;
+            }
+        });
+        $scope.chartTitle=chartTitle;
         var data = {};
         angular.forEach(tasks, function(task) {
             var user = task.assignee;
@@ -10902,7 +11140,7 @@ Showdown.converter = function(converter_options) {
                 plotShadow: !1
             },
             title: {
-                text: config.path
+                text: chartTitle
             },
             plotOptions: {
                 pie: {
@@ -10918,7 +11156,7 @@ Showdown.converter = function(converter_options) {
             },
             series: [{
                 type: "pie",
-                name: config.path,
+                name: chartTitle,
                 data: seriesData
             }]
         })
@@ -10926,11 +11164,83 @@ Showdown.converter = function(converter_options) {
 ]), angular.module("adf").run(["$templateCache",
     function($templateCache) {
         "use strict";
-        $templateCache.put("../src/templates/dashboard-edit.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">Edit Dashboard</h4></div><div class="modal-body"><form role="form"><div class="form-group"><label for="dashboardTitle">Title</label><input type="text" class="form-control" id="dashboardTitle" ng-model="model.title" required></div><div class="form-group"><label>Structure</label><div class="radio" ng-repeat="(key, structure) in structures"><label><input type="radio" value="{{key}}" ng-model="model.structure" ng-change="changeStructure(key, structure)">{{key}}</label></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'), $templateCache.put("../src/templates/dashboard.html", '<div class="dashboard-container"><h1>{{model.title}} <span style="font-size: 16px" class="pull-right"><a href="" ng-if="editMode" title="add new widget" ng-click="addWidgetDialog()"><i class="fa fa-plus-circle"></i></a> <a href="" ng-if="editMode" title="edit dashboard" ng-click="editDashboardDialog()"><i class="fa fa-cog"></i></a> <a href="" title="{{editMode ? \'disable edit mode\' : \'enable edit mode\'}}" ng-click="toggleEditMode()"><i class="fa fa-edit"></i></a></span></h1><div class="dashboard" ng-class="editClass"><div ng-repeat="row in model.rows" class="row" ng-class="row.styleClass"><div ng-repeat="col in row.columns" class="column" ng-class="col.styleClass" ui-sortable="sortableOptions" ng-model="col.widgets"><div class="widgets" ng-repeat="definition in col.widgets"><adf-widget definition="definition" column="col" edit-mode="{{editMode}}" collapsible="collapsible"></div></div></div></div></div>'), $templateCache.put("../src/templates/widget-add.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">Add new widget</h4></div><div class="modal-body"><div style="display: inline-block"><dl class="dl-horizontal"><dt ng-repeat-start="(key, widget) in widgets"><a href="" ng-click="addWidget(key)">{{widget.title}}</a></dt><dd ng-repeat-end="" ng-if="widget.description">{{widget.description}}</dd></dl></div></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'), $templateCache.put("../src/templates/widget-edit.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">{{widget.title}}</h4></div><div class="modal-body"><form role="form"><div class="form-group"><label for="widgetTitle">Title</label><input type="text" class="form-control" id="widgetTitle" ng-model="definition.title" placeholder="Enter title" required></div></form><div ng-if="widget.edit"><adf-widget-content model="definition" content="widget.edit"></div></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'), $templateCache.put("../src/templates/widget.html", '<div class="widget panel panel-default"><div class="panel-heading"><h3 class="panel-title">{{definition.title}} <span class="pull-right"><a href="" title="reload widget content" ng-if="widget.reload" ng-click="reload()"><i class="fa fa-refresh"></i></a>  <a href="" title="change widget location" ng-if="editMode"><i class="fa fa-arrows"></i></a>  <a href="" title="collapse widget" ng-show="collapsible && !isCollapsed" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-minus"></i></a>  <a href="" title="expand widget" ng-show="collapsible && isCollapsed" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-plus"></i></a>  <a href="" title="edit widget configuration" ng-click="edit()" ng-if="editMode"><i class="fa fa-cog"></i></a>  <a href="" title="remove widget" ng-click="close()" ng-if="editMode"><i class="fa fa-times"></i></a></span></h3></div><div class="panel-body" collapse="isCollapsed"><adf-widget-content model="definition" content="widget"></div></div>')
+        $templateCache.put("../src/templates/dashboard-edit.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">Edit Dashboard</h4></div><div class="modal-body"><form role="form"><div class="form-group"><label for="dashboardTitle">Title</label><input type="text" class="form-control" id="dashboardTitle" ng-model="model.title" required></div><div class="form-group"><label>Structure</label><div class="radio" ng-repeat="(key, structure) in structures"><label><input type="radio" value="{{key}}" ng-model="model.structure" ng-change="changeStructure(key, structure)">{{key}}</label></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'),
+            $templateCache.put("../src/templates/dashboard.html", '<div class="dashboard-container"><h1>{{model.title}} <span style="font-size: 16px" class="pull-right"><a href="" ng-if="editMode" title="add new widget" ng-click="addWidgetDialog()"><i class="fa fa-plus-circle"></i></a> <a href="" ng-if="editMode" title="edit dashboard" ng-click="editDashboardDialog()"><i class="fa fa-cog"></i></a> <a href="" title="{{editMode ? \'disable edit mode\' : \'enable edit mode\'}}" ng-click="toggleEditMode()"><i class="fa fa-edit"></i></a></span></h1><div class="dashboard" ng-class="editClass"><div ng-repeat="row in model.rows" class="row" ng-class="row.styleClass"><div ng-repeat="col in row.columns" class="column" ng-class="col.styleClass" ui-sortable="sortableOptions" ng-model="col.widgets"><div class="widgets" ng-repeat="definition in col.widgets"><adf-widget definition="definition" column="col" edit-mode="{{editMode}}" collapsible="collapsible"></div></div></div></div></div>'),
+
+            $templateCache.put("../src/templates/widget-add.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">Add new widget</h4></div><div class="modal-body"><div style="display: inline-block"><dl class="dl-horizontal"><dt ng-repeat-start="(key, widget) in widgets"><a href="" ng-click="addWidget(key)">{{widget.title}}</a></dt><dd ng-repeat-end="" ng-if="widget.description">{{widget.description}}</dd></dl></div></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'),
+            $templateCache.put("../src/templates/widget-edit.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">{{widget.title}}</h4></div><div class="modal-body"><form role="form"><div class="form-group"><label for="widgetTitle">Title</label><input type="text" class="form-control" id="widgetTitle" ng-model="definition.title" placeholder="Enter title" required></div></form><div ng-if="widget.edit"><adf-widget-content model="definition" content="widget.edit"></div></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'),
+            $templateCache.put("../src/templates/widget.html",
+                '<div class="widget panel panel-default">' +
+                    '<div class="panel-heading">' +
+                        '<h3 class="panel-title">{{definition.title}} ' +
+                            '<span class="pull-right">' +
+                                '<a href="" title="reload widget content" ng-if="widget.reload" ng-click="reload()"><i class="fa fa-refresh"></i></a>  ' +
+                                '<a href="" title="reload widget content" ng-if="widget.tableBased" ng-click="reloadTableBased(5)">5</a>  ' +
+                                '<a href="" title="reload widget content" ng-if="widget.tableBased" ng-click="reloadTableBased(10)">10</a>  ' +
+                                '<a href="" title="reload widget content" ng-if="widget.tableBased" ng-click="reloadTableBased(25)">25</a>  ' +
+                                '<a href="" title="change widget location" ng-if="editMode"><i class="fa fa-arrows"></i></a>  ' +
+                                '<a href="" title="collapse widget" ng-show="collapsible && !isCollapsed" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-minus"></i></a>' +
+                                '<a href="" title="expand widget" ng-show="collapsible && isCollapsed" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-plus"></i></a>  ' +
+                                '<a href="" title="edit widget configuration" ng-click="edit()" ng-if="editMode"><i class="fa fa-cog"></i></a>  ' +
+                                '<a href="" title="remove widget" ng-click="close()" ng-if="editMode"><i class="fa fa-times"></i></a>' +
+                            '</span>' +
+                        '</h3>' +
+                    '</div>' +
+                    '<div class="panel-body" collapse="isCollapsed">' +
+                        '<adf-widget-content model="definition" content="widget">' +
+                    '</div>' +
+                '</div>')
     }
 ]), angular.module("sample").run(["$templateCache",
     function($templateCache) {
         "use strict";
-        $templateCache.put("scripts/widgets/github/edit.html", '<form role="form"><div class="form-group"><label for="path">Github Repository Path</label><input type="text" class="form-control" id="path" ng-model="config.path" placeholder="Enter Path (username/reponame)"></div></form>'), $templateCache.put("scripts/widgets/github/github.html", '<div><div class="alert alert-info" ng-if="!chartConfig">Please insert a repository path in the widget configuration</div><div ng-if="chartConfig"><highchart id="chart1" config="chartConfig"></highchart></div></div>'), $templateCache.put("scripts/widgets/linklist/edit.html", '<form class="form-inline" role="form"><div><label>Links</label></div><div class="padding-bottom" ng-repeat="link in config.links"><div class="form-group"><label class="sr-only" for="title-{{$index}}">Title</label><input type="text" id="title-{{$index}}" class="form-control" placeholder="Title" ng-model="link.title" required></div><div class="form-group"><label class="sr-only" for="href-{{$index}}">URL</label><input type="url" id="href-{{$index}}" class="form-control" placeholder="http://example.com" ng-model="link.href" required></div><button type="button" class="btn btn-warning" ng-click="removeLink($index)"><i class="fa fa-minus"></i> Remove</button></div><button type="button" class="btn btn-primary" ng-click="addLink()"><i class="fa fa-plus"></i> Add</button></form>'), $templateCache.put("scripts/widgets/linklist/linklist.html", '<div class="linklist"><ul><li ng-repeat="link in links | orderBy:\'title\'"><a target="_blank" ng-href="{{link.href}}">{{link.title}}</a></li></ul></div>'), $templateCache.put("scripts/widgets/markdown/edit.html", '<form role="form"><div class="form-group"><label for="content">Markdown content</label><textarea id="content" class="form-control" rows="5" ng-model="config.content"></textarea></div></form>'), $templateCache.put("scripts/widgets/markdown/markdown.html", '<div class="markdown" btf-markdown="config.content"></div>'), $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"><label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url"></div></form>'), $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div ng-controller="myComplaintsCtrl"><table ng-table="tableParams" show-filter="true" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'ID\'" sortable>{{complaint.complaintId}}</td><td data-title="\'Title\'" sortable filter="{ \'title\': \'text\' }">{{complaint.complaintTitle}}</td><td data-title="\'Priority\'" sortable filter="{ \'priority\': \'text\' }">{{complaint.priority}}</td><td data-title="\'Created\'" sortable filter="{ \'created\': \'text\' }">{{complaint.created}}</td><td data-title="\'Status\'" sortable>{{complaint.status}}</td></tr></table></div></div>'), $templateCache.put("scripts/widgets/mytasks/edit.html", '<form role="form"><div class="form-group"><label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url"></div></form>'), $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="mytasks"><div ng-controller="myTasksCtrl"><table ng-table="tableParams" show-filter="true" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable>{{task.taskId}}</td><td data-title="\'Title\'" sortable filter="{ \'title\': \'text\' }">{{task.title}}</td><td data-title="\'Priority\'" sortable filter="{ \'priority\': \'text\' }">{{task.priority}}</td><td data-title="\'Due\'" sortable filter="{ \'due\': \'text\' }">{{task.dueDate}}</td><td data-title="\'Status\'" sortable>{{task.completed}}</td></tr></table></div></div>'), $templateCache.put("scripts/widgets/news/edit.html", '<form role="form"><div class="form-group"><label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url"></div></form>'), $templateCache.put("scripts/widgets/news/news.html", '<div class="news"><div class="alert alert-info" ng-if="!feed">Please insert a feed url in the widget configuration</div><h4><a ng-href="{{feed.link}}" target="_blank">{{feed.title}}</a></h4><ul><li ng-repeat="entry in feed.entries"><a ng-href="{{entry.link}}" target="_blank">{{entry.title}}</a></li></ul></div>'), $templateCache.put("scripts/widgets/randommsg/randommsg.html", "<blockquote><p>{{msg.text}}</p><small>{{msg.author}}</small></blockquote>"), $templateCache.put("scripts/widgets/teamtaskworkload/edit.html", '<form role="form"><div class="form-group"><label for="path">Team Task Workload</label><input type="text" class="form-control" id="path" ng-model="config.path" placeholder="Enter Path (username/reponame)"></div></form>'), $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="!chartConfig">Please insert a repository path in the widget configuration</div><div ng-if="chartConfig"><highchart id="chart1" config="chartConfig"></highchart></div></div>'), $templateCache.put("scripts/widgets/weather/edit.html", '<form role="form"><div class="form-group"><label for="location">Location</label><input type="location" class="form-control" id="location" ng-model="config.location" placeholder="Enter location"></div></form>'), $templateCache.put("scripts/widgets/weather/weather.html", '<div class="text-center"><div class="alert alert-info" ng-if="!data">Please insert a location in the widget configuration</div><div class="weather" ng-if="data"><h4>{{data.name}} ({{data.sys.country}})</h4><dl><dt>Temprature:</dt><dd>{{data.main.temp | number:2}}</dd></dl></div></div>'), $templateCache.put("partials/sample.html", '<adf-dashboard name="{{name}}" structure="4-8" adf-model="model">')
+        $templateCache.put("scripts/widgets/github/edit.html", '<form role="form"><div class="form-group"><label for="path">Github Repository Path</label><input type="text" class="form-control" id="path" ng-model="config.path" placeholder="Enter Path (username/reponame)"></div></form>'),
+            $templateCache.put("scripts/widgets/github/github.html", '<div><div class="alert alert-info" ng-if="!chartConfig">Please insert a repository path in the widget configuration</div><div ng-if="chartConfig"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
+            $templateCache.put("scripts/widgets/linklist/edit.html", '<form class="form-inline" role="form"><div><label>Links</label></div><div class="padding-bottom" ng-repeat="link in config.links"><div class="form-group"><label class="sr-only" for="title-{{$index}}">Title</label><input type="text" id="title-{{$index}}" class="form-control" placeholder="Title" ng-model="link.title" required></div><div class="form-group"><label class="sr-only" for="href-{{$index}}">URL</label><input type="url" id="href-{{$index}}" class="form-control" placeholder="http://example.com" ng-model="link.href" required></div><button type="button" class="btn btn-warning" ng-click="removeLink($index)"><i class="fa fa-minus"></i> Remove</button></div><button type="button" class="btn btn-primary" ng-click="addLink()"><i class="fa fa-plus"></i> Add</button></form>'),
+            $templateCache.put("scripts/widgets/linklist/linklist.html", '<div class="linklist"><ul><li ng-repeat="link in links | orderBy:\'title\'"><a target="_blank" ng-href="{{link.href}}">{{link.title}}</a></li></ul></div>'),
+            $templateCache.put("scripts/widgets/markdown/edit.html", '<form role="form"><div class="form-group"><label for="content">Markdown content</label><textarea id="content" class="form-control" rows="5" ng-model="config.content"></textarea></div></form>'),
+            $templateCache.put("scripts/widgets/markdown/markdown.html", '<div class="markdown" btf-markdown="config.content"></div>'),
+
+            $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
+            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div class="alert alert-info" ng-controller="myComplaintsCtrl" ng-if="!isDataC"><p style="text-align:center;">No complaints created by you</p></div><div ng-controller="myComplaintsCtrl" ng-if="isDataC"><div style="overflow-x: auto;">' +
+                //'<div ng-table-pagination="tableParams" template-url="\'ng-table\/pager.html\'"></div>' +
+                '<table ng-table="tableParams" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'Complaint Number\'" sortable="\'complaintNumber\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintNumber}}</a></td><td data-title="\'Title\'" sortable="\'complaintTitle\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintTitle}}</a></td><td data-title="\'Priority\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'complaintCreated\'">{{complaint.complaintCreated}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div></div>'),
+
+            //This si with filters
+//            $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
+//            $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div ng-controller="myComplaintsCtrl"><table ng-table="tableParams" show-filter="true" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'ID\'" sortable="\'id\'">{{complaint.id}}</td><td data-title="\'Title\'" sortable="\'title\'" filter="{ \'title\': \'text\' }">{{complaint.complaintTitle}}</td><td data-title="\'Priority\'" sortable="\'priority\'" filter="{ \'priority\': \'text\' }">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'created\'" filter="{ \'created\': \'text\' }">{{complaint.created}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div>'),
+//<label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url">
+
+
+
+            $templateCache.put("scripts/widgets/mytasks/edit.html", '<form role="form"><div class="form-group" ><input type="text" class="form-control" id="rowsT" ng-model="config.rowsT" placeholder="Enter Default Row Numbers"></div></form>'),
+            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="mytasks"><div class="alert alert-info"  ng-controller="myTasksCtrl" ng-if="!isData"><p style="text-align:center;">No active tasks assigned</p></div><div ng-controller="myTasksCtrl" ng-if="isData"><div style="overflow-x: auto;"><table  ng-table="tableParams" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.status}}</td></tr></table></div></div></div>'),
+//<label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url">
+
+
+            //This is with filters
+//            $templateCache.put("scripts/widgets/mytasks/edit.html", '<form role="form"><div class="form-group"></div></form>'),
+//            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="mytasks"><div ng-controller="myTasksCtrl"><table ng-table="tableParams" show-filter="true" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'" filter="{ \'title\': \'text\' }">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'" filter="{ \'priority\': \'text\' }">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'" filter="{ \'due\': \'text\' }">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.completed}}</td></tr></table></div></div>'),
+
+            $templateCache.put("scripts/widgets/news/edit.html", '<form role="form"><div class="form-group"><label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url"></div></form>'),
+            $templateCache.put("scripts/widgets/news/news.html", '<div class="news"><div class="alert alert-info" ng-if="!feed">Please insert a feed url in the widget configuration</div><h4><a ng-href="{{feed.link}}" target="_blank">{{feed.title}}</a></h4><ul><li ng-repeat="entry in feed.entries"><a ng-href="{{entry.link}}" target="_blank">{{entry.title}}</a></li></ul></div>'),
+
+
+            $templateCache.put("scripts/widgets/randommsg/randommsg.html", "<blockquote><p>{{msg.text}}</p><small>{{msg.author}}</small></blockquote>"),
+
+            $templateCache.put("scripts/widgets/teamtaskworkload/edit.html", '<form role="form"><div class="form-group"><label for="path">Select Due Date Period</label><select type="text" class="form-control" id="due" ng-model="config.due"><option value="all" ng-selected="selected">All</option><option value="pastDue">Past Due</option><option value="dueTomorrow" >Due Tomorrow</option><option value="dueInAWeek">Due in 7 Days</option><option value="dueInAMonth">Due in 30 Days</option></select></div></form>'),
+            $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="showChart==false"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">Currently, there are no outstanding tasks for any user</p></div><div ng-if="showChart"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
+
+            $templateCache.put("scripts/widgets/weather/edit.html", '<form role="form"><div class="form-group"><label for="location">Location</label><input type="location" class="form-control" id="location" ng-model="config.location" placeholder="Enter location"></div></form>'),
+            $templateCache.put("scripts/widgets/weather/weather.html", '<div class="text-center"><div class="alert alert-info" ng-if="!weather"><p style="text-align:center;">Please insert a location in the widget configuration</div>' +
+                '<div class="weather" ng-if="weather">' +
+                    '<h4>{{weather.location.city}} ({{weather.location.country}})</h4>' +
+                    '<weather-icon cloudiness="{{ weather.clouds }}"></weather-icon>' +
+                 //   '<dl><dt>Temprature:</dt><dd>{{weather.main.temp | number:2}}</dd></dl>' +
+                    '<h3>Current: {{ weather.temp.current | temp:2 }}</h3>' + //<h3>Current: {{ weather.temp.current | temp:2 }} F</h3>
+                    'min: {{ weather.temp.min | temp:2 }}, max: {{ weather.temp.max | temp:2 }}'+
+                '</div></div>'),
+
+            $templateCache.put("partials/sample.html", '<adf-dashboard name="{{name}}" structure="4-8" adf-model="model">')
     }
-]);
+])

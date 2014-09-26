@@ -8,6 +8,9 @@ var Task = Task || {
     }
 
     ,_task : {}
+    ,getObjectType : function() {
+    	return "TASK";
+    }
     ,getTask : function() {
         return this._task;
     }
