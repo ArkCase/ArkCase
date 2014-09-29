@@ -1,10 +1,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <t:layout>
     <jsp:attribute name="endOfHead">
-        <title>Armedia Blog | ACM | Armedia Case Management</title>
+        <title><spring:message code="armediaBlog.page.title" text="Armedia Blog | ACM | Armedia Case Management" /></title>
         <script type="text/javascript">
             $(document).ready(function ()
             {
