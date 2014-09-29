@@ -14,15 +14,15 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
 
-    <flow name="savePerson" doc:name="Save Person">
-        <description> Saves a person (creates new person if it has not been saved
-            previously).  The payload must be a Person entity object.  The return message&quot;s
-            payload is the (possibly updated) person; i.e. for a new person the return payload&quot;s
+    <flow name="savePersonAssociation" doc:name="Save PersonAssociation">
+        <description> Saves a personAssociation (creates new personAssociation if it has not been saved
+            previously).  The payload must be a PersonAssociation entity object.  The return message&quot;s
+            payload is the (possibly updated) personAssociation; i.e. for a new personAssociation, the return payload&quot;s
             ID fields are populated.</description>
         <vm:inbound-endpoint
-                address="vm://savePerson.in"
+                address="vm://savePersonAssociation.in"
                 exchange-pattern="request-response"
-                doc:name="Save Person">
+                doc:name="Save PersonAssociaiton">
         </vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>
@@ -31,11 +31,11 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <timer-interceptor/>
 
         <set-property doc:name="Added or Updated?"
-                      propertyName="PersonAdded" value="#[payload.Id == null]"/>
+                      propertyName="PersonAssociationAdded" value="#[payload.Id == null]"/>
         <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>
 
         <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
-        <scripting:transformer name="savePersonCreatorModifierTransformer">
+        <scripting:transformer name="savePersonAssociationCreatorModifierTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
                     String user = message.getInboundProperty("acmUser") == null ? null :
@@ -56,7 +56,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
              property, then call an outbound endpoint (thereby starting a new flow).
         -->
         <set-property propertyName="daoMethod" value="save"/>
-        <vm:outbound-endpoint address="vm://personDao.in" exchange-pattern="request-response"/>
+        <vm:outbound-endpoint address="vm://personAssociationDao.in" exchange-pattern="request-response"/>
 
 
         <catch-exception-strategy>
@@ -66,14 +66,14 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
     </flow>
 
-    <flow name="personDao" processingStrategy="synchronous">
-        <vm:inbound-endpoint address="vm://personDao.in" exchange-pattern="request-response"/>
+    <flow name="personAssociationDao" processingStrategy="synchronous">
+        <vm:inbound-endpoint address="vm://personAssociationDao.in" exchange-pattern="request-response"/>
 
-        <logger level="TRACE" category="com.armedia.acm.plugins.person" message="Calling Person DAO"/>
+        <logger level="TRACE" category="com.armedia.acm.plugins.person" message="Calling PersonAssociation DAO"/>
 
-        <component doc:name="Person DAO">
+        <component doc:name="PersonAssociation DAO">
             <property-entry-point-resolver property="daoMethod"/>
-            <spring-object bean="acmPersonDao"/>
+            <spring-object bean="acmPersonAssociationDao"/>
         </component>
     </flow>
 
