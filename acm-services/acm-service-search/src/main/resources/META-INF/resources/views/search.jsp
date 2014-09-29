@@ -1,12 +1,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>${pageDescriptor.title}</title>
+    <%--<title>${pageDescriptor.title}</title>--%>
+    <title><spring:message code="search.page.title" text="Search | ACM | Armedia Case Management" /></title>
+
     <div id="searchData" itemscope="true" style="display: none">
-        <span itemprop="searchDef">${searchDef}</span>
         <span itemprop="searchEx">${searchEx}</span>
     </div>
 </script>

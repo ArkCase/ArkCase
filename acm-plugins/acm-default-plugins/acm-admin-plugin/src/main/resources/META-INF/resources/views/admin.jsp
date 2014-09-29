@@ -1,10 +1,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>${pageDescriptor.title}</title>
+    <title><spring:message code="admin.page.title" text="Admin | ACM | Armedia Case Management" /></title>
 </jsp:attribute>
 
 
@@ -27,7 +28,7 @@
             <section class="scrollable padder">
                 <section class="row m-b-md">
                     <div class="col-sm-12">
-                        <h3 class="m-b-xs text-black">Admin</h3>
+                        <h3 class="m-b-xs text-black"><spring:message code="admin.page.descShort" text="Admin" /></h3>
                     </div>
                 </section>
 
