@@ -23,7 +23,6 @@ public class SearchUiController
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmPluginManager acmPluginManager;
     private AcmPageDescriptor pageDescriptor;
-//    private Properties searchDefProperties;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView search()
@@ -60,14 +59,6 @@ public class SearchUiController
     public void setPageDescriptor(AcmPageDescriptor pageDescriptor) {
         this.pageDescriptor = pageDescriptor;
     }
-
-//    public Properties getSearchDefProperties() {
-//        return searchDefProperties;
-//    }
-//
-//    public void setSearchDefProperties(Properties searchDefProperties) {
-//        this.searchDefProperties = searchDefProperties;
-//    }
 
     public AcmPluginManager getAcmPluginManager() {
         return acmPluginManager;

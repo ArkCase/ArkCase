@@ -53,8 +53,6 @@
     </bean>
        
     <bean id="complaintUiController" class="com.armedia.acm.plugins.complaint.web.ComplaintUiController">
-        <property name="acmPlugin" ref="complaintPlugin"/>
-        <property name="pluginProperties" ref="complaintPluginProperties"/>
         <property name="pageDescriptor" ref="_complaintPageDescriptor"/>
         <property name="pageDescriptorWizard" ref="_complaintWizardPageDescriptor"/>
         <property name="pageDescriptorList" ref="_complaintListPageDescriptor"/>
