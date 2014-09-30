@@ -17,7 +17,7 @@
     <script type="text/javascript" src="<c:url value='/resources/js/profile/profileService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/profile/profileCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
 </jsp:attribute>
 
 <jsp:body>
