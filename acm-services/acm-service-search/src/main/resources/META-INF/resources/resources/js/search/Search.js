@@ -13,23 +13,7 @@ var Search = Search || {
         Search.Callback.initialize();
 
         Acm.deferred(Search.Event.onPostInit);
-        //Search.Event.onPostInit();
     }
-
-    ,Object: {}
-    ,Event:{}
-    ,Page: {}
-    ,Rule: {}
-    ,Service: {}
-    ,Callback: {}
-
-//    ,EMPTY_RESULT: {"Result": "OK","Records": [],"TotalRecordCount": 0}
-//    ,DEFAULT_PAGE_SIZE: 4
-//
-//    ,OBJTYPE_CASE: "Case"
-//    ,OBJTYPE_COMPLAINT: "Complaint"
-//    ,OBJTYPE_TASK: "Task"
-//    ,OBJTYPE_DOCUMENT: "Document"
 
 };
 

@@ -2,9 +2,11 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>${pageDescriptor.title}</title>
+    <title><spring:message code="report.page.title" text="Report | ACM | Armedia Case Management" /></title>
 </jsp:attribute>
 
 
@@ -26,7 +28,7 @@
 	    <section class="hbox stretch">
 	        <aside class="aside-md bg-light dker b-r" id="subNav">
 	            <section class="scrollable">
-	                <div class="wrapper b-b header">Reports</div>
+	                <div class="wrapper b-b header"><spring:message code="report.page.descShort" text="Report" /></div>
 	                <div class="wrapper">
 	                    <label for="priority"  class="label">Report</label>
 	                    <select name="priority" class="form-control" id ="selectReport">

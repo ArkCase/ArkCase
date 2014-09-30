@@ -1,11 +1,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>${pageDescriptor.title}</title>
+    <title><spring:message code="taskNew.page.title" text="Task | ACM | Armedia Case Management" /></title>
     <div id="wizardData" itemscope="true" style="display: none">
         <span itemprop="parentType">${parentType}</span>
         <span itemprop="parentId">${parentId}</span>
@@ -139,7 +140,7 @@
         <section class="scrollable padder">
             <section class="row m-b-md">
                 <div class="col-sm-12">
-                    <h3 class="m-b-xs text-black">New Task</h3>
+                    <h3 class="m-b-xs text-black"><spring:message code="taskNew.page.descShort" text="New Task" /></h3>
                 </div>
             </section>
 
