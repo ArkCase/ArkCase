@@ -22,16 +22,16 @@
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintJTable.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
 
     <!-- File Manager -->
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_knob}/js/jquery.knob.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/jquery.fileupload.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_knob}/js/${js_knob}"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/${js_upload_fileupload}"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/${js_upload_iframe}"></script>
 
     <!-- Summernote WYSIWYG -->
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/${js_summernote}"></script>
 
     <!-- JTable -->
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
@@ -39,9 +39,9 @@
 
 
     <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
-    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/jquery.fancytree.js"></script>
-    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/jquery.fancytree.table.js"></script>
-    <script src="<c:url value='/'/>resources/vendors/${vd_contextmenu}/jquery.ui-contextmenu.js"></script>
+    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree}"></script>
+    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree_table}"></script>
+    <script src="<c:url value='/'/>resources/vendors/${vd_contextmenu}/${js_contextmenu}"></script>
 
     <!-- X-Editable -->
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css" type="text/css"/>
