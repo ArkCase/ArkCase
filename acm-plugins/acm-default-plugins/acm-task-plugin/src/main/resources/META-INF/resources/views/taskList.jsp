@@ -22,12 +22,12 @@
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
 
 
     <!-- Summernote WYSIWYG -->
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/${js_summernote}"></script>
     <%--<script>--%>
 
         <%--var edit = function() {--%>

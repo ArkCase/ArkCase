@@ -18,7 +18,7 @@
     <script type="text/javascript" src="<c:url value='/META-INF/resources/resources/js/admin/admin/admin/adminService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/META-INF/resources/resources/js/admin/admin/admin/adminCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
 
 </jsp:attribute>
 
