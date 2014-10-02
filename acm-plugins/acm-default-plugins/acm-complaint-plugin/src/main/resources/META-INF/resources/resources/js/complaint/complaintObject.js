@@ -236,7 +236,21 @@ Complaint.Object = {
         this.setValueLnkComplaintNum(c.complaintNumber);
         this.setValueLnkIncident(Acm.getDateFromDatetime(c.incidentDate));
         this.setValueLnkPriority(c.priority);
-        this.setValueLnkAssigned(c.assignee);
+
+        var assignee = "";
+        if ( typeof c.participants != "undefined" )
+        {
+            for ( var partNum = 0; partNum < c.participants.length; partNum++ )
+            {
+                if ( c.participants[partNum]['participantType'] == "assignee" )
+                {
+                    assignee = c.participants[partNum]['participantLdapId'];
+                    break;
+                }
+            }
+        }
+        this.setValueLnkAssigned(assignee);
+
         this.setValueLnkComplaintType(c.complaintType);
         this.setTextLnkStatus(c.status);
 

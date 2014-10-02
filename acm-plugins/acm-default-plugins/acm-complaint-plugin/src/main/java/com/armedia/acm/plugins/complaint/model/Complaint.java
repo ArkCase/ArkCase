@@ -3,10 +3,12 @@ package com.armedia.acm.plugins.complaint.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.services.users.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -118,6 +120,10 @@ public class Complaint implements Serializable, AcmObject
     @JoinColumn(name = "cm_person_assoc_parent_id")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
+    @OneToMany (cascade = {CascadeType.ALL})
+    @JoinColumn(name = "cm_object_id")
+    private List<AcmParticipant> participants = new ArrayList<>();
+
     @Column(name = "cm_due_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
@@ -131,10 +137,6 @@ public class Complaint implements Serializable, AcmObject
     @Column(name = "cm_location")
     private String location;
         
-    public Complaint()
-    {
-    }
-
     @PrePersist
     protected void beforeInsert()
     {
@@ -162,7 +164,6 @@ public class Complaint implements Serializable, AcmObject
         for ( PersonAssociation persAssoc : personAssociations)
         {
             personAssociationResolver(persAssoc);
-            //persAssoc.setParentId(complaintId);
         }
     }
 
@@ -313,6 +314,12 @@ public class Complaint implements Serializable, AcmObject
                 pa.setCreator(creator);
             }
         }
+
+        for ( AcmParticipant ap : getParticipants() )
+        {
+            ap.setObjectId(getComplaintId());
+            ap.setObjectType("COMPLAINT");
+        }
     }
 
     public Date getModified()
@@ -346,6 +353,11 @@ public class Complaint implements Serializable, AcmObject
             {
                 pa.setModified(modified);
             }
+        }
+
+        for ( AcmParticipant ap : getParticipants() )
+        {
+            ap.setModified(modified);
         }
 
    }
@@ -383,6 +395,11 @@ public class Complaint implements Serializable, AcmObject
             {
                 pa.setModifier(modifier);
             }
+        }
+
+        for ( AcmParticipant ap : getParticipants() )
+        {
+            ap.setModifier(modifier);
         }
     }
 
@@ -513,6 +530,15 @@ public class Complaint implements Serializable, AcmObject
     public void setLocation(String location)
     {
         this.location = location;
-    }  
-    
+    }
+
+    public List<AcmParticipant> getParticipants()
+    {
+        return participants;
+    }
+
+    public void setParticipants(List<AcmParticipant> participants)
+    {
+        this.participants = participants;
+    }
 }
