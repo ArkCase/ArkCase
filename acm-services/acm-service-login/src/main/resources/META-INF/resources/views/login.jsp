@@ -1,4 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!DOCTYPE html>
 <html lang="en" class="app">
@@ -6,7 +7,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <%@include file="/WEB-INF/tagf/global.tagf" %>
-    <title>ACM | Armedia Case Management</title>
+    <title><spring:message code="login.page.title" text="ACM | Armedia Case Management" /></title>
 </head>
 <body>
     <section id="content" class="m-t-lg wrapper-md animated fadeInUp">
@@ -14,13 +15,13 @@
             <a class="navbar-brand block" href="portal.html"><img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/logo.png" ></a>
             <section class="m-b-lg">
                 <header class="wrapper text-center">
-                    <strong>Enter your username and password.</strong>
+                    <strong><spring:message code="login.instruction" text="Enter your username and password." /></strong>
                 </header>
                 <p/>
                 <c:if test="${not empty param.login_error}">
                     <div class="error">
-                        Your login attempt was not successful, try again.<br />
-                        Reason: ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
+                        <spring:message code="login.fail.message" text="Your login attempt was not successful, try again." /><br />
+                        <spring:message code="login.fail.reason" text="Reason" />: ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
                     </div>
                 </c:if>
 
@@ -36,8 +37,8 @@
                             <input type="password" name="j_password" placeholder="Password" class="form-control no-border"/>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-lg btn-primary btn-block">Log In</button>
-                    <div class="text-center m-t m-b"><a href="#"><small>Forgot password?</small></a></div>
+                    <button type="submit" class="btn btn-lg btn-primary btn-block"><spring:message code="login.button.label" text="Log In" /></button>
+                    <div class="text-center m-t m-b"><a href="#"><small><spring:message code="login.forgot.password" text="Forgot password?" /></small></a></div>
 
                 </form>
             </section>
@@ -49,7 +50,8 @@
     <footer id="footer">
         <div class="text-center padder">
             <p>
-                <small>Armedia Case Management 3.0 <br>&copy; 2014</small>
+                <%--<small>Armedia Case Management 3.0 <br>&copy; 2014</small>--%>
+                <small><small><spring:message code="login.footer" text="Armedia Case Management 3.0 <br>&copy; 2014" /></small>
             </p>
         </div>
     </footer>
@@ -61,4 +63,3 @@
     <%@include file="/WEB-INF/tagf/ready.tagf"%>
 </body>
 </html>
-

@@ -150,12 +150,6 @@
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <!-- list of complaints -->
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/complaint/list"/>
-                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <!-- list of complaints -->
-                    <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/complaint/list/{timePeriod}"/>
                     <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
                 </bean>
