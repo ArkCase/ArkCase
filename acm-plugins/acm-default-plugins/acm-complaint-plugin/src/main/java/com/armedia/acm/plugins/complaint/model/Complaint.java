@@ -157,6 +157,11 @@ public class Complaint implements Serializable, AcmObject
             personAssociationResolver(getOriginator());
         }
 
+        setupChildPointers();
+    }
+
+    private void setupChildPointers()
+    {
         for ( ObjectAssociation childObject : childObjects )
         {
             childObject.setParentId(complaintId);
@@ -164,6 +169,11 @@ public class Complaint implements Serializable, AcmObject
         for ( PersonAssociation persAssoc : personAssociations)
         {
             personAssociationResolver(persAssoc);
+        }
+        for ( AcmParticipant ap : getParticipants() )
+        {
+            ap.setObjectId(getComplaintId());
+            ap.setObjectType("COMPLAINT");
         }
     }
 
@@ -174,7 +184,9 @@ public class Complaint implements Serializable, AcmObject
         {
             log.debug("In beforeUpdate()");
         }
-        setModified(new Date());        
+        setModified(new Date());
+
+        setupChildPointers();
       }
 
     public Long getComplaintId()
@@ -279,6 +291,11 @@ public class Complaint implements Serializable, AcmObject
                 pa.setCreated(created);
             }
         }
+
+        for ( AcmParticipant ap : getParticipants() )
+        {
+            ap.setCreated(created);
+        }
     }
 
     public String getCreator()
@@ -317,8 +334,7 @@ public class Complaint implements Serializable, AcmObject
 
         for ( AcmParticipant ap : getParticipants() )
         {
-            ap.setObjectId(getComplaintId());
-            ap.setObjectType("COMPLAINT");
+            ap.setCreator(creator);
         }
     }
 
@@ -401,6 +417,7 @@ public class Complaint implements Serializable, AcmObject
         {
             ap.setModifier(modifier);
         }
+
     }
 
     public String getStatus()
