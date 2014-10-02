@@ -11,8 +11,7 @@ Search.Service = {
 
     ,API_QUICK_SEARCH       : "/api/v1/plugin/search/quickSearch"
 
-    //,API_SEARCH       : "/api/latest/plugin/search"
-    ,API_SEARCH       : "/api/latest/plugin/complaint/list"
+    ,API_SEARCH       : "/api/latest/plugin/search"
     ,API_SEARCH_DEMO       : "/api/latest/plugin/complaint/byId/"
 
     //for demo
