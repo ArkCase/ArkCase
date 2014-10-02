@@ -7,6 +7,14 @@
  */
 TaskList.Object = {
     initialize : function() {
+
+        this.$noTaskFoundMeassge = $("#noTaskFoundMeassge");
+        this.showObject(this.$noTaskFoundMeassge, false);
+        this.$taskDetailView	 = $("#taskDetailView");
+        
+        this.$ulTasks           = $("#ulTasks");
+        this.$asideTasks        = this.$ulTasks.closest("aside");
+
         var items = $(document).items();
         var taskId = items.properties("taskId").itemValue();
         if (Acm.isNotEmpty(taskId)) {
@@ -16,13 +24,6 @@ TaskList.Object = {
         } else {
             TaskList.setSingleObject(false);
         }
-
-        this.$noTaskFoundMeassge = $("#noTaskFoundMeassge");
-        this.showObject(this.$noTaskFoundMeassge, false);
-        this.$taskDetailView	 = $("#taskDetailView");
-        
-        this.$ulTasks           = $("#ulTasks");
-        this.$asideTasks        = this.$ulTasks.closest("aside");
 
         this.$btnComplete       = $("button[data-title='Complete']");
         this.$btnSignConfirm    = $("#signatureConfirmBtn");
