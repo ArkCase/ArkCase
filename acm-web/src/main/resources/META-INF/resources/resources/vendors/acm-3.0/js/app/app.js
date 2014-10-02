@@ -14,7 +14,7 @@ var App = App || {
     }
 
     ,OBJTYPE_CASE:        "Case"
-    ,OBJTYPE_COMPLAINT:   "Complaint"
+    ,OBJTYPE_COMPLAINT:   "COMPLAINT"
     ,OBJTYPE_TASK:        "Task"
     ,OBJTYPE_DOCUMENT:    "Document"
     ,OBJTYPE_PEOPLE:    "People"
