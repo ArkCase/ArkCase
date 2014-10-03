@@ -226,6 +226,29 @@
   "originator": {
         "id":2191,
         "parentId":2190,
+        "person":{
+                "id":2192,
+                "title":"mr.",
+                "company":null,
+                "status":"ACTIVE",
+                "givenName":"Complaintant first",
+                "familyName":"Complaintant last",
+                "hairColor":null,
+                "eyeColor":null,
+                "heightInInches":null,
+                "weightInPounds":null,
+                "dateOfBirth":null,
+                "dateMarried":null,
+                "created":"2014-09-29T17:01:25.142+0000",
+                "creator":"anotherUser",
+                "modified":"2014-09-29T17:01:25.142+0000",
+                "modifier":"anotherUser",
+                "addresses":[],
+                "contactMethods":[],
+                "securityTags":[],
+                "personAliases":[ ],                                
+                "organizations":[]                          
+                 },
         "personType":"Initiator",
         "parentType":"COMPLAINT",
         "personDescription":"Sample Description",
@@ -242,6 +265,29 @@
   "personAssociations": [{
         "id":2194,
         "parentId":2190,
+        "person": {
+                  "id":2193,
+                  "title":"Mr.",
+                  "company":"Armedia",
+                  "status":"ACTIVE",
+                  "givenName":"Johnatan",
+                  "familyName":"Joe",
+                  "hairColor":"black",
+                  "eyeColor":null,
+                  "heightInInches":null,
+                  "weightInPounds":189,
+                  "dateOfBirth":null,
+                  "dateMarried":null,
+                  "created":"2014-09-29T19:08:06.006+0000",
+                  "creator":"ann-acm",
+                  "modified":"2014-09-29T19:08:06.006+0000",
+                  "modifier":"ann-acm",
+                  "addresses":[],
+                  "contactMethods":[],
+                  "securityTags":[],
+                  "personAliases":[ ],                                
+                  "organizations":[]                          
+                   },
         "personType": "Subject",
         "parentType": "COMPLAINT",
         "personDescription": "Simple Description",
@@ -258,108 +304,132 @@
 </code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the request body was invalid (did not match the expected JSON format). The response body will be empty.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_types><span class=parent>/plugin/complaint</span>/types</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_types_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_types class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage the list of complaint types.</p></div><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_types_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve array of valid complaint types.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_types_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/types</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve array of valid complaint types.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_types_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_types_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_types_get_request></div><div class=tab-pane id=_plugin_complaint_types_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response including the valid complaint types.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[ "Domestic Dispute", "Arson", "Better Business Dispute", "Government", "Local", "Agricultural", "Pollution" ]
 </code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_priorities><span class=parent>/plugin/complaint</span>/priorities</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_priorities_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_priorities class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage the list of complaint priorities.</p></div><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_priorities_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Retrieve array of valid complaint priorities.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_priorities_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/priorities</h4></div><div class=modal-body><div class="alert alert-info"><p>Retrieve array of valid complaint priorities.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_priorities_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_priorities_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_priorities_get_request></div><div class=tab-pane id=_plugin_complaint_priorities_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Expected response including the valid complaint priorities.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>[ "Low", "Medium", "High" ]
 </code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_file><span class=parent>/plugin/complaint</span>/file</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_file_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_file class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Manage complaint files.</p></div><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_file_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Add a file to the complaint. Submitted form must include a complaintId element, and a file[] element with the files to be uploaded. Returns JSON suitable for consumption by the jQuery File Upload plugin.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_file_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/file</h4></div><div class=modal-body><div class="alert alert-info"><p>Add a file to the complaint. Submitted form must include a complaintId element, and a file[] element with the files to be uploaded. Returns JSON suitable for consumption by the jQuery File Upload plugin.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_file_post_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_file_post_request><h3>Body</h3><p><strong>Type: multipart/form-data</strong></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_complaint_byId__complaintId_><span class=parent>/plugin/complaint</span>/byId/{complaintId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_complaint_byId__complaintId__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_complaint_byId__complaintId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_complaint_byId__complaintId__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Lookup complaint details by complaint ID.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_complaint_byId__complaintId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/complaint</span>/byId/{complaintId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Lookup complaint details by complaint ID.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_complaint_byId__complaintId__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_complaint_byId__complaintId__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_complaint_byId__complaintId__get_request><h3>URI Parameters</h3><ul><li><strong>complaintId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_complaint_byId__complaintId__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>expected response containing the desired complaint details</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
-"complaintId":2045,
-"complaintNumber":"20140919_2045",
-"complaintType":"Agricultural",
-"priority":"Medium",
-"complaintTitle":"fighting was the cause",
-"details":"simple Detail",
-"incidentDate":"2014-09-19T04:00:00.000+0000",
-"created":"2014-09-19T12:33:53.830+0000",
-"creator":"ann-acm",
-"modified":"2014-09-19T12:33:53.830+0000",
-"modifier":"ann-acm",
-"status":"DRAFT",
-"originator":{
-      "id":2046,
-      "parentId":2045,
-      "personType":"Initiator",
-      "parentType":"COMPLAINT",
-      "personDescription":"Sample Description",
-      "created":"2014-09-19T12:33:53.830+0000",
-      "creator":"ann-acm",
-      "modified":"2014-09-19T12:33:53.830+0000",
-      "modifier":"ann-acm",
-      "notes":"simple note description"
-            },
-"ecmFolderPath":null,
-"ecmFolderId":"workspace://SpacesStore/7d240f67-023a-4059-b653-6bc06b2d58ab",
-"childObjects":[
-      {
-      "associationId":2059,
-      "status":"ACTIVE",
-      "parentName":"20140919_2045",
-      "parentType":"COMPLAINT",
-      "parentId":2045,
-      "targetName":"form.xml",
-      "targetType":"FILE",
-      "targetId":2058,
-      "created":"2014-09-19T12:33:58.281+0000",
-      "creator":"ann-acm",
-      "modified":"2014-09-19T12:33:58.281+0000",
-      "modifier":"ann-acm"
-      },
-      {
-      "associationId":2061,
-      "status":"ACTIVE",
-      "parentName":"20140919_2045",
-      "parentType":"COMPLAINT",
-      "parentId":2045,
-      "targetName":"Testing complaint.docx",
-      "targetType":"FILE",
-      "targetId":2060,
-      "created":"2014-09-19T12:34:04.816+0000",
-      "creator":"ann-acm",
-      "modified":"2014-09-19T12:34:04.816+0000",
-      "modifier":"ann-acm"
-      },
-      {
-      "associationId":2063,
-      "status":"ACTIVE",
-      "parentName":"20140919_2045",
-      "parentType":"COMPLAINT",
-      "parentId":2045,
-      "targetName":"Complaint.pdf",
-      "targetType":"FILE",
-      "targetId":2062,
-      "created":"2014-09-19T12:34:07.979+0000",
-      "creator":"ann-acm",
-      "modified":"2014-09-19T12:34:07.979+0000",
-      "modifier":"ann-acm"
-      }
-      ],
-"approvers":null,
-"personAssociations":[
-        {
-        "id":2046,
-        "parentId":2045,
-        "personType":"Initiator",
-        "parentType":"COMPLAINT",
-        "personDescription":"Sample Description",
-        "created":"2014-09-19T12:33:53.830+0000",
-        "creator":"ann-acm",
-        "modified":"2014-09-19T12:33:53.830+0000",
-        "modifier":"ann-acm",
-        "notes":"sample note"
-        },
-        {
-        "id":2057,
-        "parentId":2045,
-        "personType":"Complaintant",
-        "parentType":"COMPLAINT",
-        "personDescription":"long and Athletic",
-        "created":"2014-09-19T12:33:53.830+0000",
-        "creator":"ann-acm",
-        "modified":"2014-09-19T12:33:53.830+0000",
-        "modifier":"ann-acm",
-        "notes":"simple note description."
-        }
-  ],
-  "dueDate":"2014-09-22T04:00:00.000+0000",
-  "tag":"couldn&#x27;t give",
-  "frequency":"Once",
-  "location":"8022 closeopen rd annandale va "
-}
+ "complaintId": 2190,
+ "complaintNumber": "20140806_1938",
+ "complaintType": "Agricultural",
+ "priority": "Medium",
+ "complaintTitle": "falling fire is coming  tree",
+ "details": "Sample Detail",
+ "incidentDate": "2014-09-19T04:00:00.000+0000",
+ "created": "2014-09-29T21:34:54.947+0000",
+ "creator": "ann-acm",
+ "modified": "2014-09-29T21:34:54.947+0000",
+ "modifier": "ann-acm",
+ "status": "DRAFT",
+ "originator": {
+       "id": 2191,
+       "person": {
+           "id": 2192,
+           "title": null,
+           "company": null,
+           "status": "ACTIVE",
+           "givenName": null,
+           "familyName": null,
+           "hairColor": null,
+           "eyeColor": null,
+           "heightInInches": null,
+           "weightInPounds": null,
+           "dateOfBirth": null,
+           "dateMarried": null,
+           "created": "2014-09-22T20:06:52.021+0000",
+           "creator": "ann-acm",
+           "modified": "2014-09-22T20:06:52.021+0000",
+           "modifier": "ann-acm",
+           "addresses": [],
+           "contactMethods": [],
+           "securityTags": [],
+           "personAliases": [],
+           "organizations": []
+       },
+       "parentId": 2190,
+       "personType": "Initiator",
+       "parentType": "COMPLAINT",
+       "personDescription": "Sample Description",
+       "created": "2014-09-22T20:06:52.018+0000",
+       "creator": "ann-acm",
+       "modified": "2014-09-29T21:34:54.971+0000",
+       "modifier": "ann-acm",
+       "notes": "sample note describing the person"
+ },
+ "ecmFolderPath": null,
+ "ecmFolderId": "workspace://SpacesStore/75ab1031-515a-4e82-ac58-fd9cf09e7119",
+ "childObjects": [],
+ "approvers": null,
+ "personAssociations": [{
+       "id": 2191,
+       "person": {
+         "id": 2192,
+         "title": null,
+         "company": null,
+         "status": "ACTIVE",
+         "givenName": null,
+         "familyName": null,
+         "hairColor": null,
+         "eyeColor": null,
+         "heightInInches": null,
+         "weightInPounds": null,
+         "dateOfBirth": null,
+         "dateMarried": null,
+         "created": "2014-09-22T20:06:52.021+0000",
+         "creator": "ann-acm",
+         "modified": "2014-09-22T20:06:52.021+0000",
+         "modifier": "ann-acm",
+         "addresses": [],
+         "contactMethods": [],
+         "securityTags": [],
+         "personAliases": [],
+         "organizations": []
+       },
+       "parentId": 2190,
+       "personType": "Initiator",
+       "parentType": "COMPLAINT",
+       "personDescription": "Sample Description",
+       "created": "2014-09-22T20:06:52.018+0000",
+       "creator": "ann-acm",
+       "modified": "2014-09-29T21:34:54.971+0000",
+       "modifier": "ann-acm",
+       "notes": "sample note describing the person"
+     },
+     {
+       "id": 2194,
+       "person": {
+         "id": 2193,
+         "title": null,
+         "company": null,
+         "status": "ACTIVE",
+         "givenName": null,
+         "familyName": null,
+         "hairColor": null,
+         "eyeColor": null,
+         "heightInInches": null,
+         "weightInPounds": null,
+         "dateOfBirth": null,
+         "dateMarried": null,
+         "created": "2014-09-22T20:06:52.023+0000",
+         "creator": "ann-acm",
+         "modified": "2014-09-22T20:06:52.023+0000",
+         "modifier": "ann-acm",
+         "addresses": [],
+         "contactMethods": [],
+         "securityTags": [],
+         "personAliases": [],
+         "organizations": []
+       },
+       "parentId": 2190,
+       "personType": "Subject",
+       "parentType": "COMPLAINT",
+       "personDescription": "Simple Description",
+       "created": "2014-09-22T20:06:52.018+0000",
+       "creator": "ann-acm",
+       "modified": "2014-09-22T20:06:52.018+0000",
+       "modifier": "ann-acm",
+       "notes": null
+     }],
+ "dueDate": "2014-09-22T04:00:00.000+0000",
+ "tag": "no tag",
+ "frequency": "low",
+ "location": "1234 straight line St, fallschurch va"
+ }
 </code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the requested complaint does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>Complaint ID 2045 not found.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_person><span class=parent>/plugin</span>/person</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_person_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_person class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_person_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Create a person with all details</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_person_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin</span>/person</h4></div><div class=modal-body><div class="alert alert-info"><p>Create a person with all details</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_person_post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_person_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_person_post_request><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
     "id": 1884,
     "title": "Mr.",
@@ -478,8 +548,6 @@
       "modifier":"ann-acm"
       }
       ],
-  "personAssociations":[
-  ],
   "organizations":[
       {
       "organizationId":2286,
@@ -559,20 +627,7 @@
           "creator":"Ann Administrator",
           "modified":"2014-09-19T12:33:53.915+0000",
           "modifier":"ann-acm"
-        }],
-    "personAssociations":[
-        {
-          "id":2046,
-          "parentId":2045,
-          "personType":"Initiator",
-          "parentType":"COMPLAINT",
-          "personDescription":"Sample Description",
-          "created":"2014-09-19T12:33:53.830+0000",
-          "creator":"ann-acm",
-          "modified":"2014-09-19T12:33:53.830+0000",
-          "modifier":"ann-acm",
-          "notes":"A simple note Describing"
-      }],
+        }],                      
     "organizations":[
          {
           "organizationId":2049,
@@ -644,20 +699,7 @@
             "creator":"Ann Administrator",
             "modified":"2014-09-19T12:33:53.915+0000",
             "modifier":"ann-acm"
-        }],
-  "personAssociations":[
-        {
-            "id":2046,
-            "parentId":2045,
-            "personType":"Initiator",
-            "parentType":"COMPLAINT",
-            "personDescription":"Simple Description",
-            "created":"2014-09-19T12:33:53.830+0000",
-            "creator":"ann-acm",
-            "modified":"2014-09-19T12:33:53.830+0000",
-            "modifier":"ann-acm",
-            "notes":"Sample note"
-        }],
+        }],                    
   "organizations":[
         {
             "organizationId":2049,
@@ -729,20 +771,7 @@
             "creator":"Ann Administrator",
             "modified":"2014-09-19T12:33:53.964+0000",
             "modifier":"ann-acm"
-        }],
-  "personAssociations":[
-        {
-            "id":2057,
-            "parentId":2045,
-            "personType":"Complaintant",
-            "parentType":"COMPLAINT",
-            "personDescription":"Sample Description",
-            "created":"2014-09-19T12:33:53.830+0000",
-            "creator":"ann-acm",
-            "modified":"2014-09-19T12:33:53.830+0000",
-            "modifier":"ann-acm",
-            "notes":"Sample note"
-        }],
+        }],                   
   "organizations":[
         {
             "organizationId":2054,
@@ -755,7 +784,156 @@
             "modifier":"ann-acm"
         }]
   }
-</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the requested person /persons does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>PersonAssociation  PARENTID OR PARENTTYPE are not found.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_person_delete__personId_><span class=parent>/plugin/person</span>/delete/{personId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_person_delete__personId__delete><span class="badge badge_delete">delete <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_person_delete__personId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_person_delete__personId__delete class=list-group-item><span class="badge badge_delete">delete <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Delete a person by personId</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_person_delete__personId__delete><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_delete">delete <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/person</span>/delete/{personId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Delete a person by personId</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_person_delete__personId__delete_request data-toggle=tab>Request</a></li><li><a href=#_plugin_person_delete__personId__delete_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_person_delete__personId__delete_request><h3>URI Parameters</h3><ul><li><strong>personId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_person_delete__personId__delete_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code> Deleting a person is successful  </code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the requested person does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>person with Id 2046 not found.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess><span class=parent>/plugin</span>/dataaccess</a> <span class=methods></span></h4></div><div id=panel__plugin_dataaccess class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess_accessControlDefaults><span class=parent>/plugin/dataaccess</span>/accessControlDefaults</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_dataaccess_accessControlDefaults class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a page of the default access controls.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_dataaccess_accessControlDefaults_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/dataaccess</span>/accessControlDefaults</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a page of the default access controls.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_dataaccess_accessControlDefaults_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_dataaccess_accessControlDefaults_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_dataaccess_accessControlDefaults_get_request><h3>Query Parameters</h3><ul><li><strong>s</strong> <em>(string)</em><p>A property to sort by. Must be one of the properties shown in the resultPage of the example response. Multiple values are allowed.</p></li><li><strong>start</strong> <em>(integer)</em><p>index of the first row to be returned. The first page starts at row 0.</p></li><li><strong>n</strong> <em>(integer)</em><p>maximum rows to be returned.</p></li></ul></div><div class=tab-pane id=_plugin_dataaccess_accessControlDefaults_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response. Includes integers for totalCount, startRow, and maxRows, and an array of default ACL objects.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the requested person /persons does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>PersonAssociation  PARENTID OR PARENTTYPE are not found.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_person_delete__personId_><span class=parent>/plugin/person</span>/delete/{personId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_person_delete__personId__delete><span class="badge badge_delete">delete <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_person_delete__personId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_person_delete__personId__delete class=list-group-item><span class="badge badge_delete">delete <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Delete a person by personId</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_person_delete__personId__delete><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_delete">delete <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/person</span>/delete/{personId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Delete a person by personId</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_person_delete__personId__delete_request data-toggle=tab>Request</a></li><li><a href=#_plugin_person_delete__personId__delete_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_person_delete__personId__delete_request><h3>URI Parameters</h3><ul><li><strong>personId</strong>: <em>required (string)</em></li></ul></div><div class=tab-pane id=_plugin_person_delete__personId__delete_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code> Deleting a person is successful  </code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the requested person does not exist.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><small><strong>Example</strong>:<pre><code>person with Id 2046 not found.</code></pre></small></p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_personAssociation><span class=parent>/plugin</span>/personAssociation</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_personAssociation_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_personAssociation class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_personAssociation_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Create a personAssociation with all details</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_personAssociation_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin</span>/personAssociation</h4></div><div class=modal-body><div class="alert alert-info"><p>Create a personAssociation with all details</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_personAssociation_post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_personAssociation_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_personAssociation_post_request><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
+"id": null,
+"personType": "Subject",
+"parentId":3022,
+"parentType":"COMPLAINT",
+"personDescription": "Sample Description",
+"notes":"sample note describing the person",      
+"person": {
+      "id": null,
+      "title": "Mr.",
+      "givenName": "John",
+      "familyName": "Doe",
+      "company": "Contoso",
+      "weightInPounds": 189,
+      "addresses": [{
+            "type": "home",
+            "streetAddress": "123 Main St.",
+            "streetAddress2": null,
+            "city": "Peoria",
+            "state": "IL",
+            "zip": "12345"
+         }],
+       "contactMethods": [{
+              "type": "Mobile Phone",
+              "value": "123-456-7890"
+                },
+                {
+              "type": "Personal E-mail",
+              "value": "john.doe@gmail.com"
+                }],
+      "securityTags": ["Anonymous",
+                     "Confidential",
+                     "Top Secret"],
+      "personAliases": [{
+           "id": null,
+            "aliasType": "Nick Name",
+            "aliasValue": "Nick"
+      }],
+      "organizations": [
+  {
+  "organizationId":null,
+  "organizationType": "sample",
+  "organizationValue": "tech net"
+        }
+  ]
+    }
+  }
+
+}
+</code></pre></small></p></div><div class=tab-pane id=_plugin_personAssociation_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response indicating the system created a new personAssociation</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{ 	
+"id":3311,
+"person":{
+      "id":3317,
+      "title":"Mr.",
+      "company":"Contoso",
+      "status":"ACTIVE",
+      "givenName":"John",
+      "familyName":"Doe",
+      "hairColor":null,
+      "eyeColor":null,
+      "heightInInches":null,
+      "weightInPounds":189,
+      "dateOfBirth":null,
+      "dateMarried":null,
+      "created":"2014-09-29T21:53:57.735+0000",
+      "creator":"ann-acm",
+      "modified":"2014-09-29T21:53:57.735+0000",
+      "modifier":"ann-acm",
+      "addresses":[
+                {
+                "id":3312,
+                "created":"2014-09-29T21:53:57.725+0000",
+                "creator":"ann-acm",
+                "modified":"2014-09-29T21:53:57.725+0000",
+                "modifier":"ann-acm",
+                "status":"ACTIVE",
+                "type":"home",
+                "types":null,
+                "streetAddress":"123 Main St.",
+                "streetAddress2":null,
+                "city":"Peoria",
+                "state":"IL",
+                "zip":"12345",
+                "country":null
+                }
+               ],
+      "contactMethods":[
+                {
+                "id":3313,
+                "created":"2014-09-29T21:53:57.727+0000",
+                "creator":"ann-acm",
+                "modified":"2014-09-29T21:53:57.727+0000",
+                "modifier":"ann-acm",
+                "status":"ACTIVE",
+                "type":"Mobile Phone",
+                "types":null,
+                "value":"123-456-7890"
+                },
+                {
+                "id":3314,
+                "created":"2014-09-29T21:53:57.729+0000",
+                "creator":"ann-acm",
+                "modified":"2014-09-29T21:53:57.729+0000",
+                "modifier":"ann-acm",
+                "status":"ACTIVE",
+                "type":"Personal E-mail",
+                "types":null,
+                "value":"john.doe@gmail.com"
+                }
+                ],
+                "securityTags":[
+                "Anonymous",
+                "Confidential",
+                "Top Secret"
+                ],
+      "personAliases":[
+                {
+                "id":3316,
+                "aliasType":"Nick Name",
+                "aliasTypes":null,
+                "aliasValue":"Nick",
+                "created":"2014-09-29T21:53:57.733+0000",
+                "creator":"ann-acm",
+                "modified":"2014-09-29T21:53:57.733+0000",
+                "modifier":"ann-acm"
+                }
+                ],
+      "organizations":[
+                {
+                "organizationId":3315,
+                "organizationType":"sample",
+                "organizationTypes":null,
+                "organizationValue":"tech net",
+                "created":"2014-09-29T21:53:57.731+0000",
+                "creator":"ann-acm",
+                "modified":"2014-09-29T21:53:57.731+0000",
+                "modifier":"ann-acm"
+                }]
+      },
+"parentId":3022,
+"personType":"Subject",
+"parentType":"COMPLAINT",
+"personDescription":"Sample Description",
+"created":"2014-09-29T21:53:57.720+0000",
+"creator":"ann-acm",
+"modified":"2014-09-29T21:53:57.720+0000",
+"modifier":"ann-acm",
+"notes":"sample note describing the person"
+ }
+</code></pre></small></p><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the request body was invalid (did not match the expected JSON format). The response body will be empty.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess><span class=parent>/plugin</span>/dataaccess</a> <span class=methods></span></h4></div><div id=panel__plugin_dataaccess class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess_accessControlDefaults><span class=parent>/plugin/dataaccess</span>/accessControlDefaults</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_dataaccess_accessControlDefaults class="panel-collapse collapse"><div class=panel-body><div class=list-group><a href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a page of the default access controls.</p></div><div class=clearfix></div></a></div></div></div><div class="modal fade" tabindex=0 id=_plugin_dataaccess_accessControlDefaults_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/dataaccess</span>/accessControlDefaults</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a page of the default access controls.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_dataaccess_accessControlDefaults_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_dataaccess_accessControlDefaults_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_dataaccess_accessControlDefaults_get_request><h3>Query Parameters</h3><ul><li><strong>s</strong> <em>(string)</em><p>A property to sort by. Must be one of the properties shown in the resultPage of the example response. Multiple values are allowed.</p></li><li><strong>start</strong> <em>(integer)</em><p>index of the first row to be returned. The first page starts at row 0.</p></li><li><strong>n</strong> <em>(integer)</em><p>maximum rows to be returned.</p></li></ul></div><div class=tab-pane id=_plugin_dataaccess_accessControlDefaults_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response. Includes integers for totalCount, startRow, and maxRows, and an array of default ACL objects.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><small><strong>Example</strong>:<pre><code>{
   "totalCount" : 98,    // total number of default access controls
   "startRow" : 0,       // start row (from the request)
   "maxRows" : 1,        // max rows (from the request)

@@ -26,9 +26,15 @@ TaskWizard.Object = {
         this.$selOwners        = $("#assignee");
         this.$edtComplaint     = $("#complaintId");
         this.$edtSubject       = $("#subject");
+
         this.$edtStartDate     = $("#startDate");
+        this.setValueEdtStartDate(Acm.getCurrentDay());
+
         this.$selStatus        = $("#statusSel");
+
         this.$edtDueDate       = $("#dueDate");
+        this.setValueEdtDueDate(Acm.getCurrentDay());
+
         this.$prioritySel      = $("#prioritySel");
         this.$completedStatus  = $("#completedStatus");
         this.$divDetail        = $("#taskDetail");
@@ -76,7 +82,14 @@ TaskWizard.Object = {
     ,getValueEdtStartDate: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtStartDate);
     }
-    
+
+    /**
+     * set the start date field value
+     */
+    ,setValueEdtStartDate: function(val) {
+        return Acm.Object.setValueDatePicker(this.$edtStartDate, val);
+    }
+
 	/**
 	 * Get the status select option field value
 	 */
@@ -89,6 +102,13 @@ TaskWizard.Object = {
 	 */
     ,getValueEdtDueDate: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtDueDate);
+    }
+
+    /**
+     * set the start date field value
+     */
+    ,setValueEdtDueDate: function(val) {
+        return Acm.Object.setValueDatePicker(this.$edtDueDate, val);
     }
     
     /**
@@ -111,6 +131,7 @@ TaskWizard.Object = {
     ,getSelectedValueSelPriority: function() {
         return Acm.Object.getSelectValueIgnoreFirst(this.$prioritySel);
     }
+
     
 /////////// older setter ang getter ///////////////////////////////////////////////
     

@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.person.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,9 +34,8 @@ public class PersonAssociation implements Serializable
     @Column(name = "cm_person_assoc_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @JsonIgnore
-    @ManyToOne( fetch = FetchType.LAZY, optional = false)
+   
+    @ManyToOne( cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="cm_person_assoc_person_id", nullable = false) 
     private Person person;
     

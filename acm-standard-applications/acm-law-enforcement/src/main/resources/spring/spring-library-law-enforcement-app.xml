@@ -328,74 +328,6 @@
     </bean>
     <!-- end of actions -->
 
-    <!-- Page Descriptors -->
-    <bean id="dashboardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Dashboard | ACM | Armedia Case Management"/>
-        <property name="descShort" value="Dashboard"/>
-        <property name="descLong" value="Dashboard"/>
-    </bean>
-    <bean id="profilePageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Profile | ACM | Armedia Case Management"/>
-        <property name="descShort" value="Profile"/>
-        <property name="descLong" value="Profile"/>
-    </bean>
-    <bean id="adminPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Admin | ACM | Armedia Case Management"/>
-        <property name="descShort" value="Admin"/>
-        <property name="descLong" value="Administration"/>
-    </bean>
-    <bean id="reportPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Report | ACM | Armedia Case Management"/>
-        <property name="descShort" value="Report"/>
-        <property name="descLong" value="Report"/>
-    </bean>
-    <bean id="searchPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Search | ACM | Armedia Case Management"/>
-        <property name="descShort" value="Search"/>
-        <property name="descLong" value="Search"/>
-    </bean>
-
-
-    <bean id="complaintPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="${complaint.list.page.title}"/>
-        <property name="descShort" value="${complaint.list.page.short.text}"/>
-        <property name="descLong" value="${complaint.list.page.long.text}"/>
-    </bean>
-    <bean id="complaintListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="${complaint.list.page.title}"/>
-        <property name="descShort" value="${complaint.list.page.short.text}"/>
-        <property name="descLong" value="${complaint.list.page.long.text}"/>
-    </bean>
-    <bean id="complaintWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="${complaint.wizard.page.title}"/>
-        <property name="descShort" value="${complaint.wizard.page.short.text}"/>
-        <property name="descLong" value="${complaint.wizard.page.long.text}"/>
-    </bean>
-
-    <bean id="taskListPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Tasks | ACM | Armedia Case Management"/>
-        <property name="descShort" value="Tasks"/>
-        <property name="descLong" value="Tasks"/>
-    </bean>
-    <bean id="taskWizardPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Task | ACM | Armedia Case Management"/>
-        <property name="descShort" value="New Task"/>
-        <property name="descLong" value="New Task"/>
-    </bean>
-
-    <bean id="armediaBlogPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Armedia Blog | ACM | Armedia Case Management"/>
-        <property name="descShort" value="Aremedia Blog"/>
-        <property name="descLong" value="Aremedia Blog"/>
-    </bean>
-    <bean id="helloWorldPageDescriptor" class="com.armedia.acm.web.AcmPageDescriptor">
-        <property name="title" value="Hello World | ACM | Armedia Case Management"/>
-        <property name="descShort" value="Hello World"/>
-        <property name="descLong" value="Hello World"/>
-    </bean>
-    <!-- end of Descriptors -->
-
-
     <!-- quick search configurations -->
     <bean id="complaintClass" class="java.lang.Class" factory-method="forName">
         <constructor-arg index="0" value="com.armedia.acm.plugins.complaint.model.Complaint"/>
@@ -410,6 +342,7 @@
         <property name="batchSize" value="50"/>
         <property name="idProperty" value="complaintId"/>
         <property name="ownerProperty" value="author"/>
+        <property name="assigneeParticipantType" value="assignee"/>
         <property name="lastModifiedProperty" value="modified"/>
         <property name="quickSearchFieldToEntityPropertyMap">
             <map>
