@@ -4,6 +4,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.TimePeriod;
+import com.armedia.acm.services.users.model.AcmParticipant;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
@@ -11,6 +12,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -56,7 +58,21 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
         CriteriaQuery<ComplaintListView> query = builder.createQuery(ComplaintListView.class);
         Root<ComplaintListView> clv = query.from(ComplaintListView.class);
         query.select(clv);
-        query.where(builder.equal(clv.get("creator"),userId));
+
+        Subquery<AcmParticipant> assigneeQuery = query.subquery(AcmParticipant.class);
+        Root<AcmParticipant> assigneeRoot = assigneeQuery.from(AcmParticipant.class);
+        assigneeQuery.select(assigneeRoot);
+
+        assigneeQuery.where(builder.and(
+                builder.equal(assigneeRoot.get("objectType"), "COMPLAINT"),
+                builder.equal(assigneeRoot.get("objectId"), clv.get("complaintId")),
+                builder.equal(assigneeRoot.get("participantLdapId"), userId),
+                builder.equal(assigneeRoot.get("participantType"), "assignee")));
+
+        query.where(builder.and(
+                builder.exists(assigneeQuery),
+                builder.notEqual(clv.get("status"), "CLOSED")));
+
         // TODO: parameterized order by
         query.orderBy(builder.desc(clv.get("created")));
         TypedQuery<ComplaintListView> dbQuery = getEm().createQuery(query);

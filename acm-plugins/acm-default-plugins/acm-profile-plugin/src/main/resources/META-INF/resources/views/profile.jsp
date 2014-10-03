@@ -1,10 +1,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>${pageDescriptor.title}</title>
+    <title><spring:message code="profile.page.title" text="Profile | ACM | Armedia Case Management" /></title>
 </jsp:attribute>
 
 
@@ -17,7 +18,7 @@
     <script type="text/javascript" src="<c:url value='/resources/js/profile/profileService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/profile/profileCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -26,7 +27,7 @@
 
 <header class="header m-b-xs b-light hidden-print">
     <a href="editProfile.html" class="btn btn-sm btn-info pull-right">Edit</a>
-    <h3 class="m-b-xs text-black">User Profile</h3>
+    <h3 class="m-b-xs text-black"><spring:message code="profile.page.descShort" text="User Profile" /></h3>
 </header>
 
 
