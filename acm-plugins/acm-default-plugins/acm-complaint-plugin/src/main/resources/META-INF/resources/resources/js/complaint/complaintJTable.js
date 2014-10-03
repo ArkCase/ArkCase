@@ -2098,6 +2098,7 @@ Complaint.JTable = {
                     ,title: {
                         title: 'Title'
                         ,width: '30%'
+                        ,sorting: false
                     }
                     ,created: {
                         title: 'Created'
@@ -2112,10 +2113,10 @@ Complaint.JTable = {
                     ,dueDate: {
                         title: 'Due'
                         ,width: '15%'
-                        ,sorting: false
+                        ,sorting: true
                     }
                     ,status: {
-                        title: 'status'
+                        title: 'Status'
                         ,width: '10%'
                         ,sorting: false
                     }

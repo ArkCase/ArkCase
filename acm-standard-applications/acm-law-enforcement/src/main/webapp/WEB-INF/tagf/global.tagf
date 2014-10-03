@@ -39,7 +39,7 @@
 <c:set var="js_datatables"         scope="session" value="jquery.dataTables.min.js"/>
 
 <c:set var="vd_datepicker"         scope="session" value="datepicker"/>
-<c:set var="js_datepicker"         scope="session" value="bootstrap.datepicker.js"/>
+<c:set var="js_datepicker"         scope="session" value="bootstrap-datepicker.js"/>
 
 <c:set var="vd_file-input"         scope="session" value="file-input"/>
 <c:set var="js_file-input"         scope="session" value="bootstrap.file-input.js"/>

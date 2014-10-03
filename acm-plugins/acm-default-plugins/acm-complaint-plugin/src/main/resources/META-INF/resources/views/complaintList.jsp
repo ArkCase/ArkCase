@@ -167,8 +167,8 @@
         <div class="panel b-a  bg-gradient">
             <div class="padder-v text-center clearfix">
                 <div class="col-xs-12">
-                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>
-                    <small class="text-muted">Subject Type</small> </div>
+                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Incident Category"></a></div>
+                    <small class="text-muted">Incident Category</small> </div>
             </div>
         </div>
     </div>

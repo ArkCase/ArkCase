@@ -187,7 +187,7 @@
                 <div class="row wrapper">
                     <div class="col-sm-4">
                         <label class="label">Start Date</label>
-                        <input class="datepicker-input form-control" type="text" value="" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" id="startDate">
+                        <input class="datepicker-input form-control" type="text" value="" data-date-format="mm/dd/yyyy" placeholder="mm/dd/yyyy" id="startDate">
 
                     </div>
                     <div class="col-sm-8">
@@ -204,7 +204,7 @@
                     <div class="col-sm-4">
                         <label class="label ">Due Date</label>
 
-                        <input class="datepicker-input form-control"  type="text" value="" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" id="dueDate">
+                        <input class="datepicker-input form-control"  type="text" value="" data-date-format="mm/dd/yyyy" placeholder="mm/dd/yyyy" id="dueDate">
 
                     </div>
                     <div class="col-sm-4">
@@ -251,8 +251,6 @@
 
 
 <!-- Summernote WYSIWYG -->
-
-<link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>
 <script>
     $(document).ready(function() {
         $('.complaintDetails').summernote({
