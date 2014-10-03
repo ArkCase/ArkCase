@@ -69,7 +69,9 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
                 builder.equal(assigneeRoot.get("participantLdapId"), userId),
                 builder.equal(assigneeRoot.get("participantType"), "assignee")));
 
-        query.where(builder.exists(assigneeQuery));
+        query.where(builder.and(
+                builder.exists(assigneeQuery),
+                builder.notEqual(clv.get("status"), "CLOSED")));
 
         // TODO: parameterized order by
         query.orderBy(builder.desc(clv.get("created")));
