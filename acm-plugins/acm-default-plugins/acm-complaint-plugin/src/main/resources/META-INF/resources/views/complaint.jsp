@@ -164,8 +164,8 @@
                                                     <small class="text-muted">Assigned To</small></div>
                                                 <div class="col-xs-2 b-r">
                                                     <%--<div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
-                                                    <small class="text-muted">Subject Type</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Incident Category"></a></div>
+                                                    <small class="text-muted">Incident Category</small></div>
                                                 <div class="col-xs-1">
                                                     <div class="h4 font-bold"><a href="#" id="status" ></a></div>
                                                     <small class="text-muted">Status</small></div>
