@@ -49,6 +49,7 @@
             <list>
                 <ref bean="dashboardNavigatorAction"/>
                 <ref bean="complaintNavigatorAction"/>
+                <ref bean="caseFileNavigatorAction"/>
                 <ref bean="taskNavigatorAction"/>
                 <ref bean="searchNavigatorAction"/>
                 <ref bean="adminNavigatorAction"/>
@@ -259,12 +260,6 @@
         <property name="url" value="/plugin/complaint"/>
         <property name="requiredPrivilege" value="acm-complaint-list"/>
     </bean>
-    <bean id="complaintOldNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="${complaint.navigator.tab.text}"/>
-        <property name="iconName" value="i-notice"/>
-        <property name="url" value="/plugin/complaint/old"/>
-        <property name="requiredPrivilege" value="acm-complaint-list"/>
-    </bean>
     <bean id="saveComplaintAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Save"/>
         <property name="iconName" value="fa-save"/>
@@ -291,6 +286,13 @@
         <property name="iconName" value="i-search2"/>
         <property name="url" value="/plugin/search"/>
         <property name="requiredPrivilege" value="acm-search"/>
+    </bean>
+
+    <bean id="caseFileNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Case Files"/>
+        <property name="iconName" value="i-folder"/>
+        <property name="url" value="/plugin/casefile"/>
+        <property name="requiredPrivilege" value="case-file-list"/>
     </bean>
 
     <bean id="dashboardNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
