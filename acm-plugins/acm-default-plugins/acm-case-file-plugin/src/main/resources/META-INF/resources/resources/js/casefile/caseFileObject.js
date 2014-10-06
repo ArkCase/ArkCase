@@ -283,16 +283,8 @@ CaseFile.Object = {
     //tabBlank             - p        - [pageId]
     //tabTitle,tabEvent    - pc       - [pageId].[caseFileId]
     //tabPerson            - pcp      - [pageId].[caseFileId].p
-    //tabSpouse            - pcs      - [pageId].[caseFileId].s
-    //tabDrug              - pcd      - [pageId].[caseFileId].d
-    //tabFinancial         - pcf      - [pageId].[caseFileId].f
-    //tabItems             - pci      - [pageId].[caseFileId].i
-    //tabItem,tabItemEvent - pcic     - [pageId].[caseFileId].i.[itemId]
     //tabRois              - pcr      - [pageId].[caseFileId].r
     //tabRoi               - pcrc     - [pageId].[caseFileId].r.[itemId]
-    //tabClosingDocs       - pcc      - [pageId].[caseFileId].c
-    //tabClosingDoc        - pccc     - [pageId].[caseFileId].c.[docId]
-    //tabBillingRpt        - pcb      - [pageId].[caseFileId].b
     //tabBlank             - nextPage - nextPage
     //
     ,getNodeTypeByKey: function(key) {
@@ -548,13 +540,13 @@ CaseFile.Object = {
                 ,tooltip: c.title
                 ,expanded: false
             })
+            .addLeafLast({key: pageId + "." + c.id + ".r"                   //level 2: /CaseFile/ROIs
+                ,title: "ROIs"
+                ,folder: true
+                ,lazy: true
+                ,cache: false
+            })
 
-                .addLeaf({key: pageId + "." + c.id + ".r"                   //level 2: /CaseFile/ROIs
-                    ,title: "ROIs"
-                    ,folder: true
-                    ,lazy: true
-                    ,cache: false
-                })
         } //end for i
 
         if ((0 > treeInfo.total)                                    //unknown size
