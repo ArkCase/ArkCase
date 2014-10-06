@@ -3,6 +3,8 @@ package com.armedia.acm.plugins.casefile.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
+import org.drools.core.RuntimeDroolsException;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -26,7 +29,7 @@ public class SaveCaseFileAPIController
 
     @RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
     @ResponseBody
-    public CaseFile createComplaint(
+    public CaseFile createCaseFile(
             @RequestBody CaseFile in,
             HttpSession session,
             Authentication auth
@@ -38,7 +41,14 @@ public class SaveCaseFileAPIController
         }
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
-        return getSaveCaseService().saveCase(in, auth, ipAddress);
+        try
+        {
+            return getSaveCaseService().saveCase(in, auth, ipAddress);
+        }
+        catch (MuleException | PersistenceException | RuntimeDroolsException e)
+        {
+            throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
+        }
     }
 
 

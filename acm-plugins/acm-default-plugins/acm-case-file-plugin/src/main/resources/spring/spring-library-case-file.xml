@@ -47,6 +47,11 @@
                     <property name="url" value="/api/{version}/plugin/casefile/closeCase/{caseId}"/>
                     <property name="requiredPrivilege" ref="saveCasePrivilege"/>
                 </bean>
+                <bean id="saveCaseUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/casefile"/>
+                    <property name="requiredPrivilege" ref="saveCasePrivilege"/>
+                </bean>
                 <bean id="listCaseEventsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/casefile/events/{caseId}"/>
@@ -92,5 +97,6 @@
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="saveRule" ref="saveCaseFileBusinessRule"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+        <property name="muleClient" ref="muleClient"/>
     </bean>
 </beans>
