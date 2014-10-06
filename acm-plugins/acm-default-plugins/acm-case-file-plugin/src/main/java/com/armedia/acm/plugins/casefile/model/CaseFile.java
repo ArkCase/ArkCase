@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
@@ -12,21 +11,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name="acm_case_file")
@@ -247,5 +242,23 @@ public class CaseFile implements Serializable, AcmObject
         return "caseFile";
     }
 
-
+    @Override
+    public String toString()
+    {
+        return "CaseFile{" +
+                "id=" + id +
+                ", caseNumber='" + caseNumber + '\'' +
+                ", caseType='" + caseType + '\'' +
+                ", title='" + title + '\'' +
+                ", status='" + status + '\'' +
+                ", created=" + created +
+                ", creator='" + creator + '\'' +
+                ", modified=" + modified +
+                ", modifier='" + modifier + '\'' +
+                ", closed=" + closed +
+                ", disposition='" + disposition + '\'' +
+                ", ecmFolderPath='" + ecmFolderPath + '\'' +
+                ", ecmFolderId='" + ecmFolderId + '\'' +
+                '}';
+    }
 }
