@@ -25,6 +25,10 @@ jQuery(document).ready(function() {
     if ("undefined" != typeof Complaint) {
         Complaint.initialize();
     }
+    if ( "undefined" != typeof CaseFile )
+    {
+        CaseFile.initialize();
+    }
     if ("undefined" != typeof ComplaintWizard) {
         ComplaintWizard.initialize();
     }
