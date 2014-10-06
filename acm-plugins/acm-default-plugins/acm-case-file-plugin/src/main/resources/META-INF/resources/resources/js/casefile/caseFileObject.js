@@ -534,13 +534,13 @@ CaseFile.Object = {
         var pageId = start.toString();
         for (var i = 0; i < caseFiles.length; i++) {
             var c = caseFiles[i];
-
-            builder.addBranch({key: pageId + "." + c.id                       //level 1: /CaseFile
-                ,title: c.caseNumber + "(" + c.caseType + ")"
-                ,tooltip: c.title
+            var caseId = parseInt(c.object_id_s);
+            builder.addBranch({key: pageId + "." + caseId                       //level 1: /CaseFile
+                ,title: c.name + " (" + c.title_t + ")"
+                ,tooltip: c.title_t
                 ,expanded: false
             })
-            .addLeafLast({key: pageId + "." + c.id + ".r"                   //level 2: /CaseFile/ROIs
+            .addLeafLast({key: pageId + "." + caseId + ".r"                   //level 2: /CaseFile/ROIs
                 ,title: "ROIs"
                 ,folder: true
                 ,lazy: true
@@ -562,18 +562,6 @@ CaseFile.Object = {
         }
 
         return builder.getTree();
-    }
-    ,refreshItemTreeNode: function(item) {
-        if (!item) {
-            item = CaseFile.getItem();
-        }
-        var c = CaseFile.getCaseFile();
-        if (c && item) {
-            var node = this.$tree.fancytree("getTree").getNodeByKey(this._getCaseFileKey(c.id) + ".i." + item.id);
-            if (node) {
-                node.setTitle(Acm.goodValue(item.title, item.itemNumber) + " (" + item.status + ")");
-            }
-        }
     }
     ,_getCaseFileKey: function(caseFileId) {
         var treeInfo = CaseFile.Object.getTreeInfo();

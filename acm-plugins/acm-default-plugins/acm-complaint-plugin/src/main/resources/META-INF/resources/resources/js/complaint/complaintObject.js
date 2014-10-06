@@ -538,7 +538,7 @@ Complaint.Object = {
                 }
 
 
-                // populaet complaint data
+                // populate complaint data
                 var pageId = start.toString();
                 for (var i = 0; i < complaints.length; i++) {
                     var c = complaints[i];

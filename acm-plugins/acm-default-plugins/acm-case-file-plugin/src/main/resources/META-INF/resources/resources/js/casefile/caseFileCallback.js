@@ -22,31 +22,32 @@ CaseFile.Callback = {
 
     ,onListRetrieved : function(Callback, response) {
         if (response.hasError) {
-            Acm.Dialog.error("Failed to retrieve caseFile list:" + response.errorMsg);
+            Acm.Dialog.error("Failed to retrieve case file list:" + response.errorMsg);
         } else {
-            var treeInfo = CaseFile.Object.getTreeInfo();
-            //todo: compare treeInfo with response, if not match do nothing (user click something else before result)
-            //if (treeInfo.start != response start) {
-            //  return;
-            //}
-            treeInfo.total = 32;  //= response total
+            if ( "undefined" != typeof response && response.response && response.responseHeader ) {
+                var responseData = response.response;
+                var treeInfo = CaseFile.Object.getTreeInfo();
+                treeInfo.total = responseData.numFound;
 
-            var caseFiles = response;
-            var start = treeInfo.start;
-            CaseFile.cachePage.put(start, caseFiles);
+                var caseFiles = responseData.docs;
+                var start = treeInfo.start;
+                CaseFile.cachePage.put(start, caseFiles);
 
-            var key = treeInfo.initKey;
-            if (null == key) {
-                if (0 < caseFiles.length) {
-                    var caseFileId = caseFiles[0].caseFileId;
-                    if (0 < caseFileId) {
-                        key = start + "." + caseFileId;
+                var key = treeInfo.initKey;
+
+                if (null == key) {
+                    if (0 < caseFiles.length) {
+                        var caseFileId = parseInt(caseFiles[0].object_id_s);
+                        if (0 < caseFileId) {
+                            key = start + "." + caseFileId;
+                        }
                     }
+                } else {
+                    treeInfo.initKey = null;
                 }
-            } else {
-                treeInfo.initKey = null;
+
+                CaseFile.Object.refreshTree(key);
             }
-            CaseFile.Object.refreshTree(key);
         }
     }
     ,onDetailRetrieved : function(Callback, response) {
@@ -66,7 +67,20 @@ CaseFile.Callback = {
                     treeInfo.total = 1;
 
                     var pageId = treeInfo.start;
-                    var caseFiles = [caseFile];
+                    var caseFileSolr = {};
+                    caseFileSolr.author = caseFile.creator;
+                    caseFileSolr.author_s = caseFile.creator;
+                    caseFileSolr.create_dt = caseFile.created;
+                    caseFileSolr.last_modified = caseFile.modified;
+                    caseFileSolr.modifier_s = caseFile.modifier;
+                    caseFileSolr.name = caseFile.caseNumber;
+                    caseFileSolr.object_id_s = caseFile.id;
+                    caseFileSolr.object_type_s = 'CASE_FILE';
+                    caseFileSolr.owner_s = caseFile.creator;
+                    caseFileSolr.status_s = caseFile.status;
+                    caseFileSolr.title_t = caseFile.title;
+
+                    var caseFiles = [caseFileSolr];
                     CaseFile.cachePage.put(pageId, caseFiles);
 
                     var key = pageId + "." + treeInfo.caseFileId.toString();
