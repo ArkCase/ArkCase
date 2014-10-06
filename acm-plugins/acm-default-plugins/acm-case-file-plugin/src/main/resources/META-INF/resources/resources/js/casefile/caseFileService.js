@@ -9,12 +9,12 @@ CaseFile.Service = {
     initialize : function() {
     }
 
-    ,API_LIST_CASE_FILE         : "/api/latest/plugin/casefile"
+    ,API_LIST_CASE_FILE         : "/api/latest/plugin/search/CASE_FILE"
     ,API_RETRIEVE_PERSON_       : "/api/latest/plugin/person/find?assocId="
-    ,API_RETRIEVE_DETAIL        : "/api/latest/plugin/caseFile/byId/"
+    ,API_RETRIEVE_DETAIL        : "/api/latest/plugin/casefile/byId/"
     ,API_SAVE_CASE_FILE         : "/api/latest/plugin/casefile/"
     ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
-    ,API_UPLOAD_CASE_FILE_FILE  : "/api/latest/plugin/caseFile/file"
+    ,API_UPLOAD_CASE_FILE_FILE  : "/api/latest/plugin/casefile/file"
     ,API_RETRIEVE_TASKS         : "/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId="
     ,API_CLOSE_CASE_FILE_       : "/api/latest/plugin/casefile/closeCase/"
 
@@ -27,26 +27,17 @@ CaseFile.Service = {
         var s = treeInfo.s;
         var q = treeInfo.q;
 
-        Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_CASE_FILE
+        s = s ? s : "name desc";
+
+        var url = App.getContextPath() + this.API_LIST_CASE_FILE;
+        url += "?start=" + treeInfo.start;
+        url += "&n=" + treeInfo.n;
+        url += "&s=" + s;
+        Acm.Ajax.asyncGet(url
             ,CaseFile.Callback.EVENT_LIST_RETRIEVED
         );
     }
     ,retrieveDetail : function(caseFileId) {
-        //not retrieving detail at this time, let's fake it
-        var treeInfo = CaseFile.Object.getTreeInfo();
-        var start = treeInfo.start;
-        var caseFiles = CaseFile.cachePage.get(start);
-        if (null == caseFiles || 0 >= caseFiles.length) {
-            return;
-        }
-        for (var i = 0; i < caseFiles.length; i++) {
-            var c = caseFiles[i];
-            if (c.id == caseFileId) {
-                Acm.Dispatcher.triggerEvent(CaseFile.Callback.EVENT_DETAIL_RETRIEVED, c);
-            }
-        }
-        return;
-
         Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_DETAIL + caseFileId
             ,CaseFile.Callback.EVENT_DETAIL_RETRIEVED
         );

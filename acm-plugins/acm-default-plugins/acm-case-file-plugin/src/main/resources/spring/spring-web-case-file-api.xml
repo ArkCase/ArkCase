@@ -11,6 +11,10 @@
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
+    <bean id="findCaseByIdAPIController" class="com.armedia.acm.plugins.casefile.web.api.FindCaseByIdAPIController">
+        <property name="caseFileDao" ref="caseFileDao"/>
+    </bean>
+
     <bean id="getCasesByStatusAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
