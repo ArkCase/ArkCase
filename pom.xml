@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.0.14-SNAPSHOT</version>
+    <version>3.0.15-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Armedia Case Management Framework and Default Plugins</name>
