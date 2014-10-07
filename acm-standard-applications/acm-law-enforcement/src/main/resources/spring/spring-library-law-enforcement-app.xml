@@ -49,6 +49,7 @@
             <list>
                 <ref bean="dashboardNavigatorAction"/>
                 <ref bean="complaintNavigatorAction"/>
+                <ref bean="caseFileNavigatorAction"/>
                 <ref bean="taskNavigatorAction"/>
                 <ref bean="searchNavigatorAction"/>
                 <ref bean="adminNavigatorAction"/>
@@ -259,12 +260,6 @@
         <property name="url" value="/plugin/complaint"/>
         <property name="requiredPrivilege" value="acm-complaint-list"/>
     </bean>
-    <bean id="complaintOldNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="${complaint.navigator.tab.text}"/>
-        <property name="iconName" value="i-notice"/>
-        <property name="url" value="/plugin/complaint/old"/>
-        <property name="requiredPrivilege" value="acm-complaint-list"/>
-    </bean>
     <bean id="saveComplaintAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Save"/>
         <property name="iconName" value="fa-save"/>
@@ -291,6 +286,13 @@
         <property name="iconName" value="i-search2"/>
         <property name="url" value="/plugin/search"/>
         <property name="requiredPrivilege" value="acm-search"/>
+    </bean>
+
+    <bean id="caseFileNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Case Files"/>
+        <property name="iconName" value="i-folder"/>
+        <property name="url" value="/plugin/casefile"/>
+        <property name="requiredPrivilege" value="case-file-list"/>
     </bean>
 
     <bean id="dashboardNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
@@ -351,6 +353,40 @@
                 <entry key="last_modified" value="modified"/>
                 <entry key="create_dt" value="created"/>
                 <entry key="name" value="complaintNumber"/>
+                <entry key="status_s" value="status"/>
+                <entry key="author" value="creator"/>
+                <entry key="modifier_s" value="modifier"/>
+            </map>
+        </property>
+        <property name="muleClient" ref="muleClient"/>
+        <property name="dataAccessEntryService" ref="dataAccessEntryService"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+    </bean>
+
+    <bean id="caseFileClass" class="java.lang.Class" factory-method="forName">
+        <constructor-arg index="0" value="com.armedia.acm.plugins.casefile.model.CaseFile"/>
+    </bean>
+
+    <bean id="caseFileQuicksearchGenerator"
+          class="com.armedia.acm.services.search.service.AcmQuickSearchJpaSolrGenerator"
+          init-method="initBean">
+        <property name="lastUpdatedPropertyFileLocation" value="${user.home}/.acm/caseFileSolrLastMod.properties"/>
+        <property name="entityClass" ref="caseFileClass"/>
+        <property name="objectType" value="CASE_FILE"/>
+        <property name="batchSize" value="50"/>
+        <property name="idProperty" value="id"/>
+        <property name="ownerProperty" value="author"/>
+        <property name="assigneeParticipantType" value="assignee"/>
+        <property name="lastModifiedProperty" value="modified"/>
+        <property name="quickSearchFieldToEntityPropertyMap">
+            <map>
+                <entry key="title_t" value="title"/>
+                <entry key="object_id_s" value="id"/>
+                <entry key="last_modified" value="modified"/>
+                <entry key="create_dt" value="created"/>
+                <entry key="name" value="caseNumber"/>
                 <entry key="status_s" value="status"/>
                 <entry key="author" value="creator"/>
                 <entry key="modifier_s" value="modifier"/>

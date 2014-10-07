@@ -79,8 +79,8 @@ public class AcmQuickSearchJpaSolrGenerator
      *     <li>status_s: current status, e.g. APPROVED, ACTIVE, CLOSED ...</li>
      *     <li>author: user id of the user who created this object</li>
      *     <li>modifier_s: user id of the user who last modified this object</li>
-     *     <li>assignee: user id of the user who is currently responsible for this object, if any (e.g. case agent,
-     *     task assgnee</li>
+     *     <li>assignee_s: user id of the user who is currently responsible for this object, if any (e.g. case agent,
+     *     task assignee</li>
      * </ul>
      * <p/>
      * The corresponding values must be property names from the entity class.  If there is no appropriate property
