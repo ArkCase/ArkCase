@@ -1,10 +1,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>${pageDescriptor.title}</title>
+    <title><spring:message code="adminAccess.page.title" text="Admin | ACM | Armedia Case Management" /></title>
 </jsp:attribute>
 
 
@@ -17,11 +18,11 @@
     <script type="text/javascript" src="<c:url value='/resources/js/admin/access/adminAccessService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/admin/access/adminAccessCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
     
     <!-- JTable -->
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/jquery.jtable.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
 
 </jsp:attribute>
 
@@ -31,7 +32,7 @@
                 <section class="scrollable padder">
                     <section class="row m-b-md">
                         <div class="col-sm-12">
-                            <h3 class="m-b-xs text-black">Access Control Policy</h3>
+                            <h3 class="m-b-xs text-black"><spring:message code="adminAccess.page.descShort" text="Access Control Policy" /></h3>
                         </div>
                     </section>
 

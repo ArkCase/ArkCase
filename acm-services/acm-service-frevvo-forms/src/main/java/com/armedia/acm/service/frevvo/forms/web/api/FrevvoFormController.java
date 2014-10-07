@@ -127,7 +127,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 
 			if (multipartRequest != null && multipartRequest.getFileMap() != null) {
-				MultipartFile formDataFile = multipartRequest.getFileMap().get("form");	
+				MultipartFile formDataFile = multipartRequest.getFileMap().get("form_" + formName);	
 				if (formDataFile != null) {
 					StringWriter writer = new StringWriter();
 					IOUtils.copy(formDataFile.getInputStream(), writer, Charset.forName("UTF-8"));

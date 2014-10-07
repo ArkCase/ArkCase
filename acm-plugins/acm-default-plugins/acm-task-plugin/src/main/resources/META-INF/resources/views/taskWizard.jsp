@@ -1,11 +1,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>${pageDescriptor.title}</title>
+    <title><spring:message code="taskNew.page.title" text="Task | ACM | Armedia Case Management" /></title>
     <div id="wizardData" itemscope="true" style="display: none">
         <span itemprop="parentType">${parentType}</span>
         <span itemprop="parentId">${parentId}</span>
@@ -22,18 +23,18 @@
     <script type="text/javascript" src="<c:url value='/resources/js/task/wizard/taskWizardService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/wizard/taskWizardCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_datepicker}/bootstrap-datepicker.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_parsley}/parsley.min.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_wizard}/jquery.bootstrap.wizard.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_wizard}/demo.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_datepicker}/${js_datepicker}"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_parsley}/${js_parsley}"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_wizard}/${js_wizard_bootstrap}"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_wizard}/${js_wizard_demo}"></script>
 
     <!-- Summernote WYSIWYG -->
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/${js_summernote}"></script>
 
     <!-- Multi-Select Field WYSIWYG -->
-    <script type="text/javascript" charset="utf-8" src="<c:url value='/'/>resources/vendors/${vd_chosen}/chosen.js"></script>
+    <script type="text/javascript" charset="utf-8" src="<c:url value='/'/>resources/vendors/${vd_chosen}/${js_chosen}"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -139,7 +140,7 @@
         <section class="scrollable padder">
             <section class="row m-b-md">
                 <div class="col-sm-12">
-                    <h3 class="m-b-xs text-black">New Task</h3>
+                    <h3 class="m-b-xs text-black"><spring:message code="taskNew.page.descShort" text="New Task" /></h3>
                 </div>
             </section>
 
@@ -186,7 +187,7 @@
                 <div class="row wrapper">
                     <div class="col-sm-4">
                         <label class="label">Start Date</label>
-                        <input class="datepicker-input form-control" type="text" value="" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" id="startDate">
+                        <input class="datepicker-input form-control" type="text" value="" data-date-format="mm/dd/yyyy" placeholder="mm/dd/yyyy" id="startDate">
 
                     </div>
                     <div class="col-sm-8">
@@ -203,7 +204,7 @@
                     <div class="col-sm-4">
                         <label class="label ">Due Date</label>
 
-                        <input class="datepicker-input form-control"  type="text" value="" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" id="dueDate">
+                        <input class="datepicker-input form-control"  type="text" value="" data-date-format="mm/dd/yyyy" placeholder="mm/dd/yyyy" id="dueDate">
 
                     </div>
                     <div class="col-sm-4">
@@ -250,8 +251,6 @@
 
 
 <!-- Summernote WYSIWYG -->
-
-<link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>
 <script>
     $(document).ready(function() {
         $('.complaintDetails').summernote({
