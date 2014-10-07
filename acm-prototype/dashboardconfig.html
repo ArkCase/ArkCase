@@ -14,7 +14,14 @@
     <script src="js/ie/html5shiv.js"></script>
     <script src="js/ie/respond.min.js"></script>
     <script src="js/ie/excanvas.js"></script>
-  <![endif]-->
+<![endif]-->
+
+<script src="resources/js/jquery.min.js"></script>
+<script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="resources/js/fancytree/jquery.fancytree.js"></script>
+<link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
+
+
 </head>
 <body class="">
 <section class="vbox">
@@ -88,14 +95,7 @@
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span></a></li>
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span></a></li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span></a></li>
-                  <li class=""> <a href="#" class="auto" data-target=".admin-collapse" data-toggle="collapse"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a>
-                    <ul class="nav admin-collapse">
-                      <li> <a href="access.html"> <i class="i i-circle-sm"></i> <span>Access Control Policy</span></a></li>
-                      <li> <a href="locks.html"> <i class="i i-circle-sm"></i> <span>Object Locks</span></a></li>
-<li> <a href="dashboardconfig.html"> <i class="i i-circle-sm"></i> <span>Dashboard Config</span></a></li>
-
-                    </ul>
-                  </li>
+                 <li class="active"> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
               </nav>
@@ -108,6 +108,31 @@
       <!-- /.aside -->
       <section id="content">
         <section class="vbox">
+        
+         <section class="scrollable">
+            <section class="hbox stretch"><!-- /.aside --> 
+        
+         <aside class="aside-lg bg-light lt">
+                <section class="vbox animated fadeInLeft">
+                  <section class="scrollable">
+                    <header class="dk header">
+                      <h3 class="m-b-xs text-black pull-left">Administration</h3>
+                   
+                    </header>
+                    
+                    <div class="row m-b">
+                      <div class="col-sm-12">
+                        <div id="tree"></div>
+                      </div>
+                    </div>
+                  </section>
+                </section>
+              </aside>
+        
+        
+        <aside id="email-content" class="bg-light lter">
+                <section class="vbox">
+        
           <section class="scrollable padder">
             <section class="row m-b-md">
               <div class="col-sm-12">
@@ -115,105 +140,136 @@
               </div>
             </section>
             <section class="panel panel-default">
-              <div class="table-responsive">
-                <table class="table table-striped b-t b-light">
-                  <thead>
-                    <tr>
-                      <th  class="th-sortable" data-toggle="class">Dashboard Widget<span class="th-sort"></span></th>
-                      <th width="1202"  class="th-sortable" data-toggle="class">Permissions<span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span></th>
-                      <th  class="th-sortable" width="50" data-toggle="class">&nbsp;</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td width="227">My Complaints</td>
-                      <td><select data-placeholder="Choose permissions..." id="permissions" class="choose-permissions form-control" multiple>
-                          <option>ROLE_INVESTIGATOR</option>
-                          <option> ROLE_ADMINISTRATOR</option>
-                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
-                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
-                          <option>ROLE_ANALYST</option>
-                          <option>ACM_ANALYST_DEV</option>
-                          <option>ACM_ADMINISTRATOR_DEV</option>
-                          <option>ACM_SUPERVISOR_DEV</option>
-                          <option>ACM_SUPERVISOR_DEV</option>
-                          <option>ACM_INVESTIGATOR_DEV</option>
-                        </select></td>
-                      <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
-                    </tr>
-                    <tr>
-                      <td width="227">My Cases</td>
-                      <td><select data-placeholder="Choose permissions..." id="permissions" class="choose-permissions form-control" multiple>
-                          <option>ROLE_INVESTIGATOR</option>
-                          <option> ROLE_ADMINISTRATOR</option>
-                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
-                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
-                          <option>ROLE_ANALYST</option>
-                          <option>ACM_ANALYST_DEV</option>
-                          <option>ACM_ADMINISTRATOR_DEV</option>
-                          <option>ACM_SUPERVISOR_DEV</option>
-                          <option>ACM_SUPERVISOR_DEV</option>
-                          <option>ACM_INVESTIGATOR_DEV</option>
-                        </select></td>
-                      <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
-                    </tr>
-                    <tr>
-                      <td width="227">My Documents</td>
-                      <td><select data-placeholder="Choose permissions..." id="permissions" class="choose-permissions form-control" multiple>
-                          <option>ROLE_INVESTIGATOR</option>
-                          <option> ROLE_ADMINISTRATOR</option>
-                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
-                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
-                          <option>ROLE_ANALYST</option>
-                          <option>ACM_ANALYST_DEV</option>
-                          <option>ACM_ADMINISTRATOR_DEV</option>
-                          <option>ACM_SUPERVISOR_DEV</option>
-                          <option>ACM_SUPERVISOR_DEV</option>
-                          <option>ACM_INVESTIGATOR_DEV</option>
-                        </select></td>
-                      <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
-                    </tr>
-                    <tr>
-                      <td width="227">My Tasks</td>
-                      <td><select data-placeholder="Choose permissions..." id="permissions" class="choose-permissions form-control" multiple>
-                          <option>ROLE_INVESTIGATOR</option>
-                          <option> ROLE_ADMINISTRATOR</option>
-                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
-                          <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
-                          <option>ROLE_ANALYST</option>
-                          <option>ACM_ANALYST_DEV</option>
-                          <option>ACM_ADMINISTRATOR_DEV</option>
-                          <option>ACM_SUPERVISOR_DEV</option>
-                          <option>ACM_SUPERVISOR_DEV</option>
-                          <option>ACM_INVESTIGATOR_DEV</option>
-                        </select></td>
-                      <td><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button></td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div class="wrapper">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <div class="col-xs-3 b-r">
+                      <label>Choose Dashboard Widgets</label>
+                      <select name=""  size="10" multiple class="form-control">
+                        <option>My Complaints</option>
+                        <option>My Cases</option>
+                        <option>My Documents</option>
+                        <option>My Tasks</option>
+                      </select>
+                    </div>
+                    <div class="col-xs-1 b-r"><br/>
+                      <br/>
+                      <br/>
+                      <br/>
+                      <br/>
+                      <button class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection" onclick="save()"> Go <i class="fa fa-chevron-right"></i></button>
+                      <br/>
+                      <br/>
+                      <br/>
+                      <br/>
+                      <br/>
+                      <br/>
+                    </div>
+                    <div class="col-xs-3 b-r">
+                      <label>Not Authorized</label>
+                      <select name="" size="10" multiple class="form-control">
+                        <option>ROLE_ADMINISTRATOR</option>
+                        <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
+                        <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
+                        <option>ROLE_ANALYST</option>
+                        <option>ACM_ANALYST_DEV</option>
+                        <option>ACM_ADMINISTRATOR_DEV</option>
+                        <option>ACM_SUPERVISOR_DEV</option>
+                        <option>ACM_SUPERVISOR_DEV</option>
+                        <option>ACM_INVESTIGATOR_DEV</option>
+                      </select>
+                    </div>
+                    <div class="col-xs-1 b-r"><br/>
+                      <br/>
+                      <br/>
+                      <br/>
+                      <br/>
+                      <button class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right" onclick="save()"> <i class="fa fa-angle-double-right"></i></button>
+                      <br/>
+                      <button class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left" onclick="save()"> <i class="fa fa-angle-double-left"></i></button>
+                      <br/>
+                      <br/>
+                      <br/>
+                      <br/>
+                    </div>
+                    <div class="col-xs-4 b-r">
+                      <label>Authorized</label>
+                      <select name=""  size="10" multiple  class="form-control">
+                        <option>ROLE_INVESTIGATOR</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
               </div>
             </section>
+            
+            </section></section></aside>
           </section>
         </section>
       </section>
     </section>
   </section>
 </section>
-<script src="resources/js/jquery.min.js"></script> 
+</section>
+
+
+<script type='text/javascript'>//<![CDATA[ 
+
+$(function() {
+    $("#tree").fancytree({
+
+activate: function(event, data) {
+				var node = data.node;
+				// Use <a> href and target attributes to load the content:
+				if( node.data.href ){
+					// Open target
+					window.open(node.data.href, "_self");
+					// or open target in iframe
+//                $("[name=contentFrame]").attr("src", node.data.href);
+				}
+			},
+
+        source: [{
+                title: "Access Controls",
+                folder: true,
+				expanded: "fancytree-expanded",
+                children: [{
+                    title: "Access Control Policy", 
+					href: "access.html"
+                }, {
+                    title: "Object locks",
+					href: "locks.html", 
+                    description1: "John Doe",
+                    description2: "Victim"
+                }]
+            }, {
+                title: "Dashboard",
+                folder: true,
+expanded: "fancytree-expanded",
+                 children: [{
+                    title: "Dashboard Configuration", 
+					href: "dashboardconfig.html"
+                }]
+            }, {
+                title: "Reports",
+                folder: true,
+expanded: "fancytree-expanded",
+                 children: [{
+                    title: "Reports Configuration", 
+					href: "reportsconfig.html"
+                }]
+            }]
+    });
+
+});
+//]]>
+</script> 
+
 <!-- Bootstrap --> 
 <script src="resources/js/bootstrap.js"></script> 
 <!-- App --> 
 <script src="resources/js/app.js"></script> 
 <script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
-<script src="resources/js/app.plugin.js"></script> 
-<script src="resources/js/chosen.js" type="text/javascript" charset="utf-8"></script> 
-<script type="text/javascript">
-var config = {
-  '.choose-permissions' : {}
-}
-for (var selector in config) {
-  $(selector).chosen(config[selector]);
-}
-</script>
+<script src="resources/js/app.plugin.js"></script>
 </body>
 </html>
