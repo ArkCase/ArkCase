@@ -1,10 +1,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title>${pageDescriptor.title}</title>
+    <title><spring:message code="dashboard.page.title" text="Dashboard | ACM | Armedia Case Management" /></title>
 
     <link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_angular}/css/sample.test.css" />
 
@@ -29,12 +30,12 @@
     <script type="text/javascript" src="<c:url value='/resources/js/dashboard/dashboardService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/dashboard/dashboardCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular.min.7931140c.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular-route.min.7d4fa7e4.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/moment.min.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/ng-table.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${js_angular_min}"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${js_angular_route_min}"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${js_angular_moment}"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${js_angular_table}"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${dashboardFileName}"></script>
 </jsp:attribute>
 

@@ -17,6 +17,42 @@ securitySchemes:
       type: x-Token Authentication
 
 /plugin:
+  /casefile:
+    post:
+      description: create a a new case file, or update an existing one.
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      body:
+        application/json:
+          example: |
+            {
+              "caseType": "Better Business Bureau",
+              "title": "Dupree's Diamond Blues"
+              // this request will create a case file since no id is specified.
+              // to update a case file, include the id property, as shown in the 
+              // example response.
+            }
+      responses:
+        200:
+          description: Case file successfully created or updated.
+          body:
+            application/json:
+              example: |
+                {
+                  "id":508,
+                  "caseNumber":"20141006_508",
+                  "caseType":"Better Business Bureau",
+                  "title":"Dupree's Diamond Blues",
+                  "status":"DRAFT",
+                  "created":"2014-10-06T20:28:42.080+0000",
+                  "creator":"ebmillar",
+                  "modified":"2014-10-06T20:28:42.080+0000",
+                  "modifier":"ebmillar",
+                  "closed":null,
+                  "disposition":null,
+                  "ecmFolderPath":"/Sites/acm/documentLibrary/Case Files/20141006_508",
+                  "ecmFolderId":"workspace://SpacesStore/7c4c7c0c-b4dd-4e3d-aa8c-e6e4a9ea2e52",
+                  "childObjects":[]
+                }
   /complaint:
     post:
       description: Create a complaint based on the complaint originator's contact information
@@ -149,6 +185,29 @@ securitySchemes:
                   "originator": {
                         "id":2191,
                         "parentId":2190,
+                        "person":{
+                                "id":2192,
+                                "title":"mr.",
+                                "company":null,
+                                "status":"ACTIVE",
+                                "givenName":"Complaintant first",
+                                "familyName":"Complaintant last",
+                                "hairColor":null,
+                                "eyeColor":null,
+                                "heightInInches":null,
+                                "weightInPounds":null,
+                                "dateOfBirth":null,
+                                "dateMarried":null,
+                                "created":"2014-09-29T17:01:25.142+0000",
+                                "creator":"anotherUser",
+                                "modified":"2014-09-29T17:01:25.142+0000",
+                                "modifier":"anotherUser",
+                                "addresses":[],
+                                "contactMethods":[],
+                                "securityTags":[],
+                                "personAliases":[ ],                                
+                                "organizations":[]                          
+                                 },
                         "personType":"Initiator",
                         "parentType":"COMPLAINT",
                         "personDescription":"Sample Description",
@@ -165,6 +224,29 @@ securitySchemes:
                   "personAssociations": [{
                         "id":2194,
                         "parentId":2190,
+                        "person": {
+                                  "id":2193,
+                                  "title":"Mr.",
+                                  "company":"Armedia",
+                                  "status":"ACTIVE",
+                                  "givenName":"Johnatan",
+                                  "familyName":"Joe",
+                                  "hairColor":"black",
+                                  "eyeColor":null,
+                                  "heightInInches":null,
+                                  "weightInPounds":189,
+                                  "dateOfBirth":null,
+                                  "dateMarried":null,
+                                  "created":"2014-09-29T19:08:06.006+0000",
+                                  "creator":"ann-acm",
+                                  "modified":"2014-09-29T19:08:06.006+0000",
+                                  "modifier":"ann-acm",
+                                  "addresses":[],
+                                  "contactMethods":[],
+                                  "securityTags":[],
+                                  "personAliases":[ ],                                
+                                  "organizations":[]                          
+                                   },
                         "personType": "Subject",
                         "parentType": "COMPLAINT",
                         "personDescription": "Simple Description",
@@ -227,108 +309,132 @@ securitySchemes:
             body:
               application/json:
                 example: |
-                  {
-                  "complaintId":2045,
-                  "complaintNumber":"20140919_2045",
-                  "complaintType":"Agricultural",
-                  "priority":"Medium",
-                  "complaintTitle":"fighting was the cause",
-                  "details":"simple Detail",
-                  "incidentDate":"2014-09-19T04:00:00.000+0000",
-                  "created":"2014-09-19T12:33:53.830+0000",
-                  "creator":"ann-acm",
-                  "modified":"2014-09-19T12:33:53.830+0000",
-                  "modifier":"ann-acm",
-                  "status":"DRAFT",
-                  "originator":{
-                        "id":2046,
-                        "parentId":2045,
-                        "personType":"Initiator",
-                        "parentType":"COMPLAINT",
-                        "personDescription":"Sample Description",
-                        "created":"2014-09-19T12:33:53.830+0000",
-                        "creator":"ann-acm",
-                        "modified":"2014-09-19T12:33:53.830+0000",
-                        "modifier":"ann-acm",
-                        "notes":"simple note description"
-                              },
-                  "ecmFolderPath":null,
-                  "ecmFolderId":"workspace://SpacesStore/7d240f67-023a-4059-b653-6bc06b2d58ab",
-                  "childObjects":[
-                        {
-                        "associationId":2059,
-                        "status":"ACTIVE",
-                        "parentName":"20140919_2045",
-                        "parentType":"COMPLAINT",
-                        "parentId":2045,
-                        "targetName":"form.xml",
-                        "targetType":"FILE",
-                        "targetId":2058,
-                        "created":"2014-09-19T12:33:58.281+0000",
-                        "creator":"ann-acm",
-                        "modified":"2014-09-19T12:33:58.281+0000",
-                        "modifier":"ann-acm"
+                 {
+                  "complaintId": 2190,
+                  "complaintNumber": "20140806_1938",
+                  "complaintType": "Agricultural",
+                  "priority": "Medium",
+                  "complaintTitle": "falling fire is coming  tree",
+                  "details": "Sample Detail",
+                  "incidentDate": "2014-09-19T04:00:00.000+0000",
+                  "created": "2014-09-29T21:34:54.947+0000",
+                  "creator": "ann-acm",
+                  "modified": "2014-09-29T21:34:54.947+0000",
+                  "modifier": "ann-acm",
+                  "status": "DRAFT",
+                  "originator": {
+                        "id": 2191,
+                        "person": {
+                            "id": 2192,
+                            "title": null,
+                            "company": null,
+                            "status": "ACTIVE",
+                            "givenName": null,
+                            "familyName": null,
+                            "hairColor": null,
+                            "eyeColor": null,
+                            "heightInInches": null,
+                            "weightInPounds": null,
+                            "dateOfBirth": null,
+                            "dateMarried": null,
+                            "created": "2014-09-22T20:06:52.021+0000",
+                            "creator": "ann-acm",
+                            "modified": "2014-09-22T20:06:52.021+0000",
+                            "modifier": "ann-acm",
+                            "addresses": [],
+                            "contactMethods": [],
+                            "securityTags": [],
+                            "personAliases": [],
+                            "organizations": []
                         },
-                        {
-                        "associationId":2061,
-                        "status":"ACTIVE",
-                        "parentName":"20140919_2045",
-                        "parentType":"COMPLAINT",
-                        "parentId":2045,
-                        "targetName":"Testing complaint.docx",
-                        "targetType":"FILE",
-                        "targetId":2060,
-                        "created":"2014-09-19T12:34:04.816+0000",
-                        "creator":"ann-acm",
-                        "modified":"2014-09-19T12:34:04.816+0000",
-                        "modifier":"ann-acm"
+                        "parentId": 2190,
+                        "personType": "Initiator",
+                        "parentType": "COMPLAINT",
+                        "personDescription": "Sample Description",
+                        "created": "2014-09-22T20:06:52.018+0000",
+                        "creator": "ann-acm",
+                        "modified": "2014-09-29T21:34:54.971+0000",
+                        "modifier": "ann-acm",
+                        "notes": "sample note describing the person"
+                  },
+                  "ecmFolderPath": null,
+                  "ecmFolderId": "workspace://SpacesStore/75ab1031-515a-4e82-ac58-fd9cf09e7119",
+                  "childObjects": [],
+                  "approvers": null,
+                  "personAssociations": [{
+                        "id": 2191,
+                        "person": {
+                          "id": 2192,
+                          "title": null,
+                          "company": null,
+                          "status": "ACTIVE",
+                          "givenName": null,
+                          "familyName": null,
+                          "hairColor": null,
+                          "eyeColor": null,
+                          "heightInInches": null,
+                          "weightInPounds": null,
+                          "dateOfBirth": null,
+                          "dateMarried": null,
+                          "created": "2014-09-22T20:06:52.021+0000",
+                          "creator": "ann-acm",
+                          "modified": "2014-09-22T20:06:52.021+0000",
+                          "modifier": "ann-acm",
+                          "addresses": [],
+                          "contactMethods": [],
+                          "securityTags": [],
+                          "personAliases": [],
+                          "organizations": []
                         },
-                        {
-                        "associationId":2063,
-                        "status":"ACTIVE",
-                        "parentName":"20140919_2045",
-                        "parentType":"COMPLAINT",
-                        "parentId":2045,
-                        "targetName":"Complaint.pdf",
-                        "targetType":"FILE",
-                        "targetId":2062,
-                        "created":"2014-09-19T12:34:07.979+0000",
-                        "creator":"ann-acm",
-                        "modified":"2014-09-19T12:34:07.979+0000",
-                        "modifier":"ann-acm"
-                        }
-                        ],
-                  "approvers":null,
-                  "personAssociations":[
-                          {
-                          "id":2046,
-                          "parentId":2045,
-                          "personType":"Initiator",
-                          "parentType":"COMPLAINT",
-                          "personDescription":"Sample Description",
-                          "created":"2014-09-19T12:33:53.830+0000",
-                          "creator":"ann-acm",
-                          "modified":"2014-09-19T12:33:53.830+0000",
-                          "modifier":"ann-acm",
-                          "notes":"sample note"
-                          },
-                          {
-                          "id":2057,
-                          "parentId":2045,
-                          "personType":"Complaintant",
-                          "parentType":"COMPLAINT",
-                          "personDescription":"long and Athletic",
-                          "created":"2014-09-19T12:33:53.830+0000",
-                          "creator":"ann-acm",
-                          "modified":"2014-09-19T12:33:53.830+0000",
-                          "modifier":"ann-acm",
-                          "notes":"simple note description."
-                          }
-                    ],
-                    "dueDate":"2014-09-22T04:00:00.000+0000",
-                    "tag":"couldn't give",
-                    "frequency":"Once",
-                    "location":"8022 closeopen rd annandale va "
+                        "parentId": 2190,
+                        "personType": "Initiator",
+                        "parentType": "COMPLAINT",
+                        "personDescription": "Sample Description",
+                        "created": "2014-09-22T20:06:52.018+0000",
+                        "creator": "ann-acm",
+                        "modified": "2014-09-29T21:34:54.971+0000",
+                        "modifier": "ann-acm",
+                        "notes": "sample note describing the person"
+                      },
+                      {
+                        "id": 2194,
+                        "person": {
+                          "id": 2193,
+                          "title": null,
+                          "company": null,
+                          "status": "ACTIVE",
+                          "givenName": null,
+                          "familyName": null,
+                          "hairColor": null,
+                          "eyeColor": null,
+                          "heightInInches": null,
+                          "weightInPounds": null,
+                          "dateOfBirth": null,
+                          "dateMarried": null,
+                          "created": "2014-09-22T20:06:52.023+0000",
+                          "creator": "ann-acm",
+                          "modified": "2014-09-22T20:06:52.023+0000",
+                          "modifier": "ann-acm",
+                          "addresses": [],
+                          "contactMethods": [],
+                          "securityTags": [],
+                          "personAliases": [],
+                          "organizations": []
+                        },
+                        "parentId": 2190,
+                        "personType": "Subject",
+                        "parentType": "COMPLAINT",
+                        "personDescription": "Simple Description",
+                        "created": "2014-09-22T20:06:52.018+0000",
+                        "creator": "ann-acm",
+                        "modified": "2014-09-22T20:06:52.018+0000",
+                        "modifier": "ann-acm",
+                        "notes": null
+                      }],
+                  "dueDate": "2014-09-22T04:00:00.000+0000",
+                  "tag": "no tag",
+                  "frequency": "low",
+                  "location": "1234 straight line St, fallschurch va"
                   }
           400:
             description: Usually means the requested complaint does not exist.
@@ -466,8 +572,6 @@ securitySchemes:
                       "modifier":"ann-acm"
                       }
                       ],
-                  "personAssociations":[
-                  ],
                   "organizations":[
                       {
                       "organizationId":2286,
@@ -570,20 +674,7 @@ securitySchemes:
                             "creator":"Ann Administrator",
                             "modified":"2014-09-19T12:33:53.915+0000",
                             "modifier":"ann-acm"
-                          }],
-                      "personAssociations":[
-                          {
-                            "id":2046,
-                            "parentId":2045,
-                            "personType":"Initiator",
-                            "parentType":"COMPLAINT",
-                            "personDescription":"Sample Description",
-                            "created":"2014-09-19T12:33:53.830+0000",
-                            "creator":"ann-acm",
-                            "modified":"2014-09-19T12:33:53.830+0000",
-                            "modifier":"ann-acm",
-                            "notes":"A simple note Describing"
-                        }],
+                          }],                      
                       "organizations":[
                            {
                             "organizationId":2049,
@@ -669,20 +760,7 @@ securitySchemes:
                               "creator":"Ann Administrator",
                               "modified":"2014-09-19T12:33:53.915+0000",
                               "modifier":"ann-acm"
-                          }],
-                    "personAssociations":[
-                          {
-                              "id":2046,
-                              "parentId":2045,
-                              "personType":"Initiator",
-                              "parentType":"COMPLAINT",
-                              "personDescription":"Simple Description",
-                              "created":"2014-09-19T12:33:53.830+0000",
-                              "creator":"ann-acm",
-                              "modified":"2014-09-19T12:33:53.830+0000",
-                              "modifier":"ann-acm",
-                              "notes":"Sample note"
-                          }],
+                          }],                    
                     "organizations":[
                           {
                               "organizationId":2049,
@@ -754,20 +832,7 @@ securitySchemes:
                               "creator":"Ann Administrator",
                               "modified":"2014-09-19T12:33:53.964+0000",
                               "modifier":"ann-acm"
-                          }],
-                    "personAssociations":[
-                          {
-                              "id":2057,
-                              "parentId":2045,
-                              "personType":"Complaintant",
-                              "parentType":"COMPLAINT",
-                              "personDescription":"Sample Description",
-                              "created":"2014-09-19T12:33:53.830+0000",
-                              "creator":"ann-acm",
-                              "modified":"2014-09-19T12:33:53.830+0000",
-                              "modifier":"ann-acm",
-                              "notes":"Sample note"
-                          }],
+                          }],                   
                     "organizations":[
                           {
                               "organizationId":2054,
@@ -800,8 +865,173 @@ securitySchemes:
             description: Usually means the requested person does not exist.
             body:
               text/plain:
-                example: person with Id 2046 not found.     
-                                   
+                example: person with Id 2046 not found.  
+        
+  /personAssociation:
+    post:
+      description: Create a personAssociation with all details
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      body: 
+        application/json:
+          example: |
+            {
+            "id": null,
+            "personType": "Subject",
+            "parentId":3022,
+            "parentType":"COMPLAINT",
+            "personDescription": "Sample Description",
+            "notes":"sample note describing the person",      
+            "person": {
+                  "id": null,
+                  "title": "Mr.",
+                  "givenName": "John",
+                  "familyName": "Doe",
+                  "company": "Contoso",
+                  "weightInPounds": 189,
+                  "addresses": [{
+                        "type": "home",
+                        "streetAddress": "123 Main St.",
+                        "streetAddress2": null,
+                        "city": "Peoria",
+                        "state": "IL",
+                        "zip": "12345"
+                     }],
+                   "contactMethods": [{
+                          "type": "Mobile Phone",
+                          "value": "123-456-7890"
+                            },
+                            {
+                          "type": "Personal E-mail",
+                          "value": "john.doe@gmail.com"
+                            }],
+                  "securityTags": ["Anonymous",
+                                 "Confidential",
+                                 "Top Secret"],
+                  "personAliases": [{
+                       "id": null,
+                        "aliasType": "Nick Name",
+                        "aliasValue": "Nick"
+                  }],
+                  "organizations": [
+              {
+              "organizationId":null,
+              "organizationType": "sample",
+              "organizationValue": "tech net"
+                    }
+              ]
+                }
+              }
+   
+            }
+      responses:        
+        200:
+          description: Normal response indicating the system created a new personAssociation
+          body: 
+            application/json:
+              example: | 
+                { 	
+                "id":3311,
+                "person":{
+                      "id":3317,
+                      "title":"Mr.",
+                      "company":"Contoso",
+                      "status":"ACTIVE",
+                      "givenName":"John",
+                      "familyName":"Doe",
+                      "hairColor":null,
+                      "eyeColor":null,
+                      "heightInInches":null,
+                      "weightInPounds":189,
+                      "dateOfBirth":null,
+                      "dateMarried":null,
+                      "created":"2014-09-29T21:53:57.735+0000",
+                      "creator":"ann-acm",
+                      "modified":"2014-09-29T21:53:57.735+0000",
+                      "modifier":"ann-acm",
+                      "addresses":[
+                                {
+                                "id":3312,
+                                "created":"2014-09-29T21:53:57.725+0000",
+                                "creator":"ann-acm",
+                                "modified":"2014-09-29T21:53:57.725+0000",
+                                "modifier":"ann-acm",
+                                "status":"ACTIVE",
+                                "type":"home",
+                                "types":null,
+                                "streetAddress":"123 Main St.",
+                                "streetAddress2":null,
+                                "city":"Peoria",
+                                "state":"IL",
+                                "zip":"12345",
+                                "country":null
+                                }
+                               ],
+                      "contactMethods":[
+                                {
+                                "id":3313,
+                                "created":"2014-09-29T21:53:57.727+0000",
+                                "creator":"ann-acm",
+                                "modified":"2014-09-29T21:53:57.727+0000",
+                                "modifier":"ann-acm",
+                                "status":"ACTIVE",
+                                "type":"Mobile Phone",
+                                "types":null,
+                                "value":"123-456-7890"
+                                },
+                                {
+                                "id":3314,
+                                "created":"2014-09-29T21:53:57.729+0000",
+                                "creator":"ann-acm",
+                                "modified":"2014-09-29T21:53:57.729+0000",
+                                "modifier":"ann-acm",
+                                "status":"ACTIVE",
+                                "type":"Personal E-mail",
+                                "types":null,
+                                "value":"john.doe@gmail.com"
+                                }
+                                ],
+                                "securityTags":[
+                                "Anonymous",
+                                "Confidential",
+                                "Top Secret"
+                                ],
+                      "personAliases":[
+                                {
+                                "id":3316,
+                                "aliasType":"Nick Name",
+                                "aliasTypes":null,
+                                "aliasValue":"Nick",
+                                "created":"2014-09-29T21:53:57.733+0000",
+                                "creator":"ann-acm",
+                                "modified":"2014-09-29T21:53:57.733+0000",
+                                "modifier":"ann-acm"
+                                }
+                                ],
+                      "organizations":[
+                                {
+                                "organizationId":3315,
+                                "organizationType":"sample",
+                                "organizationTypes":null,
+                                "organizationValue":"tech net",
+                                "created":"2014-09-29T21:53:57.731+0000",
+                                "creator":"ann-acm",
+                                "modified":"2014-09-29T21:53:57.731+0000",
+                                "modifier":"ann-acm"
+                                }]
+                      },
+                "parentId":3022,
+                "personType":"Subject",
+                "parentType":"COMPLAINT",
+                "personDescription":"Sample Description",
+                "created":"2014-09-29T21:53:57.720+0000",
+                "creator":"ann-acm",
+                "modified":"2014-09-29T21:53:57.720+0000",
+                "modifier":"ann-acm",
+                "notes":"sample note describing the person"
+                 }
+        400:
+            description: Usually means the request body was invalid (did not match the expected JSON format).  The response body    will be empty.  
+                                                  
   /dataaccess:
     /accessControlDefaults:
       securedBy: [ spring_security_form_auth, spring_security_basic_auth ]

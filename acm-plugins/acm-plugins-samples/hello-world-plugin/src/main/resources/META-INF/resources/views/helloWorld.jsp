@@ -1,12 +1,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%--<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>--%>
-<%--<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>--%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:layout>
     <jsp:attribute name="endOfHead">
-        <title>${pageDescriptor.title}</title>
+        <title>Hello World | ACM | Armedia Case Management</title>
         <script type="text/javascript">
             $(document).ready(function () {
                 HelloWorld.initialize();
