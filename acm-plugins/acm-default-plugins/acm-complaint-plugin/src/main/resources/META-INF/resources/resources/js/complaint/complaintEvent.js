@@ -158,8 +158,9 @@ Complaint.Event = {
         alert("onClickBtnTaskUnassign");
     }
     ,onClickSpanAddTask: function(e) {
-        var complaintId = Complaint.getComplaintId();
-        var url = Complaint.Page.URL_NEW_TASK + complaintId;
+        var complaint = Complaint.getComplaint();
+        var complaintNumber = complaint.complaintNumber;
+        var url = Complaint.Page.URL_NEW_TASK  + complaintNumber;
         App.gotoPage(url);
     }
 
