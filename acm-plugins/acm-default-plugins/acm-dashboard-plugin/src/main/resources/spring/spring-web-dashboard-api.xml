@@ -23,4 +23,15 @@
         <property name="eventPublisher" ref="widgetEventPublisher"/>
     </bean>
 
+    <bean id="getRolesByWidgets"  class="com.armedia.acm.plugins.dashboard.web.api.GetRolesByWidgetsAPIController">
+        <property name="widgetDao" ref="acmWidgetDao"/>
+        <property name="eventPublisher" ref="widgetEventPublisher"/>
+        <property name="userDao" ref="acmUserDao"/>
+    </bean>
+
+    <bean id="setAuthorizedWidgetRoles"  class="com.armedia.acm.plugins.dashboard.web.api.SetAuthorizedWidgetRolesAPIController">
+        <property name="widgetDao" ref="acmWidgetDao"/>
+        <property name="eventPublisher" ref="widgetEventPublisher"/>
+        <property name="userDao" ref="acmUserDao"/>
+    </bean>
 </beans>

@@ -65,9 +65,20 @@
                 </bean>
 
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <!--create dashboard get config service-->
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/dashboard/widgets/get"/>
+                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
+                </bean>
+
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/dashboard/widgets/rolesByWidget/all"/>
+                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
+                </bean>
+
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/dashboard/widgets/set"/>
                     <property name="requiredPrivilege" ref="dashboardPrivilege"/>
                 </bean>
             </list>

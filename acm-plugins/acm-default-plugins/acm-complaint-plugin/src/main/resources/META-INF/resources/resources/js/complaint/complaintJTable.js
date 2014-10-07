@@ -1879,7 +1879,7 @@ Complaint.JTable = {
                                             Record.priority = "[priority]";
                                             Record.dueDate = "[due]";
                                             Record.status = Acm.goodValue(response.docs[i].status_s);
-                                            Record.assignee = "[assignee]";
+                                            Record.assignee = response.docs[i].assignee_s;
                                             rc.jtData.Records.push(Record);
 
                                         }
