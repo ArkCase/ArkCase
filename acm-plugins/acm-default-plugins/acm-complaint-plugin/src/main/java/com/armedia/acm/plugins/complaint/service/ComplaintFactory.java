@@ -101,10 +101,9 @@ public class ComplaintFactory
     }
     
     private List<AcmParticipant> convertToParticipants(List<Item> items){
-    	List<AcmParticipant> participants = null;
+    	List<AcmParticipant> participants = new ArrayList<AcmParticipant>();
     	
     	if (items != null && items.size() > 0){
-    		participants = new ArrayList<AcmParticipant>();
     		for (Item item : items){
     			AcmParticipant participant = new AcmParticipant();
     			participant.setParticipantLdapId(item.getValue());
