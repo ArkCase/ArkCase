@@ -61,7 +61,7 @@ var Complaint = Complaint || {
         return this._personTitles;
     }
 
-    ,_deviceTypes : ['Phone', 'Email']
+    ,_deviceTypes : ['Phone','Personal E-mail','Mobile Phone', 'Email']
     ,getDeviceTypes : function() {
         return this._deviceTypes;
     }

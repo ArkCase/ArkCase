@@ -66,7 +66,7 @@ public class ROIService extends FrevvoFormAbstractService {
 		Long parentObjectId = null;
 		String parentObjectName = null;
 		
-		ROIForm roiForm = (ROIForm) convertFromXMLToObject(xml, ROIForm.class);
+		ROIForm roiForm = (ROIForm) convertFromXMLToObject(cleanXML(xml), ROIForm.class);
 		
 		if (roiForm == null) {
 			LOG.warn("Cannot umarshall ROI Form.");

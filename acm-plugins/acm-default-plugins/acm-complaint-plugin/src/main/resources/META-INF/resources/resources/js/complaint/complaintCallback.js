@@ -74,7 +74,22 @@ Complaint.Callback = {
                     treeInfo.total = 1;
 
                     var pageId = treeInfo.start;
-                    var complaints = [complaint];
+                    var complaintSolr = {};
+                    complaintSolr.author = complaint.creator;
+                    complaintSolr.author_s = complaint.creator;
+                    complaintSolr.create_dt = complaint.created;
+                    complaintSolr.last_modified = complaint.modified;
+                    complaintSolr.modifier_s = complaint.modifier;
+                    complaintSolr.name = complaint.complaintNumber;
+                    complaintSolr.object_id_s = complaint.complaintId;
+                    complaintSolr.object_type_s = App.OBJTYPE_COMPLAINT;
+                    complaintSolr.owner_s = complaint.creator;
+                    complaintSolr.status_s = complaint.status;
+                    complaintSolr.title_t = complaint.complaintTitle;
+
+
+
+                    var complaints = [complaintSolr];
                     Complaint.cachePage.put(pageId, complaints);
 
                     var key = pageId + "." + treeInfo.complaintId.toString();
@@ -121,12 +136,6 @@ Complaint.Callback = {
             if (Acm.isNotEmpty(response)) {
                 var c = Complaint.getComplaint();
                 if(response){
-                    for(var i = 0;i < response.length; i++){
-                        if(response[i].personAssociations[0].personType == "Initiator"){
-                            c.originator.person = response[i];
-                        }
-                    }
-                    Complaint.Object.refreshJTableInitiator();
                     Complaint.cachePersonList.put(c.complaintId,response);
                     Complaint.Object.refreshJTablePeople();
                 }

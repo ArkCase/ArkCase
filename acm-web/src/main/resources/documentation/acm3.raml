@@ -17,6 +17,42 @@ securitySchemes:
       type: x-Token Authentication
 
 /plugin:
+  /casefile:
+    post:
+      description: create a a new case file, or update an existing one.
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      body:
+        application/json:
+          example: |
+            {
+              "caseType": "Better Business Bureau",
+              "title": "Dupree's Diamond Blues"
+              // this request will create a case file since no id is specified.
+              // to update a case file, include the id property, as shown in the 
+              // example response.
+            }
+      responses:
+        200:
+          description: Case file successfully created or updated.
+          body:
+            application/json:
+              example: |
+                {
+                  "id":508,
+                  "caseNumber":"20141006_508",
+                  "caseType":"Better Business Bureau",
+                  "title":"Dupree's Diamond Blues",
+                  "status":"DRAFT",
+                  "created":"2014-10-06T20:28:42.080+0000",
+                  "creator":"ebmillar",
+                  "modified":"2014-10-06T20:28:42.080+0000",
+                  "modifier":"ebmillar",
+                  "closed":null,
+                  "disposition":null,
+                  "ecmFolderPath":"/Sites/acm/documentLibrary/Case Files/20141006_508",
+                  "ecmFolderId":"workspace://SpacesStore/7c4c7c0c-b4dd-4e3d-aa8c-e6e4a9ea2e52",
+                  "childObjects":[]
+                }
   /complaint:
     post:
       description: Create a complaint based on the complaint originator's contact information

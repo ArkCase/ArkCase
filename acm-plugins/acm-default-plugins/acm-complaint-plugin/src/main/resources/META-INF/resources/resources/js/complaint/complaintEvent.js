@@ -94,8 +94,36 @@ Complaint.Event = {
     }
     ,onSaveAssigned: function(value) {
         var c = Complaint.getComplaint();
-        //c.assignee = value;                 //fix meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-        //Complaint.Service.saveComplaint(c);
+
+        var foundAssignee = false;
+        var participantsDefined = typeof c.participants != "undefined";
+        if ( participantsDefined )
+        {
+            for (var partNum = 0; partNum < c.participants.length; partNum++)
+            {
+                if (c.participants[partNum]['participantType'] == "assignee")
+                {
+                    c.participants[partNum]['participantLdapId'] = value;
+                    foundAssignee = true;
+                    break;
+                }
+            }
+        }
+        if ( ! foundAssignee )
+        {
+            var participants = participantsDefined ? c.participants : [];
+            c['participants'] = participants;
+            var assignee =
+            {
+                "participantLdapId": value,
+                "participantType": "assignee"
+            };
+            participants.push(assignee);
+
+
+        }
+
+        Complaint.Service.saveComplaint(c);
     }
     ,onSaveComplaintType: function(value) {
         var c = Complaint.getComplaint();
@@ -130,8 +158,9 @@ Complaint.Event = {
         alert("onClickBtnTaskUnassign");
     }
     ,onClickSpanAddTask: function(e) {
-        var complaintId = Complaint.getComplaintId();
-        var url = Complaint.Page.URL_NEW_TASK + complaintId;
+        var complaint = Complaint.getComplaint();
+        var complaintNumber = complaint.complaintNumber;
+        var url = Complaint.Page.URL_NEW_TASK  + complaintNumber;
         App.gotoPage(url);
     }
 

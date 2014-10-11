@@ -1,4 +1,7 @@
 /**
+ * Created by manoj.dhungana on 10/1/2014.
+ */
+/**
  * Complaint.JTable
  *
  * JTable
@@ -10,9 +13,11 @@ Complaint.JTable = {
     }
 
 
+
     //
     //------------------ Initiator ------------------
     //
+
     ,_toggleSubJTable: function($t, $row, fnOpen, fnClose, title) {
         var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
         var curTitle = $childRow.find("div.jtable-title-text").text();
@@ -45,6 +50,7 @@ Complaint.JTable = {
     }
     ,_createJTable4SubTable: function($s, arg) {
         //return;
+
         var argNew = {fields:{}};
         argNew.fields.subTables = {
             title: 'Entities'
@@ -90,11 +96,6 @@ Complaint.JTable = {
         $s.jtable(argNew);
         $s.jtable('load');
     }
-
-
-//    ,refreshJTableInitiator: function() {
-//        AcmEx.Object.jTableLoad(this.$divInitiator);
-//    }
     ,_getEmptyOriginator: function() {
         return {id: null
             ,personType: "Complaint"
@@ -108,736 +109,49 @@ Complaint.JTable = {
             }
         };
     }
+
     ,createJTableInitiator: function($s) {
         this._createJTable4SubTable($s, {
+
             title: 'Initiator'
             ,paging: false
             ,actions: {
                 listAction: function(postData, jtParams) {
-                    var rc = {"Result": "OK"
-                        ,"Records": [{id:0, title:"", givenName:"", familyName:"", type:"", description:""}]
-                        ,TotalRecordCount: 1
-                    };
-                    var c = Complaint.getComplaint();
-
-
-                    if (c && c.originator) {
-
-                        rc.Records[0].id = c.originator.id;
-                        rc.Records[0].type = Acm.goodValue(c.originator.personType);
-                        rc.Records[0].description = Acm.goodValue(c.originator.personDescription);
-
-                        var person = c.originator.person;
-                        if (person) {
-                            rc.Records[0].title = Acm.goodValue(person.title);
-                            rc.Records[0].givenName = Acm.goodValue(person.givenName);
-                            rc.Records[0].familyName = Acm.goodValue(person.familyName);
-                        }
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var complaint = Complaint.getComplaint();
+                    if(complaint){
+                        if(complaint.originator && complaint.originator.id && complaint.originator.person)
+                        {
+                            var originator = complaint.originator;
+                            var originatorPerson = originator.person;
+                                rc.Records.push({
+                                    personId: originatorPerson.id
+                                    ,title: originatorPerson.title
+                                    ,givenName: originatorPerson.givenName
+                                    ,familyName: originatorPerson.familyName
+                                    ,personType: originator.personType
+                                    ,personDescription: originator.personDescription
+                                });
+                            }
                     }
                     return rc;
                 }
                 ,updateAction: function(postData, jtParams) {
                     var record = Acm.urlToJson(postData);
-                    var c = Complaint.getComplaint();
+                    var complaint = Complaint.getComplaint();
                     var rc = {"Result": "OK", "Record": {}};
-                    if (c) {
-                        var originatorId = 0;
-                        if (c.originator && c.originator.id) {
-                            originatorId = c.originator.id;
-                        }
-                        rc.Record.id = originatorId;    // (record.id) is empty, do not assign;
-                        rc.Record.title = record.title;
-                        rc.Record.givenName = record.givenName;
-                        rc.Record.familyName = record.familyName;
-                        rc.Record.type = record.type;
-                        rc.Record.description = record.description;
-                    }
-                    return rc;
-                }
-            }
-            ,fields: {
-                id: {
-                    title: 'ID'
-                    ,key: true
-                    ,list: false
-                    ,create: false
-                    ,edit: false
-                }
-                ,title: {
-                    title: 'Title'
-                    ,width: '10%'
-                    ,options: Complaint.getPersonTitles()
-                }
-                ,givenName: {
-                    title: 'First Name'
-                    ,width: '15%'
-                }
-                ,familyName: {
-                    title: 'Last Name'
-                    ,width: '15%'
-                }
-                ,type: {
-                    title: 'Type'
-                    //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
-                    ,options: Complaint.getPersonTypes()
-                }
-                ,description: {
-                    title: 'Description'
-                    ,type: 'textarea'
-                    ,width: '30%'
-                }
-            }
-            ,recordUpdated: function(event, data){
-                var record = data.record;
-                var c = Complaint.getComplaint();
-                if (c) {
-                    if (!c.originator) {
-                        c.originator = Complaint.JTable._getEmptyOriginator();
-                    }
-
-                    c.originator.personType = record.type;
-                    c.originator.personDescription = record.description;
-                    var person = c.originator.person;
-                    if (person) {
-                        person.title = record.title;
-                        person.givenName = record.givenName;
-                        person.familyName = record.familyName;
-
-                        Complaint.Service.saveComplaint(c);
-                    }
-                } //end if (c)
-            }
-            ,formCreated: function (event, data) {
-                //to be used for typeahead in future
-                var a = data;
-                var z = 1;
-            }
-        });
-    }
-
-    ,_closeInitiatorDevices: function($t, $row) {
-        $t.jtable('closeChildTable', $row.closest('tr'));
-    }
-    ,_openInitiatorDevices: function($t, $row) {
-        $t.jtable('openChildTable', $row.closest('tr')
-            ,{
-                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
-                ,sorting: true
-                ,actions: {
-                    listAction: function(postData, jtParams) {
-                        var rc = AcmEx.Object.jTableGetEmptyRecords();
-                        var c = Complaint.getComplaint();
-                        if (c && c.originator && c.originator.person && c.originator.person.contactMethods) {
-                            var contactMethods = c.originator.person.contactMethods;
-                            var cnt = contactMethods.length;
-                            for (i = 0; i < cnt; i++) {
-                                rc.Records.push({personId: c.originator.id
-                                    //,id: contactMethods[i].id
-                                    ,type: contactMethods[i].type
-                                    ,value: contactMethods[i].value
-                                    ,created: Acm.goodValue(contactMethods[i].created)
-                                    ,creator: Acm.goodValue(contactMethods[i].creator)
-                                });
-                            }
-                        }
-                        return rc;
-//                        return {
-//                            "Result": "OK"
-//                            ,"Records": [
-//                                { "personId":  1, "type": "Phone", "value": "703-123-5678", "created": "01-02-03", "creator": "123 do re mi" }
-//                                ,{ "personId": 2, "type": "Email", "value": "doe@gmail.com", "created": "14-05-15", "creator": "xyz abc" }
-//                            ]
-//                            ,"TotalRecordCount": 2
-//                        };
-
-                    }
-                    ,createAction: function(postData, jtParams) {
-                        var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
-                        var c = Complaint.getComplaint();
-                        if (c & c.originator) {
-                            rc.Record.personId = c.originator.id;
-                            //rc.Record.id = parseInt(record.id);
-                            rc.Record.type = record.type;
-                            rc.Record.value = record.value;
-                            rc.Record.created = Acm.getCurrentDay(); //record.created;
-                            rc.Record.creator = App.getUserName();   //record.creator;
-                        }
-                        return rc;
-//                        return {
-//                            "Result": "OK"
-//                            ,"Record":
-//                            { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "created": "01-02-03", "creator": "test" }
-//                        };
-                    }
-                    ,updateAction: function(postData, jtParams) {
-                        var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
-                        var c = Complaint.getComplaint();
-                        if (c && c.originator) {
-                            rc.Record.personId = c.originator.id;
-                            //rc.Record.id = parseInt(record.id);           //no such field in postData, ignored
-                            rc.Record.type = record.type;
-                            rc.Record.value = record.value;
-                            rc.Record.created = record.created;
-                            rc.Record.creator = record.creator;
-                        }
-                        return rc;
-//                        return {
-//                            "Result": "OK"
-//                            ,"Record":
-//                            { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "created": "01-02-03", "creator": "test" }
-//                        };
-
-                    }
-                    ,deleteAction: function(postData, jtParams) {
-                        return {
-                            "Result": "OK"
-                        };
-                    }
-                }
-                ,fields: {
-                    personId: {
-                        key: false
-                        ,create: false
-                        ,edit: false
-                        ,list: false
-                    }
-//                    ,id: {
-//                        key: false
-//                        ,type: 'hidden'
-//                        ,edit: false
-//                        ,defaultValue: 0
-//                    }
-                    ,type: {
-                        title: 'Type'
-                        ,width: '15%'
-                        ,options: Complaint.getDeviceTypes()
-                    }
-                    ,value: {
-                        title: 'Value'
-                        ,width: '30%'
-                    }
-                    ,created: {
-                        title: 'Date Added'
-                        ,width: '20%'
-                        ,create: false
-                        ,edit: false
-                        //,type: 'date'
-                        //,displayFormat: 'yy-mm-dd'
-                    }
-                    ,creator: {
-                        title: 'Added By'
-                        ,width: '30%'
-                        ,create: false
-                        ,edit: false
-                    }
-                }
-                ,recordAdded : function (event, data) {
-                    var record = data.record;
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.contactMethods) {
-                        var contactMethods = c.originator.person.contactMethods;
-
-                        var contactMethod = {};
-                        //contactMethod.id = parseInt(record.id);
-                        contactMethod.type = record.type;
-                        contactMethod.value = record.value;
-                        //contactMethod.created = record.created;   //created,creator is readonly
-                        //contactMethod.creator = record.creator;
-                        contactMethods.push(contactMethod);
-
-                        Complaint.Service.saveComplaint(c);
-                    }
-                }
-                ,recordUpdated : function (event, data) {
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var record = data.record;
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.contactMethods) {
-                        var contactMethods = c.originator.person.contactMethods;
-
-                        var contactMethod = contactMethods[whichRow];
-                        contactMethod.type = record.type;
-                        contactMethod.value = record.value;
-                        //contactMethod.created = record.created;   //created,creator is readonly
-                        //contactMethod.creator = record.creator;
-
-                        Complaint.Service.saveComplaint(c);
-                    }
-                }
-                ,recordDeleted : function (event, data) {
-                    var r = data.row;
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.contactMethods) {
-                        var contactMethods = c.originator.person.contactMethods;
-                        contactMethods.splice(whichRow, 1);
-                        Complaint.Service.saveComplaint(c);
-                    }
-                }
-            }
-            ,function (data) { //opened handler
-                data.childTable.jtable('load');
-            });
-    }
-    ,_closeInitiatorOrganizations: function($t, $row) {
-        $t.jtable('closeChildTable', $row.closest('tr'));
-    }
-    ,_openInitiatorOrganizations: function($t, $row) {
-        $t.jtable('openChildTable', $row.closest('tr')
-            ,{
-                title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
-                ,sorting: true
-                ,actions: {
-                    listAction: function(postData, jtParams) {
-                        return {
-                            "Result": "OK"
-                            ,"Records": [
-                                { "personId":  1, "id": "a", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "123 do re mi" }
-                                ,{ "personId": 2, "id": "b", "type": "gov", "value": "IRS", "createDate": "14-05-15", "createBy": "xyz abc" }
-                            ]
-                            //,"TotalRecordCount": 2
-                        };
-                    }
-                    ,createAction: function(postData, jtParams) {
-                        return {
-                            "Result": "OK"
-                            ,"Record":
-                            { "personId": 3, "id": "c", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "test" }
-                        };
-                    }
-                    ,updateAction: function(postData, jtParams) {
-                        return {
-                            "Result": "OK"
-                            ,"Record":
-                            { "personId": 3, "id": "c", "type": "gov", "value": "IRS", "createDate": "01-02-03", "createBy": "test" }
-                        };
-                    }
-                    ,deleteAction: function(postData, jtParams) {
-                        return {
-                            "Result": "OK"
-                        };
-                    }
-                }
-                ,fields: {
-                    personId: {
-                        type: 'hidden'
-                        ,defaultValue: 1 //commData.record.StudentId
-                    }
-                    ,id: {
-                        key: true
-                        ,create: false
-                        ,edit: false
-                        ,list: false
-                    }
-                    ,type: {
-                        title: 'Type'
-                        ,width: '15%'
-                        ,options: Complaint.getOrganizationTypes()
-                    }
-                    ,value: {
-                        title: 'Value'
-                        ,width: '30%'
-                    }
-                    ,createDate: {
-                        title: 'Date Added'
-                        ,width: '20%'
-                        //,type: 'date'
-                        //,displayFormat: 'yy-mm-dd'
-                        ,create: false
-                        ,edit: false
-                    }
-                    ,createBy: {
-                        title: 'Added By'
-                        ,width: '30%'
-                    }
-                }
-            }
-            ,function (data) { //opened handler
-                data.childTable.jtable('load');
-            });
-    }
-    ,_closeInitiatorLocations: function($t, $row) {
-        $t.jtable('closeChildTable', $row.closest('tr'));
-    }
-    ,_openInitiatorLocations: function($t, $row) {
-        $t.jtable('openChildTable', $row.closest('tr')
-            ,{
-                title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
-                ,sorting: true
-                ,actions: {
-                    listAction: function(postData, jtParams) {
-                        var rc = AcmEx.Object.jTableGetEmptyRecords();
-                        var c = Complaint.getComplaint();
-                        if (c && c.originator && c.originator.person && c.originator.person.addresses) {
-                            var addresses = c.originator.person.addresses;
-                            var cnt = addresses.length;
-                            for (i = 0; i < cnt; i++) {
-                                rc.Records.push({personId: c.originator.id
-                                    //,id: addresses[i].id
-                                    ,type: addresses[i].type
-                                    ,streetAddress: addresses[i].streetAddress
-                                    ,city: addresses[i].city
-                                    ,state: addresses[i].state
-                                    ,zip: addresses[i].zip
-                                    ,created: Acm.goodValue(addresses[i].created)
-                                    ,creator: Acm.goodValue(addresses[i].creator)
-                                });
-                            }
-                        }
-                        return rc;
-                    }
-                    ,createAction: function(postData, jtParams) {
-                        var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
-                        var c = Complaint.getComplaint();
-                        if (c & c.originator) {
-                            rc.Record.personId = c.originator.id;
-                            rc.Record.type = record.type;
-                            rc.Record.streetAddress = record.streetAddress;
-                            rc.Record.city = record.city;
-                            rc.Record.state = record.state;
-                            rc.Record.zip = record.zip;
-                            rc.Record.created = Acm.getCurrentDay(); //record.created;
-                            rc.Record.creator = App.getUserName();   //record.creator;
-                        }
-                        return rc;
-                    }
-                    ,updateAction: function(postData, jtParams) {
-                        var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
-                        var c = Complaint.getComplaint();
-                        if (c && c.originator) {
-                            rc.Record.personId = c.originator.id;
-                            rc.Record.type = record.type;
-                            rc.Record.streetAddress = record.streetAddress;
-                            rc.Record.city = record.city;
-                            rc.Record.state = record.state;
-                            rc.Record.zip = record.zip;
-                            rc.Record.created = record.created;
-                            rc.Record.creator = record.creator;
-                        }
-                        return rc;
-                    }
-                    ,deleteAction: function(postData, jtParams) {
-                        return {
-                            "Result": "OK"
-                        };
-                    }
-                }
-
-                ,fields: {
-                    personId: {
-                        type: 'hidden'
-                        ,defaultValue: 1 //commData.record.StudentId
-                    }
-                    ,type: {
-                        title: 'Type'
-                        ,width: '8%'
-                        ,options: Complaint.getLocationTypes()
-                    }
-                    ,streetAddress: {
-                        title: 'Address'
-                        ,width: '20%'
-                    }
-                    ,city: {
-                        title: 'City'
-                        ,width: '10%'
-                    }
-                    ,state: {
-                        title: 'State'
-                        ,width: '8%'
-                    }
-                    ,zip: {
-                        title: 'Zip'
-                        ,width: '8%'
-                    }
-                    ,country: {
-                        title: 'Country'
-                        ,width: '8%'
-                    }
-                    ,created: {
-                        title: 'Date Added'
-                        ,width: '15%'
-                        //,type: 'date'
-                        //,displayFormat: 'yy-mm-dd'
-                        ,create: false
-                        ,edit: false
-                    }
-                    ,creator: {
-                        title: 'Added By'
-                        ,width: '15%'
-                    }
-                }
-                ,recordAdded : function (event, data) {
-                    var record = data.record;
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.addresses) {
-                        var addresses = c.originator.person.addresses;
-                        var address = {};
-                        address.type = record.type;
-                        address.streetAddress = record.streetAddress;
-                        address.city = record.city;
-                        address.state = record.state;
-                        address.zip = record.zip;
-                        addresses.push(address);
-
-                        Complaint.Service.saveComplaint(c);
-                    }
-                }
-                ,recordUpdated : function (event, data) {
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var record = data.record;
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.addresses) {
-                        var addresses = c.originator.person.addresses;
-
-                        var address = addresses[whichRow];
-                        address.type = record.type;
-                        address.streetAddress = record.streetAddress;
-                        address.city = record.city;
-                        address.state = record.state;
-                        address.zip = record.zip;
-                        //address.created = record.created;   //created,creator is readonly
-                        //address.creator = record.creator;
-
-                        Complaint.Service.saveComplaint(c);
-                    }
-                }
-                ,recordDeleted : function (event, data) {
-                    var r = data.row;
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.addresses) {
-                        var addresses = c.originator.person.addresses;
-                        addresses.splice(whichRow, 1);
-                        Complaint.Service.saveComplaint(c);
-                    }
-                }
-            }
-            ,function (data) { //opened handler
-                data.childTable.jtable('load');
-            });
-    }
-    ,_closeInitiatorAliases: function($jt, $row) {
-        $jt.jtable('closeChildTable', $row.closest('tr'));
-    }
-    ,_openInitiatorAliases: function($jt, $row) {
-        $jt.jtable('openChildTable', $row.closest('tr')
-            ,{
-                title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
-                ,sorting: true
-                ,actions: {
-                    listAction: function(postData, jtParams) {
-                        var rc = AcmEx.Object.jTableGetEmptyRecords();
-                        var c = Complaint.getComplaint();
-                        if (c && c.originator && c.originator.person && c.originator.person.personAliases) {
-                            var personAliases = c.originator.person.personAliases;
-                            var cnt = personAliases.length;
-                            for (i = 0; i < cnt; i++) {
-                                rc.Records.push({personId: c.originator.id
-                                    //,id: personAliases[i].id
-                                    ,type: personAliases[i].type
-                                    ,value: personAliases[i].value
-                                    ,created: Acm.goodValue(personAliases[i].created)
-                                    ,creator: Acm.goodValue(personAliases[i].creator)
-                                });
-                            }
-                        }
-                        return rc;
-                    }
-                    ,createAction: function(postData, jtParams) {
-                        var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
-                        var c = Complaint.getComplaint();
-                        if (c & c.originator) {
-                            rc.Record.personId = c.originator.id;
-                            //rc.Record.id = parseInt(record.id);
-                            rc.Record.type = record.type;
-                            rc.Record.value = record.value;
-                            rc.Record.created = Acm.getCurrentDay(); //record.created;
-                            rc.Record.creator = App.getUserName();   //record.creator;
-                        }
-                        return rc;
-                    }
-                    ,updateAction: function(postData, jtParams) {
-                        var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
-                        var c = Complaint.getComplaint();
-                        if (c && c.originator) {
-                            rc.Record.personId = c.originator.id;
-                            //rc.Record.id = parseInt(record.id);           //no such field in postData, ignored
-                            rc.Record.type = record.type;
-                            rc.Record.value = record.value;
-                            rc.Record.created = record.created;
-                            rc.Record.creator = record.creator;
-                        }
-                        return rc;
-                    }
-                    ,deleteAction: function(postData, jtParams) {
-                        return {
-                            "Result": "OK"
-                        };
-                    }
-                }
-                ,fields: {
-                    personId: {
-                        type: 'hidden'
-                        ,defaultValue: 1 //commData.record.StudentId
-                    }
-                    ,type: {
-                        title: 'Type'
-                        ,width: '15%'
-                        ,options: Complaint.getAliasTypes()
-                    }
-                    ,value: {
-                        title: 'Value'
-                        ,width: '30%'
-                    }
-                    ,created: {
-                        title: 'Date Added'
-                        ,width: '20%'
-                        //,type: 'date'
-                        //,displayFormat: 'yy-mm-dd'
-                        ,create: false
-                        ,edit: false
-                    }
-                    ,creator: {
-                        title: 'Added By'
-                        ,width: '30%'
-                    }
-                }
-                ,recordAdded : function (event, data) {
-                    var record = data.record;
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.personAliases) {
-                        var personAliases = c.originator.person.personAliases;
-
-                        var personAliase = {};
-                        //personAliase.id = parseInt(record.id);
-                        personAliase.type = record.type;
-                        personAliase.value = record.value;
-                        //personAliase.created = record.created;   //created,creator is readonly
-                        //personAliase.creator = record.creator;
-                        personAliases.push(personAliase);
-
-                        Complaint.Service.saveComplaint(c);
-                    }
-                }
-                ,recordUpdated : function (event, data) {
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var record = data.record;
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.personAliases) {
-                        var personAliases = c.originator.person.personAliases;
-
-                        var personAliase = personAliases[whichRow];
-                        personAliase.type = record.type;
-                        personAliase.value = record.value;
-                        //contactMethod.created = record.created;   //created,creator is readonly
-                        //contactMethod.creator = record.creator;
-
-                        Complaint.Service.saveComplaint(c);
-                    }
-                }
-                ,recordDeleted : function (event, data) {
-                    var r = data.row;
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.personAliases) {
-                        var personAliases = c.originator.person.personAliases;
-                        personAliases.splice(whichRow, 1);
-                        Complaint.Service.saveComplaint(c);
-                    }
-                }
-            }
-            ,function (data) { //opened handler
-                data.childTable.jtable('load');
-            });
-    }
-    //----------------- end of Initiator -----------------------
-
-
-    //
-    //------------------ People ------------------
-    //
-//    ,refreshJTablePeople: function() {
-//        AcmEx.Object.jTableLoad(this.$divPeople);
-//    }
-    ,_getEmptyPerson: function() {
-        return {
-            id: null
-            ,title: ""
-            ,givenName: ""
-            ,familyName: ""
-            ,company: ""
-            ,addresses: []
-            ,contactMethods: []
-            ,securityTags: []
-            ,personAliases: []
-        };
-    }
-    ,_makePersonRecord: function(people) {
-//        var rc = {"Result": "OK", "Records": [{id:0, title:"", givenName:"", familyName:"", type:""}]};
-        var rc = AcmEx.Object.jTableGetEmptyRecords();
-        for (var i = 0; i < people.length; i++) {
-            var Record = {};
-            Record.id = Acm.goodValue(people[i].id);
-            Record.title = Acm.goodValue(people[i].title);
-            Record.givenName = Acm.goodValue(people[i].givenName);
-            Record.familyName = Acm.goodValue(people[i].familyName);
-            Record.personType = Acm.goodValue(people[i].personAssociations[0].personType);
-            Record.description = Acm.goodValue(people[i].personAssociations[0].description);
-
-            rc.Records.push(Record);
-        }
-        rc.TotalRecordCount = people.length;
-        return rc;
-    }
-    ,createJTablePeople: function($s) {
-        this._createJTable4SubTable($s, {
-            title: 'People'
-            ,paging: false
-            ,actions: {
-                listAction: function(postData, jtParams) {
-                    //var rc = {"Result": "OK", "Records": [{id:0, title:"", givenName:"", familyName:"", personType:"", description: ""}]};
-                    var rc = {"Result": "OK", "Records": []};
-                    var c = Complaint.getComplaint();
-                    if (c) {
-                        var persons = Complaint.cachePersonList.get(c.complaintId);
-                        if (persons) {
-                            rc = Complaint.JTable._makePersonRecord(persons);
+                    if (complaint) {
+                        if(complaint.originator && complaint.originator.person){
+                            //rc.Record.id = originatorPersonId;    // (record.id) is empty, do not assign;
+                            rc.Record.title = record.title;
+                            rc.Record.givenName = record.givenName;
+                            rc.Record.familyName = record.familyName;
+                            rc.Record.personType = record.personType;
+                            rc.Record.personDescription = record.personDescription;
                         }
                     }
                     return rc;
                 }
-/*                ,createAction: function(postData, jtParams) {
-                    var record = Acm.urlToJson(postData);
-                    var rc = {"Result": "OK", "Record": {}};
-                    //rc.Record.id = c.originator.person.id;
-                    rc.Record.title = record.title;
-                    rc.Record.givenName = record.givenName;
-                    rc.Record.familyName = record.familyName;
-                    rc.Record.personType = record.personType;
-                    rc.Record.description = record.description;
-                    return rc;
-                }*/
-                /*,updateAction: function(postData, jtParams) {
-                    var record = Acm.urlToJson(postData);
-                    var rc = {"Result": "OK", "Record": {}};
-                    rc.Record.title = record.title;
-                    rc.Record.givenName = record.givenName;
-                    rc.Record.familyName = record.familyName;
-                    rc.Record.personType = record.personType;
-                    rc.Record.description = record.description;
-                    return rc;
-                }
-                ,deleteAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                    };
-                }*/
             }
             ,fields: {
                 id: {
@@ -862,74 +176,761 @@ Complaint.JTable = {
                 }
                 ,personType: {
                     title: 'Type'
+                    ,options: Complaint.getPersonTypes()
+                }
+                ,personDescription: {
+                    title: 'Description'
+                    ,type: 'textarea'
+                    ,width: '30%'
+                }
+            }
+            ,recordUpdated: function(event, data){
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint.originator && complaint.originator.person)
+                {
+                    var originator = complaint.originator;
+                    var originatorPerson = complaint.originator.person;
+                    var originatorPersonId = 0;
+                    if (originatorPerson) {
+                        originatorPersonId = originatorPerson.id;
+                    }
+                    originator.personType = record.personType;
+                    originator.personDescription = record.personDescription;
+                    originatorPerson.title = record.title;
+                    originatorPerson.givenName = record.givenName;
+                    originatorPerson.familyName = record.familyName;
+                    Complaint.Service.saveComplaint(complaint);
+                }
+            }
+            ,formCreated: function (event, data) {
+                //to be used for typeahead in future
+                var a = data;
+                var z = 1;
+            }
+        });
+    }
+
+    ,_closeInitiatorDevices: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openInitiatorDevices: function($t, $row) {
+        $t.jtable('openChildTable', $row.closest('tr')
+            , {
+                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES, sorting: true, actions: {
+                    listAction: function (postData, jtParams) {
+                        var index = $row.closest('tr');
+                        var rc = AcmEx.Object.jTableGetEmptyRecords();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                var originatorPerson = complaint.originator.person;
+                                if (originatorPerson.contactMethods) {
+                                    var contactMethods = originatorPerson.contactMethods;
+                                    var cnt = contactMethods.length;
+                                    for (var i = 0; i < cnt; i++) {
+                                        rc.Records.push({
+                                            personId: originatorPerson.id,
+                                            type: contactMethods[i].type,
+                                            value: Acm.goodValue(contactMethods[i].value),
+                                            created: Acm.getDateFromDatetime(contactMethods[i].created),
+                                            creator: contactMethods[i].creator
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        return rc;
+                    }, createAction: function (postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.jTableGetEmptyRecord();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                var originatorPerson = complaint.originator.person;
+                                rc.Record.personId = originatorPerson.id;
+                                rc.Record.type = record.type;
+                                rc.Record.value = Acm.goodValue(record.value);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
+                        return rc;
+                    }, updateAction: function (postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.jTableGetEmptyRecord();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                rc.Record.type = record.type;
+                                rc.Record.value = Acm.goodValue(record.value);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
+                        return rc;
+                    }, deleteAction: function (postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
+                }, fields: {
+                    personId: {
+                        key: false, create: false, edit: false, list: false
+                    }, type: {
+                        title: 'Type', width: '15%', options: Complaint.getDeviceTypes()
+                    }, value: {
+                        title: 'Value', width: '30%'
+                    }, created: {
+                        title: 'Date Added', width: '20%', create: false, edit: false
+                    }, creator: {
+                        title: 'Added By', width: '30%', create: false, edit: false
+                    }
+                }, recordAdded: function (event, data) {
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            var originatorPerson = complaint.originator.person;
+                            if (originatorPerson.contactMethods) {
+                                var contactMethods = originatorPerson.contactMethods;
+                                var contactMethod = {};
+                                contactMethod.type = record.type;
+                                contactMethod.value = Acm.goodValue(record.value);
+                                contactMethods.push(contactMethod);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
+                }, recordUpdated: function (event, data) {
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            var originatorPerson = complaint.originator.person;
+                            if (originatorPerson.contactMethods) {
+                                var contactMethods = originatorPerson.contactMethods;
+                                var contactMethod = contactMethods[whichRow];
+                                contactMethod.type = record.type;
+                                contactMethod.value = Acm.goodValue(record.value);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
+                }, recordDeleted: function (event, data) {
+                    var r = data.row;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            var originatorPerson = complaint.originator.person;
+                            if (originatorPerson.contactMethods) {
+                                var contactMethods = originatorPerson.contactMethods;
+                                contactMethods.splice(whichRow, 1);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
+                }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+
+    }
+    ,_closeInitiatorOrganizations: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openInitiatorOrganizations: function($t, $row) {
+        $t.jtable('openChildTable', $row.closest('tr')
+            , {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS, sorting: true, actions: {
+                    listAction: function (postData, jtParams) {
+                        var index = $row.closest('tr');
+                        var rc = AcmEx.Object.jTableGetEmptyRecords();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                var originatorPerson = complaint.originator.person;
+                                if (originatorPerson.organizations) {
+                                    var organizations = originatorPerson.organizations;
+                                    var cnt = organizations.length;
+                                    for (var i = 0; i < cnt; i++) {
+                                        rc.Records.push({
+                                            personId: originatorPerson.id, type: organizations[i].organizationType, value: Acm.goodValue(organizations[i].organizationValue), created: Acm.getDateFromDatetime(organizations[i].created), creator: organizations[i].creator
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        return rc;
+                    }, createAction: function (postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.jTableGetEmptyRecord();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                var originatorPerson = complaint.originator.person;
+                                rc.Record.personId = originatorPerson.id;
+                                rc.Record.type = record.type;
+                                rc.Record.value = Acm.goodValue(record.value);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
+                        return rc;
+                    }, updateAction: function (postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.jTableGetEmptyRecord();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                rc.Record.type = record.type;
+                                rc.Record.value = Acm.goodValue(record.value);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
+                        return rc;
+                    }, deleteAction: function (postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
+                }, fields: {
+                    personId: {
+                        type: 'hidden', defaultValue: 1 //commData.record.StudentId
+                    }, id: {
+                        key: true, create: false, edit: false, list: false
+                    }, type: {
+                        title: 'Type', width: '15%', options: Complaint.getOrganizationTypes()
+                    }, value: {
+                        title: 'Value', width: '30%'
+                    }, createDate: {
+                        title: 'Date Added', width: '20%', create: false, edit: false
+                    }, createBy: {
+                        title: 'Added By', width: '30%'
+                    }
+                }, recordAdded: function (event, data) {
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            var originatorPerson = complaint.originator.person;
+                            if (originatorPerson.organizations) {
+                                var organizations = originatorPerson.organizations;
+                                var organization = {};
+                                organization.organizationType = record.type;
+                                organization.organizationValue = Acm.goodValue(record.value);
+                                organizations.push(organization);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
+                }, recordUpdated: function (event, data) {
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            var originatorPerson = complaint.originator.person;
+                            if (originatorPerson.organizations) {
+                                var organizations = originatorPerson.organizations;
+                                var organization = organizations[whichRow];
+                                organization.organizationType = record.type;
+                                organization.organizationValue = Acm.goodValue(record.value);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
+                }, recordDeleted: function (event, data) {
+                    var r = data.row;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            var originatorPerson = complaint.originator.person;
+                            if (originatorPerson.organizations) {
+                                var organizations = originatorPerson.organizations;
+                                organizations.splice(whichRow, 1);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
+                }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+    }
+    ,_closeInitiatorLocations: function($t, $row) {
+        $t.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openInitiatorLocations: function($t, $row) {
+        $t.jtable('openChildTable', $row.closest('tr')
+            , {
+                title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS, sorting: true, actions: {
+                    listAction: function (postData, jtParams) {
+                        var index = $row.closest('tr');
+                        var rc = AcmEx.Object.jTableGetEmptyRecords();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                var originatorPerson = complaint.originator.person;
+                                if (originatorPerson.addresses) {
+                                    var addresses = originatorPerson.addresses;
+                                    var cnt = addresses.length;
+                                    for (var i = 0; i < cnt; i++) {
+                                        rc.Records.push({
+                                            personId: originatorPerson.id, type: addresses[i].type, streetAddress: addresses[i].streetAddress, city: addresses[i].city, state: addresses[i].state, zip: Acm.goodValue(addresses[i].zip), created: Acm.getDateFromDatetime(addresses[i].created), creator: addresses[i].creator
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        return rc;
+                    }, createAction: function (postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.jTableGetEmptyRecord();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                var originatorPerson = complaint.originator.person;
+                                rc.Record.personId = originatorPerson.id;
+                                rc.Record.type = record.type;
+                                rc.Record.streetAddress = record.streetAddress;
+                                rc.Record.city = record.city;
+                                rc.Record.state = record.state;
+                                rc.Record.zip = Acm.goodValue(record.zip);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
+                        return rc;
+                    }, updateAction: function (postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.jTableGetEmptyRecord();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                var originatorPerson = originator.person;
+                                rc.Record.personId = originatorPerson.id;
+                                rc.Record.type = record.type;
+                                rc.Record.streetAddress = record.streetAddress;
+                                rc.Record.city = record.city;
+                                rc.Record.state = record.state;
+                                rc.Record.zip = Acm.goodValue(record.zip);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
+                        return rc;
+                    }, deleteAction: function (postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
+                }, fields: {
+                    personId: {
+                        type: 'hidden', defaultValue: 1 //commData.record.StudentId
+                    }, type: {
+                        title: 'Type', width: '8%', options: Complaint.getLocationTypes()
+                    }, streetAddress: {
+                        title: 'Address', width: '20%'
+                    }, city: {
+                        title: 'City', width: '10%'
+                    }, state: {
+                        title: 'State', width: '8%'
+                    }, zip: {
+                        title: 'Zip', width: '8%'
+                    }, country: {
+                        title: 'Country', width: '8%'
+                    }, created: {
+                        title: 'Date Added', width: '15%', create: false, edit: false
+                    }, creator: {
+                        title: 'Added By', width: '15%'
+                    }
+                }, recordAdded: function (event, data) {
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    var rc = {"Result": "OK", "Record": {}};
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            var originatorPerson = complaint.originator.person;
+                            if (originatorPerson.addresses) {
+                                var addresses = originatorPerson.addresses;
+                                var address = {};
+                                address.type = record.type;
+                                address.streetAddress = record.streetAddress;
+                                address.city = record.city;
+                                address.state = record.state;
+                                address.zip = record.zip;
+                                addresses.push(address);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
+                }, recordUpdated: function (event, data) {
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    var rc = {"Result": "OK", "Record": {}};
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            if (complaint.originator.person) {
+                                var originatorPerson = complaint.originator.person;
+                                if (originatorPerson.addresses) {
+                                    var addresses = originatorPerson.addresses;
+                                    var address = addresses[whichRow];
+                                    address.type = record.type;
+                                    address.streetAddress = record.streetAddress;
+                                    address.city = record.city;
+                                    address.state = record.state;
+                                    address.zip = record.zip;
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
+                            }
+                        }
+                    }
+                }, recordDeleted: function (event, data) {
+                    var r = data.row;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            var originatorPerson = complaint.originator.person;
+                            if (originatorPerson.addresses) {
+                                var addresses = originatorPerson.addresses;
+                                addresses.splice(whichRow, 1);
+                                Complaint.Service.savePerson(originator);
+                            }
+                        }
+                    }
+                }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+    }
+    ,_closeInitiatorAliases: function($jt, $row) {
+        $jt.jtable('closeChildTable', $row.closest('tr'));
+    }
+    ,_openInitiatorAliases: function($jt, $row) {
+        $jt.jtable('openChildTable', $row.closest('tr')
+            , {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES, sorting: true, actions: {
+                    listAction: function (postData, jtParams) {
+                        var index = $row.closest('tr');
+                        var rc = AcmEx.Object.jTableGetEmptyRecords();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                var originatorPerson = complaint.originator.person;
+                                if (originatorPerson.personAliases) {
+                                    var personAliases = originatorPerson.personAliases;
+                                    var cnt = personAliases.length;
+                                    for (var i = 0; i < cnt; i++) {
+                                        rc.Records.push({
+                                            personId: originatorPerson.id, type: personAliases[i].aliasType, value: Acm.goodValue(personAliases[i].aliasValue), created: Acm.getDateFromDatetime(personAliases[i].created), creator: personAliases[i].creator
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        return rc;
+                    }, createAction: function (postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.jTableGetEmptyRecord();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                var originatorPerson = complaint.originator.person;
+                                rc.Record.personId = originatorPerson.id;
+                                rc.Record.type = record.type;
+                                rc.Record.value = Acm.goodValue(record.value);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
+                        return rc;
+                    }, updateAction: function (postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.jTableGetEmptyRecord();
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.originator && complaint.originator.person) {
+                                var originatorPerson = complaint.originator.person;
+                                rc.Record.personId = originatorPerson.id;
+                                rc.Record.type = record.type;
+                                rc.Record.value = Acm.goodValue(record.value);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
+                        return rc;
+                    }, deleteAction: function (postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
+                }, fields: {
+                    aliasId: {
+                        type: 'hidden', defaultValue: 1 //commData.record.StudentId
+                    }, type: {
+                        title: 'Type', width: '15%', options: Complaint.getAliasTypes()
+                    }, value: {
+                        title: 'Value', width: '30%'
+                    }, created: {
+                        title: 'Date Added', width: '20%', create: false, edit: false
+                    }, creator: {
+                        title: 'Added By', width: '30%'
+                    }
+                }, recordAdded: function (event, data) {
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            var originatorPerson = complaint.originator.person;
+                            if (originatorPerson.personAliases) {
+                                var personAliases = originatorPerson.personAliases;
+                                var personAlias = {};
+                                personAlias.aliasType = record.type;
+                                personAlias.aliasValue = Acm.goodValue(record.value);
+                                personAliases.push(personAlias);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
+                }, recordUpdated: function (event, data) {
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    var rc = {"Result": "OK", "Record": {}};
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            var originatorPerson = complaint.originator.person;
+                            if (originatorPerson.personAliases) {
+                                if (originatorPerson.personAliases) {
+                                    var personAliases = originatorPerson.personAliases;
+                                    var personAlias = personAliases[whichRow];
+                                    personAlias.aliasType = record.type;
+                                    personAlias.aliasValue = Acm.goodValue(record.value);
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
+                            }
+                        }
+                    }
+                }, recordDeleted: function (event, data) {
+                    var r = data.row;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.originator && complaint.originator.person) {
+                            var originatorPerson = complaint.originator.person;
+                            if (originatorPerson.personAliases) {
+                                var personAliases = originatorPerson.personAliases;
+                                personAliases.splice(whichRow, 1);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
+                }
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
+    }
+    //----------------- end of Initiator -----------------------
+
+
+    //
+    //------------------ People ------------------
+    //
+//    ,refreshJTablePeople: function() {
+//        AcmEx.Object.jTableLoad(this.$divPeople);
+//    }
+    ,_getEmptyPerson: function() {
+        return {
+            id: null
+            ,title: ""
+            ,givenName: ""
+            ,familyName: ""
+            ,company: ""
+            ,weightInPounds: null
+            ,addresses: []
+            ,contactMethods: []
+            ,securityTags: []
+            ,personAliases: []
+        };
+    }
+
+    ,createJTablePeople: function($s) {
+        this._createJTable4SubTable($s, {
+            title: 'People'
+            ,paging: false
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var complaint = Complaint.getComplaint();
+                    if(complaint){
+                        //var assocId = complaint.originator.id;
+                        if(complaint.personAssociations){
+                            var personAssociations = complaint.personAssociations;
+                            var cnt = personAssociations.length;
+                            for (var i = 0; i < cnt; i++) {
+                                var person = personAssociations[i].person;
+                                if(!complaint.originator)
+                                {
+                                    if(personAssociations[i].personType != 'Initiator'){
+                                        rc.Records.push({
+                                            personId: person.id
+                                            ,title: person.title
+                                            ,givenName: person.givenName
+                                            ,familyName: person.familyName
+                                            ,personType: personAssociations[i].personType
+                                            ,personDescription: personAssociations[i].personDescription
+                                        });
+                                    }
+                                }
+                                else{
+                                    rc.Records.push({
+                                        personId: person.id
+                                        ,title: person.title
+                                        ,givenName: person.givenName
+                                        ,familyName: person.familyName
+                                        ,personType: personAssociations[i].personType
+                                        ,personDescription: personAssociations[i].personDescription
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    return rc;
+                }
+                ,createAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.personAssociations){
+                            rc.Record.title = record.title;
+                            rc.Record.givenName = record.givenName;
+                            rc.Record.familyName = record.familyName;
+                            rc.Record.personType = record.personType;
+                            rc.Record.personDescription = record.personDescription;
+                        }
+                    }
+                    return rc;
+                }
+                ,updateAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.personAssociations) {
+                            rc.Record.title = record.title;
+                            rc.Record.givenName = record.givenName;
+                            rc.Record.familyName = record.familyName;
+                            rc.Record.personType = record.personType;
+                            rc.Record.personDescription = record.personDescription;
+                        }
+                    }
+                    return rc;
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                       "Result": "OK"
+                    };
+                }
+            }
+            ,fields: {
+                personId: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                }
+                ,title: {
+                    title: 'Title'
+                    ,width: '10%'
+                    ,options: Complaint.getPersonTitles()
+                }
+                ,givenName: {
+                    title: 'First Name'
+                    ,width: '15%'
+                }
+                ,familyName: {
+                    title: 'Last Name'
+                    ,width: '15%'
+                }
+                ,personType: {
+                    title: 'Type'
                     //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
                     ,options: Complaint.getPersonTypes()
                 }
-                ,description: {
+                ,personDescription: {
                     title: 'Description'
-                        ,type: 'textarea'
-                        ,width: '30%'
+                    ,type: 'textarea'
+                    ,width: '30%'
                 }
             }
-            /*,recordAdded: function(event, data){
+            ,recordAdded: function(event, data){
                 var record = data.record;
-                var person = this._getEmptyPerson();
-                person.title = record.title;
-                person.givenName = record.givenName;
-                person.familyName = record.familyName;
-                person.personType[0].personType = record.type;
-                }
-
-                //$s.jtable('load');
-            }*/
-          /*  ,recordUpdated: function(event, data){
-                var record = data.record;
-                var c = Complaint.getComplaint();
-                var p = Complaint.cachePersonList.get(c.complaintId);
-                var person;
-                for (var i = 0; i < p.length; i++) {
-                    if (p[i].id == record.id) {
-                        person = p[i];
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    var personAssociations = complaint.personAssociations;
+                    var assocId = complaint.originator.id;
+                    if (complaint.personAssociations && assocId) {
+                        var person;
+                        person.personType = record.personType;
+                        person.personDescription = record.personDescription;
+                        person.title = record.title;
+                        person.givenName = record.givenName;
+                        person.familyName = record.familyName;
+                        Complaint.Service.saveComplaint(complaint);
                     }
                 }
-                var key = "personAssociations";
-                delete person[key];
-                var personUpdated = Complaint.JTable._getEmptyPerson();
-                personUpdated.id = person.id;
-                personUpdated.title = record.title;
+             }
 
-                personUpdated.givenName = record.givenName;
-                personUpdated.familyName = record.familyName;
-                personUpdated.company = person.company;
-                personUpdated.addresses = person.addresses;
-                personUpdated.contactMethods = person.contactMethods;
-                personUpdated.securityTags = person.securityTags;
-                personUpdated.personAliases = person.personAliases;
-
-
-                person.personAssociations[0].personType = record.type;
-                person.personAssociations[0].personDescription = record.description;
-                Complaint.Service.savePerson(personUpdated);
-
-            }
-            ,recordDeleted: function(event,data){
-                var r = data.row;
+            ,recordUpdated: function(event, data){
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                var c = Complaint.getComplaint;
-                var persons = Complaint.cachePersonList.get(c.complaintId);
-                var person;
-                for (var i = 0; i < p.length; i++) {
-                    if (persons[i].id == r.id) {
-                        person = persons[i];
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    //var assocId = complaint.originator.id;
+                    if (complaint.personAssociations) {
+                        var personAssociations = complaint.personAssociations;
+                        if(personAssociations[whichRow].person){
+                            var person = personAssociations[whichRow].person;
+                            personAssociations[whichRow].personType = record.personType;
+                            personAssociations[whichRow].personDescription = record.personDescription;
+                            person.title = record.title;
+                            person.givenName = record.givenName;
+                            person.familyName = record.familyName;
+                            Complaint.Service.saveComplaint(complaint);
+                        }
                     }
                 }
-                if (person) {
-                    persons.splice(whichRow, 1);
-                    Complaint.Service.savePerson(person);
+            }
+            ,recordDeleted: function(event,data) {
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    //var assocId = complaint.originator.id;
+                    if (complaint.personAssociations) {
+                        var personAssociations = complaint.personAssociations;
+                        if (personAssociations[whichRow].person) {
+                            var person = personAssociations[whichRow].person;
+                            personAssociations.splice(whichRow, 1);
+                            Complaint.Service.savePerson(complaint);
+                        }
+                    }
                 }
-            }*/
+            }
         });
-
     }
 
     ,_closePeopleDevices: function($t, $row) {
@@ -943,70 +944,74 @@ Complaint.JTable = {
                 ,sorting: true
                 ,actions: {
                     listAction: function(postData, jtParams) {
+                        var index = $row.closest('tr');
                         var rc = AcmEx.Object.jTableGetEmptyRecords();
-                        var c = Complaint.getComplaint();
-                        if (c && c.originator && c.originator.person && c.originator.person.contactMethods) {
-                            var contactMethods = c.originator.person.contactMethods;
-                            var cnt = contactMethods.length;
-                            for (i = 0; i < cnt; i++) {
-                                rc.Records.push({personId: c.originator.id
-                                    //,id: contactMethods[i].id
-                                    ,type: contactMethods[i].type
-                                    ,value: contactMethods[i].value
-                                    ,created: Acm.goodValue(contactMethods[i].created)
-                                    ,creator: Acm.goodValue(contactMethods[i].creator)
-                                });
+                        var complaint = Complaint.getComplaint();
+                        if(complaint){
+                            //var assocId = complaint.originator.id;
+                            if(complaint.personAssociations){
+                                var personAssociations = complaint.personAssociations;
+                                if(personAssociations[index].person){
+                                    var person = personAssociations[index].person;
+                                    if(person.contactMethods) {
+                                        var contactMethods = person.contactMethods;
+                                        var cnt = contactMethods.length;
+                                        for (var i = 0; i < cnt; i++) {
+                                            rc.Records.push({
+                                                personId: person.id
+                                                ,type: contactMethods[i].type
+                                                ,value: Acm.goodValue(contactMethods[i].value)
+                                                ,created: Acm.getDateFromDatetime(contactMethods[i].created)
+                                                ,creator: contactMethods[i].creator
+                                            });
+                                        }
+                                    }
+                                }
                             }
                         }
                         return rc;
-//                        return {
-//                            "Result": "OK"
-//                            ,"Records": [
-//                                { "personId":  1, "id": "a", "type": "Phone", "value": "703-123-5678", "created": "01-02-03", "creator": "123 do re mi" }
-//                                ,{ "personId": 2, "id": "b", "type": "Email", "value": "doe@gmail.com", "created": "14-05-15", "creator": "xyz abc" }
-//                            ]
-//                            //,"TotalRecordCount": 2
-//                        };
-
                     }
                     ,createAction: function(postData, jtParams) {
+                        var index = $row.closest('tr');
                         var record = Acm.urlToJson(postData);
                         var rc = AcmEx.Object.jTableGetEmptyRecord();
-                        var c = Complaint.getComplaint();
-                        if (c & c.originator) {
-                            rc.Record.personId = c.originator.id;
-                            //rc.Record.id = parseInt(record.id);
-                            rc.Record.type = record.type;
-                            rc.Record.value = record.value;
-                            rc.Record.created = Acm.getCurrentDay(); //record.created;
-                            rc.Record.creator = App.getUserName();   //record.creator;
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            //var assocId = complaint.originator.id;
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                if (personAssociations[index].person) {
+                                    var person = personAssociations[index].person;
+                                    rc.Record.personId = person.id;
+                                    rc.Record.type = record.type;
+                                    rc.Record.value = Acm.goodValue(record.value);
+                                    rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                    rc.Record.creator = App.getUserName();   //record.creator;
+                                }
+                            }
                         }
                         return rc;
-//                        return {
-//                            "Result": "OK"
-//                            ,"Record":
-//                            { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "created": "01-02-03", "creator": "test" }
-//                        };
                     }
                     ,updateAction: function(postData, jtParams) {
+                        var index = $row.closest('tr');
                         var record = Acm.urlToJson(postData);
                         var rc = AcmEx.Object.jTableGetEmptyRecord();
-                        var c = Complaint.getComplaint();
-                        if (c && c.originator) {
-                            rc.Record.personId = c.originator.id;
-                            //rc.Record.id = parseInt(record.id);           //no such field in postData, ignored
-                            rc.Record.type = record.type;
-                            rc.Record.value = record.value;
-                            rc.Record.created = record.created;
-                            rc.Record.creator = record.creator;
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            //var assocId = complaint.originator.id;
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                if (personAssociations[index].person) {
+                                    var person = personAssociations[index].person;
+                                    rc.Record.personId = person.id;
+                                    rc.Record.type = record.type;
+                                    rc.Record.value = Acm.goodValue(record.value);
+                                    rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                    rc.Record.creator = App.getUserName();   //record.creator;
+                                }
+                            }
                         }
                         return rc;
-//                        return {
-//                            "Result": "OK"
-//                            ,"Record":
-//                            { "personId": 3, "id": "c", "type": "Phone", "value": "703-123-9999", "created": "01-02-03", "creator": "test" }
-//                        };
-
                     }
                     ,deleteAction: function(postData, jtParams) {
                         return {
@@ -1052,46 +1057,67 @@ Complaint.JTable = {
                     }
                 }
                 ,recordAdded : function (event, data) {
+                    var index = $row.closest('tr');
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                     var record = data.record;
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.contactMethods) {
-                        var contactMethods = c.originator.person.contactMethods;
-
-                        var contactMethod = {};
-                        //contactMethod.id = parseInt(record.id);
-                        contactMethod.type = record.type;
-                        contactMethod.value = record.value;
-                        //contactMethod.created = record.created;   //created,creator is readonly
-                        //contactMethod.creator = record.creator;
-                        contactMethods.push(contactMethod);
-
-                        Complaint.Service.saveComplaint(c);
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        //var assocId = complaint.originator.id;
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            if (personAssociations[whichRow].person) {
+                                var person = personAssociations[whichRow].person;
+                                if (person.contactMethods) {
+                                    var contactMethods = person.contactMethods;
+                                    var contactMethod = {};
+                                    contactMethod.type = record.type;
+                                    contactMethod.value = Acm.goodValue(record.value);
+                                    contactMethods.push(contactMethod);
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
+                            }
+                        }
                     }
                 }
                 ,recordUpdated : function (event, data) {
+                    var index = $row.closest('tr');
                     var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                     var record = data.record;
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.contactMethods) {
-                        var contactMethods = c.originator.person.contactMethods;
-
-                        var contactMethod = contactMethods[whichRow];
-                        contactMethod.type = record.type;
-                        contactMethod.value = record.value;
-                        //contactMethod.created = record.created;   //created,creator is readonly
-                        //contactMethod.creator = record.creator;
-
-                        Complaint.Service.saveComplaint(c);
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        //var assocId = complaint.originator.id;
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            if (personAssociations[whichRow].person) {
+                                var person = personAssociations[whichRow].person;
+                                if (person.contactMethods) {
+                                    var contactMethods = person.contactMethods;
+                                    var contactMethod = contactMethods[whichRow];
+                                    contactMethod.type = record.type;
+                                    contactMethod.value = Acm.goodValue(record.value);
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
+                            }
+                        }
                     }
                 }
                 ,recordDeleted : function (event, data) {
                     var r = data.row;
                     var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.contactMethods) {
-                        var contactMethods = c.originator.person.contactMethods;
-                        contactMethods.splice(whichRow, 1);
-                        Complaint.Service.saveComplaint(c);
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        //var assocId = complaint.originator.id;
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            if (personAssociations[whichRow].person) {
+                                var person = personAssociations[whichRow].person;
+                                if (person.contactMethods) {
+                                    var contactMethods = person.contactMethods;
+                                    contactMethods.splice(whichRow, 1);
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1109,69 +1135,172 @@ Complaint.JTable = {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
                 //,paging: true
                 //,pageSize: 10
-                ,sorting: true
-                ,actions: {
-                listAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                        ,"Records": [
-                            { "personId":  1, "id": "a", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "123 do re mi" }
-                            ,{ "personId": 2, "id": "b", "type": "gov", "value": "IRS", "createDate": "14-05-15", "createBy": "xyz abc" }
-                        ]
-                        //,"TotalRecordCount": 2
-                    };
+                , sorting: true, actions: {
+                listAction: function (postData, jtParams) {
+                    var index = $row.closest('tr');
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var complaint = Complaint.getComplaint();
+                    if(complaint){
+                        //var assocId = complaint.originator.id;
+                        if(complaint.personAssociations){
+                            var personAssociations = complaint.personAssociations;
+                            if(personAssociations[index].person){
+                                var person = personAssociations[index].person;
+                                if(person.organizations) {
+                                    var organizations = person.organizations;
+                                    var cnt = organizations.length;
+                                    for (var i = 0; i < cnt; i++) {
+                                        rc.Records.push({
+                                            personId: person.id,
+                                            type: organizations[i].type,
+                                            value: Acm.goodValue(organizations[i].value),
+                                            created: Acm.getDateFromDatetime(organizations[i].created),
+                                            creator: organizations[i].creator
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                ,createAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                        ,"Record":
-                        { "personId": 3, "id": "c", "type": "com", "value": "ABC, Inc.", "createDate": "01-02-03", "createBy": "test" }
-                    };
+                , createAction: function (postData, jtParams) {
+                    var index = $row.closest('tr');
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        //var assocId = complaint.originator.id;
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            if (personAssociations[index].person) {
+                                var person = personAssociations[index].person;
+                                rc.Record.personId = person.id;
+                                rc.Record.type = record.type;
+                                rc.Record.value = Acm.goodValue(record.value);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
+                    }
+                    return rc;
                 }
-                ,updateAction: function(postData, jtParams) {
-                    return {
-                        "Result": "OK"
-                        ,"Record":
-                        { "personId": 3, "id": "c", "type": "gov", "value": "IRS", "createDate": "01-02-03", "createBy": "test" }
-                    };
-                }
-                ,deleteAction: function(postData, jtParams) {
+                , updateAction: function (postData, jtParams) {
+                    var index = $row.closest('tr');
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        //var assocId = complaint.originator.id;
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            if (personAssociations[index].person) {
+                                var person = personAssociations[index].person;
+                                rc.Record.personId = person.id;
+                                rc.Record.type = record.type;
+                                rc.Record.value = Acm.goodValue(record.value);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
+                    }
+                }, deleteAction: function (postData, jtParams) {
                     return {
                         "Result": "OK"
                     };
                 }
             }
-                ,fields: {
+            , fields: {
                 personId: {
-                    type: 'hidden'
-                    ,defaultValue: 1 //commData.record.StudentId
+                    type: 'hidden',
+                    defaultValue: 1 //commData.record.StudentId
                 }
-                ,id: {
-                    key: true
-                    ,create: false
-                    ,edit: false
-                    ,list: false
+                , id: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
                 }
-                ,type: {
-                    title: 'Type'
-                    ,width: '15%'
-                    ,options: Complaint.getOrganizationTypes()
+                , type: {
+                    title: 'Type',
+                    width: '15%',
+                    options: Complaint.getOrganizationTypes()
                 }
-                ,value: {
-                    title: 'Value'
-                    ,width: '30%'
+                , value: {
+                    title: 'Value',
+                    width: '30%'
                 }
-                ,createDate: {
-                    title: 'Date Added'
-                    ,width: '20%'
-                    //,type: 'date'
-                    //,displayFormat: 'yy-mm-dd'
-                    ,create: false
-                    ,edit: false
+                , createDate: {
+                    title: 'Date Added',
+                    width: '20%',
+                    create: false,
+                    edit: false
                 }
-                ,createBy: {
-                    title: 'Added By'
-                    ,width: '30%'
+                , createBy: {
+                    title: 'Added By',
+                    width: '30%'
+                }
+            }
+            , recordAdded: function (event, data) {
+                var index = $row.closest('tr');
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    //var assocId = complaint.originator.id;
+                    if (complaint.personAssociations) {
+                        var personAssociations = complaint.personAssociations;
+                        if (personAssociations[index].person) {
+                            var person = personAssociations[index].person;
+                            if (person.organizations) {
+                                var organizations = person.organizations;
+                                var organization = {};
+                                organization.organizationType = record.type;
+                                organization.organizationValue = Acm.goodValue(record.value);
+                                organizations.push(organization);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
+                }
+            }
+            , recordUpdated: function (event, data) {
+                var index = $row.closest('tr');
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    //var assocId = complaint.originator.id;
+                    if (complaint.personAssociations) {
+                        var personAssociations = complaint.personAssociations;
+                        if (personAssociations[index].person) {
+                            var person = personAssociations[index].person;
+                            if (person.organizations) {
+                                var organizations = person.organizations;
+                                var organization = organizations[whichRow];
+                                organization.organizationType = record.type;
+                                organization.organizationValue = Acm.goodValue(record.value);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
+                }
+            }
+            , recordDeleted: function (event, data) {
+                var r = data.row;
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    //var assocId = complaint.originator.id;
+                    if (complaint.personAssociations) {
+                        var personAssociations = complaint.personAssociations;
+                        if (personAssociations[index].person) {
+                            var person = personAssociations[index].person;
+                            if (person.organizations) {
+                                var organizations = person.organizations;
+                                organizations.splice(whichRow, 1);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
                 }
             }
             }
@@ -1192,76 +1321,83 @@ Complaint.JTable = {
                 ,sorting: true
                 ,actions: {
                 listAction: function(postData, jtParams) {
+                    var index = $row.closest('tr');
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.addresses) {
-                        var addresses = c.originator.person.addresses;
-                        var cnt = addresses.length;
-                        for (i = 0; i < cnt; i++) {
-                            rc.Records.push({personId: c.originator.id
-                                //,id: addresses[i].id
-                                ,type: addresses[i].type
-                                ,streetAddress: addresses[i].streetAddress
-                                ,city: addresses[i].city
-                                ,state: addresses[i].state
-                                ,zip: addresses[i].zip
-                                ,created: Acm.goodValue(addresses[i].created)
-                                ,creator: Acm.goodValue(addresses[i].creator)
-                            });
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        //var assocId = complaint.originator.id;
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            if (personAssociations[index].person) {
+                                var person = personAssociations[index].person;
+                                if (person.addresses) {
+                                    var addresses = person.addresses;
+                                    var cnt = addresses.length;
+                                    for (var i = 0; i < cnt; i++) {
+                                        rc.Records.push({
+                                            personId : person.id
+                                            , type: addresses[i].type
+                                            , streetAddress: addresses[i].streetAddress
+                                            , city: addresses[i].city
+                                            , state: addresses[i].state
+                                            , zip: Acm.goodValue(addresses[i].zip)
+                                            , created: Acm.getDateFromDatetime(addresses[i].created)
+                                            , creator: addresses[i].creator
+                                        });
+                                    }
+                                }
+                            }
                         }
                     }
                     return rc;
                 }
-                /*  return {
-                 "Result": "OK"
-                 ,"Records": [
-                 { "personId":  1, "id": "a", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "123 do re mi" }
-                 ,{ "personId": 2, "id": "b", "type": "Office", "address": "999 Fairfax Blvd #201, Fairfax, VA 22030", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "14-05-15", "createBy": "xyz abc" }
-                 ]
-                 //,"TotalRecordCount": 2
-                 };*/
-
                 ,createAction: function(postData, jtParams) {
+                    var index = $row.closest('tr');
                     var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
-                    var c = Complaint.getComplaint();
-                    if (c & c.originator) {
-                        rc.Record.personId = c.originator.id;
-                        rc.Record.type = record.type;
-                        rc.Record.streetAddress = record.streetAddress;
-                        rc.Record.city = record.city;
-                        rc.Record.state = record.state;
-                        rc.Record.zip = record.zip;
-                        rc.Record.created = Acm.getCurrentDay(); //record.created;
-                        rc.Record.creator = App.getUserName();   //record.creator;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        //var assocId = complaint.originator.id;
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            if (personAssociations[index].person) {
+                                var person = personAssociations[index].person;
+                                rc.Record.personId = person.id;
+                                rc.Record.type = record.type;
+                                rc.Record.streetAddress = record.streetAddress;
+                                rc.Record.city = record.city;
+                                rc.Record.state = record.state;
+                                rc.Record.zip = record.zip;
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
                     }
                     return rc;
-                    /*return {
-                     "Result": "OK"
-                     ,"Record":
-                     { "personId": 3, "id": "c", "type": "Home", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
-                     };*/
                 }
                 ,updateAction: function(postData, jtParams) {
+                    var index = $row.closest('tr');
                     var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator) {
-                        rc.Record.personId = c.originator.id;
-                        rc.Record.type = record.type;
-                        rc.Record.streetAddress = record.streetAddress;
-                        rc.Record.city = record.city;
-                        rc.Record.state = record.state;
-                        rc.Record.zip = record.zip;
-                        rc.Record.created = record.created;
-                        rc.Record.creator = record.creator;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        //var assocId = complaint.originator.id;
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            if (personAssociations[index].person) {
+                                var person = personAssociations[index].person;
+                                rc.Record.personId = person.id;
+                                rc.Record.type = record.type;
+                                rc.Record.streetAddress = record.streetAddress;
+                                rc.Record.city = record.city;
+                                rc.Record.state = record.state;
+                                rc.Record.zip = record.zip;
+                                rc.Record.created = record.created;
+                                rc.Record.creator = record.creator;
+                            }
+                        }
                     }
                     return rc;
-                    /*return {
-                     "Result": "OK"
-                     ,"Record":
-                     { "personId": 3, "id": "c", "type": "Hotel", "address": "123 Main St", "city": "Vienna", "state": "VA", "zip": "22000", "country": "US", "createDate": "01-02-03", "createBy": "test" }
-                     };*/
                 }
                 ,deleteAction: function(postData, jtParams) {
                     return {
@@ -1270,7 +1406,7 @@ Complaint.JTable = {
                 }
             }
 
-                ,fields: {
+            ,fields: {
                 personId: {
                     type: 'hidden'
                     ,defaultValue: 1 //commData.record.StudentId
@@ -1319,49 +1455,73 @@ Complaint.JTable = {
                     ,width: '15%'
                 }
             }
-                ,recordAdded : function (event, data) {
+            ,recordAdded : function (event, data) {
+                var index = $row.closest('tr');
                 var record = data.record;
-                var c = Complaint.getComplaint();
-                if (c && c.originator && c.originator.person && c.originator.person.addresses) {
-                    var addresses = c.originator.person.addresses;
-                    var address = {};
-                    address.type = record.type;
-                    address.streetAddress = record.streetAddress;
-                    address.city = record.city;
-                    address.state = record.state;
-                    address.zip = record.zip;
-                    addresses.push(address);
-
-                    Complaint.Service.saveComplaint(c);
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    //var assocId = complaint.originator.id;
+                    if (complaint.personAssociations) {
+                        var personAssociations = complaint.personAssociations;
+                        if (personAssociations[index].person) {
+                            var person = personAssociations[index].person;
+                            if (person.addresses) {
+                                var addresses = person.addresses;
+                                var address = {};
+                                address.type = record.type;
+                                address.streetAddress = record.streetAddress;
+                                address.city = record.city;
+                                address.state = record.state;
+                                address.zip = record.zip;
+                                addresses.push(address);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
                 }
             }
-                ,recordUpdated : function (event, data) {
+            ,recordUpdated : function (event, data) {
+                var index = $row.closest('tr');
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                 var record = data.record;
-                var c = Complaint.getComplaint();
-                if (c && c.originator && c.originator.person && c.originator.person.addresses) {
-                    var addresses = c.originator.person.addresses;
-
-                    var address = addresses[whichRow];
-                    address.type = record.type;
-                    address.streetAddress = record.streetAddress;
-                    address.city = record.city;
-                    address.state = record.state;
-                    address.zip = record.zip;
-                    //address.created = record.created;   //created,creator is readonly
-                    //address.creator = record.creator;
-
-                    Complaint.Service.saveComplaint(c);
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    //var assocId = complaint.originator.id;
+                    if (complaint.personAssociations) {
+                        var personAssociations = complaint.personAssociations;
+                        if (personAssociations[index].person) {
+                            var person = personAssociations[index].person;
+                            if (person.addresses) {
+                                var addresses = person.addresses;
+                                var address = addresses[whichRow];
+                                address.type = record.type;
+                                address.streetAddress = record.streetAddress;
+                                address.city = record.city;
+                                address.state = record.state;
+                                address.zip = record.zip;
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
                 }
             }
-                ,recordDeleted : function (event, data) {
+            ,recordDeleted : function (event, data) {
                 var r = data.row;
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                var c = Complaint.getComplaint();
-                if (c && c.originator && c.originator.person && c.originator.person.addresses) {
-                    var addresses = c.originator.person.addresses;
-                    addresses.splice(whichRow, 1);
-                    Complaint.Service.saveComplaint(c);
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    //var assocId = complaint.originator.id;
+                    if (complaint.personAssociations) {
+                        var personAssociations = complaint.personAssociations;
+                        if (personAssociations[index].person) {
+                            var person = personAssociations[index].person;
+                            if (person.addresses) {
+                                var addresses = person.addresses;
+                                addresses.splice(whichRow, 1);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
                 }
             }
             }
@@ -1382,72 +1542,74 @@ Complaint.JTable = {
                 ,sorting: true
                 ,actions: {
                 listAction: function(postData, jtParams) {
+                    var index = $row.closest('tr');
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator && c.originator.person && c.originator.person.personAliases) {
-                        var personAliases = c.originator.person.personAliases;
-                        var cnt = personAliases.length;
-                        for (i = 0; i < cnt; i++) {
-                            rc.Records.push({personId: c.originator.id
-                                //,id: personAliases[i].id
-                                ,type: personAliases[i].type
-                                ,value: personAliases[i].value
-                                ,created: Acm.goodValue(personAliases[i].created)
-                                ,creator: Acm.goodValue(personAliases[i].creator)
-                            });
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        //var assocId = complaint.originator.id;
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            if (personAssociations[index].person) {
+                                var person = personAssociations[index].person;
+                                if (person.personAliases) {
+                                    var personAliases = person.personAliases;
+                                    var cnt = personAliases.length;
+                                    for (var i = 0; i < cnt; i++) {
+                                        rc.Records.push({
+                                            personId: person.id
+                                            ,type: personAliases[i].type
+                                            ,value: Acm.goodValue(personAliases[i].value)
+                                            ,created: Acm.getDateFromDatetime(personAliases[i].created)
+                                            ,creator: personAliases[i].creator
+                                        });
+                                    }
+                                }
+                            }
                         }
                     }
                     return rc;
-
-
-                    /*   return {
-                     "Result": "OK"
-                     ,"Records": [
-                     { "personId":  1, "id": "a", "type": "Nick Name", "value": "JJ", "createDate": "01-02-03", "createBy": "123 do re mi" }
-                     ,{ "personId": 2, "id": "b", "type": "Some Name", "value": "Ice Man", "createDate": "14-05-15", "createBy": "xyz abc" }
-                     ]
-                     //,"TotalRecordCount": 2
-                     };*/
                 }
                 ,createAction: function(postData, jtParams) {
+                    var index = $row.closest('tr');
                     var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
-                    var c = Complaint.getComplaint();
-                    if (c & c.originator) {
-                        rc.Record.personId = c.originator.id;
-                        //rc.Record.id = parseInt(record.id);
-                        rc.Record.type = record.type;
-                        rc.Record.value = record.value;
-                        rc.Record.created = Acm.getCurrentDay(); //record.created;
-                        rc.Record.creator = App.getUserName();   //record.creator;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        //var assocId = complaint.originator.id;
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            if (personAssociations[index].person) {
+                                var person = personAssociations[index].person;
+                                rc.Record.personId = person.id;
+                                rc.Record.type = record.type;
+                                rc.Record.value = Acm.goodValue(record.value);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
                     }
                     return rc;
-
-                    /* return{
-                     "Result": "OK"
-                     ,"Record":
-                     { "personId": 3, "id": "c", "type": "Nick Name", "value": "Ice Man", "createDate": "01-02-03", "createBy": "test" }
-                     };*/
                 }
                 ,updateAction: function(postData, jtParams) {
+                    var index = $row.closest('tr');
                     var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
-                    var c = Complaint.getComplaint();
-                    if (c && c.originator) {
-                        rc.Record.personId = c.originator.id;
-                        //rc.Record.id = parseInt(record.id);           //no such field in postData, ignored
-                        rc.Record.type = record.type;
-                        rc.Record.value = record.value;
-                        rc.Record.created = record.created;
-                        rc.Record.creator = record.creator;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        //var assocId = complaint.originator.id;
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            if (personAssociations[index].person) {
+                                var person = personAssociations[index].person;
+                                rc.Record.personId = person.id;
+                                rc.Record.type = record.type;
+                                rc.Record.value = Acm.goodValue(record.value);
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                        }
                     }
                     return rc;
-
-                    /*return {
-                     "Result": "OK"
-                     ,"Record":
-                     { "personId": 3, "id": "c", "type": "Nick Name", "value": "Big Man", "createDate": "01-02-03", "createBy": "test" }
-                     };*/
                 }
                 ,deleteAction: function(postData, jtParams) {
                     return {
@@ -1455,7 +1617,7 @@ Complaint.JTable = {
                     };
                 }
             }
-                ,fields: {
+            ,fields: {
                 personId: {
                     type: 'hidden'
                     ,defaultValue: 1 //commData.record.StudentId
@@ -1478,8 +1640,6 @@ Complaint.JTable = {
                 ,created: {
                     title: 'Date Added'
                     ,width: '20%'
-                    //,type: 'date'
-                    //,displayFormat: 'yy-mm-dd'
                     ,create: false
                     ,edit: false
                 }
@@ -1488,47 +1648,66 @@ Complaint.JTable = {
                     ,width: '30%'
                 }
             }
-                ,recordAdded : function (event, data) {
+            ,recordAdded : function (event, data) {
+                var index = $row.closest('tr');
                 var record = data.record;
-                var c = Complaint.getComplaint();
-                if (c && c.originator && c.originator.person && c.originator.person.personAliases) {
-                    var personAliases = c.originator.person.personAliases;
-
-                    var personAliase = {};
-                    //personAliase.id = parseInt(record.id);
-                    personAliase.type = record.type;
-                    personAliase.value = record.value;
-                    //personAliase.created = record.created;   //created,creator is readonly
-                    //personAliase.creator = record.creator;
-                    personAliases.push(personAliase);
-
-                    Complaint.Service.saveComplaint(c);
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    var personAssociations = complaint.personAssociations;
+                    var assocId = complaint.originator.id;
+                    if (personAssociations && assocId) {
+                        var person = personAssociations[index].person;
+                        if (person) {
+                            var personAliases = person.personAliases;
+                            if (personAliases) {
+                                var personAlias = {};
+                                personAlias.aliasType = record.type;
+                                personAlias.aliasValue = Acm.goodValue(record.value);
+                                personAliases.push(personAlias);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
                 }
             }
-                ,recordUpdated : function (event, data) {
+            ,recordUpdated : function (event, data) {
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                 var record = data.record;
-                var c = Complaint.getComplaint();
-                if (c && c.originator && c.originator.person && c.originator.person.personAliases) {
-                    var personAliases = c.originator.person.personAliases;
-
-                    var personAliase = personAliases[whichRow];
-                    personAliase.type = record.type;
-                    personAliase.value = record.value;
-                    //contactMethod.created = record.created;   //created,creator is readonly
-                    //contactMethod.creator = record.creator;
-
-                    Complaint.Service.saveComplaint(c);
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    //var assocId = complaint.originator.id;
+                    if (complaint.personAssociations) {
+                        var personAssociations = complaint.personAssociations;
+                        if (personAssociations[index].person) {
+                            var person = personAssociations[index].person;
+                            if (person.personAliases) {
+                                var personAliases = person.personAliases;
+                                var personAlias = personAliases[whichRow];
+                                personAlias.type = record.type;
+                                personAlias.value = Acm.goodValue(record.value);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
                 }
             }
-                ,recordDeleted : function (event, data) {
+            ,recordDeleted : function (event, data) {
                 var r = data.row;
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                var c = Complaint.getComplaint();
-                if (c && c.originator && c.originator.person && c.originator.person.personAliases) {
-                    var personAliases = c.originator.person.personAliases;
-                    personAliases.splice(whichRow, 1);
-                    Complaint.Service.saveComplaint(c);
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    //var assocId = complaint.originator.id;
+                    if (complaint.personAssociations) {
+                        var personAssociations = complaint.personAssociations;
+                        if (personAssociations[index].person) {
+                            var person = personAssociations[index].person;
+                            if (person.personAliases) {
+                                var personAliases = person.personAliases;
+                                personAliases.splice(whichRow, 1);
+                                Complaint.Service.saveComplaint(complaint);
+                            }
+                        }
+                    }
                 }
             }
             }
@@ -1700,7 +1879,7 @@ Complaint.JTable = {
                                             Record.priority = "[priority]";
                                             Record.dueDate = "[due]";
                                             Record.status = Acm.goodValue(response.docs[i].status_s);
-                                            Record.assignee = "[assignee]";
+                                            Record.assignee = response.docs[i].assignee_s;
                                             rc.jtData.Records.push(Record);
 
                                         }
@@ -1736,6 +1915,7 @@ Complaint.JTable = {
                     ,title: {
                         title: 'Title'
                         ,width: '30%'
+                        ,sorting: false
                     }
                     ,created: {
                         title: 'Created'
@@ -1750,10 +1930,10 @@ Complaint.JTable = {
                     ,dueDate: {
                         title: 'Due'
                         ,width: '15%'
-                        ,sorting: false
+                        ,sorting: true
                     }
                     ,status: {
-                        title: 'status'
+                        title: 'Status'
                         ,width: '10%'
                         ,sorting: false
                     }
