@@ -9,7 +9,9 @@ var Login = Login || {
         sessionStorage.setItem("AcmComplaintTypes", null);
         sessionStorage.setItem("AcmPriorities", null);
         sessionStorage.setItem("AcmQuickSearchTerm", null);
+        sessionStorage.setItem("AcmAsnList", null);
     }
+
 
 };
 

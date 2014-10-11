@@ -9,18 +9,17 @@ var Topbar = Topbar || {
         Topbar.Event.initialize();
         Topbar.Page.initialize();
         Topbar.Rule.initialize();
-        Topbar.Service.initialize();
+        //Topbar.Service.initialize();
         Topbar.Callback.initialize();
 
-        Acm.deferred(Topbar.Event.onPostInit);
-    }
+        if (Topbar.Model.create)      {Topbar.Model.create();}
+        if (Topbar.View.create)       {Topbar.View.create();}
+        if (Topbar.Controller.create) {Topbar.Controller.create();}
 
-//    ,Object: {}
-//    ,Event:{}
-//    ,Page: {}
-//    ,Rule: {}
-//    ,Service: {}
-//    ,Callback: {}
+        //if (Topbar.Model.initialize)      {Acm.deferred(Topbar.Model.initialize);}
+        //if (Topbar.View.initialize)       {Acm.deferred(Topbar.View.initialize);}
+        if (Topbar.Controller.initialize) {Acm.deferred(Topbar.Controller.initialize);}
+    }
 
 };
 

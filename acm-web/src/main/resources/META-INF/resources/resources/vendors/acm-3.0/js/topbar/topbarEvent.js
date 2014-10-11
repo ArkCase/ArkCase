@@ -55,10 +55,12 @@ Topbar.Event = {
 //        this.$divAsnList.empty();
 //        this.$divAsnList.prev().hide();
 //        this.$divAsnList.next().hide();
-//        $msg.hide().prependTo(this.$divAsnList).slideDown()
+//        $msg.hide().prependTo(this.$divAsnList)
+//            .slideDown()
 //            //.css('display','block')
 //        ;
-//        $msg2.hide().prependTo(this.$divAsnList).slideDown()
+//        $msg2.hide().prependTo(this.$divAsnList)
+//            .slideDown()
 //            //.css('display','block')
 //        ;
 //
@@ -94,6 +96,10 @@ Topbar.Event = {
 //    }
 //
 //    ,onClickBtnTest3 : function(e) {
+//        //Topbar.View.Asn.initialize();
+//        Topbar.Service.Asn.retrieveAsnList();
+//        return;
+//
 //        var msg = '<a href="#" class="media list-group-item">'+
 //            '<span class="pull-left thumb-sm text-center">'+
 //            '<i class="fa fa-file fa-2x text-success"></i>'+
@@ -107,11 +113,15 @@ Topbar.Event = {
 //        var $el = $('.nav-user');
 //
 //        this.$divAsnList = $el.find('.list-group');
-//        $msg.hide().prependTo(this.$divAsnList).slideDown()
+//        $msg.hide().prependTo(this.$divAsnList)
+//            .slideDown()
 //            //.css('display','block')
 //        ;
 //    }
 //    ,onClickBtnTest4 : function(e) {
+//        //Topbar.View.Asn.closeAsnNew();
+//        //return;
+//
 //        var $el = $('.nav-user');
 //
 //        this.$divAsnList = $el.find('.list-group');
@@ -126,7 +136,7 @@ Topbar.Event = {
 //            '<i class="fa fa-file fa-2x text-success"></i>'+
 //            '</span>'+
 //            '<span class="media-body block m-b-none">'+
-//            '2David Miller assigned a document to you.<br>'+
+//            '28David Miller assigned a document to you.<br>'+
 //            '<small class="text-muted">1 minutes ago</small>'+
 //            '</span>'+
 //            '</a>';
