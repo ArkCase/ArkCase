@@ -56,7 +56,7 @@
         </div>
     </footer>
 
-    <script src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
 
     <script type="text/javascript" src="<c:url value='/resources/js/login/login.js'/>"></script>
 
