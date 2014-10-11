@@ -21,6 +21,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -78,8 +79,8 @@ public class AcmQuickSearchJpaSolrGenerator
      *     <li>status_s: current status, e.g. APPROVED, ACTIVE, CLOSED ...</li>
      *     <li>author: user id of the user who created this object</li>
      *     <li>modifier_s: user id of the user who last modified this object</li>
-     *     <li>assignee: user id of the user who is currently responsible for this object, if any (e.g. case agent,
-     *     task assgnee</li>
+     *     <li>assignee_s: user id of the user who is currently responsible for this object, if any (e.g. case agent,
+     *     task assignee</li>
      * </ul>
      * <p/>
      * The corresponding values must be property names from the entity class.  If there is no appropriate property
@@ -115,6 +116,12 @@ public class AcmQuickSearchJpaSolrGenerator
      * a key in the "quickSearchFieldToEntityPropertyMap" map.
      */
     private String ownerProperty;
+
+    /**
+     * Name of the participant type considered to represent the assignee - the person who is responsible for this
+     * object.  Must be a value in the acm_participant.cm_participant_type column.
+     */
+    private String assigneeParticipantType;
 
     /**
      * Internal use only (not specified via Spring).  The values from the quickSearchFieldToEntityPropertyMap.
@@ -185,6 +192,12 @@ public class AcmQuickSearchJpaSolrGenerator
 
             DateFormat solrDateFormat = new SimpleDateFormat(SearchConstants.SOLR_DATE_FORMAT);
             Date sinceWhen = solrDateFormat.parse(lastRunDate);
+
+            // back up one minute just to be sure we get everything
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(sinceWhen);
+            cal.set(Calendar.MINUTE, cal.get(Calendar.MINUTE) - 1);
+            sinceWhen = cal.getTime();
 
             // store the current time as the last run date to use the next time this job runs.  This allows us to
             // scan only for objects updated since this date.
@@ -290,9 +303,9 @@ public class AcmQuickSearchJpaSolrGenerator
 
         for ( Object[] properties : businessObjects )
         {
-            // allocate five extra map entries: one for object type, one for ID, one for object owner,
-            // one for allow acls, and one for deny acls
-            Map<String, Object> objectMap = new HashMap<>(properties.length + 5);
+            // allocate six extra map entries: one for object type, one for ID, one for object owner,
+            // one for allow acls, and one for deny acls, one for assignee
+            Map<String, Object> objectMap = new HashMap<>(properties.length + 6);
             objectMap.put(SearchConstants.SOLR_OBJECT_TYPE_FIELD_NAME, objectType);
 
 
@@ -316,6 +329,14 @@ public class AcmQuickSearchJpaSolrGenerator
             // retrieve acm read access for object and enrich business object map with acls
             AcmAccess acmAccess = getDataAccessEntryService().getAcmReadAccess((Long)objectMap.get("object_id_s"), getObjectType(), (String)objectMap.get("status_s"));
             acmAccess.enrichWithAcls(objectMap);
+
+            // add assignee.  The assignee is the last object in the array.  The above loop
+            // shouldn't have reached it since assignee is not in the fields list.
+            if ( getAssigneeParticipantType() != null && properties.length == quickSearchFields.size() + 1 )
+            {
+                String assignee = (String) properties[properties.length - 1];
+                objectMap.put("assignee_s", assignee);
+            }
 
             retval.add(objectMap);
         }
@@ -360,7 +381,21 @@ public class AcmQuickSearchJpaSolrGenerator
             }
             query += "e." + entityProperty;
         }
+
+        if ( getAssigneeParticipantType() != null )
+        {
+            query += addComma ? ", p.participantLdapId " : " p.participantLdapId ";
+        }
+
         query += " FROM " + getEntityClass().getSimpleName() + " e ";
+
+        if ( getAssigneeParticipantType() != null )
+        {
+            query += " LEFT OUTER JOIN AcmParticipant p " +
+                    "ON e." + getIdProperty() + " = p.objectId AND " +
+                    "p.participantType = '" + getAssigneeParticipantType() + "' ";
+        }
+
         if ( sinceWhen != null )
         {
             query += " WHERE e." + getLastModifiedProperty() + " >= :lastModified";
@@ -501,5 +536,15 @@ public class AcmQuickSearchJpaSolrGenerator
 
     public void setDataAccessEntryService(DataAccessEntryService dataAccessEntryService) {
         this.dataAccessEntryService = dataAccessEntryService;
+    }
+
+    public String getAssigneeParticipantType()
+    {
+        return assigneeParticipantType;
+    }
+
+    public void setAssigneeParticipantType(String assigneeParticipantType)
+    {
+        this.assigneeParticipantType = assigneeParticipantType;
     }
 }

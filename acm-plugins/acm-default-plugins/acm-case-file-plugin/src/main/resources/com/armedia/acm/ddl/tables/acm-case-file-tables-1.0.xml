@@ -1,0 +1,44 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="case-file-01-acm-case-file-table" author="dmiller">
+        <createTable tableName="acm_case_file">
+            <column name="cm_case_id" type="NUMBER(32,0)">
+                <constraints primaryKeyName="pk_acm_case_file" primaryKey="true"/>
+            </column>
+            <column name="cm_case_number" type="VARCHAR(1024)">
+                <constraints unique="true" uniqueConstraintName="uk_case_file_number"
+                        nullable="false"/>
+            </column>
+            <column name="cm_case_type" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_status" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_title" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_ecm_folder_id" type="VARCHAR(1024)"/>
+            <column name="cm_case_closed" type="DATE"/>
+            <column name="cm_case_disposition" type="VARCHAR(4000)"/>
+            <column name="cm_case_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_case_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

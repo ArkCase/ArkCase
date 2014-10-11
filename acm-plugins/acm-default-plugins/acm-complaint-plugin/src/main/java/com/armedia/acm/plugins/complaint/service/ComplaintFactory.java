@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.complaint.model.complaint.Item;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.services.users.model.AcmParticipant;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,7 +22,7 @@ public class ComplaintFactory
         retval.setIncidentDate(formComplaint.getDate());
         retval.setPriority(formComplaint.getPriority());
         retval.setComplaintTitle(formComplaint.getComplaintTitle());
-        retval.setApprovers(convertItemsToList(formComplaint.getOwners()));
+        retval.setParticipants(convertToParticipants(formComplaint.getOwners()));
         
         Calendar  cal = Calendar.getInstance();
         cal.setTime(formComplaint.getDate());
@@ -48,13 +49,14 @@ public class ComplaintFactory
         {
             for ( Contact person : formComplaint.getPeople() )
             {
-                PersonAssociation pa = new PersonAssociation();
-                Person p = new Person();
-                pa.setPerson(p);
-                retval.getPersonAssociations().add(pa);
-
-                populatePerson(person, pa, p);
-
+            	if (person.getMainInformation() != null && person.getMainInformation().getFirstName() != null && person.getMainInformation().getLastName() != null){
+	                PersonAssociation pa = new PersonAssociation();
+	                Person p = new Person();
+	                pa.setPerson(p);
+	                retval.getPersonAssociations().add(pa);
+	
+	                populatePerson(person, pa, p);
+	            }
             }
         }
 
@@ -96,6 +98,22 @@ public class ComplaintFactory
         {
             p.getSecurityTags().add("Anonymous");
         }
+    }
+    
+    private List<AcmParticipant> convertToParticipants(List<Item> items){
+    	List<AcmParticipant> participants = new ArrayList<AcmParticipant>();
+    	
+    	if (items != null && items.size() > 0){
+    		for (Item item : items){
+    			AcmParticipant participant = new AcmParticipant();
+    			participant.setParticipantLdapId(item.getValue());
+    			participant.setParticipantType("assignee");
+    			
+    			participants.add(participant);
+    		}
+    	}
+    	
+    	return participants;
     }
     
     private List<String> convertItemsToList(List<Item> items){
