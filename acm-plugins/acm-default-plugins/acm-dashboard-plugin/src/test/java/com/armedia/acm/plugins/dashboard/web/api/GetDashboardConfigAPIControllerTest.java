@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
@@ -29,8 +30,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import javax.persistence.PersistenceException;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -58,6 +62,7 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
     private UserDao mockUserDao;
     private DashboardEventPublisher mockDashboardEventPublisher;
     private Authentication mockAuthentication;
+    private AcmPlugin mockDashboardPlugin;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -72,6 +77,7 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
         mockDashboardEventPublisher = createMock(DashboardEventPublisher.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
+        mockDashboardPlugin = createMock(AcmPlugin.class);
 
 
         unit = new GetDashboardConfigAPIController();
@@ -79,6 +85,7 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
         unit.setDashboardDao(mockDashboardDao);
         unit.setEventPublisher(mockDashboardEventPublisher);
         unit.setUserDao(mockUserDao);
+        unit.setDashboardPlugin(mockDashboardPlugin);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -104,9 +111,12 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
 
+        Map<String,Object> prop =  new HashMap<String, Object>();
+        prop.put("key","value");
 
         expect(mockDashboardDao.getDashboardConfigForUser(user)).andReturn(ret);
         expect(mockUserDao.findByUserId(userId)).andReturn(user);
+        expect(mockDashboardPlugin.getPluginProperties()).andReturn(prop).anyTimes();
         mockDashboardEventPublisher.publishGetDashboardByUserIdEvent(
                 eq(ret),
                 eq(mockAuthentication),
@@ -139,38 +149,4 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
         assertNotNull(fromJson);
         assertEquals(returned.getDashboardConfig(), fromJson.getDashboardConfig());
     }
-
-//    @Test
-//    public void getDashboardConfig_notFound() throws Exception
-//    {
-//        String ipAddress = "ipAddress";
-//        String userId = "ann-acm";
-//        AcmUser user = null;
-//
-//        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
-//
-//
-//        expect(mockDashboardDao.getDashboardConfigForUser(user)).andThrow(new PersistenceException());
-//        expect(mockUserDao.findByUserId(userId)).atLeastOnce();
-//        mockDashboardEventPublisher.publishGetDashboardByUserIdEvent(
-//                anyObject(Dashboard.class),
-//                eq(mockAuthentication),
-//                eq(ipAddress),
-//                eq(false));
-//
-//        // MVC test classes must call getName() somehow
-//        expect(mockAuthentication.getName()).andReturn("user").anyTimes();
-//
-//        replayAll();
-//
-//        mockMvc.perform(
-//                get("/api/v1/plugin/dashboard/get")
-//                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-//                        .session(mockHttpSession)
-//                        .principal(mockAuthentication))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
-//
-//        verifyAll();
-//    }
 }

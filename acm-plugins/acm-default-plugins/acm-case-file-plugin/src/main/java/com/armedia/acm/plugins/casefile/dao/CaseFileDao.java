@@ -77,7 +77,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
         return retval;
     }
 
-    public List<CaseByStatusDto> getCasesByStatusAndByTimePeriod(TimePeriod numberOfDaysFromToday) {
+        public List<CaseByStatusDto> getCasesByStatusAndByTimePeriod(TimePeriod numberOfDaysFromToday) {
         String queryText = "SELECT cf.status, COUNT(cf) as counted FROM CaseFile cf WHERE cf.created >= :created GROUP BY cf.status";
         Query caseGroupedByStatus = getEm().createQuery(queryText);
 
