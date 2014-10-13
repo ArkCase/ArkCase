@@ -2,7 +2,7 @@
 <html lang="en" class="app">
 <head>
 <meta charset="utf-8" />
-<title>Complaints | ACM | Armedia Case Management</title>
+<title>Cases | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
@@ -19,7 +19,6 @@
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="resources/js/fancytree/jquery.fancytree.js"></script>
-
 <link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
 </head>
 <body class="">
@@ -89,8 +88,8 @@
                 <ul class="nav nav-main" data-ride="collapse">
                   <li class=""> <a href="portal.html" class="auto"> <i class="i i-statistics icon"> </i> <span class="font-bold">Dashboard</span> </a> </li>
                   <li class=""> <a href="activity.html" class="auto"> <i class="i i-alarm icon"> </i> <span class="font-bold">Activity</span> </a> </li>
-                  <li class="active"> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
-                  <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
+                  <li class=""> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
+                  <li class="active"> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
                   <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
@@ -116,26 +115,26 @@
                 <section class="vbox animated fadeInLeft">
                   <section class="scrollable">
                     <header class="dk header">
-                      <h3 class="m-b-xs text-black pull-left">Complaints</h3>
+                      <h3 class="m-b-xs text-black pull-left">Cases</h3>
                       <div class="btn-group inline select pull-right">
                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
                         <ul class="dropdown-menu text-left text-sm">
                           <li><a href="#">Sort Date Ascending</a></li>
                           <li><a href="#">Sort Date Descending</a></li>
-                          <li><a href="#">Sort Complaint ID Ascending</a></li>
-                          <li><a href="#">Sort Complaint ID Ascending</a></li>
+                          <li><a href="#">Sort Case ID Ascending</a></li>
+                          <li><a href="#">Sort Case ID Ascending</a></li>
                         </ul>
                       </div>
                       <div class="btn-group select pull-right">
                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
                         <ul class="dropdown-menu text-left text-sm">
-                          <li><a href="#">All Open Complaint</a></li>
-                          <li><a href="#">Complaint I've Opened</a></li>
-                          <li><a href="#">Unapproved Complaint</a></li>
-                          <li><a href="#">Approved Complaint</a></li>
-                          <li><a href="#">Complaint From Group</a></li>
-                          <li><a href="#">Closed or Expired Complaint</a></li>
-                          <li><a href="#">New Complaint</a></li>
+                          <li><a href="#">All Open Cases</a></li>
+                          <li><a href="#">Cases I've Opened</a></li>
+                          <li><a href="#">Unapproved Cases</a></li>
+                          <li><a href="#">Approved Cases</a></li>
+                          <li><a href="#">Cases From Group</a></li>
+                          <li><a href="#">Closed or Expired Cases</a></li>
+                          <li><a href="#">New Cases</a></li>
                         </ul>
                       </div>
                     </header>
@@ -148,7 +147,13 @@
                     </div>
                     <div class="row m-b">
                       <div class="col-sm-12">
+                      
+                      
                         <div id="tree"></div>
+                        
+                        
+                        
+                        
                       </div>
                     </div>
                   </section>
@@ -162,12 +167,13 @@
                         <div class="col-xs-12">
                           <div class="">
                             <div class=" clearfix">
-                              <div class="col-xs-4 b-r">
-                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> </div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> Sample Case Title</a> </div>
                                 <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
                               <div class="col-xs-2 b-r">
                                 <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
-                                <small class="text-muted">Incident Date</small></div>
+                                <small class="text-muted">Start Date</small></div>
+                               
                               <div class="col-xs-1 b-r">
                                 <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
                                 <small class="text-muted">Priority</small></div>
@@ -177,77 +183,71 @@
                               <div class="col-xs-2 b-r">
                                 <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
                                 <small class="text-muted">Subject Type</small></div>
+                                 <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="duedate" data-type="date" data-pk="1" data-url="/post" data-title="Enter Due Date">MM/DD/YYYY</a></div>
+                                <small class="text-muted">Due Date</small></div>
                               <div class="col-xs-1">
                                 <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div> <small class="text-muted">Status</small></div>
                             </div>
                           </div>
-                        </div>
+                   
                     </div></div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
                     <div>
                       <div class="wrapper">
                         <div class="row">
-                     <div class="col-md-12">
-                                    <section class="panel b-a">
-                                      <div class="panel-heading b-b bg-info">
-                                        <ul class="nav nav-pills pull-right">
-                                          <li style="margin-right:5px">
-                                            <div class="btn-group" style="margin-top:4px;">
-                                              <button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown">Filter</span> <span class="caret"></span> </button>
-                                              <ul class="dropdown-menu dropdown-select">
-                                                <li><a href="#">
-                                                  <input type="radio" name="b">
-                                                  Filter 1</a></li>
-                                                <li><a href="#">
-                                                  <input type="radio" name="b">
-                                                  Filter 2</a></li>
-                                                <li><a href="#">
-                                                  <input type="radio" name="b">
-                                                  Filter 3</a></li>
-                                              </ul>
-                                            </div>
-                                          </li>
-                                          <li>
-                                            <div class="btn-group padder-v2">
-                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="i i-checkmark"></i> New</button>
-                                            </div>
-                                          </li>
-                                          <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                        </ul>
-                                        <a href="#" class="font-bold">Tasks</a> </div>
-                                      <div class="panel-body max-200 no-padder">
-                                        <table class="table table-striped th-sortable table-hover">
-                                          <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>Title</th>
-                                              <th>Created</th>
-                                              <th>Priority</th>
-                                              <th>Due</th>
-                                              <th>Status</th>
-                                              <th width="10%">Action</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr class="odd gradeA">
-                                              <td>[ID]</td>
-                                              <td>[Title]</td>
-                                              <td>[Created]</td>
-                                              <td>[Priority]</td>
-                                              <td>[Due]</td>
-                                              <td>[Status]</td>
-                                              <td><select class="input-sm form-control input-s-sm inline v-middle">
-                                                  <option value="0">Choose Action</option>
-                                                  <option value="1">Assign</option>
-                                                  <option value="1">Delete</option>
-                                                </select></td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </div>
-                                    </section>
+                          <div class="col-md-12">
+                            <section class="panel b-a">
+                              <div class="panel-heading b-b bg-info">
+                                <ul class="nav nav-pills pull-right">
+                                  <li style="margin-right:5px"></li>
+                                  <li>
+                                    <div class="btn-group padder-v2">
+                                      <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New Reference</button>
+                                    </div>
+                                  </li>
+                                  <li> </li>
+                                </ul>
+                                <a href="#" class="font-bold">Other Documents</a></div>
+                              <div class="panel-body max-200 no-padder">
+                                <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                      <th>Complaint ID</th>
+                                      <th>ID</th>
+                                      <th>Title</th>
+                                      <th>Created</th>
+                                      <th>Author</th>
+                                      <th>Priority</th>
+                                      <th>Due</th>
+                                      <th>Status</th>
+                                      <th width="10%">Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                      <td>[Complaint ID]</td>
+                                      <td>[ID]</td>
+                                      <td>[Title]</td>
+                                      <td>[Created]</td>
+                                      <td>[Author]</td>
+                                      <td>[Priority]</td>
+                                      <td>[Due]</td>
+                                      <td>[Status]</td>
+                                      <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
+                                        <option value="0">Choose Action</option>
+                                        <option value="1">Delete</option>
+                                      </select></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </section>
                           </div>
                         </div>
-                                <div class="row"></div>
                       </div>
                     </div>
                     </div>
@@ -263,6 +263,8 @@
     </section>
   </section>
 </section>
+
+
 <script type='text/javascript'>//<![CDATA[ 
 
 $(function() {
@@ -280,138 +282,69 @@ activate: function(event, data) {
 			},
 
         source: [{
-            title: "Sample Complaint Title <em>(2014-03-12321)</em>",
-href: "complaints.html",
+            title: "Sample Case Title <em>(2014-03-12321)</em>",
+href: "cases.html",
 tooltip: "2014-03-12321",
             expanded: "fancytree-expanded",
             children: [{
-                title: "Incident 1",
-                folder: true,
-				expanded: "fancytree-expanded",
-                children: [{
                     title: "Details", 
-					href: "complaintDetails.html"
-                }, {
-                    title: "Initiator",
-					href: "complaintIntitiator.html", 
-                    description1: "John Doe",
-                    description2: "Victim"
+					href: "caseDetails.html"
                 }, {
                     title: "People ", 
-					href: "complaintPeople.html"
+					href: "casePeople.html"
                 }, {
                     title: "Notes", 
-					href: "complaintNotes.html"
-                }]
-            }, {
+					href: "caseNotes.html"
+                }, {
                 title: "Documents",
                 folder: true,
+				href: "caseDocuments.html",
 expanded: "fancytree-expanded",
                 children: [{
-                    title: "Pending",
-                    folder: false,
-					href: "complaintDocuments.html",
-                    children: [{
-                        title: "Document Title 1",
+                        title: "Document Title",
                         description1: "David Miller", 
-						href: "complaintDocumentDetails.html"
-                    }, {
-                        title: "Document Title 2",
-                        description1: "Ronda Ringo", 
-						href: "complaintDocumentDetails.html"
+						href: "caseDocumentDetails.html"
                     }]
-                }, {
-                    title: "Approved",
-                    folder: false,
-					href: "complaintDocuments.html",
-                    children: [{
-                        title: "Document Title 3",
+            }, {
+                title: "ROIs",
+                folder: true,
+				href: "caseROI.html",
+expanded: "fancytree-expanded",
+                children: [{
+                        title: "[Document #], [Status]",
                         description1: "David Miller", 
-						href: "complaintDocumentDetails.html"
-                    }, {
-                        title: "Document Title 4",
-                        description1: "Ronda Ringo", 
-						href: "complaintDocumentDetails.html"
+						href: "caseROIDetails.html"
                     }]
-                }, {
-                    title: "Rejected",
-                    folder: false,
-					href: "complaintDocuments.html",
-                    children: [{
-                        title: "0005",
-                        title: "Document Title 5",
-                        description1: "David Miller", 
-						href: "complaintDocumentDetails.html"
-                    }, {
-                        title: "0006",
-                        title: "Document Title 6",
-                        description1: "Ronda Ringo", 
-						href: "complaintDocumentDetails.html"
-                    }]
-                }]
             }, {
                 title: "Tasks",
                 folder: true,
+				href: "caseTasks.html",
 expanded: "fancytree-expanded",
                 children: [{
-                    title: "Unassigned",
-                    folder: false,
-					href: "complaintTasks.html",
-                    children: [{
-                        title: "Task Title 1",
+                        title: "Subject, Priority",
                         description1: "David Miller", 
-						href: "complaintTaskDetails.html"
-                    }, {
-                        title: "Task  Title 2",
-                        description1: "Ronda Ringo", 
-						href: "complaintTaskDetails.html"
+						href: "caseTaskDetails.html"
                     }]
-                }, {
-                    title: "Assigned",
-                    folder: false,
-                    children: [{
-                        title: "Task  Title 3",
-                        description1: "David Miller", 
-						href: "complaintTaskDetails.html"
-                    }, {
-                        title: "Task  Title 4",
-                        description1: "Ronda Ringo", 
-						href: "complaintTaskDetails.html"
-                    }]
-                }, {
-                    title: "Completed",
-                    folder: false,
-                    children: [{
-                        title: "0005",
-                        title: "Task  Title 5",
-                        description1: "David Miller", 
-						href: "complaintTaskDetails.html"
-                    }, {
-                        title: "0006",
-                        title: "Task Title 6",
-                        description1: "Ronda Ringo", 
-						href: "complaintTaskDetails.html"
-                    }]
-                }]
+               
             }, {
                 title: "References",
                 folder: true,
 expanded: "fancytree-expanded", children: [{
                     title: "Other Complaints",
                     folder: false, 
-					href: "complaintOtherComplaints.html"
+					href: "caseOtherComplaints.html"
                 },{
                     title: "Other Cases",
                     folder: false, 
-					href: "complaintOtherCases.html"
+					href: "caseOtherCases.html"
                 }, {
                     title: "Other Tasks",
                     folder: false, 
-					href: "complaintOtherTasks.html"
+					href: "caseOtherTasks.html"
                 }, {
                     title: "Other Documents",
                     folder: false, 
-					href: "complaintOtherDocuments.html"
+					href: "caseOtherDocuments.html"
                 }]
             }, {
                 title: "Participants",
@@ -431,6 +364,7 @@ expanded: "fancytree-expanded",
 });
 //]]>
 </script> 
+
 
 <!-- Bootstrap --> 
 <script src="resources/js/bootstrap.js"></script> 
@@ -483,6 +417,16 @@ $(document).ready(function() { $('#assigned').editable({placement: 'bottom', val
            ]}); }); 
 		   
 $(document).ready(function() { $('#incident').editable({
+        format: 'yyyy-mm-dd',  
+		placement: 'bottom',  
+        viewformat: 'dd/mm/yyyy',    
+        datepicker: {
+                weekStart: 1
+           }
+        }); }); 
+		
+			   
+$(document).ready(function() { $('#duedate').editable({
         format: 'yyyy-mm-dd',  
 		placement: 'bottom',  
         viewformat: 'dd/mm/yyyy',    
