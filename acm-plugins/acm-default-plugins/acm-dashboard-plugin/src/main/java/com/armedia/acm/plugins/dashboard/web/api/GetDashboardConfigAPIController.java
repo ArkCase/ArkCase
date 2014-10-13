@@ -4,9 +4,11 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
+import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
+import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * Created by marst on 7/29/14.
@@ -33,6 +36,7 @@ public class GetDashboardConfigAPIController {
     private UserDao userDao;
     private AcmPlugin dashboardPlugin;
     private DashboardDao dashboardDao;
+    private WidgetDao widgetDao;
     private DashboardEventPublisher eventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -54,6 +58,20 @@ public class GetDashboardConfigAPIController {
         DashboardDto dashboardDto;
         boolean inserted = false;
         try {
+           String newWidgetsString = (String)dashboardPlugin.getPluginProperties().get("acm.new.widgets");
+           boolean isNewWidgetForAdding = Boolean.valueOf((String)dashboardPlugin.getPluginProperties().get("acm.add.widget"));
+           String[] newWidgetsNames = null;
+
+            if(isNewWidgetForAdding) {
+                if (!"".equals(newWidgetsString)) {
+                    newWidgetsNames = newWidgetsString.split(",");
+                    for (String widgetName : newWidgetsNames) {
+                        Widget widget = new Widget();
+                        widget.setWidgetName(widgetName);
+                        getWidgetDao().saveWidget(widget);
+                    }
+                }
+            }
             retval = getDashboardDao().getDashboardConfigForUser(owner);
             raiseGetEvent(authentication, session, retval, true);
             dashboardDto = prepareDashboardDto(retval,inserted);
@@ -139,5 +157,13 @@ public class GetDashboardConfigAPIController {
 
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    public WidgetDao getWidgetDao() {
+        return widgetDao;
+    }
+
+    public void setWidgetDao(WidgetDao widgetDao) {
+        this.widgetDao = widgetDao;
     }
 }
