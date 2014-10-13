@@ -9,7 +9,7 @@
     <title><spring:message code="taskNew.page.title" text="Task | ACM | Armedia Case Management" /></title>
     <div id="wizardData" itemscope="true" style="display: none">
         <span itemprop="parentType">${parentType}</span>
-        <span itemprop="parentId">${parentId}</span>
+        <span itemprop="reference">${reference}</span>
     </div>
 </jsp:attribute>
 
