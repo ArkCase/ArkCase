@@ -68,6 +68,9 @@ public class CaseFile implements Serializable, AcmObject
     @Column(name = "cm_case_disposition")
     private String disposition;
 
+    @Column(name = "cm_case_priority")
+    private String priority;
+
     /**
      * This field is only used when the complaint is created. Usually it will be null.  Use the ecmFolderId
      * to get the CMIS object ID of the complaint folder.
@@ -233,6 +236,14 @@ public class CaseFile implements Serializable, AcmObject
     public void setChildObjects(Collection<ObjectAssociation> childObjects)
     {
         this.childObjects = childObjects;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 
     @Override

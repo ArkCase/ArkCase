@@ -40,5 +40,11 @@
             </column>
         </createTable>
     </changeSet>
+    
+    <changeSet id="02-add-priority-column" author="marst">
+       <addColumn tableName="acm_case_file">
+           <column name="cm_case_priority" type="VARCHAR(1024)"/>
+       </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
