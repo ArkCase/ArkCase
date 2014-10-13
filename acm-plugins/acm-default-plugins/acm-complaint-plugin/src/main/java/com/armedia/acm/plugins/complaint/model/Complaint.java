@@ -28,6 +28,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -507,6 +508,8 @@ public class Complaint implements Serializable, AcmObject
     {
         personAssoc.setParentId(getComplaintId());
         personAssoc.setParentType("COMPLAINT");
+
+        personAssoc.getPerson().setPersonAssociations(Arrays.asList(personAssoc));
     }
        
     public Date getDueDate()
