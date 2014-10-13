@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -28,18 +29,19 @@ public class GetCasesByStatusAPIController {
     private CaseFileDao caseFileDao;
 
     @RequestMapping(
-            value ="/{timePeriod}",
+            value = "/{timePeriod}",
             method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public List<CaseByStatusDto> getCasesByStatus(
             @PathVariable("timePeriod") String timePeriod,
-            Authentication authentication
-    ) throws AcmListObjectsFailedException
-
-    {
+            Authentication authentication,
+            HttpSession session
+    ) throws AcmListObjectsFailedException {
         if (log.isInfoEnabled()){
-            log.info("Getting all cases grouped by status");
+            log.info("Getting cases grouped by status in a time period");
         }
+        String ipAddress = (String) session.getAttribute("acm_ip_address");
+        String user = authentication.getName();
         List<CaseByStatusDto> retval = null;
         switch (CasesByStatusAndTimePeriod.getTimePeriod(timePeriod)) {
             case ALL:

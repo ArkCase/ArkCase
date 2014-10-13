@@ -26,4 +26,15 @@
     <bean id="findCaseFileEventsAPIController" class="com.armedia.acm.plugins.casefile.web.api.FindCaseFileEventsAPIController">
         <property name="dao" ref="auditDao"/>
     </bean>
+
+    <bean id="listCaseFilesByUserAPIController" class="com.armedia.acm.plugins.casefile.web.api.ListCaseFilesByUserAPIController">
+        <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+    </bean>
+
+    <bean id="getCaseFileStatusSummaryAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCaseFileStatusSummaryAPIController">
+        <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+    </bean>
+
 </beans>

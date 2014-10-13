@@ -71,11 +71,11 @@ public class SetAuthorizedWidgetRolesAPIController {
         List<AcmRole> rolesForUpdate = new ArrayList<AcmRole>();
 
         for ( WidgetRoleName roleName : rolesGroupByWidgetDto.getWidgetAuthorizedRoles() ) {
-             for(AcmRole role: allRoles) {
-                 if(role.getRoleName().equals(roleName.getName())){
-                     rolesForUpdate.add(role);
-                     break;
-                 }
+            for(AcmRole role: allRoles) {
+                if(role.getRoleName().equals(roleName.getName())){
+                    rolesForUpdate.add(role);
+                    break;
+                }
             }
         }
         try {

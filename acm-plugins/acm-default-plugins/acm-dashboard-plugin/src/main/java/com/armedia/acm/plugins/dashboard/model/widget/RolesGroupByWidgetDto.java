@@ -7,10 +7,10 @@ import java.util.List;
  */
 public class RolesGroupByWidgetDto {
 
-    String widgetName;
-    String name;
-    List<WidgetRoleName> widgetAuthorizedRoles;
-    List<WidgetRoleName> widgetNotAuthorizedRoles;
+    private String widgetName;
+    private String name;
+    private List<WidgetRoleName> widgetAuthorizedRoles;
+    private List<WidgetRoleName> widgetNotAuthorizedRoles;
 
     public String getWidgetName() {
         return widgetName;
