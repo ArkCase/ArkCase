@@ -28,17 +28,15 @@ public class GetCasesByStatusAPIController {
     private CaseFileDao caseFileDao;
 
     @RequestMapping(
-            value ="/{timePeriod}",
+            value = "/{timePeriod}",
             method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public List<CaseByStatusDto> getCasesByStatus(
             @PathVariable("timePeriod") String timePeriod,
             Authentication authentication
-    ) throws AcmListObjectsFailedException
-
-    {
+    ) throws AcmListObjectsFailedException {
         if (log.isInfoEnabled()){
-            log.info("Getting all cases grouped by status");
+            log.info("Getting cases grouped by status in a time period");
         }
         List<CaseByStatusDto> retval = null;
         switch (CasesByStatusAndTimePeriod.getTimePeriod(timePeriod)) {

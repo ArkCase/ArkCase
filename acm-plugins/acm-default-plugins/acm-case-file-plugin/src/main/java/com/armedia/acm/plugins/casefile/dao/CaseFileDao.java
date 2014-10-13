@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.casefile.dao;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.casefile.model.CaseByStatusDto;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -10,6 +11,8 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -62,7 +65,19 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
         return result;
     }
 
-    public List<CaseByStatusDto> getCasesByStatusAndByTimePeriod(TimePeriod numberOfDaysFromToday){
+    public List<CaseFile> getCaseFilesByUser(String user) throws AcmObjectNotFoundException{
+        String queryText = "SELECT cf FROM CaseFile cf " +
+                "WHERE cf.creator = :user";
+        Query casesByUser = getEm().createQuery(queryText);
+        casesByUser.setParameter("user",user);
+        List<CaseFile> retval = casesByUser.getResultList();
+        if(retval.isEmpty()) {
+            throw new AcmObjectNotFoundException("Case File",null, "Cases not found for the user: "+user+"",null);
+        }
+        return retval;
+    }
+
+    public List<CaseByStatusDto> getCasesByStatusAndByTimePeriod(TimePeriod numberOfDaysFromToday) {
         String queryText = "SELECT cf.status, COUNT(cf) as counted FROM CaseFile cf WHERE cf.created >= :created GROUP BY cf.status";
         Query caseGroupedByStatus = getEm().createQuery(queryText);
 
@@ -90,8 +105,6 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
         findByCaseNumber.setParameter("caseNumber", caseNumber);
 
         return (CaseFile) findByCaseNumber.getSingleResult();
-
-
     }
     private Date shiftDateFromToday(int daysFromToday){
         Date nextDate;
