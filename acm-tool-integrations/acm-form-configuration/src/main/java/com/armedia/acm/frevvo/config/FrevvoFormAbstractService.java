@@ -180,5 +180,19 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			}
 		}
 	}
+	
+	public String cleanXML(String xml)
+	{
+		if (xml != null){
+			String changedXML = xml.replaceAll("(?s)<rta_label.*?<\\/rta_label>", "");
+			changedXML = changedXML.replaceAll("<[^<>]*?\\/>", "");
+			changedXML = changedXML.replaceAll("(?s)<[^\\/<>]*?>[\n\r\t ]*?<\\/[^<>]*?>", "");
+			
+			if (!xml.equals(changedXML)){
+				return cleanXML(changedXML);
+			}
+		}
+		return xml;
+	}
 
 }

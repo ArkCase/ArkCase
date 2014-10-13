@@ -72,7 +72,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	@Override
 	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception
     {
-		Complaint complaint = (Complaint) convertFromXMLToObject(xml, Complaint.class);
+		Complaint complaint = (Complaint) convertFromXMLToObject(cleanXML(xml), Complaint.class);
 
         complaint = saveComplaint(complaint);
 
@@ -186,7 +186,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".types"), ",");
 		
 		mainInformation.setTitles(titles);
-		mainInformation.setAnonimuos("true");
+		mainInformation.setAnonimuos("");
 		mainInformation.setTypes(types);
 		mainInformation.setType("Initiator");
 		
@@ -252,7 +252,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		}
 		
 		mainInformation.setTitles(titles);
-		mainInformation.setAnonimuos("true");
+		mainInformation.setAnonimuos("");
 		mainInformation.setTypes(types);
 		
 		List<ContactMethod> communicationDevices = new ArrayList<ContactMethod>();

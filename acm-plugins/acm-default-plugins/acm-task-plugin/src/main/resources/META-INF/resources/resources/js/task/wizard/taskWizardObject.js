@@ -10,13 +10,11 @@ TaskWizard.Object = {
         //access data from jsp page
     	var items = $(document).items();
         var parentType = items.properties("parentType").itemValue();
-        var parentId = items.properties("parentId").itemValue();
-        
-        if (Acm.isNotEmpty(parentType) && Acm.isNotEmpty(parentId)) {
+        var reference = items.properties("reference").itemValue();
+        if (Acm.isNotEmpty(parentType) && Acm.isNotEmpty(reference) ) {
             var t = Task.getTask();
             t.attachedToObjectType = parentType;
-            t.attachedToObjectId = parseInt(parentId);
-
+            t.attachedToObjectId = reference;
         }
         
         //jsp object definitions
@@ -25,9 +23,11 @@ TaskWizard.Object = {
 
         this.$selOwners        = $("#assignee");
         this.$edtComplaint     = $("#complaintId");
+        this.setValueEdtComplaint(Acm.goodValue(reference));
+
         this.$edtSubject       = $("#subject");
 
-        this.$edtStartDate     = $("#startDate");
+        this.$edtStartDate     = $("#startDate");;
         this.setValueEdtStartDate(Acm.getCurrentDay());
 
         this.$selStatus        = $("#statusSel");
@@ -67,6 +67,13 @@ TaskWizard.Object = {
 	 */
     ,getValueEdtComplaint: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtComplaint);
+    }
+
+    /**
+     * set the complaint id or case id field value
+     */
+    ,setValueEdtComplaint: function(val) {
+        return Acm.Object.setValue(this.$edtComplaint, val);
     }
 
 	/**
