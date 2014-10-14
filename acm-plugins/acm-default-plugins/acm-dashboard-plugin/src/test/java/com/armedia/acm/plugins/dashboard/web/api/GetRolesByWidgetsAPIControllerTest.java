@@ -119,7 +119,7 @@ public class GetRolesByWidgetsAPIControllerTest extends EasyMockSupport {
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockWidgetDao.getRolesGroupByWidget()).andReturn(Arrays.asList(rolesGroupByWidgetDto)).anyTimes();
-        expect(mockWidgetDao.getAllWidgets()).andReturn(Arrays.asList(returned)).anyTimes();
+        expect(mockWidgetDao.findAll()).andReturn(Arrays.asList(returned)).anyTimes();
         expect(mockUserDao.findAllRoles()).andReturn(Arrays.asList(userAuthRole)).anyTimes();
         mockWidgetEventPublisher.publishGeRolesByWidgets(
                 eq(Arrays.asList(rolesGroupByWidgetDto)),
