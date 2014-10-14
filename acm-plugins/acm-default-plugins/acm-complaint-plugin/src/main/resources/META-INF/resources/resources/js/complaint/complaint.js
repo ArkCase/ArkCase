@@ -51,32 +51,33 @@ var Complaint = Complaint || {
 
 
 
-    ,_personTypes : ["Initiator","Witness", "Subject", "Spouse"]
+    ,_personTypes : ['Initiator', 'Complaintant','Subject','Witness','Wrongdoer','Other']
     ,getPersonTypes : function() {
         return this._personTypes;
     }
 
-    ,_personTitles : ['Mr.', 'Mrs.', 'Ms.', 'Dr.']
+    ,_personTitles : ['Mr', 'Mrs', 'Ms', 'Miss']
     ,getPersonTitles : function() {
         return this._personTitles;
     }
 
-    ,_deviceTypes : ['Phone','Personal E-mail','Mobile Phone', 'Email']
+    ,_deviceTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
+                'Email','Instant messenger', 'Social media','Website','Blog']
     ,getDeviceTypes : function() {
         return this._deviceTypes;
     }
 
-    ,_organizationTypes : ['org', 'gov', 'com']
+    ,_organizationTypes : ['Non-profit','Government','Corporation']
     ,getOrganizationTypes : function() {
         return this._organizationTypes;
     }
 
-    ,_locationTypes : ['Home', 'Office', 'Hotel']
+    ,_locationTypes : ['Business' , 'Home']
     ,getLocationTypes : function() {
         return this._locationTypes;
     }
 
-    ,_aliasTypes : ['Nick Name', 'Other Name']
+    ,_aliasTypes : ['FKA' , 'Married']
     ,getAliasTypes : function() {
         return this._aliasTypes;
     }
