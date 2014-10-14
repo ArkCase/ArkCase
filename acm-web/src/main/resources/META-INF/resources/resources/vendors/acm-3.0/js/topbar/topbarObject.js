@@ -35,7 +35,7 @@ Topbar.Object = {
 //        this.$divAsn = $(".asn");
 //        this.$ulAsn = $(".asn ul");
 //        this.$lnkAsn = $(".asn a[data-toggle='dropdown']");
-//        this.$lnkAsn.click(function(e) {Topbar.Event.onClickLnkAsn(this);});
+//        //this.$lnkAsn.click(function(e) {Topbar.Event.onClickLnkAsn(this);});
 //        this.$divAsnPopup = $(".asn-popup");
 //        var pos = this.$lnkAsn.position();
 //

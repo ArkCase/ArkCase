@@ -7,6 +7,7 @@ import org.mule.api.client.MuleClient;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,9 @@ public class SaveComplaintTransaction
             Authentication authentication)
             throws MuleException
     {
+        complaint.setModified(new Date());
+        complaint.setModifier(authentication.getName());
+
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", authentication);
         MuleMessage received = getMuleClient().send("vm://saveComplaint.in", complaint, messageProps);

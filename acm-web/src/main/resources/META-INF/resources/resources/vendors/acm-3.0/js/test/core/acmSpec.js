@@ -27,6 +27,7 @@ describe("Acm", function()
         spyOn(Acm.Object,     "initialize");
         spyOn(Acm.Event,      "initialize");
         spyOn(Acm.Rule,       "initialize");
+        spyOn(Acm.Model,      "initialize");
         Acm.initialize();
         expect(Acm.Dialog     .initialize).toHaveBeenCalled();
         expect(Acm.Dispatcher .initialize).toHaveBeenCalled();
@@ -34,6 +35,7 @@ describe("Acm", function()
         expect(Acm.Object     .initialize).toHaveBeenCalled();
         expect(Acm.Event      .initialize).toHaveBeenCalled();
         expect(Acm.Rule       .initialize).toHaveBeenCalled();
+        expect(Acm.Model      .initialize).toHaveBeenCalled();
     });
 
     it("Test Acm.isEmpty() function", function() {
@@ -115,337 +117,190 @@ describe("Acm", function()
             .toEqual({abc: "foo", def: "[asf]", xyz: "5", foo: "bar"});
     });
 
-    it("Acm.CacheFifo: maxSize", function() {
-        var cache = new Acm.CacheFifo(4);
-        expect(cache.getMaxSize()).toEqual(4);
 
-        cache.setMaxSize(1);
-        expect(cache.getMaxSize()).toEqual(1);
-    });
+    it("Test Acm.equals() function", function() {
+        var obj1 = {id:123, name:"Joe"};
+        var obj2 = {name:"Joe", id:123};
+        var obj3 = {id:123, name:"Joe", sex:'M'};
 
-    it("Acm.CacheFifo: put/get", function() {
-        var cache = new Acm.CacheFifo(3);
-        expect(cache.getMaxSize()).toEqual(3);
+        expect(Acm.equals(obj1, obj2)).toEqual(true);
+        expect(Acm.equals(obj1, obj3)).toEqual(false);
 
-        expect(cache.get("k1")).toEqual(null);
+        expect(Acm.equals(obj1, null)).toEqual(false);
+        expect(Acm.equals(null, obj1)).toEqual(false);
+        expect(Acm.equals(null, null)).toEqual(true);
 
-        cache.put("k1", {name:"n1",age:1});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
+        expect(Acm.equals({}, {})).toEqual(true);
+        expect(Acm.equals({}, null)).toEqual(false);
+        expect(Acm.equals(null, {})).toEqual(false);
 
-        cache.put("k2", {name:"n2",age:2});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
-        expect(cache.get("k2")).toEqual({name:"n2",age:2});
-
-        cache.put("k3", {name:"n3",age:3});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
-        expect(cache.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-
-        cache.put("k4", {name:"n4",age:4});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-        expect(cache.get("k4")).toEqual({name:"n4",age:4});
-
-        cache.put("k5", {name:"n5",age:5});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-        expect(cache.get("k4")).toEqual({name:"n4",age:4});
-        expect(cache.get("k5")).toEqual({name:"n5",age:5});
-
-        cache.put("k6", {name:"n6",age:6});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual(null);
-        expect(cache.get("k4")).toEqual({name:"n4",age:4});
-        expect(cache.get("k5")).toEqual({name:"n5",age:5});
-        expect(cache.get("k6")).toEqual({name:"n6",age:6});
-
-        cache.put("k7", {name:"n7",age:7});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual(null);
-        expect(cache.get("k4")).toEqual(null);
-        expect(cache.get("k5")).toEqual({name:"n5",age:5});
-        expect(cache.get("k6")).toEqual({name:"n6",age:6});
-        expect(cache.get("k7")).toEqual({name:"n7",age:7});
-
-        cache.reset();
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual(null);
-        expect(cache.get("k4")).toEqual(null);
-        expect(cache.get("k5")).toEqual(null);
-        expect(cache.get("k6")).toEqual(null);
-        expect(cache.get("k7")).toEqual(null);
-
-        cache.put("k8", {name:"n8",age:8});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual(null);
-        expect(cache.get("k4")).toEqual(null);
-        expect(cache.get("k5")).toEqual(null);
-        expect(cache.get("k6")).toEqual(null);
-        expect(cache.get("k7")).toEqual(null);
-        expect(cache.get("k8")).toEqual({name:"n8",age:8});
-    });
-
-    it("Acm.CacheFifo: put as update", function() {
-        var cache = new Acm.CacheFifo(3);
-        expect(cache.getMaxSize()).toEqual(3);
-
-        expect(cache.get("k1")).toEqual(null);
-
-        cache.put("k1", {name:"n1",age:1001});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1001});
-
-        cache.put("k1", {name:"n1",age:1});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
-
-        cache.put("k2", {name:"n2",age:1002});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
-        expect(cache.get("k2")).toEqual({name:"n2",age:1002});
-
-        cache.put("k3", {name:"n3",age:1003});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
-        expect(cache.get("k2")).toEqual({name:"n2",age:1002});
-        expect(cache.get("k3")).toEqual({name:"n3",age:1003});
-
-        cache.put("k2", {name:"n2",age:2});
-        cache.put("k3", {name:"n3",age:3});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
-        expect(cache.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-
-        cache.put("k4", {name:"n4",age:1004});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-        expect(cache.get("k4")).toEqual({name:"n4",age:1004});
-
-        cache.put("k4", {name:"n4",age:4});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-        expect(cache.get("k4")).toEqual({name:"n4",age:4});
-
-        cache.put("k5", {name:"n5",age:1005});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-        expect(cache.get("k4")).toEqual({name:"n4",age:4});
-        expect(cache.get("k5")).toEqual({name:"n5",age:1005});
-
-        cache.put("k5", {name:"n5",age:5});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-        expect(cache.get("k4")).toEqual({name:"n4",age:4});
-        expect(cache.get("k5")).toEqual({name:"n5",age:5});
-
-        cache.reset();
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual(null);
-        expect(cache.get("k4")).toEqual(null);
-        expect(cache.get("k5")).toEqual(null);
-    });
-
-    it("Acm.CacheFifo: cache size 1 = assignment", function() {
-        var cache = new Acm.CacheFifo(1);
-        expect(cache.getMaxSize()).toEqual(1);
-
-        expect(cache.get(1)).toEqual(null);
-
-        cache.put(1, {name:"n1",age:1});
-        expect(cache.get(1)).toEqual({name:"n1",age:1});
-
-        cache.put(1, {name:"n1",age:11});
-        expect(cache.get(1)).toEqual({name:"n1",age:11});
-
-        cache.put(2, {name:"n2",age:2});
-        expect(cache.get(1)).toEqual(null);
-        expect(cache.get(2)).toEqual({name:"n2",age:2});
-    });
-
-    it("Acm.CacheFifo: cache size 0, no exception", function() {
-        var cache = new Acm.CacheFifo(0);
-        expect(cache.getMaxSize()).toEqual(0);
-
-        expect(cache.get(1)).toEqual(null);
-
-        cache.put(1, {name:"n1",age:1});
-        expect(cache.get(1)).toEqual(null);
-
-        cache.put(2, {name:"n2",age:2});
-        expect(cache.get(1)).toEqual(null);
-        expect(cache.get(2)).toEqual(null);
-    });
-
-    it("Acm.CacheFifo: remove", function() {
-        var cache1 = new Acm.CacheFifo(0);
-        cache1.remove("nosuch");
-        //no exception thrown
-
-
-        var cache2 = new Acm.CacheFifo(1);
-        cache2.remove("nosuch");                //no exception thrown
-        cache2.put("k1", {name:"n1",age:1});
-        expect(cache2.get("k1")).toEqual({name:"n1",age:1});
-        cache2.remove("k1");
-        expect(cache2.get("k1")).toEqual(null);
-        cache2.remove("k1");                     //no effect
-        expect(cache2.get("k1")).toEqual(null);
-        cache2.put("k1", {name:"n1",age:1});
-        expect(cache2.get("k1")).toEqual({name:"n1",age:1});
-
-
-        var cache3 = new Acm.CacheFifo(3);
-        cache3.put("k1", {name:"n1",age:1});
-        expect(cache3.get("k1")).toEqual({name:"n1",age:1});
-
-        cache3.remove("k1");
-        expect(cache3.get("k1")).toEqual(null);
-
-        cache3.put("k2", {name:"n2",age:2});
-        cache3.put("k3", {name:"n3",age:3});
-        expect(cache3.get("k1")).toEqual(null);
-        expect(cache3.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache3.get("k3")).toEqual({name:"n3",age:3});
-
-        cache3.remove("k3");
-        expect(cache3.get("k1")).toEqual(null);
-        expect(cache3.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache3.get("k3")).toEqual(null);
-
-
-        cache3.put("k4", {name:"n4",age:4});
-        cache3.put("k5", {name:"n5",age:5});
-        expect(cache3.get("k1")).toEqual(null);
-        expect(cache3.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache3.get("k3")).toEqual(null);
-        expect(cache3.get("k4")).toEqual({name:"n4",age:4});
-        expect(cache3.get("k5")).toEqual({name:"n5",age:5});
-
-        cache3.remove("k5");
-        expect(cache3.get("k1")).toEqual(null);
-        expect(cache3.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache3.get("k3")).toEqual(null);
-        expect(cache3.get("k4")).toEqual({name:"n4",age:4});
-        expect(cache3.get("k5")).toEqual(null);
-
-        cache3.remove("k4");
-        expect(cache3.get("k1")).toEqual(null);
-        expect(cache3.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache3.get("k3")).toEqual(null);
-        expect(cache3.get("k4")).toEqual(null);
-        expect(cache3.get("k5")).toEqual(null);
-
-        cache3.remove("k2");
-        expect(cache3.get("k1")).toEqual(null);
-        expect(cache3.get("k2")).toEqual(null);
-        expect(cache3.get("k3")).toEqual(null);
-        expect(cache3.get("k4")).toEqual(null);
-        expect(cache3.get("k5")).toEqual(null);
-
-        cache3.put("k6", {name:"n6",age:6});
-        cache3.put("k7", {name:"n7",age:7});
-        expect(cache3.get("k1")).toEqual(null);
-        expect(cache3.get("k2")).toEqual(null);
-        expect(cache3.get("k3")).toEqual(null);
-        expect(cache3.get("k4")).toEqual(null);
-        expect(cache3.get("k5")).toEqual(null);
-        expect(cache3.get("k6")).toEqual({name:"n6",age:6});
-        expect(cache3.get("k7")).toEqual({name:"n7",age:7});
-
+//array not working yet
+//        var arr1 = [{id:100, name:"Joe"},  {id:200, name:"Mary"}, {id:300, name:"Kate"}];
+//        var arr2 = [{id:300, name:"Kate"}, {id:100, name:"Joe"},  {id:200, name:"Mary"}];
+//        var arr3 = [{id:123, name:"Joe"},  {id:200, name:"Mary"}, {id:300, name:"Kate"}];
+//        var arr4 = [{id:100, name:"Joe"},  {id:200, name:"Mary"}];
+//        var arr5 = [{id:100, name:"Joe"},  {id:200, name:"Mary"}, {id:300, name:"Kate"}, {id:400, name:"Kate"}];
+//
+//        expect(Acm.equals(arr1, arr2)).toEqual(true);
+//        expect(Acm.equals(arr1, arr3)).toEqual(false);
+//        expect(Acm.equals(arr1, arr4)).toEqual(false);
+//        expect(Acm.equals(arr1, arr5)).toEqual(false);
     });
 
 
-    it("Acm.CacheFifo: no interference", function() {
-        var cache = new Acm.CacheFifo(2);
-        var cache2 = new Acm.CacheFifo(3);
-        expect(cache.getMaxSize()).toEqual(2);
-        expect(cache2.getMaxSize()).toEqual(3);
+    it("Test Acm.Timer: listener", function() {
+        var listenerName1 = "listener1";
+        var listenerName2 = "listener2";
+        var triggeredEventCount1 = 0;
+        var triggeredEventCount2 = 0;
 
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache2.get("k1")).toEqual(null);
+        Acm.Timer.registerListener(listenerName1
+            ,3
+            ,function() {
+                triggeredEventCount1++;
+                return false;
+            }
+        );
+        Acm.Timer.registerListener(listenerName2
+            ,2
+            ,function() {
+                triggeredEventCount2++;
+                return true;
+            }
+        );
 
-        cache.put("k1", {name:"n1",age:1});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
-        expect(cache2.get("k1")).toEqual(null);
+        //two listeners should have countDown 2 and 1
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(0);
+        expect(triggeredEventCount2).toEqual(0);
 
-        cache2.put("k1", {name:"n1",age:21});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
-        expect(cache2.get("k1")).toEqual({name:"n1",age:21});
+        //listener1 should have countDown 1;
+        //listener2 has 0, event triggered and set back to 2
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(0);
+        expect(triggeredEventCount2).toEqual(1);
 
-        cache.put("k2", {name:"n2",age:2});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
-        expect(cache.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache2.get("k1")).toEqual({name:"n1",age:21});
+        //listener1 countDown reaches 0, event triggered and remove from listener list;
+        //listener2 countDown to 1, no event
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(1);
 
-        cache2.put("k2", {name:"n2",age:22});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
-        expect(cache.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache2.get("k1")).toEqual({name:"n1",age:21});
-        expect(cache2.get("k2")).toEqual({name:"n2",age:22});
+        //listener1 is gone, no event
+        //listener2 countDown to 0, event triggered again and every 2 triggers
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(2);
 
-        cache.put("k3", {name:"n3",age:3});
-        expect(cache.get("k1")).toEqual(null);                 //1st cache is full
-        expect(cache.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-        expect(cache2.get("k1")).toEqual({name:"n1",age:21});
-        expect(cache2.get("k2")).toEqual({name:"n2",age:22});
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(2);
 
-        cache2.put("k3", {name:"n3",age:23});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-        expect(cache2.get("k1")).toEqual({name:"n1",age:21});
-        expect(cache2.get("k2")).toEqual({name:"n2",age:22});
-        expect(cache2.get("k3")).toEqual({name:"n3",age:23});
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(3);
 
-        cache.put("k4", {name:"n4",age:4});
-        cache2.put("k4", {name:"n4",age:24});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-        expect(cache.get("k4")).toEqual({name:"n4",age:4});
-        expect(cache2.get("k1")).toEqual(null);                //2nd cache is full
-        expect(cache2.get("k2")).toEqual({name:"n2",age:22});
-        expect(cache2.get("k3")).toEqual({name:"n3",age:23});
-        expect(cache2.get("k4")).toEqual({name:"n4",age:24});
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(3);
 
-        cache.reset();
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual(null);
-        expect(cache.get("k4")).toEqual(null);
-        expect(cache2.get("k1")).toEqual(null);                //2nd cache is full
-        expect(cache2.get("k2")).toEqual({name:"n2",age:22});
-        expect(cache2.get("k3")).toEqual({name:"n3",age:23});
-        expect(cache2.get("k4")).toEqual({name:"n4",age:24});
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(4);
 
-        cache2.reset();
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual(null);
-        expect(cache.get("k4")).toEqual(null);
-        expect(cache2.get("k1")).toEqual(null);
-        expect(cache2.get("k2")).toEqual(null);
-        expect(cache2.get("k3")).toEqual(null);
-        expect(cache2.get("k4")).toEqual(null);
+        //remove listener2, no more events expected after this
+        Acm.Timer.removeListener(listenerName2);
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(4);
 
-        cache2.put("k5", {name:"n5",age:25});
-        expect(cache.get("k1")).toEqual(null);
-        expect(cache.get("k2")).toEqual(null);
-        expect(cache.get("k3")).toEqual(null);
-        expect(cache.get("k4")).toEqual(null);
-        expect(cache2.get("k1")).toEqual(null);
-        expect(cache2.get("k2")).toEqual(null);
-        expect(cache2.get("k3")).toEqual(null);
-        expect(cache2.get("k4")).toEqual(null);
-        expect(cache2.get("k5")).toEqual({name:"n5",age:25});
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(4);
+
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(4);
+    });
+
+    //same test but with shared callback function
+    it("Test Acm.Timer: listener share callback", function() {
+        var listenerName1 = "listener1";
+        var listenerName2 = "listener2";
+        var triggeredEventCount1 = 0;
+        var triggeredEventCount2 = 0;
+
+        var callback = function(name) {
+            if (name == listenerName1) {
+                triggeredEventCount1++;
+                return false;
+            } else if (name == listenerName2) {
+                triggeredEventCount2++;
+                return true;
+            }
+            return false;
+        }
+        Acm.Timer.registerListener(listenerName1
+            ,3
+            ,callback
+        );
+        Acm.Timer.registerListener(listenerName2
+            ,2
+            ,callback
+        );
+
+        //two listeners should have countDown 2 and 1
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(0);
+        expect(triggeredEventCount2).toEqual(0);
+
+        //listener1 should have countDown 1;
+        //listener2 has 0, event triggered and set back to 2
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(0);
+        expect(triggeredEventCount2).toEqual(1);
+
+        //listener1 countDown reaches 0, event triggered and remove from listener list;
+        //listener2 countDown to 1, no event
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(1);
+
+        //listener1 is gone, no event
+        //listener2 countDown to 0, event triggered again and every 2 triggers
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(2);
+
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(2);
+
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(3);
+
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(3);
+
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(4);
+
+        //remove listener2, no more events expected after this
+        Acm.Timer.removeListener(listenerName2);
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(4);
+
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(4);
+
+        Acm.Timer.triggerEvent();
+        expect(triggeredEventCount1).toEqual(1);
+        expect(triggeredEventCount2).toEqual(4);
     });
 
 });

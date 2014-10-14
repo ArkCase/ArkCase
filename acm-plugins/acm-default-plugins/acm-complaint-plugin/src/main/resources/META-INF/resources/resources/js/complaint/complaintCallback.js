@@ -115,9 +115,9 @@ Complaint.Callback = {
     ,onComplaintSaved : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to create or save complaint:" + response.errorMsg);
-//        } else {
-//            if (Acm.isNotEmpty(response.complaintId)) {
-//            }
+        } else
+        {
+            Complaint.Callback.onDetailRetrieved(Callback, response);
         }
     }
     ,onPersonSaved: function(Callback, response) {
