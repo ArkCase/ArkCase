@@ -7,8 +7,7 @@ public enum TimePeriod {
 
     ONE_YEAR(365,"one year"),
     SEVEN_DAYS(7,"seven days"),
-    THIRTY_DAYS(30,"thirty days"),
-    ZERO(0,"zerro days");
+    THIRTY_DAYS(30,"thirty days");
 
     TimePeriod(int numOfDays, String days) {
         this.numOfDays = numOfDays;
@@ -32,7 +31,7 @@ public enum TimePeriod {
                 return attribute;
             }
         }
-        return TimePeriod.ZERO;
+        return null;
     }
 
 

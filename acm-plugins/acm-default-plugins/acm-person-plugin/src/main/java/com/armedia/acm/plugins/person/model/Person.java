@@ -95,7 +95,7 @@ public class Person implements Serializable
     @Column(name = "cm_person_modifier")
     private String modifier;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "acm_person_postal_address",
             joinColumns = { @JoinColumn(name="cm_person_id", referencedColumnName = "cm_person_id") },
@@ -103,7 +103,7 @@ public class Person implements Serializable
     )
     private List<PostalAddress> addresses = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "acm_person_contact_method",
             joinColumns = { @JoinColumn(name="cm_person_id", referencedColumnName = "cm_person_id") },
@@ -126,7 +126,7 @@ public class Person implements Serializable
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
     
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "acm_person_organization",
             joinColumns = { @JoinColumn(name="cm_person_id", referencedColumnName = "cm_person_id") },

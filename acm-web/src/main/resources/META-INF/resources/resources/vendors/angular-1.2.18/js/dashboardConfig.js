@@ -8,16 +8,19 @@ var app = angular.module('config', ['ngTable','dashboardConfigServices'])
             $scope.widgets = result;
             $scope.allWidgets = [];
             angular.forEach($scope.widgets, function(widget){
-                $scope.allWidgets.push(widget.name);
+                var element = new Object;
+                element.name=widget.name;
+                $scope.allWidgets.push(element);
             });
+            $scope.selectedWidget = $scope.allWidgets[0];
         });
+
 
         $scope.authorized;
         $scope.notAuthorized;
         $scope.selectedAuthorized;
         $scope.selectedNotAuthorized;
         $scope.selectedWidget;
-        $scope.tmpWidget = [];
         var firstSelection = true;
 
         $scope.indexSelections = function() {
@@ -26,21 +29,16 @@ var app = angular.module('config', ['ngTable','dashboardConfigServices'])
                 $scope.notAuthorized = [];
                 $scope.selectedAuthorized = [];
                 $scope.selectedNotAuthorized = [];
-                $scope.tmpWidget = [];
-                $scope.tmpWidget.push($scope.selectedWidget[0]);
             } else {
                 $scope.authorized = [];
                 $scope.notAuthorized = [];
-                $scope.tmpWidget = [];
-                $scope.tmpWidget.push($scope.selectedWidget[0]);
                 firstSelection = false;
             }
-            $scope.selectedWidget = [];
         };
 
         $scope.moveRight = function() {
             angular.forEach($scope.widgets, function(widget) {
-                if(angular.equals(widget.name, $scope.tmpWidget[0])) {
+                if(angular.equals(widget.name,$scope.selectedWidget.name)) {// $scope.tmpWidget[0].name)) {
                     angular.forEach($scope.selectedNotAuthorized, function(selectedRole,index) {
                         console.log(selectedRole);
                         widget.widgetAuthorizedRoles.push(selectedRole);
@@ -58,7 +56,7 @@ var app = angular.module('config', ['ngTable','dashboardConfigServices'])
 
         $scope.moveLeft = function() {
             angular.forEach($scope.widgets, function(widget) {
-                if(angular.equals(widget.name, $scope.tmpWidget[0])) {
+                if(angular.equals(widget.name,$scope.selectedWidget.name)) {// $scope.tmpWidget[0].name)) {
                     angular.forEach($scope.selectedAuthorized, function (selectedRole, index) {
                         console.log(selectedRole);
                         widget.widgetNotAuthorizedRoles.push(selectedRole);
@@ -76,7 +74,7 @@ var app = angular.module('config', ['ngTable','dashboardConfigServices'])
 
         $scope.saveAuthorized = function() {
             angular.forEach($scope.widgets, function(widget) {
-                if(angular.equals(widget.name, $scope.tmpWidget[0])) {
+                if(angular.equals(widget.name, $scope.selectedWidget.name)) {
                     var url = App.Object.getContextPath() + "/api/latest/plugin/dashboard/widgets/set",
                     postObject = new Object;
                     postObject.widgetName = widget.widgetName;
@@ -107,11 +105,12 @@ var app = angular.module('config', ['ngTable','dashboardConfigServices'])
 
         $scope.select = function() {
             angular.forEach($scope.widgets, function(widget){
-                if(angular.equals(widget.name,$scope.tmpWidget[0])){
+                if(angular.equals(widget.name,$scope.selectedWidget.name)) {
                        $scope.authorized = widget.widgetAuthorizedRoles;
                        $scope.notAuthorized = widget.widgetNotAuthorizedRoles;
                    }
             });
+            console.log($scope.selectedWidget);
         }
 
          var elementIndexFromArray = function(arr,elm){

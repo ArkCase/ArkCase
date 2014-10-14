@@ -78,4 +78,17 @@ public class SaveCaseFileRulesTest
         assertEquals("A Number", caseFile.getCaseNumber());
     }
 
+    @Test
+    public void nullCasePriority() throws Exception
+    {
+        CaseFile caseFile = new CaseFile();
+        caseFile.setId(12345L);
+
+        workingMemory.execute(caseFile);
+
+        assertNotNull(caseFile.getPriority());
+
+        log.info("Case priority: " + caseFile.getPriority());
+    }
+
 }
