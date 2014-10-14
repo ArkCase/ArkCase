@@ -108,7 +108,7 @@
       <section id="content">
         <section class="vbox">
           <header class="header m-b-xs b-light hidden-print">
-            <h3 class="m-b-xs text-black">User Profile</h3>
+            <h3 class="m-b-xs text-black">User Profile (Read Only)</h3>
           </header>
           <section class="scrollable">
             <section class="hbox stretch">
@@ -147,7 +147,7 @@
                                 <h4>David Miller</h4>
                                 <small> Agent </small> </div>
                               <div class="col-xs-6">
-                                <h4><a href="#" id="location" data-type="text" data-pk="1" data-url="/post" data-title="Enter Location"> Pentagon</a></h4>
+                                <h4>Pentagon</h4>
                                 <small>Location </small>
                               </div>
                             </div>
@@ -160,14 +160,14 @@
                           <li class="list-group-item">
                             <div class="row">
                               <div class="col-xs-6">
-                                <h4>dmiller@armedia.com</h4>
+                                <h4><a href="mailto:dmiller@armedia.com" target="_blank">dmiller@armedia.com</a></h4>
                                 <small> E-mail Address </small>
-                                <h4><a href="#" id="imaccount" data-type="text" data-pk="1" data-url="/post" data-title="Enter IM Account">DMiller</a> (<a href="#" id="imsystem" data-type="text" data-pk="1" data-url="/post" data-title="Enter IM System">Skype</a>)</h4>
+                                <h4>DMiller (Skype)</h4>
                                 <small> IM Account </small> </div>
                               <div class="col-xs-6">
-                                <h4><a href="#" id="officephone" data-type="text" data-pk="1" data-url="/post" data-title="Enter Office Phone Number"> 555-555-5555</a></h4>
+                                <h4><a href="tel://5555555555" target="_blank">555-555-5555</a></h4>
                                 <small> Office Phone </small>
-                                <h4><a href="#" id="mobilephone" data-type="text" data-pk="1" data-url="/post" data-title="Enter Mobile Phone Number"> 555-555-5555</a></h4>
+                                <h4><a href="tel://5555555555" target="_blank">555-555-5555</a></h4>
                                 <small> Mobile Phone </small> </div>
                             </div>
                           </li>
@@ -179,24 +179,24 @@
                           <li class="list-group-item">
                             <div class="row">
                               <div class="col-xs-6">
-                                <h4><a href="#" id="company" data-type="text" data-pk="1" data-url="/post" data-title="Enter Company Name"> Armedia</a></h4>
+                                <h4>Armedia</h4>
                                 <small> Company Name </small>
-                                <h4><a href="#" id="street" data-type="text" data-pk="1" data-url="/post" data-title="Enter Street"> 1234 Street Name</a></h4>
+                                <h4>1234 Street Name</h4>
                                 <small> Address 1 </small>
-                                <h4><a href="#" id="address2" data-type="text" data-pk="1" data-url="/post" data-title="Enter Address 2"> Suite 123</a></h4>
+                                <h4>Suite 123</h4>
                                 <small> Address 2 </small>
-                                <h4><a href="#" id="city" data-type="text" data-pk="1" data-url="/post" data-title="Enter City"> Vienna</a></h4>
+                                <h4>Vienna</h4>
                                 <small> City </small>
-                                <h4><a href="#" id="state" data-type="text" data-pk="1" data-url="/post" data-title="Enter State"> VA</a></h4>
+                                <h4>VA</h4>
                                 <small> State </small>
-                                <h4><a href="#" id="zip" data-type="text" data-pk="1" data-url="/post" data-title="Enter ZIP"> 12345</a></h4>
+                                <h4>12345</h4>
                                 <small> ZIP </small> </div>
                               <div class="col-xs-6">
-                                <h4><a href="#" id="mainphone" data-type="text" data-pk="1" data-url="/post" data-title="Enter Main Office Phone"> 555-555-5555</a></h4>
+                                <h4><a href="tel://5555555555" target="_blank">555-555-5555</a></h4>
                                 <small> Main Office Phone </small>
-                                <h4><a href="#" id="fax" data-type="text" data-pk="1" data-url="/post" data-title="Enter Main Office Phone"> 555-555-5555</a></h4>
+                                <h4><a href="tel://5555555555" target="_blank">555-555-5555</a></h4>
                                 <small> Fax </small>
-                                <h4><a href="#" id="website" data-type="text" data-pk="1" data-url="/post" data-title="Enter Website Address">www.armedia.com</a></h4>
+                                <h4><a href="http://www.armedia.com/" target="_blank">www.armedia.com</a></h4>
                                 <small> Website </small> </div>
                             </div>
                           </li>
@@ -241,26 +241,7 @@ var save = function() {
 <link href="resources/css/bootstrap-editable.css" rel="stylesheet">
 <script src="resources/js/bootstrap-editable.min.js"></script> 
 <script src="resources/js/typeahead.js"></script> 
-<script>
-$.fn.editable.defaults.url = '/post';
-$(document).ready(function() { $('#emaiAddress').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#displayName').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#location').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#imaccount').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#imsystem').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#officephone').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#mobilephone').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#company').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#street').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#address2').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#city').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#state').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#zip').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#mainphone').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#fax').editable({placement: 'bottom'}); }); 
-$(document).ready(function() { $('#website').editable({placement: 'bottom'}); }); 
 
-</script> 
 
 <!-- App --> 
 <script src="resources/js/app.js"></script> 
