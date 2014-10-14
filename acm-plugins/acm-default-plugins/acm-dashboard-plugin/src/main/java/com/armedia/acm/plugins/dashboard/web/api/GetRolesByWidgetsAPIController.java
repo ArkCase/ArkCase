@@ -57,7 +57,7 @@ public class GetRolesByWidgetsAPIController {
 
     private List<RolesGroupByWidgetDto> addNotAuthorizedRolesPerWidget(List<RolesGroupByWidgetDto> rolesPerWidget) {
         List<AcmRole> allRoles = getUserDao().findAllRoles();
-        List<Widget> allWidgets = getWidgetDao().getAllWidgets();
+        List<Widget> allWidgets = getWidgetDao().findAll();
         List<WidgetRoleName> notAuthorized = new ArrayList<WidgetRoleName>();
         boolean isNotAuthorized = true;
         List<RolesGroupByWidgetDto> tmpRolesPerWidget = new ArrayList<RolesGroupByWidgetDto>();
