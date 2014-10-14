@@ -34,18 +34,19 @@ CaseFile.Object = {
         //this.$lnkCaseType         = $("#caseType");
         //this.$lnkCloseDisposition = $("#disposition");
 
-        this.$lnkStartDate        = $("#startDate");
-        /*this.$lnkStartDate.editable({placement: 'bottom'
+        this.$lnkIncidentDate        = $("#incidentDate");
+        this.$lnkIncidentDate.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,format: 'mm/dd/yyyy'
-            ,emptytext : "Unknown"
             ,viewformat: 'mm/dd/yyyy'
             ,datepicker: {
                 weekStart: 1
             }
             ,success: function(response, newValue) {
-                CaseFile.Event.onSaveStartDate(newValue);
+                CaseFile.Event.onSaveIncidentDate(newValue);
             }
-        });*/
+        });
+
 
         this.$lnkCloseDate       = $("#closeDate");
         /*this.$lnkCloseDate.editable({placement: 'bottom'
@@ -64,6 +65,7 @@ CaseFile.Object = {
         this.$labCaseNumber  = $("#caseNumber"); //this.$lnkCloseDate.parent("div").next("small");
         this.$lnkCaseTitle   = $("#caseTitle");
         this.$lnkCaseTitle.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,success: function(response, newValue) {
                 CaseFile.Event.onSaveCaseTitle(newValue);
             }
@@ -71,7 +73,7 @@ CaseFile.Object = {
 
 
         this.$divRois        = $("#divRois");
-        CaseFile.JTable.createJTableRois(this.$divRois);
+        //CaseFile.JTable.createJTableRois(this.$divRois);
         this.$spanAddRoi   = this.$divRois.find(".jtable-toolbar-item-add-record");
         this.$spanAddRoi.unbind("click").on("click", function(e){CaseFile.Event.onClickSpanAddRoi(e);});
         CaseFile.Page.fillReportSelection();
@@ -79,13 +81,48 @@ CaseFile.Object = {
         this.$h4ItemTitleHeader = $("#itemTitle").parent();
         this.$lnkItemTitle  = $("#itemTitle");
         this.$lnkItemTitle.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
             ,success: function(response, newValue) {
-                CaseFile.Event.onSaveItemTitle(newValue);
+                CaseFile.Event.onSaveCasePriority(newValue);
             }
         });
 
         this.$lnkCaseClose = $("#closeCase");
         this.$lnkCaseClose.click(function(e){CaseFile.Event.onCloseCase(e)});
+
+        this.$lnkPriority = $("#priority");
+        this.$lnkPriority.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
+            ,success: function(response, newValue) {
+                CaseFile.Event.onSaveCasePriority(newValue);
+            }
+        });
+        this.$lnkAssignee = $("#assignee");
+        this.$lnkAssignee.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
+            ,success: function(response, newValue) {
+                CaseFile.Event.onSaveCaseAssignee(newValue);
+            }
+        });
+
+        this.$lnkSubjectType = $("#subjectType");
+        this.$lnkSubjectType.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
+            ,success: function(response, newValue) {
+                CaseFile.Event.onSaveCaseSubjectType(newValue);
+            }
+        });
+
+        this.$lnkStatus = $("#status");
+        this.$lnkStatus.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
+            ,success: function(response, newValue) {
+                CaseFile.Event.onSaveCaseStatus(newValue);
+            }
+        });
+
+
+
 
         var formUrls = new Object();
         formUrls["roi"] = $('#roiFormUrl').val();
@@ -188,15 +225,15 @@ CaseFile.Object = {
         //Acm.Object.setText(this.$lnkCaseTitle, txt);
         this.$lnkCaseTitle.editable("setValue",txt);
     }
-    ,setTextLnkStartDate: function(txt) {
+    ,setTextLnkIncidentDate: function(txt) {
         if(txt){
-            Acm.Object.setText(this.$lnkStartDate, txt);
+            Acm.Object.setText(this.$lnkIncidentDate, txt);
         }
         else{
             txt = "Unknown"
-            Acm.Object.setText(this.$lnkStartDate, txt);
+            Acm.Object.setText(this.$lnkIncidentDate, txt);
         }
-        //this.$lnkStartDate.editable("setValue", txt, true);
+        //this.$lnkIncidentDate.editable("setValue", txt, true);
     }
     ,setTextLnkCloseDate: function(txt) {
         if(txt){
@@ -220,12 +257,12 @@ CaseFile.Object = {
         this.setTextLnkCaseTitle(c.title);
 
         //this.setValueLnkCaseType(c.caseType);
-        this.setTextLnkStartDate(Acm.getDateFromDatetime(c.created));
+        this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));
         this.setTextLnkCloseDate(Acm.getDateFromDatetime(c.closed));
         //this.setValueLnkCloseDisposition(c.disposition);
 
-        this.refreshJTablePerson();
-        this.refreshJTableRois();
+        /*this.refreshJTablePerson();
+        this.refreshJTableRois();*/
 //        this.refreshJTableClosingDocs();
     }
 
