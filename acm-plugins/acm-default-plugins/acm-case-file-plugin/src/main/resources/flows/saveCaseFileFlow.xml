@@ -41,7 +41,6 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                     <logger category="com.armedia.acm.plugins.casefile" level="DEBUG"
                             message="Folder Id: #[payload.ecmFolderId]"/>
                 </processor-chain>
-
             </when>
             <otherwise>
                 <logger category="com.armedia.acm.plugins.casefile" level="INFO" message="No need to create folder."/>

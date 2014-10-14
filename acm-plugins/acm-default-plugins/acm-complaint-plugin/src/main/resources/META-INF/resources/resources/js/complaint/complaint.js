@@ -5,9 +5,9 @@
  */
 var Complaint = Complaint || {
     initialize: function() {
-        Complaint.cachePage = new Acm.CacheFifo(2);
-        Complaint.cacheComplaint = new Acm.CacheFifo(3);
-        Complaint.cachePersonList = new Acm.CacheFifo(3);
+        Complaint.cachePage = new Acm.Model.CacheFifo(2);
+        Complaint.cacheComplaint = new Acm.Model.CacheFifo(3);
+        Complaint.cachePersonList = new Acm.Model.CacheFifo(3);
 
 
         Complaint.Object.initialize();

@@ -67,6 +67,16 @@
                     <property name="url" value="/api/{version}/plugin/casebystatus/{timePeriod}"/>
                     <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
                 </bean>
+                <bean id="listAllCasesByUserUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/casefile/forUser/{user}"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
+                <bean id="getCaseFileStatusSummaryUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/casebystatus/summary"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>

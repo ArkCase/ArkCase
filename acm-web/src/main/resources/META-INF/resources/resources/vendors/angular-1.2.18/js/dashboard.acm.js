@@ -4614,11 +4614,12 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                             remove: removeFromCookies,
                             clearAll: clearAllFromCookies
                         }
+
                     }
                 }
             ]
         })
-    }.call(this), angular.module("sample", ["adf", "sample.widgets.mytasks", "sample.widgets.mycomplaints", "sample.widgets.news", "sample.widgets.weather", "sample.widgets.teamtaskworkload", "LocalStorageModule", "structures", "sample-01", "sample-02", "ngRoute", "ngTable"]).config(["$routeProvider", "localStorageServiceProvider",
+    }.call(this), angular.module("sample", ["adf", "sample.widgets.casesummary", "sample.widgets.mycases", "sample.widgets.mytasks", "sample.widgets.mycomplaints", "sample.widgets.news", "sample.widgets.weather", "sample.widgets.teamtaskworkload", "LocalStorageModule", "structures", "sample-01", "sample-02", "ngRoute", "ngTable"]).config(["$routeProvider", "localStorageServiceProvider",
     function($routeProvider, localStorageServiceProvider) {
         localStorageServiceProvider.setPrefix("adf"), $routeProvider.when("/", {
             templateUrl: "partials/sample.html",
@@ -4937,7 +4938,53 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             })
         })
     }
-]), angular.module("sample.widgets.mycomplaints", ["adf.provider"]).config(["dashboardProvider",
+]), angular.module("sample.widgets.mycases", ["adf.provider"]).config(["dashboardProvider",
+    function(dashboardProvider) {
+        dashboardProvider.widget("myCases", {
+            title: "My Cases",
+            description: "Displays a user cases",
+            templateUrl: "scripts/widgets/mycases/mycases.html",
+            tableBased: true,
+            controller: "myCasesCtrl",
+            edit: {
+                templateUrl: "scripts/widgets/mycases/edit.html"
+            }
+        })
+    }
+]).controller("myCasesCtrl", ["$scope", "$filter", "$http", "ngTableParams",
+        function($scope, $filter, $http, ngTableParams) {
+            var url = App.Object.getContextPath() + "/api/latest/plugin/casefile/forUser/" + App.Object.getUserName();
+            var nOfRows = 5;
+            if($scope.numberOfRows) {
+                nOfRows = $scope.numberOfRows;
+            }
+            $http.get(url).success(function(rawData) {
+                dataCa=_.map(rawData,function(row){
+                    row=_.clone(row);
+                    row.number = row.caseNumber;
+                    //row.priority = "LOW";
+                    row.taskUrl = App.Object.getContextPath() + "/plugin/casefile/";
+                    return row;
+                })
+                $scope.isData = dataCa.length > 0 ? true : false
+                $scope.tableParams = new ngTableParams({
+                    page: 1,
+                    count: nOfRows,
+                    sorting: {
+                        number: "asc"
+                    }
+                }, {
+                    counts:[3,5,10],
+                    total: dataCa.length,
+                    getData: function($defer, params) {
+                        var orderedData = params.sorting() ? $filter("orderBy")(dataCa, params.orderBy()) : dataCa;
+                        params.total(orderedData.length), $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()))
+                    }
+                })
+            })
+        }
+    ]),
+    angular.module("sample.widgets.mycomplaints", ["adf.provider"]).config(["dashboardProvider",
     function(dashboardProvider) {
         dashboardProvider.widget("myComplaints", {
             title: "My Complaints",
@@ -10896,7 +10943,110 @@ Showdown.converter = function(converter_options) {
             })
         }
     }
-}), angular.module("sample.widgets.github", ["adf.provider", "highcharts-ng"]).value("githubApiUrl", "https://api.github.com/repos/").config(["dashboardProvider",
+}), angular.module("sample.widgets.casesummary", ["adf.provider", "highcharts-ng"]).config(["dashboardProvider",
+        function(dashboardProvider) {
+            var widget = {
+                templateUrl: "scripts/widgets/casessum/caseStatus.html",
+                reload: !0,
+                resolve: {
+                    cases: function(serviceCasesByStatusSummary, config) {
+                        return serviceCasesByStatusSummary.get(config.period)
+                    }
+                },
+                edit: {
+                    templateUrl: "scripts/widgets/casessum/edit.html"
+                }
+            };
+            dashboardProvider.widget("casesByStatusSummary", angular.extend({
+                title: "Cases by Status",
+                description: "Displays Cases by Status Summary as a pie chart",
+                controller: "casesByStatusSummaryCtrl"
+            }, widget))
+        }
+    ]).service("serviceCasesByStatusSummary", ["$q", "$http",
+        function($q, $http) {
+            return {
+                get: function(period) {
+                    var deferred = $q.defer(),
+                        url = App.Object.getContextPath() + "/api/latest/plugin/casebystatus/"+period;
+                    return $http.get(url).success(function(data) {
+                        data ? deferred.resolve(data) : deferred.reject()
+                    }).error(function() {
+                        deferred.reject()
+                    }), deferred.promise
+                }
+            }
+        }
+    ]).controller("casesByStatusSummaryCtrl", ["$scope", "config", "cases",
+        function($scope, config,  cases) {
+            $scope.showChartCase = cases.length> 0 ? true : false;
+
+
+            var options = [
+                {
+                    idO: "all", nameO: "All"
+                },
+                {
+                    idO: "lastWeek", nameO:"Last Week"
+                },
+                {
+                    idO: "lastMonth", nameO:"Last Month"
+                },
+                {
+                    idO: "lastYear", nameO:"Last Year"
+                }];
+
+            var chartTitle =  "All";
+            angular.forEach(options, function(option) {
+                if (option.idO == config.period) {
+                    chartTitle = option.nameO;
+                }
+            });
+            $scope.chartTitle = chartTitle;
+            var seriesData = [];
+            if (angular.forEach(cases, function(caseS) {
+                seriesData.push([caseS.status, caseS.count])
+            }), seriesData.length > 0) {
+                seriesData.sort(function(a, b) {
+                    return b[1] - a[1]
+                });
+                var s = seriesData[0];
+                seriesData[0] = {
+                    name: s[0],
+                    y: s[1],
+                    sliced: !0,
+                    selected: !0
+                }
+            }
+            cases && ($scope.chartConfig = {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: !1
+                },
+                title: {
+                    text: chartTitle
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: !0,
+                        cursor: "pointer",
+                        dataLabels: {
+                            enabled: !0,
+                            color: "#000000",
+                            connectorColor: "#000000",
+                            format: "<b>{point.name}</b>: {point.percentage:.1f} %"
+                        }
+                    }
+                },
+                series: [{
+                    type: "pie",
+                    name: config.period,
+                    data: seriesData
+                }]
+            })
+        }
+    ]), angular.module("sample.widgets.github", ["adf.provider", "highcharts-ng"]).value("githubApiUrl", "https://api.github.com/repos/").config(["dashboardProvider",
     function(dashboardProvider) {
         var widget = {
             templateUrl: "scripts/widgets/github/github.html",
@@ -11250,10 +11400,25 @@ Showdown.converter = function(converter_options) {
             $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="myTasks"><div class="alert alert-info"  ng-controller="myTasksCtrl" ng-if="!isData"><p style="text-align:center;">No active tasks assigned</p></div><div ng-controller="myTasksCtrl" ng-if="isData"><div style="overflow-x: auto;"><table  ng-table="tableParams" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.status}}</td></tr></table></div></div></div>'),
 //<label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url">
 
-
-            //This is with filters
-//            $templateCache.put("scripts/widgets/mytasks/edit.html", '<form role="form"><div class="form-group"></div></form>'),
-//            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="mytasks"><div ng-controller="myTasksCtrl"><table ng-table="tableParams" show-filter="true" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'" filter="{ \'title\': \'text\' }">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'" filter="{ \'priority\': \'text\' }">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'" filter="{ \'due\': \'text\' }">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.completed}}</td></tr></table></div></div>'),
+            $templateCache.put("scripts/widgets/mycases/edit.html", '<form role="form"><div class="form-group"></div></form>'),
+            $templateCache.put("scripts/widgets/mycases/mycases.html", '' +
+                '<div class="myCases">' +
+                    '<div class="alert alert-info" ng-controller="myCasesCtrl" ng-if="!isData">' +
+                        '<p style="text-align:center;">No active cases assigned</p>' +
+                    '</div>' +
+                    '<div ng-controller="myCasesCtrl" ng-if="isData">' +
+                        '<div style="overflow-x: auto;">' +
+                            '<table  ng-table="tableParams" class="table">' +
+                                '<tr ng-repeat="case in $data">' +
+                                    '<td data-title="\'Number\'" sortable="\'number\'"><a ng-href="{{case.caseUrl}}{{case.number}}">{{case.number}}</td>' +
+                                    '<td data-title="\'Title\'" sortable="\'title\'">{{case.title}}</td>' +
+                                    '<td data-title="\'Priority\'" sortable="\'priority\'">{{case.priority}}</td>' +
+                                    '<td data-title="\'Status\'" sortable="\'status\'">{{case.status}}</td>' +
+                                '</tr>' +
+                            '</table>' +
+                            '</div>' +
+                    '</div>' +
+                '</div>'),
 
             $templateCache.put("scripts/widgets/news/edit.html", '<form role="form"><div class="form-group"><label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url"></div></form>'),
             $templateCache.put("scripts/widgets/news/news.html", '<div class="news"><div class="alert alert-info" ng-if="!feed">Please insert a feed url in the widget configuration</div><h4><a ng-href="{{feed.link}}" target="_blank">{{feed.title}}</a></h4><ul><li ng-repeat="entry in feed.entries"><a ng-href="{{entry.link}}" target="_blank">{{entry.title}}</a></li></ul></div>'),
@@ -11263,6 +11428,24 @@ Showdown.converter = function(converter_options) {
 
             $templateCache.put("scripts/widgets/teamtaskworkload/edit.html", '<form role="form"><div class="form-group"><label for="path">Select Due Date Period</label><select type="text" class="form-control" id="due" ng-model="config.due"><option value="all" ng-selected="selected">All</option><option value="pastDue">Past Due</option><option value="dueTomorrow" >Due Tomorrow</option><option value="dueInAWeek">Due in 7 Days</option><option value="dueInAMonth">Due in 30 Days</option></select></div></form>'),
             $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="showChart==false"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">Currently, there are no outstanding tasks for any user</p></div><div ng-if="showChart"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
+
+            $templateCache.put("scripts/widgets/casessum/caseStatus.html", '<div>' +
+                '<div class="alert alert-info" ng-if="!showChartCase"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">Currently, there are no outstanding cases</p></div><div ng-if="showChartCase"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
+            $templateCache.put("scripts/widgets/casessum/edit.html", '<form role="form"><div class="form-group">' +
+                '<label for="path">Select Time Period</label>' +
+                '<select type="text" class="form-control" id="period" ng-model="config.period">' +
+                '<option value="all" ng-selected="selected">All</option>' +
+                '<option value="lastWeek">Last Week</option>' +
+                '<option value="lastMonth">Last Month</option>' +
+                '<option value="lastYear">Last Year</option>' +
+                '</select>'+
+                '</div></form>'),
+
+
+
+
+
+
 
             $templateCache.put("scripts/widgets/weather/edit.html", '<form role="form"><div class="form-group"><label for="location">Location</label><input type="location" class="form-control" id="location" ng-model="config.location" placeholder="Enter location"></div></form>'),
             $templateCache.put("scripts/widgets/weather/weather.html", '<div class="text-center"><div class="alert alert-info" ng-if="!weather"><p style="text-align:center;">Please insert a location in the widget configuration</div>' +
