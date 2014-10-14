@@ -2,7 +2,7 @@
 <html lang="en" class="app">
 <head>
 <meta charset="utf-8" />
-<title>Cases | ACM | Armedia Case Management</title>
+<title>Complaints | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
@@ -56,7 +56,63 @@
         <section class="dropdown-menu aside-xl animated flipInY">
           <section class="panel bg-white">
             <header class="panel-heading b-light bg-light"> <strong>You have <span class="count">0</span> notifications</strong> </header>
-            <div class="list-group list-group-alt"> </div>
+            <div class="list-group list-group-alt">
+
+				<a href="#" class="media list-group-item">
+					<span class="pull-left thumb-sm text-center">
+						<i class="fa fa-file fa-2x text-success"></i>
+					</span>
+					<span class="media-body block m-b-none">
+						Your original format with anchor tag.<br>
+						<small class="text-muted">1 minutes ago</small>
+					</span>
+				</a>
+				<div class="media list-group-item">
+					<span class="pull-left thumb-sm text-center">
+						<i class="fa fa-file fa-2x text-success"></i>
+					</span>
+					<span class="media-body block m-b-none">
+						My format with div. Not that much different by the look<br>
+						<small class="text-muted">10/09/2014 12:00:00</small>
+					</span>
+				</div>
+				<div class="media list-group-item">
+					<span class="pull-left thumb-sm text-center">
+						<i class="fa fa-file fa-2x text-success"></i>
+					</span>
+					<span class="media-body block m-b-none">
+						We need extra buttons<br>
+						<small class="text-muted">10/09/2014 12:00:00</small>
+					</span>
+					<input type='button' name='markAsRead' value='Mark As Read'/>
+					<input type='button' name='delete' value='Delete'/>
+					<input type='button' name='seeResult' value='See Result'/>
+				</div>
+				<div class="media list-group-item">
+					<span class="pull-left thumb-sm text-center">
+						<i class="fa fa-file fa-2x text-success"></i>
+					</span>
+					<span class="media-body block m-b-none">
+						Above buttons are ugly. Would be nice to use some kind of little icons<br>
+						<small class="text-muted">10/09/2014 12:00:00</small>
+					<i class="i i-checkmark i-2x text-success-lt"></i>
+					<i class="i i-checkmark i-2x text-success-lt"></i>
+					<i class="i i-checkmark i-2x text-success-lt"></i>
+					</span>
+				</div>
+				<div class="media list-group-item asn-unread">
+					<span class="pull-left thumb-sm text-center">
+						<i class="fa fa-file fa-2x text-success"></i>
+					</span>
+					<span class="media-body block m-b-none">
+						<b>I can add class 'asn-unread' for unread messages </b><br>
+						<small class="text-muted">10/09/2014 12:00:00</small>
+					<i class="i i-checkmark i-2x text-success-lt"></i>
+					<i class="i i-checkmark i-2x text-success-lt"></i>
+					<i class="i i-checkmark i-2x text-success-lt"></i>
+					</span>
+				</div>
+            </div>
             <footer class="panel-footer text-sm"> <a href="#" class="pull-right"><i class="fa fa-cog"></i></a> <a href="#notes" data-toggle="class:show animated fadeInRight">See all acitivity</a> </footer>
           </section>
         </section>
@@ -64,7 +120,7 @@
     </ul>
   </header>
   <section>
-    <section class="hbox stretch"> 
+    <section class="hbox stretch">
       <!-- .aside -->
       <aside class="bg-light lt b-r b-light aside hidden-print" id="nav">
         <section class="vbox">
@@ -81,24 +137,29 @@
                   </ul>
                 </div>
               </div>
-              
+
               <!-- nav -->
               <nav class="nav-primary hidden-xs">
                 <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Navigation</div>
                 <ul class="nav nav-main" data-ride="collapse">
                   <li class=""> <a href="portal.html" class="auto"> <i class="i i-statistics icon"> </i> <span class="font-bold">Dashboard</span> </a> </li>
                   <li class=""> <a href="activity.html" class="auto"> <i class="i i-alarm icon"> </i> <span class="font-bold">Activity</span> </a> </li>
-                  <li class=""> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
-                  <li class="active"> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
+                  <li class="active"> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
+                  <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
                   <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
-<li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
+<li class=""> <a href="#" class="auto" data-target=".admin-collapse" data-toggle="collapse"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span> </a>
+                    <ul class="nav admin-collapse">
+                      <li> <a href="access.html"> <i class="i i-circle-sm"></i> <span>Access Control Policy</span> </a> </li>
+                      <li> <a href="locks.html"> <i class="i i-circle-sm"></i> <span>Object Locks</span> </a> </li>
+                    </ul>
+                  </li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
               </nav>
-              <!-- / nav --> 
+              <!-- / nav -->
             </div>
           </section>
           <footer class="footer hidden-xs no-padder text-center-nav-xs"> <a href="#nav" data-toggle="class:nav-xs" class="btn btn-icon icon-muted btn-inactive m-l-xs m-r-xs"> <i class="i i-circleleft text"></i> <i class="i i-circleright text-active"></i> </a> </footer>
@@ -108,33 +169,33 @@
       <section id="content">
         <section class="vbox">
           <section class="scrollable">
-            <section class="hbox stretch"><!-- /.aside --> 
+            <section class="hbox stretch"><!-- /.aside -->
               <!-- .aside -->
-              
+
               <aside class="aside-lg bg-light lt">
                 <section class="vbox animated fadeInLeft">
                   <section class="scrollable">
                     <header class="dk header">
-                      <h3 class="m-b-xs text-black pull-left">Cases</h3>
+                      <h3 class="m-b-xs text-black pull-left">Complaints</h3>
                       <div class="btn-group inline select pull-right">
                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
                         <ul class="dropdown-menu text-left text-sm">
                           <li><a href="#">Sort Date Ascending</a></li>
                           <li><a href="#">Sort Date Descending</a></li>
-                          <li><a href="#">Sort Case ID Ascending</a></li>
-                          <li><a href="#">Sort Case ID Ascending</a></li>
+                          <li><a href="#">Sort Complaint ID Ascending</a></li>
+                          <li><a href="#">Sort Complaint ID Ascending</a></li>
                         </ul>
                       </div>
                       <div class="btn-group select pull-right">
                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
                         <ul class="dropdown-menu text-left text-sm">
-                          <li><a href="#">All Open Cases</a></li>
-                          <li><a href="#">Cases I've Opened</a></li>
-                          <li><a href="#">Unapproved Cases</a></li>
-                          <li><a href="#">Approved Cases</a></li>
-                          <li><a href="#">Cases From Group</a></li>
-                          <li><a href="#">Closed or Expired Cases</a></li>
-                          <li><a href="#">New Cases</a></li>
+                          <li><a href="#">All Open Complaint</a></li>
+                          <li><a href="#">Complaint I've Opened</a></li>
+                          <li><a href="#">Unapproved Complaint</a></li>
+                          <li><a href="#">Approved Complaint</a></li>
+                          <li><a href="#">Complaint From Group</a></li>
+                          <li><a href="#">Closed or Expired Complaint</a></li>
+                          <li><a href="#">New Complaint</a></li>
                         </ul>
                       </div>
                     </header>
@@ -147,13 +208,7 @@
                     </div>
                     <div class="row m-b">
                       <div class="col-sm-12">
-                      
-                      
                         <div id="tree"></div>
-                        
-                        
-                        
-                        
                       </div>
                     </div>
                   </section>
@@ -167,13 +222,12 @@
                         <div class="col-xs-12">
                           <div class="">
                             <div class=" clearfix">
-                              <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> Sample Case Title</a> </div>
+                              <div class="col-xs-4 b-r">
+                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> </div>
                                 <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
                               <div class="col-xs-2 b-r">
                                 <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
-                                <small class="text-muted">Start Date</small></div>
-                               
+                                <small class="text-muted">Incident Date</small></div>
                               <div class="col-xs-1 b-r">
                                 <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
                                 <small class="text-muted">Priority</small></div>
@@ -183,77 +237,25 @@
                               <div class="col-xs-2 b-r">
                                 <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
                                 <small class="text-muted">Subject Type</small></div>
-                                 <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#" id="duedate" data-type="date" data-pk="1" data-url="/post" data-title="Enter Due Date">MM/DD/YYYY</a></div>
-                                <small class="text-muted">Due Date</small></div>
                               <div class="col-xs-1">
                                 <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div> <small class="text-muted">Status</small></div>
                             </div>
                           </div>
-                   
+
                     </div></div>
                     </div>
                     </div>
                     </div>
                     </div>
                     <div>
-                      <div class="wrapper">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <section class="panel b-a">
-                              <div class="panel-heading b-b bg-info">
-                                <ul class="nav nav-pills pull-right">
-                                  <li style="margin-right:5px"></li>
-                                  <li>
-                                    <div class="btn-group padder-v2">
-                                      <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New Reference</button>
-                                    </div>
-                                  </li>
-                                  <li> </li>
-                                </ul>
-                                <a href="#" class="font-bold">Other Cases</a></div>
-                              <div class="panel-body max-200 no-padder">
-                                <table class="table table-striped th-sortable table-hover">
-                                  <thead>
-                                    <tr>
-                                      <th>Case ID</th>
-                                      <th>Title</th>
-                                      <th>Incident Date</th>
-                                      <th>Priority</th>
-                                      <th>Assigned To</th>
-                                      <th>Subject Type</th>
-                                      <th>Status</th>
-                                      <th width="10%">Action</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr class="odd gradeA">
-                                      <td>[Case ID]</td>
-                                      <td>[Title]</td>
-                                      <td>[Incident Date]</td>
-                                      <td>[Priority]</td>
-                                      <td>[Assigned To]</td>
-                                      <td>[Subject Type]</td>
-                                      <td>[Status]</td>
-                                      <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
-                                        <option value="0">Choose Action</option>
-                                        <option value="1">Delete</option>
-                                      </select></td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </section>
-                          </div>
-                        </div>
-                      </div>
+                      <div class="wrapper"> </div>
                     </div>
                     </div>
                   </section>
                 </section>
               </aside>
-              <!-- /.aside --> 
-              
+              <!-- /.aside -->
+
             </section>
           </section>
         </section>
@@ -261,9 +263,7 @@
     </section>
   </section>
 </section>
-
-
-<script type='text/javascript'>//<![CDATA[ 
+<script type='text/javascript'>//<![CDATA[
 
 $(function() {
     $("#tree").fancytree({
@@ -280,69 +280,138 @@ activate: function(event, data) {
 			},
 
         source: [{
-            title: "Sample Case Title <em>(2014-03-12321)</em>",
-href: "cases.html",
+            title: "Sample Complaint Title <em>(2014-03-12321)</em>",
+href: "complaints.html",
 tooltip: "2014-03-12321",
             expanded: "fancytree-expanded",
             children: [{
-                    title: "Details", 
-					href: "caseDetails.html"
+                title: "Incident 1",
+                folder: true,
+				expanded: "fancytree-expanded",
+                children: [{
+                    title: "Details",
+					href: "complaintDetails.html"
                 }, {
-                    title: "People ", 
-					href: "casePeople.html"
+                    title: "Initiator",
+					href: "complaintIntitiator.html",
+                    description1: "John Doe",
+                    description2: "Victim"
                 }, {
-                    title: "Notes", 
-					href: "caseNotes.html"
+                    title: "People ",
+					href: "complaintPeople.html"
                 }, {
+                    title: "Notes",
+					href: "complaintNotes.html"
+                }]
+            }, {
                 title: "Documents",
                 folder: true,
-				href: "caseDocuments.html",
 expanded: "fancytree-expanded",
                 children: [{
-                        title: "Document Title",
-                        description1: "David Miller", 
-						href: "caseDocumentDetails.html"
+                    title: "Pending",
+                    folder: false,
+					href: "complaintDocuments.html",
+                    children: [{
+                        title: "Document Title 1",
+                        description1: "David Miller",
+						href: "complaintDocumentDetails.html"
+                    }, {
+                        title: "Document Title 2",
+                        description1: "Ronda Ringo",
+						href: "complaintDocumentDetails.html"
                     }]
-            }, {
-                title: "ROIs",
-                folder: true,
-				href: "caseROI.html",
-expanded: "fancytree-expanded",
-                children: [{
-                        title: "[Document #], [Status]",
-                        description1: "David Miller", 
-						href: "caseROIDetails.html"
+                }, {
+                    title: "Approved",
+                    folder: false,
+					href: "complaintDocuments.html",
+                    children: [{
+                        title: "Document Title 3",
+                        description1: "David Miller",
+						href: "complaintDocumentDetails.html"
+                    }, {
+                        title: "Document Title 4",
+                        description1: "Ronda Ringo",
+						href: "complaintDocumentDetails.html"
                     }]
+                }, {
+                    title: "Rejected",
+                    folder: false,
+					href: "complaintDocuments.html",
+                    children: [{
+                        title: "0005",
+                        title: "Document Title 5",
+                        description1: "David Miller",
+						href: "complaintDocumentDetails.html"
+                    }, {
+                        title: "0006",
+                        title: "Document Title 6",
+                        description1: "Ronda Ringo",
+						href: "complaintDocumentDetails.html"
+                    }]
+                }]
             }, {
                 title: "Tasks",
                 folder: true,
-				href: "caseTasks.html",
 expanded: "fancytree-expanded",
                 children: [{
-                        title: "Subject, Priority",
-                        description1: "David Miller", 
-						href: "caseTaskDetails.html"
+                    title: "Unassigned",
+                    folder: false,
+					href: "complaintTasks.html",
+                    children: [{
+                        title: "Task Title 1",
+                        description1: "David Miller",
+						href: "complaintTaskDetails.html"
+                    }, {
+                        title: "Task  Title 2",
+                        description1: "Ronda Ringo",
+						href: "complaintTaskDetails.html"
                     }]
-               
+                }, {
+                    title: "Assigned",
+                    folder: false,
+                    children: [{
+                        title: "Task  Title 3",
+                        description1: "David Miller",
+						href: "complaintTaskDetails.html"
+                    }, {
+                        title: "Task  Title 4",
+                        description1: "Ronda Ringo",
+						href: "complaintTaskDetails.html"
+                    }]
+                }, {
+                    title: "Completed",
+                    folder: false,
+                    children: [{
+                        title: "0005",
+                        title: "Task  Title 5",
+                        description1: "David Miller",
+						href: "complaintTaskDetails.html"
+                    }, {
+                        title: "0006",
+                        title: "Task Title 6",
+                        description1: "Ronda Ringo",
+						href: "complaintTaskDetails.html"
+                    }]
+                }]
             }, {
                 title: "References",
                 folder: true,
 expanded: "fancytree-expanded", children: [{
                     title: "Other Complaints",
-                    folder: false, 
-					href: "caseOtherComplaints.html"
+                    folder: false,
+					href: "complaintOtherComplaints.html"
                 },{
                     title: "Other Cases",
-                    folder: false, 
-					href: "caseOtherCases.html"
+                    folder: false,
+					href: "complaintOtherCases.html"
                 }, {
                     title: "Other Tasks",
-                    folder: false, 
-					href: "caseOtherTasks.html"
+                    folder: false,
+					href: "complaintOtherTasks.html"
                 }, {
                     title: "Other Documents",
-                    folder: false, 
-					href: "caseOtherDocuments.html"
+                    folder: false,
+					href: "complaintOtherDocuments.html"
                 }]
             }, {
                 title: "Participants",
@@ -361,18 +430,17 @@ expanded: "fancytree-expanded",
 
 });
 //]]>
-</script> 
+</script>
 
-
-<!-- Bootstrap --> 
-<script src="resources/js/bootstrap.js"></script> 
+<!-- Bootstrap -->
+<script src="resources/js/bootstrap.js"></script>
 
 <!-- Summernote WYSIWYG -->
 
 <link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>
-<script src="resources/js/summernote/summernote.js"></script> 
+<script src="resources/js/summernote/summernote.js"></script>
 <script>
-  
+
   var edit = function() {
   $('.complaintDetails').summernote({focus: true});
 };
@@ -380,64 +448,54 @@ var save = function() {
   var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
   $('.complaintDetails').destroy();
 };
-  
-</script> 
+
+</script>
 
 <!-- X-Editable -->
 
 <link href="resources/css/bootstrap-editable.css" rel="stylesheet">
-<script src="resources/js/bootstrap-editable.min.js"></script> 
-<script src="resources/js/typeahead.js"></script> 
+<script src="resources/js/bootstrap-editable.min.js"></script>
+<script src="resources/js/typeahead.js"></script>
 <script>
 $.fn.editable.defaults.url = '/post';
-$(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); }); 
-$(document).ready(function() { $('#priority').editable({placement: 'left', value: 2,    
+$(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); });
+$(document).ready(function() { $('#priority').editable({placement: 'left', value: 2,
         source: [
               {value: 1, text: 'Low'},
               {value: 2, text: 'Medium'},
               {value: 3, text: 'High'},
               {value: 3, text: 'Expedited'}
-           ]}); }); 
-$(document).ready(function() { $('#type').editable({placement: 'bottom', value: 2,    
+           ]}); });
+$(document).ready(function() { $('#type').editable({placement: 'bottom', value: 2,
         source: [
               {value: 1, text: 'Type 1'},
               {value: 2, text: 'Type 2'},
               {value: 3, text: 'Type 3'},
               {value: 3, text: 'Type 4'}
-           ]}); }); 
-		   
-$(document).ready(function() { $('#assigned').editable({placement: 'bottom', value: 2,    
+           ]}); });
+
+$(document).ready(function() { $('#assigned').editable({placement: 'bottom', value: 2,
         source: [
               {value: 1, text: 'David Miller'},
               {value: 2, text: 'Judy Hsu'},
               {value: 3, text: 'Ronda Ringo'},
               {value: 3, text: 'AJ McClary'}
-           ]}); }); 
-		   
+           ]}); });
+
 $(document).ready(function() { $('#incident').editable({
-        format: 'yyyy-mm-dd',  
-		placement: 'bottom',  
-        viewformat: 'dd/mm/yyyy',    
+        format: 'yyyy-mm-dd',
+		placement: 'bottom',
+        viewformat: 'dd/mm/yyyy',
         datepicker: {
                 weekStart: 1
            }
-        }); }); 
-		
-			   
-$(document).ready(function() { $('#duedate').editable({
-        format: 'yyyy-mm-dd',  
-		placement: 'bottom',  
-        viewformat: 'dd/mm/yyyy',    
-        datepicker: {
-                weekStart: 1
-           }
-        }); }); 
+        }); });
 
-</script> 
+</script>
 
-<!-- App --> 
-<script src="resources/js/app.js"></script> 
-<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<!-- App -->
+<script src="resources/js/app.js"></script>
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script>
 <script src="resources/js/app.plugin.js"></script>
 </body>
 </html>
