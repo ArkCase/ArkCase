@@ -154,15 +154,28 @@ var Acm = Acm || {
         }
     }
 
-    //datetime format: "2014-04-30T16:51:33.914+0000"
+    //Get date part from format: "2014-04-30T16:51:33.914+0000"
     ,getDateFromDatetime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
-            //d = dt.substr(0, 10);
             var year  = dt.substr(0, 4);
             var month = dt.substr(5, 2);
             var day   = dt.substr(8, 2);
             d = month + "/" + day + "/" + year;
+        }
+        return d;
+    }
+    //Get date and time from format: "2014-04-30T16:51:33.914+0000"
+    ,getDateTimeFromDatetime: function(dt) {
+        var d = "";
+        if (Acm.isNotEmpty(dt)) {
+            var year  = dt.substr(0, 4);
+            var month = dt.substr(5, 2);
+            var day   = dt.substr(8, 2);
+            var hour   = dt.substr(11, 2);
+            var minute   = dt.substr(14, 2);
+            var second   = dt.substr(17, 2);
+            d = month + "/" + day + "/" + year + " " + hour + ":" + minute + ":" + second;
         }
         return d;
     }
