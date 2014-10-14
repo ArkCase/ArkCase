@@ -257,12 +257,12 @@ CaseFile.Object = {
         this.setTextLnkCaseTitle(c.title);
 
         //this.setValueLnkCaseType(c.caseType);
-        this.setTextLnkStartDate(Acm.getDateFromDatetime(c.created));
+        this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));
         this.setTextLnkCloseDate(Acm.getDateFromDatetime(c.closed));
         //this.setValueLnkCloseDisposition(c.disposition);
 
-        this.refreshJTablePerson();
-        this.refreshJTableRois();
+        /*this.refreshJTablePerson();
+        this.refreshJTableRois();*/
 //        this.refreshJTableClosingDocs();
     }
 

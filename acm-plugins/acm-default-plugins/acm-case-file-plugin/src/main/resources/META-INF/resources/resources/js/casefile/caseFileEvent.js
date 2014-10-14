@@ -28,7 +28,7 @@ CaseFile.Event = {
         //Acm.keepTrying(CaseFile.Event._tryInitCaseType,         8, 200);
         //Acm.keepTrying(CaseFile.Event._tryInitCloseDisposition, 8, 200);
 //        Acm.keepTrying(CaseFile.Event._tryInitItemStatus,        8, 200);
-        Acm.keepTrying(CaseFile.Event._tryInitItemAssignee,     8, 200);
+        //Acm.keepTrying(CaseFile.Event._tryInitItemAssignee,     8, 200);
     }
     ,onActivateTreeNode: function(node) {
         if ("prevPage" == node.key) {

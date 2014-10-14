@@ -404,7 +404,8 @@ Complaint.JTable = {
                     }, id: {
                         key: true, create: false, edit: false, list: false
                     }, type: {
-                        title: 'Type', width: '15%', options: Complaint.getOrganizationTypes()
+                        title: 'Type', width: '15%'
+                        , options: Complaint.getOrganizationTypes()
                     }, value: {
                         title: 'Value', width: '30%'
                     }, createDate: {
