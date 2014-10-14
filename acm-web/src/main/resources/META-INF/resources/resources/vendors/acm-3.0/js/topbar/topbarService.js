@@ -57,7 +57,7 @@ Topbar.Service = {
 
 
 
-//    ,API_TYPEAHEAD_SUGGESTION       : "/resources/ctrs.json"
+    ,API_TYPEAHEAD_SUGGESTION       : "/resources/ctrs.json"
 //    ,API_GET_TYPEAHEAD_TERMS       : "/api/latest/plugin/complaint/types"
 //
 //
