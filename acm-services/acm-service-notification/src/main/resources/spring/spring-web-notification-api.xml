@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="listNotificationsAPIController" class="com.armedia.acm.services.notification.web.api.ListAllNotificationsAPIController">
+        <property name="notificationDao" ref="notificationDao"/>
+    </bean>
+
+    <bean id="deleteNotificationByNotificationId" class="com.armedia.acm.services.notification.web.api.DeleteNotificationByIdAPIController">
+        <property name="notificationDao" ref="notificationDao"/>
+    </bean>
+</beans>
