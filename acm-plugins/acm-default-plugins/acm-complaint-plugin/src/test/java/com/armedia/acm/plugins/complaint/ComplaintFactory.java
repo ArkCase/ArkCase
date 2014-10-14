@@ -1,9 +1,13 @@
 package com.armedia.acm.plugins.complaint;
 
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +58,24 @@ public class ComplaintFactory
         p.setCreator("ann-acm");
         p.setModifier("ann-acm");
 
+        ContactMethod cm = new ContactMethod();
+        cm.setType("Phone Number");
+        cm.setValue("703-555-1212");
+
+        List<ContactMethod> cms = new ArrayList<>();
+        cms.add(cm);
+        p.setContactMethods(cms);
+
+        Organization org = new Organization();
+        org.setOrganizationType("Corporation");
+        org.setOrganizationValue("The League of Extraordinary Gentlemen");
+
+        List<Person> ps = new ArrayList<>();
+        ps.add(p);
+        List<Organization> orgs = new ArrayList<>();
+        orgs.add(org);
+        p.setOrganizations(orgs);
+
         pa.setPerson(p);
         pa.setPersonDescription("Simple Description");
         pa.setPersonType("Subject");
@@ -63,13 +85,22 @@ public class ComplaintFactory
         complaint.setOriginator(pa);
         
         PersonAssociation personAssoc = new PersonAssociation();
+
+        Person p2 = new Person();
+        p2.setFamilyName("Person 2");
+        p2.setGivenName("ACM");
+        p2.setStatus("testStatus");
+        p2.setCreator("ann-acm");
+        p2.setModifier("ann-acm");
         
-        personAssoc.setPerson(p);
-        personAssoc.setPersonType("Complainant");
+        personAssoc.setPerson(p2);
+        personAssoc.setPersonType("Witness");
         personAssoc.setPersonDescription("Short Description");
-        
+        personAssoc.setCreator("witnessCreator");
+        personAssoc.setModifier("witnessModifier");
+
         List <PersonAssociation> listPersonAssoc = complaint.getPersonAssociations();
-        listPersonAssoc.add(pa);
+        listPersonAssoc.add(personAssoc);
 
         ObjectAssociation oa = new ObjectAssociation();
         oa.setTargetId(12345L);
