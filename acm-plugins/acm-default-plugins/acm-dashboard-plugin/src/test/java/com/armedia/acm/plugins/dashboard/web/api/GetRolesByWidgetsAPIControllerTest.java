@@ -150,10 +150,15 @@ public class GetRolesByWidgetsAPIControllerTest extends EasyMockSupport {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        List<RolesGroupByWidgetDto> foundTasks = objectMapper.readValue(json,
+        List<RolesGroupByWidgetDto> rolesGroupByWidgetDtos = objectMapper.readValue(json,
                 objectMapper.getTypeFactory().constructParametricType(List.class, RolesGroupByWidgetDto.class));
 
-        assertEquals(1, foundTasks.size());
+        assertEquals(1, rolesGroupByWidgetDtos.size());
+
+        RolesGroupByWidgetDto rolesGroupByWidget = rolesGroupByWidgetDtos.get(0);
+
+        assertEquals(rolesGroupByWidget.getWidgetName(),rolesGroupByWidgetDto.getWidgetName());
+        assertEquals(rolesGroupByWidget.getWidgetAuthorizedRoles().get(0).getName(),rolesGroupByWidgetDto.getWidgetAuthorizedRoles().get(0).getName());
     }
 
 }
