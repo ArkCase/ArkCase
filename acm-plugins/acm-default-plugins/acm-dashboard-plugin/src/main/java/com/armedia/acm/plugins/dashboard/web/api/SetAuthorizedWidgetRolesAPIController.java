@@ -47,7 +47,7 @@ public class SetAuthorizedWidgetRolesAPIController {
     ) throws AcmObjectNotFoundException, AcmUserActionFailedException {
         String userId = (String) authentication.getName();
 
-        if ( log.isInfoEnabled() ) {
+        if (log.isInfoEnabled()) {
             log.info("Updating authorized roles for dashboard widget: '" + updateAuthorizedWidgetRoles.getWidgetName() + "'");
         }
         RolesGroupByWidgetDto result = null;
@@ -55,7 +55,7 @@ public class SetAuthorizedWidgetRolesAPIController {
             result = updateWidgetRolesAuthorization(updateAuthorizedWidgetRoles);
             raiseSetEvent(authentication,session,result,true);
             return result;
-        } catch (AcmUserActionFailedException e){
+        } catch (AcmUserActionFailedException e) {
             throw e;
         }
     }
@@ -65,10 +65,13 @@ public class SetAuthorizedWidgetRolesAPIController {
         getEventPublisher().publishSetAuthorizedWidgetRolesEvent(rolesPerWidget, authentication, ipAddress, succeeded);
     }
 
-    private RolesGroupByWidgetDto updateWidgetRolesAuthorization(RolesGroupByWidgetDto rolesGroupByWidgetDto) throws AcmUserActionFailedException {
-        getWidgetDao().deleteAllWidgetRolesByWidgetName(rolesGroupByWidgetDto.getWidgetName());
+    protected RolesGroupByWidgetDto updateWidgetRolesAuthorization(RolesGroupByWidgetDto rolesGroupByWidgetDto) throws AcmUserActionFailedException {
+        int i = getWidgetDao().deleteAllWidgetRolesByWidgetName(rolesGroupByWidgetDto.getWidgetName());
+        if(log.isInfoEnabled()) {
+            log.info("Deleted "+i+" WidgetRoles");
+        }
         List<AcmRole> allRoles = getUserDao().findAllRoles();
-        List<AcmRole> rolesForUpdate = new ArrayList<AcmRole>();
+        List<AcmRole> rolesForUpdate = new ArrayList<>();
 
         for ( WidgetRoleName roleName : rolesGroupByWidgetDto.getWidgetAuthorizedRoles() ) {
             for(AcmRole role: allRoles) {
@@ -87,10 +90,9 @@ public class SetAuthorizedWidgetRolesAPIController {
             }
             throw new AcmUserActionFailedException("Update Authorized Roles for a Widget", "Dashboard", null, e.getMessage(), e);
         }
-
     }
 
-    private void addRolesToAWidgetByWidgetNameAndRoles(String widgetName, List<AcmRole> roles) throws AcmWidgetException {
+    protected void addRolesToAWidgetByWidgetNameAndRoles(String widgetName, List<AcmRole> roles) throws AcmWidgetException {
         WidgetRole widgetRole = new WidgetRole();
         Widget widget = null;
         try {

@@ -156,14 +156,15 @@ public class WidgetDao extends AcmAbstractDao<Widget> {
     }
 
     @Transactional
-    public void deleteAllWidgetRolesByWidgetName(String widgetName) {
+    public int deleteAllWidgetRolesByWidgetName(String widgetName) {
         Query deleteAllRolesPerWidget = getEntityManager().createQuery(
                 "DELETE FROM WidgetRole wrole WHERE wrole.widgetId IN " +
                 "(SELECT widget.widgetId FROM Widget widget " +
                 "WHERE widget.widgetName=:widgetName)");
 
         deleteAllRolesPerWidget.setParameter("widgetName",widgetName);
-        deleteAllRolesPerWidget.executeUpdate();
+        int i = deleteAllRolesPerWidget.executeUpdate();
+        return i;
     }
 
     public EntityManager getEntityManager() {
