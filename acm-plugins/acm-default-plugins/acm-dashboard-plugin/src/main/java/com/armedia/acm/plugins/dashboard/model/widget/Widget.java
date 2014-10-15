@@ -39,22 +39,24 @@ public class Widget {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
-        if (!(o instanceof Widget)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Widget widget = (Widget) o;
 
-        if (!widgetId.equals(widget.widgetId)) return false;
-        if (!widgetName.equals(widget.widgetName)) return false;
+        if (widgetId != null ? !widgetId.equals(widget.widgetId) : widget.widgetId != null) return false;
+        if (widgetName != null ? !widgetName.equals(widget.widgetName) : widget.widgetName != null) return false;
 
         return true;
     }
 
     @Override
-    public int hashCode() {
-        int result = widgetId.hashCode();
-        result = 31 * result + widgetName.hashCode();
+    public int hashCode()
+    {
+        int result = widgetId != null ? widgetId.hashCode() : 0;
+        result = 31 * result + (widgetName != null ? widgetName.hashCode() : 0);
         return result;
     }
 }
