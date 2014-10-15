@@ -5,9 +5,9 @@
  */
 var CaseFile = CaseFile || {
     initialize: function() {
-        CaseFile.cachePage = new Acm.CacheFifo(2);
-        CaseFile.cacheCaseFile = new Acm.CacheFifo(3);
-        CaseFile.cacheCaseEvents = new Acm.CacheFifo(3);
+        CaseFile.cachePage = new Acm.Model.CacheFifo(2);
+        CaseFile.cacheCaseFile = new Acm.Model.CacheFifo(3);
+        CaseFile.cacheCaseEvents = new Acm.Model.CacheFifo(3);
 
         CaseFile.Object.initialize();
         CaseFile.Event.initialize();
@@ -42,35 +42,38 @@ var CaseFile = CaseFile || {
     ,PERSON_SUBTABLE_TITLE_ORGANIZATIONS: "Organizations"
     ,PERSON_SUBTABLE_TITLE_LOCATIONS:     "Locations"
     ,PERSON_SUBTABLE_TITLE_ALIASES:       "Aliases"
-    ,_personTypes : ["Witness", "Subject", "Spouse"]
+
+    ,_personTypes : ['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator']
     ,getPersonTypes : function() {
         return this._personTypes;
     }
 
-    ,_personTitles : ['Mr.', 'Mrs.', 'Ms.', 'Dr.']
+    ,_personTitles : ['Mr', 'Mrs', 'Ms', 'Miss']
     ,getPersonTitles : function() {
         return this._personTitles;
     }
 
-    ,_deviceTypes : ['Phone', 'Email']
+    ,_deviceTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
+        'Email','Instant messenger', 'Social media','Website','Blog']
     ,getDeviceTypes : function() {
         return this._deviceTypes;
     }
 
-    ,_organizationTypes : ['org', 'gov', 'com']
+    ,_organizationTypes : ['Non-profit','Government','Corporation']
     ,getOrganizationTypes : function() {
         return this._organizationTypes;
     }
 
-    ,_locationTypes : ['Home', 'Office', 'Hotel']
+    ,_locationTypes : ['Business' , 'Home']
     ,getLocationTypes : function() {
         return this._locationTypes;
     }
 
-    ,_aliasTypes : ['Nick Name', 'Other Name']
+    ,_aliasTypes : ['FKA' , 'Married']
     ,getAliasTypes : function() {
         return this._aliasTypes;
     }
+
 };
 
 

@@ -119,25 +119,34 @@
                                         <div class="">
                                             <div class=" clearfix">
                                                 <div class="col-xs-2 b-r">
-                                                    <%--<div class="h4 font-bold"> <a href="#" id="caseType" data-type="select" data-pk="1" data-url="/post" data-title="Choose Case type"> [Case Type]</a> </div>--%>
-                                                    <%--<small class="text-muted">2014-03-12321</small></div>--%>
-                                                    <%--<div class="h4 font-bold"> <a href="#" id="caseType" data-type="select" data-pk="1" data-title="Choose Case type"></a> </div>--%>
 
                                                     <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Case Title"></a> </div>
                                                     <small class="text-muted" id="caseNumber"></small></div>
-                                                <%--<div id="div1"><small>world</small></div>--%>
                                                 <div class="col-xs-2 b-r">
-                                                    <%--<div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-url="/post" data-title="Start Date">MM/DD/YYYY</a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-title="Start Date"></a></div>
-                                                    <small class="text-muted">Start Date</small></div>
+
+                                                    <div class="h4 font-bold"><a href="#" id="incidentDate" data-type="date" data-pk="1" data-title="Incident Date"></a></div>
+                                                    <small class="text-muted">Incident Date</small></div>
                                                 <div class="col-xs-2 b-r">
-                                                    <%--<div class="h4 font-bold"><a href="#" id="closeDate" data-type="date" data-pk="1" data-url="/post" data-title="Close Date">MM/DD/YYYY</a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="closeDate" data-type="date" data-pk="1" data-title="Close Date"></a></div>
-                                                    <small class="text-muted">Close Date</small></div>
-                                                <%--<div class="col-xs-2">--%>
-                                                    <%--&lt;%&ndash;<div class="h4 font-bold"><a href="#" id="disposition"  data-type="select" data-pk="1" data-url="/post" data-title="Choose Close Disposition">XXXXXX</a></div>&ndash;%&gt;--%>
-                                                    <%--<div class="h4 font-bold"><a href="#" id="disposition"  data-type="select" data-pk="1" data-title="Choose Close Disposition"></a></div>--%>
-                                                    <%--<small class="text-muted">Close Disposition</small></div>--%>
+
+                                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="text" data-pk="1" data-title="Priority"></a></div>
+                                                    <small class="text-muted">Priority</small></div>
+                                                <div class="col-xs-2 b-r">
+
+                                                    <div class="h4 font-bold"><a href="#" id="assignee" data-type="text" data-pk="1" data-title="Assigned To"></a></div>
+                                                    <small class="text-muted">Assigned To</small></div>
+                                                <div class="col-xs-2 b-r">
+
+                                                    <div class="h4 font-bold"><a href="#" id="subjectType" data-type="text" data-pk="1" data-title="Subject Type"></a></div>
+                                                    <small class="text-muted">Subject Type</small></div>
+                                                <div class="col-xs-2 b-r">
+
+                                                    <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-pk="1" data-title="Status"></a></div>
+                                                    <small class="text-muted">Status</small></div>
+                                                <div class="col-xs-2 b-r">
+
+                                                    <%--<div class="h4 font-bold"><a href="#" id="closeDate" data-type="date" data-pk="1" data-title="Close Date"></a></div>
+                                                    <small class="text-muted">Close Date</small></div>--%>
+
                                             </div>
                                         </div>
                                     </div>

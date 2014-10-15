@@ -12,6 +12,9 @@ TaskWizard.Service = {
 //    ,API_GET_ASSIGNEES              : "/api/latest/users/withPrivilege/acm-complaint-approve"
     ,API_CREATE_ADHOC_TASK          : "/api/latest/plugin/task/adHocTask"
 
+    ,API_TYPEAHEAD_SUGGESTION_BEGIN       : "/api/latest/plugin/search/quickSearch?q=name:*"
+    ,API_TYPEAHEAD_SUGGESTION_END         : "*%20AND%20(object_type_s:COMPLAINT%20OR%20object_type_s:CASE)&start=0&n=16"
+
 
 //    ,getAssignees : function() {
 //        Acm.Ajax.asyncGet(App.getContextPath() + this.API_GET_ASSIGNEES
