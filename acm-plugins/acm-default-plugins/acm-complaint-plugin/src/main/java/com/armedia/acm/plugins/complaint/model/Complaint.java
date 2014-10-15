@@ -117,7 +117,7 @@ public class Complaint implements Serializable, AcmObject
     @Transient
     private List<String> approvers;
     
-    @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany (cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_person_assoc_parent_id")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
