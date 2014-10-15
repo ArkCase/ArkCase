@@ -33,11 +33,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -82,6 +81,7 @@ public class SetAuthorizedWidgetRolesAPIControllerTest extends EasyMockSupport {
         unit.setWidgetDao(mockWidgetDao);
         unit.setEventPublisher(mockWidgetEventPublisher);
         unit.setUserDao(mockUserDao);
+
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
     }
@@ -92,47 +92,45 @@ public class SetAuthorizedWidgetRolesAPIControllerTest extends EasyMockSupport {
 //
 //        Widget widget = new Widget();
 //        widget.setWidgetName("New Widget");
+//        widget.setWidgetId(5L);
 //
+//        AcmRole role = new AcmRole();
+//        role.setRoleName("testRole");
 //
-//        List<WidgetRoleName> widgetRoleNames = new ArrayList<WidgetRoleName>();
-//        widgetRoleNames.add(new WidgetRoleName("role1"));
-//        widgetRoleNames.add(new WidgetRoleName("role2"));
-//        widgetRoleNames.add(new WidgetRoleName("role3"));
-//        widgetRoleNames.add(new WidgetRoleName("role4"));
-//        widgetRoleNames.add(new WidgetRoleName("role5"));
+//        WidgetRole widgetRole = new WidgetRole();
+//        widgetRole.setRoleName(role.getRoleName());
+//        widgetRole.setWidgetId(widget.getWidgetId());
+//
+//        List<WidgetRoleName> widgetRoleNames = new ArrayList<>();
+//        widgetRoleNames.add(new WidgetRoleName(widgetRole.getRoleName()));
 //
 //        RolesGroupByWidgetDto rolesGroupByWidgetDto = new RolesGroupByWidgetDto();
 //        rolesGroupByWidgetDto.setWidgetName(widget.getWidgetName());
 //        rolesGroupByWidgetDto.setWidgetAuthorizedRoles(widgetRoleNames);
 //        rolesGroupByWidgetDto.setWidgetNotAuthorizedRoles(new ArrayList<WidgetRoleName>());
 //
-////        Dashboard dashboard = new Dashboard();
-////        dashboard.setDashobardConfig("UPDATE TEST");
-////
 //        AcmUser user = new AcmUser();
 //        user.setUserId(userId);
-////
-////        DashboardDto dashboardDto = new DashboardDto();
-////        dashboardDto.setDashboardConfig("UPDATE TEST");
 //
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        String in = objectMapper.writeValueAsString(rolesGroupByWidgetDto);
-//
 //
 //        log.debug("Input JSON: " + in);
 //        // MVC test classes must call getName() somehow
 //        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 //
-////        Capture<RolesGroupByWidgetDto> savedRolesGroupByWidgetDto = new Capture<>();
-////        Capture<RolesGroupByWidgetDto> publishedRolesGroupByWidgetDto = new Capture<>();
+//        Capture<RolesGroupByWidgetDto> savedRolesGroupByWidgetDto = new Capture<>();
 //
 //        expect(mockUserDao.findByUserId(userId)).andReturn(user);
-//      //  expect(mockDashboardDao.getDashboardConfigForUser(user)).andReturn(dashboard);
-//        //expect(mockWidgetDao.seeq(user), capture(savedRolesGroupByWidgetDto));).andReturn(1);
+//        expect(mockWidgetDao.deleteAllWidgetRolesByWidgetName(widget.getWidgetName())).andReturn(1);
+//        expect(mockWidgetDao.saveWidgetRole(widgetRole)).andReturn(widgetRole).anyTimes();
 //
-//  //      mockWidgetEventPublisher.publishSetAuthorizedWidgetRolesEvent(capture(publishedRolesGroupByWidgetDto), eq(mockAuthentication), "192.168.0.111", eq(true));
+//        expect(mockWidgetDao.getWidgetByWidgetName(widget.getWidgetName())).andReturn(widget);
+//        expect(mockUserDao.findAllRoles()).andReturn(Arrays.asList(role));
 //
-//        replayAll();
+//       mockWidgetEventPublisher.publishSetAuthorizedWidgetRolesEvent(capture(savedRolesGroupByWidgetDto), eq(mockAuthentication),eq("192.168.0.111"), eq(true));
+//
+//       replayAll();
 //
 //        MvcResult result = mockMvc.perform(
 //                post("/api/latest/plugin/dashboard/widgets/set")
