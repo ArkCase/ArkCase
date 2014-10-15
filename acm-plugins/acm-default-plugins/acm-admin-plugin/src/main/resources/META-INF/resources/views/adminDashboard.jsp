@@ -45,7 +45,7 @@
                     </div>
                 </section>
                 <section class="panel panel-default">
-                    <div class="wrapper" ng-app="config" >
+                    <div class="wrapper" ng-app="config">
                         <div ng-controller="DemoCtrl">
                         <div class="row">
                             <div class="col-xs-12">

@@ -67,7 +67,7 @@ public class GetDashboardConfigAPIController {
                     newWidgetsNames = newWidgetsString.split(",");
                     for (String widgetName : newWidgetsNames) {
                         Widget widget = new Widget();
-                        widget.setWidgetName(widgetName);
+                        widget.setWidgetName(widgetName.trim());
                         getWidgetDao().saveWidget(widget);
                     }
                 }
@@ -93,7 +93,7 @@ public class GetDashboardConfigAPIController {
             return dashboardDto;
         } catch (Exception e1) {
             if(log.isErrorEnabled()) {
-                log.error("Exception occurred while raising an event or while reading values from fetched DB dashboard ");
+                log.error("Exception occurred while raising an event or while reading values from fetched DB dashboard ", e1);
             }
            throw new AcmDashboardException("Get dashboard exception",e1);
         }
