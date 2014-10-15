@@ -27,6 +27,7 @@
         <module>acm-service-authentication-token</module>
     	<module>acm-service-electronic-signature</module>
     	<module>acm-service-frevvo-forms</module>
+        <module>acm-service-notification</module>
   </modules>
 
 

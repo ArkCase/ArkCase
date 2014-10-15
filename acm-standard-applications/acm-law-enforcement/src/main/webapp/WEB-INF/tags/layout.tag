@@ -31,9 +31,7 @@
     <%@include file="/WEB-INF/tagf/footer.tagf"%>
 </section>
 
-<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_underscore}/underscore-min.js"></script>--%>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_underscore}/${js_underscore}"></script>
-<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/typeahead.js"></script>--%>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/${js_typeahead}"></script>
 <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/typeahead.jquery.js"></script>--%>
 <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/bloodhound.js"></script>--%>

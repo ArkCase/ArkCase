@@ -31,7 +31,7 @@ Acm.Object = {
     }
 
     //
-    //i is zero based index to indeicate which text node to use
+    //i is zero based index to indicate which text node to use
     //i not specified -- return all text nodes as whole
     //i = -1          -- return last text node
     //

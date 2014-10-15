@@ -28,7 +28,7 @@ CaseFile.Event = {
         //Acm.keepTrying(CaseFile.Event._tryInitCaseType,         8, 200);
         //Acm.keepTrying(CaseFile.Event._tryInitCloseDisposition, 8, 200);
 //        Acm.keepTrying(CaseFile.Event._tryInitItemStatus,        8, 200);
-//        Acm.keepTrying(CaseFile.Event._tryInitItemAssignee,     8, 200);
+        //Acm.keepTrying(CaseFile.Event._tryInitItemAssignee,     8, 200);
     }
     ,onActivateTreeNode: function(node) {
         if ("prevPage" == node.key) {
@@ -91,6 +91,32 @@ CaseFile.Event = {
         c.title = value;
         CaseFile.Service.saveCaseFile(c);
     }
+    ,onSaveCasePriority: function(value){
+        var c = CaseFile.getCaseFile();
+        c.priority = value;
+        CaseFile.Service.saveCaseFile(c);
+    }
+    ,onSaveCaseAssignee: function(value){
+        var c = CaseFile.getCaseFile();
+        c.assignee = value;
+        CaseFile.Service.saveCaseFile(c);
+    }
+    ,onSaveCaseIncidentDate: function(value) {
+        var c = CaseFile.getCaseFile();
+        c.incidentDate = Acm.xDateToDatetime(value);
+        CaseFile.Service.saveCaseFile(c);
+    }
+    ,onSaveCaseSubjectType: function(value) {
+        var c = CaseFile.getCaseFile();
+        c.subjectType = value;
+        CaseFile.Service.saveCaseFile(c);
+    }
+    ,onSaveCaseStatus: function(value) {
+        var c = CaseFile.getCaseFile();
+        c.status = value;
+        CaseFile.Service.saveCaseFile(c);
+    }
+
 
     ,onClickSpanAddRoi: function(e) {
         var report = CaseFile.Object.getSelectReport();
