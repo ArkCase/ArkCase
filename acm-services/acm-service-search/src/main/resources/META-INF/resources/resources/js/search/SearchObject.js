@@ -118,14 +118,14 @@ Search.Object = {
 
                 ,actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
-                        var term = Topbar.Object.getQuickSearchTerm();
+                        var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
                         if (Acm.isEmpty(term)) {
                             return AcmEx.Object.jTableGetEmptyRecords();
                         }
 
                         return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
                             ,function() {
-                                var term = Topbar.Object.getQuickSearchTerm();
+                                var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
                                 var url;
                                 url =  App.getContextPath() + Search.Service.API_QUICK_SEARCH;
                                 url += "?q=" + term;
