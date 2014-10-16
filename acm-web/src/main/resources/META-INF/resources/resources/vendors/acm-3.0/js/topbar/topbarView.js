@@ -5,10 +5,120 @@
  */
 Topbar.View = {
     create : function() {
-        if (Topbar.View.Asn.create) {Topbar.View.Asn.create();}
+        if (Topbar.View.QuickSearch.create) {Topbar.View.QuickSearch.create();}
+        if (Topbar.View.Suggestion.create)  {Topbar.View.Suggestion.create();}
+        if (Topbar.View.Asn.create)         {Topbar.View.Asn.create();}
     }
     ,initialize: function() {
-        if (Topbar.View.Asn.initialize) {Topbar.View.Asn.initialize();}
+        if (Topbar.View.QuickSearch.initialize) {Topbar.View.QuickSearch.initialize();}
+        if (Topbar.View.Suggestion.initialize)  {Topbar.View.Suggestion.initialize();}
+        if (Topbar.View.Asn.initialize)         {Topbar.View.Asn.initialize();}
+    }
+
+    ,QuickSearch: {
+        create: function() {
+            this.$formSearch = $("form[role='search']");
+            this.$edtSearch = this.$formSearch.find("input.typeahead");
+            this.$btnSearch = this.$formSearch.find("button[type='submit']");
+
+            this.$formSearch.on("submit", function() {Topbar.View.QuickSearch.onSubmitFormSearch(this);});
+            this.$btnSearch.on("click", function(e) {Topbar.View.QuickSearch.onClickBtnSearch(e, this);});
+
+            this.$formSearch.attr("method", "get");
+            var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
+            this.setActionFormSearch(term);
+        }
+        ,initialize: function() {
+        }
+
+        ,onClickBtnSearch : function(event, ctrl) {
+            var term = this.getValueEdtSearch();
+            this.setActionFormSearch(term);
+            //event.preventDefault();
+        }
+
+        ,onSubmitFormSearch : function(ctrl) {
+            var term = this.getValueEdtSearch();
+            Topbar.Model.QuickSearch.setQuickSearchTerm(term);
+            return false;
+        }
+
+        ,setActionFormSearch: function(term) {
+            var url = App.getContextPath() + "/plugin/search"
+            if (Acm.isNotEmpty(term)) {
+                url += "?q=" + term;
+            }
+            this.$formSearch.attr("action", url);
+        }
+        ,getValueEdtSearch: function() {
+            return Acm.Object.getPlaceHolderInput(this.$edtSearch);
+        }
+        ,setValueEdtSearch: function(val) {
+            return Acm.Object.setPlaceHolderInput(this.$edtSearch, val);
+        }
+//        ,getValueHidSearch: function() {
+//            return Acm.Object.getPlaceHolderInput(this.$hidSearch);
+//        }
+//        ,setValueHidSearch: function(val) {
+//            return Acm.Object.setPlaceHolderInput(this.$hidSearch, val);
+//        }
+    }
+
+    ,Suggestion: {
+        create: function() {
+            this.$formSearch = $("form[role='search']");
+            this.$edtSearch = this.$formSearch.find("input.typeahead");
+            this.useTypeAhead(this.$edtSearch);
+        }
+        ,initialize: function() {
+        }
+
+        ,ctrlUpdateSuggestion: function(process) {
+            process(Topbar.Model.Suggestion.getKeys());
+        }
+
+        ,useTypeAhead: function($s) {
+            $s.typeahead({
+                source: function ( query, process ) {
+                    _.debounce(Topbar.Service.Suggestion.retrieveSuggestion( query, process ), 300);
+                }
+                ,highlighter: function( item ){
+                    html = '<div class="ctr">';
+                    var ctr = Topbar.Model.Suggestion.getObject(item);
+                    if (ctr) {
+                        var icon = "";
+                        var type = Acm.goodValue(ctr.object_type_s, "UNKNOWN");
+                        if (type == "COMPLAINT") {
+                            icon = '<i class="i i-notice i-2x"></i>';
+                        } else if (type == "CASE") {
+                            icon = '<i class="i i-folder i-2x"></i>';
+                        } else if (type == "TASK") {
+                            icon = '<i class="i i-checkmark i-2x"></i>';
+                        } else if (type == "DOCUMENT") {
+                            icon = '<i class="i i-file i-2x"></i>';
+                        } else {
+                            icon = '<i class="i i-circle i-2x"></i>';
+                        }
+
+                        html += '<div class="icontype">' + icon + '</div>'
+                            + '<div class="title">' + Acm.goodValue(ctr.title_t) + '</div>'
+                            + '<div class="identifier">' + Acm.goodValue(ctr.name) + ' ('+ Acm.goodValue(ctr.object_type_s) + ')' + '</div>'
+                            + '<div class="author">By ' + ctr.author  + ' on '+ Acm.getDateTimeFromDatetime(ctr.last_modified) + '</div>'
+                        html += '</div>';
+                    }
+                    return html;
+                }
+                , updater: function ( selectedtitle ) {
+                    var ctr = Topbar.Model.Suggestion.getObject(selectedtitle);
+                    $( "#ctrId" ).val(ctr.object_id_s);
+                    return selectedtitle;
+                }
+                ,hint: true
+                ,highlight: true
+                ,minLength: 1
+
+            }); //end $s.typeahead
+        }
     }
 
     ,Asn: {

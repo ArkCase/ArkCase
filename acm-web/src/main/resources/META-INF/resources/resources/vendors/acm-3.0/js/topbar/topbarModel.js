@@ -5,15 +5,65 @@
  */
 Topbar.Model = {
     create : function() {
-        if (Topbar.Model.Asn.create) {this.Asn.create();}
+        if (Topbar.Model.QuickSearch.create) {this.QuickSearch.create();}
+        if (Topbar.Model.Suggestion.create)  {this.Suggestion.create();}
+        if (Topbar.Model.Asn.create)         {this.Asn.create();}
     }
     ,initialize: function() {
-        if (Topbar.Model.Asn.initialize) {this.Asn.initialize();}
+        //if (Topbar.Model.QuickSearch.initialize) {this.QuickSearch.initialize();}
+        //if (Topbar.Model.Suggestion.initialize)  {this.Suggestion.initialize();}
+        //if (Topbar.Model.Asn.initialize)         {this.Asn.initialize();}
+    }
+
+    ,QuickSearch: {
+        create: function() {
+            this._quickSearchTerm = new Acm.Model.SessionData("AcmQuickSearchTerm");
+        }
+        ,initialize: function() {
+        }
+        ,getQuickSearchTerm: function() {
+            return this._quickSearchTerm.get();
+        }
+        ,setQuickSearchTerm: function(term) {
+            this._quickSearchTerm.set(term);
+        }
+    }
+
+    ,Suggestion: {
+        create: function() {
+        }
+        ,initialize: function() {
+        }
+
+        ,_ctrObjs: {}
+        ,_ctrKeys: []
+
+        ,getKeys: function() {
+            return this._ctrKeys;
+        }
+        ,getObjects: function() {
+            return this._ctrObjs;
+        }
+        ,getObject: function(key) {
+            return this._ctrObjs[key];
+        }
+        ,buildSuggestion: function(query, data) {
+            Topbar.Model.Suggestion._ctrObjs = {};
+            Topbar.Model.Suggestion._ctrKeys = [];
+
+            _.each( data, function(item, ix, list){
+                Topbar.Model.Suggestion._ctrKeys.push( item.name );
+                Topbar.Model.Suggestion._ctrObjs[ item.name ] = item;
+            });
+        }
+
     }
 
     ,Asn: {
         create : function() {
             this._asnListData = new Acm.Model.SessionData("AcmAsnList");
+        }
+        ,initialize: function() {
         }
 
         ,STATUS_READ    : "Read"
