@@ -30,8 +30,8 @@
     <!-- Multi-Select Field WYSIWYG -->
     <script type="text/javascript" charset="utf-8" src="<c:url value='/'/>resources/vendors/${vd_chosen}/chosen.js"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/dashboardConfigServices.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/dashboardConfig.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/js/admin/dashboard/angular/dashboardConfigServices.js"></script>
+    <script type="text/javascript" src="<c:url value='/'/>resources/js/admin/dashboard/angular/dashboardConfig.js"></script>
 
 </jsp:attribute>
 
@@ -71,16 +71,3 @@
 </section>
 </jsp:body>
 </t:layout>
-<script type="text/javascript">
-    var config = {
-        '.choose-permissions' : {},
-        '.choose-intitiatorFlags' : {},
-        '.choose-complaintFlags' : {},
-        '.choose-approvers' : {},
-        '.choose-collab' : {},
-        '.choose-notifications' : {}
-    }
-    for (var selector in config) {
-        $(selector).chosen(config[selector]);
-    }
-</script>

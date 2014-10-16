@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.dashboard.dao;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
+import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.widget.*;
 import com.armedia.acm.services.users.model.AcmRole;
 import org.slf4j.Logger;
@@ -17,7 +19,7 @@ import java.util.List;
 /**
  * Created by marjan.stefanoski on 9/19/2014.
  */
-public class WidgetDao {
+public class WidgetDao extends AcmAbstractDao<Widget> {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -154,14 +156,15 @@ public class WidgetDao {
     }
 
     @Transactional
-    public void deleteAllWidgetRolesByWidgetName(String widgetName) {
+    public int deleteAllWidgetRolesByWidgetName(String widgetName) {
         Query deleteAllRolesPerWidget = getEntityManager().createQuery(
                 "DELETE FROM WidgetRole wrole WHERE wrole.widgetId IN " +
                 "(SELECT widget.widgetId FROM Widget widget " +
                 "WHERE widget.widgetName=:widgetName)");
 
         deleteAllRolesPerWidget.setParameter("widgetName",widgetName);
-        deleteAllRolesPerWidget.executeUpdate();
+        int i = deleteAllRolesPerWidget.executeUpdate();
+        return i;
     }
 
     public EntityManager getEntityManager() {
@@ -170,6 +173,12 @@ public class WidgetDao {
 
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+
+    @Override
+    protected Class<Widget> getPersistenceClass()
+    {
+        return Widget.class;
     }
 }
 
