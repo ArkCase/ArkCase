@@ -132,6 +132,7 @@ public class UserDao
         existing.setUserDirectoryName(user.getUserDirectoryName());
         existing.setLastName(user.getLastName());
         existing.setFirstName(user.getFirstName());
+        existing.setMail(user.getMail());
         getEntityManager().persist(existing);
 
         return existing;
