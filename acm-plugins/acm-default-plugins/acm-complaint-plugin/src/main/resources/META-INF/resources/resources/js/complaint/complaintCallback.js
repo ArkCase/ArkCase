@@ -10,16 +10,16 @@ Complaint.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_RETRIEVED, this.onListRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_RETRIEVED, this.onDetailRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_COMPLAIN_SAVED, this.onComplaintSaved);
-        Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_PERSON_LIST_RETRIEVED, this.onComplaintPersonListRetrieved);
-        Acm.Dispatcher.addEventListener(this.EVENT_PERSON_SAVED, this.onPersonSaved);
+        /*Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_PERSON_LIST_RETRIEVED, this.onComplaintPersonListRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_PERSON_SAVED, this.onPersonSaved);*/
 
     }
 
     ,EVENT_LIST_RETRIEVED		: "complaint-list-retrieved"
     ,EVENT_DETAIL_RETRIEVED		: "complaint-detail-retrieved"
     ,EVENT_COMPLAIN_SAVED		: "complaint-complaint-saved"
-    ,EVENT_COMPLAINT_PERSON_LIST_RETRIEVED : "complaint-person-list-retrieved"
-    ,EVENT_PERSON_SAVED         : "complaint-person-saved"
+    /*,EVENT_COMPLAINT_PERSON_LIST_RETRIEVED : "complaint-person-list-retrieved"
+    ,EVENT_PERSON_SAVED         : "complaint-person-saved"*/
     ,onListRetrieved : function(Callback, response) {   	
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve complaint list:" + response.errorMsg);
@@ -104,8 +104,6 @@ Complaint.Callback = {
                     Complaint.Object.populateComplaint(complaint);
                 } else {
                     Complaint.Service.retrievePersonListComplaint(complaintId);
-
-
                 }
 
                 Complaint.Object.populateComplaint(complaint);
@@ -117,10 +115,12 @@ Complaint.Callback = {
             Acm.Dialog.error("Failed to create or save complaint:" + response.errorMsg);
         } else
         {
-            Complaint.Callback.onDetailRetrieved(Callback, response);
+            Complaint.cacheComplaint.put(response.complaintId, response);
+            /*Complaint.Object.refreshJTablePeople();
+            Complaint.Object.refreshJTableInitiator();*/
         }
     }
-    ,onPersonSaved: function(Callback, response) {
+   /* ,onPersonSaved: function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to create or save person:" + response.errorMsg);
 //        } else {
@@ -142,5 +142,5 @@ Complaint.Callback = {
 
             }
         }
-    }
+    }*/
 };
