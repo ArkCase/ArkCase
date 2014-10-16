@@ -35,7 +35,7 @@ public class PersonAssociation implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
    
-    @ManyToOne( cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @ManyToOne( cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name="cm_person_assoc_person_id", nullable = false) 
     private Person person;
     
