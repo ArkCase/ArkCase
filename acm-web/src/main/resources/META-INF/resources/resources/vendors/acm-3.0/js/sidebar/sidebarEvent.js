@@ -10,8 +10,7 @@ Sidebar.Event = {
     }
 
     ,onClickLnkNav : function(e) {
-        console.log("Sidebar.Event.onClickBtnSearch");
-        Topbar.Object.setQuickSearchTerm(null);
+        Topbar.Model.QuickSearch.setQuickSearchTerm(null);
     }
 
     ,onPostInit: function() {

@@ -13,6 +13,45 @@ Topbar.Service = {
         if (this.Asn.initialize) {this.Asn.initialize();}
     }
 
+    ,Suggestion: {
+        create: function() {
+        }
+        ,initialize: function() {
+        }
+        ,API_TYPEAHEAD_SUGGESTION_BEGIN_      : "/api/latest/plugin/search/quickSearch?q=*"
+        ,API_TYPEAHEAD_SUGGESTION_END         : "*&start=0&n=16"
+
+        ,getTypeAheadUrl: function(query) {
+            var url = App.getContextPath() + this.API_TYPEAHEAD_SUGGESTION_BEGIN_
+                + query
+                + this.API_TYPEAHEAD_SUGGESTION_END;
+            return url;
+        }
+
+        ,_validateSuggestionData: function(data) {
+            if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start) || Acm.isEmpty(data.response.docs)) {
+                return false;
+            }
+            return true;
+        }
+        ,retrieveSuggestion: function(query, process){
+            $.ajax({
+                url: Topbar.Service.Suggestion.getTypeAheadUrl(query)
+                ,cache: false
+                ,success: function(data){
+                    if (Topbar.Service.Suggestion._validateSuggestionData(data)) {
+                        var docs = data.response.docs;
+                        Topbar.Model.Suggestion.buildSuggestion(query, docs);
+                        Topbar.Controller.Suggestion.onModelChangeSuggestion(process);
+                    }
+                }
+            });
+        }
+    }
+
     ,Asn: {
         create : function() {
         }
