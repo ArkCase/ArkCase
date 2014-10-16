@@ -90,10 +90,14 @@ var Acm = Acm || {
     //convert URL parameters to JSON
     //ex) "abc=foo&def=%5Basf%5D&xyz=5&foo=b%3Dar" to {abc: "foo", def: "[asf]", xyz: "5", foo: "b=ar"}
     ,urlToJson: function(param) {
-        var decoded = decodeURI(param)
+        var decodedUrlComponents = decodeURIComponent(param);
+
+        var decoded = decodeURI(decodedUrlComponents)
             .replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"')
             .replace(/\n/g,"\\n").replace(/\r/g,"\\r")
             .replace(/\+/g, " ");
+
+
 
 
         var parsed = JSON.parse('{"' + decoded + '"}');
