@@ -78,8 +78,8 @@ public class GetWidgetsByUserRolesAPIController {
     }
 
     private List<Widget> onlyUniqueValues(List<Widget> widgets){
-        Set<Widget> widgetSet = new HashSet<Widget>();
-        List<Widget> result = new ArrayList<Widget>();
+        Set<Widget> widgetSet = new HashSet<>();
+        List<Widget> result = new ArrayList<>();
         for(Widget widget: widgets){
             widgetSet.add(widget);
         }
