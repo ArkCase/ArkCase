@@ -11,6 +11,17 @@ Topbar.Controller = {
         if (Topbar.Controller.Asn.initialize) {Topbar.Controller.Asn.initialize();}
     }
 
+    ,Suggestion: {
+        create : function() {
+        }
+        ,initialize: function() {
+        }
+
+        ,onModelChangeSuggestion: function(process) {
+            Topbar.View.Suggestion.ctrlUpdateSuggestion(process);
+        }
+    }
+
     ,Asn: {
         create : function() {
         }
