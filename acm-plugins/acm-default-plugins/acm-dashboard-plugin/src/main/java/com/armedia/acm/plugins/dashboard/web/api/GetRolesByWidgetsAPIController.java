@@ -36,9 +36,9 @@ public class GetRolesByWidgetsAPIController {
 
     @RequestMapping(value = "/rolesByWidget/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<RolesGroupByWidgetDto> getDashboardConfig(Authentication authentication, HttpSession session) throws AcmWidgetException, AcmObjectNotFoundException {
+    public List<RolesGroupByWidgetDto> getRolesGroupedByWidget(Authentication authentication, HttpSession session) throws AcmWidgetException, AcmObjectNotFoundException {
         if (log.isInfoEnabled()) {
-            log.info("Finding all roles per all widgets'");
+            log.info("List of all, authorized and not authorized roles grouped by widget'");
         }
          List<RolesGroupByWidgetDto> result = null;
          try {
@@ -57,10 +57,10 @@ public class GetRolesByWidgetsAPIController {
 
     private List<RolesGroupByWidgetDto> addNotAuthorizedRolesPerWidget(List<RolesGroupByWidgetDto> rolesPerWidget) {
         List<AcmRole> allRoles = getUserDao().findAllRoles();
-        List<Widget> allWidgets = getWidgetDao().getAllWidgets();
-        List<WidgetRoleName> notAuthorized = new ArrayList<WidgetRoleName>();
+        List<Widget> allWidgets = getWidgetDao().findAll();
+        List<WidgetRoleName> notAuthorized = new ArrayList<>();
         boolean isNotAuthorized = true;
-        List<RolesGroupByWidgetDto> tmpRolesPerWidget = new ArrayList<RolesGroupByWidgetDto>();
+        List<RolesGroupByWidgetDto> tmpRolesPerWidget = new ArrayList<>();
         boolean isAddedToRolesGroupByWidgetLsit = false;
             for (RolesGroupByWidgetDto rolePerW : rolesPerWidget) {
                 rolePerW.setName(widgetName(rolePerW.getWidgetName()));
