@@ -89,7 +89,7 @@ public class Complaint implements Serializable, AcmObject
 
     // the same person could originate many complaints, but each complaint is originated by
     // only one person, so a ManyToOne mapping makes sense here.
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_originator_id")
     private PersonAssociation originator;
 
