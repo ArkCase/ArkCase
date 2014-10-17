@@ -14,7 +14,7 @@ App.Object = {
 
 
         $(window).bind("beforeunload", function(event) {
-            if (this.isDirty()) {
+            if (App.Object.isDirty()) {
                 return "Warning: There unsaved data. Leaving this page may cause data lost.";
             }
         });

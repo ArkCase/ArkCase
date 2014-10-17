@@ -11,9 +11,6 @@
 Complaint.JTable = {
     initialize : function() {
     }
-
-
-
     //
     //------------------ Initiator ------------------
     //
@@ -238,20 +235,33 @@ Complaint.JTable = {
             ,recordUpdated: function(event, data){
                 var record = data.record;
                 var complaint = Complaint.getComplaint();
-                if (complaint.originator && complaint.originator.person)
-                {
+                if (complaint.originator && complaint.originator.person) {
                     var originator = complaint.originator;
                     var originatorPerson = complaint.originator.person;
                     var originatorPersonId = 0;
                     if (originatorPerson) {
                         originatorPersonId = originatorPerson.id;
                     }
+
                     originator.personType = record.personType;
                     originator.personDescription = record.personDescription;
                     originatorPerson.title = record.title;
                     originatorPerson.givenName = record.givenName;
                     originatorPerson.familyName = record.familyName;
+                    //daveM
+                    if ( "undefined" != typeof complaint.personAssociations )
+                    {
+                        for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                        {
+                            var currentPerson = complaint.personAssociations[idx];
+                            if ( currentPerson.id == originator.id )
+                            {
+                                complaint.personAssociations[idx] = originator;
+                            }
+                        }
+                    }
                     Complaint.Service.saveComplaint(complaint);
+                    Complaint.Object.refreshJTablePeople();
                 }
             }
             ,formCreated: function (event, data) {
@@ -342,6 +352,7 @@ Complaint.JTable = {
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
                         if (complaint.originator && complaint.originator.person) {
+                            var originator = complaint.originator;
                             var originatorPerson = complaint.originator.person;
                             if (originatorPerson.contactMethods) {
                                 var contactMethods = originatorPerson.contactMethods;
@@ -349,6 +360,20 @@ Complaint.JTable = {
                                 contactMethod.type = record.type;
                                 contactMethod.value = Acm.goodValue(record.value);
                                 contactMethods.push(contactMethod);
+
+                                //daveM
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
+
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -365,6 +390,21 @@ Complaint.JTable = {
                                 var contactMethod = contactMethods[whichRow];
                                 contactMethod.type = record.type;
                                 contactMethod.value = Acm.goodValue(record.value);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -379,6 +419,21 @@ Complaint.JTable = {
                             if (originatorPerson.contactMethods) {
                                 var contactMethods = originatorPerson.contactMethods;
                                 contactMethods.splice(whichRow, 1);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -480,6 +535,21 @@ Complaint.JTable = {
                                 organization.organizationType = record.type;
                                 organization.organizationValue = Acm.goodValue(record.value);
                                 organizations.push(organization);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -496,6 +566,21 @@ Complaint.JTable = {
                                 var organization = organizations[whichRow];
                                 organization.organizationType = record.type;
                                 organization.organizationValue = Acm.goodValue(record.value);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -510,6 +595,21 @@ Complaint.JTable = {
                             if (originatorPerson.organizations) {
                                 var organizations = originatorPerson.organizations;
                                 organizations.splice(whichRow, 1);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -634,6 +734,21 @@ Complaint.JTable = {
                                 address.country = record.country;
                                 address.zip = record.zip;
                                 addresses.push(address);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -656,6 +771,21 @@ Complaint.JTable = {
                                     address.country = record.country;
                                     address.state = record.state;
                                     address.zip = record.zip;
+
+                                    //daveM
+                                    var originator = complaint.originator;
+
+                                    if ( "undefined" != typeof complaint.personAssociations )
+                                    {
+                                        for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                        {
+                                            var currentPerson = complaint.personAssociations[idx];
+                                            if ( currentPerson.id == originator.id )
+                                            {
+                                                complaint.personAssociations[idx] = originator;
+                                            }
+                                        }
+                                    }
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -671,6 +801,21 @@ Complaint.JTable = {
                             if (originatorPerson.addresses) {
                                 var addresses = originatorPerson.addresses;
                                 addresses.splice(whichRow, 1);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -770,6 +915,21 @@ Complaint.JTable = {
                                 personAlias.aliasType = record.type;
                                 personAlias.aliasValue = Acm.goodValue(record.value);
                                 personAliases.push(personAlias);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -788,6 +948,21 @@ Complaint.JTable = {
                                     var personAlias = personAliases[whichRow];
                                     personAlias.aliasType = record.type;
                                     personAlias.aliasValue = Acm.goodValue(record.value);
+
+                                    //daveM
+                                    var originator = complaint.originator;
+
+                                    if ( "undefined" != typeof complaint.personAssociations )
+                                    {
+                                        for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                        {
+                                            var currentPerson = complaint.personAssociations[idx];
+                                            if ( currentPerson.id == originator.id )
+                                            {
+                                                complaint.personAssociations[idx] = originator;
+                                            }
+                                        }
+                                    }
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -803,6 +978,21 @@ Complaint.JTable = {
                             if (originatorPerson.personAliases) {
                                 var personAliases = originatorPerson.personAliases;
                                 personAliases.splice(whichRow, 1);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -819,22 +1009,43 @@ Complaint.JTable = {
     //
     //------------------ People ------------------
     //
-//    ,refreshJTablePeople: function() {
-//        AcmEx.Object.jTableLoad(this.$divPeople);
-//    }
-    ,_getEmptyPerson: function() {
+    ,_getnewPersonAssociationRecord: function() {
         return {
             id: null
-            ,title: ""
-            ,givenName: ""
-            ,familyName: ""
-            ,company: ""
-            ,weightInPounds: null
-            ,addresses: []
-            ,contactMethods: []
-            ,securityTags: []
-            ,personAliases: []
+            ,personType: ""
+            ,parentId:null
+            ,parentType:""
+            ,personDescription: ""
+            ,notes:""
+            ,person:{
+                id: null
+                ,title: ""
+                ,givenName: ""
+                ,familyName: ""
+                ,company: ""
+                /*,hairColor:""
+                ,eyeColor:""
+                ,heightInInches:null*/
+                ,weightInPounds:null
+                /*,dateOfBirth:null
+                ,dateMarried:null*/
+                ,addresses: []
+                ,contactMethods: []
+                ,securityTags: []
+                ,personAliases: []
+                ,organizations: []
+            }
         };
+    }
+    ,_findPerson: function(personId,personAssociations) {
+        var person;
+        for (var i = 0; i < personAssociations.length; i++) {
+            if (personId == personAssociations[i].person.id) {
+                person = personAssociations[i].person;
+                break;
+            }
+        }
+        return person;
     }
 
     ,createJTablePeople: function($s) {
@@ -846,13 +1057,12 @@ Complaint.JTable = {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var complaint = Complaint.getComplaint();
                     if(complaint){
-                        //var assocId = complaint.originator.id;
                         if(complaint.personAssociations){
                             var personAssociations = complaint.personAssociations;
                             var cnt = personAssociations.length;
                             for (var i = 0; i < cnt; i++) {
                                 var person = personAssociations[i].person;
-                                if(!complaint.originator)
+                                /*if(!complaint.originator)
                                 {
                                     if(personAssociations[i].personType != 'Initiator'){
                                         rc.Records.push({
@@ -865,7 +1075,7 @@ Complaint.JTable = {
                                         });
                                     }
                                 }
-                                else{
+                                else{*/
                                     rc.Records.push({
                                         personId: person.id
                                         ,title: person.title
@@ -874,7 +1084,7 @@ Complaint.JTable = {
                                         ,personType: personAssociations[i].personType
                                         ,personDescription: personAssociations[i].personDescription
                                     });
-                                }
+                                //}
                             }
                         }
                     }
@@ -953,15 +1163,17 @@ Complaint.JTable = {
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
                     var personAssociations = complaint.personAssociations;
-                    var assocId = complaint.originator.id;
-                    if (complaint.personAssociations && assocId) {
-                        var person;
-                        person.personType = record.personType;
-                        person.personDescription = record.personDescription;
-                        person.title = record.title;
-                        person.givenName = record.givenName;
-                        person.familyName = record.familyName;
-                        Complaint.Service.saveComplaint(complaint);
+                    //var assocId = complaint.originator.id;
+                    if (complaint.personAssociations) {
+                        var newPersonAssociationRecord = Complaint.JTable._getnewPersonAssociationRecord();
+                        newPersonAssociationRecord.parentType = App.OBJTYPE_COMPLAINT;
+                        newPersonAssociationRecord.parentId = complaint.complaintId;
+                        newPersonAssociationRecord.personType = record.personType;
+                        newPersonAssociationRecord.personDescription = record.personDescription;
+                        newPersonAssociationRecord.person.title = record.title;
+                        newPersonAssociationRecord.person.givenName = record.givenName;
+                        newPersonAssociationRecord.person.familyName = record.familyName;
+                        Complaint.Service.savePersonAssociation(newPersonAssociationRecord);
                     }
                 }
              }
@@ -995,8 +1207,9 @@ Complaint.JTable = {
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
                         if (personAssociations[whichRow].person) {
-                            personAssociations.splice(whichRow, 1);
-                            Complaint.Service.saveComplaint(complaint);
+                            var personId = personAssociations[whichRow].person.id;
+                            //personAssociations.splice(whichRow, 1);
+                            Complaint.Service.deletePersonById(personId);
                         }
                     }
                 }
@@ -1015,21 +1228,23 @@ Complaint.JTable = {
                 ,sorting: true
                 ,actions: {
                     listAction: function(postData, jtParams) {
-                        //var record = $row.closest('tr').data('record');
+                        var recordParent = $row.closest('tr').data('record');
+                        var personId = recordParent.personId;
                         //var rowId = $row.closest('tr')[0].rowIndex;
-                        var rowIndex = $row
-                            .closest('tr') // closest tr parent element
-                            .prevAll() // all sibling elements in front of it
-                            .length; // find their count
-
+                        //var rowId = $row.closest('tr').index();
+                        //var rowIndex = rowId - 1;
+                        //var rowIndex = 0;
+                        //var rowIndex = $row
+//                            .closest('tr') // closest tr parent element
+//                            .prevAll() // all sibling elements in front of it
+//                            .length; // find their count
                         var rc = AcmEx.Object.jTableGetEmptyRecords();
                         var complaint = Complaint.getComplaint();
                         if(complaint){
-                            //var assocId = complaint.originator.id;
                             if(complaint.personAssociations){
                                 var personAssociations = complaint.personAssociations;
-                                if(personAssociations[rowIndex].person){
-                                    var person = personAssociations[rowIndex].person;
+                                var person = Complaint.JTable._findPerson(personId, personAssociations);
+                                if(person){
                                     if(person.contactMethods) {
                                         var contactMethods = person.contactMethods;
                                         var cnt = contactMethods.length;
@@ -1049,20 +1264,17 @@ Complaint.JTable = {
                         return rc;
                     }
                     ,createAction: function(postData, jtParams) {
-                        var rowIndex = $row
-                            .closest('tr') // closest tr parent element
-                            .prevAll() // all sibling elements in front of it
-                            .length; // find their count
+                        var recordParent = $row.closest('tr').data('record');
+                        var personId = recordParent.personId;
 
                         var record = Acm.urlToJson(postData);
                         var rc = AcmEx.Object.jTableGetEmptyRecord();
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
-                            //var assocId = complaint.originator.id;
                             if (complaint.personAssociations) {
                                 var personAssociations = complaint.personAssociations;
-                                if (personAssociations[rowIndex].person) {
-                                    var person = personAssociations[rowIndex].person;
+                                var person = Complaint.JTable._findPerson(personId, personAssociations);
+                                if (person) {
                                     rc.Record.personId = person.id;
                                     rc.Record.type = record.type;
                                     rc.Record.value = Acm.goodValue(record.value);
@@ -1074,20 +1286,17 @@ Complaint.JTable = {
                         return rc;
                     }
                     ,updateAction: function(postData, jtParams) {
-                        var rowIndex = $row
-                            .closest('tr') // closest tr parent element
-                            .prevAll() // all sibling elements in front of it
-                            .length; // find their count
+                        var recordParent = $row.closest('tr').data('record');
+                        var personId = recordParent.personId;
 
                         var record = Acm.urlToJson(postData);
                         var rc = AcmEx.Object.jTableGetEmptyRecord();
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
-                            //var assocId = complaint.originator.id;
                             if (complaint.personAssociations) {
                                 var personAssociations = complaint.personAssociations;
-                                if (personAssociations[rowIndex].person) {
-                                    var person = personAssociations[rowIndex].person;
+                                var person = Complaint.JTable._findPerson(personId, personAssociations);
+                                if (person) {
                                     rc.Record.personId = person.id;
                                     rc.Record.type = record.type;
                                     rc.Record.value = Acm.goodValue(record.value);
@@ -1142,19 +1351,16 @@ Complaint.JTable = {
                     }
                 }
                 ,recordAdded : function (event, data) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
 
-                    //var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                     var record = data.record;
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            if (personAssociations[rowIndex].person) {
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 if (person.contactMethods) {
                                     var contactMethods = person.contactMethods;
                                     var contactMethod = {};
@@ -1168,19 +1374,17 @@ Complaint.JTable = {
                     }
                 }
                 ,recordUpdated : function (event, data) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
-                     var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
 
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                     var record = data.record;
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            if (personAssociations[rowIndex].person) {
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 if (person.contactMethods) {
                                     var contactMethods = person.contactMethods;
                                     var contactMethod = contactMethods[whichRow];
@@ -1193,10 +1397,8 @@ Complaint.JTable = {
                     }
                 }
                 ,recordDeleted : function (event, data) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
 
                     var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                     var complaint = Complaint.getComplaint();
@@ -1204,8 +1406,8 @@ Complaint.JTable = {
                         //var assocId = complaint.originator.id;
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            if (personAssociations[rowIndex].person) {
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 if (person.contactMethods) {
                                     var contactMethods = person.contactMethods;
                                     contactMethods.splice(whichRow, 1);
@@ -1228,23 +1430,19 @@ Complaint.JTable = {
             $row.closest('tr'),
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
-                //,paging: true
-                //,pageSize: 10
-                , sorting: true, actions: {
+                ,sorting: true
+                ,actions: {
                 listAction: function (postData, jtParams) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
 
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var complaint = Complaint.getComplaint();
                     if(complaint){
-                        //var assocId = complaint.originator.id;
                         if(complaint.personAssociations){
                             var personAssociations = complaint.personAssociations;
-                            if(personAssociations[rowIndex].person){
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 if(person.organizations) {
                                     var organizations = person.organizations;
                                     var cnt = organizations.length;
@@ -1264,10 +1462,9 @@ Complaint.JTable = {
                     return rc;
                 }
                 , createAction: function (postData, jtParams) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
+
                     var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var complaint = Complaint.getComplaint();
@@ -1275,8 +1472,8 @@ Complaint.JTable = {
                         //var assocId = complaint.originator.id;
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            if (personAssociations[rowIndex].person) {
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.value = Acm.goodValue(record.value);
@@ -1288,19 +1485,17 @@ Complaint.JTable = {
                     return rc;
                 }
                 , updateAction: function (postData, jtParams) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
+
                     var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
-                        //var assocId = complaint.originator.id;
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            if (personAssociations[rowIndex].person) {
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.value = Acm.goodValue(record.value);
@@ -1309,7 +1504,9 @@ Complaint.JTable = {
                             }
                         }
                     }
-                }, deleteAction: function (postData, jtParams) {
+                    return rc;
+                }
+                , deleteAction: function (postData, jtParams) {
                     return {
                         "Result": "OK"
                     };
@@ -1349,18 +1546,16 @@ Complaint.JTable = {
                 }
             }
             , recordAdded: function (event, data) {
-                var rowIndex = $row
-                    .closest('tr') // closest tr parent element
-                    .prevAll() // all sibling elements in front of it
-                    .length; // find their count
+                var recordParent = $row.closest('tr').data('record');
+                var personId = recordParent.personId;
+
                 var record = data.record;
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    //var assocId = complaint.originator.id;
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        if (personAssociations[rowIndex].person) {
-                            var person = personAssociations[rowIndex].person;
+                        var person = Complaint.JTable._findPerson(personId, personAssociations);
+                        if (person) {
                             if (person.organizations) {
                                 var organizations = person.organizations;
                                 var organization = {};
@@ -1374,19 +1569,17 @@ Complaint.JTable = {
                 }
             }
             , recordUpdated: function (event, data) {
-                var rowIndex = $row
-                    .closest('tr') // closest tr parent element
-                    .prevAll() // all sibling elements in front of it
-                    .length; // find their count
+                var recordParent = $row.closest('tr').data('record');
+                var personId = recordParent.personId;
+
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                 var record = data.record;
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    //var assocId = complaint.originator.id;
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        if (personAssociations[rowIndex].person) {
-                            var person = personAssociations[rowIndex].person;
+                        var person = Complaint.JTable._findPerson(personId, personAssociations);
+                        if (person) {
                             if (person.organizations) {
                                 var organizations = person.organizations;
                                 var organization = organizations[whichRow];
@@ -1399,18 +1592,16 @@ Complaint.JTable = {
                 }
             }
             , recordDeleted: function (event, data) {
-                var rowIndex = $row
-                    .closest('tr') // closest tr parent element
-                    .prevAll() // all sibling elements in front of it
-                    .length; // find their count
+                var recordParent = $row.closest('tr').data('record');
+                var personId = recordParent.personId;
+
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    //var assocId = complaint.originator.id;
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        if (personAssociations[rowIndex].person) {
-                            var person = personAssociations[rowIndex].person;
+                        var person = Complaint.JTable._findPerson(personId, personAssociations);
+                        if (person) {
                             if (person.organizations) {
                                 var organizations = person.organizations;
                                 organizations.splice(whichRow, 1);
@@ -1433,22 +1624,19 @@ Complaint.JTable = {
             $row.closest('tr'),
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
-                //,paging: true
-                //,pageSize: 10
                 ,sorting: true
                 ,actions: {
                 listAction: function(postData, jtParams) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
+
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            if (personAssociations[rowIndex].person) {
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 if (person.addresses) {
                                     var addresses = person.addresses;
                                     var cnt = addresses.length;
@@ -1471,10 +1659,9 @@ Complaint.JTable = {
                     return rc;
                 }
                 ,createAction: function(postData, jtParams) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
+
                     var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var complaint = Complaint.getComplaint();
@@ -1482,8 +1669,8 @@ Complaint.JTable = {
                         //var assocId = complaint.originator.id;
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            if (personAssociations[rowIndex].person) {
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.streetAddress = record.streetAddress;
@@ -1498,18 +1685,17 @@ Complaint.JTable = {
                     return rc;
                 }
                 ,updateAction: function(postData, jtParams) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
+
                     var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            if (personAssociations[rowIndex].person) {
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.streetAddress = record.streetAddress;
@@ -1569,8 +1755,6 @@ Complaint.JTable = {
                 ,created: {
                     title: 'Date Added'
                     ,width: '15%'
-                    //,type: 'date'
-                    //,displayFormat: 'yy-mm-dd'
                     ,create: false
                     ,edit: false
                 }
@@ -1582,18 +1766,16 @@ Complaint.JTable = {
                 }
             }
             ,recordAdded : function (event, data) {
-                var rowIndex = $row
-                    .closest('tr') // closest tr parent element
-                    .prevAll() // all sibling elements in front of it
-                    .length; // find their count
+                var recordParent = $row.closest('tr').data('record');
+                var personId = recordParent.personId;
+
                 var record = data.record;
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    //var assocId = complaint.originator.id;
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        if (personAssociations[rowIndex].person) {
-                            var person = personAssociations[rowIndex].person;
+                        var person = Complaint.JTable._findPerson(personId, personAssociations);
+                        if (person) {
                             if (person.addresses) {
                                 var addresses = person.addresses;
                                 var address = {};
@@ -1610,19 +1792,17 @@ Complaint.JTable = {
                 }
             }
             ,recordUpdated : function (event, data) {
-                var rowIndex = $row
-                    .closest('tr') // closest tr parent element
-                    .prevAll() // all sibling elements in front of it
-                    .length; // find their count
+                var recordParent = $row.closest('tr').data('record');
+                var personId = recordParent.personId;
+
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                 var record = data.record;
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    //var assocId = complaint.originator.id;
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        if (personAssociations[rowIndex].person) {
-                            var person = personAssociations[rowIndex].person;
+                        var person = Complaint.JTable._findPerson(personId, personAssociations);
+                        if (person) {
                             if (person.addresses) {
                                 var addresses = person.addresses;
                                 var address = addresses[whichRow];
@@ -1638,18 +1818,16 @@ Complaint.JTable = {
                 }
             }
             ,recordDeleted : function (event, data) {
-                var rowIndex = $row
-                    .closest('tr') // closest tr parent element
-                    .prevAll() // all sibling elements in front of it
-                    .length; // find their count
+                var recordParent = $row.closest('tr').data('record');
+                var personId = recordParent.personId;
+
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    //var assocId = complaint.originator.id;
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        if (personAssociations[rowIndex].person) {
-                            var person = personAssociations[rowIndex].person;
+                        var person = Complaint.JTable._findPerson(personId, personAssociations);
+                        if (person) {
                             if (person.addresses) {
                                 var addresses = person.addresses;
                                 addresses.splice(whichRow, 1);
@@ -1672,23 +1850,19 @@ Complaint.JTable = {
             $row.closest('tr'),
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
-                //,paging: true
-                //,pageSize: 10
                 ,sorting: true
                 ,actions: {
                 listAction: function(postData, jtParams) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
+
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
-                        //var assocId = complaint.originator.id;
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            if (personAssociations[rowIndex].person) {
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 if (person.personAliases) {
                                     var personAliases = person.personAliases;
                                     var cnt = personAliases.length;
@@ -1708,10 +1882,9 @@ Complaint.JTable = {
                     return rc;
                 }
                 ,createAction: function(postData, jtParams) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
+
                     var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var complaint = Complaint.getComplaint();
@@ -1719,8 +1892,8 @@ Complaint.JTable = {
                         //var assocId = complaint.originator.id;
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            if (personAssociations[rowIndex].person) {
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.value = Acm.goodValue(record.value);
@@ -1732,19 +1905,17 @@ Complaint.JTable = {
                     return rc;
                 }
                 ,updateAction: function(postData, jtParams) {
-                    var rowIndex = $row
-                        .closest('tr') // closest tr parent element
-                        .prevAll() // all sibling elements in front of it
-                        .length; // find their count
+                    var recordParent = $row.closest('tr').data('record');
+                    var personId = recordParent.personId;
+
                     var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
-                        //var assocId = complaint.originator.id;
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            if (personAssociations[rowIndex].person) {
-                                var person = personAssociations[rowIndex].person;
+                            var person = Complaint.JTable._findPerson(personId, personAssociations);
+                            if (person) {
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.value = Acm.goodValue(record.value);
@@ -1795,20 +1966,18 @@ Complaint.JTable = {
                 }
             }
             ,recordAdded : function (event, data) {
-                var rowIndex = $row
-                    .closest('tr') // closest tr parent element
-                    .prevAll() // all sibling elements in front of it
-                    .length; // find their count
+                var recordParent = $row.closest('tr').data('record');
+                var personId = recordParent.personId;
+
                 var record = data.record;
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    var personAssociations = complaint.personAssociations;
-                    var assocId = complaint.originator.id;
-                    if (personAssociations && assocId) {
-                        var person = personAssociations[rowIndex].person;
+                    if (complaint.personAssociations) {
+                        var personAssociations = complaint.personAssociations;
+                        var person = Complaint.JTable._findPerson(personId, personAssociations);
                         if (person) {
-                            var personAliases = person.personAliases;
-                            if (personAliases) {
+                            if (person.personAliases) {
+                                var personAliases = person.personAliases;
                                 var personAlias = {};
                                 personAlias.aliasType = record.type;
                                 personAlias.aliasValue = Acm.goodValue(record.value);
@@ -1820,19 +1989,17 @@ Complaint.JTable = {
                 }
             }
             ,recordUpdated : function (event, data) {
-                var rowIndex = $row
-                    .closest('tr') // closest tr parent element
-                    .prevAll() // all sibling elements in front of it
-                    .length; // find their count
+                var recordParent = $row.closest('tr').data('record');
+                var personId = recordParent.personId;
+
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                 var record = data.record;
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    //var assocId = complaint.originator.id;
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        if (personAssociations[rowIndex].person) {
-                            var person = personAssociations[rowIndex].person;
+                        var person = Complaint.JTable._findPerson(personId, personAssociations);
+                        if (person) {
                             if (person.personAliases) {
                                 var personAliases = person.personAliases;
                                 var personAlias = personAliases[whichRow];
@@ -1845,22 +2012,21 @@ Complaint.JTable = {
                 }
             }
             ,recordDeleted : function (event, data) {
-                var rowIndex = $row
-                    .closest('tr') // closest tr parent element
-                    .prevAll() // all sibling elements in front of it
-                    .length; // find their count
+                var recordParent = $row.closest('tr').data('record');
+                var personId = recordParent.personId;
+
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    //var assocId = complaint.originator.id;
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        if (personAssociations[rowIndex].person) {
-                            var person = personAssociations[rowIndex].person;
+                        var person = Complaint.JTable._findPerson(personId, personAssociations);
+                        if (person) {
                             if (person.personAliases) {
                                 var personAliases = person.personAliases;
                                 personAliases.splice(whichRow, 1);
                                 Complaint.Service.saveComplaint(complaint);
+
                             }
                         }
                     }

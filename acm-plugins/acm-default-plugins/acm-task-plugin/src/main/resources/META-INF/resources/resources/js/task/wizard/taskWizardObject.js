@@ -159,7 +159,7 @@ TaskWizard.Object = {
         process( TaskWizard.Object._ctrTitles );
     }
     ,_getTypeAheadUrl: function(query) {
-        var url = App.getContextPath() + TaskWizard.Service.API_TYPEAHEAD_SUGGESTION_BEGIN
+        var url = App.getContextPath() + TaskWizard.Service.API_TYPEAHEAD_SUGGESTION_BEGIN_
             + query
             + TaskWizard.Service.API_TYPEAHEAD_SUGGESTION_END;
         return url;
