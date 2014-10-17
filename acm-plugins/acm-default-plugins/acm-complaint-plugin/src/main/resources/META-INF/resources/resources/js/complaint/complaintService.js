@@ -16,7 +16,9 @@ Complaint.Service = {
     ,API_UPLOAD_COMPLAINT_FILE  : "/api/latest/plugin/complaint/file"
     ,API_RETRIEVE_TASKS         : "/api/latest/plugin/search/children?parentType=COMPLAINT&childType=TASK&parentId="
     ,API_RETRIEVE_PERSON_LIST_COMPLAINT   : "/api/latest/plugin/person/list/complaint/"
-    ,API_SAVE_PERSON            : "/api/latest/plugin/person"
+    //,API_SAVE_PERSON             : "/api/latest/plugin/person"
+    ,API_SAVE_PERSON_ASSOCIATION : "/api/latest/plugin/personAssociation"
+    ,API_DELETE_PERSON           : "/api/latest/plugin/person/delete/"
 
 
 
@@ -46,17 +48,30 @@ Complaint.Service = {
             ,Complaint.Callback.EVENT_COMPLAIN_SAVED
         );
     }
-    ,savePerson: function(data){
+  /*  ,savePerson: function(data){
         Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_PERSON
             ,JSON.stringify(data)
             ,Complaint.Callback.EVENT_PERSON_SAVED
         );
-    }
-    ,retrievePersonListComplaint : function(parentId) {
-        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_PERSON_LIST_COMPLAINT + parentId
-            ,Complaint.Callback.EVENT_COMPLAINT_PERSON_LIST_RETRIEVED
+    }*/
+
+    ,savePersonAssociation: function(data){
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_PERSON_ASSOCIATION
+            ,JSON.stringify(data)
+            ,Complaint.Callback.EVENT_PERSON_ASSOCIATION_SAVED
         );
     }
+    ,deletePersonById: function(personId){
+        var url = (App.getContextPath() + this.API_DELETE_PERSON + personId);
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_DELETE_PERSON + personId
+            ,Complaint.Callback.EVENT_PERSON_DELETED
+        );
+    }
+//    ,retrievePersonListComplaint : function(parentId) {
+//        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_PERSON_LIST_COMPLAINT + parentId
+//            ,Complaint.Callback.EVENT_COMPLAINT_PERSON_LIST_RETRIEVED
+//        );
+//    }
 
 //    ,retrieveTasks : function(complaintId) {
 //        //Acm.Ajax.asyncGet(App.getContextPath() + "/api/v1/plugin/search/quickSearch?q=object_type_s:Task&start=0&n=800&s="

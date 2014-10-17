@@ -31,7 +31,7 @@ Search.Event = {
 
 
     ,onPostInit: function() {
-        var term = Topbar.Object.getQuickSearchTerm();
+        var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
         if (Acm.isNotEmpty(term)) {
             Search.Object.reloadJTableResults();
         }
