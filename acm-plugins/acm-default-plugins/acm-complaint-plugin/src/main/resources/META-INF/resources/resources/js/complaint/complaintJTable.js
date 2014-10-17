@@ -352,6 +352,7 @@ Complaint.JTable = {
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
                         if (complaint.originator && complaint.originator.person) {
+                            var originator = complaint.originator;
                             var originatorPerson = complaint.originator.person;
                             if (originatorPerson.contactMethods) {
                                 var contactMethods = originatorPerson.contactMethods;
@@ -359,6 +360,20 @@ Complaint.JTable = {
                                 contactMethod.type = record.type;
                                 contactMethod.value = Acm.goodValue(record.value);
                                 contactMethods.push(contactMethod);
+
+                                //daveM
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
+
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -375,6 +390,21 @@ Complaint.JTable = {
                                 var contactMethod = contactMethods[whichRow];
                                 contactMethod.type = record.type;
                                 contactMethod.value = Acm.goodValue(record.value);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -389,6 +419,21 @@ Complaint.JTable = {
                             if (originatorPerson.contactMethods) {
                                 var contactMethods = originatorPerson.contactMethods;
                                 contactMethods.splice(whichRow, 1);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -490,6 +535,21 @@ Complaint.JTable = {
                                 organization.organizationType = record.type;
                                 organization.organizationValue = Acm.goodValue(record.value);
                                 organizations.push(organization);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -506,6 +566,21 @@ Complaint.JTable = {
                                 var organization = organizations[whichRow];
                                 organization.organizationType = record.type;
                                 organization.organizationValue = Acm.goodValue(record.value);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -520,6 +595,21 @@ Complaint.JTable = {
                             if (originatorPerson.organizations) {
                                 var organizations = originatorPerson.organizations;
                                 organizations.splice(whichRow, 1);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -644,6 +734,21 @@ Complaint.JTable = {
                                 address.country = record.country;
                                 address.zip = record.zip;
                                 addresses.push(address);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -666,6 +771,21 @@ Complaint.JTable = {
                                     address.country = record.country;
                                     address.state = record.state;
                                     address.zip = record.zip;
+
+                                    //daveM
+                                    var originator = complaint.originator;
+
+                                    if ( "undefined" != typeof complaint.personAssociations )
+                                    {
+                                        for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                        {
+                                            var currentPerson = complaint.personAssociations[idx];
+                                            if ( currentPerson.id == originator.id )
+                                            {
+                                                complaint.personAssociations[idx] = originator;
+                                            }
+                                        }
+                                    }
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -681,6 +801,21 @@ Complaint.JTable = {
                             if (originatorPerson.addresses) {
                                 var addresses = originatorPerson.addresses;
                                 addresses.splice(whichRow, 1);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -780,6 +915,21 @@ Complaint.JTable = {
                                 personAlias.aliasType = record.type;
                                 personAlias.aliasValue = Acm.goodValue(record.value);
                                 personAliases.push(personAlias);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -798,6 +948,21 @@ Complaint.JTable = {
                                     var personAlias = personAliases[whichRow];
                                     personAlias.aliasType = record.type;
                                     personAlias.aliasValue = Acm.goodValue(record.value);
+
+                                    //daveM
+                                    var originator = complaint.originator;
+
+                                    if ( "undefined" != typeof complaint.personAssociations )
+                                    {
+                                        for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                        {
+                                            var currentPerson = complaint.personAssociations[idx];
+                                            if ( currentPerson.id == originator.id )
+                                            {
+                                                complaint.personAssociations[idx] = originator;
+                                            }
+                                        }
+                                    }
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -813,6 +978,21 @@ Complaint.JTable = {
                             if (originatorPerson.personAliases) {
                                 var personAliases = originatorPerson.personAliases;
                                 personAliases.splice(whichRow, 1);
+
+                                //daveM
+                                var originator = complaint.originator;
+
+                                if ( "undefined" != typeof complaint.personAssociations )
+                                {
+                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
+                                    {
+                                        var currentPerson = complaint.personAssociations[idx];
+                                        if ( currentPerson.id == originator.id )
+                                        {
+                                            complaint.personAssociations[idx] = originator;
+                                        }
+                                    }
+                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
