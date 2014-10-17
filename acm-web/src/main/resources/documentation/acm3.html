@@ -144,6 +144,7 @@
           "personType": "Initiator",
           "personDescription": "Sample Description",
           "notes":"sample note describing the person",
+          "tags": ["Grateful Dead", "Guitar" ],
           "person": {
                 "id": null,
                 "title": "Mr.",
@@ -188,6 +189,7 @@
           "id": null,
           "personType": "Subject",
           "personDescription": "Simple Description",
+          "tags": ["Contoso", "Illinois" ],
           "person": {
                 "id": null,
                 "title": "Mr.",
@@ -249,6 +251,7 @@
       "originator": {
             "id":2191,
             "parentId":2190,
+            "tags": ["Grateful Dead", "Guitar" ],
             "person":{
                     "id":2192,
                     "title":"mr.",
@@ -288,6 +291,7 @@
       "personAssociations": [{
             "id":2194,
             "parentId":2190,
+            "tags": ["Armedia", "Allman Brothers Band" ],
             "person": {
                       "id":2193,
                       "title":"Mr.",
@@ -341,6 +345,7 @@
          "status": "DRAFT",
          "originator": {
                "id": 2191,
+               "tags": ["Grateful Dead", "Guitar" ],
                "person": {
                    "id": 2192,
                    "title": null,
@@ -427,6 +432,7 @@
          "approvers": null,
          "personAssociations": [{
                "id": 2191,
+               "tags": ["Grateful Dead", "Guitar" ],
                "person": {
                  "id": 2192,
                  "title": null,
@@ -860,7 +866,8 @@
     "parentId":3022,
     "parentType":"COMPLAINT",
     "personDescription": "Sample Description",
-    "notes":"sample note describing the person",      
+    "notes":"sample note describing the person",  
+    "tags": ["Grateful Dead", "Guitar" ],    
     "person": {
           "id": null,
           "title": "Mr.",
@@ -905,6 +912,7 @@
     }
     </code></pre></div><div class=tab-pane id=_plugin_personAssociation_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response indicating the system created a new personAssociation</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{ 	
     "id":3311,
+    "tags": ["Grateful Dead", "Guitar" ],
     "person":{
           "id":3317,
           "title":"Mr.",
