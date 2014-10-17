@@ -78,8 +78,8 @@ public class GetWidgetsByUserRolesAPIController {
     }
 
     private List<Widget> onlyUniqueValues(List<Widget> widgets){
-        Set<Widget> widgetSet = new HashSet<Widget>();
-        List<Widget> result = new ArrayList<Widget>();
+        Set<Widget> widgetSet = new HashSet<>();
+        List<Widget> result = new ArrayList<>();
         for(Widget widget: widgets){
             widgetSet.add(widget);
         }
@@ -90,10 +90,10 @@ public class GetWidgetsByUserRolesAPIController {
     }
 
     private List<Widget> addAvailableWidgets(String userId, Authentication authentication) {
-        List<Widget> retval = new ArrayList<Widget>();
-        Set<Widget> retvalSet = new HashSet<Widget>();
+        List<Widget> retval = new ArrayList<>();
+        Set<Widget> retvalSet = new HashSet<>();
         List<AcmRole> userRoles = userDao.findAllRolesByUser(userId);
-        Set<String> widgetSet = new HashSet<String>();
+        Set<String> widgetSet = new HashSet<>();
         String retVal = null;
         String[] widgetArray = null;
 
@@ -105,7 +105,7 @@ public class GetWidgetsByUserRolesAPIController {
                retVal = (String) dashboardPlugin.getPluginProperties().get(key);
                widgetArray = retVal.split(",");
                for(String widget: widgetArray) {
-                   widgetSet.add(widget);
+                   widgetSet.add(widget.trim());
                }
                for(String widgetName : widgetSet) {
 

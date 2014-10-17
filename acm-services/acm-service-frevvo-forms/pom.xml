@@ -36,6 +36,16 @@
             <artifactId>acm-forms-roi</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-close-case</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-close-complaint</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
   	
 		 <!-- spring -->
         <dependency>

@@ -61,6 +61,7 @@ public class SpringLdapDao
 
         AcmLdapEntityContextMapper mapper = new AcmLdapEntityContextMapper();
         mapper.setUserIdAttributeName(syncConfig.getUserIdAttributeName());
+        mapper.setMailAttributeName(syncConfig.getMailAttributeName());
 
         boolean debug = log.isDebugEnabled();
 

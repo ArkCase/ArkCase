@@ -30,7 +30,9 @@ public class ComplaintUiController
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         retval.addObject("token", token);
         
+        // Frevvo form URLs
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
+        retval.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
 
         return retval;
     }
@@ -44,7 +46,10 @@ public class ComplaintUiController
 
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         retval.addObject("token", token);
+        
+        // Frevvo form URLs
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
+        retval.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
         
         log.debug("Security token: " + token);
         return retval;
@@ -56,6 +61,7 @@ public class ComplaintUiController
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaintWizard");
 
+        // Frevvo form URLs
         retval.addObject("newComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.COMPLAINT));
 
         return retval;
