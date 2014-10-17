@@ -317,15 +317,6 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		return complaint;
 		
 	}
-	
-	private List<String> convertToList(String source, String delimiter){
-		if (source != null && !"".equals(source)) {
-			String[] sourceArray = source.split(delimiter, -1);
-			return new LinkedList<String>(Arrays.asList(sourceArray)); 
-		}
-		
-		return null;
-	}
 
     public SaveComplaintTransaction getSaveComplaintTransaction()
     {

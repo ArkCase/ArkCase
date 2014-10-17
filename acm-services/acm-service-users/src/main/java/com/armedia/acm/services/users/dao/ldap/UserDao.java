@@ -5,12 +5,18 @@ import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import java.util.Date;
 import java.util.List;
 
@@ -81,6 +87,30 @@ public class UserDao
         List<AcmUser> retval = usersWithRole.getResultList();
 
         return retval;
+    }
+    
+    public List<AcmUser> findByFullNameKeyword(String keyword) {
+    	CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<AcmUser> query = builder.createQuery(AcmUser.class);
+    	Root<AcmUser> user = query.from(AcmUser.class);
+    	
+    	query.select(user);
+    	
+    	query.where(
+    			builder.and(
+    					builder.like(
+    							builder.lower(user.<String>get("fullName")), "%" + keyword.toLowerCase() + "%"
+    					),
+    					builder.equal(user.<String>get("userState"), "VALID")
+    			)
+    	);
+    	
+    	query.orderBy(builder.asc(user.get("fullName")));
+    	
+    	TypedQuery<AcmUser> dbQuery = getEntityManager().createQuery(query);
+    	List<AcmUser> results = dbQuery.getResultList();
+    	
+    	return results;
     }
 
     public void markAllUsersInvalid(String directoryName)
