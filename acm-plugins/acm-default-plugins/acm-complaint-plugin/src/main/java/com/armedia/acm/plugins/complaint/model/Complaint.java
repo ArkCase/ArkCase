@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.users.model.AcmParticipant;
@@ -20,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -137,6 +139,15 @@ public class Complaint implements Serializable, AcmObject
     
     @Column(name = "cm_location")
     private String location;
+
+    /**
+     * Complaint disposition is set only when the close complaint request is approved.
+     * Until then, the requested disposition (if any) is linked from the acm_close_complaint_request table
+     * (CloseComplaintRequest POJO).
+     */
+    @OneToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "cm_disposition_id", insertable = false, updatable = false)
+    private Disposition disposition;
         
     @PrePersist
     protected void beforeInsert()
@@ -560,5 +571,15 @@ public class Complaint implements Serializable, AcmObject
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
+    }
+
+    public Disposition getDisposition()
+    {
+        return disposition;
+    }
+
+    public void setDisposition(Disposition disposition)
+    {
+        this.disposition = disposition;
     }
 }

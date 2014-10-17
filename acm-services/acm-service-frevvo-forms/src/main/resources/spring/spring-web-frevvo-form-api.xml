@@ -23,6 +23,7 @@
 		<property name="caseFileDao" ref="caseFileDao" />
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
         <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
 	</bean>
 
 </beans>

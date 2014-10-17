@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
+import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	private Logger LOG = LoggerFactory.getLogger(CloseComplaintService.class);
 	private ComplaintDao complaintDao;
 	private CaseFileDao caseFileDao;
+    private CloseComplaintRequestDao closeComplaintRequestDao;
 			
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#init()
@@ -98,10 +101,14 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 			return false;
 		}
 		
-		if ("IN APPROVAL".equals(complaint.getStatus()) || "COSED".equals(complaint.getStatus())){
+		if ("IN APPROVAL".equals(complaint.getStatus()) || "CLOSED".equals(complaint.getStatus())){
 			LOG.info("The complaint is already in '" + complaint.getStatus() + "' mode. No further action will be taken.");
 			return true;
 		}
+
+        CloseComplaintRequestFactory factory = new CloseComplaintRequestFactory();
+        CloseComplaintRequest closeComplaintRequest = factory.fromFormXml(form, getAuthentication());
+        getCloseComplaintRequestDao().save(closeComplaintRequest);
 		
 		// Update Status to "IN APPROVAL"
 		if (!complaint.getStatus().equals("IN APPROVAL")){
@@ -242,6 +249,15 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	 */
 	public void setCaseFileDao(CaseFileDao caseFileDao) {
 		this.caseFileDao = caseFileDao;
-	}	
+	}
 
+    public CloseComplaintRequestDao getCloseComplaintRequestDao()
+    {
+        return closeComplaintRequestDao;
+    }
+
+    public void setCloseComplaintRequestDao(CloseComplaintRequestDao closeComplaintRequestDao)
+    {
+        this.closeComplaintRequestDao = closeComplaintRequestDao;
+    }
 }
