@@ -163,6 +163,15 @@ Complaint.Event = {
         var url = Complaint.Page.URL_NEW_TASK  + complaintNumber;
         App.gotoPage(url);
     }
+    ,onCloseComplaint: function(e) {
+    	var c = Complaint.getComplaint();
+    	
+    	var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()['close_complaint'] : '';
+        if (url != null && url != '') {
+        	url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',");
+        	this._showPopup(url, "", 860, 700);        	
+        }
+    }
 
     ,_tryInitAssignee: function() {
         var data = App.Object.getApprovers();

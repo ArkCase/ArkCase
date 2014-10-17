@@ -170,4 +170,9 @@
         </createIndex>
     </changeSet>
 
+     <changeSet id="08-add-email-column-to-user-table" author="marst">
+         <addColumn tableName="acm_user">
+             <column name="cm_mail" type="VARCHAR(512)"/>
+         </addColumn>
+     </changeSet>
 </databaseChangeLog>

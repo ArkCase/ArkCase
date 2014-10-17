@@ -94,7 +94,6 @@ public class LdapSyncDatabaseHelper
             AcmUser saved = getUserDao().saveAcmUser(user);
             retval.add(saved);
         }
-
         return retval;
     }
 

@@ -3,6 +3,8 @@ package com.armedia.acm.plugins.person;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -59,6 +61,7 @@ public class PersonAssociationIT
         person.setFamilyName("Person");
         person.setGivenName("ACM");
         person.setStatus("testStatus");
+
         
          Person per = new Person();
         
@@ -84,6 +87,7 @@ public class PersonAssociationIT
         perAssoc.setCreated(new Date());
         perAssoc.setModified(new Date());
         perAssoc.setNotes("here a we can write our note");
+        perAssoc.setTags(Arrays.asList("tag 1", "tag 2"));
         
         PersonAssociation personAssoc = new PersonAssociation();
 
@@ -96,6 +100,8 @@ public class PersonAssociationIT
         personAssoc.setCreator("testCreator");
         personAssoc.setCreated(new Date());
         personAssoc.setModified(new Date());
+
+        personAssoc.setTags(Arrays.asList("tag 3", "tag 4"));
 
         PersonAssociation saved = personAssocDao.save(perAssoc);
                                   personAssocDao.save(personAssoc);

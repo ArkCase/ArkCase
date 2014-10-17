@@ -7,6 +7,8 @@ package com.armedia.acm.frevvo.config;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -193,6 +195,15 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			}
 		}
 		return xml;
+	}
+	
+	public List<String> convertToList(String source, String delimiter){
+		if (source != null && !"".equals(source)) {
+			String[] sourceArray = source.split(delimiter, -1);
+			return new LinkedList<String>(Arrays.asList(sourceArray)); 
+		}
+		
+		return null;
 	}
 
 }
