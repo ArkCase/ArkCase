@@ -96,7 +96,7 @@ public class ComplaintFactory
 
         if ( "true".equalsIgnoreCase(contact.getMainInformation().getAnonimuos()) )
         {
-            p.getSecurityTags().add("Anonymous");
+            pa.getTags().add("Anonymous");
         }
     }
     
