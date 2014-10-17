@@ -167,7 +167,10 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 
 			if (acmUsers != null && acmUsers.size() > 0){
 				for (AcmUser acmUser : acmUsers) {
-					approvers.add(acmUser.getUserId() + "=" + acmUser.getFullName());
+					// Add only users that are not the logged user
+					if (!acmUser.getUserId().equals(getAuthentication().getName())){
+						approvers.add(acmUser.getUserId() + "=" + acmUser.getFullName());
+					}
 				}
 			}
 		}
