@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -53,6 +54,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private UserDao userDao;
 	private ComplaintDao complaintDao;
 	private CaseFileDao caseFileDao;
+    private CloseComplaintRequestDao closeComplaintRequestDao;
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
@@ -249,5 +251,15 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
+    }
+
+    public CloseComplaintRequestDao getCloseComplaintRequestDao()
+    {
+        return closeComplaintRequestDao;
+    }
+
+    public void setCloseComplaintRequestDao(CloseComplaintRequestDao closeComplaintRequestDao)
+    {
+        this.closeComplaintRequestDao = closeComplaintRequestDao;
     }
 }
