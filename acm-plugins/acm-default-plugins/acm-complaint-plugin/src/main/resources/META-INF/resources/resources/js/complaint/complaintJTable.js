@@ -159,6 +159,22 @@ Complaint.JTable = {
         $s.jtable('load');
     }
 
+    ,_updatePersonAssociation: function(complaint){
+        if(complaint.originator){
+            var originator = complaint.originator;
+            if (complaint.personAssociations )
+            {
+                for ( var i = 0; i < complaint.personAssociations.length; i++)
+                {
+                    var currentPerson = complaint.personAssociations[i];
+                    if ( currentPerson.id == originator.id )
+                    {
+                        complaint.personAssociations[i] = originator;
+                    }
+                }
+            }
+        }
+    }
     ,createJTableInitiator: function($s) {
         this._createJTable4SubTable($s, {
 
@@ -248,18 +264,11 @@ Complaint.JTable = {
                     originatorPerson.title = record.title;
                     originatorPerson.givenName = record.givenName;
                     originatorPerson.familyName = record.familyName;
-                    //daveM
-                    if ( "undefined" != typeof complaint.personAssociations )
-                    {
-                        for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                        {
-                            var currentPerson = complaint.personAssociations[idx];
-                            if ( currentPerson.id == originator.id )
-                            {
-                                complaint.personAssociations[idx] = originator;
-                            }
-                        }
-                    }
+
+                    //copy over originator to personAssoc in order to update the complaint
+                    //this is the way it works at the moment
+                    Complaint.JTable._updatePersonAssociation(complaint);
+
                     Complaint.Service.saveComplaint(complaint);
                     Complaint.Object.refreshJTablePeople();
                 }
@@ -352,7 +361,6 @@ Complaint.JTable = {
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
                         if (complaint.originator && complaint.originator.person) {
-                            var originator = complaint.originator;
                             var originatorPerson = complaint.originator.person;
                             if (originatorPerson.contactMethods) {
                                 var contactMethods = originatorPerson.contactMethods;
@@ -361,18 +369,9 @@ Complaint.JTable = {
                                 contactMethod.value = Acm.goodValue(record.value);
                                 contactMethods.push(contactMethod);
 
-                                //daveM
-                                if ( "undefined" != typeof complaint.personAssociations )
-                                {
-                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                    {
-                                        var currentPerson = complaint.personAssociations[idx];
-                                        if ( currentPerson.id == originator.id )
-                                        {
-                                            complaint.personAssociations[idx] = originator;
-                                        }
-                                    }
-                                }
+                                //copy over originator to personAssoc in order to update the complaint
+                                //this is the way it works at the moment
+                                Complaint.JTable._updatePersonAssociation(complaint);
 
                                 Complaint.Service.saveComplaint(complaint);
                             }
@@ -391,20 +390,10 @@ Complaint.JTable = {
                                 contactMethod.type = record.type;
                                 contactMethod.value = Acm.goodValue(record.value);
 
-                                //daveM
-                                var originator = complaint.originator;
+                                //copy over originator to personAssoc in order to update the complaint
+                                //this is the way it works at the moment
+                                Complaint.JTable._updatePersonAssociation(complaint);
 
-                                if ( "undefined" != typeof complaint.personAssociations )
-                                {
-                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                    {
-                                        var currentPerson = complaint.personAssociations[idx];
-                                        if ( currentPerson.id == originator.id )
-                                        {
-                                            complaint.personAssociations[idx] = originator;
-                                        }
-                                    }
-                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -420,20 +409,10 @@ Complaint.JTable = {
                                 var contactMethods = originatorPerson.contactMethods;
                                 contactMethods.splice(whichRow, 1);
 
-                                //daveM
-                                var originator = complaint.originator;
+                                //copy over originator to personAssoc in order to update the complaint
+                                //this is the way it works at the moment
+                                Complaint.JTable._updatePersonAssociation(complaint);
 
-                                if ( "undefined" != typeof complaint.personAssociations )
-                                {
-                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                    {
-                                        var currentPerson = complaint.personAssociations[idx];
-                                        if ( currentPerson.id == originator.id )
-                                        {
-                                            complaint.personAssociations[idx] = originator;
-                                        }
-                                    }
-                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -536,20 +515,10 @@ Complaint.JTable = {
                                 organization.organizationValue = Acm.goodValue(record.value);
                                 organizations.push(organization);
 
-                                //daveM
-                                var originator = complaint.originator;
+                                //copy over originator to personAssoc in order to update the complaint
+                                //this is the way it works at the moment
+                                Complaint.JTable._updatePersonAssociation(complaint);
 
-                                if ( "undefined" != typeof complaint.personAssociations )
-                                {
-                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                    {
-                                        var currentPerson = complaint.personAssociations[idx];
-                                        if ( currentPerson.id == originator.id )
-                                        {
-                                            complaint.personAssociations[idx] = originator;
-                                        }
-                                    }
-                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -567,20 +536,10 @@ Complaint.JTable = {
                                 organization.organizationType = record.type;
                                 organization.organizationValue = Acm.goodValue(record.value);
 
-                                //daveM
-                                var originator = complaint.originator;
+                                //copy over originator to personAssoc in order to update the complaint
+                                //this is the way it works at the moment
+                                Complaint.JTable._updatePersonAssociation(complaint);
 
-                                if ( "undefined" != typeof complaint.personAssociations )
-                                {
-                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                    {
-                                        var currentPerson = complaint.personAssociations[idx];
-                                        if ( currentPerson.id == originator.id )
-                                        {
-                                            complaint.personAssociations[idx] = originator;
-                                        }
-                                    }
-                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -596,20 +555,10 @@ Complaint.JTable = {
                                 var organizations = originatorPerson.organizations;
                                 organizations.splice(whichRow, 1);
 
-                                //daveM
-                                var originator = complaint.originator;
+                                //copy over originator to personAssoc in order to update the complaint
+                                //this is the way it works at the moment
+                                Complaint.JTable._updatePersonAssociation(complaint);
 
-                                if ( "undefined" != typeof complaint.personAssociations )
-                                {
-                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                    {
-                                        var currentPerson = complaint.personAssociations[idx];
-                                        if ( currentPerson.id == originator.id )
-                                        {
-                                            complaint.personAssociations[idx] = originator;
-                                        }
-                                    }
-                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -735,20 +684,10 @@ Complaint.JTable = {
                                 address.zip = record.zip;
                                 addresses.push(address);
 
-                                //daveM
-                                var originator = complaint.originator;
+                                //copy over originator to personAssoc in order to update the complaint
+                                //this is the way it works at the moment
+                                Complaint.JTable._updatePersonAssociation(complaint);
 
-                                if ( "undefined" != typeof complaint.personAssociations )
-                                {
-                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                    {
-                                        var currentPerson = complaint.personAssociations[idx];
-                                        if ( currentPerson.id == originator.id )
-                                        {
-                                            complaint.personAssociations[idx] = originator;
-                                        }
-                                    }
-                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -772,20 +711,10 @@ Complaint.JTable = {
                                     address.state = record.state;
                                     address.zip = record.zip;
 
-                                    //daveM
-                                    var originator = complaint.originator;
+                                    //copy over originator to personAssoc in order to update the complaint
+                                    //this is the way it works at the moment
+                                    Complaint.JTable._updatePersonAssociation(complaint);
 
-                                    if ( "undefined" != typeof complaint.personAssociations )
-                                    {
-                                        for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                        {
-                                            var currentPerson = complaint.personAssociations[idx];
-                                            if ( currentPerson.id == originator.id )
-                                            {
-                                                complaint.personAssociations[idx] = originator;
-                                            }
-                                        }
-                                    }
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -802,20 +731,10 @@ Complaint.JTable = {
                                 var addresses = originatorPerson.addresses;
                                 addresses.splice(whichRow, 1);
 
-                                //daveM
-                                var originator = complaint.originator;
+                                //copy over originator to personAssoc in order to update the complaint
+                                //this is the way it works at the moment
+                                Complaint.JTable._updatePersonAssociation(complaint);
 
-                                if ( "undefined" != typeof complaint.personAssociations )
-                                {
-                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                    {
-                                        var currentPerson = complaint.personAssociations[idx];
-                                        if ( currentPerson.id == originator.id )
-                                        {
-                                            complaint.personAssociations[idx] = originator;
-                                        }
-                                    }
-                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -916,20 +835,10 @@ Complaint.JTable = {
                                 personAlias.aliasValue = Acm.goodValue(record.value);
                                 personAliases.push(personAlias);
 
-                                //daveM
-                                var originator = complaint.originator;
+                                //copy over originator to personAssoc in order to update the complaint
+                                //this is the way it works at the moment
+                                Complaint.JTable._updatePersonAssociation(complaint);
 
-                                if ( "undefined" != typeof complaint.personAssociations )
-                                {
-                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                    {
-                                        var currentPerson = complaint.personAssociations[idx];
-                                        if ( currentPerson.id == originator.id )
-                                        {
-                                            complaint.personAssociations[idx] = originator;
-                                        }
-                                    }
-                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -949,20 +858,10 @@ Complaint.JTable = {
                                     personAlias.aliasType = record.type;
                                     personAlias.aliasValue = Acm.goodValue(record.value);
 
-                                    //daveM
-                                    var originator = complaint.originator;
+                                    //copy over originator to personAssoc in order to update the complaint
+                                    //this is the way it works at the moment
+                                    Complaint.JTable._updatePersonAssociation(complaint);
 
-                                    if ( "undefined" != typeof complaint.personAssociations )
-                                    {
-                                        for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                        {
-                                            var currentPerson = complaint.personAssociations[idx];
-                                            if ( currentPerson.id == originator.id )
-                                            {
-                                                complaint.personAssociations[idx] = originator;
-                                            }
-                                        }
-                                    }
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -979,20 +878,10 @@ Complaint.JTable = {
                                 var personAliases = originatorPerson.personAliases;
                                 personAliases.splice(whichRow, 1);
 
-                                //daveM
-                                var originator = complaint.originator;
+                                //copy over originator to personAssoc in order to update the complaint
+                                //this is the way it works at the moment
+                                Complaint.JTable._updatePersonAssociation(complaint);
 
-                                if ( "undefined" != typeof complaint.personAssociations )
-                                {
-                                    for ( var idx = 0; idx < complaint.personAssociations.length; idx++)
-                                    {
-                                        var currentPerson = complaint.personAssociations[idx];
-                                        if ( currentPerson.id == originator.id )
-                                        {
-                                            complaint.personAssociations[idx] = originator;
-                                        }
-                                    }
-                                }
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -1009,7 +898,24 @@ Complaint.JTable = {
     //
     //------------------ People ------------------
     //
-    ,_getnewPersonAssociationRecord: function() {
+
+    ,_updateOriginatorRecord: function (personAssociationRecord, complaint)
+    {
+        //if an originator record has been modified/added, copy it to the complaint.originator
+        //this is the way it works at the moment
+        if(personAssociationRecord){
+            if(personAssociationRecord.personType == 'Initiator'){
+                if(complaint){
+                    if(complaint.originator){
+                        var currentPerson = personAssociationRecord;
+                        complaint.originator = currentPerson;
+                        Complaint.Object.refreshJTableInitiator();
+                    }
+                }
+            }
+        }
+    }
+    ,_getNewPersonAssociationRecord: function() {
         return {
             id: null
             ,personType: ""
@@ -1037,15 +943,15 @@ Complaint.JTable = {
             }
         };
     }
-    ,_findPerson: function(personId,personAssociations) {
-        var person;
+    ,_findPersonAssoc: function(personId,personAssociations) {
+        var personAssoc;
         for (var i = 0; i < personAssociations.length; i++) {
             if (personId == personAssociations[i].person.id) {
-                person = personAssociations[i].person;
+                personAssoc = personAssociations[i];
                 break;
             }
         }
-        return person;
+        return personAssoc;
     }
 
     ,createJTablePeople: function($s) {
@@ -1162,10 +1068,8 @@ Complaint.JTable = {
                 var record = data.record;
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    var personAssociations = complaint.personAssociations;
-                    //var assocId = complaint.originator.id;
                     if (complaint.personAssociations) {
-                        var newPersonAssociationRecord = Complaint.JTable._getnewPersonAssociationRecord();
+                        var newPersonAssociationRecord = Complaint.JTable._getNewPersonAssociationRecord();
                         newPersonAssociationRecord.parentType = App.OBJTYPE_COMPLAINT;
                         newPersonAssociationRecord.parentId = complaint.complaintId;
                         newPersonAssociationRecord.personType = record.personType;
@@ -1173,6 +1077,10 @@ Complaint.JTable = {
                         newPersonAssociationRecord.person.title = record.title;
                         newPersonAssociationRecord.person.givenName = record.givenName;
                         newPersonAssociationRecord.person.familyName = record.familyName;
+
+                        //check if originator needs to be updated
+                        Complaint.JTable._updateOriginatorRecord(newPersonAssociationRecord,complaint);
+
                         Complaint.Service.savePersonAssociation(newPersonAssociationRecord);
                     }
                 }
@@ -1183,7 +1091,6 @@ Complaint.JTable = {
                 var record = data.record;
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    //var assocId = complaint.originator.id;
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
                         if(personAssociations[whichRow].person){
@@ -1193,6 +1100,10 @@ Complaint.JTable = {
                             person.title = record.title;
                             person.givenName = record.givenName;
                             person.familyName = record.familyName;
+
+                            //check if originator needs to be updated
+                            Complaint.JTable._updateOriginatorRecord(personAssociations[whichRow],complaint);
+
                             Complaint.Service.saveComplaint(complaint);
                         }
                     }
@@ -1203,12 +1114,15 @@ Complaint.JTable = {
                 var record = data.record;
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
-                    //var assocId = complaint.originator.id;
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
                         if (personAssociations[whichRow].person) {
                             var personId = personAssociations[whichRow].person.id;
                             //personAssociations.splice(whichRow, 1);
+
+                            //check if originator needs to be updated
+                            Complaint.JTable._updateOriginatorRecord(personAssociations[whichRow],complaint);
+
                             Complaint.Service.deletePersonById(personId);
                         }
                     }
@@ -1243,8 +1157,9 @@ Complaint.JTable = {
                         if(complaint){
                             if(complaint.personAssociations){
                                 var personAssociations = complaint.personAssociations;
-                                var person = Complaint.JTable._findPerson(personId, personAssociations);
-                                if(person){
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
                                     if(person.contactMethods) {
                                         var contactMethods = person.contactMethods;
                                         var cnt = contactMethods.length;
@@ -1273,8 +1188,9 @@ Complaint.JTable = {
                         if (complaint) {
                             if (complaint.personAssociations) {
                                 var personAssociations = complaint.personAssociations;
-                                var person = Complaint.JTable._findPerson(personId, personAssociations);
-                                if (person) {
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
                                     rc.Record.personId = person.id;
                                     rc.Record.type = record.type;
                                     rc.Record.value = Acm.goodValue(record.value);
@@ -1295,8 +1211,9 @@ Complaint.JTable = {
                         if (complaint) {
                             if (complaint.personAssociations) {
                                 var personAssociations = complaint.personAssociations;
-                                var person = Complaint.JTable._findPerson(personId, personAssociations);
-                                if (person) {
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
                                     rc.Record.personId = person.id;
                                     rc.Record.type = record.type;
                                     rc.Record.value = Acm.goodValue(record.value);
@@ -1359,14 +1276,19 @@ Complaint.JTable = {
                     if (complaint) {
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 if (person.contactMethods) {
                                     var contactMethods = person.contactMethods;
                                     var contactMethod = {};
                                     contactMethod.type = record.type;
                                     contactMethod.value = Acm.goodValue(record.value);
                                     contactMethods.push(contactMethod);
+
+                                    //check if originator needs to be updated
+                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -1383,13 +1305,18 @@ Complaint.JTable = {
                     if (complaint) {
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 if (person.contactMethods) {
                                     var contactMethods = person.contactMethods;
                                     var contactMethod = contactMethods[whichRow];
                                     contactMethod.type = record.type;
                                     contactMethod.value = Acm.goodValue(record.value);
+
+                                    //check if originator needs to be updated
+                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -1403,14 +1330,18 @@ Complaint.JTable = {
                     var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
-                        //var assocId = complaint.originator.id;
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 if (person.contactMethods) {
                                     var contactMethods = person.contactMethods;
                                     contactMethods.splice(whichRow, 1);
+
+                                    //check if originator needs to be updated
+                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -1441,8 +1372,9 @@ Complaint.JTable = {
                     if(complaint){
                         if(complaint.personAssociations){
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 if(person.organizations) {
                                     var organizations = person.organizations;
                                     var cnt = organizations.length;
@@ -1469,11 +1401,11 @@ Complaint.JTable = {
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
-                        //var assocId = complaint.originator.id;
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.value = Acm.goodValue(record.value);
@@ -1494,8 +1426,9 @@ Complaint.JTable = {
                     if (complaint) {
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.value = Acm.goodValue(record.value);
@@ -1554,14 +1487,19 @@ Complaint.JTable = {
                 if (complaint) {
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        var person = Complaint.JTable._findPerson(personId, personAssociations);
-                        if (person) {
+                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                        if (currentPersonAssoc.person) {
+                            var person = currentPersonAssoc.person;
                             if (person.organizations) {
                                 var organizations = person.organizations;
                                 var organization = {};
                                 organization.organizationType = record.type;
                                 organization.organizationValue = Acm.goodValue(record.value);
                                 organizations.push(organization);
+
+                                //check if originator needs to be updated
+                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -1578,13 +1516,18 @@ Complaint.JTable = {
                 if (complaint) {
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        var person = Complaint.JTable._findPerson(personId, personAssociations);
-                        if (person) {
+                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                        if (currentPersonAssoc.person) {
+                            var person = currentPersonAssoc.person;
                             if (person.organizations) {
                                 var organizations = person.organizations;
                                 var organization = organizations[whichRow];
                                 organization.organizationType = record.type;
                                 organization.organizationValue = Acm.goodValue(record.value);
+
+                                //check if originator needs to be updated
+                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -1600,11 +1543,16 @@ Complaint.JTable = {
                 if (complaint) {
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        var person = Complaint.JTable._findPerson(personId, personAssociations);
-                        if (person) {
+                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                        if (currentPersonAssoc.person) {
+                            var person = currentPersonAssoc.person;
                             if (person.organizations) {
                                 var organizations = person.organizations;
                                 organizations.splice(whichRow, 1);
+
+                                //check if originator needs to be updated
+                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -1635,8 +1583,9 @@ Complaint.JTable = {
                     if (complaint) {
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 if (person.addresses) {
                                     var addresses = person.addresses;
                                     var cnt = addresses.length;
@@ -1666,11 +1615,11 @@ Complaint.JTable = {
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var complaint = Complaint.getComplaint();
                     if (complaint) {
-                        //var assocId = complaint.originator.id;
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.streetAddress = record.streetAddress;
@@ -1694,8 +1643,9 @@ Complaint.JTable = {
                     if (complaint) {
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.streetAddress = record.streetAddress;
@@ -1774,8 +1724,9 @@ Complaint.JTable = {
                 if (complaint) {
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        var person = Complaint.JTable._findPerson(personId, personAssociations);
-                        if (person) {
+                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                        if (currentPersonAssoc.person) {
+                            var person = currentPersonAssoc.person;
                             if (person.addresses) {
                                 var addresses = person.addresses;
                                 var address = {};
@@ -1785,6 +1736,10 @@ Complaint.JTable = {
                                 address.state = record.state;
                                 address.zip = record.zip;
                                 addresses.push(address);
+
+                                //check if originator needs to be updated
+                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -1801,8 +1756,9 @@ Complaint.JTable = {
                 if (complaint) {
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        var person = Complaint.JTable._findPerson(personId, personAssociations);
-                        if (person) {
+                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                        if (currentPersonAssoc.person) {
+                            var person = currentPersonAssoc.person;
                             if (person.addresses) {
                                 var addresses = person.addresses;
                                 var address = addresses[whichRow];
@@ -1811,6 +1767,10 @@ Complaint.JTable = {
                                 address.city = record.city;
                                 address.state = record.state;
                                 address.zip = record.zip;
+
+                                //check if originator needs to be updated
+                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -1826,11 +1786,16 @@ Complaint.JTable = {
                 if (complaint) {
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        var person = Complaint.JTable._findPerson(personId, personAssociations);
-                        if (person) {
+                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                        if (currentPersonAssoc.person) {
+                            var person = currentPersonAssoc.person;
                             if (person.addresses) {
                                 var addresses = person.addresses;
                                 addresses.splice(whichRow, 1);
+
+                                //check if originator needs to be updated
+                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -1861,8 +1826,9 @@ Complaint.JTable = {
                     if (complaint) {
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 if (person.personAliases) {
                                     var personAliases = person.personAliases;
                                     var cnt = personAliases.length;
@@ -1892,8 +1858,9 @@ Complaint.JTable = {
                         //var assocId = complaint.originator.id;
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.value = Acm.goodValue(record.value);
@@ -1914,8 +1881,9 @@ Complaint.JTable = {
                     if (complaint) {
                         if (complaint.personAssociations) {
                             var personAssociations = complaint.personAssociations;
-                            var person = Complaint.JTable._findPerson(personId, personAssociations);
-                            if (person) {
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
                                 rc.Record.personId = person.id;
                                 rc.Record.type = record.type;
                                 rc.Record.value = Acm.goodValue(record.value);
@@ -1974,14 +1942,19 @@ Complaint.JTable = {
                 if (complaint) {
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        var person = Complaint.JTable._findPerson(personId, personAssociations);
-                        if (person) {
+                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                        if (currentPersonAssoc.person) {
+                            var person = currentPersonAssoc.person;
                             if (person.personAliases) {
                                 var personAliases = person.personAliases;
                                 var personAlias = {};
                                 personAlias.aliasType = record.type;
                                 personAlias.aliasValue = Acm.goodValue(record.value);
                                 personAliases.push(personAlias);
+
+                                //check if originator needs to be updated
+                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -1998,13 +1971,18 @@ Complaint.JTable = {
                 if (complaint) {
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        var person = Complaint.JTable._findPerson(personId, personAssociations);
-                        if (person) {
+                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                        if (currentPersonAssoc.person) {
+                            var person = currentPersonAssoc.person;
                             if (person.personAliases) {
                                 var personAliases = person.personAliases;
                                 var personAlias = personAliases[whichRow];
                                 personAlias.aliasType = record.type;
                                 personAlias.aliasValue = Acm.goodValue(record.value);
+
+                                //check if originator needs to be updated
+                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+
                                 Complaint.Service.saveComplaint(complaint);
                             }
                         }
@@ -2020,11 +1998,16 @@ Complaint.JTable = {
                 if (complaint) {
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        var person = Complaint.JTable._findPerson(personId, personAssociations);
-                        if (person) {
+                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                        if (currentPersonAssoc.person) {
+                            var person = currentPersonAssoc.person;
                             if (person.personAliases) {
                                 var personAliases = person.personAliases;
                                 personAliases.splice(whichRow, 1);
+
+                                //check if originator needs to be updated
+                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
+                                
                                 Complaint.Service.saveComplaint(complaint);
 
                             }
