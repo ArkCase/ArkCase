@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 	   
-	 <bean id="acm-form-properties"
+	 <bean id="acm-form-properties-test"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="file:${user.home}/.acm/acm-forms.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
@@ -14,15 +14,8 @@
         </property>    
     </bean>
 	   
-    <bean id="frevvoFormController" class="com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController">
-		<property name="properties" ref="acm-form-properties" />
-		<property name="authenticationTokenService" ref="authenticationTokenService" />
-		<property name="acmPluginManager" ref="acmPluginManager"/>
-		<property name="userDao" ref="userJpaDao" />
-		<property name="complaintDao" ref="acmComplaintDao" />
-		<property name="caseFileDao" ref="caseFileDao" />
-        <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
+    <bean id="roiServiceTest" class="com.armedia.acm.forms.roi.service.ROIService">
+		<property name="properties" ref="acm-form-properties-test" />
 	</bean>
 
 </beans>

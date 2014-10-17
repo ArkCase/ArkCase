@@ -106,6 +106,30 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
 
         return (CaseFile) findByCaseNumber.getSingleResult();
     }
+    
+    public List<CaseFile> findByCaseNumberKeyword(String expression) {
+    	CriteriaBuilder builder = getEm().getCriteriaBuilder();
+    	CriteriaQuery<CaseFile> query = builder.createQuery(CaseFile.class);
+    	Root<CaseFile> cf = query.from(CaseFile.class);
+    	
+    	query.select(cf);
+    	
+    	query.where(
+    			builder.and(
+    					builder.like(
+    							builder.lower(cf.<String>get("caseNumber")), "%" + expression.toLowerCase() + "%"
+    					)
+    			)
+    	);
+    	
+    	query.orderBy(builder.asc(cf.get("caseNumber")));
+    	
+    	TypedQuery<CaseFile> dbQuery = getEm().createQuery(query);
+    	List<CaseFile> results = dbQuery.getResultList();
+    	
+    	return results;
+    }
+    
     private Date shiftDateFromToday(int daysFromToday){
         Date nextDate;
         Date today = new Date();

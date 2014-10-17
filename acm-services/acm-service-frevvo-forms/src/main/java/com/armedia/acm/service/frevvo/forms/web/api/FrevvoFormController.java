@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -51,6 +52,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private AcmPluginManager acmPluginManager;
 	private UserDao userDao;
 	private ComplaintDao complaintDao;
+	private CaseFileDao caseFileDao;
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
@@ -213,6 +215,20 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	 */
 	public void setComplaintDao(ComplaintDao complaintDao) {
 		this.complaintDao = complaintDao;
+	}
+
+	/**
+	 * @return the caseFileDao
+	 */
+	public CaseFileDao getCaseFileDao() {
+		return caseFileDao;
+	}
+
+	/**
+	 * @param caseFileDao the caseFileDao to set
+	 */
+	public void setCaseFileDao(CaseFileDao caseFileDao) {
+		this.caseFileDao = caseFileDao;
 	}
 
 	public SaveComplaintTransaction getSaveComplaintTransaction()

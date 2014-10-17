@@ -81,7 +81,7 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
     }
 
     @Transactional
-    public int updateComplaintStatus(Long complaintId, String newStatus, String modifier)
+    public int updateComplaintStatus(Long complaintId, String newStatus, String modifier, Date date)
     {
         Query updateStatusQuery = getEm().createQuery(
                 "UPDATE Complaint " +
@@ -90,7 +90,7 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
                         "modifier = :modifier " +
                         "WHERE complaintId = :complaintId");
         updateStatusQuery.setParameter("newStatus", newStatus);
-        updateStatusQuery.setParameter("modified", new Date());
+        updateStatusQuery.setParameter("modified", date);
         updateStatusQuery.setParameter("modifier", modifier);
         updateStatusQuery.setParameter("complaintId", complaintId);
 
