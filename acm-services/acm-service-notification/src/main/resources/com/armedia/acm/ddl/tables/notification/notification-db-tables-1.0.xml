@@ -1,0 +1,57 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-notification-table" author="manojd">
+        <createTable tableName="acm_notification">
+            <column name="cm_notification_id" type="RAW(16)" defaultValueComputed="SYS_GUID()" >
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_notification"/>
+            </column>
+            <column name="cm_notification_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_notification_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <!--<column name="cm_notification_auto" type="VARCHAR2(1)">
+                <constraints nullable="false"/>
+            </column>-->
+            <column name="cm_notification_status" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_notification_action" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_notification_note" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_notification_comment" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="02-change-ID-type" author="manojd">
+        <dropDefaultValue tableName="acm_notification" columnName="cm_notification_id"/>
+        <modifyDataType tableName="acm_notification" columnName="cm_notification_id" newDataType="NUMBER(32,0)"/>
+    </changeSet>
+
+    <changeSet id="03-add-modify-params" author="manojd">
+        <addColumn tableName="acm_notification">
+            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+<!--    <changeSet id="03-delete" author="manojd">
+        <dropTable tableName="acm_notification"/>
+    </changeSet>-->
+
+</databaseChangeLog>

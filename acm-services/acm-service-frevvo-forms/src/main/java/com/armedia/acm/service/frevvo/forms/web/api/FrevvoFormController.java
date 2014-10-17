@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -51,6 +53,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private AcmPluginManager acmPluginManager;
 	private UserDao userDao;
 	private ComplaintDao complaintDao;
+	private CaseFileDao caseFileDao;
+    private CloseComplaintRequestDao closeComplaintRequestDao;
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
@@ -127,7 +131,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 
 			if (multipartRequest != null && multipartRequest.getFileMap() != null) {
-				MultipartFile formDataFile = multipartRequest.getFileMap().get("form");	
+				MultipartFile formDataFile = multipartRequest.getFileMap().get("form_" + formName);	
 				if (formDataFile != null) {
 					StringWriter writer = new StringWriter();
 					IOUtils.copy(formDataFile.getInputStream(), writer, Charset.forName("UTF-8"));
@@ -215,6 +219,20 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		this.complaintDao = complaintDao;
 	}
 
+	/**
+	 * @return the caseFileDao
+	 */
+	public CaseFileDao getCaseFileDao() {
+		return caseFileDao;
+	}
+
+	/**
+	 * @param caseFileDao the caseFileDao to set
+	 */
+	public void setCaseFileDao(CaseFileDao caseFileDao) {
+		this.caseFileDao = caseFileDao;
+	}
+
 	public SaveComplaintTransaction getSaveComplaintTransaction()
     {
         return saveComplaintTransaction;
@@ -233,5 +251,15 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
+    }
+
+    public CloseComplaintRequestDao getCloseComplaintRequestDao()
+    {
+        return closeComplaintRequestDao;
+    }
+
+    public void setCloseComplaintRequestDao(CloseComplaintRequestDao closeComplaintRequestDao)
+    {
+        this.closeComplaintRequestDao = closeComplaintRequestDao;
     }
 }

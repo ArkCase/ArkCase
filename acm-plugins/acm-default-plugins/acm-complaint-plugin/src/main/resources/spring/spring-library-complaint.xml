@@ -101,6 +101,7 @@
     </bean>
 
     <bean id="acmComplaintDao" class="com.armedia.acm.plugins.complaint.dao.ComplaintDao"/>
+    <bean id="closeComplaintRequestDao" class="com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao"/>
 
     <bean id="saveComplaintTransaction" class="com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction">
         <property name="muleClient" ref="muleClient"/>

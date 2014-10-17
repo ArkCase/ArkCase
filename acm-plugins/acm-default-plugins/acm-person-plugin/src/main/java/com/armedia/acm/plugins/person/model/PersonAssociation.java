@@ -1,9 +1,13 @@
 package com.armedia.acm.plugins.person.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -35,7 +39,7 @@ public class PersonAssociation implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
    
-    @ManyToOne( cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @ManyToOne( cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name="cm_person_assoc_person_id", nullable = false) 
     private Person person;
     
@@ -67,6 +71,14 @@ public class PersonAssociation implements Serializable
     
     @Column(name = "cm_notes")
     private String notes;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "acm_person_assoc_tag",
+            joinColumns = @JoinColumn(name = "cm_person_assoc_id", referencedColumnName = "cm_person_assoc_id")
+    )
+    @Column(name = "cm_tag")
+    private List<String> tags = new ArrayList<>();
 
     @PrePersist
     protected void beforeInsert()
@@ -220,5 +232,13 @@ public class PersonAssociation implements Serializable
         this.notes = notes;
     }
 
-    
-    }   
+    public List<String> getTags()
+    {
+        return tags;
+    }
+
+    public void setTags(List<String> tags)
+    {
+        this.tags = tags;
+    }
+}

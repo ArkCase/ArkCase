@@ -1,6 +1,7 @@
 <script type="text/javascript">
 
 jQuery(document).ready(function() {
+
     if ("undefined" != typeof Acm) {
         Acm.initialize();
     }
@@ -10,9 +11,26 @@ jQuery(document).ready(function() {
     if ("undefined" != typeof App) {
         App.initialize();
     }
-    if ("undefined" != typeof Topbar) {
-        Topbar.initialize();
-    }
+//    if ("undefined" != typeof Topbar) {
+//        if (Topbar.create) {Topbar.create();}
+//        if (Topbar.initialize){Acm.deferred(Topbar.initialize);}
+//    }
+    var acmObjects = [
+        Topbar
+    ];
+    for (var i = 0; i < acmObjects.length; i++) {
+        var obj = acmObjects[i];
+        if ("undefined" != typeof obj) {
+            if (obj.create) {obj.create();}
+        }
+    };
+    for (var i = 0; i < acmObjects.length; i++) {
+        var obj = acmObjects[i];
+        if ("undefined" != typeof obj) {
+            if (obj.initialize){Acm.deferred(obj.initialize);}
+        }
+    };
+
     if ("undefined" != typeof Sidebar) {
         Sidebar.initialize();
     }
@@ -24,6 +42,10 @@ jQuery(document).ready(function() {
     }
     if ("undefined" != typeof Complaint) {
         Complaint.initialize();
+    }
+    if ( "undefined" != typeof CaseFile )
+    {
+        CaseFile.initialize();
     }
     if ("undefined" != typeof ComplaintWizard) {
         ComplaintWizard.initialize();

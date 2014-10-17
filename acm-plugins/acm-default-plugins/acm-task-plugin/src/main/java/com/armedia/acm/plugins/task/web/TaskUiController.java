@@ -33,12 +33,12 @@ public class TaskUiController
     @RequestMapping(value = "/wizard", method = RequestMethod.GET)
     public ModelAndView openTaskWizard(
             @RequestParam(value = "parentType", required = false) String parentType
-            ,@RequestParam(value = "parentId", required = false) Integer parentId
+            ,@RequestParam(value = "reference", required = false) String reference
     ) {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("taskWizard");
         retval.addObject("parentType",  parentType);
-        retval.addObject("parentId",  parentId);
+        retval.addObject("reference",  reference);
         return retval;
 
     }

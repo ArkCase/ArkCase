@@ -36,7 +36,8 @@
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${js_angular_route_min}"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${js_angular_moment}"></script>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${js_angular_table}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${dashboardFileName}"></script>
+
+    <script type="text/javascript" src="<c:url value='/'/>resources/js/dashboard/dashboardAngular/${dashboardFileName}"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -45,33 +46,7 @@
 <section class="scrollable">
 
     <div class="container" ng-app="sample" style="width:100%">
-        <%--<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">--%>
-        <%--<div class="navbar navbar-inverse " role="navigation">--%>
-            <%--<div class="container" ng-controller="navigationCtrl">--%>
-                <%--<div class="navbar-header">--%>
-                    <%--<button type="button" class="navbar-toggle" ng-click="toggleNav()">--%>
-                        <%--<span class="sr-only">Toggle navigation</span>--%>
-                        <%--<span class="icon-bar"></span>--%>
-                        <%--<span class="icon-bar"></span>--%>
-                        <%--<span class="icon-bar"></span>--%>
-                    <%--</button>--%>
-                    <%--<a class="navbar-brand" href="#">ADF</a>--%>
-                <%--</div>--%>
-                <%--<div collapse="navCollapsed" class="collapse navbar-collapse">--%>
-                    <%--<ul class="nav navbar-nav">--%>
-                        <%--<li ng-class="navClass('sample/01')">--%>
-                            <%--<a href="#/sample/01">Sample 01</a>--%>
-                        <%--</li>--%>
-                        <%--<li ng-class="navClass('sample/02')">--%>
-                            <%--<a href="#/sample/02">Sample 02</a>--%>
-                        <%--</li>--%>
-                    <%--</ul>--%>
-                <%--</div><!--/.nav-collapse -->--%>
-            <%--</div>--%>
-        <%--</div>--%>
-
         <div ng-view />
-
     </div>
 
 <%--</section>--%>

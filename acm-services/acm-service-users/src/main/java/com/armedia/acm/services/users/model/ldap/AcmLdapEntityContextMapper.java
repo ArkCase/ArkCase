@@ -21,6 +21,8 @@ public class AcmLdapEntityContextMapper implements ContextMapper
 
     private String userIdAttributeName;
 
+    private String mailAttributeName;
+
     @Override
     public AcmLdapEntity mapFromContext(Object ctx)
     {
@@ -84,7 +86,7 @@ public class AcmLdapEntityContextMapper implements ContextMapper
             retval.setFirstName(adapter.getStringAttribute("givenName"));
         }
         retval.setUserId(adapter.getStringAttribute(getUserIdAttributeName()));
-
+        retval.setMail(adapter.getStringAttribute(getMailAttributeName()));
         retval.setDistinguishedName(adapter.getStringAttribute("dn"));
 
         return retval;
@@ -106,5 +108,13 @@ public class AcmLdapEntityContextMapper implements ContextMapper
     public void setUserIdAttributeName(String userIdAttributeName)
     {
         this.userIdAttributeName = userIdAttributeName;
+    }
+
+    public String getMailAttributeName() {
+        return mailAttributeName;
+    }
+
+    public void setMailAttributeName(String mailAttributeName) {
+        this.mailAttributeName = mailAttributeName;
     }
 }

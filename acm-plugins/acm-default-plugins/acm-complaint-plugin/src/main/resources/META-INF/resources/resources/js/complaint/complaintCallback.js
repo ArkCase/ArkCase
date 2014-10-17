@@ -10,16 +10,20 @@ Complaint.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_RETRIEVED, this.onListRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_RETRIEVED, this.onDetailRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_COMPLAIN_SAVED, this.onComplaintSaved);
-        Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_PERSON_LIST_RETRIEVED, this.onComplaintPersonListRetrieved);
-        Acm.Dispatcher.addEventListener(this.EVENT_PERSON_SAVED, this.onPersonSaved);
+        /*Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_PERSON_LIST_RETRIEVED, this.onComplaintPersonListRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_PERSON_SAVED, this.onPersonSaved);*/
+        Acm.Dispatcher.addEventListener(this.EVENT_PERSON_ASSOCIATION_SAVED, this.onPersonAssociationSaved);
+        Acm.Dispatcher.addEventListener(this.EVENT_PERSON_DELETED, this.onPersonDeleted);
 
     }
 
     ,EVENT_LIST_RETRIEVED		: "complaint-list-retrieved"
     ,EVENT_DETAIL_RETRIEVED		: "complaint-detail-retrieved"
     ,EVENT_COMPLAIN_SAVED		: "complaint-complaint-saved"
-    ,EVENT_COMPLAINT_PERSON_LIST_RETRIEVED : "complaint-person-list-retrieved"
-    ,EVENT_PERSON_SAVED         : "complaint-person-saved"
+    ,EVENT_PERSON_ASSOCIATION_SAVED : "person-association-saved"
+    ,EVENT_PERSON_DELETED       : "person-record-deleted"
+    /*,EVENT_COMPLAINT_PERSON_LIST_RETRIEVED : "complaint-person-list-retrieved"
+    ,EVENT_PERSON_SAVED         : "complaint-person-saved"*/
     ,onListRetrieved : function(Callback, response) {   	
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve complaint list:" + response.errorMsg);
@@ -82,7 +86,7 @@ Complaint.Callback = {
                     complaintSolr.modifier_s = complaint.modifier;
                     complaintSolr.name = complaint.complaintNumber;
                     complaintSolr.object_id_s = complaint.complaintId;
-                    complaintSolr.object_type_s = complaint.originator.parentType;
+                    complaintSolr.object_type_s = App.OBJTYPE_COMPLAINT;
                     complaintSolr.owner_s = complaint.creator;
                     complaintSolr.status_s = complaint.status;
                     complaintSolr.title_t = complaint.complaintTitle;
@@ -99,14 +103,12 @@ Complaint.Callback = {
 
                 Complaint.cacheComplaint.put(complaintId, complaint);
 
-                var people = Complaint.cachePersonList.get(complaintId);
+                /*var people = Complaint.cachePersonList.get(complaintId);
                 if (people) {
                     Complaint.Object.populateComplaint(complaint);
                 } else {
                     Complaint.Service.retrievePersonListComplaint(complaintId);
-
-
-                }
+                }*/
 
                 Complaint.Object.populateComplaint(complaint);
             }
@@ -115,21 +117,38 @@ Complaint.Callback = {
     ,onComplaintSaved : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to create or save complaint:" + response.errorMsg);
-//        } else {
-//            if (Acm.isNotEmpty(response.complaintId)) {
-//            }
+        } else
+        {
+            Complaint.cacheComplaint.put(response.complaintId, response);
+            /*Complaint.Object.refreshJTablePeople();
+            Complaint.Object.refreshJTableInitiator();*/
         }
     }
-    ,onPersonSaved: function(Callback, response) {
+/*    ,onPersonSaved: function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to create or save person:" + response.errorMsg);
-//        } else {
-//            if (Acm.isNotEmpty(response.complaintId)) {
-//            }
+        } else {
+            Acm.Dialog.info("Able to create or save person");
+
+        }
+    }*/
+    ,onPersonAssociationSaved: function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to create or save person:" + response.errorMsg);
+        } else {
+            //Acm.Dialog.info("Able to create or save person");
+        }
+    }
+    ,onPersonDeleted: function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to delete person:" + response.errorMsg);
+        } else {
+            //Acm.Dialog.info("Able to delete person");
         }
     }
 
-    ,onComplaintPersonListRetrieved : function(Callback, response) {
+
+ /*   ,onComplaintPersonListRetrieved : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to create or retrieve person list:" + response.errorMsg);
         } else {
@@ -142,5 +161,5 @@ Complaint.Callback = {
 
             }
         }
-    }
+    }*/
 };

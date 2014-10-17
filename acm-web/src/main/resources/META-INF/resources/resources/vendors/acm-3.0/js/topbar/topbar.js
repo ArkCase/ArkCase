@@ -4,23 +4,16 @@
  * @author jwu
  */
 var Topbar = Topbar || {
-    initialize: function() {
-        Topbar.Object.initialize();
-        Topbar.Event.initialize();
-        Topbar.Page.initialize();
-        Topbar.Rule.initialize();
-        Topbar.Service.initialize();
-        Topbar.Callback.initialize();
-
-        Acm.deferred(Topbar.Event.onPostInit);
+    create: function() {
+        if (Topbar.Model.create)      {Topbar.Model.create();}
+        if (Topbar.View.create)       {Topbar.View.create();}
+        if (Topbar.Controller.create) {Topbar.Controller.create();}
     }
-
-//    ,Object: {}
-//    ,Event:{}
-//    ,Page: {}
-//    ,Rule: {}
-//    ,Service: {}
-//    ,Callback: {}
+    ,initialize: function() {
+        if (Topbar.Model.initialize)      {Topbar.Model.initialize();}
+        if (Topbar.View.initialize)       {Topbar.View.initialize();}
+        if (Topbar.Controller.initialize) {Topbar.Controller.initialize();}
+    }
 
 };
 

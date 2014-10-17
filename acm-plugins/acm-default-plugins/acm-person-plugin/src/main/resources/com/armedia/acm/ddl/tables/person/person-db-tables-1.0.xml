@@ -482,6 +482,25 @@
            <column name="cm_notes" type="VARCHAR(4000)"/>                
         </addColumn>
     </changeSet>
+
+    <changeSet id="acm-person-24-add-person-assoc-tag" author="dmiller">
+        <createTable tableName="acm_person_assoc_tag">
+            <column name="cm_person_assoc_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_tag" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="acm_person_assoc_tag" columnNames="cm_person_assoc_id, cm_tag"/>
+        <addForeignKeyConstraint baseTableName="acm_person_assoc_tag" baseColumnNames="cm_person_assoc_id"
+                                 constraintName="fk_person_assoc_tag_assoc_id"
+                                 referencedTableName="acm_person_assoc"
+                                 referencedColumnNames="cm_person_assoc_id"
+                                 deferrable="true" initiallyDeferred="true" />
+
+
+    </changeSet>
     
 </databaseChangeLog>
 

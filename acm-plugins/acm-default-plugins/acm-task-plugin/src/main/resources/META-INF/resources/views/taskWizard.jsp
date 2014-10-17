@@ -9,7 +9,7 @@
     <title><spring:message code="taskNew.page.title" text="Task | ACM | Armedia Case Management" /></title>
     <div id="wizardData" itemscope="true" style="display: none">
         <span itemprop="parentType">${parentType}</span>
-        <span itemprop="parentId">${parentId}</span>
+        <span itemprop="reference">${reference}</span>
     </div>
 </jsp:attribute>
 
@@ -172,6 +172,7 @@
                     <div class="col-sm-6">
                         <label  class="label">Associate with Complaint or Case</label>
                         <input type="text" class="input-sm form-control" placeholder="Complaint or Case #" id="complaintId">
+                        <input type="hidden" class="span1" title="refCtrId" id="refCtrId" value="" />
                     </div>
                 </div>
 

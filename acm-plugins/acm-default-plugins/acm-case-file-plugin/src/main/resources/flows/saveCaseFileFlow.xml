@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+
+    <flow name="saveCaseFile" doc:name="Save Case File">
+        <description>Saves a case file (creates new case file if it has not been saved
+            previously).  The payload must be a CaseFile entity object.  The return message&quot;s
+            payload is the (possibly updated) case file; i.e. for a new case file, the return payload&quot;s
+            ECM folder ID is populated.</description>
+        <vm:inbound-endpoint
+                address="vm://saveCaseFile.in"
+                exchange-pattern="request-response"
+                doc:name="Save Case File">
+        </vm:inbound-endpoint>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.casefile"/>
+
+        <timer-interceptor/>
+
+        <choice>
+            <when expression="#[payload.ecmFolderPath != null]">
+                <processor-chain>
+                    <!-- store the case file in a flow variable so the enricher can see it -->
+                    <set-variable variableName="caseFile" value="#[message.payload]"/>
+                    <!-- update the case file with the ID of the folder -->
+                    <enricher  source="#[message.payload.id]" target="#[flowVars['caseFile'].ecmFolderId]">
+                        <cmis:get-or-create-folder-by-path folderPath="#[payload.ecmFolderPath]"/>
+                    </enricher>
+                    <logger category="com.armedia.acm.plugins.casefile" level="DEBUG"
+                            message="Folder Id: #[payload.ecmFolderId]"/>
+                </processor-chain>
+            </when>
+            <otherwise>
+                <logger category="com.armedia.acm.plugins.casefile" level="INFO" message="No need to create folder."/>
+            </otherwise>
+        </choice>
+
+
+        <catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.plugins.casefile" message="Exception saving: #[exception.message]"/>
+            <set-property propertyName="saveException" value="#[exception]"/>
+        </catch-exception-strategy>
+
+    </flow>
+
+</mule>

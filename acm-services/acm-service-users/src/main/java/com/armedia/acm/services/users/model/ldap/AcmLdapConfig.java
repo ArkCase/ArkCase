@@ -6,6 +6,7 @@ public class AcmLdapConfig
     private String authUserDn;
     private String authUserPassword;
     private String userIdAttributeName;
+    private String mailAttributeName;
     private boolean ignorePartialResultException;
     private String referral;
 
@@ -67,5 +68,13 @@ public class AcmLdapConfig
     public void setReferral(String referral)
     {
         this.referral = referral;
+    }
+
+    public String getMailAttributeName() {
+        return mailAttributeName;
+    }
+
+    public void setMailAttributeName(String mailAttributeName) {
+        this.mailAttributeName = mailAttributeName;
     }
 }

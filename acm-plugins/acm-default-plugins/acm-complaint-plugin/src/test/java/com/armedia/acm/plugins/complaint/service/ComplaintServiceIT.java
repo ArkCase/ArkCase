@@ -137,6 +137,9 @@ public class ComplaintServiceIT
 
         assertNotNull(personAssociation.getPerson().getContactMethods());
         verifyContactMethods(contact.getCommunicationDevice().get(0), personAssociation);
+
+        assertEquals(1, personAssociation.getTags().size());
+        assertEquals("Anonymous", personAssociation.getTags().get(0));
     }
 
     private void populateContact(Contact in, String personType)
