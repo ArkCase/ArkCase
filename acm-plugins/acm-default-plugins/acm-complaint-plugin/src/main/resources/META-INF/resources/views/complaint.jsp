@@ -180,6 +180,17 @@
                                     <div class="row" id="tabBlank" style="display:none;">
                                         <p></p>
                                     </div>
+                                    
+                                    <div class="row" id="tabCloseComplaintButton" style="display:none;">
+                                    	<div class="col-md-12">
+	                                        <div class="pull-right inline">
+	                                            <div class="btn-group">
+	                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> Close Complaint</button>
+	                                            	<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />
+	                                            </div>
+	                                        </div>
+                                        </div>
+                                    </div>
 
 
                                     <div class="row" id="tabDetail" style="display:none;">

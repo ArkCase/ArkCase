@@ -10,7 +10,9 @@ Complaint.Page = {
     }
 
     ,URL_TASK_DETAIL: "/plugin/task/"
-    ,URL_NEW_TASK:    "/plugin/task/wizard?parentType=COMPLAINT&parentId="
+    ,URL_NEW_TASK:    "/plugin/task/wizard?parentType=COMPLAINT&reference="
+
+
 
 
     ,fillReportSelection: function() {

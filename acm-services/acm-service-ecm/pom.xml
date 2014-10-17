@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.0.14</version>
+        <version>3.0.15</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -50,6 +50,11 @@
             <artifactId>acm-service-login</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-activiti-spring-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>
@@ -62,6 +67,20 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- activiti -->
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-bpmn-layout</artifactId>
         </dependency>
 
         <!-- logging -->
@@ -142,6 +161,11 @@
             <groupId>com.oracle</groupId>
             <artifactId>jdbc</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- h2 is the in-memory database used for Activiti tests -->
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>

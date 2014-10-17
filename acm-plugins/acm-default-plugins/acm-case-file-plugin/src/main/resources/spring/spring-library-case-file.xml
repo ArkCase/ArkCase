@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+    
+    <bean id="caseFileDao" class="com.armedia.acm.plugins.casefile.dao.CaseFileDao"/>
+
+    <bean id="caseFileEventUtility" class="com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility"/>
+
+    <bean id="changeCaseFileStateService" class="com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService">
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+        <property name="dao" ref="caseFileDao"/>
+    </bean>
+
+    <bean id="acmCasePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="ACM Case Files"/>
+        <property name="privileges">
+            <list>
+                <ref bean="caseFileListPrivilege"/>
+                <ref bean="saveCasePrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="casefileLandingPage" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/casefile"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
+                <bean id="listAllCasesUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/casefile"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
+                <bean id="getCaseUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/casefile/{caseId}"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
+                <bean id="caseById" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/casefile/byId/{id}"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
+                <bean id="casesByStatusUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/casebystatus"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
+                <bean id="closeCaseUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/casefile/closeCase/{caseId}"/>
+                    <property name="requiredPrivilege" ref="saveCasePrivilege"/>
+                </bean>
+                <bean id="saveCaseUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/casefile"/>
+                    <property name="requiredPrivilege" ref="saveCasePrivilege"/>
+                </bean>
+                <bean id="listCaseEventsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/casefile/events/{caseId}"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
+                <bean id="getCasesByStatusUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/casebystatus/{timePeriod}"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
+                <bean id="listAllCasesByUserUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/casefile/forUser/{user}"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
+                <bean id="getCaseFileStatusSummaryUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/casebystatus/summary"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="saveCasePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="fis-save-case"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="caseFileListPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="case-file-list"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="saveCaseFileBusinessRule" class="com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule">
+        <property name="ruleSpreadsheetFilename" value="drools-case-file-rules.xlsx"/>
+    </bean>
+
+    <bean id="saveCaseService" class="com.armedia.acm.plugins.casefile.service.SaveCaseService">
+        <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="saveRule" ref="saveCaseFileBusinessRule"/>
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+        <property name="muleClient" ref="muleClient"/>
+    </bean>
+</beans>

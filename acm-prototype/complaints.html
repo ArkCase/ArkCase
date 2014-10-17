@@ -71,11 +71,11 @@
           <section class="w-f scrollable">
             <div class=slim-scroll data-height=auto data-disable-fade-out=true data-distance=0 data-size=10px data-railOpacity=0.2>
               <div class="clearfix wrapper dk nav-user hidden-xs">
-                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="resources/images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
+                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="resources/images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
-                    <li> <a href="#">Switch User</a> </li>
+                    
                     <li class="divider"></li>
                     <li> <a href="index.html">Logout</a> </li>
                   </ul>
@@ -94,12 +94,7 @@
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
-<li class=""> <a href="#" class="auto" data-target=".admin-collapse" data-toggle="collapse"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span> </a>
-                    <ul class="nav admin-collapse">
-                      <li> <a href="access.html"> <i class="i i-circle-sm"></i> <span>Access Control Policy</span> </a> </li>
-                      <li> <a href="locks.html"> <i class="i i-circle-sm"></i> <span>Object Locks</span> </a> </li>
-                    </ul>
-                  </li>
+<li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
               </nav>
@@ -192,7 +187,120 @@
                     </div>
                     </div>
                     <div>
-                      <div class="wrapper"> </div>
+                      <div class="wrapper">
+                        <div class="pull-right inline">
+                          <div class="btn-group">
+                            <button class="btn btn-default btn-sm" data-title="Close Complaint"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button><button class="btn btn-default btn-sm" data-title="Consolidate Complaint"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>
+                            <!-- Modal -->
+                           
+                            <div class="modal fade" id="closeCase" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Close Complaint</h4>
+                                  </div>
+                                  <div class="modal-body"> Are you sure you want to close this case? </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary">Close Complaint</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            
+                             <div class="modal fade" id="consolidateCase" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Consolidate Complaint</h4>
+                                  </div>
+                                  <div class="modal-body"> 
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                   <section class="row">
+                            <div class="col-sm-12">
+                              <label for="title" class="label">Enter the complaint you would like to consolidate with:</label>
+                              <input id="title" type="text" class="form-control" placeholder="Complaint #" >
+                              
+                           
+                              
+                         
+                              </div>
+                     
+                          </section>
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                   </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary">Consolidate Complaint</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                          </div>
+                        </div>
+                        <h4 class="m-n">Complaint Details</h4>
+                        <hr/>
+                        <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Event Log</a></div>
+                        <section class="panel panel-default">
+                          <div class="table-responsive">
+                            <table class="table table-striped b-light">
+                              <thead>
+                                <tr>
+                                  <th width="20"><label class="checkbox m-n i-checks">
+                                    <input type="checkbox">
+                                    <i></i></label></th>
+                                  <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
+                                  <th>Date/Time</th>
+                                  <th>User</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td><label class="checkbox m-n i-checks">
+                                    <input type="checkbox" name="post[]">
+                                    <i></i></label></td>
+                                  <td>[Event]</td>
+                                  <td>MM/DD/YYYY HH:MM:SS</td>
+                                  <td>[User]</td>
+                                </tr>
+                                  </tr>
+                                
+                              </tbody>
+                            </table>
+                          </div>
+                          <footer class="panel-footer">
+                            <div class="row">
+                              <div class="col-sm-8 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small></div>
+                              <div class="col-sm-4 text-right text-center-xs">
+                                <ul class="pagination pagination-sm m-t-none m-b-none">
+                                  <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                  <li><a href="#">1</a></li>
+                                  <li><a href="#">2</a></li>
+                                  <li><a href="#">3</a></li>
+                                  <li><a href="#">4</a></li>
+                                  <li><a href="#">5</a></li>
+                                  <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                </ul>
+                              </div>
+                            </div>
+                          </footer>
+                        </section>
+                      </div>
                     </div>
                     </div>
                   </section>

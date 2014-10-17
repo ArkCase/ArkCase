@@ -10,13 +10,11 @@ TaskWizard.Object = {
         //access data from jsp page
     	var items = $(document).items();
         var parentType = items.properties("parentType").itemValue();
-        var parentId = items.properties("parentId").itemValue();
-        
-        if (Acm.isNotEmpty(parentType) && Acm.isNotEmpty(parentId)) {
+        var reference = items.properties("reference").itemValue();
+        if (Acm.isNotEmpty(parentType) && Acm.isNotEmpty(reference) ) {
             var t = Task.getTask();
             t.attachedToObjectType = parentType;
-            t.attachedToObjectId = parseInt(parentId);
-
+            t.attachedToObjectId = reference;
         }
         
         //jsp object definitions
@@ -25,9 +23,12 @@ TaskWizard.Object = {
 
         this.$selOwners        = $("#assignee");
         this.$edtComplaint     = $("#complaintId");
+        this.setValueEdtComplaint(Acm.goodValue(reference));
+        this.useTypeAhead(this.$edtComplaint);
+
         this.$edtSubject       = $("#subject");
 
-        this.$edtStartDate     = $("#startDate");
+        this.$edtStartDate     = $("#startDate");;
         this.setValueEdtStartDate(Acm.getCurrentDay());
 
         this.$selStatus        = $("#statusSel");
@@ -42,6 +43,7 @@ TaskWizard.Object = {
         this.$edtCase          = $("#case");
         this.$selTaskFlags     = $("#taskFlags");
         this.$selTaskFlags.chosen();
+
 
 //        this.$divDetail.summernote({
 //            height: 300
@@ -67,6 +69,13 @@ TaskWizard.Object = {
 	 */
     ,getValueEdtComplaint: function() {
         return Acm.Object.getPlaceHolderInput(this.$edtComplaint);
+    }
+
+    /**
+     * set the complaint id or case id field value
+     */
+    ,setValueEdtComplaint: function(val) {
+        return Acm.Object.setValue(this.$edtComplaint, val);
     }
 
 	/**
@@ -130,6 +139,94 @@ TaskWizard.Object = {
      */
     ,getSelectedValueSelPriority: function() {
         return Acm.Object.getSelectValueIgnoreFirst(this.$prioritySel);
+    }
+
+
+
+///////////////////////////////////////
+    ,_ctrObjs: {}
+    ,_ctrTitles: []
+
+    ,_onSuccessSuggestion: function(query, process, data) {
+        TaskWizard.Object._ctrObjs = {};
+        TaskWizard.Object._ctrTitles = [];
+
+        _.each( data, function(item, ix, list){
+            TaskWizard.Object._ctrTitles.push( item.name );
+            TaskWizard.Object._ctrObjs[ item.name ] = item;
+        });
+
+        process( TaskWizard.Object._ctrTitles );
+    }
+    ,_getTypeAheadUrl: function(query) {
+        var url = App.getContextPath() + TaskWizard.Service.API_TYPEAHEAD_SUGGESTION_BEGIN_
+            + query
+            + TaskWizard.Service.API_TYPEAHEAD_SUGGESTION_END;
+        return url;
+    }
+    ,_validateSuggestionData: function(data) {
+        if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start) || Acm.isEmpty(data.response.docs)) {
+            return false;
+        }
+        return true;
+    }
+    ,_throttledRequest: function(query, process){
+        $.ajax({
+            url: TaskWizard.Object._getTypeAheadUrl(query)
+            ,cache: false
+            ,success: function(data){
+                if (TaskWizard.Object._validateSuggestionData(data)) {
+                    var docs = data.response.docs;
+                    TaskWizard.Object._onSuccessSuggestion(query, process, docs);
+                }
+            }
+        });
+    }
+
+    ,useTypeAhead: function($s) {
+        $s.typeahead({
+            source: function ( query, process ) {
+                _.debounce(TaskWizard.Object._throttledRequest( query, process ), 300);
+            }
+            ,highlighter: function( item ){
+                html = '<div class="ctr">';
+                var ctr = TaskWizard.Object._ctrObjs[ item ];
+                if (ctr) {
+                    var icon = "";
+                    var type = Acm.goodValue(ctr.object_type_s, "UNKNOWN");
+                    if (type == "COMPLAINT") {
+                        icon = '<i class="i i-notice i-2x"></i>';
+                    } else if (type == "CASE") {
+                        icon = '<i class="i i-folder i-2x"></i>';
+                    } else if (type == "TASK") {
+                        icon = '<i class="i i-checkmark i-2x"></i>';
+                    } else if (type == "DOCUMENT") {
+                        icon = '<i class="i i-file i-2x"></i>';
+                    } else {
+                        icon = '<i class="i i-circle i-2x"></i>';
+                    }
+
+                    html += '<div class="icontype">' + icon + '</div>'
+                        + '<div class="title">' + Acm.goodValue(ctr.title_t) + '</div>'
+                        + '<div class="identifier">' + Acm.goodValue(ctr.name) + ' ('+ Acm.goodValue(ctr.object_type_s) + ')' + '</div>'
+                        + '<div class="author">By ' + ctr.author  + ' on '+ Acm.getDateTimeFromDatetime(ctr.last_modified) + '</div>'
+                    html += '</div>';
+                }
+                return html;
+            }
+            , updater: function ( selectedName ) {
+                $( "#refCtrId" ).val( TaskWizard.Object._ctrObjs[ selectedName ].object_id_s );
+                return selectedName;
+            }
+            ,hint: true
+            ,highlight: true
+            ,minLength: 1
+
+        });
+
     }
 
     

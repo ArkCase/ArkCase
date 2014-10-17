@@ -71,11 +71,11 @@
           <section class="w-f scrollable">
             <div class=slim-scroll data-height=auto data-disable-fade-out=true data-distance=0 data-size=10px data-railOpacity=0.2>
               <div class="clearfix wrapper dk nav-user hidden-xs">
-                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="resources/images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David Miller</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
+                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="resources/images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
-                    <li> <a href="#">Switch User</a> </li>
+                    
                     <li class="divider"></li>
                     <li> <a href="index.html">Logout</a> </li>
                   </ul>
@@ -94,12 +94,7 @@
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
-<li class=""> <a href="#" class="auto" data-target=".admin-collapse" data-toggle="collapse"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span> </a>
-                    <ul class="nav admin-collapse">
-                      <li> <a href="access.html"> <i class="i i-circle-sm"></i> <span>Access Control Policy</span> </a> </li>
-                      <li> <a href="locks.html"> <i class="i i-circle-sm"></i> <span>Object Locks</span> </a> </li>
-                    </ul>
-                  </li>
+<li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
               </nav>
@@ -166,12 +161,12 @@
                         <div class="col-xs-12">
                           <div class="">
                             <div class=" clearfix">
-                              <div class="col-xs-4 b-r">
-                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> </div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="caseTitle2" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> Sample Case Title</a></div>
                                 <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
                               <div class="col-xs-2 b-r">
                                 <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
-                                <small class="text-muted">Incident Date</small></div>
+                                <small class="text-muted">Start Date</small></div>
                               <div class="col-xs-1 b-r">
                                 <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
                                 <small class="text-muted">Priority</small></div>
@@ -181,6 +176,9 @@
                               <div class="col-xs-2 b-r">
                                 <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
                                 <small class="text-muted">Subject Type</small></div>
+                              <div class="col-xs-2 b-r">
+                                <div class="h4 font-bold"><a href="#" id="duedate" data-type="date" data-pk="1" data-url="/post" data-title="Enter Due Date">MM/DD/YYYY</a></div>
+                                <small class="text-muted">Due Date</small></div>
                               <div class="col-xs-1">
                                 <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
                                 <small class="text-muted">Status</small></div>
@@ -189,8 +187,7 @@
                         </div>
                       </div>
                     </div>
-                    
-                     <div class="wrapper bg-empty  clearfix">
+                    <div class="wrapper bg-empty  clearfix">
                       <div class="pull-right inline">
                         <div class="btn-group">
                           <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete Task"><i class="fa fa-check"></i></button>

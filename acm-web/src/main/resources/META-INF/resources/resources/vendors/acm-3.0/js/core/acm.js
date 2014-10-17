@@ -11,17 +11,10 @@ var Acm = Acm || {
         Acm.Object.initialize();
         Acm.Event.initialize();
         Acm.Rule.initialize();
+        Acm.Model.initialize();
 
         Acm.deferred(Acm.Event.onPostInit);
     }
-
-//    ,Dialog : {}
-//    ,Dispatcher : {}
-//    ,Ajax : {}
-//    ,Object : {}
-//    ,Event : {}
-//    ,Rule : {}
-
 
 	,isEmpty: function (val) {
 //        if (typeof val == "undefined") {
@@ -42,6 +35,14 @@ var Acm = Acm || {
 	,isNotEmpty: function (val) {
 	    return !this.isEmpty(val);
 	}
+    ,isArray: function(arr) {
+        if (arr) {
+            if (arr instanceof Array) {
+                return true;
+            }
+        }
+        return false;
+    }
 	,isArrayEmpty: function (arr) {
 	    return arr.length === 0;
 	}
@@ -89,10 +90,14 @@ var Acm = Acm || {
     //convert URL parameters to JSON
     //ex) "abc=foo&def=%5Basf%5D&xyz=5&foo=b%3Dar" to {abc: "foo", def: "[asf]", xyz: "5", foo: "b=ar"}
     ,urlToJson: function(param) {
-        var decoded = decodeURI(param)
+        var decodedUrlComponents = decodeURIComponent(param);
+
+        var decoded = decodeURI(decodedUrlComponents)
             .replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"')
             .replace(/\n/g,"\\n").replace(/\r/g,"\\r")
             .replace(/\+/g, " ");
+
+
 
 
         var parsed = JSON.parse('{"' + decoded + '"}');
@@ -153,15 +158,28 @@ var Acm = Acm || {
         }
     }
 
-    //datetime format: "2014-04-30T16:51:33.914+0000"
+    //Get date part from format: "2014-04-30T16:51:33.914+0000"
     ,getDateFromDatetime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
-            //d = dt.substr(0, 10);
             var year  = dt.substr(0, 4);
             var month = dt.substr(5, 2);
             var day   = dt.substr(8, 2);
             d = month + "/" + day + "/" + year;
+        }
+        return d;
+    }
+    //Get date and time from format: "2014-04-30T16:51:33.914+0000"
+    ,getDateTimeFromDatetime: function(dt) {
+        var d = "";
+        if (Acm.isNotEmpty(dt)) {
+            var year  = dt.substr(0, 4);
+            var month = dt.substr(5, 2);
+            var day   = dt.substr(8, 2);
+            var hour   = dt.substr(11, 2);
+            var minute   = dt.substr(14, 2);
+            var second   = dt.substr(17, 2);
+            d = month + "/" + day + "/" + year + " " + hour + ":" + minute + ":" + second;
         }
         return d;
     }
@@ -233,26 +251,6 @@ var Acm = Acm || {
     }
 
 
-//    ,_foobar_cont: function (){
-//        console.log("finished.");
-//    }
-//    ,sleep: function (millis) {
-//        setTimeout(
-//            function(){
-//                this._foobar_cont();
-//            }
-//            ,millis);
-//    }
-
-//    ,_timer: null
-//    ,sleep: function (milliseconds) {
-//        //this._timer.start();
-//        setTimeout(this._wake, milliseconds);
-//    }
-//
-//    ,_wake: function () {
-//        //this._timer.stop;
-//    }
 
     ,sleep: function(milliseconds) {
         var start = new Date().getTime();
@@ -263,136 +261,141 @@ var Acm = Acm || {
         }
     }
 
-//Untested code, commented for now.
-// http://www.w3schools.com/HTML/html5_webworkers.asp
-//
-//    ,Timer: {
-//        startWorker: function() {
-//            if(typeof(Worker) !== "undefined") {
-//                if(typeof(this._worker) == "undefined") {
-//                    this._worker = new Worker("acmTimer.js");
-//                }
-//                this._worker.onmessage = function(event) {
-//                    Console.log("" + event.data);
-//                };
-//            } else {
-//                Console.log("Sorry! No Web Worker support.");
-//            }
-//        }
-//        ,stopWorker: function() {
-//            this._worker.terminate();
-//        }
-//    }
-//    ,SessionData: function(name) {
-//        this.name = name;
-//    }
-
-    ,CacheFifo: function(maxSize) {
-        this.maxSize = maxSize;
-        this.reset();
-    }
-
-};
-
-//data stored in SessionStorage
-//Acm.SessionData.prototype = {
-//    getName: function() {
-//        return this.name;
-//    }
-//    ,get: function() {
-//        var data = sessionStorage.getItem(this.name);
-//        var item = ("null" === data)? null : JSON.parse(data);
-//        return item;
-//    }
-//    ,set: function(data) {
-//        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
-//        sessionStorage.setItem(this.name, item);
-//    }
-//}
-
-//simple first in first out aging cache
-Acm.CacheFifo.prototype = {
-    getMaxSize: function() {
-        return this.maxSize;
-    }
-    ,setMaxSize: function(maxSize) {
-        this.maxSize = maxSize;
-    }
-    ,put: function(key, item) {
-        var putAt = this.next;
-        for (var i = 0; i < this.size; i++) {
-            if (this.keys[i] == key) {
-                putAt = i;
-                break;
-            }
+    /**
+     * Deep compare of two objects.
+     *
+     * Note that this does not detect cyclical objects as it should.
+     * Need to implement that when this is used in a more general case. It's currently only used
+     * in a place that guarantees no cyclical structures.
+     *
+     * @param {*} x
+     * @param {*} y
+     * @return {Boolean} Whether the two objects are equivalent, that is,
+     *         every property in x is equal to every property in y recursively. Primitives
+     *         must be strictly equal, that is "1" and 1, null an undefined and similar objects
+     *         are considered different
+     */
+    ,equals: function ( x, y ) {
+        // If both x and y are null or undefined and exactly the same
+        if ( x === y ) {
+            return true;
         }
 
-
-        this.cache[key] = item;
-        this.keys[putAt] = key;
-
-
-        if (putAt == this.next) {
-            this.next = (this.next + 1) % this.maxSize;
-            this.size = (this.maxSize > this.size)? (this.size + 1) : this.maxSize;
-        }
-    }
-    ,remove: function(key) {
-        var delAt = -1;
-        for (var i = 0; i < this.size; i++) {
-            if (this.keys[i] == key) {
-                delAt = i;
-                break;
-            }
+        // If they are not strictly equal, they both need to be Objects
+        if ( ! ( x instanceof Object ) || ! ( y instanceof Object ) ) {
+            return false;
         }
 
-        if (0 <= delAt) {
-            var newKeys = [];
-            for (var i = 0; i < this.maxSize; i++) {
-                newKeys.push(null);
-            }
+        // They must have the exact same prototype chain, the closest we can do is
+        // test the constructor.
+        if ( x.constructor !== y.constructor ) {
+            return false;
+        }
 
-            if (this.size == this.maxSize) {
-                var n = 0;
-                for (var i = 0; i < this.size; i++) {
-                    if (i != delAt) {
-                        newKeys[n] = this.keys[(this.next + i + this.maxSize) % this.maxSize];
-                        n++;
-                    }
+        for ( var p in x ) {
+            // Inherited properties were tested using x.constructor === y.constructor
+            if ( x.hasOwnProperty( p ) ) {
+                // Allows comparing x[ p ] and y[ p ] when set to undefined
+                if ( ! y.hasOwnProperty( p ) ) {
+                    return false;
                 }
+
+                // If they have the same strict value or identity then they are equal
+                if ( x[ p ] === y[ p ] ) {
+                    continue;
+                }
+
+                // Numbers, Strings, Functions, Booleans must be strictly equal
+                if ( typeof( x[ p ] ) !== "object" ) {
+                    return false;
+                }
+
+                // Objects and Arrays must be tested recursively
+                if ( !equals( x[ p ],  y[ p ] ) ) {
+                    return false;
+                }
+            }
+        }
+
+        for ( p in y ) {
+            // allows x[ p ] to be set to undefined
+            if ( y.hasOwnProperty( p ) && ! x.hasOwnProperty( p ) ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    ,Timer: {
+        _worker: null
+        ,startWorker: function(workerUrl) {
+            if (null == this._worker) {
+                if(typeof(Worker) === "undefined") {
+                    return null;
+                }
+
+                this._worker = new Worker(workerUrl);
+                this._worker.onmessage = function(event) {
+                    //console.log("" + event.data);
+                    Acm.Timer.triggerEvent();
+                };
+            }
+            return this._worker;
+        }
+        ,stopWorker: function() {
+            this._worker.terminate();
+        }
+
+        ,_listeners: []
+        ,_listenerCount: 0
+        ,registerListener: function(name, count, callback) {
+            var i = this._findListener(name);
+            if (0 > i) {    //not found; create new entry
+                this._listeners.push({name: name, callback: callback, count: count, countDown: count});
+                this._listenerCount++;
             } else {
-                var n = 0;
-                for (var i = 0; i < this.size; i++) {
-                    if (i != delAt) {
-                        newKeys[n] = this.keys[i];
-                        n++;
-                    }
+                var listener = this._listeners[i];
+                listener.callback = callback;
+                listener.count = count;
+            }
+        }
+        ,removeListener: function(name) {
+            var i = this._findListener(name);
+            this._removeListener(i);
+        }
+        ,_removeListener: function(i) {
+            if (0 <= i) {
+                this._listeners.splice(i, 1);
+                this._listenerCount--;
+            }
+        }
+        ,_findListener: function(name) {
+            for (var i = 0; i < this._listenerCount; i++) {
+                var listener = this._listeners[i];
+                if (listener.name == name) {
+                    return i;
                 }
             }
-            this.size--;
-            this.next = this.size;
+            return -1;
+        }
+        ,triggerEvent: function() {
+            //need to loop backwards because of possible item removed while looping
+            for (var i = this._listenerCount - 1; 0 <= i; i--) {
+                var listener = this._listeners[i];
+                if (0 >= --listener.countDown) {
+                    if (listener.callback(listener.name)) {
+                        listener.countDown = listener.count;
+                    } else {
+                        this._removeListener(i);
+                    }
+                }
+            } //for i
+        }
+    }
 
-            this.keys = newKeys;
-            delete this.cache[key];
-        } //end if (0 <= delAt) {
-    }
-    ,get: function(key) {
-        for (var i = 0; i < this.size; i++) {
-            if (this.keys[i] == key) {
-                return this.cache[key];
-            }
-        }
-        return null;
-    }
-    ,reset: function() {
-        this.next = 0;
-        this.size = 0;
-        this.cache = {};
-        this.keys = [];
-        for (var i = 0; i < this.maxSize; i++) {
-            this.keys.push(null);
-        }
-    }
+
 };
+
 
 

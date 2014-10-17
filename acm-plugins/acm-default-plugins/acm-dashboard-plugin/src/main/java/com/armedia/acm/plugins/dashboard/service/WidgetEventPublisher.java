@@ -60,4 +60,27 @@ public class WidgetEventPublisher implements ApplicationEventPublisherAware {
         eventPublisher.publishEvent(getWidgetsByUserRoles);
     }
 
+    public void publishGeRolesByWidgets(List<RolesGroupByWidgetDto> source, Authentication authentication, String ipAddress, boolean succeeded) {
+        if (log.isDebugEnabled()) {
+            log.debug("Publishing a widget event. Get all Roles per Widgets Event");
+        }
+        GetRolesByWidgetsEvent getRolesByWidgetsEvent = new GetRolesByWidgetsEvent(source);
+        String user = authentication.getName();
+        getRolesByWidgetsEvent.setUserId(user);
+        getRolesByWidgetsEvent.setIpAddress(ipAddress);
+        getRolesByWidgetsEvent.setSucceeded(succeeded);
+        eventPublisher.publishEvent(getRolesByWidgetsEvent);
+    }
+
+    public void publishSetAuthorizedWidgetRolesEvent(RolesGroupByWidgetDto source, Authentication authentication, String ipAddress, boolean succeeded){
+        if (log.isDebugEnabled()) {
+            log.debug("Publishing a widget event. Get all Roles per Widgets Event");
+        }
+        SetAuthorizedWidgetRolesEvent setAuthorizedWidgetRolesEvent = new SetAuthorizedWidgetRolesEvent(source);
+        String user = authentication.getName();
+        setAuthorizedWidgetRolesEvent.setUserId(user);
+        setAuthorizedWidgetRolesEvent.setIpAddress(ipAddress);
+        setAuthorizedWidgetRolesEvent.setSucceeded(succeeded);
+        eventPublisher.publishEvent(setAuthorizedWidgetRolesEvent);
+    }
 }
