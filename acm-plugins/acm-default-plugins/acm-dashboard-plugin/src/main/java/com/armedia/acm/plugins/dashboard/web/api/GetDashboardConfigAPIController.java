@@ -67,7 +67,7 @@ public class GetDashboardConfigAPIController {
                     newWidgetsNames = newWidgetsString.split(",");
                     for (String widgetName : newWidgetsNames) {
                         Widget widget = new Widget();
-                        widget.setWidgetName(widgetName);
+                        widget.setWidgetName(widgetName.trim());
                         getWidgetDao().saveWidget(widget);
                     }
                 }

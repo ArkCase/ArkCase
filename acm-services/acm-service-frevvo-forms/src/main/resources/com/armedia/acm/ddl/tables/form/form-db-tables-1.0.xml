@@ -41,6 +41,19 @@
     
     </changeSet>
 
+    <changeSet id="forms-02-form-approvers-table" author="dmiller">
+        <createTable tableName="acm_form_approver">
+            <column name="cm_parent_id" type="NUMBER(32,0)"/>
+            <column name="cm_approver_user_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+                tableName="acm_form_approver"
+                columnNames="cm_parent_id, cm_approver_user_id"
+                constraintName="pk_form_approver"/>
+    </changeSet>
+
     
 
 </databaseChangeLog>

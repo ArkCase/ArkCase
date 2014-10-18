@@ -1,11 +1,13 @@
 package com.armedia.acm.plugins.dashboard.model.widget;
 
+import java.io.Serializable;
+
 /**
 * Created by marjan.stefanoski on 9/12/2014.
 */
-public class WidgetRolePrimaryKey {
-    private String roleName;
+public class WidgetRolePrimaryKey implements Serializable {
 
+    private String roleName;
     private Long widgetId;
 
     public String getRoleName() {
