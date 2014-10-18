@@ -225,6 +225,7 @@ var Acm = Acm || {
             ;
     }
 
+    //todo: relocate this to AcmEx.Object.XEditable
     //parameter d from x-editable date format, both getDate() and getMonth() are zero based
     ,xDateToDatetime: function(d) {
         if (null == d) {
