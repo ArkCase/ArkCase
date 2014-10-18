@@ -6,7 +6,7 @@
  * @author jwu
  */
 Sidebar.Callback = {
-    initialize : function() {
+    create : function() {
     }
 
 };

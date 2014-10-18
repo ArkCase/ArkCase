@@ -4,24 +4,9 @@
  * @author jwu
  */
 var HelloWorld = HelloWorld || {
-    initialize: function() {
-//        HelloWorld.Callbacks.initialize();
-//        HelloWorld.ObjectManager.initialize();
-//        HelloWorld.ServerManager.initialize();
-//        HelloWorld.TableManager.initialize();
-//
-//        HelloWorld.Callbacks.onPostInit();
-        console.log("HelloWorld initialize");
+    create: function() {
+        console.log("HelloWorld create");
     }
 
-    ,Callbacks:{}
-    ,ObjectManager: {}
-    ,ServerManager: {}
-    ,TableManager: {}
 };
 
-//$(document).ready(
-//    function() {
-//        HelloWorld.initialize();
-//    }
-//);

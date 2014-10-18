@@ -6,7 +6,7 @@
  * @author jwu
  */
 AdminAccess.Page = {
-    initialize : function() {
+    create : function() {
     }
 
 

@@ -9,7 +9,7 @@
  * @author jwu
  */
 Complaint.JTable = {
-    initialize : function() {
+    create : function() {
     }
     //
     //------------------ Initiator ------------------

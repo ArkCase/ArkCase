@@ -4,7 +4,7 @@
  * @author jwu
  */
 var Task = Task || {
-    initialize: function() {
+    create: function() {
     }
 
     ,_task : {}

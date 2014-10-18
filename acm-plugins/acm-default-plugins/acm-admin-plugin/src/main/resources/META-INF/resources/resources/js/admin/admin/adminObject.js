@@ -6,7 +6,7 @@
  * @author jwu
  */
 Admin.Object = {
-    initialize : function() {
+    create : function() {
         this.$btnTest = $("#test");
         this.$btnTest.click(function(e) {Admin.Event.onClickBtnTest(e);});
     }

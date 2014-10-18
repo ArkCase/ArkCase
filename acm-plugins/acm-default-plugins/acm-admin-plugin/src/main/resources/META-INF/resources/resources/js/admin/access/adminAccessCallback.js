@@ -6,7 +6,7 @@
  * @author jwu
  */
 AdminAccess.Callback = {
-    initialize : function() {
+    create : function() {
         Acm.Dispatcher.addEventListener(this.EVENT_ADMIN_ACCESS_UPDATED, this.onAdminAccessUpdate);
     }
 

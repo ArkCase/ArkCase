@@ -6,7 +6,7 @@
  * @author jwu
  */
 Admin.Event = {
-    initialize : function() {
+    create : function() {
     }
 
     ,onClickBtnTest: function(e) {

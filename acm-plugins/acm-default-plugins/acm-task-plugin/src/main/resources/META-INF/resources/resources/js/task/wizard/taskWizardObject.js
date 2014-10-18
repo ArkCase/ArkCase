@@ -6,7 +6,7 @@
  * @author jwu
  */
 TaskWizard.Object = {
-    initialize : function() {
+    create : function() {
         //access data from jsp page
     	var items = $(document).items();
         var parentType = items.properties("parentType").itemValue();

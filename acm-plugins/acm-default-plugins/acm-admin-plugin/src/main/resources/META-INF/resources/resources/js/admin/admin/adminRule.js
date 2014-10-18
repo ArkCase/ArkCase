@@ -6,7 +6,7 @@
  * @author jwu
  */
 Admin.Rule = {
-    initialize : function() {
+    create : function() {
     }
 };
 

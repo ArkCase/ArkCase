@@ -6,7 +6,7 @@
  * @author jwu
  */
 Sidebar.Service = {
-    initialize : function() {
+    create : function() {
     }
 
 };

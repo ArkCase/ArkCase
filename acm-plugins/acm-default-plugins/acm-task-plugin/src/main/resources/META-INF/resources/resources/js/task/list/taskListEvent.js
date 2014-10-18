@@ -6,7 +6,7 @@
  * @author jwu
  */
 TaskList.Event = {
-    initialize : function() {
+    create : function() {
     }
     ,onClickLnkListItemImage : function(e) {
         var taskId = TaskList.Object.getHiddenTaskId(e);

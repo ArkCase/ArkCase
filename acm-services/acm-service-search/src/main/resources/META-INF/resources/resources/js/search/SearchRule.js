@@ -6,7 +6,7 @@
  * @author jwu
  */
 Search.Rule = {
-    initialize : function() {
+    create : function() {
     }
 };
 

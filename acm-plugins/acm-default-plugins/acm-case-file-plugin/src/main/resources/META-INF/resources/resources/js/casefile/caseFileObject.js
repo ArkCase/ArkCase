@@ -6,7 +6,7 @@
  * @author jwu
  */
 CaseFile.Object = {
-    initialize : function() {
+    create : function() {
         var ti = this.getTreeInfo();
         var tiApp = CaseFile.Object.getCaseFileTreeInfo();
         if (tiApp) {

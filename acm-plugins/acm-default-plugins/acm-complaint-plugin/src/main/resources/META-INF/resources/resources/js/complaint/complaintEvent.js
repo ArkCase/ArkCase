@@ -6,7 +6,7 @@
  * @author jwu
  */
 Complaint.Event = {
-    initialize : function() {
+    create : function() {
     }
     ,onPostInit: function() {
         var treeInfo = Complaint.Object.getTreeInfo();

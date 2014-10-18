@@ -4,17 +4,17 @@
  * @author jwu
  */
 var CaseFile = CaseFile || {
-    initialize: function() {
+    create: function() {
         CaseFile.cachePage = new Acm.Model.CacheFifo(2);
         CaseFile.cacheCaseFile = new Acm.Model.CacheFifo(3);
         CaseFile.cacheCaseEvents = new Acm.Model.CacheFifo(3);
 
-        CaseFile.Object.initialize();
-        CaseFile.Event.initialize();
-        CaseFile.Page.initialize();
-        CaseFile.Rule.initialize();
-        CaseFile.Service.initialize();
-        CaseFile.Callback.initialize();
+        CaseFile.Object.create();
+        CaseFile.Event.create();
+        CaseFile.Page.create();
+        CaseFile.Rule.create();
+        CaseFile.Service.create();
+        CaseFile.Callback.create();
 
         Acm.deferred(CaseFile.Event.onPostInit);
     }

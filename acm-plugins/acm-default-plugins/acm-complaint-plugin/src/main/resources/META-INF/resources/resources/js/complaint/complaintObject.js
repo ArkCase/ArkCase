@@ -6,7 +6,7 @@
  * @author jwu
  */
 Complaint.Object = {
-    initialize : function() {
+    create : function() {
         var ti = this.getTreeInfo();
         var tiApp = App.getComplaintTreeInfo();
         if (tiApp) {

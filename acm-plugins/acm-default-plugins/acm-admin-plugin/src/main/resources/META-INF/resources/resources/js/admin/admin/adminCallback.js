@@ -6,7 +6,7 @@
  * @author jwu
  */
 Admin.Callback = {
-    initialize : function() {
+    create : function() {
         //Acm.Dispatcher.addEventListener(this.EVENT_MY_TASKS_RETRIEVED, this.onMyTasksRetrieved);
     }
 

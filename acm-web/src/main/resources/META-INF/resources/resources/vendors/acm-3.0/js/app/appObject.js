@@ -7,7 +7,7 @@
  * @author jwu
  */
 App.Object = {
-    initialize : function() {
+    create : function() {
         var items = $(document).items();
         this._contextPath = items.properties("contextPath").itemValue();
         this._userName = items.properties("userName").itemValue();

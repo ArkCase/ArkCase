@@ -6,7 +6,7 @@
  * @author jwu
  */
 Search.Page = {
-    initialize : function() {
+    create : function() {
     }
 
     ,buildPanel: function(searchEx) {

@@ -6,7 +6,7 @@
  * @author jwu
  */
 Complaint.FileUpload = {
-    initialize : function() {
+    create : function() {
     }
 
     ,removeUploadFileArea: function() {

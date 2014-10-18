@@ -6,7 +6,7 @@
  * @author jwu
  */
 AdminAccess.Rule = {
-    initialize : function() {
+    create : function() {
     }
 };
 

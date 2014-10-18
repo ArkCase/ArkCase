@@ -6,7 +6,7 @@
  * @author jwu
  */
 Admin.Service = {
-    initialize : function() {
+    create : function() {
     }
 
 //    ,API_RETRIEVE_MY_TASKS       : "/api/latest/plugin/task/forUser/"
