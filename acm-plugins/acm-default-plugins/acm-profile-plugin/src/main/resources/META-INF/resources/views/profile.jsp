@@ -11,271 +11,193 @@
 
 <jsp:attribute name="endOfBody">
     <script type="text/javascript" src="<c:url value='/resources/js/profile/profile.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/profile/profileObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/profile/profileEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/profile/profilePage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/profile/profileRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/profile/profileModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/profile/profileView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/profile/profileController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/profile/profileService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/profile/profileCallback.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
+
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css" type="text/css"/>
+    <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/${js_x_editable}"></script>
+
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
+
 </jsp:attribute>
 
 <jsp:body>
 <section id="content">
-<section class="vbox">
-
-<header class="header m-b-xs b-light hidden-print">
-    <a href="editProfile.html" class="btn btn-sm btn-info pull-right">Edit</a>
-    <h3 class="m-b-xs text-black"><spring:message code="profile.page.descShort" text="User Profile" /></h3>
-</header>
-
-
-<section class="scrollable">
-
-
-
-
-
-
-
-
-
-
-
-
-<section class="hbox stretch">
-<aside class="aside-lg bg-light lter b-r">
     <section class="vbox">
-
-
-
+        <header class="header m-b-xs b-light hidden-print">
+            <h3 class="m-b-xs text-black">User Profile</h3>
+        </header>
         <section class="scrollable">
-            <div class="wrapper">
-                <section class="panel no-border bg-gradient lt">
-                    <div class="panel-body">
-                        <div class="row m-t-xl">
-                            <div class="col-xs-3 text-right padder-v">
-                                <a href="#" class="btn btn-primary btn-icon btn-rounded m-t-xl"><i class="i i-mail2"></i></a>
-                            </div>
-                            <div class="col-xs-6 text-center">
-                                <div class="inline">
-                                    <div class="thumb-lg avatar">
-                                        <img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/ann.jpg" class="dker">
+            <section class="hbox stretch">
+                <aside class="aside-lg bg-light lter b-r">
+                    <section class="vbox">
+                        <section class="scrollable">
+                            <div class="wrapper">
+                                <section class="panel no-border bg-gradient lt">
+                                    <div class="panel-body">
+                                        <div class="row">
+
+                                            <div class="col-xs-6 text-center">
+
+                                                <div class="thumb-lg avatar"> <img src="./profile2_files/a5.png" class="dker"> </div>
+
+                                            </div>
+                                            <div class="col-xs-6">
+
+                                                <h4>David Miller</h4>
+                                                <small> Agent </small>
+
+
+                                                <h4>dmiller@armedia.com</h4>
+                                                <small> E-mail Address </small>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="h4 m-t m-b-xs font-bold text-lt">Ann Administrator</div>
-                                    <small class="text-muted m-b">Agent</small>
+                                </section>
 
-                                </div>
+                                <section class="panel panel-default bg-gradient">
+                                    <h4 class="padder">Groups</h4>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+
+                                                    <span class="btn-rounded btn-sm btn-info"> Richmond Field Office</span>
+                                                    <span class="btn-rounded btn-sm btn-info"> Internal Affairs</span>
+                                                    <span class="btn-rounded btn-sm btn-info"> Forensic Accountants</span>
+                                                    <span class="btn-rounded btn-sm btn-info"> Group 4</span>
+                                                    <span class="btn-rounded btn-sm btn-info"> Group 5</span>
+
+
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </section>
+
+
+                                <section class="panel panel-default bg-gradient">
+
+
+                                    <h4 class="padder">Subscriptions</h4>
+
+                                    <table class="table table-striped b-light">
+                                        <thead>
+                                        <tr>
+
+                                            <th class="th-sortable" data-toggle="class">Type</th>
+                                            <th>ID</th>
+                                            <th>Title</th>
+                                            <th>Date</th>
+                                            <th width="30"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+
+                                            <td>[Object]</td>
+                                            <td>[ID]</td>
+                                            <td>[Title]</td>
+                                            <td>MM/DD/YYYY</td>
+
+                                            <td><a href="http://www.armedia.com/demos/acm3/profile.html#" class="active" data-toggle="class"><i class="fa fa-times text-danger text-active"></i><i class="fa  fa-check-circle text-success text"></i></a></td>
+                                        </tr>
+
+
+                                        </tbody>
+                                    </table>
+
+
+                                    <footer class="panel-footer">
+                                        <div class="row">
+                                            <div class="col-sm-5 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small> </div>
+                                            <div class="col-sm-7 text-right text-center-xs">
+                                                <ul class="pagination pagination-sm m-t-none m-b-none">
+                                                    <li><a href="http://www.armedia.com/demos/acm3/profile.html#"><i class="fa fa-chevron-left"></i></a></li>
+                                                    <li><a href="http://www.armedia.com/demos/acm3/profile.html#">1</a></li>
+                                                    <li><a href="http://www.armedia.com/demos/acm3/profile.html#">2</a></li>
+                                                    <li><a href="http://www.armedia.com/demos/acm3/profile.html#">3</a></li>
+                                                    <li><a href="http://www.armedia.com/demos/acm3/profile.html#"><i class="fa fa-chevron-right"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </footer>
+
+                                    <div id="divSubscriptions" style="width:100%"></div>
+                                </section>
+
+
                             </div>
+                        </section>
+                    </section>
+                </aside>
+                <aside class="col-lg-4 b-l no-padder">
+                    <section class="vbox">
+                        <section class="scrollable">
+                            <div class="wrapper">
+                                <section class="panel panel-default">
+                                    <h4 class="padder">Contact Information</h4>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <h4><a href="#" id="location" data-type="text" data-pk="1" data-title="Enter Location" class="editable editable-click"> Pentagon</a></h4>
+                                                    <small>Location </small>
 
-
-
-
-
-
-                            <div class="col-xs-3 padder-v">
-                                <a href="#" class="btn btn-primary btn-icon btn-rounded m-t-xl" data-toggle="class:btn-danger">
-                                    <i class="i i-phone text"></i>
-                                    <i class="i i-phone2 text-active"></i>
-                                </a>
+                                                    <h4><a href="#" id="imaccount" data-type="text" data-pk="1" data-title="Enter IM Account" class="editable editable-click">DMiller</a> (<a href="#" id="imsystem" data-type="text" data-pk="1" data-title="Enter IM System" class="editable editable-click">Skype</a>)</h4>
+                                                    <small> IM Account </small> </div>
+                                                <div class="col-xs-6">
+                                                    <h4><a href="#" id="officephone" data-type="text" data-pk="1" data-title="Enter Office Phone Number" class="editable editable-click"> 555-555-5555</a></h4>
+                                                    <small> Office Phone </small>
+                                                    <h4><a href="#" id="mobilephone" data-type="text" data-pk="1" data-title="Enter Mobile Phone Number" class="editable editable-click"> 555-555-5555</a></h4>
+                                                    <small> Mobile Phone </small> </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </section>
+                                <section class="panel panel-default">
+                                    <h4 class="padder">Company Details</h4>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <h4><a href="#" id="company" data-type="text" data-pk="1" data-title="Enter Company Name" class="editable editable-click"> Armedia</a></h4>
+                                                    <small> Company Name </small>
+                                                    <h4><a href="#" id="street" data-type="text" data-pk="1" data-title="Enter Street" class="editable editable-click"> 1234 Street Name</a></h4>
+                                                    <small> Address 1 </small>
+                                                    <h4><a href="#" id="address2" data-type="text" data-pk="1" data-title="Enter Address 2" class="editable editable-click"> Suite 123</a></h4>
+                                                    <small> Address 2 </small>
+                                                    <h4><a href="#" id="city" data-type="text" data-pk="1" data-title="Enter City" class="editable editable-click"> Vienna</a></h4>
+                                                    <small> City </small>
+                                                    <h4><a href="#" id="state" data-type="text" data-pk="1" data-title="Enter State" class="editable editable-click"> VA</a></h4>
+                                                    <small> State </small>
+                                                    <h4><a href="#" id="zip" data-type="text" data-pk="1" data-title="Enter ZIP" class="editable editable-click"> 12345</a></h4>
+                                                    <small> ZIP </small> </div>
+                                                <div class="col-xs-6">
+                                                    <h4><a href="#" id="mainphone" data-type="text" data-pk="1" data-title="Enter Main Office Phone" class="editable editable-click"> 555-555-5555</a></h4>
+                                                    <small> Main Office Phone </small>
+                                                    <h4><a href="#" id="fax" data-type="text" data-pk="1" data-title="Enter Main Office Phone" class="editable editable-click"> 555-555-5555</a></h4>
+                                                    <small> Fax </small>
+                                                    <h4><a href="#" id="website" data-type="text" data-pk="1" data-title="Enter Website Address" class="editable editable-click">www.armedia.com</a></h4>
+                                                    <small> Website </small> </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </section>
+                                <section class="panel panel-default"></section>
                             </div>
-
-
-
-                        </div>
-                    </div>
-                    <footer class="panel-footer dk text-center no-border">
-                        <div class="row pull-out">
-                            <div class="col-xs-3 dker">
-                                <div class="padder-v">
-                                    <span class="m-b-xs h3 block text-black">0</span>
-                                    <small class="text-muted">Complaints</small>
-                                </div>
-                            </div>
-                            <div class="col-xs-3">
-                                <div class="padder-v">
-                                    <span class="m-b-xs h3 block text-black">0</span>
-                                    <small class="text-muted">Cases</small>
-                                </div>
-                            </div>
-                            <div class="col-xs-3 dker">
-                                <div class="padder-v">
-                                    <span class="m-b-xs h3 block text-black">0</span>
-                                    <small class="text-muted">Documents</small>
-                                </div>
-                            </div>
-                            <div class="col-xs-3">
-                                <div class="padder-v">
-                                    <span class="m-b-xs h3 block text-black">0</span>
-                                    <small class="text-muted">Tasks</small>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
-                </section>
-            </div>
+                        </section>
+                    </section>
+                </aside>
+            </section>
         </section>
     </section>
-</aside>
-<aside class="col-lg-4 b-l no-padder">
-    <section class="vbox">
-        <section class="scrollable">
-            <div class="wrapper">
-
-                <section class="panel panel-default">
-                    <h4 class="padder">About</h4>
-
-
-
-                    <ul class="list-group">
-                        <li class="list-group-item">
-
-                            <div class="row">
-                                <div class="col-xs-6">
-
-                                    <h4>Ann Administrator</h4>
-                                    <small>
-                                        Agent
-                                    </small>
-                                </div>
-                                <div class="col-xs-6">
-                                    <h4>Pentagon</h4>
-
-                                </div>
-                            </div>
-
-
-
-
-
-
-
-
-                        </li>
-                    </ul>
-                </section>
-
-                <section class="panel panel-default">
-                    <h4 class="padder">Contact Information</h4>
-                    <ul class="list-group">
-                        <li class="list-group-item">
-
-
-
-
-                            <div class="row">
-                                <div class="col-xs-6">
-
-                                    <h4>ann-acm@armedia.com</h4>
-                                    <small>
-                                        E-mail Address
-                                    </small>
-                                    <h4>ann-acm</h4>
-                                    <small>
-                                        Skype
-                                    </small>
-                                </div>
-                                <div class="col-xs-6">
-                                    <h4>555-555-5555</h4>
-                                    <small>
-                                        Office Phone
-                                    </small>
-                                    <h4>555-555-5555</h4>
-                                    <small>
-                                        Mobile Phone
-                                    </small>
-                                </div>
-                            </div>
-
-
-                        </li>
-
-                    </ul>
-                </section>
-
-
-
-                <section class="panel panel-default">
-                    <h4 class="padder">Company Details</h4>
-                    <ul class="list-group">
-                        <li class="list-group-item">
-
-
-
-                            <div class="row">
-                                <div class="col-xs-6">
-
-                                    <h4>Armedia</h4>
-                                    <small>
-                                        Company Name
-                                    </small>
-                                    <h4>1234 Street Name</h4>
-                                    <small>
-                                        Address 1
-                                    </small>
-                                    <h4>Suite 123</h4>
-                                    <small>
-                                        Address 2
-                                    </small>
-                                    <h4>Vienna</h4>
-                                    <small>
-                                        City
-                                    </small>
-                                    <h4>VA</h4>
-                                    <small>
-                                        State
-                                    </small>
-                                    <h4>12345</h4>
-                                    <small>
-                                        ZIP
-                                    </small>
-
-                                </div>
-                                <div class="col-xs-6">
-                                    <h4>555-555-5555</h4>
-                                    <small>
-                                        Main Office Phone
-                                    </small>
-                                    <h4>555-555-5555</h4>
-                                    <small>
-                                        Fax
-                                    </small>
-
-                                    <h4><a href="http://www.armedia.com">www.armedia.com</a></h4>
-                                    <small>
-                                        Website
-                                    </small>
-                                </div>
-                            </div>
-
-
-
-                        </li>
-
-                    </ul>
-                </section>
-
-                <section class="panel panel-default"></section>
-            </div>
-        </section>
-    </section>
-</aside>
-</section>
-
-
-
-
-
-
-
-
-
-
-
-</section>
-
-</section>
 </section>
 </jsp:body>
 </t:layout>

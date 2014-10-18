@@ -121,9 +121,66 @@ AcmEx.Object = {
         $jt.jtable('load');
     }
 
+    //
+    // x-editable
+    //
+    ,XEditable: {
+        useEditable: function($s, arg) {
+            arg.placement = Acm.goodValue(arg.placement, "bottom");
+            arg.emptytext = Acm.goodValue(arg.emptytext, "Unknown");
+            $s.editable(arg);
+        }
+
+        ,useEditableDate: function($s, arg) {
+            arg.placement = Acm.goodValue(arg.placement, "bottom");
+            arg.emptytext = Acm.goodValue(arg.emptytext, "Unknown");
+            arg.format = Acm.goodValue(arg.format, "mm/dd/yyyy");
+            arg.viewformat = Acm.goodValue(arg.viewformat, "mm/dd/yyyy");
+            arg.datepicker = Acm.goodValue(arg.datepicker, {
+                weekStart: 1
+            });
+            $s.editable(arg);
+        }
+
+        ,getValue: function($s) {
+            return $s.editable("getValue");
+        }
+        ,setValue: function($s, txt) {
+            $s.editable("setValue", txt);
+        }
+        ,setDate: function($s, txt) {
+            $s.editable("setValue", txt, true);  //true = use internal format
+        }
+
+        ,xDateToDatetime: function(d) {
+            if (null == d) {
+                return "";
+            }
+            var month = d.getMonth()+1;
+            var day = d.getDate()+1;
+            var year = d.getFullYear();
+            var hour = d.getHours();
+            var minute = d.getMinutes();
+            var second = d.getSeconds();
+
+            return year
+                + "-" + this._padZero(month)
+                + "-" + this._padZero(day)
+                + "T" + this._padZero(hour)
+                + ":" + this._padZero(minute)
+                + ":" + this._padZero(second)
+                + ".000+0000"
+                ;
+        }
+        ,_padZero: function(i) {
+            return (10 > i) ? "0" + i : "" + i;
+        }
+    }
 
 
 
+
+    ////////////////// some function ideas for future use
     ,useDobInput: function($s) {
         $s.datepicker({
             changeMonth: true, changeYear: true,
