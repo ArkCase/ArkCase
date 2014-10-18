@@ -79,8 +79,12 @@ Complaint.Object = {
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
         
+        this.$lnkComplaintClose = $("#closeComplaint");
+        this.$lnkComplaintClose.click(function(e){Complaint.Event.onCloseComplaint(e)});
+        
         var formUrls = new Object();
         formUrls["roi"] = $('#roiFormUrl').val();
+        formUrls["close_complaint"] = $('#closeComplaintFormUrl').val();
         this.setFormUrls(formUrls);
     }
 
@@ -110,6 +114,7 @@ Complaint.Object = {
     }
     ,showTab: function(key) {
         var tabIds = ["tabBlank"
+            ,"tabCloseComplaintButton"
             ,"tabDetail"
             ,"tabInitiator"
             ,"tabPeople"
@@ -255,6 +260,12 @@ Complaint.Object = {
         this.setTextLnkStatus(c.status);
 
         this.setHtmlDivDetails(c.details);
+        
+        if (c.status === 'CLOSED' || c.status === 'IN APPROVAL'){
+        	this.$lnkComplaintClose.hide();
+        }else{
+        	this.$lnkComplaintClose.show();
+        }
 
         this.refreshJTableInitiator();
         this.refreshJTableDocuments();
@@ -333,7 +344,8 @@ Complaint.Object = {
         return null;
     }
     ,_mapNodeTab: {
-        pc: ["tabDetail"
+        pc: ["tabCloseComplaintButton"
+            ,"tabDetail"
             ,"tabInitiator"
             ,"tabPeople"
             ,"tabNotes"

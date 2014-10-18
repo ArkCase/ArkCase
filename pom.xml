@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.0.15-SNAPSHOT</version>
+    <version>3.0.16-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Armedia Case Management Framework and Default Plugins</name>
@@ -617,6 +617,11 @@
                 <artifactId>activiti-spring</artifactId>
                 <version>${activiti.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-bpmn-layout</artifactId>
+                <version>${activiti.version}</version>
             </dependency>
 
             <!-- activemq -->

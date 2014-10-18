@@ -74,6 +74,7 @@ securitySchemes:
                   "personType": "Initiator",
                   "personDescription": "Sample Description",
                   "notes":"sample note describing the person",
+                  "tags": ["Grateful Dead", "Guitar" ],
                   "person": {
                         "id": null,
                         "title": "Mr.",
@@ -118,6 +119,7 @@ securitySchemes:
                   "id": null,
                   "personType": "Subject",
                   "personDescription": "Simple Description",
+                  "tags": ["Contoso", "Illinois" ],
                   "person": {
                         "id": null,
                         "title": "Mr.",
@@ -185,6 +187,7 @@ securitySchemes:
                   "originator": {
                         "id":2191,
                         "parentId":2190,
+                        "tags": ["Grateful Dead", "Guitar" ],
                         "person":{
                                 "id":2192,
                                 "title":"mr.",
@@ -224,6 +227,7 @@ securitySchemes:
                   "personAssociations": [{
                         "id":2194,
                         "parentId":2190,
+                        "tags": ["Armedia", "Allman Brothers Band" ],
                         "person": {
                                   "id":2193,
                                   "title":"Mr.",
@@ -324,6 +328,7 @@ securitySchemes:
                   "status": "DRAFT",
                   "originator": {
                         "id": 2191,
+                        "tags": ["Grateful Dead", "Guitar" ],
                         "person": {
                             "id": 2192,
                             "title": null,
@@ -341,11 +346,58 @@ securitySchemes:
                             "creator": "ann-acm",
                             "modified": "2014-09-22T20:06:52.021+0000",
                             "modifier": "ann-acm",
-                            "addresses": [],
-                            "contactMethods": [],
+                            "addresses": [{
+                                "id" : 1294,
+                                "created" : "2014-10-15T13:47:41.313+0000",
+                                "creator" : "anotherUser",
+                                "modified" : "2014-10-15T18:22:03.648+0000",
+                                "modifier" : "ebmillar",
+                                "status" : "ACTIVE",
+                                "type" : "type",
+                                "types" : null,
+                                "streetAddress" : "street address",
+                                "streetAddress2" : "street address 2",
+                                "city" : "city",
+                                "state" : "state",
+                                "zip" : "zip",
+                                "country" : "country"
+                              }
+                            ],
+                            "contactMethods": [{
+                                "id" : 1295,
+                                "created" : "2014-10-15T13:47:41.329+0000",
+                                "creator" : "anotherUser",
+                                "modified" : "2014-10-17T13:48:47.960+0000",
+                                "modifier" : "ebmillar",
+                                "status" : "ACTIVE",
+                                "type" : "Office phone",
+                                "types" : null,
+                                "value" : "703-555-1212"
+                              }
+                            ],
                             "securityTags": [],
-                            "personAliases": [],
-                            "organizations": []
+                            "personAliases": [{
+                                "id" : 1297,
+                                "aliasType" : "Nick Name",
+                                "aliasTypes" : null,
+                                "aliasValue" : "Complaintant alias",
+                                "created" : "2014-10-15T13:47:41.347+0000",
+                                "creator" : "anotherUser",
+                                "modified" : "2014-10-15T18:22:03.674+0000",
+                                "modifier" : "ebmillar"
+                              }
+                            ],
+                            "organizations": [{
+                              "organizationId" : 1296,
+                              "organizationType" : "org type",
+                              "organizationTypes" : null,
+                              "organizationValue" : "org value",
+                              "created" : "2014-10-15T13:47:41.338+0000",
+                              "creator" : "anotherUser",
+                              "modified" : "2014-10-15T18:22:03.670+0000",
+                              "modifier" : "ebmillar"
+                            }
+                          ]
                         },
                         "parentId": 2190,
                         "personType": "Initiator",
@@ -363,6 +415,7 @@ securitySchemes:
                   "approvers": null,
                   "personAssociations": [{
                         "id": 2191,
+                        "tags": ["Grateful Dead", "Guitar" ],
                         "person": {
                           "id": 2192,
                           "title": null,
@@ -880,7 +933,8 @@ securitySchemes:
             "parentId":3022,
             "parentType":"COMPLAINT",
             "personDescription": "Sample Description",
-            "notes":"sample note describing the person",      
+            "notes":"sample note describing the person",  
+            "tags": ["Grateful Dead", "Guitar" ],    
             "person": {
                   "id": null,
                   "title": "Mr.",
@@ -931,6 +985,7 @@ securitySchemes:
               example: | 
                 { 	
                 "id":3311,
+                "tags": ["Grateful Dead", "Guitar" ],
                 "person":{
                       "id":3317,
                       "title":"Mr.",

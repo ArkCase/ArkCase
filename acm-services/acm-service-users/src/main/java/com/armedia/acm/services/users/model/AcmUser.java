@@ -47,6 +47,9 @@ public class AcmUser implements Serializable, AcmLdapEntity
     @Column(name = "cm_user_state")
     private String userState;
 
+    @Column(name="cm_mail")
+    private String mail;
+
     @Transient
     private String distinguishedName;
 
@@ -143,6 +146,14 @@ public class AcmUser implements Serializable, AcmLdapEntity
     public void setLastName(String lastName)
     {
         this.lastName = lastName;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     @Override

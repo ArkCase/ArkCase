@@ -47,4 +47,32 @@
        </addColumn>
     </changeSet>
 
+    <changeSet id="case-file-03-add-disposition-table" author="dmiller">
+        <createTable tableName="acm_disposition">
+            <column name="cm_disposition_id" type="NUMBER(32,0)">
+                <constraints primaryKey="true" primaryKeyName="pk_disposition"/>
+            </column>
+            <column name="cm_close_date" type="DATE"/>
+            <column name="cm_disposition_type" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_refer_ext_org_name" type="VARCHAR(4000)"/>
+            <column name="cm_refer_ext_person_name" type="VARCHAR(4000)"/>
+            <column name="cm_refer_ext_contact_method_id" type="NUMBER(32,0)"/>
+            <column name="cm_existing_case_number" type="VARCHAR(1024)"/>
+            <column name="cm_disposition_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>

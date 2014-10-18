@@ -290,5 +290,46 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="complaint-13-add-disposition-column" author="dmiller">
+        <addColumn tableName="acm_complaint">
+            <column name="cm_disposition_id" type="NUMBER(32,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="complaint-14-add-close-complaint-request-table" author="dmiller">
+        <createTable tableName="acm_close_complaint_request">
+            <column name="cm_close_complaint_id" type="NUMBER(32,0)">
+                <constraints primaryKeyName="pk_close_complaint_request" primaryKey="true"/>
+            </column>
+            <column name="cm_complaint_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_complaint_status" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_complaint_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_complaint_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_complaint_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_complaint_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_close_complaint_request" baseColumnNames="cm_complaint_id"
+                                 constraintName="fk_close_complaint_cmplnt_id"
+                                 referencedTableName="acm_complaint"
+                                 referencedColumnNames="cm_complaint_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
+
 </databaseChangeLog>
 

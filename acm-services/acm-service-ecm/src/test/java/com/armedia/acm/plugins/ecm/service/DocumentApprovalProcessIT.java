@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.service;
 
 
+import org.activiti.bpmn.BpmnAutoLayout;
 import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.Process;
 import org.activiti.engine.HistoryService;
@@ -8,6 +9,8 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricDetail;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -30,6 +33,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -201,24 +205,234 @@ public class DocumentApprovalProcessIT
 
     }
 
+    protected StartEvent createStartEvent()
+    {
+        StartEvent startEvent = new StartEvent();
+        startEvent.setId("start");
+        return startEvent;
+    }
+
+    protected UserTask createUserTask(String id, String name, String assignee)
+    {
+        UserTask userTask = new UserTask();
+        userTask.setName(name);
+        userTask.setId(id);
+        userTask.setAssignee(assignee);
+        return userTask;
+    }
+
+    protected SequenceFlow createSequenceFlow(String from, String to)
+    {
+        SequenceFlow flow = new SequenceFlow();
+        flow.setSourceRef(from);
+        flow.setTargetRef(to);
+        return flow;
+    }
+
+    protected EndEvent createEndEvent()
+    {
+        EndEvent endEvent = new EndEvent();
+        endEvent.setId("end");
+        return endEvent;
+    }
+
     @Test
     public void documentApproval_generatePng() throws Exception
     {
         assertNotNull(pi);
 
-        BpmnModel model = repo.getBpmnModel(pi.getProcessDefinitionId());
-        assertNotNull(model);
+//        BpmnModel designModel = repo.getBpmnModel(pi.getProcessDefinitionId());
 
+        BpmnModel model = new BpmnModel();
+        Process p = new Process();
+        model.addProcess(p);
+        p.setId("test-runtime-image");
+
+//        Process designProcess = designModel.getProcesses().get(0);
+//        p.getFlowElements().addAll(designProcess.getFlowElements());
+//
+//        Map<String, UserTask> designTasks = new HashMap<>();
+//        List<UserTask> toRemove = new ArrayList<>();
+//        for ( FlowElement fe : designProcess.getFlowElements() )
+//        {
+//            if ( fe instanceof UserTask )
+//            {
+//                UserTask ut = (UserTask) fe;
+//                designTasks.put(ut.getId(), ut);
+//            }
+//        }
+
+//        StartEvent runtimeStart = createStartEvent();
+//        EndEvent runtimeEnd = createEndEvent();
+//
+//        p.addFlowElement(runtimeStart);
+//        p.addFlowElement(runtimeEnd);
+//
+//        List<SequenceFlow> sfRemove = new ArrayList<>();
+//        List<Task> reviews = ts.createTaskQuery().processInstanceId(pi.getProcessInstanceId()).list();
+//        for ( Task t : reviews )
+//        {
+//            UserTask tRuntime = createUserTask(t.getId(), t.getName(), t.getAssignee());
+//            UserTask tDesign = designTasks.get(t.getTaskDefinitionKey());
+//
+//
+//
+//            for ( SequenceFlow sfDesign : tDesign.getOutgoingFlows() )
+//            {
+//                log.debug("Adding sequence from: " + tRuntime.getId() + " to " + sfDesign.getTargetRef());
+//                SequenceFlow sfRuntime = createSequenceFlow(tRuntime.getId(), sfDesign.getTargetRef());
+//                tRuntime.getOutgoingFlows().add(sfRuntime);
+//                p.addFlowElement(sfRuntime);
+//                sfRemove.add(sfDesign);
+//            }
+//
+//            for ( SequenceFlow sfDesign : tDesign.getIncomingFlows() )
+//            {
+//                log.debug("design sequence: " + sfDesign.getSourceRef() + " -> " + sfDesign.getTargetRef());
+//                SequenceFlow sfRuntime = createSequenceFlow(sfDesign.getSourceRef(), tRuntime.getId());
+//                tRuntime.getIncomingFlows().add(sfRuntime);
+//                p.addFlowElement(sfRuntime);
+//                sfRemove.add(sfDesign);
+//            }
+//
+//
+//            p.addFlowElement(tRuntime);
+//            toRemove.add(tDesign);
+//
+//
+//        }
+//
+//        List<SequenceFlow> runtimeRemove = new ArrayList<>();
+//
+//        for ( SequenceFlow removeMe : sfRemove )
+//        {
+//            for ( FlowElement fe : p.getFlowElements() )
+//            {
+//                if ( fe instanceof SequenceFlow )
+//                {
+//                    SequenceFlow sf = (SequenceFlow) fe;
+//                    if ( sf.getTargetRef().equals(removeMe.getTargetRef()) && sf.getSourceRef().equals(removeMe.getSourceRef()) )
+//                    {
+//                        runtimeRemove.add(sf);
+//                        FlowElement src = p.getFlowElement(sf.getSourceRef());
+//                        if ( src instanceof FlowNode )
+//                        {
+//                            FlowNode srcFn = (FlowNode) src;
+//                            srcFn.getOutgoingFlows().remove(sf);
+//                        }
+//
+//                        FlowElement target = p.getFlowElement(sf.getTargetRef());
+//                        if ( target instanceof FlowNode )
+//                        {
+//                            FlowNode targetFn = (FlowNode) target;
+//                            targetFn.getIncomingFlows().remove(sf);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        log.debug("size before: " + p.getFlowElements().size());
+//        p.getFlowElements().removeAll(runtimeRemove);
+//        log.debug("size after: " + p.getFlowElements().size());
+//
+//       p.getFlowElements().removeAll(toRemove);
+        List<String> taskIds = new ArrayList<>();
+//
         List<Task> reviews = ts.createTaskQuery().processInstanceId(pi.getProcessInstanceId()).list();
 
-        List<String> reviewIds = new ArrayList<>();
-        for ( Task t : reviews )
+        // approve first task
+        Task task = reviews.get(0);
+        ts.setVariable(task.getId(), "reviewOutcome", "APPROVE");
+        ts.setVariableLocal(task.getId(), "outcome", "APPROVE");
+        ts.complete(task.getId());
+
+        reviews = ts.createTaskQuery().processInstanceId(pi.getProcessInstanceId()).list();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+
+        int maxNameLength = Integer.MIN_VALUE;
+
+        List<HistoricTaskInstance> completed = hs.
+                createHistoricTaskInstanceQuery().
+                processInstanceId(pi.getProcessInstanceId()).
+                includeTaskLocalVariables().
+                orderByHistoricTaskInstanceEndTime().asc().
+                list();
+        for ( HistoricTaskInstance hti : completed )
         {
-            reviewIds.add(t.getId());
+            if ( hti.getEndTime() != null )
+            {
+                String taskName = "DONE: " + hti.getName() + " [" + hti.getTaskLocalVariables().get("outcome") +
+                        " by " + hti.getAssignee() + " on " + sdf.format(hti.getEndTime()) + "]";
+                maxNameLength = taskName.length() > maxNameLength ? taskName.length() : maxNameLength;
+                log.debug("task name length: "  + taskName.length());
+                UserTask ut = createUserTask(hti.getId(), taskName, hti.getAssignee());
+                p.addFlowElement(ut);
+            }
+
         }
 
-//        InputStream is = ProcessDiagramGenerator.generateDiagram(model, "png", rt.getActiveActivityIds(pi.getId()));
-        InputStream is = ProcessDiagramGenerator.generateDiagram(model, "png", reviewIds);
+        for ( Task t : reviews )
+        {
+            log.debug("task id: " + t.getId() + "; " + t.getName() + "; " + t.getAssignee() +
+                "; task def key: " + t.getTaskDefinitionKey());
+            String taskName = t.getName() + " [" + t.getAssignee() + ", due: " + sdf.format(t.getDueDate()) + "]";
+            maxNameLength = taskName.length() > maxNameLength ? taskName.length() : maxNameLength;
+            UserTask ut = createUserTask(t.getId(), taskName, t.getAssignee());
+            p.addFlowElement(ut);
+
+//            SequenceFlow sfStartToStask = createSequenceFlow("start", t.getId());
+//            p.addFlowElement(sfStartToStask);
+//            runtimeStart.getOutgoingFlows().add(sfStartToStask);
+//            ut.getIncomingFlows().add(sfStartToStask);
+
+//            SequenceFlow sfTaskToEnd = createSequenceFlow(t.getId(), "end");
+//            p.addFlowElement(sfTaskToEnd);
+//            ut.getOutgoingFlows().add(sfTaskToEnd);
+//            runtimeEnd.getIncomingFlows().add(sfTaskToEnd);
+
+            taskIds.add(t.getId());
+        }
+
+        log.debug("max name length: " + maxNameLength);
+//
+//        StartEvent designStart = (StartEvent) designModel.getFlowElement("startDocumentApproval");
+//
+
+
+        // 2. Generate graphical information
+        BpmnAutoLayout bal = new BpmnAutoLayout(model);
+        log.debug("default task width: " + bal.getTaskWidth());
+        // need about 8 per character
+        bal.setTaskWidth(maxNameLength * 8);
+        bal.execute();
+
+        InputStream is = ProcessDiagramGenerator.generateDiagram(model, "png", taskIds);
+//        InputStream is = ProcessDiagramGenerator.generatePngDiagram(model);
+
+
+//        BpmnModel model = repo.getBpmnModel(pi.getProcessDefinitionId());
+//        assertNotNull(model);
+//
+//        List<Task> reviews = ts.createTaskQuery().processInstanceId(pi.getProcessInstanceId()).list();
+//
+//        List<String> reviewIds = new ArrayList<>();
+//        for ( Task t : reviews )
+//        {
+//            reviewIds.add(t.getId());
+//        }
+//
+////        InputStream is = ProcessDiagramGenerator.generateDiagram(model, "png", rt.getActiveActivityIds(pi.getId()));
+//        InputStream is = ProcessDiagramGenerator.generateDiagram(model, "png", reviewIds);
+
+
+
+//        ProcessDefinitionEntity pde = (ProcessDefinitionEntity) repo.createProcessDefinitionQuery().
+//                processDefinitionId(pi.getProcessDefinitionId())
+//                .singleResult();
+
+//        InputStream is = repo.getResourceAsStream(pde.getDeploymentId(), pde.getDiagramResourceName());
 
         File output = new File(System.getProperty("user.home") + "/model.png");
 

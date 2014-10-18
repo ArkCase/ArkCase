@@ -34,6 +34,25 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>                  
     </changeSet>
+
+    <changeSet id="complaint-constraint-05-disposition-id" author="dmiller">
+        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_disposition_id"
+                                 constraintName="fk_complaint_disp_id"
+                                 referencedTableName="acm_disposition"
+                                 referencedColumnNames="cm_disposition_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
+
+    <changeSet id="complaint-constraint-06-close-complaint-disposition-id" author="dmiller">
+        <addForeignKeyConstraint baseTableName="acm_close_complaint_request"
+                                 baseColumnNames="cm_disposition_id"
+                                 constraintName="fk_close_complaint_disp_id"
+                                 referencedTableName="acm_disposition"
+                                 referencedColumnNames="cm_disposition_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
     
     
 </databaseChangeLog>
