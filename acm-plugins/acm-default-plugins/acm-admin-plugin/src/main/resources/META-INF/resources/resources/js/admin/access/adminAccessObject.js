@@ -13,7 +13,7 @@
  * @author jwu
  */
 AdminAccess.Object = {
-    initialize : function() {
+    create : function() {
 
         /* this.$btnTest = $("#test");
         this.$btnTest.click(function(e) {AdminAccess.Event.onClickBtnTest(e);});

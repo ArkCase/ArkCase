@@ -6,7 +6,7 @@
  * @author jwu
  */
 Acm.Dialog = {
-    initialize : function() {
+    create : function() {
     }
 
     ,DEFAULT_NO_TITLE:    undefined

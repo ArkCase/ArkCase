@@ -6,7 +6,7 @@
  * @author jwu
  */
 Search.Event = {
-    initialize : function() {
+    create : function() {
     }
 
     ,onClickBtnSearch : function(event, control) {

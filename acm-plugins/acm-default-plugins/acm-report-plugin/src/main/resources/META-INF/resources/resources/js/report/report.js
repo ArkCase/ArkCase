@@ -4,13 +4,13 @@
  * @author jwu
  */
 var Report = Report || {
-    initialize: function() {
-        Report.Object.initialize();
-        Report.Event.initialize();
-        Report.Page.initialize();
-        Report.Rule.initialize();
-        Report.Service.initialize();
-        Report.Callback.initialize();
+    create: function() {
+        Report.Object.create();
+        Report.Event.create();
+        Report.Page.create();
+        Report.Rule.create();
+        Report.Service.create();
+        Report.Callback.create();
 
         Acm.deferred(Report.Event.onPostInit);
     }

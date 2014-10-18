@@ -20,22 +20,22 @@ describe("Acm", function()
     });
 
 
-    it("Acm.Initialize", function() {
-        spyOn(Acm.Dialog,     "initialize");
-        spyOn(Acm.Dispatcher, "initialize");
-        spyOn(Acm.Ajax,       "initialize");
-        spyOn(Acm.Object,     "initialize");
-        spyOn(Acm.Event,      "initialize");
-        spyOn(Acm.Rule,       "initialize");
-        spyOn(Acm.Model,      "initialize");
-        Acm.initialize();
-        expect(Acm.Dialog     .initialize).toHaveBeenCalled();
-        expect(Acm.Dispatcher .initialize).toHaveBeenCalled();
-        expect(Acm.Ajax       .initialize).toHaveBeenCalled();
-        expect(Acm.Object     .initialize).toHaveBeenCalled();
-        expect(Acm.Event      .initialize).toHaveBeenCalled();
-        expect(Acm.Rule       .initialize).toHaveBeenCalled();
-        expect(Acm.Model      .initialize).toHaveBeenCalled();
+    it("Acm.create", function() {
+        spyOn(Acm.Dialog,     "create");
+        spyOn(Acm.Dispatcher, "create");
+        spyOn(Acm.Ajax,       "create");
+        spyOn(Acm.Object,     "create");
+        spyOn(Acm.Event,      "create");
+        spyOn(Acm.Rule,       "create");
+        spyOn(Acm.Model,      "create");
+        Acm.create();
+        expect(Acm.Dialog     .create).toHaveBeenCalled();
+        expect(Acm.Dispatcher .create).toHaveBeenCalled();
+        expect(Acm.Ajax       .create).toHaveBeenCalled();
+        expect(Acm.Object     .create).toHaveBeenCalled();
+        expect(Acm.Event      .create).toHaveBeenCalled();
+        expect(Acm.Rule       .create).toHaveBeenCalled();
+        expect(Acm.Model      .create).toHaveBeenCalled();
     });
 
     it("Test Acm.isEmpty() function", function() {

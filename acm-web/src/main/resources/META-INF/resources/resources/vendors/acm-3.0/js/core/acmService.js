@@ -4,7 +4,7 @@
  * @author jwu
  */
 Acm.Service = {
-    initialize: function() {
+    create: function() {
     }
 
     ,ajax: function(arg) {

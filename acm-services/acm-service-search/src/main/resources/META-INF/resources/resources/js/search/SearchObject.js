@@ -6,7 +6,7 @@
  * @author jwu
  */
 Search.Object = {
-    initialize : function() {
+    create : function() {
         var items = $(document).items();
         var searchExStr = items.properties("searchEx").itemValue();
         this.searchEx = $.parseJSON(searchExStr);

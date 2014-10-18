@@ -6,7 +6,7 @@
  * @author jwu
  */
 Report.Page = {
-    initialize : function() {
+    create : function() {
     }
 
 	/**

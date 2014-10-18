@@ -6,7 +6,7 @@
  * @author jwu
  */
 TaskWizard.Page = {
-    initialize : function() {
+    create : function() {
     }
 
     ,URL_DASHBOARD:           "/plugin/dashboard"

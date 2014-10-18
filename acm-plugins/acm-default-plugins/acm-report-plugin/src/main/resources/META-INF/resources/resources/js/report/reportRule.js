@@ -6,7 +6,7 @@
  * @author jwu
  */
 Report.Rule = {
-    initialize : function() {
+    create : function() {
     }
 
 	,validateCaseNumber : function(caseNumber) {

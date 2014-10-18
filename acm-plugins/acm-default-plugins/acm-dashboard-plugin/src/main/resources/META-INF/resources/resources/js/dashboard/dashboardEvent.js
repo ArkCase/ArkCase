@@ -6,7 +6,7 @@
  * @author jwu
  */
 Dashboard.Event = {
-    initialize : function() {
+    create : function() {
     }
 
 

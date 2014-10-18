@@ -1,5 +1,5 @@
 Acm.Rule = {
-    initialize: function() {
+    create: function() {
     }
 
     ,isAlpha: function (value) {

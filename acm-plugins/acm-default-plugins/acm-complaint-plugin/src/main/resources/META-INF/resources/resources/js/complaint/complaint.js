@@ -4,18 +4,18 @@
  * @author jwu
  */
 var Complaint = Complaint || {
-    initialize: function() {
+    create: function() {
         Complaint.cachePage = new Acm.Model.CacheFifo(2);
         Complaint.cacheComplaint = new Acm.Model.CacheFifo(3);
         Complaint.cachePersonList = new Acm.Model.CacheFifo(3);
 
 
-        Complaint.Object.initialize();
-        Complaint.Event.initialize();
-        Complaint.Page.initialize();
-        Complaint.Rule.initialize();
-        Complaint.Service.initialize();
-        Complaint.Callback.initialize();
+        Complaint.Object.create();
+        Complaint.Event.create();
+        Complaint.Page.create();
+        Complaint.Rule.create();
+        Complaint.Service.create();
+        Complaint.Callback.create();
 
         Acm.deferred(Complaint.Event.onPostInit);
     }

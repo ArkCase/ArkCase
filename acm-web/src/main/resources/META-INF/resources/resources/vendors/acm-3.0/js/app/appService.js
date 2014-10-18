@@ -6,7 +6,7 @@
  * @author jwu
  */
 App.Service = {
-    initialize : function() {
+    create : function() {
     }
 
     ,API_GET_APPROVERS             : "/api/latest/users/withPrivilege/acm-complaint-approve"

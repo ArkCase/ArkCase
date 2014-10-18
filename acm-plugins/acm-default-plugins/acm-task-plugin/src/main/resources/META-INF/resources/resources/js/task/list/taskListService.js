@@ -6,7 +6,7 @@
  * @author jwu
  */
 TaskList.Service = {
-    initialize : function() {
+    create : function() {
     }
 
     ,API_LIST_TASK             : "/api/latest/plugin/search/" + Task.getObjectType()

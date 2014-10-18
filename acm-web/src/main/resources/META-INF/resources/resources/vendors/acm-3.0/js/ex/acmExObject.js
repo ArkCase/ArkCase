@@ -4,7 +4,7 @@
  * @author jwu
  */
 AcmEx.Object = {
-    initialize : function() {
+    create : function() {
     }
 
     ,getSummerNote : function($s) {

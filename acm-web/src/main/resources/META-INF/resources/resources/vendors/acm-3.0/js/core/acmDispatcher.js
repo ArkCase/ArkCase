@@ -14,6 +14,9 @@
  * @author dmcclure
  */
 Acm.Dispatcher = {
+    create: function() {
+
+    },
 
     // events mapped to listeners
     events:[],
@@ -24,10 +27,6 @@ Acm.Dispatcher = {
         if ( this.events[event] ) {
             this.events[event].push(callback);
         }
-    },
-
-    initialize: function() {
-
     },
 
     removeEventListener: function(event,callback) {

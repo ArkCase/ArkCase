@@ -6,7 +6,7 @@
  * @author jwu
  */
 Complaint.Page = {
-    initialize : function() {
+    create : function() {
     }
 
     ,URL_TASK_DETAIL: "/plugin/task/"

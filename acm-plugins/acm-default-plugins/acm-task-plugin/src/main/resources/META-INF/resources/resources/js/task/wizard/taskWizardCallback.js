@@ -6,7 +6,7 @@
  * @author jwu
  */
 TaskWizard.Callback = {
-    initialize : function() {
+    create : function() {
 //        Acm.Dispatcher.addEventListener(this.EVENT_ASSIGNEES_RETRIEVED, this.onAssigneesRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_CREATED, this.onTaskCreated);
     }

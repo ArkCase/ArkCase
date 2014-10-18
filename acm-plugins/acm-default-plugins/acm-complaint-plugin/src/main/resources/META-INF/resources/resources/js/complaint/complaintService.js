@@ -6,7 +6,7 @@
  * @author jwu
  */
 Complaint.Service = {
-    initialize : function() {
+    create : function() {
     }
 
     ,API_LIST_COMPLAINT         : "/api/latest/plugin/search/COMPLAINT"

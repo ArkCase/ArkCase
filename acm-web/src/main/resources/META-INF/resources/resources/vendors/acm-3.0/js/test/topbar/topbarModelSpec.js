@@ -6,7 +6,7 @@
 describe("Topbar.Model.Asn", function()
 {
     beforeEach(function() {
-        Topbar.Model.Asn.initialize();
+        Topbar.Model.Asn.create();
     });
 
     it("Topbar.Model.Asn: getAsnList/setAsnList", function() {

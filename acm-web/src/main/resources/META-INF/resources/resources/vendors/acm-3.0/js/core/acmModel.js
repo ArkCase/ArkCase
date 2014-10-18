@@ -1,5 +1,5 @@
 Acm.Model = {
-    initialize: function() {
+    create: function() {
     }
 
     ,SessionData: function(name) {

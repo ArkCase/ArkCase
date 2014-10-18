@@ -6,7 +6,7 @@
  * @author jwu
  */
 TaskWizard.Event = {
-    initialize : function() {
+    create : function() {
     }
 
     ,onClickBtnSave : function(e) {

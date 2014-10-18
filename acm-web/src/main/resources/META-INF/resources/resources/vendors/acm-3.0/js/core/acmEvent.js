@@ -6,7 +6,7 @@
  * @author jwu
  */
 Acm.Event = {
-    initialize : function() {
+    create : function() {
     }
 
     ,onPostInit: function() {

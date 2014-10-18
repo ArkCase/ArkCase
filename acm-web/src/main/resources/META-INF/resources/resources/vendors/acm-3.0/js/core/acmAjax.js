@@ -6,7 +6,7 @@
  * @author jwu
  */
 Acm.Ajax = {
-    initialize: function() {
+    create: function() {
     }
 
     ,deferredGet : function(url, data) {

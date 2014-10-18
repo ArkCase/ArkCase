@@ -4,13 +4,13 @@
  * @author jwu
  */
 var Admin = Admin || {
-    initialize: function() {
-        Admin.Object.initialize();
-        Admin.Event.initialize();
-        Admin.Page.initialize();
-        Admin.Rule.initialize();
-        Admin.Service.initialize();
-        Admin.Callback.initialize();
+    create: function() {
+        Admin.Object.create();
+        Admin.Event.create();
+        Admin.Page.create();
+        Admin.Rule.create();
+        Admin.Service.create();
+        Admin.Callback.create();
 
         Acm.deferred(Admin.Event.onPostInit);
     }

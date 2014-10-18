@@ -6,7 +6,7 @@
  * @author jwu
  */
 TaskWizard.Service = {
-    initialize : function() {
+    create : function() {
     }
 
 //    ,API_GET_ASSIGNEES              : "/api/latest/users/withPrivilege/acm-complaint-approve"
