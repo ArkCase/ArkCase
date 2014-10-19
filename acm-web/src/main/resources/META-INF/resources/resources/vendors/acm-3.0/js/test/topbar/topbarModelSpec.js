@@ -60,7 +60,7 @@ describe("Topbar.Model.Asn", function()
         expect(Topbar.Model.Asn.buildAsnListNew(asnList)).toEqual(asnListNew);
 
         //
-        // obj 1 changes action; add obj 4
+        // change obj 1 action; add obj 4
         //
         asnList = [
             {"id": 1
@@ -93,9 +93,19 @@ describe("Topbar.Model.Asn", function()
             }
         ];
         Topbar.Model.Asn.setAsnList(asnList);
-        expect(Topbar.Model.Asn.getAsnListNewMore()).toEqual(asnListNewNoLonger);
-        expect(Topbar.Model.Asn.getAsnListNewNoLonger()).toEqual(asnListNewNoLonger);
-
+        expect(Topbar.Model.Asn.getAsnListNewMore(asnList)).toEqual(asnListNewMore);
+        expect(Topbar.Model.Asn.getAsnListNewNoLonger(asnList)).toEqual(asnListNewNoLonger);
+        asnListNew = [
+            {"id": 3
+                , "note":"updated notification3"
+                , "action":"New"
+            }
+            ,{"id": 4
+                , "note":"updated notification4"
+                , "action":"New"
+            }
+        ];
+        expect(Topbar.Model.Asn.buildAsnListNew(asnList)).toEqual(asnListNew);
 
         //
         // add obj 5
@@ -131,16 +141,31 @@ describe("Topbar.Model.Asn", function()
         asnListNewNoLonger = [
         ];
         Topbar.Model.Asn.setAsnList(asnList);
-        expect(Topbar.Model.Asn.getAsnListNewMore()).toEqual(asnListNewNoLonger);
-        expect(Topbar.Model.Asn.getAsnListNewNoLonger()).toEqual(asnListNewNoLonger);
+        expect(Topbar.Model.Asn.getAsnListNewMore(asnList)).toEqual(asnListNewMore);
+        expect(Topbar.Model.Asn.getAsnListNewNoLonger(asnList)).toEqual(asnListNewNoLonger);
+        asnListNew = [
+            {"id": 3
+                , "note":"updated notification3"
+                , "action":"New"
+            }
+            ,{"id": 4
+                , "note":"updated notification4"
+                , "action":"New"
+            }
+            ,{"id": 5
+                , "note":"updated notification5"
+                , "action":"New"
+            }
+        ];
+        expect(Topbar.Model.Asn.buildAsnListNew(asnList)).toEqual(asnListNew);
 
 
         //
         // asnList has no change, expect nothing to chnage for asnListNew
         //
         Topbar.Model.Asn.setAsnList(asnList);
-        expect(Topbar.Model.Asn.getAsnListNewMore()).toEqual([]);
-        expect(Topbar.Model.Asn.getAsnListNewNoLonger()).toEqual([]);
+        expect(Topbar.Model.Asn.getAsnListNewMore(asnList)).toEqual([]);
+        expect(Topbar.Model.Asn.getAsnListNewNoLonger(asnList)).toEqual([]);
 
 
         //
@@ -177,8 +202,8 @@ describe("Topbar.Model.Asn", function()
             }
         ];
         Topbar.Model.Asn.setAsnList(asnList);
-        expect(Topbar.Model.Asn.getAsnListNewMore()).toEqual(asnListNewNoLonger);
-        expect(Topbar.Model.Asn.getAsnListNewNoLonger()).toEqual(asnListNewNoLonger);
+        expect(Topbar.Model.Asn.getAsnListNewMore(asnList)).toEqual(asnListNewMore);
+        expect(Topbar.Model.Asn.getAsnListNewNoLonger(asnList)).toEqual(asnListNewNoLonger);
     });
 
 });
