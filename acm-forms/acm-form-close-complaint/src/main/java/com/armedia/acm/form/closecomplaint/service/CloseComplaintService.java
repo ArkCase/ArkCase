@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.armedia.acm.form.closecomplaint.model.Approver;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintInformation;
 import com.armedia.acm.form.closecomplaint.model.ExistingCase;
@@ -130,19 +129,17 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		information.setDispositions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
 		
 		// Get Approvers
-		Approver approver = new Approver();
 		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
 		
-		List<String> approvers = new ArrayList<String>();
+		List<String> approverOptions = new ArrayList<String>();
 		if (acmUsers != null && acmUsers.size() > 0){
 			for (AcmUser acmUser : acmUsers) {
 				// Add only users that are not the logged user
 				if (!acmUser.getUserId().equals(getAuthentication().getName())){
-					approvers.add(acmUser.getUserId() + "=" + acmUser.getFullName());
+					approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
 				}
 			}
 		}
-		approver.setApprovers(approvers);
 		
 		ReferExternal referExternal = new ReferExternal();
 		referExternal.setDate(new Date());
@@ -151,7 +148,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		referExternal.setContact(contact);
 		
 		closeComplaint.setInformation(information);
-		closeComplaint.setApprover(approver);
+		closeComplaint.setApproverOptions(approverOptions);
 		closeComplaint.setReferExternal(referExternal);
 		
 		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
@@ -165,8 +162,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	private Object searchApprovers(String keyword){
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
-		Approver approver = new Approver();
-		List<String> approvers = new ArrayList<String>();
+		List<String> approverOptions = new ArrayList<String>();
 		
 		if (keyword != null){
 			// Get Approvers
@@ -176,15 +172,13 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 				for (AcmUser acmUser : acmUsers) {
 					// Add only users that are not the logged user
 					if (!acmUser.getUserId().equals(getAuthentication().getName())){
-						approvers.add(acmUser.getUserId() + "=" + acmUser.getFullName());
+						approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
 					}
 				}
 			}
 		}
-			
-		approver.setApprovers(approvers);
 		
-		closeComplaint.setApprover(approver);
+		closeComplaint.setApproverOptions(approverOptions);
 		
 		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
 		String jsonString = gson.toJson(closeComplaint);
