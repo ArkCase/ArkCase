@@ -12,6 +12,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 
+import com.armedia.acm.form.config.Item;
+
 
 /**
  * @author riste.tutureski

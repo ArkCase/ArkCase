@@ -3,22 +3,51 @@
  */
 package com.armedia.acm.form.closecomplaint.model;
 
-import com.armedia.acm.plugins.person.model.Person;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
+
+import com.armedia.acm.form.config.Item;
 
 
 /**
  * @author riste.tutureski
  *
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class CloseComplaintForm {
 
+	private List<String> types;
 	private CloseComplaintInformation information;
 	private ReferExternal referExternal;
 	private ExistingCase existingCase;
-	private Approver approver;
+	@XmlElements({
+		@XmlElement(name="approvers"),
+		@XmlElement(name="approverItem")
+		
+	})
+	private List<Item> approvers;
+	private List<String> approverOptions;
 	private String description;
 	
 	
+	/**
+	 * @return the types
+	 */
+	public List<String> getTypes() {
+		return types;
+	}
+
+	/**
+	 * @param types the types to set
+	 */
+	public void setTypes(List<String> types) {
+		this.types = types;
+	}
+
 	/**
 	 * @return the information
 	 */
@@ -62,17 +91,31 @@ public class CloseComplaintForm {
 	}
 
 	/**
-	 * @return the approver
+	 * @return the approvers
 	 */
-	public Approver getApprover() {
-		return approver;
+	public List<Item> getApprovers() {
+		return approvers;
 	}
 
 	/**
-	 * @param approver the approver to set
+	 * @param approvers the approvers to set
 	 */
-	public void setApprover(Approver approver) {
-		this.approver = approver;
+	public void setApprovers(List<Item> approvers) {
+		this.approvers = approvers;
+	}
+
+	/**
+	 * @return the approverOptions
+	 */
+	public List<String> getApproverOptions() {
+		return approverOptions;
+	}
+
+	/**
+	 * @param approverOptions the approverOptions to set
+	 */
+	public void setApproverOptions(List<String> approverOptions) {
+		this.approverOptions = approverOptions;
 	}
 
 	/**

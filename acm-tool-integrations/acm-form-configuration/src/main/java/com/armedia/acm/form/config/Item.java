@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.plugins.complaint.model.complaint;
+package com.armedia.acm.form.config;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -19,6 +19,7 @@ public class Item {
 		@XmlElement(name="value"),
 		@XmlElement(name="owner"),
 		@XmlElement(name="follower"),
+		@XmlElement(name="approverId")
 	})
 	private String value;
 

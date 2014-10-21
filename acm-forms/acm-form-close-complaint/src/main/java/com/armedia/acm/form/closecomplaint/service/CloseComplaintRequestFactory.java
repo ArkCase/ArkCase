@@ -1,11 +1,14 @@
 package com.armedia.acm.form.closecomplaint.service;
 
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
+import com.armedia.acm.form.config.Item;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
+
 import org.springframework.security.core.Authentication;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by armdev on 10/17/14.
@@ -26,8 +29,7 @@ public class CloseComplaintRequestFactory
         req.setModifier(auth.getName());
         req.setCreator(auth.getName());
 
-        // TODO: support multiple approvers
-        req.setApprovers(Arrays.asList(form.getApprover().getApproverId()));
+        req.setApprovers(convertItemsToList(form.getApprovers()));
         req.setComplaintId(form.getInformation().getComplaintId());
 
         populateDisposition(form, auth, req);
@@ -67,5 +69,20 @@ public class CloseComplaintRequestFactory
                 disposition.getReferExternalContactMethod().setModifier(auth.getName());
             }
         }
+    }
+    
+    private List<String> convertItemsToList(List<Item> items)
+    {
+    	List<String> itemsString = new ArrayList<String>();
+    	
+    	if (items != null && items.size() > 0)
+    	{
+    		for (int i = 0; i < items.size(); i++) 
+    		{
+    			itemsString.add(items.get(i).getValue());
+    		}
+    	}
+    	
+    	return itemsString;
     }
 }
