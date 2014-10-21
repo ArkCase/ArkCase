@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +47,17 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	 */
 	@Override
 	public Object init() {
-		// TODO Auto-generated method stub
-		return null;
+
+		Object result = "";
+		
+		String type = getRequest().getParameter("type");
+		
+		if ("approver".equals(type))
+		{
+			// TODO: Call service to get the XML form for editing
+		}
+		
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -122,10 +132,14 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	
 	private Object initFormData(){
 		
+		String type = getRequest().getParameter("type");
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
 		CloseComplaintInformation information = new CloseComplaintInformation();
-		information.setCloseDate(new Date());
+		if (!"approver".equals(type))
+		{
+			information.setCloseDate(new Date());
+		}
 		information.setDispositions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
 		
 		// Get Approvers
@@ -135,18 +149,22 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		if (acmUsers != null && acmUsers.size() > 0){
 			for (AcmUser acmUser : acmUsers) {
 				// Add only users that are not the logged user
-				if (!acmUser.getUserId().equals(getAuthentication().getName())){
+				if (!acmUser.getUserId().equals(getAuthentication().getName()) || "approver".equals(type)){
 					approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
 				}
 			}
 		}
 		
 		ReferExternal referExternal = new ReferExternal();
-		referExternal.setDate(new Date());
+		if (!"approver".equals(type))
+		{
+			referExternal.setDate(new Date());
+		}
 		ContactMethod contact = new ContactMethod();
 		contact.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".deviceTypes"), ","));
 		referExternal.setContact(contact);
 		
+		closeComplaint.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".types"), ","));
 		closeComplaint.setInformation(information);
 		closeComplaint.setApproverOptions(approverOptions);
 		closeComplaint.setReferExternal(referExternal);
@@ -160,6 +178,8 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	}
 	
 	private Object searchApprovers(String keyword){
+		
+		String type = getRequest().getParameter("type");
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
 		List<String> approverOptions = new ArrayList<String>();
@@ -171,7 +191,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 			if (acmUsers != null && acmUsers.size() > 0){
 				for (AcmUser acmUser : acmUsers) {
 					// Add only users that are not the logged user
-					if (!acmUser.getUserId().equals(getAuthentication().getName())){
+					if (!acmUser.getUserId().equals(getAuthentication().getName())  || "approver".equals(type)){
 						approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
 					}
 				}
