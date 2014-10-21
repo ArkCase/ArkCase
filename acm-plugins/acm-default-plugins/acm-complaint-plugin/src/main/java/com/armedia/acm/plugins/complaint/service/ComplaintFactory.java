@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import com.armedia.acm.form.config.Item;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
-import com.armedia.acm.plugins.complaint.model.complaint.Item;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.users.model.AcmParticipant;

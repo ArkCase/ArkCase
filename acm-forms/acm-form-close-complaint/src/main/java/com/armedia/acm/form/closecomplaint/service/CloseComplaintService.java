@@ -9,13 +9,13 @@ import java.util.List;
 
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.armedia.acm.form.closecomplaint.model.Approver;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintInformation;
 import com.armedia.acm.form.closecomplaint.model.ExistingCase;
@@ -47,8 +47,17 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	 */
 	@Override
 	public Object init() {
-		// TODO Auto-generated method stub
-		return null;
+
+		Object result = "";
+		
+		String type = getRequest().getParameter("type");
+		
+		if ("approver".equals(type))
+		{
+			// TODO: Call service to get the XML form for editing
+		}
+		
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -123,35 +132,41 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	
 	private Object initFormData(){
 		
+		String type = getRequest().getParameter("type");
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
 		CloseComplaintInformation information = new CloseComplaintInformation();
-		information.setCloseDate(new Date());
+		if (!"approver".equals(type))
+		{
+			information.setCloseDate(new Date());
+		}
 		information.setDispositions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
 		
 		// Get Approvers
-		Approver approver = new Approver();
 		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
 		
-		List<String> approvers = new ArrayList<String>();
+		List<String> approverOptions = new ArrayList<String>();
 		if (acmUsers != null && acmUsers.size() > 0){
 			for (AcmUser acmUser : acmUsers) {
 				// Add only users that are not the logged user
-				if (!acmUser.getUserId().equals(getAuthentication().getName())){
-					approvers.add(acmUser.getUserId() + "=" + acmUser.getFullName());
+				if (!acmUser.getUserId().equals(getAuthentication().getName()) || "approver".equals(type)){
+					approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
 				}
 			}
 		}
-		approver.setApprovers(approvers);
 		
 		ReferExternal referExternal = new ReferExternal();
-		referExternal.setDate(new Date());
+		if (!"approver".equals(type))
+		{
+			referExternal.setDate(new Date());
+		}
 		ContactMethod contact = new ContactMethod();
 		contact.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".deviceTypes"), ","));
 		referExternal.setContact(contact);
 		
+		closeComplaint.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".types"), ","));
 		closeComplaint.setInformation(information);
-		closeComplaint.setApprover(approver);
+		closeComplaint.setApproverOptions(approverOptions);
 		closeComplaint.setReferExternal(referExternal);
 		
 		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
@@ -163,10 +178,11 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	}
 	
 	private Object searchApprovers(String keyword){
+		
+		String type = getRequest().getParameter("type");
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
-		Approver approver = new Approver();
-		List<String> approvers = new ArrayList<String>();
+		List<String> approverOptions = new ArrayList<String>();
 		
 		if (keyword != null){
 			// Get Approvers
@@ -175,16 +191,14 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 			if (acmUsers != null && acmUsers.size() > 0){
 				for (AcmUser acmUser : acmUsers) {
 					// Add only users that are not the logged user
-					if (!acmUser.getUserId().equals(getAuthentication().getName())){
-						approvers.add(acmUser.getUserId() + "=" + acmUser.getFullName());
+					if (!acmUser.getUserId().equals(getAuthentication().getName())  || "approver".equals(type)){
+						approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
 					}
 				}
 			}
 		}
-			
-		approver.setApprovers(approvers);
 		
-		closeComplaint.setApprover(approver);
+		closeComplaint.setApproverOptions(approverOptions);
 		
 		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
 		String jsonString = gson.toJson(closeComplaint);
