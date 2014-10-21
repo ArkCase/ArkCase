@@ -15,6 +15,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
     "/spring/spring-library-person.xml",
@@ -31,6 +34,9 @@ import org.springframework.transaction.annotation.Transactional;
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class OrganizationIT {
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
     private OrganizationDao organizationDao;
@@ -50,6 +56,8 @@ public class OrganizationIT {
         org.setModified(new Date());
 
         Organization saved = organizationDao.save(org);
+
+        em.flush();
 
         assertNotNull(saved.getOrganizationId());
 
