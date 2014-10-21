@@ -109,6 +109,22 @@
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
     </bean>
 
+    <bean id="objectChangesBySessionAccumulator" class="com.armedia.acm.data.ObjectChangesBySessionAccumulator"/>
+    <bean id="sessionCommitListener" class="com.armedia.acm.data.SessionAccumulatingSessionListener">
+        <property name="descriptorListener" ref="objectChangesBySessionAccumulator"/>
+    </bean>
+
+    <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer"
+            depends-on="acmEntityManager" init-method="initBean">
+        <property name="entityManagerFactory" ref="acmEntityManager"/>
+        <property name="sessionListener" ref="sessionCommitListener"/>
+        <property name="defaultListeners">
+            <list>
+                <ref bean="objectChangesBySessionAccumulator"/>
+            </list>
+        </property>
+    </bean>
+
     <bean id="eclipseLinkDialect" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect"/>
 
     <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
