@@ -4,5 +4,31 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <changeSet id="01-user-info-and-organization-details-foreign-keys" author="marst">
+
+        <addForeignKeyConstraint baseTableName="acm_organization_details"
+                                 baseColumnNames="cm_organization"
+                                 constraintName="fk_organization"
+                                 referencedTableName="acm_organization"
+                                 referencedColumnNames="cm_organization_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+
+        <addForeignKeyConstraint baseTableName="acm_user_info"
+                                 baseColumnNames="cm_user"
+                                 constraintName="fk_user"
+                                 referencedTableName="acm_user"
+                                 referencedColumnNames="cm_user_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+
+        <addForeignKeyConstraint baseTableName="acm_user_info"
+                                 baseColumnNames="cm_organization_details"
+                                 constraintName="fk_organization_details"
+                                 referencedTableName="acm_organization_details"
+                                 referencedColumnNames="cm_organization_details_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
 
 </databaseChangeLog>
