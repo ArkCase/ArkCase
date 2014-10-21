@@ -151,12 +151,6 @@
             <artifactId>spring-test</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
-            <artifactId>acm-complaint-plugin</artifactId>
-            <version>${acm.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>jdbc</artifactId>
             <scope>test</scope>

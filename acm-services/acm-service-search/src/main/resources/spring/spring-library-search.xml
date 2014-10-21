@@ -27,6 +27,10 @@
         </property>
     </bean>
 
+    <bean id="sendDocumentsToSolr" class="com.armedia.acm.services.search.service.SendDocumentsToSolr">
+        <property name="contextHolder" ref="acmContextHolder"/>
+    </bean>
+
     <!-- event publishers -->
     <bean id="acmSearchEventPublisher" class="com.armedia.acm.services.search.service.SearchEventPublisher"/>
     
