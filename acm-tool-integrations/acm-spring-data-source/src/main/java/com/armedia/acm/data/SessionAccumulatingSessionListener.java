@@ -20,7 +20,7 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
-        setApplicationEventPublisher(applicationEventPublisher);
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Override

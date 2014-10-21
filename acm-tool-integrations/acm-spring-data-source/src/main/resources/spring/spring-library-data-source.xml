@@ -114,8 +114,7 @@
         <property name="descriptorListener" ref="objectChangesBySessionAccumulator"/>
     </bean>
 
-    <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer"
-            depends-on="acmEntityManager" init-method="initBean">
+    <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer" init-method="initBean">
         <property name="entityManagerFactory" ref="acmEntityManager"/>
         <property name="sessionListener" ref="sessionCommitListener"/>
         <property name="defaultListeners">

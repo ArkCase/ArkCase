@@ -24,6 +24,10 @@
     </bean>
     
     <bean id="personAssociationEventPublisher" class="com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher"/>
+
+    <bean id="personDatabaseChangeToSearchHandler" class="com.armedia.acm.plugins.person.service.PersonDatabaseChangeToSearchHandler">
+        <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
+    </bean>
             
     <bean id ="personPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Person Plugin"/>

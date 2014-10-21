@@ -26,6 +26,7 @@ public class SpringEntityListenerConfigurer
 
     public void initBean()
     {
+        log.debug("in initBean for spring entity listener config");
         Session session = getEntityManagerFactory().unwrap(Session.class);
         session.getEventManager().addListener(getSessionListener());
 
@@ -36,10 +37,10 @@ public class SpringEntityListenerConfigurer
             boolean foundDescriptor = descriptor != null;
             if ( foundDescriptor )
             {
-                log.trace("adding listeners...");
+                log.debug("adding listeners...");
                 descriptor.getEventManager().getDefaultEventListeners().addAll(getDefaultListeners());
             }
-            log.trace("Entity class: " + entityType.getJavaType().getName() + "; has descriptor? " + foundDescriptor);
+            log.debug("Entity class: " + entityType.getJavaType().getName() + "; has descriptor? " + foundDescriptor);
         }
     }
 
