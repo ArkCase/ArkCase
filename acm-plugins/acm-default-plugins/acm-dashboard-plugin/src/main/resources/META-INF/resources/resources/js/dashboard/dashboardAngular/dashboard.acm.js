@@ -4659,25 +4659,64 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             return page === currentRoute || new RegExp(page).test(currentRoute) ? "active" : ""
         }
     }
-]), angular.module("sample-01", ["adf", "LocalStorageModule"]).controller("sample01Ctrl", ["$scope", "$http", "localStorageService", "model", "widgetsPerRoles",
-    function($scope, $http, localStorageService, model,widgetsPerRoles) {
+]), angular.module("sample-01", ["adf", "LocalStorageModule"]).controller("sample01Ctrl", ["$scope", "$http", "localStorageService", "model", "widgetsPerRoles","$rootScope",
+    function($scope, $http, localStorageService, model,widgetsPerRoles, $rootScope) {
+
 
         $scope.widgetFilter = function(widget, type){
             var result = false;
-            angular.forEach(widgetsPerRoles,function(w){
+            angular.forEach(widgetsPerRoles, function(w){
                 if(type === w.widgetName){
                      result = true;
                 }
             });
             return result;
         };
+        console.log(widgetsPerRoles);
 
+        var modelForChecking = angular.fromJson(model);
+        console.log(modelForChecking);
+        var renderWidget=false;
+             var dashboardChanged=false;
+        $.each(modelForChecking.rows, function(indexR,row){
+            $.each(this.columns, function(indexC,column){
+                $.each(this.widgets, function(indexW,widget){
+                    $.each(widgetsPerRoles, function(i,w){
+                      if(w.widgetName===widget.type){
+                          renderWidget = true;
+                      }
+                    })
+                    if(!renderWidget){
+                       modelForChecking.rows[indexR].columns[indexC].widgets.splice(indexW,1);
+                        dashboardChanged=true;
+                    }
+                    renderWidget = false;
+                })
+            })
+        })
+
+        console.log(modelForChecking);
         $scope.name = "sample-01";
-        $scope.model = angular.fromJson(model);
+        $scope.model = modelForChecking; //angular.fromJson(model);
         $scope.collapsible = !1;
+
 
         appRoot = App.Object.getContextPath();
         $scope.appRoot =  appRoot;
+
+        if (dashboardChanged){
+            var url = appRoot + "/api/latest/plugin/dashboard/set",
+                postObject = new Object;
+            postObject.dashboardConfig = JSON.stringify(modelForChecking), $http({
+                method: "POST",
+                url: url,
+                data: JSON.stringify(postObject),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).success(function() {}).error(function() {})
+        }
+
         $scope.$on("adfDashboardChanged", function(event, name, model) {
             localStorageService.set(name, model);
             var url = appRoot + "/api/latest/plugin/dashboard/set",
