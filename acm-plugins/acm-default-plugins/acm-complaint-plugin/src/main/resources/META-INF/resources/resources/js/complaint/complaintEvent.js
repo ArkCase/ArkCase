@@ -169,6 +169,15 @@ Complaint.Event = {
         	this._showPopup(url, "", 860, 700);        	
         }
     }
+    ,onEditCloseComplaint: function(e) {
+    	var c = Complaint.getComplaint();
+    	
+    	var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()['close_complaint'] : '';
+        if (url != null && url != '') {
+        	url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',mode:'edit',");
+        	this._showPopup(url, "", 860, 700);        	
+        }
+    }
 
     ,_tryInitAssignee: function() {
         var data = App.Object.getApprovers();
