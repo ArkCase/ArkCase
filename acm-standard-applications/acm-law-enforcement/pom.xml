@@ -34,6 +34,13 @@
             <artifactId>acm-service-notification</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-note</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-audit</artifactId>
