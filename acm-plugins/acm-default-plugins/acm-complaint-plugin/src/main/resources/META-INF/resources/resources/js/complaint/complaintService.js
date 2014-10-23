@@ -19,6 +19,10 @@ Complaint.Service = {
     //,API_SAVE_PERSON             : "/api/latest/plugin/person"
     ,API_SAVE_PERSON_ASSOCIATION : "/api/latest/plugin/personAssociation"
     ,API_DELETE_PERSON           : "/api/latest/plugin/person/delete/"
+    ,API_SAVE_NOTE               : "/api/latest/plugin/note/save"
+    ,API_DELETE_NOTE             : "/api/latest/plugin/note/delete/"
+    ,API_LIST_NOTES              : "/api/v1/plugin/note/list/"
+
 
 
 
@@ -54,7 +58,12 @@ Complaint.Service = {
             ,Complaint.Callback.EVENT_PERSON_SAVED
         );
     }*/
-
+    ,saveNote : function(data) {
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_NOTE
+            ,JSON.stringify(data)
+            ,Complaint.Callback.EVENT_NOTE_SAVED
+        );
+    }
     ,savePersonAssociation: function(data){
         Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_PERSON_ASSOCIATION
             ,JSON.stringify(data)
@@ -67,6 +76,18 @@ Complaint.Service = {
             ,Complaint.Callback.EVENT_PERSON_DELETED
         );
     }
+    ,deleteNoteById: function(noteId){
+        var url = (App.getContextPath() + this.API_DELETE_NOTE + noteId);
+        Acm.Ajax.asyncDelete(App.getContextPath() + this.API_DELETE_NOTE + noteId
+            ,Complaint.Callback.EVENT_NOTE_DELETED
+        );
+    }
+    ,retrieveNotes : function(complaintId) {
+        var url = (App.getContextPath() + this.API_LIST_NOTES + App.OBJTYPE_COMPLAINT + "/" + complaintId);
+        Acm.Ajax.asyncGet(url ,Complaint.Callback.EVENT_NOTE_LIST_RETRIEVED);
+    }
+
+
 //    ,retrievePersonListComplaint : function(parentId) {
 //        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_PERSON_LIST_COMPLAINT + parentId
 //            ,Complaint.Callback.EVENT_COMPLAINT_PERSON_LIST_RETRIEVED

@@ -138,5 +138,23 @@ Acm.Ajax = {
 	        }
 	    });
 	}
+    ,asyncDelete : function(url, callback) {
+        jQuery.ajax({type: 'DELETE'
+            ,url: url
+            ,async: true
+            ,dataType: 'json'
+            ,beforeSend: function(x) {
+                if (x && x.overrideMimeType) {
+                    x.overrideMimeType("application/json;charset=UTF-8");
+                }
+            }
+            ,success: function(response) {
+                Acm.Dispatcher.triggerEvent(callback, response);
+            }
+            ,error: function(xhr, status, error) {
+                Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
+            }
+        });
+    }
 
 };

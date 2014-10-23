@@ -2015,10 +2015,10 @@ Complaint.JTable = {
                     }
                 }
             }
-            }
-            ,function (data) { //opened handler
-                data.childTable.jtable('load');
-            });
+        }
+        ,function (data) { //opened handler
+            data.childTable.jtable('load');
+        });
     }
 
     //----------------- end of People -----------------------
@@ -2269,6 +2269,116 @@ Complaint.JTable = {
         );
     }
     //---------------- end of Tasks --------------------------
+
+
+    //
+    //----------------- Notes ------------------------------
+
+    ,createJTableNotes: function($s) {
+        $s.jtable({
+            title: 'Notes'
+            ,paging: false
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var complaint = Complaint.getComplaint();
+                    if(complaint)
+                    {
+                        var notes = Complaint.cacheNoteList.get(complaint.complaintId);
+                        if (notes) {
+                            for (var i = 0; i < notes.length; i++) {
+                                var noteRecord = notes[i];
+                                var record = {};
+                                record.id = Acm.goodValue(noteRecord.id);
+                                record.note = noteRecord.note;
+                                record.created = Acm.getDateFromDatetime(noteRecord.created);
+                                record.creator = noteRecord.creator;
+                                record.parentId = Acm.goodValue(noteRecord.parentId);
+                                record.parentType = noteRecord.parentType;
+                                rc.Records.push(record);
+                            }
+                        }
+                    }
+                    return rc;
+                }
+                ,createAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        rc.Record.parentId = Acm.goodValue(complaint.complaintId);
+                        rc.Record.parentType = App.OBJTYPE_COMPLAINT;
+                        rc.Record.note = record.note;
+                        rc.Record.created = Acm.getCurrentDay(); //record.created;
+                        rc.Record.creator = App.getUserName();   //record.creator;
+                    }
+                    return rc;
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                    ,defaultvalue : 0
+                }
+                ,note: {
+                    title: 'Note'
+                    ,width: '50%'
+                    ,edit: false
+                }
+                ,created: {
+                    title: 'Created'
+                    ,width: '15%'
+                    ,edit: false
+                    ,create: false
+                }
+                ,creator: {
+                    title: 'Author'
+                    ,width: '15%'
+                    ,edit: false
+                    ,create: false
+                }
+            }
+            ,recordAdded : function (event, data) {
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    var noteToSave = {};
+                    noteToSave.id = record.id;
+                    noteToSave.note = record.note;
+                    noteToSave.created = Acm.getCurrentDayInternal(); //record.created;
+                    noteToSave.creator = record.creator;   //record.creator;
+                    noteToSave.parentId = complaint.complaintId;
+                    noteToSave.parentType = App.OBJTYPE_COMPLAINT;
+                    Complaint.Service.saveNote(noteToSave);
+                }
+            }
+            ,recordDeleted : function (event, data) {
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
+                    if (notes) {
+                        var noteToDelete = notes[whichRow];
+                        var noteId = noteToDelete.id;
+                        Complaint.Service.deleteNoteById(noteId);
+                    }
+                }
+            }
+
+            });
+
+        $s.jtable('load');
+    }
+    //----------------- end of Notes ----------------------
 
 
 };

@@ -1669,7 +1669,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                         active && tabsetCtrl.select(scope)
                     }), scope.disabled = !1, attrs.disabled && scope.$parent.$watch($parse(attrs.disabled), function(value) {
                         scope.disabled = !!value
-                    }), scope.select = function() {
+                    }), scope.select =
+                        function() {
                         scope.disabled || (scope.active = !0)
                     }, tabsetCtrl.addTab(scope), scope.$on("$destroy", function() {
                         tabsetCtrl.removeTab(scope)
@@ -4263,6 +4264,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
     }
 ]), angular.module("adf").directive("adfWidget", ["$log", "$modal", "dashboard",
     function($log, $modal, dashboard) {
+
         function preLink($scope, $element, $attr) {
             var definition = $scope.definition;
             if (definition) {
@@ -4276,6 +4278,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
         }
 
         function postLink($scope, $element) {
+            var model = $scope.model;
             var definition = $scope.definition;
             definition ? ($scope.close = function() {
                 var column = $scope.col;
@@ -4283,7 +4286,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     var index = column.widgets.indexOf(definition);
                     index >= 0 && column.widgets.splice(index, 1)
                 }
-                $element.remove()
+                $element.remove();
+                $scope.$broadcast("adfDashboardChanged","sample-01",model);
             }, $scope.reload = function() {
                 $scope.$broadcast("widgetReload")
             },
@@ -4316,9 +4320,12 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 definition: "=",
                 col: "=column",
                 editMode: "@",
-                collapsible: "="
+                collapsible: "=",
+                adfModel: "=adfModel"
             },
-            compile: function() {
+            compile: function(scope) {
+                var model = scope.adfModel;
+                      console.log(model);
                 return {
                     pre: preLink,
                     post: postLink
@@ -4431,8 +4438,9 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                                 type: widget,
                                 config: createConfiguration(widget)
                             };
-                            addScope.model.rows[0].columns[0].widgets.unshift(w), instance.close(), addScope.$destroy()
-                        }, addScope.closeDialog = function() {
+                            addScope.model.rows[0].columns[0].widgets.unshift(w), instance.close(), addScope.$destroy();
+                            $rootScope.$broadcast("adfDashboardChanged", name, model);
+                        },  addScope.closeDialog = function() {
                             instance.close(), addScope.$destroy()
                         }
                     }
@@ -4529,7 +4537,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                         getKeysForLocalStorage = function() {
                             if (!browserSupportsLocalStorage) return $rootScope.$broadcast("LocalStorageModule.notification.warning", "LOCAL_STORAGE_NOT_SUPPORTED"), !1;
                             var prefixLength = prefix.length,
-                                keys = [];
+                               keys = [];
                             for (var key in webStorage)
                                 if (key.substr(0, prefixLength) === prefix) try {
                                     keys.push(key.substr(prefixLength))
@@ -4659,25 +4667,74 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             return page === currentRoute || new RegExp(page).test(currentRoute) ? "active" : ""
         }
     }
-]), angular.module("sample-01", ["adf", "LocalStorageModule"]).controller("sample01Ctrl", ["$scope", "$http", "localStorageService", "model", "widgetsPerRoles",
-    function($scope, $http, localStorageService, model,widgetsPerRoles) {
+]), angular.module("sample-01", ["adf", "LocalStorageModule"]).controller("sample01Ctrl", ["$scope", "$http", "localStorageService", "model", "widgetsPerRoles","$rootScope",
+    function($scope, $http, localStorageService, model,widgetsPerRoles, $rootScope) {
+
 
         $scope.widgetFilter = function(widget, type){
             var result = false;
-            angular.forEach(widgetsPerRoles,function(w){
+            angular.forEach(widgetsPerRoles, function(w){
                 if(type === w.widgetName){
                      result = true;
                 }
             });
             return result;
         };
+        console.log(widgetsPerRoles);
 
+        var modelForChecking = angular.fromJson(model);
+        var renderWidget=false;
+        var dashboardChanged=false;
+        var decreaseIndex = false;
+        var decreasingIndex = 0;
+
+        $.each(modelForChecking.rows, function(indexR,row) {
+            decreaseIndex = false;
+            decreasingIndex = 0;
+            $.each(this.columns, function (indexC, column) {
+                decreaseIndex = false;
+                decreasingIndex = 0;
+                $.each(this.widgets, function (indexW, widget) {
+                    if (decreaseIndex) {
+                        indexW = indexW - decreasingIndex;
+                        widget = modelForChecking.rows[indexR].columns[indexC].widgets[indexW];
+                    }
+                    $.each(widgetsPerRoles, function (i, w) {
+                        if (w.widgetName === widget.type) {
+                            renderWidget = true;
+                        }
+                    })
+                    if (!renderWidget) {
+                        decreaseIndex = true;
+                        decreasingIndex++;
+                        modelForChecking.rows[indexR].columns[indexC].widgets.splice(indexW, 1);
+                        dashboardChanged = true;
+                    }
+                    renderWidget = false;
+                })
+            })
+        })
         $scope.name = "sample-01";
-        $scope.model = angular.fromJson(model);
+        $scope.model = modelForChecking; //angular.fromJson(model);
         $scope.collapsible = !1;
+
 
         appRoot = App.Object.getContextPath();
         $scope.appRoot =  appRoot;
+
+        if (dashboardChanged){
+            var url = appRoot + "/api/latest/plugin/dashboard/set",
+                postObject = new Object;
+            postObject.dashboardConfig = JSON.stringify(modelForChecking), $http({
+                method: "POST",
+                url: url,
+                data: JSON.stringify(postObject),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).success(function() {}).error(function() {})
+        }
+
         $scope.$on("adfDashboardChanged", function(event, name, model) {
             localStorageService.set(name, model);
             var url = appRoot + "/api/latest/plugin/dashboard/set",
@@ -11352,7 +11409,31 @@ Showdown.converter = function(converter_options) {
     function($templateCache) {
         "use strict";
         $templateCache.put("../src/templates/dashboard-edit.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">Edit Dashboard</h4></div><div class="modal-body"><form role="form"><div class="form-group"><label for="dashboardTitle">Title</label><input type="text" class="form-control" id="dashboardTitle" ng-model="model.title" required></div><div class="form-group"><label>Structure</label><div class="radio" ng-repeat="(key, structure) in structures"><label><input type="radio" value="{{key}}" ng-model="model.structure" ng-change="changeStructure(key, structure)">{{key}}</label></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'),
-            $templateCache.put("../src/templates/dashboard.html", '<div class="dashboard-container"><h1>{{model.title}} <span style="font-size: 16px" class="pull-right"><a href="" ng-if="editMode" title="add new widget" ng-click="addWidgetDialog()"><i class="fa fa-plus-circle"></i></a> <a href="" ng-if="editMode" title="edit dashboard" ng-click="editDashboardDialog()"><i class="fa fa-cog"></i></a> <a href="" title="{{editMode ? \'disable edit mode\' : \'enable edit mode\'}}" ng-click="toggleEditMode()"><i class="fa fa-edit"></i></a></span></h1><div class="dashboard" ng-class="editClass"><div ng-repeat="row in model.rows" class="row" ng-class="row.styleClass"><div ng-repeat="col in row.columns" class="column" ng-class="col.styleClass" ui-sortable="sortableOptions" ng-model="col.widgets"><div class="widgets" ng-repeat="definition in col.widgets"><adf-widget definition="definition" column="col" edit-mode="{{editMode}}" collapsible="collapsible"></div></div></div></div></div>'),
+            $templateCache.put("../src/templates/dashboard.html",
+                '<div class="dashboard-container">' +
+                    '<h1>{{model.title}} ' +
+                        '<span style="font-size: 16px" class="pull-right">' +
+                            '<a href="" ng-if="editMode" title="add new widget" ng-click="addWidgetDialog()">' +
+                                '<i class="fa fa-plus-circle"></i>' +
+                            '</a>' +
+                            '<a href="" ng-if="editMode" title="edit dashboard" ng-click="editDashboardDialog()">' +
+                                '<i class="fa fa-cog"></i>' +
+                            '</a>' +
+                            '<a href="" title="{{editMode ? \'disable edit mode\' : \'enable edit mode\'}}" ng-click="toggleEditMode()">' +
+                                '<i class="fa fa-edit"></i>' +
+                            '</a>' +
+                        '</span>' +
+                    '</h1>' +
+                    '<div class="dashboard" ng-class="editClass">' +
+                        '<div ng-repeat="row in model.rows" class="row" ng-class="row.styleClass">' +
+                            '<div ng-repeat="col in row.columns" class="column" ng-class="col.styleClass" ui-sortable="sortableOptions" ng-model="col.widgets">' +
+                                '<div class="widgets" ng-repeat="definition in col.widgets">' +
+                                    '<adf-widget definition="definition" column="col" edit-mode="{{editMode}}" collapsible="collapsible">' +
+                                '</div>' +
+                            '</div>' +
+                    '</div>' +
+                    '</div>' +
+                '</div>'),
 
             $templateCache.put("../src/templates/widget-add.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">Add new widget</h4></div><div class="modal-body"><div style="display: inline-block"><dl class="dl-horizontal"><dt ng-repeat-start="(key, widget) in widgets"><a href="" ng-click="addWidget(key)">{{widget.title}}</a></dt><dd ng-repeat-end="" ng-if="widget.description">{{widget.description}}</dd></dl></div></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'),
             $templateCache.put("../src/templates/widget-edit.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">{{widget.title}}</h4></div><div class="modal-body"><form role="form"><div class="form-group"><label for="widgetTitle">Title</label><input type="text" class="form-control" id="widgetTitle" ng-model="definition.title" placeholder="Enter title" required></div></form><div ng-if="widget.edit"><adf-widget-content model="definition" content="widget.edit"></div></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'),
