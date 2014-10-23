@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint;
 
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Organization;
@@ -9,6 +10,7 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +39,15 @@ public class ComplaintFactory
         complaint.setModifier("testModifier");
         complaint.setTag("noTag");
         complaint.setFrequency("once");
-        complaint.setLocation("1121 goodluck st");
+        
+        PostalAddress location = new PostalAddress();
+        location.setStreetAddress("testAddress");
+        location.setCity("testCity");
+        location.setState("testState");
+        location.setZip("12345");
+        location.setCreator("testCreator");
+        
+        complaint.setLocation(location);
         
         Calendar  cal = Calendar.getInstance();
         cal.setTime(new Date());

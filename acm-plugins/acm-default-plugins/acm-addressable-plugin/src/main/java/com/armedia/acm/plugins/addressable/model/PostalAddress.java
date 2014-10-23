@@ -40,6 +40,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="created"),
+		@XmlElement(name="locationDate"),
 		@XmlElement(name="initiatorLocationDate"),
 		@XmlElement(name="peopleLocationDate")
 		
@@ -50,6 +51,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="creator"),
+		@XmlElement(name="locationAddedBy"),
 		@XmlElement(name="initiatorLocationAddedBy"),
 		@XmlElement(name="peopleLocationAddedBy")
 		
@@ -69,6 +71,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="type"),
+		@XmlElement(name="locationType"),
 		@XmlElement(name="initiatorLocationType"),
 		@XmlElement(name="peopleLocationType")
 		
@@ -81,6 +84,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="streetAddress"),
+		@XmlElement(name="locationAddress"),
 		@XmlElement(name="initiatorLocationAddress"),
 		@XmlElement(name="peopleLocationAddress")
 		
@@ -93,6 +97,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="city"),
+		@XmlElement(name="locationCity"),
 		@XmlElement(name="initiatorLocationCity"),
 		@XmlElement(name="peopleLocationCity")
 		
@@ -102,6 +107,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="state"),
+		@XmlElement(name="locationState"),
 		@XmlElement(name="initiatorLocationState"),
 		@XmlElement(name="peopleLocationState")
 		
@@ -111,6 +117,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="zip"),
+		@XmlElement(name="locationZip"),
 		@XmlElement(name="initiatorLocationZip"),
 		@XmlElement(name="peopleLocationZip")
 		

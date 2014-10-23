@@ -72,7 +72,15 @@ public class ComplaintServiceIT
         frevvoComplaint.setCategory("Agricultural");
         frevvoComplaint.setComplaintTag("No Tag");
         frevvoComplaint.setFrequency("Ongoing");
-        frevvoComplaint.setLocation(" 1222 pennsylvania av");       
+
+        PostalAddress location = new PostalAddress();
+        location.setStreetAddress("testAddress");
+        location.setCity("testCity");
+        location.setState("testState");
+        location.setZip("12345");
+        location.setCreator("testCreator");
+        
+        frevvoComplaint.setLocation(location);
 
         Contact initiator = new Contact();
         frevvoComplaint.setInitiator(initiator);
