@@ -59,6 +59,9 @@ Complaint.Object = {
         this.$btnEditDetails.on("click", function(e) {Complaint.Event.onClickBtnEditDetails(e);});
         this.$btnSaveDetails.on("click", function(e) {Complaint.Event.onClickBtnSaveDetails(e);});
 
+        this.$divLocation		= $('#divLocation');
+        Complaint.JTable.createJTableLocation(this.$divLocation);
+        
         this.$divInitiator      = $("#divInitiator");
         Complaint.JTable.createJTableInitiator(this.$divInitiator);
 
@@ -119,6 +122,7 @@ Complaint.Object = {
         var tabIds = ["tabBlank"
             ,"tabCloseComplaintButton"
             ,"tabDetail"
+            ,"tabLocation"
             ,"tabInitiator"
             ,"tabPeople"
             ,"tabNotes"
@@ -270,6 +274,7 @@ Complaint.Object = {
         	this.$lnkComplaintClose.show();
         }
 
+        this.refreshJTableLocation();
         this.refreshJTableInitiator();
         this.refreshJTableDocuments();
         this.refreshJTableTasks();
@@ -350,6 +355,7 @@ Complaint.Object = {
     ,_mapNodeTab: {
         pc: ["tabCloseComplaintButton"
             ,"tabDetail"
+            ,"tabLocation"
             ,"tabInitiator"
             ,"tabPeople"
             ,"tabNotes"
@@ -364,11 +370,13 @@ Complaint.Object = {
             ,"tabWatchers"
         ]
         ,pci: ["tabDetail"
+            ,"tabLocation"
             ,"tabInitiator"
             ,"tabPeople"
             ,"tabNotes"
         ]
-        ,pcid: ["tabDetail"]
+        ,pcid: ["tabDetail"
+            ,"tabLocation"]
         ,pcii: ["tabInitiator"]
         ,pcip: ["tabPeople"]
         ,pcipc: ["tabPeople"]
@@ -684,6 +692,9 @@ Complaint.Object = {
     //----------------- end of tree -----------------
 
 
+    ,refreshJTableLocation: function() {
+    	AcmEx.Object.jTableLoad(this.$divLocation);
+    }
     ,refreshJTableInitiator: function() {
         AcmEx.Object.jTableLoad(this.$divInitiator);
     }
