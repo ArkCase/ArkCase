@@ -160,6 +160,7 @@
 	                                        <div class="pull-right inline">
 	                                            <div class="btn-group">
 	                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> Close Complaint</button>
+	                                            	<button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
 	                                            	<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />
 	                                            </div>
 	                                        </div>
@@ -190,7 +191,14 @@
                                             </section>
                                         </div>
                                     </div>
-
+                                    
+                                    <div class="row" id="tabLocation" style="display:none;">
+                                        <div class="col-md-12">
+                                            <section class="panel b-a">
+                                                <div id="divLocation" style="width:100%"></div>
+                                            </section>
+                                        </div>
+                                    </div>
 
                                     <div class="row" id="tabInitiator" style="display:none;">
                                         <div class="col-md-12">
