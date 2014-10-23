@@ -33,6 +33,17 @@ public class ComplaintFactory
         retval.setComplaintType(formComplaint.getCategory());
         retval.setTag(formComplaint.getComplaintTag());
         retval.setFrequency(formComplaint.getFrequency());
+        
+        if (null == formComplaint.getLocation().getModified())
+        {
+        	formComplaint.getLocation().setModified(formComplaint.getLocation().getCreated());
+        }
+        
+        if (null == formComplaint.getLocation().getModifier())
+        {
+        	formComplaint.getLocation().setModifier(formComplaint.getLocation().getCreator());
+        }
+        
         retval.setLocation(formComplaint.getLocation());
         
         if ( formComplaint.getInitiator() != null )

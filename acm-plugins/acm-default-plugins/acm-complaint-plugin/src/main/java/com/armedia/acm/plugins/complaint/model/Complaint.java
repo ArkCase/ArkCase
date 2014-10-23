@@ -1,14 +1,17 @@
 package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.users.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
+
 
 
 import javax.persistence.CascadeType;
@@ -28,6 +31,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,8 +141,9 @@ public class Complaint implements Serializable, AcmObject
     @Column(name = "cm_frequency")
     private String frequency;
     
-    @Column(name = "cm_location")
-    private String location;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cm_address_id")
+    private PostalAddress location;
 
     /**
      * Complaint disposition is set only when the close complaint request is approved.
@@ -553,17 +558,15 @@ public class Complaint implements Serializable, AcmObject
         this.frequency = frequency;
     }
 
-    public String getLocation() 
-    {
-        return location;
-    }
+    public PostalAddress getLocation() {
+		return location;
+	}
 
-    public void setLocation(String location)
-    {
-        this.location = location;
-    }
+	public void setLocation(PostalAddress location) {
+		this.location = location;
+	}
 
-    public List<AcmParticipant> getParticipants()
+	public List<AcmParticipant> getParticipants()
     {
         return participants;
     }
