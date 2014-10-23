@@ -1,17 +1,16 @@
 package com.armedia.acm.plugins.search.web.api;
 
+import com.armedia.acm.services.search.web.api.SearchObjectByTypeAPIController;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.Authentication;
@@ -23,9 +22,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import com.armedia.acm.plugins.search.model.ApplicationSearchEvent;
-import com.armedia.acm.plugins.search.model.solr.SolrDocument;
-import com.armedia.acm.plugins.search.model.solr.SolrResponse;
+import com.armedia.acm.services.search.model.ApplicationSearchEvent;
+import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.model.solr.SolrResponse;
 import com.armedia.acm.services.search.service.SearchEventPublisher;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

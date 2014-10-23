@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.search.web.api;
+package com.armedia.acm.services.search.web.api;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.plugins.search.model.ApplicationSearchEvent;
-import com.armedia.acm.plugins.search.model.solr.SolrDocument;
-import com.armedia.acm.plugins.search.model.solr.SolrResponse;
+import com.armedia.acm.services.search.model.ApplicationSearchEvent;
+import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.model.solr.SolrResponse;
 import com.armedia.acm.services.search.service.SearchEventPublisher;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
