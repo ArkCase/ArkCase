@@ -67,6 +67,7 @@ public class ContactMethod implements Serializable
 
     @XmlElements({
 		@XmlElement(name="type"),
+		@XmlElement(name="contactType"),
 		@XmlElement(name="initiatorDeviceType"),
 		@XmlElement(name="peopleDeviceType")
 		
@@ -79,6 +80,7 @@ public class ContactMethod implements Serializable
 
     @XmlElements({
 		@XmlElement(name="value"),
+		@XmlElement(name="contactValue"),
 		@XmlElement(name="initiatorDeviceValue"),
 		@XmlElement(name="peopleDeviceValue")
 		
