@@ -2331,6 +2331,7 @@ Complaint.JTable = {
                 }
                 ,note: {
                     title: 'Note'
+                    ,type: 'textarea'
                     ,width: '50%'
                     ,edit: false
                 }
