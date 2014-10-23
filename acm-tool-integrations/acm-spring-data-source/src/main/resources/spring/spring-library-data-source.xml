@@ -33,8 +33,8 @@
                 <prop key="acm.username">acm</prop>
                 <prop key="acm.password">acm</prop>
                 <prop key="acm.initialSize">5</prop>
-                <prop key="acm.maxActive">10</prop>
-                <prop key="acm.minIdle">2</prop>
+                <prop key="acm.maxActive">5</prop>
+                <prop key="acm.minIdle">5</prop>
                 <prop key="acm.maxWait">10000</prop>
                 <prop key="acm.testOnBorrow">true</prop>
                 <prop key="acm.testOnReturn">false</prop>
@@ -42,6 +42,7 @@
                 <prop key="acm.validationQuery">select 1 from dual</prop>
                 <prop key="acm.acquireRetryAttempts">30</prop>
                 <prop key="acm.acquireRetryDelay">1000</prop>
+                <prop key="acm.acquireIncrement">5</prop>
 
                 <!-- whether the schema should be updated at application startup - set to false to run with JRebel  -->
                 <prop key="schema.autoUpdate">true</prop>
