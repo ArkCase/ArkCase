@@ -5,9 +5,7 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -302,17 +300,27 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
 	private Complaint initIncidentFields() {
 		
+		String userId = getAuthentication().getName();
+		AcmUser user = getUserDao().findByUserId(userId);
+
 		Complaint complaint = new Complaint();
 		
 		List<String> categories = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".categories"), ",");	
 		List<String> priorities = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".priorities"), ",");
 		List<String> frequencies = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".frequencies"), ",");
+		List<String> locationTypes = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".locationTypes"), ",");
+		
+		PostalAddress location = new PostalAddress();
+		location.setTypes(locationTypes);
+		location.setCreated(new Date());
+		location.setCreator(user.getFullName());
 		
 		complaint.setCategories(categories);
 		complaint.setPriorities(priorities);
 		complaint.setFrequencies(frequencies);
 		complaint.setDate(new Date());
 		complaint.setPriority("Low");
+		complaint.setLocation(location);
 		
 		return complaint;
 		

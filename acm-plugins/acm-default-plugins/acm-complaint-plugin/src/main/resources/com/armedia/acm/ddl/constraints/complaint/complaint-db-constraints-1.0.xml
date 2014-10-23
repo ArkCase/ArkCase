@@ -54,6 +54,16 @@
                                  initiallyDeferred="true"/>
     </changeSet>
     
+    <changeSet id="complaint-constraint-07-address-id" author="riste.tutureski">
+    	<addForeignKeyConstraint baseTableName="acm_complaint"
+    	                         baseColumnNames="cm_address_id"
+    	                         constraintName="fk_complaint_address_id" 
+    							 referencedTableName="acm_postal_address"
+    							 referencedColumnNames="cm_address_id"
+    							 deferrable="true"
+    							 initiallyDeferred="true" />
+    </changeSet>
+    
     
 </databaseChangeLog>
 

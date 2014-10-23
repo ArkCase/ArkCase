@@ -76,6 +76,9 @@ Complaint.Object = {
         this.$spanAddTask       = this.$divTasks.find(".jtable-toolbar-item-add-record");
         this.$spanAddTask.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddTask(e);});
 
+        this.$divNotes = $("#divNotes");
+        Complaint.JTable.createJTableNotes(this.$divNotes);
+
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
         
@@ -271,6 +274,7 @@ Complaint.Object = {
         this.refreshJTableDocuments();
         this.refreshJTableTasks();
         this.refreshJTablePeople();
+        this.refreshJTableNotes();
 
     }
 
@@ -691,6 +695,10 @@ Complaint.Object = {
     }
     ,refreshJTablePeople: function() {
         AcmEx.Object.jTableLoad(this.$divPeople);
+    }
+    ,refreshJTableNotes: function(){
+        AcmEx.Object.jTableLoad(this.$divNotes);
+
     }
 
 };
