@@ -75,11 +75,20 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
         {
             if ( transformer.isAcmObjectTypeSupported(jpaObject.getClass() ))
             {
+                // transformers can return null if they don't want to add to the advanced or quick search repo...
+
                 SolrAdvancedSearchDocument advancedSearchDocument = transformer.toSolrAdvancedSearch(jpaObject);
-                solrAdvancedSearchDocs.add(advancedSearchDocument);
+                if ( advancedSearchDocument != null )
+                {
+                    solrAdvancedSearchDocs.add(advancedSearchDocument);
+                }
 
                 SolrDocument quickSearchDocument = transformer.toSolrQuickSearch(jpaObject);
-                solrQuickSearchDocs.add(quickSearchDocument);
+                if ( quickSearchDocument != null )
+                {
+                    solrQuickSearchDocs.add(quickSearchDocument);
+                }
+
             }
         }
     }

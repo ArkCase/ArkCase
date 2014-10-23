@@ -31,6 +31,11 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String location_state_s;
     private String location_postal_code_s;
     private List<SolrBaseDocument> _childDocuments_ = new ArrayList<>();
+    private String child_id_s;
+    private String child_type_s;
+    private String parent_id_s;
+    private String parent_type_s;
+    private String description_parseable;
 
     @Override
     public String getId()
@@ -252,5 +257,56 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     public void set_childDocuments_(List<SolrBaseDocument> _childDocuments_)
     {
         this._childDocuments_ = _childDocuments_;
+    }
+
+    public void setChild_id_s(String child_id_s)
+    {
+        this.child_id_s = child_id_s;
+    }
+
+    public String getChild_id_s()
+    {
+        return child_id_s;
+    }
+
+    public void setChild_type_s(String child_type_s)
+    {
+        this.child_type_s = child_type_s;
+    }
+
+    public String getChild_type_s()
+    {
+        return child_type_s;
+    }
+
+
+    public void setParent_id_s(String parent_id_s)
+    {
+        this.parent_id_s = parent_id_s;
+    }
+
+    public String getParent_id_s()
+    {
+        return parent_id_s;
+    }
+
+    public void setParent_type_s(String parent_type_s)
+    {
+        this.parent_type_s = parent_type_s;
+    }
+
+    public String getParent_type_s()
+    {
+        return parent_type_s;
+    }
+
+    public void setDescription_parseable(String description_parseable)
+    {
+        this.description_parseable = description_parseable;
+    }
+
+    public String getDescription_parseable()
+    {
+        return description_parseable;
     }
 }
