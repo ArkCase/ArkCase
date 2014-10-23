@@ -12,6 +12,9 @@ public class ProfileDTO {
     private List<AcmRole> groups;
     private OrganizationDetails companyDetails;
     private UserInfo userInfo;
+    private String email;
+    private String fullName;
+
 
     public List<AcmRole> getGroups() {
         return groups;
@@ -35,5 +38,21 @@ public class ProfileDTO {
 
     public void setUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }
