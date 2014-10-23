@@ -70,9 +70,6 @@ Complaint.Event = {
         } else {
             Complaint.Service.retrieveDetail(complaintId);
         }
-
-
-
         Complaint.Object.showTab(node.key);
     }
     ,onSaveTitle: function(value) {
