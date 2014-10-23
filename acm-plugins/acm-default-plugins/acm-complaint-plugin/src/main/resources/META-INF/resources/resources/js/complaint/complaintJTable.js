@@ -2270,6 +2270,81 @@ Complaint.JTable = {
     }
     //---------------- end of Tasks --------------------------
 
+    
+    //
+    //----------------- Location ------------------------------
+    //
+    ,createJTableLocation: function($s) {
+        $s.jtable({
+            title: 'Location'
+            ,paging: false
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var c = Complaint.getComplaint();
+                    if (c && c.location) {
+                    	var record = {};
+                        record.id = Acm.goodValue(c.location.id, 0);
+                        record.address = Acm.goodValue(c.location.streetAddress);
+                        record.city = Acm.goodValue(c.location.city);
+                        record.state = Acm.goodValue(c.location.state);
+                        record.zip = Acm.goodValue(c.location.zip);
+                        rc.Records.push(record);
+                    }
+                    return rc;
+                }
+                ,updateAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    rc.Record.address = record.address;
+                    rc.Record.city = record.city;
+                    rc.Record.state = record.state;
+                    rc.Record.zip = record.zip;
+                    return rc;
+                }
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                }
+                ,address: {
+                    title: 'Address'
+                    ,width: '20%'
+                }
+                ,city: {
+                    title: 'City'
+                    ,width: '20%'
+                }
+                ,state: {
+                    title: 'State'
+                    ,width: '20%'
+                }
+                ,zip: {
+                    title: 'Zip'
+                    ,width: '10%'
+                }
+            }
+            ,recordUpdated : function (event, data) {
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    complaint.location.streetAddress = record.address;
+                    complaint.location.city = record.city;
+                    complaint.location.state = record.state;
+                    complaint.location.zip = record.zip;
+
+                    Complaint.Service.saveComplaint(complaint);
+                }
+            }
+        });
+
+        $s.jtable('load');
+    }
+    //----------------- end of Location ----------------------
 
     //
     //----------------- Notes ------------------------------
@@ -2331,6 +2406,7 @@ Complaint.JTable = {
                 }
                 ,note: {
                     title: 'Note'
+                    ,type: 'textarea'
                     ,width: '50%'
                     ,edit: false
                 }
