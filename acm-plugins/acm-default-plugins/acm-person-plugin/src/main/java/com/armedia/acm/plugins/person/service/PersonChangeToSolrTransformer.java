@@ -24,9 +24,9 @@ public class PersonChangeToSolrTransformer implements AcmObjectToSolrDocTransfor
         solrDoc.setId(person.getId() + "-PERSON");
         solrDoc.setObject_type_s("PERSON");
         solrDoc.setObject_id_s(person.getId() + "");
-        solrDoc.setPerson_title_s(person.getTitle());
-        solrDoc.setFirst_name_s(person.getGivenName());
-        solrDoc.setLast_name_s(person.getFamilyName());
+        solrDoc.setPerson_title_lcs(person.getTitle());
+        solrDoc.setFirst_name_lcs(person.getGivenName());
+        solrDoc.setLast_name_lcs(person.getFamilyName());
 
         addContactMethods(person, solrDoc);
 
@@ -47,10 +47,10 @@ public class PersonChangeToSolrTransformer implements AcmObjectToSolrDocTransfor
                 addrDoc.setId(address.getId() + "-LOCATION");
                 addrDoc.setObject_type_s("LOCATION");
                 addrDoc.setObject_id_s(address.getId() + "");
-                addrDoc.setLocation_city_s(address.getCity());
-                addrDoc.setLocation_postal_code_s(address.getZip());
-                addrDoc.setLocation_state_s(address.getState());
-                addrDoc.setLocation_street_address_s(address.getStreetAddress());
+                addrDoc.setLocation_city_lcs(address.getCity());
+                addrDoc.setLocation_postal_code_sdo(address.getZip());
+                addrDoc.setLocation_state_lcs(address.getState());
+                addrDoc.setLocation_street_address_lcs(address.getStreetAddress());
 
                 solrDoc.get_childDocuments_().add(addrDoc);
             }
@@ -67,8 +67,8 @@ public class PersonChangeToSolrTransformer implements AcmObjectToSolrDocTransfor
                 orgDoc.setId(org.getOrganizationId() + "-ORGANIZATION");
                 orgDoc.setObject_type_s("ORGANIZATION");
                 orgDoc.setObject_id_s(org.getOrganizationId() + "");
-                orgDoc.setType_s(org.getOrganizationType());
-                orgDoc.setValue_s(org.getOrganizationValue());
+                orgDoc.setType_lcs(org.getOrganizationType());
+                orgDoc.setValue_parseable(org.getOrganizationValue());
 
                 solrDoc.get_childDocuments_().add(orgDoc);
             }
@@ -85,8 +85,8 @@ public class PersonChangeToSolrTransformer implements AcmObjectToSolrDocTransfor
                 cmDoc.setId(cm.getId() + "-CONTACT-METHOD");
                 cmDoc.setObject_type_s("CONTACT-METHOD");
                 cmDoc.setObject_id_s(cm.getId() + "");
-                cmDoc.setType_s(cm.getType());
-                cmDoc.setValue_s(cm.getValue());
+                cmDoc.setType_lcs(cm.getType());
+                cmDoc.setValue_parseable(cm.getValue());
 
                 solrDoc.get_childDocuments_().add(cmDoc);
             }

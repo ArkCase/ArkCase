@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.person.service;
 
-import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.search.model.solr.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
@@ -27,7 +26,7 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         solrDoc.setParent_id_s(personAssociation.getParentId() + "");
         solrDoc.setParent_type_s(personAssociation.getParentType());
 
-        solrDoc.setType_s(personAssociation.getPersonType());
+        solrDoc.setType_lcs(personAssociation.getPersonType());
 
         solrDoc.setDescription_parseable(personAssociation.getPersonDescription());
 
