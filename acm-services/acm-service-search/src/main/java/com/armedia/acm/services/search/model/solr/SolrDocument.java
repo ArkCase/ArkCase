@@ -1,8 +1,9 @@
 package com.armedia.acm.services.search.model.solr;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SolrDocument {
+public class SolrDocument implements SolrBaseDocument {
     private String id;
     private String status_s;
     private String author;
@@ -17,12 +18,17 @@ public class SolrDocument {
     private String object_type_s;
     private String assignee_s;
     private Long priority_i;
+    private List<SolrBaseDocument> _childDocuments_ = new ArrayList<>();
     
     private List<String> deny_acl_ss;
     private List<String> allow_acl_ss;
+
+    @Override
     public String getId() {
         return id;
     }
+
+    @Override
     public void setId(String id) {
         this.id = id;
     }
@@ -116,6 +122,17 @@ public class SolrDocument {
     public void setAllow_acl_ss(List<String> allow_acl_ss) {
         this.allow_acl_ss = allow_acl_ss;
     }
+
+    public List<SolrBaseDocument> get_childDocuments_()
+    {
+        return _childDocuments_;
+    }
+
+    public void set_childDocuments_(List<SolrBaseDocument> _childDocuments_)
+    {
+        this._childDocuments_ = _childDocuments_;
+    }
+
     @Override
     public String toString() {
         return "SolrDocument [id=" + id + ", status_s=" + status_s

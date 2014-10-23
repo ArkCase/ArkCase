@@ -7,9 +7,10 @@ import java.util.List;
 /**
  * Created by armdev on 10/21/14.
  */
-public class SolrAdvancedSearchDocument
+public class SolrAdvancedSearchDocument implements SolrBaseDocument
 {
     private String id;
+    private String object_id_s;
     private String object_type_s;
     private String title_parseable;
     private String name;
@@ -21,23 +22,36 @@ public class SolrAdvancedSearchDocument
     private String incident_type_s;
     private String status_s;
     private String person_title_s;
-    private String person_type_s;
-    private Long person_id_i;
     private String first_name_s;
     private String last_name_s;
-    private List<String> phone_numbers = new ArrayList<>();
-    private List<String> email_address_ss = new ArrayList<>();
-    private List<String> organizations_ss = new ArrayList<>();
-    private List<SolrLocation> _childDocuments_ = new ArrayList<>();
+    private String type_s;
+    private String value_s;
+    private String location_street_address_s;
+    private String location_city_s;
+    private String location_state_s;
+    private String location_postal_code_s;
+    private List<SolrBaseDocument> _childDocuments_ = new ArrayList<>();
 
+    @Override
     public String getId()
     {
         return id;
     }
 
+    @Override
     public void setId(String id)
     {
         this.id = id;
+    }
+
+    public String getObject_id_s()
+    {
+        return object_id_s;
+    }
+
+    public void setObject_id_s(String object_id_s)
+    {
+        this.object_id_s = object_id_s;
     }
 
     public String getObject_type_s()
@@ -150,16 +164,6 @@ public class SolrAdvancedSearchDocument
         this.person_title_s = person_title_s;
     }
 
-    public String getPerson_type_s()
-    {
-        return person_type_s;
-    }
-
-    public void setPerson_type_s(String person_type_s)
-    {
-        this.person_type_s = person_type_s;
-    }
-
     public String getFirst_name_s()
     {
         return first_name_s;
@@ -180,53 +184,73 @@ public class SolrAdvancedSearchDocument
         this.last_name_s = last_name_s;
     }
 
-    public List<String> getPhone_numbers()
+    public String getLocation_street_address_s()
     {
-        return phone_numbers;
+        return location_street_address_s;
     }
 
-    public void setPhone_numbers(List<String> phone_numbers)
+    public void setLocation_street_address_s(String location_street_address_s)
     {
-        this.phone_numbers = phone_numbers;
+        this.location_street_address_s = location_street_address_s;
     }
 
-    public List<String> getEmail_address_ss()
+    public String getLocation_city_s()
     {
-        return email_address_ss;
+        return location_city_s;
     }
 
-    public void setEmail_address_ss(List<String> email_address_ss)
+    public void setLocation_city_s(String location_city_s)
     {
-        this.email_address_ss = email_address_ss;
+        this.location_city_s = location_city_s;
     }
 
-    public List<String> getOrganizations_ss()
+    public String getLocation_state_s()
     {
-        return organizations_ss;
+        return location_state_s;
     }
 
-    public void setOrganizations_ss(List<String> organizations_ss)
+    public void setLocation_state_s(String location_state_s)
     {
-        this.organizations_ss = organizations_ss;
+        this.location_state_s = location_state_s;
     }
 
-    public List<SolrLocation> get_childDocuments_()
+    public String getLocation_postal_code_s()
+    {
+        return location_postal_code_s;
+    }
+
+    public void setLocation_postal_code_s(String location_postal_code_s)
+    {
+        this.location_postal_code_s = location_postal_code_s;
+    }
+
+    public String getType_s()
+    {
+        return type_s;
+    }
+
+    public void setType_s(String type_s)
+    {
+        this.type_s = type_s;
+    }
+
+    public String getValue_s()
+    {
+        return value_s;
+    }
+
+    public void setValue_s(String value_s)
+    {
+        this.value_s = value_s;
+    }
+
+    public List<SolrBaseDocument> get_childDocuments_()
     {
         return _childDocuments_;
     }
 
-    public void set_childDocuments_(List<SolrLocation> _childDocuments_)
+    public void set_childDocuments_(List<SolrBaseDocument> _childDocuments_)
     {
         this._childDocuments_ = _childDocuments_;
-    }
-
-    public Long getPerson_id_i()
-    {
-        return person_id_i;
-    }
-
-    public void setPerson_id_i(Long person_id_i)
-    {
-        this.person_id_i = person_id_i;
     }
 }
