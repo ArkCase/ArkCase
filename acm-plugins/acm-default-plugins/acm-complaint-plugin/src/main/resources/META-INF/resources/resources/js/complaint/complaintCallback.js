@@ -14,6 +14,12 @@ Complaint.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_PERSON_SAVED, this.onPersonSaved);*/
         Acm.Dispatcher.addEventListener(this.EVENT_PERSON_ASSOCIATION_SAVED, this.onPersonAssociationSaved);
         Acm.Dispatcher.addEventListener(this.EVENT_PERSON_DELETED, this.onPersonDeleted);
+        Acm.Dispatcher.addEventListener(this.EVENT_NOTE_SAVED, this.onNoteSaved);
+        Acm.Dispatcher.addEventListener(this.EVENT_NOTE_DELETED, this.onNoteDeleted);
+        Acm.Dispatcher.addEventListener(this.EVENT_NOTE_LIST_RETRIEVED, this.onNotesListRetrieved);
+
+
+
 
     }
 
@@ -22,6 +28,9 @@ Complaint.Callback = {
     ,EVENT_COMPLAIN_SAVED		: "complaint-complaint-saved"
     ,EVENT_PERSON_ASSOCIATION_SAVED : "person-association-saved"
     ,EVENT_PERSON_DELETED       : "person-record-deleted"
+    ,EVENT_NOTE_SAVED           : "object-note-saved"
+    ,EVENT_NOTE_DELETED         : "object-note-deleted"
+    ,EVENT_NOTE_LIST_RETRIEVED  : "object-note-listed"
     /*,EVENT_COMPLAINT_PERSON_LIST_RETRIEVED : "complaint-person-list-retrieved"
     ,EVENT_PERSON_SAVED         : "complaint-person-saved"*/
     ,onListRetrieved : function(Callback, response) {   	
@@ -103,12 +112,13 @@ Complaint.Callback = {
 
                 Complaint.cacheComplaint.put(complaintId, complaint);
 
-                /*var people = Complaint.cachePersonList.get(complaintId);
-                if (people) {
+                var notes = Complaint.cacheNoteList.get(complaintId);
+                if (notes) {
                     Complaint.Object.populateComplaint(complaint);
                 } else {
-                    Complaint.Service.retrievePersonListComplaint(complaintId);
-                }*/
+                    Complaint.Service.retrieveNotes(complaintId);
+                }
+
 
                 Complaint.Object.populateComplaint(complaint);
             }
@@ -146,7 +156,36 @@ Complaint.Callback = {
             //Acm.Dialog.info("Able to delete person");
         }
     }
-
+    ,onNoteSaved: function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to create or save note:" + response.errorMsg);
+        } else {
+            //update the note list cache manually instead of calling service
+            //next refresh will update the cache anyway
+            var complaintId = Complaint.getComplaintId();
+            var oldNotesList = Complaint.cacheNoteList.get(complaintId);
+            var updatedNotesList = oldNotesList;
+            updatedNotesList.push(response);
+            Complaint.cacheNoteList.put(complaintId, updatedNotesList);
+        }
+    }
+    ,onNoteDeleted : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to delete note:" + response.errorMsg);
+        } else {
+            var complaintId = Complaint.getComplaintId();
+            Complaint.Service.retrieveNotes(complaintId);
+        }
+    }
+    ,onNotesListRetrieved : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to list notes:" + response.errorMsg);
+        } else {
+//            Acm.Dialog.info("Able to list notes");
+            Complaint.cacheNoteList.put(Complaint.getComplaintId(),response)
+            Complaint.Object.refreshJTableNotes();
+        }
+    }
 
  /*   ,onComplaintPersonListRetrieved : function(Callback, response) {
         if (response.hasError) {
