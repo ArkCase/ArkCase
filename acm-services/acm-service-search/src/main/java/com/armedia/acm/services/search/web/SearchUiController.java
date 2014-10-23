@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.search.web;
+package com.armedia.acm.services.search.web;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;

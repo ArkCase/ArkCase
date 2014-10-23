@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.search.model.solr;
+package com.armedia.acm.services.search.model.solr;
 
 public class SolrResponse {
     private ResponseHeader responseHeader;

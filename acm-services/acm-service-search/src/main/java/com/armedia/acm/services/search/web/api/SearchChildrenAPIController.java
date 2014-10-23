@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.search.web.api;
+package com.armedia.acm.services.search.web.api;
 
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -18,28 +18,38 @@ import java.util.Map;
 
 @Controller
 @RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
-public class QuickSearchAPIController
+public class SearchChildrenAPIController
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private MuleClient muleClient;
 
-    @RequestMapping(value = "/quickSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String quickSearch(
-            @RequestParam(value = "q", required = true) String query,
+    public String children(           
+            @RequestParam(value = "parentType", required = true) String parentType,
+            @RequestParam(value = "parentId", required = true) Long parentId,
+            @RequestParam(value = "childType", required = false, defaultValue = "") String childType,
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             Authentication authentication
     ) throws MuleException
     {
+        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:"+ parentId;
+        
+         if (!"".equals(childType))
+        {
+         query = query + " AND object_type_s:" + childType;
+        }   
+        
+        
         if ( log.isDebugEnabled() )
         {
             log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
         }
-
+     
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
         headers.put("firstRow", startRow);

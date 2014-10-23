@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.search.web.api;
 
+import com.armedia.acm.services.search.web.api.SearchChildrenAPIController;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;

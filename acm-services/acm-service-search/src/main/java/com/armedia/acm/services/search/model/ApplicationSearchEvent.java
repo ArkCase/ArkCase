@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.search.model;
+package com.armedia.acm.services.search.model;
 
 import java.util.Date;
 

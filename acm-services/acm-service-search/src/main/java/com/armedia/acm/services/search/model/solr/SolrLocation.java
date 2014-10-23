@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.search.model.solr;
+package com.armedia.acm.services.search.model.solr;
 
 /**
  * Created by armdev on 10/21/14.
