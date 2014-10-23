@@ -10,27 +10,12 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 /**
  * Created by armdev on 10/21/14.
  */
 public class PersonChangeToSolrTransformer implements AcmObjectToSolrDocTransformer<Person>
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-//    private void sendPersonAssociationToSolr(PersonAssociation personAssociation)
-//    {
-//        SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
-//        solrDoc.setPerson_id_i(personAssociation.getPerson().getId());
-//        solrDoc.setId(personAssociation.getId() + "-PERSON-ASSOCIATION");
-//        solrDoc.setObject_type_s("PERSON-ASSOCIATION");
-//        solrDoc.setPerson_type_s(personAssociation.getPersonType());
-//
-//        getSendDocumentsToSolr().sendSolrDocument(solrDoc);
-//
-//
-//    }
 
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Person person)
