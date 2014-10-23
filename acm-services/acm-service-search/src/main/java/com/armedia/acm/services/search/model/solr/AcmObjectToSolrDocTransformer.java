@@ -1,15 +1,13 @@
 package com.armedia.acm.services.search.model.solr;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 /**
  * Created by armdev on 10/22/14.
  */
-public interface AcmObjectToSolrDocTransformer<T>
+public interface AcmObjectToSolrDocTransformer<T extends Object>
 {
-    SolrAdvancedSearchDocument toSolrAdvancedSearch(T in) throws JsonProcessingException;
+    SolrAdvancedSearchDocument toSolrAdvancedSearch(T in);
 
-    SolrDocument toSolrQuickSearch(T in) throws JsonProcessingException;
+    SolrDocument toSolrQuickSearch(T in);
 
     boolean isAcmObjectTypeSupported(Class acmObjectType);
 }
