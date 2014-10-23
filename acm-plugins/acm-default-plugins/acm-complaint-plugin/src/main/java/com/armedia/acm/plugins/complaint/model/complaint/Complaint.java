@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 
 import com.armedia.acm.form.config.Item;
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
 
 
 /**
@@ -40,7 +41,7 @@ public class Complaint {
 	private String complaintTag;
 	private String frequency;
 	private List<String> frequencies;
-	private String location;
+	private PostalAddress location;
 	private Contact initiator;
 	private List<Contact> people;
     private String cmisFolderId;
@@ -232,17 +233,17 @@ public class Complaint {
 	/**
 	 * @return the location
 	 */
-	public String getLocation() {
+	public PostalAddress getLocation() {
 		return location;
 	}
-	
+
 	/**
 	 * @param location the location to set
 	 */
-	public void setLocation(String location) {
+	public void setLocation(PostalAddress location) {
 		this.location = location;
 	}
-	
+
 	/**
 	 * @return the initiator
 	 */
