@@ -164,7 +164,8 @@ Complaint.Callback = {
             //next refresh will update the cache anyway
             var complaintId = Complaint.getComplaintId();
             var oldNotesList = Complaint.cacheNoteList.get(complaintId);
-            var updatedNotesList = oldNotesList;
+            var updatedNotesList = {};
+            updatedNotesList = oldNotesList;
             updatedNotesList.push(response);
             Complaint.cacheNoteList.put(complaintId, updatedNotesList);
         }
@@ -173,8 +174,24 @@ Complaint.Callback = {
         if (response.hasError) {
             Acm.Dialog.error("Failed to delete note:" + response.errorMsg);
         } else {
+            //update the note list cache manually instead of calling service
+            //next refresh will update the cache anyway
             var complaintId = Complaint.getComplaintId();
-            Complaint.Service.retrieveNotes(complaintId);
+            var oldNotesList = Complaint.cacheNoteList.get(complaintId);
+            var updatedNotesList = {};
+            var deletedNoteId = response.deletedNoteId;
+            for(var i = 0; i < oldNotesList.length; i++)
+            {
+                if(oldNotesList[i].id == deletedNoteId){
+                    oldNotesList.splice(i, 1);
+                    updatedNotesList = oldNotesList;
+                }
+            }
+
+            Complaint.cacheNoteList.put(complaintId, updatedNotesList);
+
+            /*var complaintId = Complaint.getComplaintId();
+            Complaint.Service.retrieveNotes(complaintId);*/
         }
     }
     ,onNotesListRetrieved : function(Callback, response) {

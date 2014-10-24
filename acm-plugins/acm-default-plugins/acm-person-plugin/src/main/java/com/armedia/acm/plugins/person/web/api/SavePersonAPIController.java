@@ -32,6 +32,7 @@ public class SavePersonAPIController {
             Authentication auth
     ) throws AcmCreateObjectFailedException
     {
+
         if ( log.isTraceEnabled() )
         {
             log.trace("Got a Person: " + in +"; person ID: '" + in.getId()+ "'");
