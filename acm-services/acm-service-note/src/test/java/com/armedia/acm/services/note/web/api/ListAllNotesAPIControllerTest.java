@@ -92,7 +92,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/note/list/{parentType}/{parentId}", parentType, parentId)
+                get("/api/v1/plugin/note/{parentType}/{parentId}", parentType, parentId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
                         .principal(mockAuthentication))
@@ -146,7 +146,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/note/list/{parentType}/{parentId}", parentType, parentId)
+                get("/api/v1/plugin/note/{parentType}/{parentId}", parentType, parentId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
                         .principal(mockAuthentication))

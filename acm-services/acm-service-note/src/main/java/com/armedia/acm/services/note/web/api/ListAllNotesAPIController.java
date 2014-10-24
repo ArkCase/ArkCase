@@ -26,9 +26,9 @@ public class ListAllNotesAPIController {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/list/{parentType}/{parentId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{parentType}/{parentId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Note> findAllNotes(
+    public List<Note> findAllNotesInParentObject(
             @PathVariable("parentType") String parentType,
             @PathVariable("parentId") Long parentId
     ) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException {

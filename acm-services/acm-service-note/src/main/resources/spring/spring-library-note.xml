@@ -30,7 +30,7 @@
             <list>
                 <bean id="acmSaveNoteUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/note/save"/>
+                    <property name="url" value="/api/{version}/plugin/note"/>
                     <property name="requiredPrivilege" ref="acmSaveNotePrivilege"/>
                 </bean>
             </list>
@@ -60,7 +60,7 @@
             <list>
                 <bean id="acmDeleteNoteByIdUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/plugin/note/delete/{noteId}"/>
+                    <property name="url" value="/api/{version}/plugin/note/{noteId}"/>
                     <property name="requiredPrivilege" ref="acmDeleteNoteByIdPrivilege"/>
                 </bean>
             </list>
@@ -90,7 +90,7 @@
             <list>
                 <bean id="acmListNotesUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/note/list/{parentType}/{parentId}"/>
+                    <property name="url" value="/api/{version}/plugin/note/{parentType}/{parentId}"/>
                     <property name="requiredPrivilege" ref="acmListNotesPrivilege"/>
                 </bean>
             </list>
