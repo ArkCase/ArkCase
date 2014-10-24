@@ -3,6 +3,7 @@ package com.armedia.acm.services.note.web.api;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.note.dao.NoteDao;
+import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ public class DeleteNoteByIdAPIController {
     private NoteDao noteDao;
 //MediaType.APPLICATION_JSON_VALUE
     private Logger log = LoggerFactory.getLogger(getClass());
-    @RequestMapping(value = "/delete/{noteId}", method = RequestMethod.DELETE, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/{noteId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deleteNoteById(
             @PathVariable("noteId") Long id
@@ -34,11 +35,15 @@ public class DeleteNoteByIdAPIController {
         if(id != null){
             try
             {
+                JSONObject objectToReturnJSON = new JSONObject();
                 getNoteDao().deleteNoteById(id);
                 log.info("Deleting note by id '" + id + "'");
-                log.debug("Note ID : " + id );
+                log.debug("Note ID : " + id);
 
-                String objectToReturn = "{\"info\": \"Deleting Successful\"}";
+                objectToReturnJSON.put("deletedNoteId", id);
+
+                String objectToReturn = "{\"deletedNoteId\":" + id + "}";
+                objectToReturn = objectToReturnJSON.toString();
 
                 return objectToReturn;
             }

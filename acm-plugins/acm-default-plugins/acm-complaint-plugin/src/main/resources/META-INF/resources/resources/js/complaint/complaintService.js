@@ -19,9 +19,9 @@ Complaint.Service = {
     //,API_SAVE_PERSON             : "/api/latest/plugin/person"
     ,API_SAVE_PERSON_ASSOCIATION : "/api/latest/plugin/personAssociation"
     ,API_DELETE_PERSON           : "/api/latest/plugin/person/delete/"
-    ,API_SAVE_NOTE               : "/api/latest/plugin/note/save"
-    ,API_DELETE_NOTE             : "/api/latest/plugin/note/delete/"
-    ,API_LIST_NOTES              : "/api/v1/plugin/note/list/"
+    ,API_SAVE_NOTE               : "/api/latest/plugin/note"
+    ,API_DELETE_NOTE             : "/api/latest/plugin/note/"
+    ,API_LIST_NOTES              : "/api/latest/plugin/note/"
 
 
 
