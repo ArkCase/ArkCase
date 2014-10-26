@@ -15,8 +15,8 @@
     <dependencies>
         <!-- datasource -->
         <dependency>
-            <groupId>com.mchange</groupId>
-            <artifactId>c3p0</artifactId>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
         </dependency>
 
         <!-- liquibase (database ddl maintenance) -->

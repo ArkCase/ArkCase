@@ -78,8 +78,8 @@
         </dependency>
         <!-- datasource -->
         <dependency>
-            <groupId>com.mchange</groupId>
-            <artifactId>c3p0</artifactId>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
