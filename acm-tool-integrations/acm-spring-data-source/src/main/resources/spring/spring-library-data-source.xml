@@ -64,32 +64,60 @@
         </property>
     </bean>
 
-    <bean id="acmDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-            destroy-method="close">
-        <property name="driverClass" value="${acm.driverClassName}"/>
-        <property name="jdbcUrl" value="${acm.url}"/>
-        <!--<property name="overrideDefaultUser" value="${acm.schema}"/>-->
-        <property name="user" value="${acm.username}"/>
+    <bean id="acmDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+        <property name="driverClassName" value="${acm.driverClassName}"/>
+        <property name="url" value="${acm.url}"/>
+        <property name="username" value="${acm.username}"/>
         <property name="password" value="${acm.password}"/>
-        <property name="initialPoolSize" value="${acm.initialSize}"/>
-        <property name="maxPoolSize" value="${acm.maxActive}"/>
-        <property name="minPoolSize" value="${acm.minIdle}"/>
-        <property name="checkoutTimeout" value="${acm.maxWait}"/>
-        <property name="testConnectionOnCheckout" value="${acm.testOnBorrow}"/>
-        <property name="testConnectionOnCheckin" value="${acm.testOnReturn}"/>
-        <property name="idleConnectionTestPeriod" value="${acm.idleConnectionTestPeriodInSeconds}"/>
-        <property name="preferredTestQuery" value="${acm.validationQuery}"/>
+        <property name="initialSize" value="${acm.initialSize}"/>
+        <property name="maxActive" value="${acm.maxActive}"/>
+        <property name="maxIdle" value="${acm.maxActive}"/>
+        <property name="minIdle" value="${acm.maxActive}"/>
+        <property name="maxWait" value="${acm.maxWait}"/>
+        <property name="maxAge" value="5000"/>
+        <property name="testOnBorrow" value="${acm.testOnBorrow}"/>
+        <property name="testOnReturn" value="${acm.testOnReturn}"/>
+        <!--<property name="test" value="${acm.idleConnectionTestPeriodInSeconds}"/>-->
+        <property name="validationQuery" value="${acm.validationQuery}"/>
         <property name="loginTimeout" value="${acm.maxWait}"/>
-        <property name="acquireRetryAttempts" value="${acm.acquireRetryAttempts}"/>
-        <property name="acquireRetryDelay" value="${acm.acquireRetryDelay}"/>
-        <property name="autoCommitOnClose" value="false"/>
-        <property name="dataSourceName" value="acmDataSource"/>
-        <property name="breakAfterAcquireFailure" value="false"/>
+        <property name="defaultAutoCommit" value="false"/>
+        <property name="logAbandoned" value="true"/>
+        <property name="minEvictableIdleTimeMillis" value="1000"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="5"/>
+        <property name="timeBetweenEvictionRunsMillis" value="3000"/>
+        <property name="testOnConnect" value="true"/>
+    </bean>
+
+    <!--<bean id="acmDataSource" class="org.apache.commons.dbcp2.BasicDataSource">-->
+        <!--<property name="driverClassName" value="${acm.driverClassName}"/>-->
+        <!--<property name="url" value="${acm.url}"/>-->
+        <!--<property name="username" value="${acm.username}"/>-->
+        <!--<property name="password" value="${acm.password}"/>-->
+        <!--<property name="initialSize" value="${acm.initialSize}"/>-->
+        <!--<property name="maxTotal" value="${acm.maxActive}"/>-->
+        <!--<property name="minIdle" value="${acm.minIdle}"/>-->
+        <!--<property name="testOnBorrow" value="${acm.testOnBorrow}"/>-->
+        <!--<property name="testOnReturn" value="${acm.testOnReturn}"/>-->
+        <!--<property name="validationQuery" value="${acm.validationQuery}"/>-->
+        <!--<property name="defaultAutoCommit" value="false"/>-->
+        <!--<property name="abandonedUsageTracking" value="true"/>-->
+        <!--<property name="logAbandoned" value="true"/>-->
+        <!--<property name="testWhileIdle" value="true"/>-->
+        <!--<property name="removeAbandonedTimeout" value="5"/>-->
+        <!--<property name="timeBetweenEvictionRunsMillis" value="5000"/>-->
+        <!--<property name="minEvictableIdleTimeMillis" value="5000"/>-->
+        <!--<property name="removeAbandonedOnBorrow" value="true"/>-->
+    <!--</bean>-->
+
+    <bean id="acmPersistenceUnitManager" class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
+        <property name="defaultDataSource" ref="acmDataSource"/>
+        <property name="packagesToScan" value="${jpa.model.packages}"/>
     </bean>
 
 
     <bean id="acmEntityManager" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="acmDataSource"/>
+        <!--<property name="dataSource" ref="acmDataSource"/>-->
         <property name="jpaDialect" ref="eclipseLinkDialect"/>
         <property name="persistenceProviderClass" value="org.eclipse.persistence.jpa.PersistenceProvider"/>
         <property name="jpaPropertyMap">
@@ -106,8 +134,9 @@
                 <prop key="eclipselink.validate-existence">true</prop>
             </props>
         </property>
-        <property name="packagesToScan" value="${jpa.model.packages}"/>
+        <!--<property name="packagesToScan" value="${jpa.model.packages}"/>-->
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+        <property name="persistenceUnitManager" ref="acmPersistenceUnitManager"/>
     </bean>
 
     <bean id="objectChangesBySessionAccumulator" class="com.armedia.acm.data.ObjectChangesBySessionAccumulator"/>
@@ -125,7 +154,9 @@
         </property>
     </bean>
 
-    <bean id="eclipseLinkDialect" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect"/>
+    <bean id="eclipseLinkDialect" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect">
+        <property name="lazyDatabaseTransaction" value="false"/>
+    </bean>
 
     <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
         <property name="databasePlatform" value="${database.platform}"/>
@@ -137,7 +168,6 @@
          global tx) -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="dataSource" ref="acmDataSource"/>
-        <property name="entityManagerFactory" ref="acmEntityManager"/>
     </bean>
 
     <!-- enable transaction demarcation with annotations -->
