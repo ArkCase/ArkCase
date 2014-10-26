@@ -79,6 +79,7 @@ public class ComplaintServiceIT
         location.setState("testState");
         location.setZip("12345");
         location.setCreator("testCreator");
+        location.setType("home");
         
         frevvoComplaint.setLocation(location);
 

@@ -353,6 +353,11 @@ public class Complaint implements Serializable, AcmObject
         {
             ap.setCreator(creator);
         }
+
+        if ( getLocation() != null && getLocation().getCreator() == null )
+        {
+            getLocation().setCreator(creator);
+        }
     }
 
     public Date getModified()
@@ -433,6 +438,12 @@ public class Complaint implements Serializable, AcmObject
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setModifier(modifier);
+        }
+
+        if ( getLocation() != null && getLocation().getModifier() == null )
+        {
+            log.debug("setting location modifier to: " + modifier);
+            getLocation().setModifier(modifier);
         }
 
     }
