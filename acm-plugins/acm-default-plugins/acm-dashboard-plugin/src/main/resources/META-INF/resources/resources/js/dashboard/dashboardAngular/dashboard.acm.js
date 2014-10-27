@@ -4262,8 +4262,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             }
         }
     }
-]), angular.module("adf").directive("adfWidget", ["$log", "$modal", "dashboard",
-    function($log, $modal, dashboard) {
+]), angular.module("adf").directive("adfWidget", ["$log", "$modal", "dashboard","$rootScope",
+    function($log, $modal, dashboard, $rootScope) {
 
         function preLink($scope, $element, $attr) {
             var definition = $scope.definition;
@@ -4279,6 +4279,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
 
         function postLink($scope, $element) {
             var model = $scope.model;
+            //var model1 = $rootScope.adfModel;
             var definition = $scope.definition;
             definition ? ($scope.close = function() {
                 var column = $scope.col;
@@ -4287,11 +4288,11 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     index >= 0 && column.widgets.splice(index, 1)
                 }
                 $element.remove();
-                $scope.$broadcast("adfDashboardChanged","sample-01",model);
+                    //$scope.$broadcast("adfDashboardChanged",$scope.$root.$$childHead.name,$scope.$root.$$childHead.model);
+                $scope.$emit("adfDashboardChanged",$scope.$root.$$childHead.name,$scope.$root.$$childHead.model);
             }, $scope.reload = function() {
                 $scope.$broadcast("widgetReload")
             },
-
                 $scope.reloadTableBased = function(number) {
                   //  $scope.numberOfRows = number,
                     $scope.$broadcast("widgetTableBasedReload", number)
@@ -4304,10 +4305,13 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                         templateUrl: "../src/templates/widget-edit.html"
                     },
                     instance = $modal.open(opts);
-                editScope.closeDialog = function() {
+                editScope.closeDialog = function($rootScope) {
                     instance.close(), editScope.$destroy();
                     var widget = $scope.widget;
-                    widget.edit && widget.edit.reload && $scope.$broadcast("widgetConfigChanged")
+                    widget.edit && widget.edit.reload && $scope.$broadcast("widgetConfigChanged");
+                    //$scope.$broadcast("adfDashboardChanged",$scope.$root.$$childHead.name,$scope.$root.$$childHead.model);
+                    $scope.$emit("adfDashboardChanged",$scope.$root.$$childHead.name,$scope.$root.$$childHead.model);
+
                 }
             }) : $log.debug("widget not found")
         }
@@ -4388,7 +4392,11 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                         tolerance: "pointer",
                         placeholder: "placeholder",
                         forcePlaceholderSize: !0,
-                        opacity: .4
+                        opacity: .4,
+                        update: function(){
+                            // fire your event
+                            $scope.$emit("adfDashboardChanged",$scope.$root.$$childHead.name,$scope.$root.$$childHead.model);
+                        }
                     };
                     var name = $scope.name;
                     var model = $scope.adfModel;
