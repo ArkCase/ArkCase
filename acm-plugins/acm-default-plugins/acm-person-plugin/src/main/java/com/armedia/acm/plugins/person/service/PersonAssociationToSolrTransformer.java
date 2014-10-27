@@ -20,6 +20,10 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
         solrDoc.setId(personAssociation.getId() + "-PERSON-ASSOCIATION");
         solrDoc.setObject_type_s("PERSON-ASSOCIATION");
+        solrDoc.setCreate_date_tdt(personAssociation.getCreated());
+        solrDoc.setCreator_lcs(personAssociation.getCreator());
+        solrDoc.setModified_date_tdt(personAssociation.getModified());
+        solrDoc.setModifier_lcs(personAssociation.getModifier());
 
         solrDoc.setChild_id_s(personAssociation.getPerson().getId() + "");
         solrDoc.setChild_type_s("PERSON");
@@ -27,6 +31,10 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         solrDoc.setParent_type_s(personAssociation.getParentType());
 
         solrDoc.setType_lcs(personAssociation.getPersonType());
+
+        solrDoc.setName(personAssociation.getPerson().getGivenName() + " " +
+            personAssociation.getPerson().getFamilyName() + " (" +
+            personAssociation.getPersonType() + ")");
 
         solrDoc.setDescription_parseable(personAssociation.getPersonDescription());
 

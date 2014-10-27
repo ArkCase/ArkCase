@@ -5,37 +5,70 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by armdev on 10/21/14.
+ * Property names must be identical to the desired SOLR field names.
  */
 public class SolrAdvancedSearchDocument implements SolrBaseDocument
 {
+    /////////////////////  fields for all documents ///////////////////////////
     private String id;
     private String object_id_s;
     private String object_type_s;
-    private String title_parseable;
     private String name;
+    private Date create_date_tdt;
+    private String creator_lcs;
+    private Date modified_date_tdt;
+    private String modifier_lcs;
+
+    /////////////////// for complaints, case files, other objects with a title or description ////////////
+    private String title_parseable;
+    private String description_parseable;
+
+    /////////////////// for docs with an incident date ////////////
     private Date incident_date_tdt;
+
+    /////////////////// for docs with a priority ////////////
     private String priority_lcs;
+
+    /////////////////// for docs with an assignee ////////////
     private String assignee_id_lcs;
     private String assignee_first_name_lcs;
     private String assignee_last_name_lcs;
     private String incident_type_lcs;
+
+    /////////////////// for docs with a status date ////////////
     private String status_lcs;
+
+    /////////////////// for person records //////////////////////
     private String person_title_lcs;
     private String first_name_lcs;
     private String last_name_lcs;
+
+    /////////////////// for orgs, contact methods, and other objects with a type and a value /////////////
     private String type_lcs;
     private String value_parseable;
+
+    ////////////////// for postal addresses /////////////////////
     private String location_street_address_lcs;
     private String location_city_lcs;
     private String location_state_lcs;
     private String location_postal_code_sdo;
-    private List<SolrBaseDocument> _childDocuments_ = new ArrayList<>();
+
+    /////////////////////  for objects in a parent-child relationship, or association objects /////////////
     private String child_id_s;
     private String child_type_s;
     private String parent_id_s;
     private String parent_type_s;
-    private String description_parseable;
+
+
+    ////////////////// for objects that own organizations, e.g. persons /////////////////////
+    private List<String> organization_id_ss;
+
+    ////////////////// for objects that own postal addresses, e.g. persons /////////////////////
+    private List<String> postal_address_id_ss;
+
+    ////////////////// for objects that own contact methods, e.g. persons /////////////////////
+    private List<String> contact_method_ss;
+
 
     @Override
     public String getId()
@@ -249,16 +282,6 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
         this.value_parseable = value_parseable;
     }
 
-    public List<SolrBaseDocument> get_childDocuments_()
-    {
-        return _childDocuments_;
-    }
-
-    public void set_childDocuments_(List<SolrBaseDocument> _childDocuments_)
-    {
-        this._childDocuments_ = _childDocuments_;
-    }
-
     public void setChild_id_s(String child_id_s)
     {
         this.child_id_s = child_id_s;
@@ -308,5 +331,75 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     public String getDescription_parseable()
     {
         return description_parseable;
+    }
+
+    public List<String> getOrganization_id_ss()
+    {
+        return organization_id_ss;
+    }
+
+    public void setOrganization_id_ss(List<String> organization_id_ss)
+    {
+        this.organization_id_ss = organization_id_ss;
+    }
+
+    public List<String> getPostal_address_id_ss()
+    {
+        return postal_address_id_ss;
+    }
+
+    public void setPostal_address_id_ss(List<String> postal_address_id_ss)
+    {
+        this.postal_address_id_ss = postal_address_id_ss;
+    }
+
+    public List<String> getContact_method_ss()
+    {
+        return contact_method_ss;
+    }
+
+    public void setContact_method_ss(List<String> contact_method_ss)
+    {
+        this.contact_method_ss = contact_method_ss;
+    }
+
+    public Date getCreate_date_tdt()
+    {
+        return create_date_tdt;
+    }
+
+    public void setCreate_date_tdt(Date create_date_tdt)
+    {
+        this.create_date_tdt = create_date_tdt;
+    }
+
+    public String getCreator_lcs()
+    {
+        return creator_lcs;
+    }
+
+    public void setCreator_lcs(String creator_lcs)
+    {
+        this.creator_lcs = creator_lcs;
+    }
+
+    public Date getModified_date_tdt()
+    {
+        return modified_date_tdt;
+    }
+
+    public void setModified_date_tdt(Date modified_date_tdt)
+    {
+        this.modified_date_tdt = modified_date_tdt;
+    }
+
+    public String getModifier_lcs()
+    {
+        return modifier_lcs;
+    }
+
+    public void setModifier_lcs(String modifier_lcs)
+    {
+        this.modifier_lcs = modifier_lcs;
     }
 }

@@ -4,7 +4,10 @@ import com.armedia.acm.data.AcmDatabaseChangesEvent;
 import com.armedia.acm.data.AcmObjectChangelist;
 import com.armedia.acm.services.search.model.solr.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
+import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
+import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.model.solr.SolrDocumentId;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +66,34 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
             getSendToSolr().sendSolrQuickSearchDocuments(addOrUpdateSolrQuickSearch);
         }
 
+        if ( !deleteFromSolrAdvancedSearch.isEmpty() )
+        {
+            log.debug("Docs to delete from advanced search: " + deleteFromSolrAdvancedSearch.size());
+            // for delete, we need to send a special request format including only the document ID.  So we copy this
+            // list into a delete request list.
+            List<SolrDeleteDocumentByIdRequest> deletes = copyDeleteDocsToDeleteRequests(deleteFromSolrAdvancedSearch);
+            getSendToSolr().sendSolrAdvancedSearchDeletes(deletes);
+        }
+
+        if ( !deleteFromSolrQuickSearch.isEmpty() )
+        {
+            // for delete, we need to send a special request format including only the document ID.  So we copy this
+            // list into a delete request list.
+            List<SolrDeleteDocumentByIdRequest> deletes = copyDeleteDocsToDeleteRequests(deleteFromSolrQuickSearch);
+            getSendToSolr().sendSolrQuickSearchDeletes(deletes);
+        }
+
+    }
+
+    private List<SolrDeleteDocumentByIdRequest> copyDeleteDocsToDeleteRequests(
+            List<? extends SolrBaseDocument> deletedDocs)
+    {
+        List<SolrDeleteDocumentByIdRequest> deletes = new ArrayList<>(deletedDocs.size());
+        for ( SolrBaseDocument delete : deletedDocs)
+        {
+            deletes.add(new SolrDeleteDocumentByIdRequest(new SolrDocumentId(delete.getId())));
+        }
+        return deletes;
     }
 
     private void toSolrDocuments(

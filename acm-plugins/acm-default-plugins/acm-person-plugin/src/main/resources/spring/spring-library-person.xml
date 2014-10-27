@@ -25,7 +25,8 @@
     
     <bean id="personAssociationEventPublisher" class="com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher"/>
 
-    <bean id="personChangeToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonChangeToSolrTransformer"/>
+    <bean id="personToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonToSolrTransformer"/>
+    <bean id="organizationToSolrTransformer" class="com.armedia.acm.plugins.person.service.OrganizationToSolrTransformer"/>
     
     <bean id="personAssociationToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonAssociationToSolrTransformer"/>
             

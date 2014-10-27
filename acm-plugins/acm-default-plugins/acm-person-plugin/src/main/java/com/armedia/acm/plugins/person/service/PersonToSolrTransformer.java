@@ -10,10 +10,13 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by armdev on 10/21/14.
  */
-public class PersonChangeToSolrTransformer implements AcmObjectToSolrDocTransformer<Person>
+public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Person>
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -27,6 +30,12 @@ public class PersonChangeToSolrTransformer implements AcmObjectToSolrDocTransfor
         solrDoc.setPerson_title_lcs(person.getTitle());
         solrDoc.setFirst_name_lcs(person.getGivenName());
         solrDoc.setLast_name_lcs(person.getFamilyName());
+        solrDoc.setCreate_date_tdt(person.getCreated());
+        solrDoc.setCreator_lcs(person.getCreator());
+        solrDoc.setModified_date_tdt(person.getModified());
+        solrDoc.setModifier_lcs(person.getModifier());
+
+        solrDoc.setName(person.getGivenName() + " " + person.getFamilyName());
 
         addContactMethods(person, solrDoc);
 
@@ -39,58 +48,42 @@ public class PersonChangeToSolrTransformer implements AcmObjectToSolrDocTransfor
 
     private void addAddresses(Person person, SolrAdvancedSearchDocument solrDoc)
     {
+        List<String> addressIds = new ArrayList<String>();
         if ( person.getAddresses() != null )
         {
             for ( PostalAddress address : person.getAddresses() )
             {
-                SolrAdvancedSearchDocument addrDoc = new SolrAdvancedSearchDocument();
-                addrDoc.setId(address.getId() + "-LOCATION");
-                addrDoc.setObject_type_s("LOCATION");
-                addrDoc.setObject_id_s(address.getId() + "");
-                addrDoc.setLocation_city_lcs(address.getCity());
-                addrDoc.setLocation_postal_code_sdo(address.getZip());
-                addrDoc.setLocation_state_lcs(address.getState());
-                addrDoc.setLocation_street_address_lcs(address.getStreetAddress());
-
-                solrDoc.get_childDocuments_().add(addrDoc);
+                addressIds.add(address.getId() + "-LOCATION");
             }
+
         }
+        solrDoc.setPostal_address_id_ss(addressIds);
     }
 
     private void addOrganizations(Person person, SolrAdvancedSearchDocument solrDoc)
     {
+        List<String> organizationIds = new ArrayList<>();
         if ( person.getOrganizations() != null )
         {
             for ( Organization org : person.getOrganizations() )
             {
-                SolrAdvancedSearchDocument orgDoc = new SolrAdvancedSearchDocument();
-                orgDoc.setId(org.getOrganizationId() + "-ORGANIZATION");
-                orgDoc.setObject_type_s("ORGANIZATION");
-                orgDoc.setObject_id_s(org.getOrganizationId() + "");
-                orgDoc.setType_lcs(org.getOrganizationType());
-                orgDoc.setValue_parseable(org.getOrganizationValue());
-
-                solrDoc.get_childDocuments_().add(orgDoc);
+                organizationIds.add(org.getOrganizationId() + "-ORGANIZATION");
             }
         }
+        solrDoc.setOrganization_id_ss(organizationIds);
     }
 
     private void addContactMethods(Person person, SolrAdvancedSearchDocument solrDoc)
     {
+        List<String> contactMethodIds = new ArrayList<>();
         if ( person.getContactMethods() != null )
         {
             for ( ContactMethod cm : person.getContactMethods() )
             {
-                SolrAdvancedSearchDocument cmDoc = new SolrAdvancedSearchDocument();
-                cmDoc.setId(cm.getId() + "-CONTACT-METHOD");
-                cmDoc.setObject_type_s("CONTACT-METHOD");
-                cmDoc.setObject_id_s(cm.getId() + "");
-                cmDoc.setType_lcs(cm.getType());
-                cmDoc.setValue_parseable(cm.getValue());
-
-                solrDoc.get_childDocuments_().add(cmDoc);
+                contactMethodIds.add(cm.getId() + "-CONTACT-METHOD");
             }
         }
+        solrDoc.setContact_method_ss(contactMethodIds);
     }
 
     @Override
