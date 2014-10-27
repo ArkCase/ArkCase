@@ -38,7 +38,7 @@ public class SpringEntityListenerConfigurer
             if ( foundDescriptor )
             {
                 log.debug("adding listeners...");
-                descriptor.getEventManager().getDefaultEventListeners().addAll(getDefaultListeners());
+                descriptor.getEventManager().getEventListeners().addAll(getDefaultListeners());
             }
             log.debug("Entity class: " + entityType.getJavaType().getName() + "; has descriptor? " + foundDescriptor);
         }

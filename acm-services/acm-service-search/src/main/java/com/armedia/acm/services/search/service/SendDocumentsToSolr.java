@@ -2,6 +2,7 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
+import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,6 +36,56 @@ public class SendDocumentsToSolr
     {
         sendToJmsQueue(solrDocuments, "jms://solrQuickSearch.in");
     }
+
+    public void sendSolrQuickSearchDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
+    {
+        // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
+        // queue.
+        if ( deletes != null )
+        {
+            for ( SolrDeleteDocumentByIdRequest doc : deletes )
+            {
+                sendToJmsQueue(doc, "jms://solrQuickSearch.in");
+            }
+        }
+    }
+
+    public void sendSolrAdvancedSearchDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
+    {
+        log.debug("Received " + deletes.size() + " to be deleted.");
+        // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
+        // queue.
+        if ( deletes != null )
+        {
+            for ( SolrDeleteDocumentByIdRequest doc : deletes )
+            {
+                sendToJmsQueue(doc, "jms://solrAdvancedSearch.in");
+            }
+        }
+    }
+
+    private void sendToJmsQueue(SolrDeleteDocumentByIdRequest solrDocument, String queueName)
+    {
+        try
+        {
+            String json = mapper.writeValueAsString(solrDocument);
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("Sending JSON to SOLR: " + json);
+            }
+
+            getMuleClient().dispatch(queueName, json, null);
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("Returning JSON: " + json);
+            }
+        }
+        catch (JsonProcessingException | MuleException e)
+        {
+            log.error("Could not send document to SOLR: " + e.getMessage(), e);
+        }
+    }
+
     private void sendToJmsQueue(List<? extends SolrBaseDocument> solrDocuments, String queueName)
     {
         try
@@ -76,4 +127,6 @@ public class SendDocumentsToSolr
     {
         this.contextHolder = contextHolder;
     }
+
+
 }
