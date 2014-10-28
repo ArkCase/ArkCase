@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+
+
+    <http:endpoint name="submitAdvancedSearchDocuments"
+                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.updateHandler}?overwrite=true"
+                   contentType="application/json; charset=UTF-8"
+                   mimeType="application/json"
+                   encoding="UTF-8"
+                   method="POST"
+                   exchange-pattern="request-response"
+                   doc:name="Send Advanced Search Docs to SOLR">
+    </http:endpoint>
+
+    <flow name="jmsSendToAdvancedSearchSolr"
+          doc:name="Send to SOLR"
+          doc:description="Send documents to the SOLR advanced search collection.  Payload must be a JSON-formatted
+                           string consisting of an array of documents.  Each element of the array must be a JSON
+                           object with property names corresponding to valid SOLR field names.">
+
+        <jms:inbound-endpoint
+                queue="solrAdvancedSearch.in"
+                exchange-pattern="request-response"
+                connector-ref="ActiveMQ-ACM"
+                doc:name="JMS" />
+
+        <timer-interceptor/>
+
+        <echo-component doc:name="Echo"/>
+
+        <http:outbound-endpoint ref="submitAdvancedSearchDocuments"/>
+    </flow>
+
+</mule>
