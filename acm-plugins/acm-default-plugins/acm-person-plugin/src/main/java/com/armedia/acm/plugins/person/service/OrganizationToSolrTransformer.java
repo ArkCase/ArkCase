@@ -1,15 +1,29 @@
 package com.armedia.acm.plugins.person.service;
 
+import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.services.search.model.solr.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by armdev on 10/27/14.
  */
 public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransformer<Organization>
 {
+
+    private OrganizationDao organizationDao;
+
+
+    @Override
+    public List<Organization> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        return getOrganizationDao().findModifiedSince(lastModified, start, pageSize);
+    }
+
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization org)
     {
@@ -47,5 +61,15 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         boolean isSupported = objectNotNull && classNames;
 
         return isSupported;
+    }
+
+    public OrganizationDao getOrganizationDao()
+    {
+        return organizationDao;
+    }
+
+    public void setOrganizationDao(OrganizationDao organizationDao)
+    {
+        this.organizationDao = organizationDao;
     }
 }

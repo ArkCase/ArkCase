@@ -25,10 +25,16 @@
     
     <bean id="personAssociationEventPublisher" class="com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher"/>
 
-    <bean id="personToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonToSolrTransformer"/>
-    <bean id="organizationToSolrTransformer" class="com.armedia.acm.plugins.person.service.OrganizationToSolrTransformer"/>
+    <bean id="personToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonToSolrTransformer">
+        <property name="personDao" ref="acmPersonDao"/>
+    </bean>
+    <bean id="organizationToSolrTransformer" class="com.armedia.acm.plugins.person.service.OrganizationToSolrTransformer">
+        <property name="organizationDao" ref="acmOrganizationDao"/>
+    </bean>
     
-    <bean id="personAssociationToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonAssociationToSolrTransformer"/>
+    <bean id="personAssociationToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonAssociationToSolrTransformer">
+        <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
+    </bean>
             
     <bean id ="personPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Person Plugin"/>
