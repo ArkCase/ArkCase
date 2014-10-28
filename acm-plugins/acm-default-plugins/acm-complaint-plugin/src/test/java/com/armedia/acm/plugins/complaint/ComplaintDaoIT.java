@@ -24,7 +24,9 @@ import static org.junit.Assert.*;
         "/spring/spring-library-complaint-plugin-test-mule.xml",
         "/spring/spring-library-complaint.xml",
         "/spring/spring-library-activiti-actions.xml",
-        "/spring/spring-library-activiti-configuration.xml"
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-context-holder.xml"
         })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintDaoIT
