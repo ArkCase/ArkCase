@@ -186,30 +186,52 @@
                     <div>
                       <div class="wrapper">
                         <div class="row">
-                        <div class="col-md-12">
-                                    <section class="panel b-a ">
-                                      <div class="panel-heading b-b bg-info">
-                                        <ul class="nav nav-pills pull-right">
-                                          <li>
-                                            <div class="btn-group padder-v2">
-                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>
-                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>
-                                              <ul class="dropdown-menu pull-right">
-                                                <li><a href="#">Other menu items</a></li>
-                                              </ul>
-                                            </div>
-                                          </li>
-                                          <li>&nbsp;</li>
-                                        </ul>
-                                        </span> <a href="#" class="font-bold">Details</a> </div>
-                                      <div class="panel-body">
-                                        <div class="complaintDetails">
-                                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
-                                          <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
-                                        </div>
-                                      </div>
-                                    </section>
-                                  </div>
+                          <div class="col-md-12">
+                            <section class="panel b-a">
+                              <div class="panel-heading b-b bg-info">
+                                <ul class="nav nav-pills pull-right">
+                                  <li style="margin-right:5px"></li>
+                                  <li>
+                                    <div class="btn-group padder-v2">
+                                      <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New Reference</button>
+                                    </div>
+                                  </li>
+                                  <li> </li>
+                                </ul>
+                                <a href="#" class="font-bold">References</a></div>
+                              <div class="panel-body max-200 no-padder">
+                                <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                      <th>Complaint ID</th>
+                                      <th>Title</th>
+                                      <th>Incident Date</th>
+                                      <th>Priority</th>
+                                      <th>Assigned To</th>
+                                      <th>Subject Type</th>
+                                      <th>Status</th>
+                                      <th width="10%">Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                      <td>[Complaint ID]</td>
+                                      <td>[Title]</td>
+                                      <td>[Incident Date]</td>
+                                      <td>[Priority]</td>
+                                      <td>[Assigned To]</td>
+                                      <td>[Subject Type]</td>
+                                      <td>[Status]</td>
+                                      <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
+                                        <option value="0">Choose Action</option>
+                                        <option value="1">Delete</option>
+                                      </select></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </section>
+                          </div>
                         </div>
                       </div>
                     </div>
