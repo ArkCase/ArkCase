@@ -32,13 +32,12 @@
         </property>
     </bean>
 
-    <bean id="acmDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="driverClass" value="$[acm.driverClassName]"/>
-        <property name="jdbcUrl" value="$[acm.url]"/>
-        <property name="user" value="$[acm.username]"/>
-        <property name="password" value="$[acm.password]"/>
-        <property name="autoCommitOnClose" value="false"/>
-
+    <bean id="acmDataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
+        <property name="driverClassName" value="${acm.driverClassName}"/>
+        <property name="url" value="${acm.url}"/>
+        <property name="username" value="${acm.username}"/>
+        <property name="password" value="${acm.password}"/>
+        <property name="defaultAutoCommit" value="false"/>
     </bean>
 
 </beans>

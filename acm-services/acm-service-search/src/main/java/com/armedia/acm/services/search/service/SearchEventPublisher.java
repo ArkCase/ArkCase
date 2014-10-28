@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
-import com.armedia.acm.plugins.search.model.ApplicationSearchEvent;
+import com.armedia.acm.services.search.model.ApplicationSearchEvent;
 
 public class SearchEventPublisher implements ApplicationEventPublisherAware {
     
