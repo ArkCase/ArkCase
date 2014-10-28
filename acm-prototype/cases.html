@@ -11,11 +11,10 @@
 <link rel="stylesheet" href="resources/css/font.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/app.css" type="text/css" />
 <!--[if lt IE 9]>
-    <script src="js/ie/html5shiv.js"></script>
-    <script src="js/ie/respond.min.js"></script>
-    <script src="js/ie/excanvas.js"></script>
-  <![endif]-->
-
+<script src="js/ie/html5shiv.js"></script>
+<script src="js/ie/respond.min.js"></script>
+<script src="js/ie/excanvas.js"></script>
+<![endif]-->
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="resources/js/fancytree/jquery.fancytree.js"></script>
@@ -74,14 +73,12 @@
                 <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="resources/images/a0.png" class="dker"> <i class="on md b-light"></i> </span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David</strong> <b class="caret"></b> </span> <span class="text-muted text-xs block">Agent</span> </span> </a>
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
-                    <li> <a href="profile.html">My Profile</a> </li>
-                    
+                    <li> <a href="profile.html">My Profile</a> </li>  
                     <li class="divider"></li>
                     <li> <a href="index.html">Logout</a> </li>
                   </ul>
                 </div>
               </div>
-              
               <!-- nav -->
               <nav class="nav-primary hidden-xs">
                 <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Navigation</div>
@@ -108,9 +105,9 @@
       <section id="content">
         <section class="vbox">
           <section class="scrollable">
-            <section class="hbox stretch"><!-- /.aside --> 
+            <section class="hbox stretch">
+            <!-- /.aside --> 
               <!-- .aside -->
-              
               <aside class="aside-lg bg-light lt">
                 <section class="vbox animated fadeInLeft">
                   <section class="scrollable">
@@ -150,8 +147,6 @@
                       
                       
                         <div id="tree"></div>
-                        
-                        
                         
                         
                       </div>
@@ -244,51 +239,6 @@
                         </div>
                         <h4 class="m-n">Case Details</h4>
                         <hr/>
-                        <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Event Log</a></div>
-                        <section class="panel panel-default">
-                          <div class="table-responsive">
-                            <table class="table table-striped b-light">
-                              <thead>
-                                <tr>
-                                  <th width="20"><label class="checkbox m-n i-checks">
-                                    <input type="checkbox">
-                                    <i></i></label></th>
-                                  <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
-                                  <th>Date/Time</th>
-                                  <th>User</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td><label class="checkbox m-n i-checks">
-                                    <input type="checkbox" name="post[]">
-                                    <i></i></label></td>
-                                  <td>[Event]</td>
-                                  <td>MM/DD/YYYY HH:MM:SS</td>
-                                  <td>[User]</td>
-                                </tr>
-                                  </tr>
-                                
-                              </tbody>
-                            </table>
-                          </div>
-                          <footer class="panel-footer">
-                            <div class="row">
-                              <div class="col-sm-8 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small></div>
-                              <div class="col-sm-4 text-right text-center-xs">
-                                <ul class="pagination pagination-sm m-t-none m-b-none">
-                                  <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                                  <li><a href="#">1</a></li>
-                                  <li><a href="#">2</a></li>
-                                  <li><a href="#">3</a></li>
-                                  <li><a href="#">4</a></li>
-                                  <li><a href="#">5</a></li>
-                                  <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
-                                </ul>
-                              </div>
-                            </div>
-                          </footer>
-                        </section>
                       </div>
                     </div>
                     </div>
@@ -296,7 +246,6 @@
                 </section>
               </aside>
               <!-- /.aside --> 
-              
             </section>
           </section>
         </section>
@@ -311,97 +260,57 @@
 $(function() {
     $("#tree").fancytree({
 
-activate: function(event, data) {
-				var node = data.node;
-				// Use <a> href and target attributes to load the content:
-				if( node.data.href ){
-					// Open target
-					window.open(node.data.href, "_self");
-					// or open target in iframe
-//                $("[name=contentFrame]").attr("src", node.data.href);
-				}
-			},
-
-        source: [{
-            title: "Sample Case Title <em>(2014-03-12321)</em>",
-href: "cases.html",
-tooltip: "2014-03-12321",
-            expanded: "fancytree-expanded",
-            children: [{
-                    title: "Details", 
-					href: "caseDetails.html"
-                }, {
-                    title: "People ", 
-					href: "casePeople.html"
-                }, {
-                    title: "Notes", 
-					href: "caseNotes.html"
-                }, {
-                title: "Documents",
-                folder: true,
-				href: "caseDocuments.html",
-expanded: "fancytree-expanded",
-                children: [{
-                        title: "Document Title",
-                        description1: "David Miller", 
-						href: "caseDocumentDetails.html"
-                    }]
-            }, {
-                title: "ROIs",
-                folder: true,
-				href: "caseROI.html",
-expanded: "fancytree-expanded",
-                children: [{
-                        title: "[Document #], [Status]",
-                        description1: "David Miller", 
-						href: "caseROIDetails.html"
-                    }]
-            }, {
-                title: "Tasks",
-                folder: true,
-				href: "caseTasks.html",
-expanded: "fancytree-expanded",
-                children: [{
-                        title: "Subject, Priority",
-                        description1: "David Miller", 
-						href: "caseTaskDetails.html"
-                    }]
-               
-            }, {
-                title: "References",
-                folder: true,
-expanded: "fancytree-expanded", children: [{
-                    title: "Other Complaints",
-                    folder: false, 
-					href: "caseOtherComplaints.html"
-                },{
-                    title: "Other Cases",
-                    folder: false, 
-					href: "caseOtherCases.html"
-                }, {
-                    title: "Other Tasks",
-                    folder: false, 
-					href: "caseOtherTasks.html"
-                }, {
-                    title: "Other Documents",
-                    folder: false, 
-					href: "caseOtherDocuments.html"
-                }]
-            }, {
-                title: "Participants",
-                folder: true,
-expanded: "fancytree-expanded",
-                children: [{
-                    title: "Approvers"
-                }, {
-                    title: "Collaborators"
-                }, {
-                    title: "Watchers"
-                }]
-            }]
-        }]
-    });
-
+	activate: function(event, data) {
+					var node = data.node;
+					// Use <a> href and target attributes to load the content:
+					if( node.data.href ){
+						// Open target
+						window.open(node.data.href, "_self");
+						// or open target in iframe
+						// $("[name=contentFrame]").attr("src", node.data.href);
+					}
+				},
+	source: [{
+		title: "Sample Case Title <em>(2014-03-12321)</em>",
+		href: "cases.html",
+		tooltip: "2014-03-12321",
+		expanded: "fancytree-expanded",
+		children: [{
+				title: "Details", 
+				href: "caseDetails.html"
+			}, {
+				title: "People ", 
+				href: "casePeople.html"
+			}, {
+				title: "Notes", 
+				href: "caseNotes.html"
+			}, {
+			title: "Documents",
+			folder: true,
+			href: "caseDocuments.html",
+			expanded: "fancytree-expanded",
+			children: [{
+					title: "Document Title",
+					description1: "David Miller", 
+					href: "caseDocumentDetails.html"
+				}]
+		}, {
+			title: "Tasks",
+			href: "caseTasks.html"
+		}, {
+			title: "References",
+			href: "caseOtherComplaints.html"
+		}, {
+			title: "Participants",
+			folder: false,
+			href: "casesParticipants.html"
+		}, {
+			title: "History",
+			folder: false,
+			href: "casesHistory.html"
+		}]
+	}]
+});
 });
 //]]>
 </script> 
@@ -415,8 +324,7 @@ expanded: "fancytree-expanded",
 <link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>
 <script src="resources/js/summernote/summernote.js"></script> 
 <script>
-  
-  var edit = function() {
+var edit = function() {
   $('.complaintDetails').summernote({focus: true});
 };
 var save = function() {
@@ -456,7 +364,6 @@ $(document).ready(function() { $('#assigned').editable({placement: 'bottom', val
               {value: 3, text: 'Ronda Ringo'},
               {value: 3, text: 'AJ McClary'}
            ]}); }); 
-		   
 $(document).ready(function() { $('#incident').editable({
         format: 'yyyy-mm-dd',  
 		placement: 'bottom',  
@@ -465,8 +372,6 @@ $(document).ready(function() { $('#incident').editable({
                 weekStart: 1
            }
         }); }); 
-		
-			   
 $(document).ready(function() { $('#duedate').editable({
         format: 'yyyy-mm-dd',  
 		placement: 'bottom',  
@@ -475,7 +380,6 @@ $(document).ready(function() { $('#duedate').editable({
                 weekStart: 1
            }
         }); }); 
-
 </script> 
 
 <!-- App --> 

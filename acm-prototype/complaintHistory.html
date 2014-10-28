@@ -186,30 +186,54 @@
                     <div>
                       <div class="wrapper">
                         <div class="row">
-                        <div class="col-md-12">
-                                    <section class="panel b-a ">
-                                      <div class="panel-heading b-b bg-info">
-                                        <ul class="nav nav-pills pull-right">
-                                          <li>
-                                            <div class="btn-group padder-v2">
-                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>
-                                              <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>
-                                              <ul class="dropdown-menu pull-right">
-                                                <li><a href="#">Other menu items</a></li>
-                                              </ul>
-                                            </div>
-                                          </li>
-                                          <li>&nbsp;</li>
-                                        </ul>
-                                        </span> <a href="#" class="font-bold">Details</a> </div>
-                                      <div class="panel-body">
-                                        <div class="complaintDetails">
-                                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
-                                          <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
-                                        </div>
-                                      </div>
-                                    </section>
+                          <div class="wrapper">
+                       
+                            <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Event Log</a></div>
+                            <section class="panel panel-default">
+                              <div class="table-responsive">
+                                <table class="table table-striped b-light">
+                                  <thead>
+                                    <tr>
+                                      <th width="20"><label class="checkbox m-n i-checks">
+                                        <input type="checkbox">
+                                        <i></i></label></th>
+                                      <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
+                                      <th>Date/Time</th>
+                                      <th>User</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <td><label class="checkbox m-n i-checks">
+                                        <input type="checkbox" name="post[]">
+                                        <i></i></label></td>
+                                      <td>[Event]</td>
+                                      <td>MM/DD/YYYY HH:MM:SS</td>
+                                      <td>[User]</td>
+                                    </tr>
+                                    </tr>
+                                    
+                                  </tbody>
+                                </table>
+                              </div>
+                              <footer class="panel-footer">
+                                <div class="row">
+                                  <div class="col-sm-8 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small></div>
+                                  <div class="col-sm-4 text-right text-center-xs">
+                                    <ul class="pagination pagination-sm m-t-none m-b-none">
+                                      <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                      <li><a href="#">1</a></li>
+                                      <li><a href="#">2</a></li>
+                                      <li><a href="#">3</a></li>
+                                      <li><a href="#">4</a></li>
+                                      <li><a href="#">5</a></li>
+                                      <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                    </ul>
                                   </div>
+                                </div>
+                              </footer>
+                            </section>
+                          </div>
                         </div>
                       </div>
                     </div>
