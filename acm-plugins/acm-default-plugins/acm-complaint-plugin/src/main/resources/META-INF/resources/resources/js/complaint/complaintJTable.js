@@ -1,6 +1,4 @@
-/**
- * Created by manoj.dhungana on 10/1/2014.
- */
+
 /**
  * Complaint.JTable
  *
@@ -287,7 +285,12 @@ Complaint.JTable = {
     ,_openInitiatorDevices: function($t, $row) {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
-                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES, sorting: true, actions: {
+                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
+                ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Device'
+                }
+                ,actions: {
                     listAction: function (postData, jtParams) {
                         var index = $row.closest('tr');
                         var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -430,7 +433,12 @@ Complaint.JTable = {
     ,_openInitiatorOrganizations: function($t, $row) {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
-                title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS, sorting: true, actions: {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
+                ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Organization'
+                }
+                ,actions: {
                     listAction: function (postData, jtParams) {
                         var index = $row.closest('tr');
                         var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -575,7 +583,12 @@ Complaint.JTable = {
     ,_openInitiatorLocations: function($t, $row) {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
-                title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS, sorting: true, actions: {
+                title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
+                ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Location'
+                }
+                ,actions: {
                     listAction: function (postData, jtParams) {
                         var index = $row.closest('tr');
                         var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -751,7 +764,12 @@ Complaint.JTable = {
     ,_openInitiatorAliases: function($jt, $row) {
         $jt.jtable('openChildTable', $row.closest('tr')
             , {
-                title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES, sorting: true, actions: {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
+                ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Alias'
+                }
+                ,actions: {
                     listAction: function (postData, jtParams) {
                         var index = $row.closest('tr');
                         var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -958,6 +976,9 @@ Complaint.JTable = {
         this._createJTable4SubTablePeople($s, {
             title: 'People'
             ,paging: false
+            ,messages: {
+                addNewRecord: 'Add Person'
+            }
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -1140,6 +1161,9 @@ Complaint.JTable = {
             ,{
                 title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
                 ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Device'
+                }
                 ,actions: {
                     listAction: function(postData, jtParams) {
                         var recordParent = $row.closest('tr').data('record');
@@ -1362,6 +1386,9 @@ Complaint.JTable = {
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
                 ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Organization'
+                }
                 ,actions: {
                 listAction: function (postData, jtParams) {
                     var recordParent = $row.closest('tr').data('record');
@@ -1573,6 +1600,9 @@ Complaint.JTable = {
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
                 ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Location'
+                }
                 ,actions: {
                 listAction: function(postData, jtParams) {
                     var recordParent = $row.closest('tr').data('record');
@@ -1816,6 +1846,9 @@ Complaint.JTable = {
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
                 ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Alias'
+                }
                 ,actions: {
                 listAction: function(postData, jtParams) {
                     var recordParent = $row.closest('tr').data('record');
@@ -2034,6 +2067,9 @@ Complaint.JTable = {
         $s.jtable({
             title: 'Documents'
             ,paging: false
+            ,messages: {
+                addNewRecord: 'Add Document'
+            }
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -2156,7 +2192,9 @@ Complaint.JTable = {
                 ,selecting: true
                 ,multiselect: false
                 ,selectingCheckboxes: false
-
+                ,messages: {
+                    addNewRecord: 'Add Task'
+                }
                 ,actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
                         return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
@@ -2353,6 +2391,9 @@ Complaint.JTable = {
         $s.jtable({
             title: 'Notes'
             ,paging: false
+            ,messages: {
+                addNewRecord: 'Add Note'
+            }
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -2375,6 +2416,10 @@ Complaint.JTable = {
                         }
                     }
                     return rc;
+                }
+                ,formCreated: function(event, data)
+                {
+
                 }
                 ,createAction: function(postData, jtParams) {
                     var record = Acm.urlToJson(postData);
