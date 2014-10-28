@@ -5,7 +5,6 @@ import com.armedia.acm.data.AcmObjectChangelist;
 import com.armedia.acm.services.search.model.AcmObjectTypeOne;
 import com.armedia.acm.services.search.model.AcmObjectTypeOneSolrConverter;
 import com.armedia.acm.services.search.model.AcmObjectTypeTwo;
-import com.armedia.acm.services.search.model.solr.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;

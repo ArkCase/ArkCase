@@ -1,7 +1,8 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.services.search.model.solr.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
@@ -11,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.PersistenceException;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by armdev on 10/28/14.
@@ -18,7 +21,15 @@ import javax.persistence.PersistenceException;
 public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer<Complaint>
 {
     private UserDao userDao;
+    private ComplaintDao complaintDao;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Override
+    public List<Complaint> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        return getComplaintDao().findModifiedSince(lastModified, start, pageSize);
+    }
 
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Complaint in)
@@ -138,5 +149,15 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public ComplaintDao getComplaintDao()
+    {
+        return complaintDao;
+    }
+
+    public void setComplaintDao(ComplaintDao complaintDao)
+    {
+        this.complaintDao = complaintDao;
     }
 }
