@@ -1,6 +1,7 @@
 package com.armedia.acm.services.search.model.solr;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SolrDocument implements SolrBaseDocument {
@@ -9,8 +10,8 @@ public class SolrDocument implements SolrBaseDocument {
     private String author;
     private String author_s;
     private String modifier_s;
-    private String last_modified;
-    private String create_dt;
+    private Date last_modified;
+    private Date create_dt;
     private String title_t;
     private String name;
     private String object_id_s;
@@ -18,7 +19,6 @@ public class SolrDocument implements SolrBaseDocument {
     private String object_type_s;
     private String assignee_s;
     private Long priority_i;
-    private List<SolrBaseDocument> _childDocuments_ = new ArrayList<>();
     
     private List<String> deny_acl_ss;
     private List<String> allow_acl_ss;
@@ -56,16 +56,16 @@ public class SolrDocument implements SolrBaseDocument {
     public void setModifier_s(String modifier_s) {
         this.modifier_s = modifier_s;
     }
-    public String getLast_modified() {
+    public Date getLast_modified() {
         return last_modified;
     }
-    public void setLast_modified(String last_modified) {
+    public void setLast_modified(Date last_modified) {
         this.last_modified = last_modified;
     }
-    public String getCreate_dt() {
+    public Date getCreate_dt() {
         return create_dt;
     }
-    public void setCreate_dt(String create_dt) {
+    public void setCreate_dt(Date create_dt) {
         this.create_dt = create_dt;
     }
     public String getTitle_t() {
@@ -121,16 +121,6 @@ public class SolrDocument implements SolrBaseDocument {
     }
     public void setAllow_acl_ss(List<String> allow_acl_ss) {
         this.allow_acl_ss = allow_acl_ss;
-    }
-
-    public List<SolrBaseDocument> get_childDocuments_()
-    {
-        return _childDocuments_;
-    }
-
-    public void set_childDocuments_(List<SolrBaseDocument> _childDocuments_)
-    {
-        this._childDocuments_ = _childDocuments_;
     }
 
     @Override
