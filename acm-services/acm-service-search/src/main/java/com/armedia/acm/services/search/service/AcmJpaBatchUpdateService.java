@@ -3,9 +3,6 @@ package com.armedia.acm.services.search.service;
 import com.armedia.acm.data.AcmObjectChangelist;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.spring.SpringContextHolder;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +13,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by armdev on 10/28/14.
@@ -65,22 +61,12 @@ public class AcmJpaBatchUpdateService
 
         try
         {
-            Date sinceWhen = solrDateFormat.parse(lastRunDate);
-
-            // back up one minute just to be sure we get everything
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(sinceWhen);
-            cal.set(Calendar.MINUTE, cal.get(Calendar.MINUTE) - 1);
-            sinceWhen = cal.getTime();
-
-            // store the current time as the last run date to use the next time this job runs.  This allows us to
-            // scan only for objects updated since this date.
-            String solrNow = solrDateFormat.format(new Date());
-            getPropertyFileManager().store(SOLR_LAST_RUN_DATE_PROPERTY_KEY, solrNow, getLastBatchUpdatePropertyFileLocation());
+            Date lastBatchRunDate = getLastBatchRunDate(lastRunDate, solrDateFormat);
+            storeCurrentDateForNextBatchRun(solrDateFormat);
 
             if ( log.isDebugEnabled() )
             {
-                log.debug("Checking for objects modified since: " + sinceWhen);
+                log.debug("Checking for objects modified since: " + lastBatchRunDate);
             }
 
             Collection<? extends AcmObjectToSolrDocTransformer> transformers =
@@ -92,7 +78,7 @@ public class AcmJpaBatchUpdateService
 
             for (AcmObjectToSolrDocTransformer transformer : transformers)
             {
-                raiseUpdateEvents(sinceWhen, transformer);
+                sendUpdatedObjectsToSolr(lastBatchRunDate, transformer);
             }
         }
         catch (ParseException e)
@@ -101,7 +87,27 @@ public class AcmJpaBatchUpdateService
         }
     }
 
-    private void raiseUpdateEvents(Date lastUpdate, AcmObjectToSolrDocTransformer transformer)
+    private void storeCurrentDateForNextBatchRun(DateFormat solrDateFormat)
+    {
+        // store the current time as the last run date to use the next time this job runs.  This allows us to
+        // scan only for objects updated since this date.
+        String solrNow = solrDateFormat.format(new Date());
+        getPropertyFileManager().store(SOLR_LAST_RUN_DATE_PROPERTY_KEY, solrNow, getLastBatchUpdatePropertyFileLocation());
+    }
+
+    private Date getLastBatchRunDate(String lastRunDate, DateFormat solrDateFormat) throws ParseException
+    {
+        Date sinceWhen = solrDateFormat.parse(lastRunDate);
+
+        // back up one minute just to be sure we get everything
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(sinceWhen);
+        cal.set(Calendar.MINUTE, cal.get(Calendar.MINUTE) - 1);
+        sinceWhen = cal.getTime();
+        return sinceWhen;
+    }
+
+    private void sendUpdatedObjectsToSolr(Date lastUpdate, AcmObjectToSolrDocTransformer transformer)
     {
         boolean debug = log.isDebugEnabled();
 
