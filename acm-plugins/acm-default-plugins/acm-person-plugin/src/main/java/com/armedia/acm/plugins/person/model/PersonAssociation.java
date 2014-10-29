@@ -38,8 +38,10 @@ public class PersonAssociation implements Serializable
     @Column(name = "cm_person_assoc_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-   
-    @ManyToOne( cascade = CascadeType.ALL, optional = false)
+
+    /*@ManyToOne( cascade = CascadeType.ALL, optional = false)*/
+
+    @ManyToOne(cascade = { CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     @JoinColumn(name="cm_person_assoc_person_id", nullable = false) 
     private Person person;
     

@@ -108,6 +108,9 @@ public class PersonAssociationIT
         }
                 
         assertNotNull(saved.getId());
+
+        personAssocDao.deletePersonAssociationById(saved.getId());
+
         em.flush();
         
     }

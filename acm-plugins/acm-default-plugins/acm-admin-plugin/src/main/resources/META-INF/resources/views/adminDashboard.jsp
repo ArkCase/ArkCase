@@ -32,7 +32,6 @@
 
         <script type="text/javascript" src="<c:url value='/'/>resources/js/admin/dashboard/angular/dashboardConfigServices.js"></script>
         <script type="text/javascript" src="<c:url value='/'/>resources/js/admin/dashboard/angular/dashboardConfig.js"></script>
-        <script type="text/javascript" src="<c:url value='/'/>resources/js/admin/dashboard/angular/dashboardObject.js"></script>
 
         <%--Fancy Tree--%>
         <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">

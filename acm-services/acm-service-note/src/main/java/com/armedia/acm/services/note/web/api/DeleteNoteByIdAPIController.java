@@ -42,7 +42,7 @@ public class DeleteNoteByIdAPIController {
 
                 objectToReturnJSON.put("deletedNoteId", id);
 
-                String objectToReturn = "{\"deletedNoteId\":" + id + "}";
+                String objectToReturn;
                 objectToReturn = objectToReturnJSON.toString();
 
                 return objectToReturn;
