@@ -1,10 +1,7 @@
 package com.armedia.acm.services.users.dao.ldap;
 
 
-import com.armedia.acm.services.users.model.AcmRole;
-import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserRole;
-import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
+import com.armedia.acm.services.users.model.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +35,13 @@ public class UserDao
 
         List<AcmRole> retval = roleQuery.getResultList();
 
+        return retval;
+    }
+
+    public List<AcmRole> findAllRolesByRoleType(RoleType roleType) {
+        Query roleQuery = getEntityManager().createQuery("SELECT role FROM AcmRole role WHERE role.roleType= :roleType");
+        roleQuery.setParameter("roleType",roleType.getRoleName());
+        List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
 
@@ -149,7 +153,6 @@ public class UserDao
 
     public AcmUser saveAcmUser(AcmUser user)
     {
-
         AcmUser existing = getEntityManager().find(AcmUser.class, user.getUserId());
         if ( existing == null )
         {
