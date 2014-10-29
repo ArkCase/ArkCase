@@ -1,8 +1,11 @@
 package com.armedia.acm.services.search.model;
 
-import com.armedia.acm.services.search.model.solr.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by armdev on 10/23/14.
@@ -12,6 +15,12 @@ public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransfor
     private int handledObjectsCount = 0;
 
     private int handledQuickSearchCount = 0;
+
+    @Override
+    public List<AcmObjectTypeOne> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        return null;
+    }
 
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmObjectTypeOne in)

@@ -106,6 +106,11 @@
     <bean id="saveComplaintTransaction" class="com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction">
         <property name="muleClient" ref="muleClient"/>
     </bean>
+
+    <bean id="complaintToSolrTransformer" class="com.armedia.acm.plugins.complaint.service.ComplaintToSolrTransformer">
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="complaintDao" ref="acmComplaintDao"/>
+    </bean>
     
     <bean id="complaintPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Complaint Plugin"/>

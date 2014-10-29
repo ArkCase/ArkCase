@@ -1,15 +1,27 @@
 package com.armedia.acm.plugins.addressable.service;
 
+import com.armedia.acm.plugins.addressable.dao.PostalAddressDao;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.services.search.model.solr.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by armdev on 10/27/14.
  */
 public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransformer<PostalAddress>
 {
+    private PostalAddressDao postalAddressDao;
+
+    @Override
+    public List<PostalAddress> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        return getPostalAddressDao().findModifiedSince(lastModified, start, pageSize);
+    }
+
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(PostalAddress address)
     {
@@ -65,5 +77,15 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
         boolean isSupported = objectNotNull && classNames;
 
         return isSupported;
+    }
+
+    public PostalAddressDao getPostalAddressDao()
+    {
+        return postalAddressDao;
+    }
+
+    public void setPostalAddressDao(PostalAddressDao postalAddressDao)
+    {
+        this.postalAddressDao = postalAddressDao;
     }
 }
