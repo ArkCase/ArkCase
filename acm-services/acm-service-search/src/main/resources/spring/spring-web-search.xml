@@ -18,5 +18,10 @@
         <property name="searchEventPublisher" ref="acmSearchEventPublisher" />
     </bean>
 
+    <bean id="personSearchByNameAndContactMethodAPIController"
+          class="com.armedia.acm.services.search.web.api.PersonSearchByNameAndContactMethodAPIController">
+        <property name="muleClient" ref="muleClient"/>
+    </bean>
+
 </beans>
 
