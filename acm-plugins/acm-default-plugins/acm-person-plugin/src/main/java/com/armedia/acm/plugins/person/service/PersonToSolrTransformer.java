@@ -2,15 +2,17 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.services.search.model.solr.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +21,14 @@ import java.util.List;
 public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Person>
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private PersonDao personDao;
+
+
+    @Override
+    public List<Person> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        return getPersonDao().findModifiedSince(lastModified, start, pageSize);
+    }
 
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Person person)
@@ -110,5 +120,15 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         log.debug("Incoming: " + acmObjectType.getName() + "; do we handle it? " + isSupported);
 
         return isSupported;
+    }
+
+    public PersonDao getPersonDao()
+    {
+        return personDao;
+    }
+
+    public void setPersonDao(PersonDao personDao)
+    {
+        this.personDao = personDao;
     }
 }

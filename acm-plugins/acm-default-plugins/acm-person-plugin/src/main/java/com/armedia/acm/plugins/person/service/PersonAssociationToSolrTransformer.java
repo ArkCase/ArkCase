@@ -1,11 +1,15 @@
 package com.armedia.acm.plugins.person.service;
 
+import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.services.search.model.solr.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by armdev on 10/23/14.
@@ -13,6 +17,14 @@ import org.slf4j.LoggerFactory;
 public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTransformer<PersonAssociation>
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private PersonAssociationDao personAssociationDao;
+
+
+    @Override
+    public List<PersonAssociation> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        return getPersonAssociationDao().findModifiedSince(lastModified, start, pageSize);
+    }
 
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(PersonAssociation personAssociation)
@@ -60,5 +72,15 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         log.debug("Incoming: " + acmObjectType.getName() + "; do we handle it? " + isSupported);
 
         return isSupported;
+    }
+
+    public PersonAssociationDao getPersonAssociationDao()
+    {
+        return personAssociationDao;
+    }
+
+    public void setPersonAssociationDao(PersonAssociationDao personAssociationDao)
+    {
+        this.personAssociationDao = personAssociationDao;
     }
 }

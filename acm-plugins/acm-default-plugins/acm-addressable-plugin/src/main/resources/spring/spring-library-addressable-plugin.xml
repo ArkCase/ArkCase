@@ -3,9 +3,16 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
+    <bean id="contactMethodDao" class="com.armedia.acm.plugins.addressable.dao.ContactMethodDao"/>
+    <bean id="postalAddressDao" class="com.armedia.acm.plugins.addressable.dao.PostalAddressDao"/>
+
     <bean id="contactMethodToSolrTransformer"
-          class="com.armedia.acm.plugins.addressable.service.ContactMethodToSolrTransformer"/>
+          class="com.armedia.acm.plugins.addressable.service.ContactMethodToSolrTransformer">
+        <property name="contactMethodDao" ref="contactMethodDao"/>
+    </bean>
 
     <bean id="postalAddressToSolrTransformer"
-          class="com.armedia.acm.plugins.addressable.service.PostalAddressToSolrTransformer"/>
+          class="com.armedia.acm.plugins.addressable.service.PostalAddressToSolrTransformer">
+        <property name="postalAddressDao" ref="postalAddressDao"/>
+    </bean>
 </beans>

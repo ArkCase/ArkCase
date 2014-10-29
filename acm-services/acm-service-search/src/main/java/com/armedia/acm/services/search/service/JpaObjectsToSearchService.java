@@ -2,7 +2,6 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.data.AcmDatabaseChangesEvent;
 import com.armedia.acm.data.AcmObjectChangelist;
-import com.armedia.acm.services.search.model.solr.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
