@@ -238,7 +238,7 @@ Complaint.JTable = {
                 }
                 ,personType: {
                     title: 'Type'
-                    ,options: Complaint.getPersonTypes()
+                    ,edit: false
                 }
                 ,personDescription: {
                     title: 'Description'
@@ -268,7 +268,6 @@ Complaint.JTable = {
                     Complaint.JTable._updatePersonAssociation(complaint);
 
                     Complaint.Service.saveComplaint(complaint);
-                    Complaint.Object.refreshJTablePeople();
                 }
             }
             ,formCreated: function (event, data) {
@@ -981,26 +980,13 @@ Complaint.JTable = {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var complaint = Complaint.getComplaint();
-                    if(complaint){
+                    if(complaint && complaint.originator){
                         if(complaint.personAssociations){
                             var personAssociations = complaint.personAssociations;
                             var cnt = personAssociations.length;
                             for (var i = 0; i < cnt; i++) {
-                                var person = personAssociations[i].person;
-                                /*if(!complaint.originator)
-                                {
-                                    if(personAssociations[i].personType != 'Initiator'){
-                                        rc.Records.push({
-                                            personId: person.id
-                                            ,title: person.title
-                                            ,givenName: person.givenName
-                                            ,familyName: person.familyName
-                                            ,personType: personAssociations[i].personType
-                                            ,personDescription: personAssociations[i].personDescription
-                                        });
-                                    }
-                                }
-                                else{*/
+                                if(personAssociations[i].id != complaint.originator.id){
+                                    var person = personAssociations[i].person;
                                     rc.Records.push({
                                         personId: person.id
                                         ,title: person.title
@@ -1009,7 +995,7 @@ Complaint.JTable = {
                                         ,personType: personAssociations[i].personType
                                         ,personDescription: personAssociations[i].personDescription
                                     });
-                                //}
+                                }
                             }
                         }
                     }
@@ -1075,7 +1061,7 @@ Complaint.JTable = {
                 ,personType: {
                     title: 'Type'
                     //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
-                    ,options: Complaint.getPersonTypes()
+                    ,options: Complaint.getPersonTypesModifiable()
                 }
                 ,personDescription: {
                     title: 'Description'
@@ -1115,9 +1101,6 @@ Complaint.JTable = {
                             person.title = record.title;
                             person.givenName = record.givenName;
                             person.familyName = record.familyName;
-                            //check if originator needs to be updated
-                            Complaint.JTable._updateOriginatorRecord(personAssociations[whichRow],complaint);
-
                             Complaint.Service.saveComplaint(complaint);
                         }
                     }
@@ -1176,7 +1159,11 @@ Complaint.JTable = {
                                             var cnt = contactMethods.length;
                                             for (var i = 0; i < cnt; i++) {
                                                 rc.Records.push({
-                                                    personId: person.id, type: contactMethods[i].type, value: Acm.goodValue(contactMethods[i].value), created: Acm.getDateFromDatetime(contactMethods[i].created), creator: contactMethods[i].creator
+                                                    personId: person.id,
+                                                    type: contactMethods[i].type,
+                                                    value: Acm.goodValue(contactMethods[i].value),
+                                                    created: Acm.getDateFromDatetime(contactMethods[i].created),
+                                                    creator: contactMethods[i].creator
                                                 });
                                             }
                                         }
@@ -1271,10 +1258,6 @@ Complaint.JTable = {
                                         contactMethod.type = record.type;
                                         contactMethod.value = Acm.goodValue(record.value);
                                         contactMethods.push(contactMethod);
-
-                                        //check if originator needs to be updated
-                                        Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                         Complaint.Service.saveComplaint(complaint);
                                     }
                                 }
@@ -1299,10 +1282,6 @@ Complaint.JTable = {
                                         var contactMethod = contactMethods[whichRow];
                                         contactMethod.type = record.type;
                                         contactMethod.value = Acm.goodValue(record.value);
-
-                                        //check if originator needs to be updated
-                                        Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                         Complaint.Service.saveComplaint(complaint);
                                     }
                                 }
@@ -1324,10 +1303,6 @@ Complaint.JTable = {
                                     if (person.contactMethods) {
                                         var contactMethods = person.contactMethods;
                                         contactMethods.splice(whichRow, 1);
-
-                                        //check if originator needs to be updated
-                                        Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                         Complaint.Service.saveComplaint(complaint);
                                     }
                                 }
@@ -1489,10 +1464,6 @@ Complaint.JTable = {
                                     organization.organizationType = record.type;
                                     organization.organizationValue = Acm.goodValue(record.value);
                                     organizations.push(organization);
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -1518,10 +1489,6 @@ Complaint.JTable = {
                                     var organization = organizations[whichRow];
                                     organization.organizationType = record.type;
                                     organization.organizationValue = Acm.goodValue(record.value);
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -1544,10 +1511,6 @@ Complaint.JTable = {
                                 if (person.organizations) {
                                     var organizations = person.organizations;
                                     organizations.splice(whichRow, 1);
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -1588,10 +1551,19 @@ Complaint.JTable = {
                                     if (person.addresses) {
                                         var addresses = person.addresses;
                                         var cnt = addresses.length;
-                                        for (var i = 0; i < cnt; i++) {
-                                            rc.Records.push({
-                                                personId: person.id, type: addresses[i].type, streetAddress: addresses[i].streetAddress, city: addresses[i].city, state: addresses[i].state, zip: Acm.goodValue(addresses[i].zip), created: Acm.getDateFromDatetime(addresses[i].created), creator: addresses[i].creator
-                                            });
+                                        if(cnt > 0) {
+                                            for (var i = 0; i < cnt; i++) {
+                                                rc.Records.push({
+                                                    personId: person.id,
+                                                    type: addresses[i].type,
+                                                    streetAddress: addresses[i].streetAddress,
+                                                    city: addresses[i].city,
+                                                    state: addresses[i].state,
+                                                    zip: Acm.goodValue(addresses[i].zip),
+                                                    created: Acm.getDateFromDatetime(addresses[i].created),
+                                                    creator: addresses[i].creator
+                                                });
+                                            }
                                         }
                                     }
                                 }
@@ -1731,10 +1703,6 @@ Complaint.JTable = {
                                     address.state = record.state;
                                     address.zip = record.zip;
                                     addresses.push(address);
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -1763,10 +1731,6 @@ Complaint.JTable = {
                                     address.city = record.city;
                                     address.state = record.state;
                                     address.zip = record.zip;
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -1789,10 +1753,6 @@ Complaint.JTable = {
                                 if (person.addresses) {
                                     var addresses = person.addresses;
                                     addresses.splice(whichRow, 1);
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -1833,10 +1793,17 @@ Complaint.JTable = {
                                     if (person.personAliases) {
                                         var personAliases = person.personAliases;
                                         var cnt = personAliases.length;
-                                        for (var i = 0; i < cnt; i++) {
-                                            rc.Records.push({
-                                                personId: person.id, type: personAliases[i].aliasType, value: Acm.goodValue(personAliases[i].aliasValue), created: Acm.getDateFromDatetime(personAliases[i].created), creator: personAliases[i].creator
-                                            });
+                                        if(cnt > 0)
+                                        {
+                                            for (var i = 0; i < cnt; i++) {
+                                                rc.Records.push({
+                                                    personId: person.id,
+                                                    type: personAliases[i].aliasType,
+                                                    value: Acm.goodValue(personAliases[i].aliasValue),
+                                                    created: Acm.getDateFromDatetime(personAliases[i].created),
+                                                    creator: personAliases[i].creator
+                                                });
+                                            }
                                         }
                                     }
                                 }
@@ -1951,10 +1918,6 @@ Complaint.JTable = {
                                     personAlias.aliasType = record.type;
                                     personAlias.aliasValue = Acm.goodValue(record.value);
                                     personAliases.push(personAlias);
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -1980,10 +1943,6 @@ Complaint.JTable = {
                                     var personAlias = personAliases[whichRow];
                                     personAlias.aliasType = record.type;
                                     personAlias.aliasValue = Acm.goodValue(record.value);
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                     Complaint.Service.saveComplaint(complaint);
                                 }
                             }
@@ -2006,10 +1965,6 @@ Complaint.JTable = {
                                 if (person.personAliases) {
                                     var personAliases = person.personAliases;
                                     personAliases.splice(whichRow, 1);
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
                                     Complaint.Service.saveComplaint(complaint);
 
                                 }
@@ -2404,6 +2359,19 @@ Complaint.JTable = {
                     }
                     return rc;
                 }
+                ,updateAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    var complaint = Complaint.getComplaint();
+                    if(complaint){
+                        rc.Record.parentId = Acm.goodValue(complaint.complaintId);
+                        rc.Record.parentType = App.OBJTYPE_COMPLAINT;
+                        rc.Record.note = record.note;
+                        rc.Record.created = Acm.getCurrentDay(); //record.created;
+                        rc.Record.creator = App.getUserName();   //record.creator;
+                    }
+                    return rc;
+                }
                 ,deleteAction: function(postData, jtParams) {
                     return {
                         "Result": "OK"
@@ -2423,7 +2391,7 @@ Complaint.JTable = {
                     title: 'Note'
                     ,type: 'textarea'
                     ,width: '50%'
-                    ,edit: false
+                    ,edit: true
                 }
                 ,created: {
                     title: 'Created'
@@ -2443,13 +2411,29 @@ Complaint.JTable = {
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
                     var noteToSave = {};
-                    noteToSave.id = record.id;
+                    //noteToSave.id = record.id;
                     noteToSave.note = record.note;
                     noteToSave.created = Acm.getCurrentDayInternal(); //record.created;
                     noteToSave.creator = record.creator;   //record.creator;
                     noteToSave.parentId = complaint.complaintId;
                     noteToSave.parentType = App.OBJTYPE_COMPLAINT;
                     Complaint.Service.saveNote(noteToSave);
+                }
+            }
+            ,recordUpdated: function(event,data){
+                var whichRow = data.row.prevAll("tr").length;
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if(complaint){
+                    var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
+                    if (notes) {
+                        if(notes[whichRow]){
+                            var noteToSave;
+                            noteToSave = notes[whichRow];
+                            noteToSave.note = record.note;
+                            Complaint.Service.saveNote(noteToSave);
+                        }
+                    }
                 }
             }
             ,recordDeleted : function (event, data) {

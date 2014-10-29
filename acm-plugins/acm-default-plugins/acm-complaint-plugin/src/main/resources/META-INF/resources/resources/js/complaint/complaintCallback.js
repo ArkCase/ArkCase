@@ -141,11 +141,6 @@ Complaint.Callback = {
             var complaint = Complaint.cacheComplaint.get(complaintId);
             if(complaint && complaint.personAssociations){
                 complaint.personAssociations.push(response);
-                if(response.personType == 'Initiator'){
-                    var currentPerson = response;
-                    complaint.originator = currentPerson;
-                    Complaint.Object.refreshJTableInitiator();
-                }
                 Complaint.cacheComplaint.put(complaintId, complaint);
             }
         }
@@ -165,13 +160,7 @@ Complaint.Callback = {
                 for(var i = 0; i < oldPersonAssociationList.length; i++)
                 {
                     if(oldPersonAssociationList[i].id == deletedPersonAssociationId){
-                        if(oldPersonAssociationList[i].personType == 'Initiator'){
-                            complaint.personAssociations.splice(i, 1);
-                            complaint.originator = null;
-                            Complaint.Object.refreshJTableInitiator();
-                        }else{
-                            complaint.personAssociations.splice(i, 1);
-                        }
+                        complaint.personAssociations.splice(i, 1);
                         Complaint.cacheComplaint.put(complaintId, complaint);
                     }
                 }
@@ -186,9 +175,20 @@ Complaint.Callback = {
             //next refresh will update the cache anyway
             var complaintId = Complaint.getComplaintId();
             var oldNotesList = Complaint.cacheNoteList.get(complaintId);
+            var updatedNotesList = {};
+            var isNew = true;
             if(oldNotesList){
-                var updatedNotesList = oldNotesList;
-                updatedNotesList.push(response);
+                for(var i = 0; i < oldNotesList.length; i++){
+                    if(response.id == oldNotesList[i].id){
+                        oldNotesList[i] = response;
+                        updatedNotesList = oldNotesList;
+                        isNew = false;
+                    }
+                }
+                if(isNew == true){
+                    updatedNotesList = oldNotesList;
+                    updatedNotesList.push(response);
+                }
                 Complaint.cacheNoteList.put(complaintId, updatedNotesList);
             }
         }
