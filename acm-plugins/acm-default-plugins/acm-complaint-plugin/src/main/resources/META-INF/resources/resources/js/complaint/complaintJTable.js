@@ -1134,6 +1134,7 @@ Complaint.JTable = {
                     addNewRecord: 'Add Device'
                 }, actions: {
                     listAction: function (postData, jtParams) {
+                        var rc = AcmEx.Object.jTableGetEmptyRecords();
                         var recordParent = $row.closest('tr').data('record');
                         if (recordParent && recordParent.personId) {
                             var personId = recordParent.personId;
@@ -1146,7 +1147,6 @@ Complaint.JTable = {
 //                            .closest('tr') // closest tr parent element
 //                            .prevAll() // all sibling elements in front of it
 //                            .length; // find their count
-                            var rc = AcmEx.Object.jTableGetEmptyRecords();
                             var complaint = Complaint.getComplaint();
                             if (complaint) {
                                 if (complaint.personAssociations) {
@@ -1173,11 +1173,11 @@ Complaint.JTable = {
                         }
                         return rc;
                     }, createAction: function (postData, jtParams) {
+                        var rc = AcmEx.Object.jTableGetEmptyRecord();
                         var recordParent = $row.closest('tr').data('record');
                         if (recordParent && recordParent.personId) {
                             var personId = recordParent.personId;
                             var record = Acm.urlToJson(postData);
-                            var rc = AcmEx.Object.jTableGetEmptyRecord();
                             var complaint = Complaint.getComplaint();
                             if (complaint) {
                                 if (complaint.personAssociations) {
@@ -1196,11 +1196,11 @@ Complaint.JTable = {
                         }
                         return rc;
                     }, updateAction: function (postData, jtParams) {
+                        var rc = AcmEx.Object.jTableGetEmptyRecord();
                         var recordParent = $row.closest('tr').data('record');
                         if (recordParent && recordParent.personId) {
                             var personId = recordParent.personId;
                             var record = Acm.urlToJson(postData);
-                            var rc = AcmEx.Object.jTableGetEmptyRecord();
                             var complaint = Complaint.getComplaint();
                             if (complaint) {
                                 if (complaint.personAssociations) {
@@ -1243,7 +1243,6 @@ Complaint.JTable = {
                     var recordParent = $row.closest('tr').data('record');
                     if (recordParent && recordParent.personId) {
                         var personId = recordParent.personId;
-
                         var record = data.record;
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
@@ -1329,10 +1328,10 @@ Complaint.JTable = {
                 }
                 ,actions: {
                 listAction: function (postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var recordParent = $row.closest('tr').data('record');
                     if (recordParent && recordParent.personId) {
                         var personId = recordParent.personId;
-                        var rc = AcmEx.Object.jTableGetEmptyRecords();
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
                             if (complaint.personAssociations) {
@@ -1360,11 +1359,11 @@ Complaint.JTable = {
                     return rc;
                 }
                 , createAction: function (postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var recordParent = $row.closest('tr').data('record');
                     if (recordParent && recordParent.personId) {
                         var personId = recordParent.personId;
                         var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
                             if (complaint.personAssociations) {
@@ -1384,11 +1383,11 @@ Complaint.JTable = {
                     return rc;
                 }
                 , updateAction: function (postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var recordParent = $row.closest('tr').data('record');
                     if (recordParent && recordParent.personId) {
                         var personId = recordParent.personId;
                         var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
                             if (complaint.personAssociations) {
@@ -1537,10 +1536,10 @@ Complaint.JTable = {
                 }
                 ,actions: {
                 listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var recordParent = $row.closest('tr').data('record');
                     if (recordParent && recordParent.personId) {
                         var personId = recordParent.personId;
-                        var rc = AcmEx.Object.jTableGetEmptyRecords();
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
                             if (complaint.personAssociations) {
@@ -1573,11 +1572,11 @@ Complaint.JTable = {
                     return rc;
                 }
                 ,createAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var recordParent = $row.closest('tr').data('record');
                     if (recordParent && recordParent.personId) {
                         var personId = recordParent.personId;
                         var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
                             if (complaint.personAssociations) {
@@ -1600,11 +1599,11 @@ Complaint.JTable = {
                     return rc;
                 }
                 ,updateAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var recordParent = $row.closest('tr').data('record');
                     if (recordParent && recordParent.personId) {
                         var personId = recordParent.personId;
                         var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
                             if (complaint.personAssociations) {
@@ -1779,10 +1778,10 @@ Complaint.JTable = {
                 }
                 ,actions: {
                 listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var recordParent = $row.closest('tr').data('record');
                     if (recordParent && recordParent.personId) {
                         var personId = recordParent.personId;
-                        var rc = AcmEx.Object.jTableGetEmptyRecords();
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
                             if (complaint.personAssociations) {
@@ -1813,11 +1812,11 @@ Complaint.JTable = {
                     return rc;
                 }
                 ,createAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var recordParent = $row.closest('tr').data('record');
                     if (recordParent && recordParent.personId) {
                         var personId = recordParent.personId;
                         var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
                             //var assocId = complaint.originator.id;
@@ -1838,11 +1837,11 @@ Complaint.JTable = {
                     return rc;
                 }
                 ,updateAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var recordParent = $row.closest('tr').data('record');
                     if (recordParent && recordParent.personId) {
                         var personId = recordParent.personId;
                         var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.jTableGetEmptyRecord();
                         var complaint = Complaint.getComplaint();
                         if (complaint) {
                             if (complaint.personAssociations) {
