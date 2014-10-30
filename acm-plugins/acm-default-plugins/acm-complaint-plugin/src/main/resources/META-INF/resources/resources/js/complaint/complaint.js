@@ -57,6 +57,10 @@ var Complaint = Complaint || {
     ,getPersonTypes : function() {
         return this._personTypes;
     }
+    ,_personTypesModifiable : ['Complaintant','Subject','Witness','Wrongdoer','Other']
+    ,getPersonTypesModifiable : function() {
+        return this._personTypesModifiable;
+    }
 
     ,_personTitles : ['Mr', 'Mrs', 'Ms', 'Miss']
     ,getPersonTitles : function() {

@@ -3,6 +3,8 @@ package com.armedia.acm.plugins.person.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -59,6 +61,20 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         Person found = (Person) personInAssociation.getSingleResult();
 
         return found;
+    }
+
+    @Transactional
+    public void deletePersonAssociationById(Long id)
+    {
+        Query queryToDelete = getEntityManager().createQuery(
+                "SELECT personAssociation " +"FROM  PersonAssociation personAssociation " +
+                        "WHERE personAssociation.id = :personAssociationId ");
+
+        queryToDelete.setParameter("personAssociationId", id);
+
+        PersonAssociation personAssociationToBeDeleted = (PersonAssociation) queryToDelete.getSingleResult();
+        entityManager.remove(personAssociationToBeDeleted);
+
     }
 }
 

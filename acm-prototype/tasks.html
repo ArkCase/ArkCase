@@ -14,7 +14,11 @@
     <script src="js/ie/html5shiv.js"></script>
     <script src="js/ie/respond.min.js"></script>
     <script src="js/ie/excanvas.js"></script>
-  <![endif]-->
+<![endif]-->
+<script src="resources/js/jquery.min.js"></script>
+<script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="resources/js/fancytree/jquery.fancytree.js"></script>
+<link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
 </head>
 <body class="">
 <section class="vbox">
@@ -22,37 +26,17 @@
     <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
     <ul class="nav navbar-nav hidden-xs">
       <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
-        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">   <div class="row m-l-none m-r-none m-t m-b text-center">
-              <div class="col-xs-4">
-                <div class="padder-v2">
-                  <a href="newComplaint.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-notice i-2x text-primary-lt"></i>
-                    </span>
-                    <small class="text-muted">Complaint</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-4">
-                <div class="padder-v2">
-                  <a href="newCase.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-folder i-2x text-danger-lt"></i>
-                    </span>
-                    <small class="text-muted">Case</small>
-                  </a>
-                </div>
-              </div>
-              <div class="col-xs-4">
-                <div class="padder-v2">
-                  <a href="newTask.html">
-                    <span class="m-b-xs block">
-                      <i class="i i-checkmark i-2x text-success-lt"></i>
-                    </span>
-                    <small class="text-muted">Task</small>
-                  </a>
-                </div>
-              </div>
+        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
+          <div class="row m-l-none m-r-none m-t m-b text-center">
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newComplaint.html"> <span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>
+            </div>
           </div>
         </section>
       </li>
@@ -90,7 +74,6 @@
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
-                    
                     <li class="divider"></li>
                     <li> <a href="index.html">Logout</a> </li>
                   </ul>
@@ -109,10 +92,10 @@
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
-<li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
+                  <li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
-</nav>
+              </nav>
               <!-- / nav --> 
             </div>
           </section>
@@ -125,23 +108,23 @@
           <section class="scrollable">
             <section class="hbox stretch">
               <aside class="aside-lg" id="email-list">
-                <section class="vbox">
-                  <header class="dker header clearfix">
-                    <h3 class="m-b-xs text-black pull-left">Tasks</h3>
-                    <div class="btn-toolbar">
+                <section class="vbox animated fadeInLeft">
+                  <section class="scrollable">
+                    <header class="dk header">
+                      <h3 class="m-b-xs text-black pull-left">Tasks</h3>
                       <div class="btn-group inline select pull-right">
-                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
+                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span></button>
                         <ul class="dropdown-menu text-left text-sm">
                           <li><a href="#">Sort Date Ascending</a></li>
                           <li><a href="#">Sort Date Descending</a></li>
-                          <li><a href="#">Sort Title Ascending</a></li>
-                          <li><a href="#">Sort Title Ascending</a></li>
+                          <li><a href="#">Sort Task ID Ascending</a></li>
+                          <li><a href="#">Sort Task ID Ascending</a></li>
                         </ul>
                       </div>
                       <div class="btn-group select pull-right">
-                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
+                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span></button>
                         <ul class="dropdown-menu text-left text-sm">
-                          <li><a href="#">All Open Tasks</a></li>
+                          <li><a href="#">All Open Task</a></li>
                           <li><a href="#">Tasks I've Opened</a></li>
                           <li><a href="#">Unapproved Tasks</a></li>
                           <li><a href="#">Approved Tasks</a></li>
@@ -150,33 +133,20 @@
                           <li><a href="#">New Tasks</a></li>
                         </ul>
                       </div>
-                    </div>
-                  </header>
-                  <section class="scrollable hover">
-                    <ul class="list-group auto no-radius m-b-none m-t-n-xxs list-group-lg">
-                      <li class="list-group-item active"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a0.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Created By]</small> </a> </li>
-                      <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Created By]</small> </a> </li>
-                      <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Created By]</small> </a> </li>
-                      <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Created By]</small> </a> </li>
-                      <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Created By]</small> </a> </li>
-                      <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Created By]</small> </a> </li>
-                      <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Created By]</small> </a> </li>
-                      <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Created By]</small> </a> </li>
-                      <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Created By]</small> </a> </li>
-                      <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Created By]</small> </a> </li>
-                      <li class="list-group-item"> <a href="#" class="thumb-sm pull-left m-r-sm"> <img src="resources/images/a1.png" class="img-circle"> </a> <a href="#" class="clear text-ellipsis"> <small class="pull-right">[Date Created]</small> <strong class="block">[Title]</strong> <small>[Created By]</small> </a> </li>
-                    </ul>
-                    <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Lead More...</a> </section>
-                  <footer class="footer dk clearfix">
-                    <form class="m-t-sm">
+                    </header>
+                    <div class="wrapper">
                       <div class="input-group">
-                        <input type="text" class="input-sm form-control input-s-sm" placeholder="Search">
-                        <div class="input-group-btn">
-                          <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
-                        </div>
+                        <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
+                        <span class="input-group-btn">
+                          <button class="btn btn-sm btn-default" type="button">Go!</button>
+                        </span></div>
+                    </div>
+                    <div class="row m-b">
+                      <div class="col-sm-12">
+                        <div id="tree"></div>
                       </div>
-                    </form>
-                  </footer>
+                    </div>
+                  </section>
                 </section>
               </aside>
               <!-- /.aside --> 
@@ -215,29 +185,262 @@
                     <div class="wrapper bg-empty  clearfix">
                       <div class="pull-right inline">
                         <div class="btn-group">
-                          <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete Task"><i class="fa fa-check"></i></button>
+                          <button class="btn btn-default btn-sm" data-title="Assign Task" data-toggle="modal" data-target="#assign"><i class="fa fa-male"></i> Assign</button>
+                          <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#reassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
+                          <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#unassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>
+                          <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#complete" data-title="Complete Task"><i class="fa fa-check-square-o"></i> Complete</button>
+                          <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#approve" data-title="Approve Task"><i class="fa fa-check"></i> Approve</button>
+                          <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#reject" data-title="Reject Task"><i class="fa fa-reply"></i> Reject</button>
+                          <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#delete" data-title="Delete Task"><i class="fa fa-times"></i> Delete</button>
+                          <div class="modal fade" id="assign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                  <h4 class="modal-title" id="myModalLabel">Assign Task</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <p>Who would you like to assign this task to?</p>
+                                  <section class="panel panel-default">
+                                    <div class="row wrapper">
+                                      <div class="col-sm-12">
+                                        <div class="input-group">
+                                          <input type="text" class="input-sm form-control" placeholder="Search people..">
+                                          <span class="input-group-btn">
+                                          <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                          </span> </div>
+                                      </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                      <table class="table table-striped b-t b-light">
+                                        <thead>
+                                          <tr>
+                                            <th width="20"></th>
+                                            <th class="th-sortable" data-toggle="class">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                            <th>Last Name</th>
+                                            <th>Username</th>
+                                            <th>Organization</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td><label class="checkbox m-n">
+                                                <input type="radio" name="post[]">
+                                                <i></i></label></td>
+                                            <td>[First Name]</td>
+                                            <td>[Last Name]</td>
+                                            <td>[Username]</td>
+                                            <td>[Organization]</td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                    <footer class="panel-footer">
+                                      <div class="row">
+                                        <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 20-30 of 50 items</small> </div>
+                                        <div class="col-sm-6 text-right text-center-xs">
+                                          <ul class="pagination pagination-sm m-t-none m-b-none">
+                                            <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                            <li><a href="#">1</a></li>
+                                            <li><a href="#">2</a></li>
+                                            <li><a href="#">3</a></li>
+                                            <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </footer>
+                                  </section>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                  <button type="button" class="btn btn-primary">Assign Task</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal fade" id="reassign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                  <h4 class="modal-title" id="myModalLabel">Reassign Task</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <p>Who would you like to reassign this task to?</p>
+                                  <section class="panel panel-default">
+                                    <div class="row wrapper">
+                                      <div class="col-sm-12">
+                                        <div class="input-group">
+                                          <input type="text" class="input-sm form-control" placeholder="Search people..">
+                                          <span class="input-group-btn">
+                                          <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                          </span> </div>
+                                      </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                      <table class="table table-striped b-t b-light">
+                                        <thead>
+                                          <tr>
+                                            <th width="20"></th>
+                                            <th class="th-sortable" data-toggle="class">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                            <th>Last Name</th>
+                                            <th>Username</th>
+                                            <th>Organization</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td><label class="checkbox m-n">
+                                                <input type="radio" name="post[]">
+                                                <i></i></label></td>
+                                            <td>[First Name]</td>
+                                            <td>[Last Name]</td>
+                                            <td>[Username]</td>
+                                            <td>[Organization]</td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                    <footer class="panel-footer">
+                                      <div class="row">
+                                        <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 20-30 of 50 items</small> </div>
+                                        <div class="col-sm-6 text-right text-center-xs">
+                                          <ul class="pagination pagination-sm m-t-none m-b-none">
+                                            <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                            <li><a href="#">1</a></li>
+                                            <li><a href="#">2</a></li>
+                                            <li><a href="#">3</a></li>
+                                            <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </footer>
+                                  </section>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                  <button type="button" class="btn btn-primary">Reassign Task</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal fade" id="unassign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                  <h4 class="modal-title" id="myModalLabel">Unassign Task</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <p>Are you sure you want to unassign this task?</p>
+                                  <label>Reason</label>
+                                  <textarea class="form-control"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                  <button type="button" class="btn btn-primary">Unassign Task</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal fade" id="complete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                  <h4 class="modal-title" id="myModalLabel">Complete Task</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <p>Are you sure you want to complete this task?</p>
+                                  <label>Reason</label>
+                                  <textarea class="form-control"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                  <button type="button" class="btn btn-primary">Complete Task</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                  <h4 class="modal-title" id="myModalLabel">Approve Task</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <p>Are you sure you want to approve this task?</p>
+                                  <label>Reason</label>
+                                  <textarea class="form-control"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                  <button type="button" class="btn btn-primary">Approve Task</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                  <h4 class="modal-title" id="myModalLabel">Reject Task</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <p>Are you sure you want to reject this task?</p>
+                                  <label>Reason</label>
+                                  <textarea class="form-control"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                  <button type="button" class="btn btn-primary">Reject Task</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                  <h4 class="modal-title" id="myModalLabel">Delete Task</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <p>Are you sure you want to delete this task?</p>
+                                  <label>Reason</label>
+                                  <textarea class="form-control"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                  <button type="button" class="btn btn-primary">Delete Task</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> Sample Task Subject</a> (12321)</h4>
+                      <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-url="/post" data-title="Enter Task Subject"> Sample Task Subject</a> (12321)</h4>
                       <hr/>
                       <div class="row">
                         <div class="col-xs-12">
                           <div class="">
                             <div class=" clearfix">
                               <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#">0%</a></div>
+                                <div class="h4 font-bold"><a href="#" id="numberComplete" data-type="text" data-pk="1" data-url="/post" data-title="Enter Percentage Complete">0%</a></div>
                                 <small class="text-muted">Complete</small></div>
                               <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#">AJ McClary</a></div>
+                                <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="select" data-pk="1" data-url="/post" data-title="Enter Task Owner">AJ McClary</a></div>
                                 <small class="text-muted">Owner</small></div>
                               <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#">High</a></div>
+                                <div class="h4 font-bold"><a href="#" id="taskPriority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Task Priority">High</a></div>
                                 <small class="text-muted">Priority</small></div>
                               <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#">MM/DD/YYYY</a></div>
+                                <div class="h4 font-bold"><a href="#" id="taskStart" data-type="date" data-pk="1" data-url="/post" data-title="Enter Start Date">MM/DD/YYYY</a></div>
                                 <small class="text-muted">Start Date</small></div>
                               <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#">MM/DD/YYYY</a></div>
+                                <div class="h4 font-bold"><a href="#" id="taskDue" data-type="date" data-pk="1" data-url="/post" data-title="Enter Due Date">MM/DD/YYYY</a></div>
                                 <small class="text-muted">Due Date</small></div>
                               <div class="col-xs-2">
                                 <div class="h4 font-bold"><a href="#">ASSIGNED</a></div>
@@ -275,6 +478,166 @@
                         </div>
                       </div>
                     </div>
+                    <div class="col-md-12">
+                      <section class="panel b-a">
+                        <div class="panel-heading b-b bg-info">
+                          <ul class="nav nav-pills pull-right">
+                            <li style="margin-right:5px"></li>
+                            <li>
+                              <div class="btn-group padder-v2">
+                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
+                              </div>
+                            </li>
+                            <li> </li>
+                          </ul>
+                          <a href="#" class="font-bold">Documents</a></div>
+                        <div class="panel-body max-200 no-padder">
+                          <table class="table table-striped th-sortable table-hover">
+                            <thead>
+                              <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Created</th>
+                                <th>Author</th>
+                                <th>Priority</th>
+                                <th>Due</th>
+                                <th>Status</th>
+                                <th width="10%">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="odd gradeA">
+                                <td>[ID]</td>
+                                <td>[Title]</td>
+                                <td>[Type]</td>
+                                <td>[Created]</td>
+                                <td>[Author]</td>
+                                <td>[Priority]</td>
+                                <td>[Due]</td>
+                                <td>[Status]</td>
+                                <td><select name="select2" class="input-sm form-control input-s-sm inline v-middle">
+                                  <option value="0">Choose Action</option>
+                                  <option value="1">Delete</option>
+                                  <option value="1">Approve</option>
+                                  <option value="1">Reject</option>
+                                </select></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </section>
+                    </div>
+                    <div class="col-md-12">
+                      <section class="panel b-a">
+                        <div class="panel-heading b-b bg-info">
+                          <ul class="nav nav-pills pull-right">
+                            <li style="margin-right:5px">
+                              <div class="btn-group" style="margin-top:4px;">
+                                <ul class="dropdown-menu dropdown-select">
+                                  <li><a href="#">
+                                    <input type="radio" name="b">
+                                    Filter 1</a></li>
+                                  <li><a href="#">
+                                    <input type="radio" name="b">
+                                    Filter 2</a></li>
+                                  <li><a href="#">
+                                    <input type="radio" name="b">
+                                    Filter 3</a></li>
+                                </ul>
+                              </div>
+                            </li>
+                            <li>
+                              <div class="btn-group padder-v2">
+                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Note"><i class="fa fa-file"></i> New</button>
+                              </div>
+                            </li>
+                            <li>&nbsp;</li>
+                          </ul>
+                          <a href="#" class="font-bold">Notes</a></div>
+                        <div class="panel-body max-200 no-padder">
+                          <table class="table table-striped th-sortable table-hover">
+                            <thead>
+                              <tr>
+                                <th width="68%">Note</th>
+                                <th width="12%">Created</th>
+                                <th width="10%">Author</th>
+                                <th width="10%">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="odd gradeA">
+                                <td>[Note]</td>
+                                <td>[Created]</td>
+                                <td>[Author]</td>
+                                <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
+                                    <option value="0">Choose Action</option>
+                                    <option value="1">Delete</option>
+                                  </select></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </section>
+                      
+                      
+                      
+                      <div class="row">
+                        <div class="wrapper">
+                          <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Event Log</a></div>
+                          <section class="panel panel-default">
+                            <div class="table-responsive">
+                              <table class="table table-striped b-light">
+                                <thead>
+                                  <tr>
+                                    <th width="20"><label class="checkbox m-n i-checks">
+                                      <input type="checkbox">
+                                      <i></i></label></th>
+                                    <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
+                                    <th>Date/Time</th>
+                                    <th>User</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td><label class="checkbox m-n i-checks">
+                                      <input type="checkbox" name="post[]2">
+                                      <i></i></label></td>
+                                    <td>[Event]</td>
+                                    <td>MM/DD/YYYY HH:MM:SS</td>
+                                    <td>[User]</td>
+                                  </tr>
+                                    </tr>
+                                  
+                                </tbody>
+                              </table>
+                            </div>
+                            <footer class="panel-footer">
+                              <div class="row">
+                                <div class="col-sm-8 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small></div>
+                                <div class="col-sm-4 text-right text-center-xs">
+                                  <ul class="pagination pagination-sm m-t-none m-b-none">
+                                    <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                    <li><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">4</a></li>
+                                    <li><a href="#">5</a></li>
+                                    <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </footer>
+                          </section>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    
                     </div>
                   </section>
                 </section>
@@ -309,12 +672,51 @@
     </section>
   </section>
 </section>
-<script src="resources/js/jquery.min.js"></script> 
 <!-- Bootstrap --> 
 <script src="resources/js/bootstrap.js"></script> 
 
-<!-- Summernote WYSIWYG -->
+<script type='text/javascript'>//<![CDATA[ 
 
+$(function() {
+    $("#tree").fancytree({
+
+	activate: function(event, data) {
+					var node = data.node;
+					// Use <a> href and target attributes to load the content:
+					if( node.data.href ){
+						// Open target
+						window.open(node.data.href, "_self");
+						// or open target in iframe
+						// $("[name=contentFrame]").attr("src", node.data.href);
+					}
+				},
+	source: [{
+		title: "Subject, Priority",
+		href: "tasks.html",
+		tooltip: "2014-03-12321",
+		expanded: "fancytree-expanded",
+		children: [{
+				title: "Details", 
+				href: "taskDetails.html"
+			}, {
+			title: "Documents",
+			href: "taskDocuments.html"
+		}, {
+				title: "Notes", 
+				href: "taskNotes.html"
+			}, {
+			title: "History",
+			folder: false,
+			href: "taskHistory.html"
+		}]
+	}]
+});
+});
+//]]>
+</script> 
+
+
+<!-- Summernote WYSIWYG -->
 <link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>
 <script src="resources/js/summernote/summernote.js"></script> 
 <script>
@@ -330,7 +732,6 @@ var save = function() {
 </script> 
 
 <!-- X-Editable -->
-
 <link href="resources/css/bootstrap-editable.css" rel="stylesheet">
 <script src="resources/js/bootstrap-editable.min.js"></script> 
 <script src="resources/js/typeahead.js"></script> 
@@ -369,6 +770,42 @@ $(document).ready(function() { $('#incident').editable({
            }
         }); }); 
 
+$(document).ready(function() { $('#taskSubject').editable({placement: 'right'}); }); 
+
+$(document).ready(function() { $('#numberComplete').editable({placement: 'right'}); }); 
+
+$(document).ready(function() { $('#taskOwner').editable({placement: 'bottom', value: 2,    
+        source: [
+              {value: 1, text: 'David Miller'},
+              {value: 2, text: 'Judy Hsu'},
+              {value: 3, text: 'Ronda Ringo'},
+              {value: 3, text: 'AJ McClary'}
+           ]}); }); 
+$(document).ready(function() { $('#taskPriority').editable({placement: 'bottom', value: 2,    
+        source: [
+              {value: 1, text: 'Type 1'},
+              {value: 2, text: 'Type 2'},
+              {value: 3, text: 'Type 3'},
+              {value: 3, text: 'Type 4'}
+           ]}); }); 
+
+$(document).ready(function() { $('#taskStart').editable({
+        format: 'yyyy-mm-dd',  
+		placement: 'bottom',  
+        viewformat: 'dd/mm/yyyy',    
+        datepicker: {
+                weekStart: 1
+           }
+        }); }); 
+$(document).ready(function() { $('#taskDue').editable({
+        format: 'yyyy-mm-dd',  
+		placement: 'bottom',  
+        viewformat: 'dd/mm/yyyy',    
+        datepicker: {
+                weekStart: 1
+           }
+        }); }); 
+		
 </script> 
 
 <!-- App --> 

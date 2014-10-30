@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public abstract class AcmAbstractDao<T>
@@ -44,6 +46,21 @@ public abstract class AcmAbstractDao<T>
                 em.detach(value);
             }
         }
+        return retval;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<T> findModifiedSince(Date lastModified, int startRow, int pageSize)
+    {
+        Query sinceWhen = getEm().createQuery(
+                "SELECT e " +
+                "FROM " + getPersistenceClass().getSimpleName() + " e " +
+                "WHERE e.modified >= :lastModified");
+        sinceWhen.setParameter("lastModified", lastModified);
+        sinceWhen.setFirstResult(startRow);
+        sinceWhen.setMaxResults(pageSize);
+
+        List<T> retval = sinceWhen.getResultList();
         return retval;
     }
 

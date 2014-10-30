@@ -50,9 +50,9 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 
 		Object result = "";
 		
-		String type = getRequest().getParameter("type");
+		String mode = getRequest().getParameter("mode");
 		
-		if ("approver".equals(type))
+		if ("edit".equals(mode))
 		{
 			// TODO: Call service to get the XML form for editing
 		}
@@ -94,6 +94,8 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	public boolean save(String xml,
 			MultiValueMap<String, MultipartFile> attachments) throws Exception {
 
+		String mode = getRequest().getParameter("mode");
+		
 		// Convert XML data to Object
 		CloseComplaintForm form = (CloseComplaintForm) convertFromXMLToObject(cleanXML(xml), CloseComplaintForm.class);
 		
@@ -110,20 +112,30 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 			return false;
 		}
 		
-		if ("IN APPROVAL".equals(complaint.getStatus()) || "CLOSED".equals(complaint.getStatus())){
+		if (("IN APPROVAL".equals(complaint.getStatus()) || "CLOSED".equals(complaint.getStatus())) && !"edit".equals(mode)){
 			LOG.info("The complaint is already in '" + complaint.getStatus() + "' mode. No further action will be taken.");
 			return true;
 		}
 
         CloseComplaintRequestFactory factory = new CloseComplaintRequestFactory();
         CloseComplaintRequest closeComplaintRequest = factory.fromFormXml(form, getAuthentication());
+        
+        if ("edit".equals(mode)){
+        	CloseComplaintRequest closeComplaintRequestFromDatabase = closeComplaintRequestDao.findByComplaintId(closeComplaintRequest.getComplaintId());
+        	
+        	if (null != closeComplaintRequestFromDatabase){
+        		closeComplaintRequest.setId(closeComplaintRequestFromDatabase.getId());
+        	}
+        }
+        
         getCloseComplaintRequestDao().save(closeComplaintRequest);
 		
 		// Update Status to "IN APPROVAL"
-		if (!complaint.getStatus().equals("IN APPROVAL")){
+		if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
 			getComplaintDao().updateComplaintStatus(complaint.getComplaintId(), "IN APPROVAL", getAuthentication().getName(), form.getInformation().getCloseDate());
 		}
 		
+		// TODO: Support versioning for "edit" mode
 		// Save attachments
 		saveAttachments(attachments, complaint.getEcmFolderId(), FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), complaint.getComplaintNumber());
 		
@@ -132,11 +144,11 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	
 	private Object initFormData(){
 		
-		String type = getRequest().getParameter("type");
+		String mode = getRequest().getParameter("mode");
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
 		CloseComplaintInformation information = new CloseComplaintInformation();
-		if (!"approver".equals(type))
+		if (!"edit".equals(mode))
 		{
 			information.setCloseDate(new Date());
 		}
@@ -149,14 +161,14 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		if (acmUsers != null && acmUsers.size() > 0){
 			for (AcmUser acmUser : acmUsers) {
 				// Add only users that are not the logged user
-				if (!acmUser.getUserId().equals(getAuthentication().getName()) || "approver".equals(type)){
+				if (!acmUser.getUserId().equals(getAuthentication().getName()) || "edit".equals(mode)){
 					approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
 				}
 			}
 		}
 		
 		ReferExternal referExternal = new ReferExternal();
-		if (!"approver".equals(type))
+		if (!"edit".equals(mode))
 		{
 			referExternal.setDate(new Date());
 		}
@@ -164,7 +176,6 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		contact.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".deviceTypes"), ","));
 		referExternal.setContact(contact);
 		
-		closeComplaint.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".types"), ","));
 		closeComplaint.setInformation(information);
 		closeComplaint.setApproverOptions(approverOptions);
 		closeComplaint.setReferExternal(referExternal);
@@ -179,7 +190,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	
 	private Object searchApprovers(String keyword){
 		
-		String type = getRequest().getParameter("type");
+		String mode = getRequest().getParameter("mode");
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
 		List<String> approverOptions = new ArrayList<String>();
@@ -191,7 +202,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 			if (acmUsers != null && acmUsers.size() > 0){
 				for (AcmUser acmUser : acmUsers) {
 					// Add only users that are not the logged user
-					if (!acmUser.getUserId().equals(getAuthentication().getName())  || "approver".equals(type)){
+					if (!acmUser.getUserId().equals(getAuthentication().getName())  || "edit".equals(mode)){
 						approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
 					}
 				}

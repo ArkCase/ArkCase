@@ -10,10 +10,8 @@ Complaint.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_RETRIEVED, this.onListRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_RETRIEVED, this.onDetailRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_COMPLAIN_SAVED, this.onComplaintSaved);
-        /*Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_PERSON_LIST_RETRIEVED, this.onComplaintPersonListRetrieved);
-        Acm.Dispatcher.addEventListener(this.EVENT_PERSON_SAVED, this.onPersonSaved);*/
         Acm.Dispatcher.addEventListener(this.EVENT_PERSON_ASSOCIATION_SAVED, this.onPersonAssociationSaved);
-        Acm.Dispatcher.addEventListener(this.EVENT_PERSON_DELETED, this.onPersonDeleted);
+        Acm.Dispatcher.addEventListener(this.EVENT_PERSON_ASSOCIATION_DELETED, this.onPersonAssociationDeleted);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_SAVED, this.onNoteSaved);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_DELETED, this.onNoteDeleted);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_LIST_RETRIEVED, this.onNotesListRetrieved);
@@ -27,12 +25,11 @@ Complaint.Callback = {
     ,EVENT_DETAIL_RETRIEVED		: "complaint-detail-retrieved"
     ,EVENT_COMPLAIN_SAVED		: "complaint-complaint-saved"
     ,EVENT_PERSON_ASSOCIATION_SAVED : "person-association-saved"
-    ,EVENT_PERSON_DELETED       : "person-record-deleted"
+    ,EVENT_PERSON_ASSOCIATION_DELETED       : "person-association-record-deleted"
     ,EVENT_NOTE_SAVED           : "object-note-saved"
     ,EVENT_NOTE_DELETED         : "object-note-deleted"
     ,EVENT_NOTE_LIST_RETRIEVED  : "object-note-listed"
-    /*,EVENT_COMPLAINT_PERSON_LIST_RETRIEVED : "complaint-person-list-retrieved"
-    ,EVENT_PERSON_SAVED         : "complaint-person-saved"*/
+
     ,onListRetrieved : function(Callback, response) {   	
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve complaint list:" + response.errorMsg);
@@ -134,26 +131,40 @@ Complaint.Callback = {
             Complaint.Object.refreshJTableInitiator();*/
         }
     }
-/*    ,onPersonSaved: function(Callback, response) {
-        if (response.hasError) {
-            Acm.Dialog.error("Failed to create or save person:" + response.errorMsg);
-        } else {
-            Acm.Dialog.info("Able to create or save person");
-
-        }
-    }*/
     ,onPersonAssociationSaved: function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to create or save person:" + response.errorMsg);
         } else {
-            //Acm.Dialog.info("Able to create or save person");
+            //update the personAssoc list cache manually instead of calling service
+            //next refresh will update the cache anyway
+            var complaintId = Complaint.getComplaintId();
+            var complaint = Complaint.cacheComplaint.get(complaintId);
+            if(complaint && complaint.personAssociations){
+                complaint.personAssociations.push(response);
+                Complaint.cacheComplaint.put(complaintId, complaint);
+            }
         }
     }
-    ,onPersonDeleted: function(Callback, response) {
+    ,onPersonAssociationDeleted: function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to delete person:" + response.errorMsg);
         } else {
-            //Acm.Dialog.info("Able to delete person");
+            //update the personAssoc list cache manually instead of calling service
+            //next refresh will update the cache anyway
+            var complaintId = Complaint.getComplaintId();
+            var complaint = Complaint.cacheComplaint.get(complaintId);
+            var updatedPersonAssociationList = {};
+            if(complaint && complaint.personAssociations){
+                var oldPersonAssociationList = complaint.personAssociations;
+                var deletedPersonAssociationId = response.deletedPersonAssociationId;
+                for(var i = 0; i < oldPersonAssociationList.length; i++)
+                {
+                    if(oldPersonAssociationList[i].id == deletedPersonAssociationId){
+                        complaint.personAssociations.splice(i, 1);
+                        Complaint.cacheComplaint.put(complaintId, complaint);
+                    }
+                }
+            }
         }
     }
     ,onNoteSaved: function(Callback, response) {
@@ -164,41 +175,52 @@ Complaint.Callback = {
             //next refresh will update the cache anyway
             var complaintId = Complaint.getComplaintId();
             var oldNotesList = Complaint.cacheNoteList.get(complaintId);
-            var updatedNotesList = oldNotesList;
-            updatedNotesList.push(response);
-            Complaint.cacheNoteList.put(complaintId, updatedNotesList);
+            var updatedNotesList = {};
+            var isNew = true;
+            if(oldNotesList){
+                for(var i = 0; i < oldNotesList.length; i++){
+                    if(response.id == oldNotesList[i].id){
+                        oldNotesList[i] = response;
+                        updatedNotesList = oldNotesList;
+                        isNew = false;
+                    }
+                }
+                if(isNew == true){
+                    updatedNotesList = oldNotesList;
+                    updatedNotesList.push(response);
+                }
+                Complaint.cacheNoteList.put(complaintId, updatedNotesList);
+            }
         }
     }
     ,onNoteDeleted : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to delete note:" + response.errorMsg);
         } else {
+            //update the note list cache manually instead of calling service
+            //next refresh will update the cache anyway
             var complaintId = Complaint.getComplaintId();
-            Complaint.Service.retrieveNotes(complaintId);
+            var oldNotesList = Complaint.cacheNoteList.get(complaintId);
+            if(oldNotesList){
+                var updatedNotesList = {};
+                var deletedNoteId = response.deletedNoteId;
+                for(var i = 0; i < oldNotesList.length; i++)
+                {
+                    if(oldNotesList[i].id == deletedNoteId){
+                        oldNotesList.splice(i, 1);
+                        updatedNotesList = oldNotesList;
+                        Complaint.cacheNoteList.put(complaintId, updatedNotesList);
+                    }
+                }
+            }
         }
     }
     ,onNotesListRetrieved : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to list notes:" + response.errorMsg);
         } else {
-//            Acm.Dialog.info("Able to list notes");
             Complaint.cacheNoteList.put(Complaint.getComplaintId(),response)
             Complaint.Object.refreshJTableNotes();
         }
     }
-
- /*   ,onComplaintPersonListRetrieved : function(Callback, response) {
-        if (response.hasError) {
-            Acm.Dialog.error("Failed to create or retrieve person list:" + response.errorMsg);
-        } else {
-            if (Acm.isNotEmpty(response)) {
-                var c = Complaint.getComplaint();
-                if(response){
-                    Complaint.cachePersonList.put(c.complaintId,response);
-                    Complaint.Object.refreshJTablePeople();
-                }
-
-            }
-        }
-    }*/
 };

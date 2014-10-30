@@ -24,6 +24,17 @@
     </bean>
     
     <bean id="personAssociationEventPublisher" class="com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher"/>
+
+    <bean id="personToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonToSolrTransformer">
+        <property name="personDao" ref="acmPersonDao"/>
+    </bean>
+    <bean id="organizationToSolrTransformer" class="com.armedia.acm.plugins.person.service.OrganizationToSolrTransformer">
+        <property name="organizationDao" ref="acmOrganizationDao"/>
+    </bean>
+    
+    <bean id="personAssociationToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonAssociationToSolrTransformer">
+        <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
+    </bean>
             
     <bean id ="personPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Person Plugin"/>
@@ -32,6 +43,7 @@
                 <ref bean="acmPersonSavePrivilege"/>
                 <ref bean="acmPersonFindPrivilege"/>
                 <ref bean="acmPersonDeletePrivilege"/>
+                <ref bean="acmPersonAssociationDeletePrivilege"/>
                 <ref bean="acmPersonListPrivilege"/>
                 <ref bean="acmPersonTypesPrivilege"/>
             </list>
@@ -53,6 +65,11 @@
                     <property name="httpMethod" value="DELETE"/>
                     <property name="url" value="/api/{version}/plugin/person/delete/{personId}"/>
                     <property name="requiredPrivilege" ref="acmPersonDeletePrivilege"/>                        
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/plugin/personAssociation/delete/{personAssocId}"/>
+                    <property name="requiredPrivilege" ref="acmPersonAssociationDeletePrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
@@ -122,6 +139,18 @@
                 <value>ROLE_CALLCENTER</value>
                 <value>ROLE_ADMINISTRATOR</value>
                 <value>ROLE_INVESTIGATOR</value>                
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmPersonAssociationDeletePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-person-association-delete"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_INVESTIGATOR</value>
             </list>
         </property>
     </bean>

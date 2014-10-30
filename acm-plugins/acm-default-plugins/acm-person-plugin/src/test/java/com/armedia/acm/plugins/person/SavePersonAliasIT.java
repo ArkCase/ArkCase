@@ -23,15 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
                                    "/spring/spring-library-person.xml",
-                                   "/spring/spring-library-person-plugin-test.xml",
-                                   "/spring/spring-library-mule-context-manager.xml",
-                                   "/spring/spring-library-activiti-actions.xml",
-                                   "/spring/spring-library-activemq.xml",
-                                   "/spring/spring-library-activiti-configuration.xml",
-                                   "/spring/spring-library-folder-watcher.xml",
-                                   "/spring/spring-library-cmis-configuration.xml",
-                                   "/spring/spring-library-drools-monitor.xml",
-                                   "/spring/spring-library-ecm-file.xml"
+                                   "/spring/spring-library-person-plugin-test-mule.xml"
                                   })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class SavePersonAliasIT
@@ -78,14 +70,14 @@ public class SavePersonAliasIT
         person.setPersonAliases(personAlias);
                      
         Person saved =personDao.save(person);
-        
-        
-        
+
+
+        em.flush();
 
         assertNotNull(saved.getId());
 
         log.info("Person ID: " + saved.getId());
-        em.flush();
+
     }
 }
 

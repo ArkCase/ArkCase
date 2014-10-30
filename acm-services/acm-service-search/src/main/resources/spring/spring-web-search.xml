@@ -3,19 +3,24 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="searchUiController" class="com.armedia.acm.plugins.search.web.SearchUiController">
+    <bean id="searchUiController" class="com.armedia.acm.services.search.web.SearchUiController">
         <property name="acmPluginManager" ref="acmPluginManager"/>
     </bean>
 
-    <bean id="quickSearchAPIController" class="com.armedia.acm.plugins.search.web.api.QuickSearchAPIController">
+    <bean id="quickSearchAPIController" class="com.armedia.acm.services.search.web.api.QuickSearchAPIController">
         <property name="muleClient" ref="muleClient"/>
     </bean>
-    <bean id="SearchChildrenAPIController" class="com.armedia.acm.plugins.search.web.api.SearchChildrenAPIController">
+    <bean id="SearchChildrenAPIController" class="com.armedia.acm.services.search.web.api.SearchChildrenAPIController">
         <property name="muleClient" ref="muleClient"/>
     </bean>
-    <bean id="searchObjectByTypeAPIController" class="com.armedia.acm.plugins.search.web.api.SearchObjectByTypeAPIController">
+    <bean id="searchObjectByTypeAPIController" class="com.armedia.acm.services.search.web.api.SearchObjectByTypeAPIController">
         <property name="muleClient" ref="muleClient"/>
         <property name="searchEventPublisher" ref="acmSearchEventPublisher" />
+    </bean>
+
+    <bean id="personSearchByNameAndContactMethodAPIController"
+          class="com.armedia.acm.services.search.web.api.PersonSearchByNameAndContactMethodAPIController">
+        <property name="muleClient" ref="muleClient"/>
     </bean>
 
 </beans>

@@ -46,6 +46,8 @@ public class ComplaintFactory
         location.setState("testState");
         location.setZip("12345");
         location.setCreator("testCreator");
+        location.setType("home");
+        location.setModifier("testModifier");
         
         complaint.setLocation(location);
         
