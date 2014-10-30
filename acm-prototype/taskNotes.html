@@ -2,7 +2,7 @@
 <html lang="en" class="app">
 <head>
 <meta charset="utf-8" />
-<title>Cases | ACM | Armedia Case Management</title>
+<title>Tasks | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
@@ -14,8 +14,7 @@
     <script src="js/ie/html5shiv.js"></script>
     <script src="js/ie/respond.min.js"></script>
     <script src="js/ie/excanvas.js"></script>
-  <![endif]-->
-
+<![endif]-->
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="resources/js/fancytree/jquery.fancytree.js"></script>
@@ -75,7 +74,6 @@
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
-                    
                     <li class="divider"></li>
                     <li> <a href="index.html">Logout</a> </li>
                   </ul>
@@ -89,12 +87,12 @@
                   <li class=""> <a href="portal.html" class="auto"> <i class="i i-statistics icon"> </i> <span class="font-bold">Dashboard</span> </a> </li>
                   <li class=""> <a href="activity.html" class="auto"> <i class="i i-alarm icon"> </i> <span class="font-bold">Activity</span> </a> </li>
                   <li class=""> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
-                  <li class="active"> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
-                  <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
+                  <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
+                  <li class="active"> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
-<li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
+                  <li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
               </nav>
@@ -108,33 +106,31 @@
       <section id="content">
         <section class="vbox">
           <section class="scrollable">
-            <section class="hbox stretch"><!-- /.aside --> 
-              <!-- .aside -->
-              
-              <aside class="aside-lg bg-light lt">
+            <section class="hbox stretch">
+              <aside class="aside-lg" id="email-list">
                 <section class="vbox animated fadeInLeft">
                   <section class="scrollable">
                     <header class="dk header">
-                      <h3 class="m-b-xs text-black pull-left">Cases</h3>
+                      <h3 class="m-b-xs text-black pull-left">Tasks</h3>
                       <div class="btn-group inline select pull-right">
-                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
+                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span></button>
                         <ul class="dropdown-menu text-left text-sm">
                           <li><a href="#">Sort Date Ascending</a></li>
                           <li><a href="#">Sort Date Descending</a></li>
-                          <li><a href="#">Sort Case ID Ascending</a></li>
-                          <li><a href="#">Sort Case ID Ascending</a></li>
+                          <li><a href="#">Sort Task ID Ascending</a></li>
+                          <li><a href="#">Sort Task ID Ascending</a></li>
                         </ul>
                       </div>
                       <div class="btn-group select pull-right">
-                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
+                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span></button>
                         <ul class="dropdown-menu text-left text-sm">
-                          <li><a href="#">All Open Cases</a></li>
-                          <li><a href="#">Cases I've Opened</a></li>
-                          <li><a href="#">Unapproved Cases</a></li>
-                          <li><a href="#">Approved Cases</a></li>
-                          <li><a href="#">Cases From Group</a></li>
-                          <li><a href="#">Closed or Expired Cases</a></li>
-                          <li><a href="#">New Cases</a></li>
+                          <li><a href="#">All Open Task</a></li>
+                          <li><a href="#">Tasks I've Opened</a></li>
+                          <li><a href="#">Unapproved Tasks</a></li>
+                          <li><a href="#">Approved Tasks</a></li>
+                          <li><a href="#">Tasks From Group</a></li>
+                          <li><a href="#">Closed or Expired Tasks</a></li>
+                          <li><a href="#">New Tasks</a></li>
                         </ul>
                       </div>
                     </header>
@@ -142,23 +138,19 @@
                       <div class="input-group">
                         <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
                         <span class="input-group-btn">
-                        <button class="btn btn-sm btn-default" type="button">Go!</button>
-                        </span> </div>
+                          <button class="btn btn-sm btn-default" type="button">Go!</button>
+                        </span></div>
                     </div>
                     <div class="row m-b">
                       <div class="col-sm-12">
-                      
-                      
                         <div id="tree"></div>
-                        
-                        
-                        
-                        
                       </div>
                     </div>
                   </section>
                 </section>
               </aside>
+              <!-- /.aside --> 
+              <!-- .aside -->
               <aside id="email-content" class="bg-light lter">
                 <section class="vbox">
                   <section class="scrollable">
@@ -167,13 +159,12 @@
                         <div class="col-xs-12">
                           <div class="">
                             <div class=" clearfix">
-                              <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> Sample Case Title</a> </div>
+                              <div class="col-xs-4 b-r">
+                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a></div>
                                 <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
                               <div class="col-xs-2 b-r">
                                 <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
-                                <small class="text-muted">Start Date</small></div>
-                               
+                                <small class="text-muted">Incident Date</small></div>
                               <div class="col-xs-1 b-r">
                                 <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
                                 <small class="text-muted">Priority</small></div>
@@ -183,81 +174,106 @@
                               <div class="col-xs-2 b-r">
                                 <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
                                 <small class="text-muted">Subject Type</small></div>
-                                 <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#" id="duedate" data-type="date" data-pk="1" data-url="/post" data-title="Enter Due Date">MM/DD/YYYY</a></div>
-                                <small class="text-muted">Due Date</small></div>
                               <div class="col-xs-1">
-                                <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div> <small class="text-muted">Status</small></div>
+                                <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
+                                <small class="text-muted">Status</small></div>
                             </div>
-                          </div>
-                   
-                    </div></div>
-                    </div>
-                    </div>
-                    </div>
-                    </div>
-                    <div>
-                      <div class="wrapper">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <section class="panel b-a">
-                              <div class="panel-heading b-b bg-info">
-                                <ul class="nav nav-pills pull-right">
-                                  <li style="margin-right:5px"></li>
-                                  <li>
-                                    <div class="btn-group padder-v2">
-                                      <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
-                                    </div>
-                                  </li>
-                                  <li> </li>
-                                </ul>
-                                <a href="#" class="font-bold">Documents</a></div>
-                              <div class="panel-body max-200 no-padder">
-                               <table class="table table-striped th-sortable table-hover">
-                              <thead>
-                                <tr>
-                                  <th>ID</th>
-                                  <th>Title</th>
-                                  <th>Type</th>
-                                  <th>Created</th>
-                                  <th>Author</th>
-                                  <th>Priority</th>
-                                  <th>Due</th>
-                                  <th>Status</th>
-                                  <th width="10%">Action</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr class="odd gradeA">
-                                  <td>[ID]</td>
-                                  <td>[Title]</td>
-                                  <td>[Type]</td>
-                                  <td>[Created]</td>
-                                  <td>[Author]</td>
-                                  <td>[Priority]</td>
-                                  <td>[Due]</td>
-                                  <td>[Status]</td>
-                                  <td><select name="select2" class="input-sm form-control input-s-sm inline v-middle">
-                                    <option value="0">Choose Action</option>
-                                    <option value="1">Delete</option>
-                                    <option value="1">Approve</option>
-                                    <option value="1">Reject</option>
-                                  </select></td>
-                                </tr>
-                              </tbody>
-                            </table>
-                              </div>
-                            </section>
                           </div>
                         </div>
                       </div>
                     </div>
+                    <div class="wrapper ">
+                      <div class="row"></div>
+                    </div>
+                    <div class="col-md-12">
+                      <section class="panel b-a">
+                        <div class="panel-heading b-b bg-info">
+                          <ul class="nav nav-pills pull-right">
+                            <li style="margin-right:5px">
+                              <div class="btn-group" style="margin-top:4px;">
+                                <ul class="dropdown-menu dropdown-select">
+                                  <li><a href="#">
+                                    <input type="radio" name="b">
+                                    Filter 1</a></li>
+                                  <li><a href="#">
+                                    <input type="radio" name="b">
+                                    Filter 2</a></li>
+                                  <li><a href="#">
+                                    <input type="radio" name="b">
+                                    Filter 3</a></li>
+                                </ul>
+                              </div>
+                            </li>
+                            <li>
+                              <div class="btn-group padder-v2">
+                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Note"><i class="fa fa-file"></i> New</button>
+                              </div>
+                            </li>
+                            <li>&nbsp;</li>
+                          </ul>
+                          <a href="#" class="font-bold">Notes</a></div>
+                        <div class="panel-body max-200 no-padder">
+                          <table class="table table-striped th-sortable table-hover">
+                            <thead>
+                              <tr>
+                                <th width="68%">Note</th>
+                                <th width="12%">Created</th>
+                                <th width="10%">Author</th>
+                                <th width="10%">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="odd gradeA">
+                                <td>[Note]</td>
+                                <td>[Created]</td>
+                                <td>[Author]</td>
+                                <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
+                                    <option value="0">Choose Action</option>
+                                    <option value="1">Delete</option>
+                                  </select></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </section>
+                      
+                      
+                      
+                      <div class="row"></div>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    
                     </div>
                   </section>
                 </section>
               </aside>
-              <!-- /.aside --> 
+              <!-- /.aside -->
               
+              <aside class="aside bg-light lt hide" id="chat">
+                <section class="vbox animated fadeInLeft">
+                  <section class="scrollable">
+                    <header class="dk header">
+                      <p>Approvers</p>
+                    </header>
+                    <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
+                    <header class="dk header">
+                      <p>Collaborators</p>
+                    </header>
+                    <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
+                    <header class="dk header">
+                      <p>Watchers</p>
+                    </header>
+                    <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
+                  </section>
+                  <footer class="footer text-center">
+                    <button class="btn btn-light bg-empty btn-sm"><i class="fa fa-plus"></i> New Partipant</button>
+                  </footer>
+                </section>
+              </aside>
             </section>
           </section>
         </section>
@@ -265,6 +281,8 @@
     </section>
   </section>
 </section>
+<!-- Bootstrap --> 
+<script src="resources/js/bootstrap.js"></script> 
 
 <script type='text/javascript'>//<![CDATA[ 
 
@@ -282,36 +300,23 @@ $(function() {
 					}
 				},
 	source: [{
-		title: "Sample Case Title <em>(2014-03-12321)</em>",
-		href: "cases.html",
+		title: "Subject, Priority",
+		href: "tasks.html",
 		tooltip: "2014-03-12321",
 		expanded: "fancytree-expanded",
 		children: [{
 				title: "Details", 
-				href: "caseDetails.html"
+				href: "taskDetails.html"
 			}, {
-				title: "People ", 
-				href: "casePeople.html"
-			},{
 			title: "Documents",
-			href: "caseDocuments.html"
-		}, {
-			title: "Participants",
-			folder: false,
-			href: "casesParticipants.html"
+			href: "taskDocuments.html"
 		}, {
 				title: "Notes", 
-				href: "caseNotes.html"
-			},  {
-			title: "Tasks",
-			href: "caseTasks.html"
-		}, {
-			title: "References",
-			href: "caseOtherComplaints.html"
-		}, {
+				href: "taskNotes.html"
+			}, {
 			title: "History",
 			folder: false,
-			href: "casesHistory.html"
+			href: "taskHistory.html"
 		}]
 	}]
 });
@@ -320,11 +325,7 @@ $(function() {
 </script> 
 
 
-<!-- Bootstrap --> 
-<script src="resources/js/bootstrap.js"></script> 
-
 <!-- Summernote WYSIWYG -->
-
 <link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>
 <script src="resources/js/summernote/summernote.js"></script> 
 <script>
@@ -340,7 +341,6 @@ var save = function() {
 </script> 
 
 <!-- X-Editable -->
-
 <link href="resources/css/bootstrap-editable.css" rel="stylesheet">
 <script src="resources/js/bootstrap-editable.min.js"></script> 
 <script src="resources/js/typeahead.js"></script> 
@@ -378,9 +378,27 @@ $(document).ready(function() { $('#incident').editable({
                 weekStart: 1
            }
         }); }); 
-		
-			   
-$(document).ready(function() { $('#duedate').editable({
+
+$(document).ready(function() { $('#taskSubject').editable({placement: 'right'}); }); 
+
+$(document).ready(function() { $('#numberComplete').editable({placement: 'right'}); }); 
+
+$(document).ready(function() { $('#taskOwner').editable({placement: 'bottom', value: 2,    
+        source: [
+              {value: 1, text: 'David Miller'},
+              {value: 2, text: 'Judy Hsu'},
+              {value: 3, text: 'Ronda Ringo'},
+              {value: 3, text: 'AJ McClary'}
+           ]}); }); 
+$(document).ready(function() { $('#taskPriority').editable({placement: 'bottom', value: 2,    
+        source: [
+              {value: 1, text: 'Type 1'},
+              {value: 2, text: 'Type 2'},
+              {value: 3, text: 'Type 3'},
+              {value: 3, text: 'Type 4'}
+           ]}); }); 
+
+$(document).ready(function() { $('#taskStart').editable({
         format: 'yyyy-mm-dd',  
 		placement: 'bottom',  
         viewformat: 'dd/mm/yyyy',    
@@ -388,7 +406,15 @@ $(document).ready(function() { $('#duedate').editable({
                 weekStart: 1
            }
         }); }); 
-
+$(document).ready(function() { $('#taskDue').editable({
+        format: 'yyyy-mm-dd',  
+		placement: 'bottom',  
+        viewformat: 'dd/mm/yyyy',    
+        datepicker: {
+                weekStart: 1
+           }
+        }); }); 
+		
 </script> 
 
 <!-- App --> 

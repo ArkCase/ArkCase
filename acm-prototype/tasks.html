@@ -485,18 +485,19 @@
                             <li style="margin-right:5px"></li>
                             <li>
                               <div class="btn-group padder-v2">
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Attachment"><i class="fa fa-file"></i> New</button>
+                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
                               </div>
                             </li>
                             <li> </li>
                           </ul>
-                          <a href="#" class="font-bold">Attachments</a></div>
+                          <a href="#" class="font-bold">Documents</a></div>
                         <div class="panel-body max-200 no-padder">
                           <table class="table table-striped th-sortable table-hover">
                             <thead>
                               <tr>
                                 <th>ID</th>
                                 <th>Title</th>
+                                <th>Type</th>
                                 <th>Created</th>
                                 <th>Author</th>
                                 <th>Priority</th>
@@ -509,17 +510,18 @@
                               <tr class="odd gradeA">
                                 <td>[ID]</td>
                                 <td>[Title]</td>
+                                <td>[Type]</td>
                                 <td>[Created]</td>
                                 <td>[Author]</td>
                                 <td>[Priority]</td>
                                 <td>[Due]</td>
                                 <td>[Status]</td>
-                                <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
-                                    <option value="0">Choose Action</option>
-                                    <option value="1">Delete</option>
-                                    <option value="1">Approve</option>
-                                    <option value="1">Reject</option>
-                                  </select></td>
+                                <td><select name="select2" class="input-sm form-control input-s-sm inline v-middle">
+                                  <option value="0">Choose Action</option>
+                                  <option value="1">Delete</option>
+                                  <option value="1">Approve</option>
+                                  <option value="1">Reject</option>
+                                </select></td>
                               </tr>
                             </tbody>
                           </table>
@@ -577,7 +579,65 @@
                           </table>
                         </div>
                       </section>
+                      
+                      
+                      
+                      <div class="row">
+                        <div class="wrapper">
+                          <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Event Log</a></div>
+                          <section class="panel panel-default">
+                            <div class="table-responsive">
+                              <table class="table table-striped b-light">
+                                <thead>
+                                  <tr>
+                                    <th width="20"><label class="checkbox m-n i-checks">
+                                      <input type="checkbox">
+                                      <i></i></label></th>
+                                    <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
+                                    <th>Date/Time</th>
+                                    <th>User</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td><label class="checkbox m-n i-checks">
+                                      <input type="checkbox" name="post[]2">
+                                      <i></i></label></td>
+                                    <td>[Event]</td>
+                                    <td>MM/DD/YYYY HH:MM:SS</td>
+                                    <td>[User]</td>
+                                  </tr>
+                                    </tr>
+                                  
+                                </tbody>
+                              </table>
+                            </div>
+                            <footer class="panel-footer">
+                              <div class="row">
+                                <div class="col-sm-8 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small></div>
+                                <div class="col-sm-4 text-right text-center-xs">
+                                  <ul class="pagination pagination-sm m-t-none m-b-none">
+                                    <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                    <li><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">4</a></li>
+                                    <li><a href="#">5</a></li>
+                                    <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </footer>
+                          </section>
+                        </div>
+                      </div>
                     </div>
+                    
+                    
+                    
+                    
+                    
+                    
                     </div>
                   </section>
                 </section>
