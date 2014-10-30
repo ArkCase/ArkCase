@@ -1,10 +1,13 @@
 package com.armedia.acm.plugins.person;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import java.util.Date;
 
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -30,9 +33,18 @@ public class OrganizationIT {
     private EntityManager em;
 
     @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
+    @Autowired
     private OrganizationDao organizationDao;
 
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    @Before
+    public void setUp()
+    {
+        auditAdapter.setUserId("auditUser");
+    }
 
     @Test
     @Transactional
@@ -41,10 +53,6 @@ public class OrganizationIT {
 
         org.setOrganizationType("sample");
         org.setOrganizationValue("tech net");
-        org.setModifier("testModifier");
-        org.setCreator("testCreator");
-        org.setCreated(new Date());
-        org.setModified(new Date());
 
         Organization saved = organizationDao.save(org);
 

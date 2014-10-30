@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.ecm.dao;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -36,8 +38,16 @@ public class EcmFileDaoIT
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    @Before
+    public void setUp() throws Exception
+    {
+        auditAdapter.setUserId("auditUser");
+    }
 
     @Test
     @Transactional
@@ -46,8 +56,6 @@ public class EcmFileDaoIT
 
         EcmFile file = new EcmFile();
 
-        file.setCreator("Test User");
-        file.setModifier("Modifier User");
         file.setFileMimeType("text/plain");
         file.setEcmFileId("cmisFileId");
         file.setFileName("testFileName");

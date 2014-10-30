@@ -1,8 +1,10 @@
 package com.armedia.acm.plugins.complaint;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -37,9 +39,18 @@ public class ComplaintDaoIT
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private ComplaintFactory complaintFactory = new ComplaintFactory();
+
+    @Before
+    public void setUp()
+    {
+        auditAdapter.setUserId("auditUser");
+    }
 
     @Test
     @Transactional

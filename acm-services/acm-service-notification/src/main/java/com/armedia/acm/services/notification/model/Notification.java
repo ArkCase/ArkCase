@@ -1,5 +1,6 @@
 package com.armedia.acm.services.notification.model;
 
+import com.armedia.acm.data.AcmEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "acm_notification")
-public class Notification implements Serializable
+public class Notification implements Serializable, AcmEntity
 
 {
     private static final long serialVersionUID = -1154137631399833851L;
@@ -40,9 +41,6 @@ public class Notification implements Serializable
     @Column(name = "cm_notification_data", insertable = true, updatable = true)
     private String data;
 
-    /*@Column(name = "cm_notification_auto", insertable = true, updatable = true)
-    private boolean auto;*/
-
     @Column(name = "cm_notification_status", insertable = true, updatable = true)
     private String status;
 
@@ -58,14 +56,6 @@ public class Notification implements Serializable
 
     @Column(name = "cm_notification_modifier", insertable = true, updatable = false)
     private String modifier;
-
-    @PrePersist
-    public void beforeInsert() {
-        Date today = new Date();
-        setCreated(today);
-        setModified(today);
-
-    }
 
     public Long getId() {
         return id;
@@ -83,18 +73,22 @@ public class Notification implements Serializable
         this.note = note;
     }
 
+    @Override
     public Date getCreated() {
         return created;
     }
 
+    @Override
     public void setCreated(Date created) {
         this.created = created;
     }
 
+    @Override
     public String getCreator() {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator) {
         this.creator = creator;
     }
@@ -106,14 +100,6 @@ public class Notification implements Serializable
     public void setData(String data) {
         this.data = data;
     }
-
-    /*public boolean isAuto() {
-        return auto;
-    }
-
-    public void setAuto(boolean auto) {
-        this.auto = auto;
-    }*/
 
     public String getStatus() {
         return status;
@@ -139,18 +125,22 @@ public class Notification implements Serializable
         this.comment = comment;
     }
 
+    @Override
     public Date getModified() {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified) {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier() {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier) {
         this.modifier = modifier;
     }

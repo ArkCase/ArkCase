@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.model;
 
+import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 
 import javax.persistence.CascadeType;
@@ -11,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,7 +22,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_file")
-public class EcmFile
+public class EcmFile implements AcmEntity
 {
     @Id
     @Column(name = "cm_file_id")
@@ -62,9 +62,6 @@ public class EcmFile
     @PrePersist
     protected void beforeInsert()
     {
-        setCreated(new Date());
-        setModified(new Date());
-
         if ( getStatus() == null || getStatus().trim().isEmpty() )
         {
             setStatus("ACTIVE");
@@ -75,25 +72,8 @@ public class EcmFile
             parentObject.setTargetId(fileId);
             parentObject.setTargetName(fileName);
             parentObject.setTargetType("FILE");
-
-            if ( parentObject.getCreator() == null )
-            {
-                parentObject.setCreator(creator);
-            }
-
-            if ( parentObject.getModifier() == null )
-            {
-                parentObject.setModifier(modifier);
-            }
         }
     }
-
-    @PreUpdate
-    protected void beforeUpdate()
-    {
-        setModified(new Date());
-    }
-
 
     public Long getFileId()
     {
@@ -115,41 +95,49 @@ public class EcmFile
         this.status = status;
     }
 
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
     }
 
+    @Override
     public Date getModified()
     {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier()
     {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier)
     {
         this.modifier = modifier;
