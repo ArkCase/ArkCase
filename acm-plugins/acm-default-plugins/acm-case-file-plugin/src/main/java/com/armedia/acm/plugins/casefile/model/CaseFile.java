@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,7 +27,7 @@ import java.util.Date;
 @Entity
 @Table(name="acm_case_file")
 @XmlRootElement(name = "caseFile")
-public class CaseFile implements Serializable, AcmObject
+public class CaseFile implements Serializable, AcmObject, AcmEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
@@ -88,15 +89,6 @@ public class CaseFile implements Serializable, AcmObject
     @JoinColumn(name = "cm_parent_id")
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
-    @PrePersist
-    public void beforeInsert()
-    {
-        Date today = new Date();
-        setCreated(today);
-        setModified(today);
-
-    }
-
     public Long getId()
     {
         return id;
@@ -147,41 +139,49 @@ public class CaseFile implements Serializable, AcmObject
         this.status = status;
     }
 
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
     }
 
+    @Override
     public Date getModified()
     {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier()
     {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier)
     {
         this.modifier = modifier;

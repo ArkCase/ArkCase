@@ -143,7 +143,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	}
 	
 	private Object initFormData(){
-		
+
 		String mode = getRequest().getParameter("mode");
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
@@ -153,7 +153,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 			information.setCloseDate(new Date());
 		}
 		information.setDispositions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
-		
+
 		// Get Approvers
 		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
 		
@@ -184,7 +184,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		String jsonString = gson.toJson(closeComplaint);
 		
 		JSONObject json = new JSONObject(jsonString);
-		
+
 		return json;
 	}
 	

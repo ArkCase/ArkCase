@@ -31,12 +31,8 @@ public class ComplaintFactory
         complaint.setComplaintNumber(UUID.randomUUID().toString());
         complaint.setComplaintTitle("testTitle");
         complaint.setComplaintType("Local");
-        complaint.setCreated(new Date());
-        complaint.setCreator("tester");
         complaint.setDetails("details");
         complaint.setPriority("Expedite");
-        complaint.setModified(new Date());
-        complaint.setModifier("testModifier");
         complaint.setTag("noTag");
         complaint.setFrequency("once");
         
@@ -45,9 +41,7 @@ public class ComplaintFactory
         location.setCity("testCity");
         location.setState("testState");
         location.setZip("12345");
-        location.setCreator("testCreator");
         location.setType("home");
-        location.setModifier("testModifier");
         
         complaint.setLocation(location);
         
@@ -67,8 +61,6 @@ public class ComplaintFactory
         p.setFamilyName("Person");
         p.setGivenName("ACM");
         p.setStatus("testStatus");
-        p.setCreator("ann-acm");
-        p.setModifier("ann-acm");
 
         ContactMethod cm = new ContactMethod();
         cm.setType("Phone Number");
@@ -91,8 +83,6 @@ public class ComplaintFactory
         pa.setPerson(p);
         pa.setPersonDescription("Simple Description");
         pa.setPersonType("Subject");
-        pa.setCreator("originatorCreator");
-        pa.setModifier("originatorModifier");
 
         complaint.setOriginator(pa);
         
@@ -102,14 +92,10 @@ public class ComplaintFactory
         p2.setFamilyName("Person 2");
         p2.setGivenName("ACM");
         p2.setStatus("testStatus");
-        p2.setCreator("ann-acm");
-        p2.setModifier("ann-acm");
         
         personAssoc.setPerson(p2);
         personAssoc.setPersonType("Witness");
         personAssoc.setPersonDescription("Short Description");
-        personAssoc.setCreator("witnessCreator");
-        personAssoc.setModifier("witnessModifier");
 
         List <PersonAssociation> listPersonAssoc = complaint.getPersonAssociations();
         listPersonAssoc.add(personAssoc);
@@ -118,8 +104,6 @@ public class ComplaintFactory
         oa.setTargetId(12345L);
         oa.setTargetType("DOCUMENT");
         oa.setTargetName("Test Name");
-        oa.setCreator("tester");
-        oa.setModifier("testModifier");
 
         complaint.addChildObject(oa);
         complaint.setPersonAssociations(listPersonAssoc);

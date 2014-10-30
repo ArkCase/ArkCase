@@ -5,6 +5,9 @@ import com.armedia.acm.form.config.Item;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 
+import com.armedia.acm.services.users.model.AcmParticipant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
@@ -29,7 +32,8 @@ public class CloseComplaintRequestFactory
         req.setModifier(auth.getName());
         req.setCreator(auth.getName());
 
-        req.setApprovers(convertItemsToList(form.getApprovers()));
+        List<AcmParticipant> participants = convertItemsToParticipants(form.getApprovers());
+        req.setParticipants(participants);
         req.setComplaintId(form.getInformation().getComplaintId());
 
         populateDisposition(form, auth, req);
@@ -71,18 +75,23 @@ public class CloseComplaintRequestFactory
         }
     }
     
-    private List<String> convertItemsToList(List<Item> items)
+    private List<AcmParticipant> convertItemsToParticipants(List<Item> items)
     {
-    	List<String> itemsString = new ArrayList<String>();
-    	
-    	if (items != null && items.size() > 0)
+    	List<AcmParticipant> participants = new ArrayList<>();
+    	Logger log = LoggerFactory.getLogger(getClass());
+        log.debug("# of incoming approvers: " + items.size());
+    	if ( items != null )
     	{
-    		for (int i = 0; i < items.size(); i++) 
+    		for ( Item item : items )
     		{
-    			itemsString.add(items.get(i).getValue());
+
+                AcmParticipant participant = new AcmParticipant();
+                participant.setParticipantLdapId(item.getValue());
+                participant.setParticipantType("approver");
+                participants.add(participant);
     		}
     	}
     	
-    	return itemsString;
+    	return participants;
     }
 }
