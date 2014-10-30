@@ -61,11 +61,11 @@ public class GetProfileInfoAPIController {
             if(log.isInfoEnabled()){
                 log.info("Profile info for the user: " + userId + "is not found");
             }
-            //add only none user data like full name, email, userId , groups
+            //add only user data like full name, email, userId , groups
             userOrg = new UserOrg();
             userOrg.setUser(user);
         }
-        groups = getUserDao().findAllRolesByRoleType(RoleType.LDAP_GROUP);
+        groups = getUserDao().findAllRolesByUserAndRoleType(userId,RoleType.LDAP_GROUP);
         profileDTO = prepareProfileDto(userOrg, groups);
         return profileDTO;
     }

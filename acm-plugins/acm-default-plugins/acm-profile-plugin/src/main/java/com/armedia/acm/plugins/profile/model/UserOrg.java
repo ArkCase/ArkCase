@@ -69,7 +69,7 @@ public class UserOrg implements Serializable{
     @JoinColumn(name = "cm_user")
     private AcmUser user;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cm_organization")
     private Organization organization;
 

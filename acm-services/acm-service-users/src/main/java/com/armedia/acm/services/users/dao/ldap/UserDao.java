@@ -56,6 +56,19 @@ public class UserDao
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
+    public List<AcmRole> findAllRolesByUserAndRoleType(String userId,RoleType roleType) {
+        Query roleQuery = getEntityManager().createQuery("SELECT acmRole FROM AcmRole acmRole " +
+                "WHERE acmRole.roleName IN " +
+                "(SELECT userRole.roleName FROM AcmUserRole userRole " +
+                "WHERE userRole.userId= :userId " +
+                "AND userRole.userRoleState = :userRoleState) " +
+                "AND acmRole.roleType = :roleType");
+        roleQuery.setParameter("userId",userId);
+        roleQuery.setParameter("roleType",roleType.getRoleName());
+        roleQuery.setParameter("userRoleState","VALID");
+        List<AcmRole> retval = roleQuery.getResultList();
+        return retval;
+    }
 
     public List<AcmUser> findUsersWithRoles(List<String> roles)
     {
