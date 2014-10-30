@@ -33,17 +33,7 @@ public class ComplaintFactory
         retval.setComplaintType(formComplaint.getCategory());
         retval.setTag(formComplaint.getComplaintTag());
         retval.setFrequency(formComplaint.getFrequency());
-        
-        if (null == formComplaint.getLocation().getModified())
-        {
-        	formComplaint.getLocation().setModified(formComplaint.getLocation().getCreated());
-        }
-        
-        if (null == formComplaint.getLocation().getModifier())
-        {
-        	formComplaint.getLocation().setModifier(formComplaint.getLocation().getCreator());
-        }
-        
+
         retval.setLocation(formComplaint.getLocation());
         
         if ( formComplaint.getInitiator() != null )
@@ -127,17 +117,4 @@ public class ComplaintFactory
     	return participants;
     }
     
-    private List<String> convertItemsToList(List<Item> items){
-    	List<String> itemsString = new ArrayList<String>();
-    	
-    	if (items != null && items.size() > 0){
-    		for (int i = 0; i < items.size(); i++) {
-    			itemsString.add(items.get(i).getValue());
-    		}
-    	}else{
-    		return null;
-    	}
-    	
-    	return itemsString;
-    }
 }
