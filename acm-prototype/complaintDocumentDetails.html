@@ -313,6 +313,7 @@ $(function() {
 
 activate: function(event, data) {
 				var node = data.node;
+				
 				// Use <a> href and target attributes to load the content:
 				if( node.data.href ){
 					// Open target
@@ -321,152 +322,48 @@ activate: function(event, data) {
 //                $("[name=contentFrame]").attr("src", node.data.href);
 				}
 			},
+			
 
         source: [{
-            title: "Sample Complaint Title <em>(2014-03-12321)</em>",
-href: "complaints.html",
-tooltip: "2014-03-12321",
+            title: "2014-03-12321 - Sample Complaint Title</em>",
+			href: "complaints.html",
+			tooltip: "2014-03-12321",
             expanded: "fancytree-expanded",
+			
             children: [{
-                title: "Incident 1",
-                folder: true,
-				expanded: "fancytree-expanded",
-                children: [{
-                    title: "Details", 
-					href: "complaintDetails.html"
-                }, {
                     title: "Initiator",
 					href: "complaintIntitiator.html", 
                     description1: "John Doe",
                     description2: "Victim"
+                },{
+                    title: "Details", 
+					href: "complaintDetails.html"
                 }, {
-                    title: "People ", 
+                    title: "People", 
 					href: "complaintPeople.html"
                 }, {
-                    title: "Notes", 
-					href: "complaintNotes.html"
-                }]
-            }, {
                 title: "Documents",
-                folder: true,
-expanded: "fancytree-expanded",
-                children: [{
-                    title: "Pending",
-                    folder: false,
-					href: "complaintDocuments.html",
-                    children: [{
-                        title: "Document Title 1",
-                        description1: "David Miller", 
-						href: "complaintDocumentDetails.html"
-                    }, {
-                        title: "Document Title 2",
-                        description1: "Ronda Ringo", 
-						href: "complaintDocumentDetails.html"
-                    }]
-                }, {
-                    title: "Approved",
-                    folder: false,
-					href: "complaintDocuments.html",
-                    children: [{
-                        title: "Document Title 3",
-                        description1: "David Miller", 
-						href: "complaintDocumentDetails.html"
-                    }, {
-                        title: "Document Title 4",
-                        description1: "Ronda Ringo", 
-						href: "complaintDocumentDetails.html"
-                    }]
-                }, {
-                    title: "Rejected",
-                    folder: false,
-					href: "complaintDocuments.html",
-                    children: [{
-                        title: "0005",
-                        title: "Document Title 5",
-                        description1: "David Miller", 
-						href: "complaintDocumentDetails.html"
-                    }, {
-                        title: "0006",
-                        title: "Document Title 6",
-                        description1: "Ronda Ringo", 
-						href: "complaintDocumentDetails.html"
-                    }]
-                }]
-            }, {
-                title: "Tasks",
-                folder: true,
-expanded: "fancytree-expanded",
-                children: [{
-                    title: "Unassigned",
-                    folder: false,
-					href: "complaintTasks.html",
-                    children: [{
-                        title: "Task Title 1",
-                        description1: "David Miller", 
-						href: "complaintTaskDetails.html"
-                    }, {
-                        title: "Task  Title 2",
-                        description1: "Ronda Ringo", 
-						href: "complaintTaskDetails.html"
-                    }]
-                }, {
-                    title: "Assigned",
-                    folder: false,
-                    children: [{
-                        title: "Task  Title 3",
-                        description1: "David Miller", 
-						href: "complaintTaskDetails.html"
-                    }, {
-                        title: "Task  Title 4",
-                        description1: "Ronda Ringo", 
-						href: "complaintTaskDetails.html"
-                    }]
-                }, {
-                    title: "Completed",
-                    folder: false,
-                    children: [{
-                        title: "0005",
-                        title: "Task  Title 5",
-                        description1: "David Miller", 
-						href: "complaintTaskDetails.html"
-                    }, {
-                        title: "0006",
-                        title: "Task Title 6",
-                        description1: "Ronda Ringo", 
-						href: "complaintTaskDetails.html"
-                    }]
-                }]
-            }, {
-                title: "References",
-                folder: true,
-expanded: "fancytree-expanded", children: [{
-                    title: "Other Complaints",
-                    folder: false, 
-					href: "complaintOtherComplaints.html"
-                },{
-                    title: "Other Cases",
-                    folder: false, 
-					href: "complaintOtherCases.html"
-                }, {
-                    title: "Other Tasks",
-                    folder: false, 
-					href: "complaintOtherTasks.html"
-                }, {
-                    title: "Other Documents",
-                    folder: false, 
-					href: "complaintOtherDocuments.html"
-                }]
+				expanded: "fancytree-expanded",
+				href: "complaintDocuments.html",
+				expanded: "fancytree-expanded"
             }, {
                 title: "Participants",
-                folder: true,
-expanded: "fancytree-expanded",
-                children: [{
-                    title: "Approvers"
+                folder: false,
+				href: "complaintParticipants.html"
+            }, {
+                    title: "Notes", 
+					href: "complaintNotes.html"
                 }, {
-                    title: "Collaborators"
-                }, {
-                    title: "Watchers"
-                }]
+                title: "Tasks",
+				href: "complaintTasks.html", 
+				nodeType: "task"
+            }, {
+                title: "References",
+              	href: "complaintOther.html"
+            }, {
+                title: "History",
+                folder: false,
+				href: "complaintHistory.html"
             }]
         }]
     });

@@ -20,7 +20,6 @@ import com.armedia.acm.form.config.Item;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CloseComplaintForm {
 
-	private List<String> types;
 	private CloseComplaintInformation information;
 	private ReferExternal referExternal;
 	private ExistingCase existingCase;
@@ -32,21 +31,7 @@ public class CloseComplaintForm {
 	private List<Item> approvers;
 	private List<String> approverOptions;
 	private String description;
-	
-	
-	/**
-	 * @return the types
-	 */
-	public List<String> getTypes() {
-		return types;
-	}
 
-	/**
-	 * @param types the types to set
-	 */
-	public void setTypes(List<String> types) {
-		this.types = types;
-	}
 
 	/**
 	 * @return the information

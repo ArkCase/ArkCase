@@ -105,14 +105,14 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
 
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/plugin/note/save")
+                post("/api/latest/plugin/note")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication)
                         .content(in))
                 .andReturn();
 
-        log.info("results: " + result.getResponse().getContentAsString());
+        //log.info("results: " + result.getResponse().getContentAsString());
 
         verifyAll();
 
@@ -154,14 +154,14 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
 
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/plugin/note/save")
+                post("/api/latest/plugin/note")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication)
                         .content(in))
                 .andReturn();
 
-        log.info("results: " + result.getResponse().getContentAsString());
+        //log.info("results: " + result.getResponse().getContentAsString());
 
         verifyAll();
 

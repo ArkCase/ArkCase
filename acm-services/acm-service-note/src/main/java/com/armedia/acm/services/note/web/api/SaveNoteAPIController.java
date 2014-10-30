@@ -26,7 +26,7 @@ public class SaveNoteAPIController
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Note addNote(
             @RequestBody Note note,
@@ -38,12 +38,7 @@ public class SaveNoteAPIController
         {
 
             if(note != null){
-                log.info("Note ID" + note.getId());
-                log.info("Note parentType" + note.getParentType());
-                log.info("Note parentId" + note.getParentId());
-                log.info("Note " + note.getNote());
-                log.info("Note created" + note.getCreated());
-                log.info("Note creator" + note.getCreated());
+                log.info("Note ID : " + note.getId());
             }
         }
 
