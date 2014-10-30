@@ -7,14 +7,14 @@ import java.util.Date;
 /**
  * Created by marjan.stefanoski on 20.10.2014.
  */
-public class UserInfoPersistentEvent extends AcmEvent {
+public class UserOrgPersistentEvent extends AcmEvent {
 
-    private static final String OBJECT_TYPE = "USER_INFO";
+    private static final String OBJECT_TYPE = "USER_ORG";
 
-    public UserInfoPersistentEvent(UserInfo source) {
+    public UserOrgPersistentEvent(UserOrg source) {
         super(source);
         setEventDate(new Date());
         setUserId(source.getUser().getUserId());
-        setObjectId(source.getUserInfoId());
+        setObjectId(source.getUserOrgId());
     }
 }

@@ -1,11 +1,12 @@
 package com.armedia.acm.services.dataaccess.model;
 
+import com.armedia.acm.data.AcmEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -14,7 +15,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_access_control_entry")
-public class AcmAccessControlEntry implements Serializable
+public class AcmAccessControlEntry implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 6980166708271263205L;
 
@@ -65,13 +66,6 @@ public class AcmAccessControlEntry implements Serializable
 
     @Column(name = "cm_access_control_modifier")
     private String modifier;
-
-    @PrePersist
-    protected void beforeInsert()
-    {
-        setCreated(new Date());
-        setModified(new Date());
-    }
 
     public Boolean getAllowDiscretionaryUpdate()
     {
@@ -178,36 +172,43 @@ public class AcmAccessControlEntry implements Serializable
         return created;
     }
 
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
     }
 
+    @Override
     public Date getModified()
     {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier()
     {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier)
     {
         this.modifier = modifier;

@@ -21,6 +21,11 @@
             <artifactId>acm-service-data</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-data-source</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
 
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->

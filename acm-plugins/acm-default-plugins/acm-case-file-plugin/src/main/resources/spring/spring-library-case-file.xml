@@ -113,5 +113,6 @@
         <property name="saveRule" ref="saveCaseFileBusinessRule"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="muleClient" ref="muleClient"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 </beans>

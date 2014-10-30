@@ -16,11 +16,8 @@ public class ProfileEventPublisher implements ApplicationEventPublisherAware {
     private ApplicationEventPublisher eventPublisher;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         eventPublisher = applicationEventPublisher;
     }
-
-
 }

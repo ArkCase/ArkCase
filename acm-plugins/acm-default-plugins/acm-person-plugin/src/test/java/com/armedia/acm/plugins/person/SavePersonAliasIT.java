@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.person;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
@@ -10,6 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -34,8 +37,16 @@ public class SavePersonAliasIT
     @PersistenceContext
     private EntityManager em;
 
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    @Before
+    public void setUp()
+    {
+        auditAdapter.setUserId("auditUser");
+    }
 
     @Test
     @Transactional
@@ -43,10 +54,7 @@ public class SavePersonAliasIT
     {
         Person person = new Person();
         
-        person.setModifier("testModifier");
-        person.setCreator("testCreator");
-        person.setCreated(new Date());
-        person.setModified(new Date());
+
         person.setFamilyName("Person");
         person.setGivenName("ACM");
         person.setStatus("testStatus");
@@ -58,10 +66,6 @@ public class SavePersonAliasIT
        
         pa.setAliasType("Nick Name");
         pa.setAliasValue("ACM");
-        pa.setModifier("testModifier");
-        pa.setCreator("testCreator");
-        pa.setCreated(new Date());
-        pa.setModified(new Date());
         pa.setPerson(person);
                 
         List<PersonAlias> personAlias = new ArrayList<>();

@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.person.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.armedia.acm.data.AcmEntity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "acm_organization")
-public class Organization implements Serializable
+public class Organization implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -92,35 +92,6 @@ public class Organization implements Serializable
     @Column(name = "cm_organization_modifier")
     private String modifier;
 
-    @PrePersist
-    protected void beforeInsert()
-    {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("In beforeInsert()");
-        }
-        if ( getCreated() == null )
-        {
-            setCreated(new Date());
-        }
-
-        if ( getModified() == null )
-        {
-            setModified(new Date());
-        }
-
-   }
-
-    @PreUpdate
-    protected void beforeUpdate()
-    {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("In beforeUpdate()");
-        }
-        setModified(new Date());
-    }
-
     public Long getOrganizationId() {
         return organizationId;
     }
@@ -153,34 +124,42 @@ public class Organization implements Serializable
         this.organizationValue = organizationValue;
     }
 
+    @Override
     public Date getCreated() {
         return created;
     }
 
+    @Override
     public void setCreated(Date created) {
         this.created = created;
     }
 
+    @Override
     public String getCreator() {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator) {
         this.creator = creator;
     }
 
+    @Override
     public Date getModified() {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified) {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier() {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier) {
         this.modifier = modifier;
     }
