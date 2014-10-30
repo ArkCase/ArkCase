@@ -64,6 +64,7 @@
         <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="acmApplication" ref="acmApplication"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
     
     <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">

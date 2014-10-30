@@ -31,4 +31,23 @@
                                  initiallyDeferred="true"/>
     </changeSet>
 
+    <changeSet id="02-create-new-foreign-key-constraints" author="marst">
+
+        <addForeignKeyConstraint baseTableName="acm_user_org"
+                                 baseColumnNames="cm_user"
+                                 constraintName="fk_user"
+                                 referencedTableName="acm_user"
+                                 referencedColumnNames="cm_user_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+
+        <addForeignKeyConstraint baseTableName="acm_user_org"
+                                 baseColumnNames="cm_organization"
+                                 constraintName="fk_organization"
+                                 referencedTableName="acm_organization"
+                                 referencedColumnNames="cm_organization_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+
+    </changeSet>
 </databaseChangeLog>

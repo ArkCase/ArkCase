@@ -229,48 +229,41 @@ activate: function(event, data) {
 			
 
         source: [{
-            title: "Sample Complaint Title <em>(2014-03-12321)</em>",
+            title: "2014-03-12321 - Sample Complaint Title</em>",
 			href: "complaints.html",
 			tooltip: "2014-03-12321",
             expanded: "fancytree-expanded",
 			
             children: [{
-                    title: "Details", 
-					href: "complaintDetails.html"
-                }, {
                     title: "Initiator",
 					href: "complaintIntitiator.html", 
                     description1: "John Doe",
                     description2: "Victim"
+                },{
+                    title: "Details", 
+					href: "complaintDetails.html"
                 }, {
                     title: "People", 
 					href: "complaintPeople.html"
                 }, {
+                title: "Documents",
+				expanded: "fancytree-expanded",
+				href: "complaintDocuments.html",
+				expanded: "fancytree-expanded"
+            }, {
+                title: "Participants",
+                folder: false,
+				href: "complaintParticipants.html"
+            }, {
                     title: "Notes", 
 					href: "complaintNotes.html"
                 }, {
-                title: "Documents",
-                folder: true,
-				expanded: "fancytree-expanded",
-                folder: true,
-				href: "complaintDocuments.html",
-expanded: "fancytree-expanded",
-                children: [{
-                        title: "Document Title",
-                        description1: "David Miller", 
-						href: "complaintDocumentDetails.html"
-                    }]
-            }, {
                 title: "Tasks",
 				href: "complaintTasks.html", 
 				nodeType: "task"
             }, {
                 title: "References",
               	href: "complaintOther.html"
-            }, {
-                title: "Participants",
-                folder: false,
-				href: "complaintParticipants.html"
             }, {
                 title: "History",
                 folder: false,

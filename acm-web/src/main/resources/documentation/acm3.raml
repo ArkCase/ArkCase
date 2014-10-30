@@ -1086,8 +1086,95 @@ securitySchemes:
                  }
         400:
             description: Usually means the request body was invalid (did not match the expected JSON format).  The response body    will be empty.  
-                                                  
-  /dataaccess:
+
+  /profile
+    /get
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      get:
+      description: Get a user profile (User and Company) information's
+      responses:
+        description: Expected JSON data with at least data for the current user: full-name, email and userId.
+        200:
+          body:
+            application/json:
+              example: |
+              {
+                "userId":"ann-acm",
+                "companyName":"Armedia",
+                "firstAddress":"1234 Some Name",
+                "secondAddress":"Suite 123",
+                "mainOfficePhone":"111-111-1111",
+                "fax":"555-555-5555",
+                "city":"Vienna",
+                "state":"VA",
+                "zip":"12345",
+                "website":"www.armedia.com",
+                "location":"Pentagon",
+                "imAccount":"DMiler",
+                "imSystem":"Skype",
+                "officePhoneNumber":"555-555-5555",
+                "mobilePhoneNumber":"555-555-5555",
+                "fullName":"Ann Administrator",
+                "email":"acm@armedia.com",
+                "pictureUrl":"",
+                "groups":["ACM_ADMINISTRATOR_DEV"]
+              }
+    /userOrgInfo/set
+       securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+       post:
+        description: Update the user profile data (for the User and for the Company)
+        body:
+                 application/json:
+                   example: |
+                   {
+                   	"userId":"ann-acm",
+                   	"companyName":"Armedia TEST",
+                   	"firstAddress":"1234 NEW NAME",
+                   	"secondAddress":"Suite 1234",
+                   	"mainOfficePhone":"111-111-1111",
+                   	"fax":"555-555-5555",
+                   	"city":"Vienna",
+                   	"state":"VA",
+                   	"zip":"12345",
+                   	"website":"www.armedia.org",
+                   	"location":"Pentagon",
+                   	"imAccount":"DMiler",
+                   	"imSystem":"Skype",
+                   	"officePhoneNumber":"555-555-5555",
+                   	"mobilePhoneNumber":"555-555-5555",
+                   	"fullName":"Ann Administrator",
+                   	"email":"acm@armedia.com",
+                   	"pictureUrl":"",
+                   	"groups":["ACM_ADMINISTRATOR_DEV"]
+                   }
+       responses:
+               description: The same data that was sent for update in the POST.
+               200:
+                 body:
+                   application/json:
+                     example: |
+                    {
+                    "userId":"ann-acm",
+                    "companyName":"Armedia TEST",
+                    "firstAddress":"1234 NEW NAME",
+                    "secondAddress":"Suite 1234",
+                    "mainOfficePhone":"111-111-1111",
+                    "fax":"555-555-5555",
+                    "city":"Vienna",
+                    "state":"VA",
+                    "zip":"12345",
+                    "website":"www.armedia.org",
+                    "location":"Pentagon",
+                    "imAccount":"DMiler",
+                    "imSystem":"Skype",
+                    "officePhoneNumber":"555-555-5555",
+                    "mobilePhoneNumber":"555-555-5555",
+                    "fullName":"Ann Administrator",
+                    "email":"acm@armedia.com",
+                    "pictureUrl":"",
+                    "groups":["ACM_ADMINISTRATOR_DEV"]
+                   }
+/dataaccess:
     /accessControlDefaults:
       securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
       get:

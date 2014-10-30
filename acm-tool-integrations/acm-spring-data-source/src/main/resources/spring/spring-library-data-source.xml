@@ -144,12 +144,15 @@
         <property name="descriptorListener" ref="objectChangesBySessionAccumulator"/>
     </bean>
 
+    <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
+
     <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer" init-method="initBean">
         <property name="entityManagerFactory" ref="acmEntityManager"/>
         <property name="sessionListener" ref="sessionCommitListener"/>
         <property name="defaultListeners">
             <list>
                 <ref bean="objectChangesBySessionAccumulator"/>
+                <ref bean="auditPropertyEntityAdapter"/>
             </list>
         </property>
     </bean>

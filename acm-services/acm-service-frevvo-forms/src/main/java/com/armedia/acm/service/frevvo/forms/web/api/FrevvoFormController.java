@@ -92,10 +92,10 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
     		    		HttpServletRequest request, HttpServletResponse response){
 		
 		LOG.info("Execute action \"" + action + "\" for form \"" + formName + "\"");
-		
+
 		// Create and initialize appropriate service for given form name
 		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request, authentication);
-		
+
 		// Initialize some data that should be shown on the form (if there should be any) - this is happening after form is loaded
 		Object result = frevvoFormService.get(action);
 		try{

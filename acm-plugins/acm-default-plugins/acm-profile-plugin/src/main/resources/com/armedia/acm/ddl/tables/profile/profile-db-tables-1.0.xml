@@ -84,5 +84,60 @@
 
     </changeSet>
 
+    <changeSet id="02-drop-user-info-and_rename_organization-details-tables" author="marst">
+
+        <dropForeignKeyConstraint baseTableName="acm_user_info"
+                                  constraintName="fk_user"/>
+        <dropForeignKeyConstraint baseTableName="acm_user_info"
+                                  constraintName="fk_organization_details"/>
+        <dropForeignKeyConstraint baseTableName="acm_organization_details"
+                                  constraintName="fk_organization"/>
+
+            <dropIndex tableName="acm_organization_details"
+                       indexName="idx_organization"/>
+
+            <renameTable oldTableName="acm_organization_details"
+                         newTableName="acm_user_org"/>
+
+            <renameColumn tableName="acm_user_org"
+                          oldColumnName="cm_organization_details_id"
+                          newColumnName="cm_user_org_id"/>
+
+            <dropIndex tableName="acm_user_info"
+                       indexName="idx_user"/>
+
+            <dropTable tableName="acm_user_info"/>
+
+            <addColumn tableName="acm_user_org">
+                <column name="cm_location" type="VARCHAR(512)" defaultValue="ACTIVE">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="cm_im_account" type="VARCHAR(128)" defaultValue="ACTIVE">
+                    <constraints nullable="true"/>
+                </column>
+                <column name="cm_im_system" type="VARCHAR(128)" defaultValue="ACTIVE">
+                    <constraints nullable="true"/>
+                </column>
+                <column name="cm_office_phone" type="VARCHAR(128)" defaultValue="ACTIVE">
+                    <constraints nullable="true"/>
+                </column>
+                <column name="cm_mobile_phone" type="VARCHAR(128)" defaultValue="ACTIVE">
+                    <constraints nullable="true"/>
+                </column>
+                <column name="cm_user" type="VARCHAR(1024)">
+                    <constraints nullable="false"/>
+                </column>
+            </addColumn>
+
+        <createIndex tableName="acm_user_org" indexName="idx_user">
+            <column name="cm_user"/>
+        </createIndex>
+
+        <createIndex tableName="acm_user_org" indexName="idx_organization">
+            <column name="cm_organization"/>
+        </createIndex>
+
+    </changeSet>
+
 </databaseChangeLog>
 

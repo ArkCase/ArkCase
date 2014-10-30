@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.person.model;
 
+import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,7 +37,7 @@ import javax.persistence.CascadeType;
 @XmlRootElement
 @Entity
 @Table(name = "acm_person")
-public class Person implements Serializable
+public class Person implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -137,26 +138,11 @@ public class Person implements Serializable
     @PrePersist
     protected void beforeInsert()
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("In beforeInsert()");
-        }
-
         if ( getStatus() == null || getStatus().trim().isEmpty() )
         {
             setStatus("ACTIVE");
         }     
        
-        if ( getCreated() == null )
-        {
-            setCreated(new Date());
-        }
-
-        if ( getModified() == null )
-        {
-            setModified(new Date());
-        }
-
         for ( PersonAlias pa : getPersonAliases() )
         {
             pa.setPerson(this);
@@ -166,11 +152,10 @@ public class Person implements Serializable
     @PreUpdate
     protected void beforeUpdate()
     {
-        if ( log.isDebugEnabled() )
+        for ( PersonAlias pa : getPersonAliases() )
         {
-            log.debug("In beforeUpdate()");
+            pa.setPerson(this);
         }
-        setModified(new Date());
     }
 
     public String getStatus()
@@ -203,111 +188,52 @@ public class Person implements Serializable
         this.familyName = familyName;
     }
 
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
-        for ( PostalAddress address : getAddresses() )
-        {
-            if ( address.getCreator() == null )
-            {
-                address.setCreator(creator);
-            }
-        }
-
-        for ( ContactMethod contactMethod : getContactMethods() )
-        {
-            if ( contactMethod.getCreator() == null )
-            {
-                contactMethod.setCreator(creator);
-            }
-        }
-        
-        for ( PersonAlias personAlias : getPersonAliases() )
-        {
-            if ( personAlias.getCreator() == null )
-            {
-                personAlias.setCreator(creator);
-            }
-        }
-        
-        for ( PersonAssociation persAssoc : getPersonAssociations() )
-        {
-            if ( persAssoc.getCreator() == null )
-            {
-                persAssoc.setCreator(creator);
-            }
-        }
-        
-        for ( Organization organization : getOrganizations() )
-        {
-            if ( organization.getCreator() == null )
-            {
-                organization.setCreator(creator);
-            }
-        }
     }
 
+    @Override
     public Date getModified()
     {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier()
     {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier)
     {
-        log.info("setting person modifier to: '" + modifier + "'");
-
         this.modifier = modifier;
-
-        for ( PostalAddress address : getAddresses() )
-        {
-            address.setModifier(modifier);
-        }
-
-        for ( ContactMethod contactMethod : getContactMethods() )
-        {
-            contactMethod.setModifier(modifier);
-        }
-        
-        for ( PersonAlias personAlias : getPersonAliases() )
-        {
-            personAlias.setModifier(modifier);
-        }
-        
-        for ( PersonAssociation persAssoc : getPersonAssociations() )
-        {
-            persAssoc.setModifier(modifier);
-        }
-        
-        for ( Organization organization : getOrganizations() )
-        {
-            organization.setModifier(modifier);
-        }
-        
     }
 
     public Long getId()

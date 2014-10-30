@@ -4262,8 +4262,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
             }
         }
     }
-]), angular.module("adf").directive("adfWidget", ["$log", "$modal", "dashboard",
-    function($log, $modal, dashboard) {
+]), angular.module("adf").directive("adfWidget", ["$log", "$modal", "dashboard","$rootScope",
+    function($log, $modal, dashboard, $rootScope) {
 
         function preLink($scope, $element, $attr) {
             var definition = $scope.definition;
@@ -4279,6 +4279,7 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
 
         function postLink($scope, $element) {
             var model = $scope.model;
+            //var model1 = $rootScope.adfModel;
             var definition = $scope.definition;
             definition ? ($scope.close = function() {
                 var column = $scope.col;
@@ -4287,11 +4288,11 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     index >= 0 && column.widgets.splice(index, 1)
                 }
                 $element.remove();
-                $scope.$broadcast("adfDashboardChanged","sample-01",model);
+                    //$scope.$broadcast("adfDashboardChanged",$scope.$root.$$childHead.name,$scope.$root.$$childHead.model);
+                $scope.$emit("adfDashboardChanged",$scope.$root.$$childHead.name,$scope.$root.$$childHead.model);
             }, $scope.reload = function() {
                 $scope.$broadcast("widgetReload")
             },
-
                 $scope.reloadTableBased = function(number) {
                   //  $scope.numberOfRows = number,
                     $scope.$broadcast("widgetTableBasedReload", number)
@@ -4304,10 +4305,13 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                         templateUrl: "../src/templates/widget-edit.html"
                     },
                     instance = $modal.open(opts);
-                editScope.closeDialog = function() {
+                editScope.closeDialog = function($rootScope) {
                     instance.close(), editScope.$destroy();
                     var widget = $scope.widget;
-                    widget.edit && widget.edit.reload && $scope.$broadcast("widgetConfigChanged")
+                    widget.edit && widget.edit.reload && $scope.$broadcast("widgetConfigChanged");
+                    //$scope.$broadcast("adfDashboardChanged",$scope.$root.$$childHead.name,$scope.$root.$$childHead.model);
+                    $scope.$emit("adfDashboardChanged",$scope.$root.$$childHead.name,$scope.$root.$$childHead.model);
+
                 }
             }) : $log.debug("widget not found")
         }
@@ -4388,7 +4392,11 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                         tolerance: "pointer",
                         placeholder: "placeholder",
                         forcePlaceholderSize: !0,
-                        opacity: .4
+                        opacity: .4,
+                        update: function(){
+                            // fire your event
+                            $scope.$emit("adfDashboardChanged",$scope.$root.$$childHead.name,$scope.$root.$$childHead.model);
+                        }
                     };
                     var name = $scope.name;
                     var model = $scope.adfModel;
@@ -4797,6 +4805,16 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     styleClass: "col-md-6"
                 }]
             }]
+        }).structure("4-4-4", {
+            rows: [{
+                columns: [{
+                    styleClass: "col-md-4"
+                }, {
+                    styleClass: "col-md-4"
+                }, {
+                    styleClass: "col-md-4"
+                }]
+            }]
         }).structure("4-8", {
             rows: [{
                 columns: [{
@@ -4804,6 +4822,16 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     widgets: []
                 }, {
                     styleClass: "col-md-8",
+                    widgets: []
+                }]
+            }]
+        }).structure("8-4", {
+            rows: [{
+                columns: [{
+                    styleClass: "col-md-8",
+                    widgets: []
+                }, {
+                    styleClass: "col-md-4",
                     widgets: []
                 }]
             }]
@@ -11408,7 +11436,28 @@ Showdown.converter = function(converter_options) {
 ]), angular.module("adf").run(["$templateCache",
     function($templateCache) {
         "use strict";
-        $templateCache.put("../src/templates/dashboard-edit.html", '<div class="modal-header"><button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button><h4 class="modal-title">Edit Dashboard</h4></div><div class="modal-body"><form role="form"><div class="form-group"><label for="dashboardTitle">Title</label><input type="text" class="form-control" id="dashboardTitle" ng-model="model.title" required></div><div class="form-group"><label>Structure</label><div class="radio" ng-repeat="(key, structure) in structures"><label><input type="radio" value="{{key}}" ng-model="model.structure" ng-change="changeStructure(key, structure)">{{key}}</label></div></div></form></div><div class="modal-footer"><button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button></div>'),
+        $templateCache.put("../src/templates/dashboard-edit.html",
+            '<div class="modal-header">' +
+                '<button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button>' +
+                '<h4 class="modal-title">Edit Dashboard</h4>' +
+            '</div>' +
+            '<div class="modal-body">' +
+                '<form role="form">' +
+                    '<div class="form-group">' +
+                        '<label for="dashboardTitle">Title</label>' +
+                        '<input type="text" class="form-control" id="dashboardTitle" ng-model="model.title" required>' +
+                    '</div>' +
+                    '<div class="form-group"><label>Structure</label>' +
+                        '<div class="radio" ng-repeat="(key, structure) in structures">' +
+                            '<label><input type="radio" value="{{key}}" ng-model="model.structure" ng-change="changeStructure(key, structure)">{{key}}</label>' +
+                        '</div>' +
+                    '</div>' +
+                '</form>' +
+            '</div>' +
+                '<div class="modal-footer">' +
+                    '<button type="button" class="btn btn-primary" ng-click="closeDialog()">Close</button>' +
+                '</div>'),
+
             $templateCache.put("../src/templates/dashboard.html",
                 '<div class="dashboard-container">' +
                     '<h1>{{model.title}} ' +
@@ -11472,7 +11521,10 @@ Showdown.converter = function(converter_options) {
             $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
             $templateCache.put("scripts/widgets/mycomplaints/mycomplaints.html", '<div class="mycomplaints"><div class="alert alert-info" ng-controller="myComplaintsCtrl" ng-if="!isDataC"><p style="text-align:center;">No complaints are assigned to you.</p></div><div ng-controller="myComplaintsCtrl" ng-if="isDataC"><div style="overflow-x: auto;">' +
                 //'<div ng-table-pagination="tableParams" template-url="\'ng-table\/pager.html\'"></div>' +
-                '<table ng-table="tableParams" class="table"><tr ng-repeat="complaint in $data"><td data-title="\'Complaint Number\'" sortable="\'complaintNumber\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintNumber}}</a></td><td data-title="\'Title\'" sortable="\'complaintTitle\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintTitle}}</a></td><td data-title="\'Priority\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'complaintCreated\'">{{complaint.complaintCreated}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div></div>'),
+                '<table ng-table="tableParams" class="table"><tr ng-repeat="c' +
+                '' +
+                '' +
+                'omplaint in $data"><td data-title="\'Complaint Number\'" sortable="\'complaintNumber\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintNumber}}</a></td><td data-title="\'Title\'" sortable="\'complaintTitle\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintTitle}}</a></td><td data-title="\'Priority\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'complaintCreated\'">{{complaint.complaintCreated}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div></div>'),
 
             //This si with filters
 //            $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),

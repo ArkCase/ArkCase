@@ -1,5 +1,7 @@
 package com.armedia.acm.services.users.model;
 
+import com.armedia.acm.data.AcmEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +16,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_participant")
-public class AcmParticipant implements Serializable
+public class AcmParticipant implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 5046781644315879063L;
 
@@ -48,13 +50,6 @@ public class AcmParticipant implements Serializable
 
     @Column(name = "cm_participant_modifier")
     private String modifier;
-
-    @PrePersist
-    protected void beforeInsert()
-    {
-        setCreated(new Date());
-        setModified(new Date());
-    }
 
     public Long getId()
     {
@@ -106,41 +101,49 @@ public class AcmParticipant implements Serializable
         this.participantLdapId = participantLdapId;
     }
 
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
     }
 
+    @Override
     public Date getModified()
     {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier()
     {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier)
     {
         this.modifier = modifier;

@@ -200,39 +200,41 @@
                                           </li>
                                           <li>   </li>
                                         </ul>
-                                        <a href="#" class="font-bold">Documents [Status] </a> </div>
+                                        <a href="#" class="font-bold">Documents </a> </div>
                                       <div class="panel-body max-200 no-padder">
-                                        <table class="table table-striped th-sortable table-hover">
-                                          <thead>
-                                            <tr>
-                                              <th>ID</th>
-                                              <th>Title</th>
-                                              <th>Created</th>
-                                              <th>Author</th>
-                                              <th>Priority</th>
-                                              <th>Due</th>
-                                              <th>Status</th>
-                                              <th width="10%">Action</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr class="odd gradeA">
-                                              <td>[ID]</td>
-                                              <td>[Title]</td>
-                                              <td>[Created]</td>
-                                              <td>[Author]</td>
-                                              <td>[Priority]</td>
-                                              <td>[Due]</td>
-                                              <td>[Status]</td>
-                                              <td><select class="input-sm form-control input-s-sm inline v-middle">
-                                                  <option value="0">Choose Action</option>
-                                                  <option value="1">Delete</option>
-                                                  <option value="1">Approve</option>
-                                                  <option value="1">Reject</option>
-                                                </select></td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
+                                      <table class="table table-striped th-sortable table-hover">
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>Title</th>
+                                  <th>Type</th>
+                                    <th>Created</th>
+                                  <th>Author</th>
+                                  <th>Priority</th>
+                                  <th>Due</th>
+                                  <th>Status</th>
+                                  <th width="10%">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr class="odd gradeA">
+                                  <td>[ID]</td>
+                                  <td>[Title]</td>
+                                  <td>[Type]</td>
+                                  <td>[Created]</td>
+                                  <td>[Author]</td>
+                                  <td>[Priority]</td>
+                                  <td>[Due]</td>
+                                  <td>[Status]</td>
+                                  <td><select name="select2" class="input-sm form-control input-s-sm inline v-middle">
+                                    <option value="0">Choose Action</option>
+                                    <option value="1">Delete</option>
+                                    <option value="1">Approve</option>
+                                    <option value="1">Reject</option>
+                                  </select></td>
+                                </tr>
+                              </tbody>
+                            </table>
                                       </div>
                                     </section>
                                   </div>
@@ -272,48 +274,41 @@ activate: function(event, data) {
 			
 
         source: [{
-            title: "Sample Complaint Title <em>(2014-03-12321)</em>",
+            title: "2014-03-12321 - Sample Complaint Title</em>",
 			href: "complaints.html",
 			tooltip: "2014-03-12321",
             expanded: "fancytree-expanded",
 			
             children: [{
-                    title: "Details", 
-					href: "complaintDetails.html"
-                }, {
                     title: "Initiator",
 					href: "complaintIntitiator.html", 
                     description1: "John Doe",
                     description2: "Victim"
+                },{
+                    title: "Details", 
+					href: "complaintDetails.html"
                 }, {
                     title: "People", 
 					href: "complaintPeople.html"
                 }, {
+                title: "Documents",
+				expanded: "fancytree-expanded",
+				href: "complaintDocuments.html",
+				expanded: "fancytree-expanded"
+            }, {
+                title: "Participants",
+                folder: false,
+				href: "complaintParticipants.html"
+            }, {
                     title: "Notes", 
 					href: "complaintNotes.html"
                 }, {
-                title: "Documents",
-                folder: true,
-				expanded: "fancytree-expanded",
-                folder: true,
-				href: "complaintDocuments.html",
-expanded: "fancytree-expanded",
-                children: [{
-                        title: "Document Title",
-                        description1: "David Miller", 
-						href: "complaintDocumentDetails.html"
-                    }]
-            }, {
                 title: "Tasks",
 				href: "complaintTasks.html", 
 				nodeType: "task"
             }, {
                 title: "References",
               	href: "complaintOther.html"
-            }, {
-                title: "Participants",
-                folder: false,
-				href: "complaintParticipants.html"
             }, {
                 title: "History",
                 folder: false,

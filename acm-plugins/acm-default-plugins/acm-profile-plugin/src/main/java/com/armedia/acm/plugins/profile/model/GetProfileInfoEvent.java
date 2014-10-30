@@ -15,8 +15,7 @@ public class GetProfileInfoEvent extends AcmEvent {
 
     public GetProfileInfoEvent(ProfileDTO source) {
         super(source);
-        setObjectId(source.getCompanyDetails().getOrganizationDetailsId());
-        setUserId(source.getUserInfo().getUser().getUserId());
+        setUserId(source.getUserId());
         setEventDate(new Date());
         setObjectType(OBJECT_TYPE);
         setEventType(EVENT_TYPE);
