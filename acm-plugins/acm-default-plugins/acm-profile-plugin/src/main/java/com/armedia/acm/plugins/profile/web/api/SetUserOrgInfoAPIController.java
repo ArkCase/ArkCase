@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by marjan.stefanoski on 20.10.2014.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/profile/userInfo/set","/api/latest/plugin/profile/userInfo/set"})
+@RequestMapping({"/api/v1/plugin/profile/userOrgInfo/set","/api/latest/plugin/profile/userOrgInfo/set"})
 public class SetUserOrgInfoAPIController {
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -58,31 +58,56 @@ public class SetUserOrgInfoAPIController {
             userOrg = new UserOrg();
             try {
                 //check if the company name already exists
-                org = getUserOrgDao().getOrganizationByOrganizationName(in.getCompanyName());
+                org = getOrganizationDao().getOrganizationByOrganizationName(in.getCompanyName().trim());
             } catch (AcmObjectNotFoundException e1) {
-                if(log.isInfoEnabled()){
+                if(log.isInfoEnabled()) {
                     log.info("Organization with name: "+in.getCompanyName()+" is not found in the DB");
                 }
                 //if company name doesn't exist create new organization object
-                org = new Organization();
-                //posible org types
-                //complaint.organizationTypes=Non-profit=Non-profit,Government=Government,Corporation=Corporation
-                org.setOrganizationType("Corporation");
-                org.setOrganizationValue(in.getCompanyName());
-                org.setCreator(in.getFullName());
-                org.setModifier(in.getFullName());
-
-
-                //org = getOrganizationDao().save(org);
+                org = prepareNewOrg(in);
+                org = getOrganizationDao().save(org);
             }
             userOrg.setOrganization(org);
             userOrg.setUser(user);
         }
-        userOrg = createUserOrgForUpdate(in,userOrg);
+
+       //case when user changed  his company name
+        if(userOrg.getOrganization().getOrganizationValue()!=null && !userOrg.getOrganization().getOrganizationValue().equals(in.getCompanyName().trim())) {
+            if(log.isInfoEnabled()){
+                log.info("User "+userId+" changed the name of his company");
+            }
+            try {
+                //check if the company name already exists
+                org = getOrganizationDao().getOrganizationByOrganizationName(in.getCompanyName().trim());
+            } catch (AcmObjectNotFoundException e1) {
+                if (log.isInfoEnabled()) {
+                    log.info("Organization with name: " + in.getCompanyName() + " is not found in the DB");
+                }
+                //create new company for the user
+                org = prepareNewOrg(in);
+                org = getOrganizationDao().save(org);
+                userOrg.setOrganization(org);
+
+                //TODO "check if there is records with id of the old company, if not delete the organization record"
+            }
+         userOrg.setOrganization(org);
+         userOrg.setUser(user);
+        }
+        userOrg = createUserOrgForUpdate(in, userOrg);
         getUserOrgDao().updateUserInfo(userOrg);
         return in;
     }
 
+    private Organization prepareNewOrg(ProfileDTO profileDTO){
+        Organization org = new Organization();
+        //posible org types
+        //complaint.organizationTypes=Non-profit=Non-profit,Government=Government,Corporation=Corporation
+        org.setOrganizationType("Corporation");
+        org.setOrganizationValue(profileDTO.getCompanyName());
+        org.setCreator(profileDTO.getFullName());
+        org.setModifier(profileDTO.getFullName());
+        return org;
+    }
     private UserOrg createUserOrgForUpdate(ProfileDTO in,UserOrg userOrgOld){
 
             userOrgOld.setWebsite(in.getWebsite());
@@ -90,7 +115,7 @@ public class SetUserOrgInfoAPIController {
             userOrgOld.setState(in.getState());
             userOrgOld.setSecondAddress(in.getSecondAddress());
             userOrgOld.setCity(in.getCity());
-            userOrgOld.setCompanyName(in.getCompanyName());
+            userOrgOld.setCompanyName(in.getCompanyName().trim());
             userOrgOld.setFax(in.getFax());
             userOrgOld.setFirstAddress(in.getFirstAddress());
             userOrgOld.setImAccount(in.getImAccount());
