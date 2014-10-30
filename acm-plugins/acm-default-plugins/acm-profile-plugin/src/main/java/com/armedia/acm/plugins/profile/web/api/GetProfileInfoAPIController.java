@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,13 +39,14 @@ public class GetProfileInfoAPIController {
     private Logger log = LoggerFactory.getLogger(getClass());
     private ProfileEventPublisher eventPublisher;
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/get/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ProfileDTO getProfileInfo(
+            @PathVariable("userId") String userId,
             Authentication authentication,
             HttpSession session
     ) throws AcmProfileException, AcmObjectNotFoundException {
-        String userId = (String) authentication.getName().toLowerCase();
+        //String userId = (String) authentication.getName().toLowerCase();
         if (log.isInfoEnabled()) {
             log.info("Finding Profile info for user '" + userId + "'");
         }
@@ -59,13 +61,13 @@ public class GetProfileInfoAPIController {
              userOrg = getUserOrgDao().getUserOrgForUser(user);
         } catch (AcmObjectNotFoundException e){
             if(log.isInfoEnabled()){
-                log.info("Profile info for the user: " + userId + "is not found");
+                log.info("Profile info for the user: " + userId + "is not found",e);
             }
             //add only user data like full name, email, userId , groups
             userOrg = new UserOrg();
             userOrg.setUser(user);
         }
-        groups = getUserDao().findAllRolesByUserAndRoleType(userId,RoleType.LDAP_GROUP);
+        groups = getUserDao().findAllRolesByUserAndRoleType(userId, RoleType.LDAP_GROUP);
         profileDTO = prepareProfileDto(userOrg, groups);
         return profileDTO;
     }
