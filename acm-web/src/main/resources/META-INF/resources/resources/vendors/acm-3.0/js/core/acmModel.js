@@ -31,7 +31,10 @@ Acm.Model.SessionData.prototype = {
 }
 
 //
-//simple first in first out aging cache
+// First in first out aging cache
+//
+// If a key is already exist, put() updates the value.
+// An key can be locked, so that it has higher priority not to be aged first.
 //
 Acm.Model.CacheFifo.prototype = {
     get: function(key) {
@@ -43,7 +46,7 @@ Acm.Model.CacheFifo.prototype = {
         return null;
     }
     ,put: function(key, item) {
-        var putAt = this.next;
+        var putAt = -1;
         for (var i = 0; i < this.size; i++) {
             if (this.keys[i] == key) {
                 putAt = i;
@@ -51,15 +54,35 @@ Acm.Model.CacheFifo.prototype = {
             }
         }
 
+        if (0 > putAt) {
+            putAt = this._getNext();
+            this._advanceToNext();
+        }
 
         this.cache[key] = item;
         this.keys[putAt] = key;
-
-
-        if (putAt == this.next) {
-            this.next = (this.next + 1) % this.maxSize;
-            this.size = (this.maxSize > this.size)? (this.size + 1) : this.maxSize;
+    }
+    ,_getNext: function() {
+        return this._getNextN(0);
+    }
+    //Use n to keep track number of recursive call to _getNextN(), so that it will not exceed maxSize and into an infinite loop
+    ,_getNextN: function(n) {
+        var next = this.next;
+        if (!this.isLock(this.keys[next])) {
+            return next;
         }
+
+        if (n > this.maxSize) {     //when n == maxSize, _getNextN() is called maxSize times, pick the first one to avoid infinite loop
+            return next;
+        }
+
+        this._advanceToNext();
+        return this._getNextSlotN(n + 1);
+
+    }
+    ,_advanceToNext: function() {
+        this.next = (this.next + 1) % this.maxSize;
+        this.size = (this.maxSize > this.size)? (this.size + 1) : this.maxSize;
     }
     ,remove: function(key) {
         var delAt = -1;
@@ -108,6 +131,26 @@ Acm.Model.CacheFifo.prototype = {
         for (var i = 0; i < this.maxSize; i++) {
             this.keys.push(null);
         }
+        this.locks = [];
+    }
+    ,lock: function(key) {
+        this.locks.push(key);
+    }
+    ,unlock: function(key) {
+        for (var i = 0; i < this.locks.length; i++) {
+            if (this.isLock(keys[i])) {
+                this.locks.splice(i, 1);
+                return;
+            }
+        }
+    }
+    ,isLock: function(key) {
+        for (var i = 0; i < this.locks.length; i++) {
+           if (this.keys[i] == key) {
+               return true;
+           }
+        }
+        return false;
     }
     ,getMaxSize: function() {
         return this.maxSize;

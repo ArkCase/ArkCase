@@ -149,7 +149,11 @@ AcmEx.Object = {
             $s.editable("setValue", txt);
         }
         ,setDate: function($s, txt) {
-            $s.editable("setValue", txt, true);  //true = use internal format
+            if (txt) {
+                $s.editable("setValue", txt, true);  //true = use internal format
+            } else {
+                Acm.Object.setText($s, "Unknown");
+            }
         }
 
         ,xDateToDatetime: function(d) {

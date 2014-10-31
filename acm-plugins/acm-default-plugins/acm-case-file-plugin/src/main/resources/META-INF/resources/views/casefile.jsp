@@ -5,7 +5,7 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title><spring:message code="casefile.page.title" text="Case Files | ACM | Armedia Case Management" /></title>
+    <title><spring:message code="caseFile.page.title" text="Case Files | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
         <span itemprop="caseFileId">${caseId}</span>
         <span itemprop="roiFormUrl">${roiFormUrl}</span>
@@ -15,13 +15,17 @@
 <jsp:attribute name="endOfBody">
 
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFile.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFilePage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileCallback.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileJTable.js'/>"></script>
+
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileObject.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileEvent.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFilePage.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileRule.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileCallback.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileJTable.js'/>"></script>--%>
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
@@ -72,7 +76,7 @@
                     <section class="vbox animated fadeInLeft">
                         <section class="scrollable">
                             <header class="dk header">
-                                <h3 class="m-b-xs text-black pull-left"><spring:message code="casefile.page.descShort" text="Cases" /></h3>
+                                <h3 class="m-b-xs text-black pull-left"><spring:message code="caseFile.page.descShort" text="Cases" /></h3>
                                 <div class="btn-group inline select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
                                     <ul class="dropdown-menu text-left text-sm">
@@ -115,6 +119,7 @@
                         <section class="scrollable">
                             <div class="wrapper dk  clearfix">
                                 <div class="row" id="tabTop" style="display:none;">
+                                    <p class="dev">tabTop</p>
                                     <div class="col-xs-12">
                                         <div class="">
                                             <div class=" clearfix">
@@ -153,7 +158,7 @@
                                 </div>
 
                                 <div class="row" id="tabTopBlank">
-                                    <p>(No case is selected)</p>
+                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No case is selected)</p>
                                 </div>
                             </div>
                             </div>
@@ -162,11 +167,13 @@
                             <div>
                                 <div class="wrapper" style="margin: 0;">
                                     <div class="row" id="tabBlank" style="display:none;">
-                                        <p></p>
+                                        <%--<p></p>--%>
+                                        <p class="dev">tabBlank</p>
                                     </div>
 
 
-                                    <div class="row" id="tabTitle" style="display:none;">
+                                    <div class="row" id="tabDetail" style="display:none;">
+                                        <p class="dev">tabDetail</p>
                                         <div class="pull-right inline">
                                             <div class="btn-group">
                                                 <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeCase" data-title="Close Case"><i class="fa fa-archive"></i> Close Case</button>
@@ -178,7 +185,8 @@
 
 
 
-                                    <div class="row" id="tabPerson" style="display:none;">
+                                    <div class="row" id="tabPeople" style="display:none;">
+                                        <p class="dev">tabPeople</p>
 
                                         <div class="col-md-12">
                                             <section class="panel b-a">
@@ -187,9 +195,24 @@
                                         </div>
                                     </div>
 
-                                    <div class="row" id="tabItems" style="display:none;">
+                                    <div class="row" id="tabNotes" style="display:none;">
+                                        <p class="dev">tabNotes</p>
+                                    </div>
+
+                                    <div class="row" id="tabNote" style="display:none;">
+                                        <p class="dev">tabNote</p>
+                                    </div>
+
+                                    <div class="row" id="tabDocs" style="display:none;">
+                                        <p class="dev">tabDocs</p>
+                                    </div>
+
+                                    <div class="row" id="tabDoc" style="display:none;">
+                                        <p class="dev">tabDoc</p>
+                                    </div>
 
                                     <div class="row" id="tabRois" style="display:none;">
+                                        <p class="dev">tabRois</p>
 
 
                                         <div class="col-md-12">
@@ -202,12 +225,28 @@
 
 
                                     <div class="row" id="tabRoi" style="display:none;">
-                                        <p>tabRoi</p>
+                                        <p class="dev">tabRoi</p>
                                         <div class="col-md-12">
                                             <section class="panel b-a">
                                                 <div id="divRoi" style="width:100%"></div>
                                             </section>
                                         </div>
+                                    </div>
+
+                                    <div class="row" id="tabTasks" style="display:none;">
+                                        <p class="dev">tabTasks</p>
+                                    </div>
+
+                                    <div class="row" id="tabTask" style="display:none;">
+                                        <p class="dev">tabTask</p>
+                                    </div>
+
+                                    <div class="row" id="tabRefs" style="display:none;">
+                                        <p class="dev">tabRefs</p>
+                                    </div>
+
+                                    <div class="row" id="tabRef" style="display:none;">
+                                        <p class="dev">tabRef</p>
                                     </div>
 
                                 </div>
