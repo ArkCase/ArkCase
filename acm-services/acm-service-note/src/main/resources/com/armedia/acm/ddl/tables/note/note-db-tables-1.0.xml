@@ -1,0 +1,41 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-note-table" author="manoj">
+        <createTable tableName="acm_note">
+
+            <column name="cm_note_id" type="NUMBER(32,0)">
+                <constraints primaryKey="true" primaryKeyName="pk_note"/>
+            </column>
+
+            <column name="cm_note_text" type="VARCHAR(4000)">
+                <constraints nullable = "false"/>
+            </column>
+
+            <column name="cm_note_creator" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_note_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_parent_object_id" type="NUMBER(32,0)">
+                <constraints nullable = "false"/>
+            </column>
+
+            <column name="cm_parent_object_type" type="VARCHAR(128)">
+                <constraints nullable = "false"/>
+            </column>
+
+        </createTable>
+
+        <createIndex tableName="acm_note" indexName="idx_parent_object_id">
+            <column name="cm_parent_object_id"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

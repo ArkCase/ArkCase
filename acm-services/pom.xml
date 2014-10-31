@@ -28,6 +28,7 @@
     	<module>acm-service-electronic-signature</module>
     	<module>acm-service-frevvo-forms</module>
         <module>acm-service-notification</module>
+        <module>acm-service-note</module>
   </modules>
 
 

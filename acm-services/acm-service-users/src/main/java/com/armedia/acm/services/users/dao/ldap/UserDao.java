@@ -1,10 +1,7 @@
 package com.armedia.acm.services.users.dao.ldap;
 
 
-import com.armedia.acm.services.users.model.AcmRole;
-import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserRole;
-import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
+import com.armedia.acm.services.users.model.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +38,13 @@ public class UserDao
         return retval;
     }
 
+    public List<AcmRole> findAllRolesByRoleType(RoleType roleType) {
+        Query roleQuery = getEntityManager().createQuery("SELECT role FROM AcmRole role WHERE role.roleType= :roleType");
+        roleQuery.setParameter("roleType",roleType.getRoleName());
+        List<AcmRole> retval = roleQuery.getResultList();
+        return retval;
+    }
+
     public List<AcmRole> findAllRolesByUser(String userId) {
         Query roleQuery = getEntityManager().createQuery("SELECT acmRole FROM AcmRole acmRole " +
                     "WHERE acmRole.roleName IN " +
@@ -48,6 +52,19 @@ public class UserDao
                     "WHERE userRole.userId= :userId " +
                     "AND userRole.userRoleState = :userRoleState)");
         roleQuery.setParameter("userId",userId);
+        roleQuery.setParameter("userRoleState","VALID");
+        List<AcmRole> retval = roleQuery.getResultList();
+        return retval;
+    }
+    public List<AcmRole> findAllRolesByUserAndRoleType(String userId,RoleType roleType) {
+        Query roleQuery = getEntityManager().createQuery("SELECT acmRole FROM AcmRole acmRole " +
+                "WHERE acmRole.roleName IN " +
+                "(SELECT userRole.roleName FROM AcmUserRole userRole " +
+                "WHERE userRole.userId= :userId " +
+                "AND userRole.userRoleState = :userRoleState) " +
+                "AND acmRole.roleType = :roleType");
+        roleQuery.setParameter("userId",userId);
+        roleQuery.setParameter("roleType",roleType.getRoleName());
         roleQuery.setParameter("userRoleState","VALID");
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
@@ -149,7 +166,6 @@ public class UserDao
 
     public AcmUser saveAcmUser(AcmUser user)
     {
-
         AcmUser existing = getEntityManager().find(AcmUser.class, user.getUserId());
         if ( existing == null )
         {

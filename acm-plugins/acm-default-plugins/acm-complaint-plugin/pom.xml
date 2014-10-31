@@ -105,6 +105,11 @@
             <artifactId>acm-web</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-users</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
 
         <!-- date time -->

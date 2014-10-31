@@ -106,32 +106,6 @@
                             </div>
                             <div class="row m-b">
                                 <div class="col-sm-12">
-                                    <%--<table id="tree">--%>
-                                        <%--<colgroup>--%>
-                                            <%--<col width="*">--%>
-                                            <%--</col>--%>
-
-                                            <%--<col width="*">--%>
-                                            <%--</col>--%>
-
-                                            <%--<col width="*">--%>
-                                            <%--</col>--%>
-
-                                        <%--</colgroup>--%>
-                                        <%--<thead>--%>
-                                        <%--<tr>--%>
-                                            <%--<th></th>--%>
-                                            <%--<th></th>--%>
-                                            <%--<th></th>--%>
-                                        <%--</tr>--%>
-                                        <%--</thead>--%>
-                                        <%--<tbody>--%>
-                                        <%--<tr>--%>
-                                            <%--<td></td>--%>
-                                            <%--<td></td>--%>
-                                        <%--</tr>--%>
-                                        <%--</tbody>--%>
-                                    <%--</table>--%>
                                     <div id="tree"></div>
                                 </div>
                             </div>
@@ -186,6 +160,7 @@
 	                                        <div class="pull-right inline">
 	                                            <div class="btn-group">
 	                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> Close Complaint</button>
+	                                            	<button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
 	                                            	<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />
 	                                            </div>
 	                                        </div>
@@ -216,7 +191,14 @@
                                             </section>
                                         </div>
                                     </div>
-
+                                    
+                                    <div class="row" id="tabLocation" style="display:none;">
+                                        <div class="col-md-12">
+                                            <section class="panel b-a">
+                                                <div id="divLocation" style="width:100%"></div>
+                                            </section>
+                                        </div>
+                                    </div>
 
                                     <div class="row" id="tabInitiator" style="display:none;">
                                         <div class="col-md-12">
@@ -235,33 +217,6 @@
                                         </div>
                                     </div>
 
-
-                                    <div class="row" id="tabNotes" style="display:none;">
-                                        <div class="col-md-12">
-                                            <section class="panel b-a">
-                                                <div class="panel-heading b-b bg-info">
-                                                    <ul class="nav nav-pills pull-right">
-                                                        <li>
-                                                            <div class="btn-group padder-v2">
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Person"><i class="fa fa-comments-o"></i> New</button>
-                                                                <ul class="dropdown-menu pull-right">
-                                                                    <li><a href="#">Other menu items</a></li>
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                                    </ul>
-                                                    <a href="#" class="font-bold">Notes</a> </div>
-                                                <div class="panel-body max-200">
-                                                    <ul class="list-group list-group-lg no-bg auto">
-                                                        <a href="#" class="list-group-item clearfix"> <span class="pull-left thumb-sm avatar m-r"> <img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/a4.png" alt="John said"> <i class="on b-white bottom"></i> </span> <span class="clear"> <small class="text-muted pull-right">5m ago</small> <span>Judy Hsu</span> <small class="text-muted clear text-ellipsis">Sample notes go here.</small> </span> </a>
-                                                    </ul>
-                                                </div>
-                                            </section>
-                                        </div>
-                                    </div>
-
-
                                     <div class="row" id="tabDocuments" style="display:none;">
                                         <div class="col-md-12">
                                             <section class="panel b-a">
@@ -276,66 +231,17 @@
                                     <div class="row" id="tabTasks" style="display:none;">
                                         <div class="col-md-12">
                                             <section class="panel b-a">
-                                                <%--<div class="panel-heading b-b bg-info">--%>
-                                                    <%--<ul class="nav nav-pills pull-right">--%>
-                                                        <%--<li style="margin-right:5px">--%>
-                                                            <%--<div class="btn-group" style="margin-top:4px;">--%>
-                                                                <%--<button data-toggle="dropdown" class="btn btn-sm btn-rounded btn-default dropdown-toggle"> <span class="dropdown">Filter</span> <span class="caret"></span> </button>--%>
-                                                                <%--<ul class="dropdown-menu dropdown-select">--%>
-                                                                    <%--<li><a href="#">--%>
-                                                                        <%--<input type="radio" name="b">--%>
-                                                                        <%--Filter 1</a></li>--%>
-                                                                    <%--<li><a href="#">--%>
-                                                                        <%--<input type="radio" name="b">--%>
-                                                                        <%--Filter 2</a></li>--%>
-                                                                    <%--<li><a href="#">--%>
-                                                                        <%--<input type="radio" name="b">--%>
-                                                                        <%--Filter 3</a></li>--%>
-                                                                <%--</ul>--%>
-                                                            <%--</div>--%>
-                                                        <%--</li>--%>
-                                                        <%--<li>--%>
-                                                            <%--<div class="btn-group padder-v2">--%>
-                                                                <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="i i-checkmark"></i> New</button>--%>
-                                                            <%--</div>--%>
-                                                        <%--</li>--%>
-                                                        <%--<li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>--%>
-                                                    <%--</ul>--%>
-                                                    <%--<a href="#" class="font-bold">Tasks [Status]</a> </div>--%>
-                                                <%--<div class="panel-body max-200 no-padder">--%>
-                                                    <%--<table class="table table-striped th-sortable table-hover">--%>
-                                                        <%--<thead>--%>
-                                                        <%--<tr>--%>
-                                                            <%--<th>ID</th>--%>
-                                                            <%--<th>Title</th>--%>
-                                                            <%--<th>Created</th>--%>
-                                                            <%--<th>Priority</th>--%>
-                                                            <%--<th>Due</th>--%>
-                                                            <%--<th>Status</th>--%>
-                                                            <%--<th width="10%">Action</th>--%>
-                                                        <%--</tr>--%>
-                                                        <%--</thead>--%>
-                                                        <%--<tbody>--%>
-                                                        <%--<tr class="odd gradeA">--%>
-                                                            <%--<td>[ID]</td>--%>
-                                                            <%--<td>[Title]</td>--%>
-                                                            <%--<td>[Created]</td>--%>
-                                                            <%--<td>[Priority]</td>--%>
-                                                            <%--<td>[Due]</td>--%>
-                                                            <%--<td>[Status]</td>--%>
-                                                            <%--<td><select class="input-sm form-control input-s-sm inline v-middle">--%>
-                                                                <%--<option value="0">Choose Action</option>--%>
-                                                                <%--<option value="1">Assign</option>--%>
-                                                                <%--<option value="1">Delete</option>--%>
-                                                            <%--</select></td>--%>
-                                                        <%--</tr>--%>
-                                                        <%--</tbody>--%>
-                                                    <%--</table>--%>
-                                                <%--</div>--%>
-
-                                                <div class="panel-body max-200 no-padder">
+                                                    <div class="panel-body max-200 no-padder">
                                                     <div id="divTasks" style="width:100%"></div>
                                                 </div>
+                                            </section>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" id="tabNotes" style="display:none;">
+                                        <div class="col-md-12">
+                                            <section class="panel b-a">
+                                                <div id="divNotes" style="width:100%"></div>
                                             </section>
                                         </div>
                                     </div>

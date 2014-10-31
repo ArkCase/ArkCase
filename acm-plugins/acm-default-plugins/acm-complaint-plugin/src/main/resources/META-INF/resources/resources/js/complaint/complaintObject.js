@@ -59,6 +59,9 @@ Complaint.Object = {
         this.$btnEditDetails.on("click", function(e) {Complaint.Event.onClickBtnEditDetails(e);});
         this.$btnSaveDetails.on("click", function(e) {Complaint.Event.onClickBtnSaveDetails(e);});
 
+        this.$divLocation		= $('#divLocation');
+        Complaint.JTable.createJTableLocation(this.$divLocation);
+        
         this.$divInitiator      = $("#divInitiator");
         Complaint.JTable.createJTableInitiator(this.$divInitiator);
 
@@ -75,6 +78,9 @@ Complaint.Object = {
         Complaint.JTable.createJTableTasks(this.$divTasks);
         this.$spanAddTask       = this.$divTasks.find(".jtable-toolbar-item-add-record");
         this.$spanAddTask.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddTask(e);});
+
+        this.$divNotes = $("#divNotes");
+        Complaint.JTable.createJTableNotes(this.$divNotes);
 
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
@@ -116,6 +122,7 @@ Complaint.Object = {
         var tabIds = ["tabBlank"
             ,"tabCloseComplaintButton"
             ,"tabDetail"
+            ,"tabLocation"
             ,"tabInitiator"
             ,"tabPeople"
             ,"tabNotes"
@@ -267,10 +274,12 @@ Complaint.Object = {
         	this.$lnkComplaintClose.show();
         }
 
+        this.refreshJTableLocation();
         this.refreshJTableInitiator();
         this.refreshJTableDocuments();
         this.refreshJTableTasks();
         this.refreshJTablePeople();
+        this.refreshJTableNotes();
 
     }
 
@@ -346,6 +355,7 @@ Complaint.Object = {
     ,_mapNodeTab: {
         pc: ["tabCloseComplaintButton"
             ,"tabDetail"
+            ,"tabLocation"
             ,"tabInitiator"
             ,"tabPeople"
             ,"tabNotes"
@@ -360,11 +370,13 @@ Complaint.Object = {
             ,"tabWatchers"
         ]
         ,pci: ["tabDetail"
+            ,"tabLocation"
             ,"tabInitiator"
             ,"tabPeople"
             ,"tabNotes"
         ]
-        ,pcid: ["tabDetail"]
+        ,pcid: ["tabDetail"
+            ,"tabLocation"]
         ,pcii: ["tabInitiator"]
         ,pcip: ["tabPeople"]
         ,pcipc: ["tabPeople"]
@@ -680,6 +692,9 @@ Complaint.Object = {
     //----------------- end of tree -----------------
 
 
+    ,refreshJTableLocation: function() {
+    	AcmEx.Object.jTableLoad(this.$divLocation);
+    }
     ,refreshJTableInitiator: function() {
         AcmEx.Object.jTableLoad(this.$divInitiator);
     }
@@ -691,6 +706,10 @@ Complaint.Object = {
     }
     ,refreshJTablePeople: function() {
         AcmEx.Object.jTableLoad(this.$divPeople);
+    }
+    ,refreshJTableNotes: function(){
+        AcmEx.Object.jTableLoad(this.$divNotes);
+
     }
 
 };

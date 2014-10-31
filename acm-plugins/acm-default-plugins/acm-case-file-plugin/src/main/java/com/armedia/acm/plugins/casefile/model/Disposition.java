@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 
 import javax.persistence.CascadeType;
@@ -22,7 +23,7 @@ import java.util.Date;
 
 @Entity
 @Table(name="acm_disposition")
-public class Disposition implements Serializable, AcmObject
+public class Disposition implements Serializable, AcmObject, AcmEntity
 {
     private static final long serialVersionUID = 7786267451369775524L;
 
@@ -69,33 +70,6 @@ public class Disposition implements Serializable, AcmObject
     public String getObjectType()
     {
         return "Disposition";
-    }
-
-    @PrePersist
-    public void beforeInsert()
-    {
-        Date today = new Date();
-        setCreated(today);
-
-        setModified(today);
-
-        if ( getReferExternalContactMethod() != null )
-        {
-            getReferExternalContactMethod().setCreated(today);
-            getReferExternalContactMethod().setModified(today);
-        }
-    }
-
-    @PreUpdate
-    public void beforeUpdate()
-    {
-        Date today = new Date();
-        setModified(today);
-
-        if ( getReferExternalContactMethod() != null )
-        {
-            getReferExternalContactMethod().setModified(today);
-        }
     }
 
     public Long getId()
@@ -168,41 +142,49 @@ public class Disposition implements Serializable, AcmObject
         this.existingCaseNumber = existingCaseNumber;
     }
 
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
     }
 
+    @Override
     public Date getModified()
     {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier()
     {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier)
     {
         this.modifier = modifier;

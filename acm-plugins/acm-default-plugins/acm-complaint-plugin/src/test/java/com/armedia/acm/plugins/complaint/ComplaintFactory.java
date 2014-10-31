@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint;
 
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Organization;
@@ -9,6 +10,7 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,15 +31,19 @@ public class ComplaintFactory
         complaint.setComplaintNumber(UUID.randomUUID().toString());
         complaint.setComplaintTitle("testTitle");
         complaint.setComplaintType("Local");
-        complaint.setCreated(new Date());
-        complaint.setCreator("tester");
         complaint.setDetails("details");
         complaint.setPriority("Expedite");
-        complaint.setModified(new Date());
-        complaint.setModifier("testModifier");
         complaint.setTag("noTag");
         complaint.setFrequency("once");
-        complaint.setLocation("1121 goodluck st");
+        
+        PostalAddress location = new PostalAddress();
+        location.setStreetAddress("testAddress");
+        location.setCity("testCity");
+        location.setState("testState");
+        location.setZip("12345");
+        location.setType("home");
+        
+        complaint.setLocation(location);
         
         Calendar  cal = Calendar.getInstance();
         cal.setTime(new Date());
@@ -55,8 +61,6 @@ public class ComplaintFactory
         p.setFamilyName("Person");
         p.setGivenName("ACM");
         p.setStatus("testStatus");
-        p.setCreator("ann-acm");
-        p.setModifier("ann-acm");
 
         ContactMethod cm = new ContactMethod();
         cm.setType("Phone Number");
@@ -79,8 +83,6 @@ public class ComplaintFactory
         pa.setPerson(p);
         pa.setPersonDescription("Simple Description");
         pa.setPersonType("Subject");
-        pa.setCreator("originatorCreator");
-        pa.setModifier("originatorModifier");
 
         complaint.setOriginator(pa);
         
@@ -90,14 +92,10 @@ public class ComplaintFactory
         p2.setFamilyName("Person 2");
         p2.setGivenName("ACM");
         p2.setStatus("testStatus");
-        p2.setCreator("ann-acm");
-        p2.setModifier("ann-acm");
         
         personAssoc.setPerson(p2);
         personAssoc.setPersonType("Witness");
         personAssoc.setPersonDescription("Short Description");
-        personAssoc.setCreator("witnessCreator");
-        personAssoc.setModifier("witnessModifier");
 
         List <PersonAssociation> listPersonAssoc = complaint.getPersonAssociations();
         listPersonAssoc.add(personAssoc);
@@ -106,8 +104,6 @@ public class ComplaintFactory
         oa.setTargetId(12345L);
         oa.setTargetType("DOCUMENT");
         oa.setTargetName("Test Name");
-        oa.setCreator("tester");
-        oa.setModifier("testModifier");
 
         complaint.addChildObject(oa);
         complaint.setPersonAssociations(listPersonAssoc);
