@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.objectassociation.model;
 
+import com.armedia.acm.data.AcmEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +16,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_object_association")
-public class ObjectAssociation
+public class ObjectAssociation implements AcmEntity
 {
 
     @Id
@@ -60,9 +62,6 @@ public class ObjectAssociation
     @PrePersist
     protected void beforeInsert()
     {
-        setCreated(new Date());
-        setModified(new Date());
-
         if ( getStatus() == null || getStatus().trim().isEmpty() )
         {
             setStatus("ACTIVE");
@@ -155,41 +154,49 @@ public class ObjectAssociation
         this.targetId = targetId;
     }
 
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
     }
 
+    @Override
     public Date getModified()
     {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier()
     {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier)
     {
         this.modifier = modifier;

@@ -1,7 +1,9 @@
 package com.armedia.acm.ecms.casefile.dao;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,15 @@ public class CaseFileDaoIT
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
+    @Before
+    public void setUp()
+    {
+        auditAdapter.setUserId("auditUser");
+    }
+
     @Test
     @Transactional
     public void saveCaseFile()
@@ -39,12 +50,8 @@ public class CaseFileDaoIT
         assertNotNull(entityManager);
 
         CaseFile caseFile = new CaseFile();
-        caseFile.setCreator("creator");
         caseFile.setCaseNumber("caseNumber");
         caseFile.setCaseType("caseType");
-        caseFile.setCreated(new Date());
-        caseFile.setModified(new Date());
-        caseFile.setModifier("modifier");
         caseFile.setStatus("status");
         caseFile.setTitle("title");
 

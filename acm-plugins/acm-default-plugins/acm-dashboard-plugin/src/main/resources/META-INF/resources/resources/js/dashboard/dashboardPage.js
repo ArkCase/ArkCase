@@ -6,7 +6,7 @@
  * @author jwu
  */
 Dashboard.Page = {
-    initialize : function() {
+    create : function() {
     }
 
 

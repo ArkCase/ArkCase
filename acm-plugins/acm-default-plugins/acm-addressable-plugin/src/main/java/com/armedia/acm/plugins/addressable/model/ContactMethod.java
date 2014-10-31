@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.addressable.model;
 
+import com.armedia.acm.data.AcmEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "acm_contact_method")
-public class ContactMethod implements Serializable
+public class ContactMethod implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 1827685289454605556L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -67,6 +68,7 @@ public class ContactMethod implements Serializable
 
     @XmlElements({
 		@XmlElement(name="type"),
+		@XmlElement(name="contactType"),
 		@XmlElement(name="initiatorDeviceType"),
 		@XmlElement(name="peopleDeviceType")
 		
@@ -79,6 +81,7 @@ public class ContactMethod implements Serializable
 
     @XmlElements({
 		@XmlElement(name="value"),
+		@XmlElement(name="contactValue"),
 		@XmlElement(name="initiatorDeviceValue"),
 		@XmlElement(name="peopleDeviceValue")
 		
@@ -93,23 +96,6 @@ public class ContactMethod implements Serializable
         {
             setStatus("ACTIVE");
         }
-
-        if ( getCreated() == null )
-        {
-            setCreated(new Date());
-        }
-
-        if ( getModified() == null )
-        {
-            setModified(new Date());
-        }
-
-    }
-
-    @PreUpdate
-    protected void beforeUpdate()
-    {
-        setModified(new Date());
     }
 
     public Long getId()
@@ -122,41 +108,49 @@ public class ContactMethod implements Serializable
         this.id = id;
     }
 
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
     }
 
+    @Override
     public Date getModified()
     {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier()
     {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier)
     {
         this.modifier = modifier;

@@ -6,7 +6,7 @@
  * @author jwu
  */
 Report.Service = {
-    initialize : function() {
+    create : function() {
     }
 
 };

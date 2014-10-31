@@ -6,7 +6,7 @@
  * @author jwu
  */
 Dashboard.Service = {
-    initialize : function() {
+    create : function() {
     }
 
 };

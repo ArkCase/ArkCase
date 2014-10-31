@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm.acm-plugins</groupId>
         <artifactId>acm-default-plugins</artifactId>
-        <version>3.0.15</version>
+        <version>3.0.16</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,6 +25,11 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-data</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-search</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

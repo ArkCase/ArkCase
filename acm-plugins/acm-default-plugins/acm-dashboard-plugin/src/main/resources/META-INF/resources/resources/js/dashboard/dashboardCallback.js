@@ -6,7 +6,7 @@
  * @author jwu
  */
 Dashboard.Callback = {
-    initialize : function() {
+    create : function() {
     }
 
 };

@@ -6,7 +6,7 @@
  * @author jwu
  */
 Admin.Page = {
-    initialize : function() {
+    create : function() {
     }
 
 

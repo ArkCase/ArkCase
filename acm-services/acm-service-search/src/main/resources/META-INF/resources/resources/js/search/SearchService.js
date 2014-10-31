@@ -6,7 +6,7 @@
  * @author jwu
  */
 Search.Service = {
-    initialize : function() {
+    create : function() {
     }
 
     ,API_QUICK_SEARCH       : "/api/v1/plugin/search/quickSearch"

@@ -4,13 +4,13 @@
  * @author jwu
  */
 var AdminAccess = AdminAccess || {
-    initialize: function() {
-        AdminAccess.Object.initialize();
-        AdminAccess.Event.initialize();
-        AdminAccess.Page.initialize();
-        AdminAccess.Rule.initialize();
-        AdminAccess.Service.initialize();
-        AdminAccess.Callback.initialize();
+    create: function() {
+        AdminAccess.Object.create();
+        AdminAccess.Event.create();
+        AdminAccess.Page.create();
+        AdminAccess.Rule.create();
+        AdminAccess.Service.create();
+        AdminAccess.Callback.create();
 
         Acm.deferred(AdminAccess.Event.onPostInit);
     }

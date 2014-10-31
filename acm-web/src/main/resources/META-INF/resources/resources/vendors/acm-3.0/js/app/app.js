@@ -4,11 +4,11 @@
  * @author jwu
  */
 var App = App || {
-    initialize : function() {
-        App.Object.initialize();
-        App.Event.initialize();
-        App.Service.initialize();
-        App.Callback.initialize();
+    create : function() {
+        App.Object.create();
+        App.Event.create();
+        App.Service.create();
+        App.Callback.create();
 
         Acm.deferred(App.Event.onPostInit);
     }

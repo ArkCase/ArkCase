@@ -6,7 +6,7 @@
  * @author jwu
  */
 Search.Callback = {
-    initialize : function() {
+    create : function() {
         Acm.Dispatcher.addEventListener(this.EVENT_RESULT_RETRIEVED, this.onResultRetrieved);
     }
 

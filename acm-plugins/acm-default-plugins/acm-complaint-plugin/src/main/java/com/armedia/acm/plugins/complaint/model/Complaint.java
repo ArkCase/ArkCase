@@ -1,14 +1,18 @@
 package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.users.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
+
 
 
 import javax.persistence.CascadeType;
@@ -28,6 +32,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +46,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_complaint")
-public class Complaint implements Serializable, AcmObject
+public class Complaint implements Serializable, AcmObject, AcmEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -137,8 +142,9 @@ public class Complaint implements Serializable, AcmObject
     @Column(name = "cm_frequency")
     private String frequency;
     
-    @Column(name = "cm_location")
-    private String location;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cm_address_id")
+    private PostalAddress location;
 
     /**
      * Complaint disposition is set only when the close complaint request is approved.
@@ -152,13 +158,6 @@ public class Complaint implements Serializable, AcmObject
     @PrePersist
     protected void beforeInsert()
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("In beforeInsert()");
-        }
-        setCreated(new Date());
-        setModified(new Date());
-
         if ( getStatus() == null || getStatus().trim().isEmpty() )
         {
             setStatus("DRAFT");
@@ -192,14 +191,8 @@ public class Complaint implements Serializable, AcmObject
     @PreUpdate
     protected void beforeUpdate()
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("In beforeUpdate()");
-        }
-        setModified(new Date());
-
         setupChildPointers();
-      }
+    }
 
     public Long getComplaintId()
     {
@@ -271,165 +264,52 @@ public class Complaint implements Serializable, AcmObject
         this.incidentDate = incidentDate;
     }
 
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
-    /**
-     * Sets the created date of this Complaint and of any nested objects.
-     * @param created
-     */
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
-
-        if ( getOriginator() != null )
-        {
-            getOriginator().setCreated(created);
-        }
-
-        for ( ObjectAssociation oa : childObjects )
-        {
-            if ( oa.getCreated() == null )
-            {
-                oa.setCreated(created);
-            }
-        }
-        for ( PersonAssociation pa : personAssociations )
-        {
-            if ( pa.getCreated() == null )
-            {
-                pa.setCreated(created);
-            }
-        }
-
-        for ( AcmParticipant ap : getParticipants() )
-        {
-            ap.setCreated(created);
-        }
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
-    /**
-     * Sets the creator of this Complaint and of any nested objects.
-     * @param creator
-     */
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
-
-        if ( getOriginator() != null )
-        {
-            getOriginator().setCreator(creator);
-        }
-
-        for ( ObjectAssociation oa : childObjects )
-        {
-            if ( oa.getCreator() == null )
-            {
-                oa.setCreator(creator);
-            }
-        }
-        
-        for ( PersonAssociation pa : personAssociations )
-        {
-            if ( pa.getCreator() == null )
-            {
-                pa.setCreator(creator);
-            }
-        }
-
-        for ( AcmParticipant ap : getParticipants() )
-        {
-            ap.setCreator(creator);
-        }
     }
 
+    @Override
     public Date getModified()
     {
         return modified;
     }
 
-    /**
-     * Sets the modified date of this Complaint and of any nested objects.
-     * @param modified
-     */
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
-
-        if ( getOriginator() != null )
-        {
-            getOriginator().setModified(modified);
-        }
-
-        for ( ObjectAssociation oa : childObjects )
-        {
-            if ( oa.getModified() == null )
-            {
-                oa.setModified(modified);
-            }
-        }
-        for ( PersonAssociation pa : personAssociations)
-        {
-            if ( pa.getModified() == null )
-            {
-                pa.setModified(modified);
-            }
-        }
-
-        for ( AcmParticipant ap : getParticipants() )
-        {
-            ap.setModified(modified);
-        }
-
    }
 
+    @Override
     public String getModifier()
     {
         return modifier;
     }
 
-    /**
-     * Sets the modifier of this Complaint and of any nested objects.
-     * @param modifier
-     */
+    @Override
     public void setModifier(String modifier)
     {
-        log.info("setting modifier to: '" + modifier + "'");
         this.modifier = modifier;
-
-        if ( getOriginator() != null )
-        {
-            getOriginator().setModifier(modifier);
-        }
-
-        for ( ObjectAssociation oa : childObjects )
-        {
-            if ( oa.getModifier() == null )
-            {
-                oa.setModifier(modifier);
-            }
-        }
-        
-        for ( PersonAssociation pa : personAssociations )
-        {
-            if ( pa.getModifier() == null )
-            {
-                pa.setModifier(modifier);
-            }
-        }
-
-        for ( AcmParticipant ap : getParticipants() )
-        {
-            ap.setModifier(modifier);
-        }
-
     }
 
     public String getStatus()
@@ -469,10 +349,6 @@ public class Complaint implements Serializable, AcmObject
 
     public void setEcmFolderId(String ecmFolderId)
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Set folder ID to '" + ecmFolderId + "'");
-        }
         this.ecmFolderId = ecmFolderId;
     }
 
@@ -553,17 +429,15 @@ public class Complaint implements Serializable, AcmObject
         this.frequency = frequency;
     }
 
-    public String getLocation() 
-    {
-        return location;
-    }
+    public PostalAddress getLocation() {
+		return location;
+	}
 
-    public void setLocation(String location)
-    {
-        this.location = location;
-    }
+	public void setLocation(PostalAddress location) {
+		this.location = location;
+	}
 
-    public List<AcmParticipant> getParticipants()
+	public List<AcmParticipant> getParticipants()
     {
         return participants;
     }

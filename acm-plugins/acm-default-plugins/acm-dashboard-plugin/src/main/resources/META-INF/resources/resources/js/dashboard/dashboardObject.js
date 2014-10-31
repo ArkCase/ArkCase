@@ -6,7 +6,7 @@
  * @author jwu
  */
 Dashboard.Object = {
-    initialize : function() {
+    create : function() {
     }
 
 };

@@ -7,10 +7,10 @@
  */
 Topbar.Service = {
     create : function() {
-        if (this.Asn.create) {this.Asn.create();}
+        if (this.Asn.create) {Topbar.Service.Asn.create();}
     }
     ,initialize: function() {
-        if (this.Asn.initialize) {this.Asn.initialize();}
+        if (this.Asn.initialize) {Topbar.Service.Asn.initialize();}
     }
 
     ,Suggestion: {

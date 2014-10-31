@@ -6,7 +6,7 @@
  * @author jwu
  */
 Complaint.Service = {
-    initialize : function() {
+    create : function() {
     }
 
     ,API_LIST_COMPLAINT         : "/api/latest/plugin/search/COMPLAINT"
@@ -16,9 +16,12 @@ Complaint.Service = {
     ,API_UPLOAD_COMPLAINT_FILE  : "/api/latest/plugin/complaint/file"
     ,API_RETRIEVE_TASKS         : "/api/latest/plugin/search/children?parentType=COMPLAINT&childType=TASK&parentId="
     ,API_RETRIEVE_PERSON_LIST_COMPLAINT   : "/api/latest/plugin/person/list/complaint/"
-    //,API_SAVE_PERSON             : "/api/latest/plugin/person"
     ,API_SAVE_PERSON_ASSOCIATION : "/api/latest/plugin/personAssociation"
-    ,API_DELETE_PERSON           : "/api/latest/plugin/person/delete/"
+    ,API_DELETE_PERSON_ASSOCIATION           : "/api/latest/plugin/personAssociation/delete/"
+    ,API_SAVE_NOTE               : "/api/latest/plugin/note"
+    ,API_DELETE_NOTE             : "/api/latest/plugin/note/"
+    ,API_LIST_NOTES              : "/api/latest/plugin/note/"
+
 
 
 
@@ -48,38 +51,33 @@ Complaint.Service = {
             ,Complaint.Callback.EVENT_COMPLAIN_SAVED
         );
     }
-  /*  ,savePerson: function(data){
-        Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_PERSON
+    ,saveNote : function(data) {
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_NOTE
             ,JSON.stringify(data)
-            ,Complaint.Callback.EVENT_PERSON_SAVED
+            ,Complaint.Callback.EVENT_NOTE_SAVED
         );
-    }*/
-
+    }
     ,savePersonAssociation: function(data){
         Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_PERSON_ASSOCIATION
             ,JSON.stringify(data)
             ,Complaint.Callback.EVENT_PERSON_ASSOCIATION_SAVED
         );
     }
-    ,deletePersonById: function(personId){
-        var url = (App.getContextPath() + this.API_DELETE_PERSON + personId);
-        Acm.Ajax.asyncPost(App.getContextPath() + this.API_DELETE_PERSON + personId
-            ,Complaint.Callback.EVENT_PERSON_DELETED
+    ,deletePersonAssociationById: function(personAssocId){
+        var url = (App.getContextPath() + this.API_DELETE_PERSON_ASSOCIATION + personAssocId);
+        Acm.Ajax.asyncDelete(App.getContextPath() + this.API_DELETE_PERSON_ASSOCIATION + personAssocId
+            ,Complaint.Callback.EVENT_PERSON_ASSOCIATION_DELETED
         );
     }
-//    ,retrievePersonListComplaint : function(parentId) {
-//        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_PERSON_LIST_COMPLAINT + parentId
-//            ,Complaint.Callback.EVENT_COMPLAINT_PERSON_LIST_RETRIEVED
-//        );
-//    }
-
-//    ,retrieveTasks : function(complaintId) {
-//        //Acm.Ajax.asyncGet(App.getContextPath() + "/api/v1/plugin/search/quickSearch?q=object_type_s:Task&start=0&n=800&s="
-//        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_TASKS + complaintId
-//            ,Complaint.Callback.EVENT_TASKS_RETRIEVED
-//        );
-//    }
-
-
+    ,deleteNoteById: function(noteId){
+        var url = (App.getContextPath() + this.API_DELETE_NOTE + noteId);
+        Acm.Ajax.asyncDelete(App.getContextPath() + this.API_DELETE_NOTE + noteId
+            ,Complaint.Callback.EVENT_NOTE_DELETED
+        );
+    }
+    ,retrieveNotes : function(complaintId) {
+        var url = (App.getContextPath() + this.API_LIST_NOTES + App.OBJTYPE_COMPLAINT + "/" + complaintId);
+        Acm.Ajax.asyncGet(url ,Complaint.Callback.EVENT_NOTE_LIST_RETRIEVED);
+    }
 };
 

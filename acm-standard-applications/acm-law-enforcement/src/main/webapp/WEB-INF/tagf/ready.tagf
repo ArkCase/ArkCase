@@ -1,81 +1,100 @@
 <script type="text/javascript">
 
 jQuery(document).ready(function() {
-
     if ("undefined" != typeof Acm) {
-        Acm.initialize();
+        Acm.create();
     }
     if ("undefined" != typeof AcmEx) {
-        AcmEx.initialize();
+        AcmEx.create();
     }
     if ("undefined" != typeof App) {
-        App.initialize();
+        App.create();
     }
-//    if ("undefined" != typeof Topbar) {
-//        if (Topbar.create) {Topbar.create();}
-//        if (Topbar.initialize){Acm.deferred(Topbar.initialize);}
-//    }
-    var acmObjects = [
-        Topbar
-    ];
-    for (var i = 0; i < acmObjects.length; i++) {
-        var obj = acmObjects[i];
-        if ("undefined" != typeof obj) {
-            if (obj.create) {obj.create();}
-        }
-    };
-    for (var i = 0; i < acmObjects.length; i++) {
-        var obj = acmObjects[i];
-        if ("undefined" != typeof obj) {
-            if (obj.initialize){Acm.deferred(obj.initialize);}
-        }
-    };
-
+    if ("undefined" != typeof Topbar) {
+        if (Topbar.create) {Topbar.create();}
+        if (Topbar.initialize){Acm.deferred(Topbar.initialize);}
+    }
     if ("undefined" != typeof Sidebar) {
-        Sidebar.initialize();
+        Sidebar.create();
     }
     if ("undefined" != typeof Login) {
-        Login.initialize();
+        Login.create();
     }
     if ("undefined" != typeof Dashboard) {
-        Dashboard.initialize();
+        Dashboard.create();
     }
     if ("undefined" != typeof Complaint) {
-        Complaint.initialize();
+        Complaint.create();
     }
     if ( "undefined" != typeof CaseFile )
     {
-        CaseFile.initialize();
+        CaseFile.create();
     }
     if ("undefined" != typeof ComplaintWizard) {
-        ComplaintWizard.initialize();
+        ComplaintWizard.create();
     }
     if ("undefined" != typeof ComplaintList) {
-        ComplaintList.initialize();
+        ComplaintList.create();
     }
     if ("undefined" != typeof Task) {
-        Task.initialize();
+        Task.create();
     }
     if ("undefined" != typeof TaskWizard) {
-        TaskWizard.initialize();
+        TaskWizard.create();
     }
     if ("undefined" != typeof TaskList) {
-        TaskList.initialize();
+        TaskList.create();
     }
     if ("undefined" != typeof Search) {
-        Search.initialize();
+        Search.create();
     }
     if ("undefined" != typeof Admin) {
-        Admin.initialize();
+        Admin.create();
     }
     if ("undefined" != typeof AdminAccess) {
-        AdminAccess.initialize();
+        AdminAccess.create();
     }
     if ("undefined" != typeof Report) {
-        Report.initialize();
+        Report.create();
+    }
+    if ("undefined" != typeof Profile) {
+        if (Profile.create) {Profile.create();}
+        if (Profile.initialize){Acm.deferred(Profile.initialize);}
     }
 
-
+//    var acmModules = [
+//        Acm
+//        ,AcmEx
+//        ,App
+//        ,Topbar
+//        ,Sidebar
+//        ,Login
+//        ,Dashboard
+//        ,Complaint
+//        ,ComplaintWizard
+//        ,CaseFile
+//        ,Task
+//        ,TaskWizard
+//        ,TaskList
+//        ,Search
+//        ,Admin
+//        ,AdminAccess
+//        ,Report
+//        ,Profile
+//    ];
+//
+//    for (var i = 0; i < acmModules.length; i++) {
+//        var module = acmModules[i];
+//        if ("undefined" != typeof module) {
+//            if (module.create) {module.create();}
+//        }
+//    }
+//    for (var i = 0; i < acmModules.length; i++) {
+//        var module = acmModules[i];
+//        if ("undefined" != typeof module) {
+//            if (module.initialize){Acm.deferred(module.initialize);}
+//        }
+//    }
 
 });
 

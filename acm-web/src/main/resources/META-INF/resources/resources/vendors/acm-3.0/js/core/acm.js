@@ -4,14 +4,14 @@
  * @author jwu
  */
 var Acm = Acm || {
-    initialize : function() {
-        Acm.Dialog.initialize();
-        Acm.Dispatcher.initialize();
-        Acm.Ajax.initialize();
-        Acm.Object.initialize();
-        Acm.Event.initialize();
-        Acm.Rule.initialize();
-        Acm.Model.initialize();
+    create : function() {
+        Acm.Dialog.create();
+        Acm.Dispatcher.create();
+        Acm.Ajax.create();
+        Acm.Object.create();
+        Acm.Event.create();
+        Acm.Rule.create();
+        Acm.Model.create();
 
         Acm.deferred(Acm.Event.onPostInit);
     }
@@ -225,6 +225,7 @@ var Acm = Acm || {
             ;
     }
 
+    //todo: relocate this to AcmEx.Object.XEditable
     //parameter d from x-editable date format, both getDate() and getMonth() are zero based
     ,xDateToDatetime: function(d) {
         if (null == d) {

@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
@@ -17,13 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 /**
  * Created by marst on 7/29/14.
@@ -102,9 +99,15 @@ public class GetDashboardConfigAPIController {
     private DashboardDto prepareDashboardDto(Dashboard dashboard, boolean inserted){
         DashboardDto dashboardDto = new DashboardDto();
         dashboardDto.setUserId(dashboard.getDashboardOwner().getUserId());
-        dashboardDto.setDashboardConfig(dashboard.getDashobardConfig());
+        dashboardDto.setDashboardConfig(removeHashKeyValues(dashboard.getDashobardConfig()));
         dashboardDto.setInserted(inserted);
         return dashboardDto;
+    }
+
+    private String removeHashKeyValues(String dashboardConfigWithHashValues) {
+        //the regex ",\"\\$\\$hashKey\":\"\\w+\"" is used in replaceAll(...) method to remove
+        //all ,"$$hashKey":"00A" like strings added by  angularjs into dashboard config json string.
+        return dashboardConfigWithHashValues.replaceAll(",\"\\$\\$hashKey\":\"\\w+\"","");
     }
 
     private Dashboard createDashbaord(AcmUser owner) {

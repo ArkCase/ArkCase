@@ -6,16 +6,21 @@
  * @author jwu
  */
 Admin.Service = {
-    initialize : function() {
+    create : function() {
     }
 
-//    ,API_RETRIEVE_MY_TASKS       : "/api/latest/plugin/task/forUser/"
-//
-//
-//    ,retrieveMyTasks : function(user) {
-//        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_MY_TASKS + user
-//            ,Admin.Callback.EVENT_MY_TASKS_RETRIEVED
-//        );
-//    }
+    // Admin Access Control Policy related services
+
+    ,API_RETRIEVE_ACCESS_CONTROL       : "/api/latest/plugin/dataaccess/accessControlDefaults"
+
+    ,API_UPDATE_ACCESS_CONTROL         : "/api/latest/plugin/dataaccess/default/"
+
+    ,updateAdminAccess : function(data) {
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_UPDATE_ACCESS_CONTROL + data.id
+            ,JSON.stringify(data)
+            ,Admin.Callback.EVENT_ADMIN_ACCESS_UPDATED
+        );
+    }
+
 };
 

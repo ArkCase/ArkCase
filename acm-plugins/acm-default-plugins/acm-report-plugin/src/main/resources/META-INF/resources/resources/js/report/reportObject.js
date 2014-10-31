@@ -12,8 +12,8 @@ Report.Object = {
     COMPLAINT_REPORT : "Complaint Report",
     BILLING_REPORT : "Billing Report",
     CHOOSE_REPORT : "Choose Report",
-    
-    initialize : function() {
+
+    create : function() {
         var items = $(document).items();
         this.$selReport = $("#selectReport");
         

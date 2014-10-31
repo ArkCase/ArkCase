@@ -4,13 +4,13 @@
  * @author jwu
  */
 var Search = Search || {
-    initialize: function() {
-        Search.Object.initialize();
-        Search.Event.initialize();
-        Search.Page.initialize();
-        Search.Rule.initialize();
-        Search.Service.initialize();
-        Search.Callback.initialize();
+    create: function() {
+        Search.Object.create();
+        Search.Event.create();
+        Search.Page.create();
+        Search.Rule.create();
+        Search.Service.create();
+        Search.Callback.create();
 
         Acm.deferred(Search.Event.onPostInit);
     }

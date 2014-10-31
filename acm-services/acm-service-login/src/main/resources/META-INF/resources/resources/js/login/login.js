@@ -4,7 +4,7 @@
  * @author jwu
  */
 var Login = Login || {
-    initialize: function() {
+    create: function() {
         sessionStorage.setItem("AcmApprovers", null);
         sessionStorage.setItem("AcmComplaintTypes", null);
         sessionStorage.setItem("AcmPriorities", null);

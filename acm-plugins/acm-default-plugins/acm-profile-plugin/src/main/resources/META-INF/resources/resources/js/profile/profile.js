@@ -1,25 +1,18 @@
 /**
- * Dashboard is namespace component for Dashboard plugin
+ * Profile is namespace component for Dashboard Profile
  *
  * @author jwu
  */
-var Dashboard = Dashboard || {
-    initialize: function() {
-        Dashboard.Object.initialize();
-        Dashboard.Event.initialize();
-        Dashboard.Page.initialize();
-        Dashboard.Rule.initialize();
-        Dashboard.Service.initialize();
-        Dashboard.Callback.initialize();
-
-        Acm.deferred(Dashboard.Event.onPostInit);
+var Profile = Profile || {
+    create: function() {
+        if (Profile.Model.create)      {Profile.Model.create();}
+        if (Profile.View.create)       {Profile.View.create();}
+        if (Profile.Controller.create) {Profile.Controller.create();}
     }
-
-    ,Object: {}
-    ,Event:{}
-    ,Page: {}
-    ,Rule: {}
-    ,Service: {}
-    ,Callback: {}
+    ,initialize: function() {
+        if (Profile.Model.initialize)      {Profile.Model.initialize();}
+        if (Profile.View.initialize)       {Profile.View.initialize();}
+        if (Profile.Controller.initialize) {Profile.Controller.initialize();}
+    }
 };
 

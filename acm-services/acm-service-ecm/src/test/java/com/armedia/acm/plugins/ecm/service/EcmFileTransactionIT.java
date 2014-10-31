@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -47,6 +48,9 @@ public class EcmFileTransactionIT
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
     private String testFolderId;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -61,6 +65,8 @@ public class EcmFileTransactionIT
         String folderId = message.getPayloadAsString();
 
         testFolderId = folderId;
+
+        auditAdapter.setUserId("auditUser");
     }
 
     @Test
@@ -88,17 +94,18 @@ public class EcmFileTransactionIT
         messageProperties.put("ecmFolderId", testFolderId);
         messageProperties.put("inputStream", is);
         messageProperties.put("acmUser", auth);
+        messageProperties.put("auditAdapter", auditAdapter);
 
         MuleMessage message = muleClient.send("vm://addFile.in", ecmFile, messageProperties);
 
         EcmFile found = message.getPayload(EcmFile.class);
 
+        entityManager.flush();
+
         assertNotNull(found.getEcmFileId());
         assertNotNull(found.getCreator());
 
         log.debug("upload file id '" + found.getEcmFileId() + "'");
-
-        entityManager.flush();
 
         EcmFile persisted = entityManager.find(EcmFile.class, found.getFileId());
         assertNotNull(persisted);

@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
@@ -17,7 +18,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -30,17 +35,16 @@ import static org.junit.Assert.assertTrue;
         {
                 "/spring/spring-library-data-source.xml",
                 "/spring/spring-library-complaint.xml",
+                "/spring/spring-library-complaint-plugin-test-mule.xml",
                 "/spring/spring-library-activiti-actions.xml",
-                "/spring/spring-library-mule-context-manager.xml",
-                "/spring/spring-library-activemq.xml",
-                "/spring/spring-library-person.xml",
                 "/spring/spring-library-activiti-configuration.xml",
-                "/spring/spring-library-ecm-file.xml",
                 "/spring/spring-library-folder-watcher.xml",
-                "/spring/spring-library-cmis-configuration.xml",
-                "/spring/spring-library-drools-monitor.xml"
+                "/spring/spring-library-drools-monitor.xml",
+                "/spring/spring-library-user-service.xml",
+                "/spring/spring-library-context-holder.xml"
         }
 )
+@TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintServiceIT
 {
     private ComplaintService service;
@@ -51,9 +55,17 @@ public class ComplaintServiceIT
     @Autowired
     private SaveComplaintTransaction saveComplaintTransaction;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
     @Before
     public void setUp() throws Exception
     {
+        auditAdapter.setUserId("auditUser");
+
         service = new ComplaintService();
         service.setSaveComplaintTransaction(saveComplaintTransaction);
 
@@ -62,6 +74,7 @@ public class ComplaintServiceIT
     }
 
     @Test
+    @Transactional
     public void save() throws Exception
     {
         assertNotNull(service);
@@ -76,7 +89,15 @@ public class ComplaintServiceIT
         frevvoComplaint.setCategory("Agricultural");
         frevvoComplaint.setComplaintTag("No Tag");
         frevvoComplaint.setFrequency("Ongoing");
-        frevvoComplaint.setLocation(" 1222 pennsylvania av");       
+
+        PostalAddress location = new PostalAddress();
+        location.setStreetAddress("testAddress");
+        location.setCity("testCity");
+        location.setState("testState");
+        location.setZip("12345");
+        location.setType("home");
+        
+        frevvoComplaint.setLocation(location);
 
         Contact initiator = new Contact();
         frevvoComplaint.setInitiator(initiator);
@@ -91,6 +112,8 @@ public class ComplaintServiceIT
         assertEquals("Complaintant first", frevvoComplaint.getInitiator().getMainInformation().getFirstName());
 
         Complaint savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
+
+        entityManager.flush();
 
         assertNotNull(savedFrevvoComplaint.getComplaintId());
         assertNotNull(savedFrevvoComplaint.getComplaintNumber());

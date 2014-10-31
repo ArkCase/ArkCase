@@ -1,17 +1,18 @@
 package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.casefile.model.Disposition;
+import com.armedia.acm.services.users.model.AcmParticipant;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -25,7 +26,7 @@ import java.util.List;
 
 @Entity
 @Table(name="acm_close_complaint_request")
-public class CloseComplaintRequest implements Serializable, AcmObject
+public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
 {
     private static final long serialVersionUID = -6389711968453289552L;
 
@@ -44,13 +45,9 @@ public class CloseComplaintRequest implements Serializable, AcmObject
     @Column(name = "cm_close_complaint_status")
     private String status = "IN APPROVAL";
 
-    @ElementCollection
-    @CollectionTable(
-            name = "acm_form_approver",
-            joinColumns = @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_close_complaint_id")
-    )
-    @Column(name = "cm_approver_user_id")
-    private List<String> approvers = new ArrayList<>();
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "cm_object_id")
+    private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_close_complaint_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -69,38 +66,22 @@ public class CloseComplaintRequest implements Serializable, AcmObject
     @PrePersist
     public void beforeInsert()
     {
-        Date today = new Date();
-        setCreated(today);
-        setModified(today);
+        setupChildPointers();
+    }
 
-        if ( getDisposition() != null )
+    private void setupChildPointers()
+    {
+        for ( AcmParticipant ap : getParticipants() )
         {
-            getDisposition().setCreated(today);
-            getDisposition().setModified(today);
-
-            if ( getDisposition().getReferExternalContactMethod() != null )
-            {
-                getDisposition().getReferExternalContactMethod().setCreated(today);
-                getDisposition().getReferExternalContactMethod().setModified(today);
-            }
+            ap.setObjectId(getId());
+            ap.setObjectType("CLOSE_COMPLAINT_REQUEST");
         }
     }
 
     @PreUpdate
     public void beforeUpdate()
     {
-        Date today = new Date();
-        setModified(today);
-
-        if ( getDisposition() != null )
-        {
-            getDisposition().setModified(today);
-
-            if ( getDisposition().getReferExternalContactMethod() != null )
-            {
-                getDisposition().getReferExternalContactMethod().setModified(today);
-            }
-        }
+        setupChildPointers();
     }
 
     public Long getId()
@@ -143,54 +124,62 @@ public class CloseComplaintRequest implements Serializable, AcmObject
         this.status = status;
     }
 
-    public List<String> getApprovers()
-    {
-        return approvers;
-    }
-
-    public void setApprovers(List<String> approvers)
-    {
-        this.approvers = approvers;
-    }
-
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
     }
 
+    @Override
     public Date getModified()
     {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier()
     {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier)
     {
         this.modifier = modifier;
+    }
+
+    public List<AcmParticipant> getParticipants()
+    {
+        return participants;
+    }
+
+    public void setParticipants(List<AcmParticipant> participants)
+    {
+        this.participants = participants;
     }
 
     @Override

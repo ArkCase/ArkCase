@@ -4,13 +4,13 @@
  * @author jwu
  */
 var TaskList = TaskList || {
-    initialize: function() {
-        TaskList.Object.initialize();
-        TaskList.Event.initialize();
-        TaskList.Page.initialize();
-        TaskList.Rule.initialize();
-        TaskList.Service.initialize();
-        TaskList.Callback.initialize();
+    create: function() {
+        TaskList.Object.create();
+        TaskList.Event.create();
+        TaskList.Page.create();
+        TaskList.Rule.create();
+        TaskList.Service.create();
+        TaskList.Callback.create();
 
         Acm.deferred(TaskList.Event.onPostInit);
     }

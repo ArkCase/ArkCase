@@ -29,6 +29,10 @@
 
     <bean id="acmUserDao" class="com.armedia.acm.services.users.dao.ldap.UserDao"/>
 
+    <bean id="acmUserOrgDao" class="com.armedia.acm.plugins.profile.dao.UserOrgDao"/>
+
+    <bean id="acmOrganizationDao" class="com.armedia.acm.plugins.person.dao.OrganizationDao"/>
+
     <bean id="profilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Profile Plugin"/>
         <property name="pluginProperties" ref="profilePluginProperties"/>
@@ -42,6 +46,16 @@
                 <bean id="profileUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/profile"/>
+                    <property name="requiredPrivilege" ref="profilePrivilege"/>
+                </bean>
+                <bean id="profileUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/profile/get/{userId}"/>
+                    <property name="requiredPrivilege" ref="profilePrivilege"/>
+                </bean>
+                <bean id="profileUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/profile/userOrgInfo/set"/>
                     <property name="requiredPrivilege" ref="profilePrivilege"/>
                 </bean>
             </list>
@@ -61,5 +75,7 @@
             </list>
         </property>
     </bean>
+
+    <bean id="profileEventPublisher" class="com.armedia.acm.plugins.profile.service.ProfileEventPublisher"/>
 
 </beans>
