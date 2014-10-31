@@ -25,7 +25,10 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.complaint.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
+import com.armedia.acm.plugins.complaint.model.complaint.SearchResult;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.gson.Gson;
@@ -42,6 +45,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private AcmPluginManager acmPluginManager;
+    private PersonDao personDao;
 
     private ComplaintFactory complaintFactory = new ComplaintFactory();
 
@@ -51,16 +55,50 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
 	@Override
 	public Object init() {		
-		return load();
+		Object result = "";
+		
+		String mode = getRequest().getParameter("mode");
+		
+		if ("edit".equals(mode))
+		{
+			// TODO: Call service to get the XML form for editing
+		}
+		
+		return result;
 	}
 
 	@Override
 	public Object get(String action) {
 		Object result = null;
 		
-		if (action != null) {
-			if ("init-form-data".equals(action)) {
+		if (action != null) 
+		{
+			if ("init-form-data".equals(action)) 
+			{
 				result = initFormData();
+			}
+			
+			if ("search-existing-initiator".equals(action)) 
+			{
+				String existingContactName = getRequest().getParameter("existingContactName");
+				String existingContactValue = getRequest().getParameter("existingContactValue");
+				
+				result = searchExistingContact(existingContactName, existingContactValue);
+			}
+			
+			if ("existing-initiator".equals(action))
+			{
+				Long existingContactId = null;
+				try
+				{
+					existingContactId = Long.parseLong(getRequest().getParameter("existingContactId"));
+				}
+				catch(Exception e)
+				{
+					LOG.warn("Provided ID cannot be converted to Long format: ID=" + getRequest().getParameter("existingContactId"));
+				}
+				
+				result = getExistingContact(existingContactId);
 			}
 		}
 		
@@ -81,6 +119,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
     protected Complaint saveComplaint(Complaint complaint) throws MuleException
     {
+    	getComplaintFactory().setPersonDao(getPersonDao());
         com.armedia.acm.plugins.complaint.model.Complaint acmComplaint = getComplaintFactory().asAcmComplaint(complaint);
 
         acmComplaint = getSaveComplaintTransaction().saveComplaint(acmComplaint, getAuthentication());
@@ -95,36 +134,6 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         return complaint;
     }
-	
-	public Object load() {
-
-		Object result = null;
-		
-		if (getProperties() != null && getProperties().size() > 0) {
-			String formType = (String) getProperties().get(FrevvoFormName.COMPLAINT + ".type");	
-			
-			if (formType != null && !"".equals(formType)) {
-				StringBuilder builder = new StringBuilder();
-				String token = getAuthenticationTokenService().getTokenForAuthentication(getAuthentication());
-				
-				builder.append("<p0:form xmlns:p0=\"http://www.frevvo.com/schemas/" + formType + "\">");
-				builder.append("<serviceBaseUrl>" + getProperties().get(FrevvoFormUrl.SERVICE) + "</serviceBaseUrl>");	
-				// TODO: Init form data if needed
-				if (token != null && !"".equals(token)) {
-					builder.append("<acm_ticket>" + token + "</acm_ticket>");					
-				}
-				builder.append("</p0:form>");
-				
-				result = builder.toString();
-			}else{
-				LOG.warn("The form type for form name \"" + FrevvoFormName.COMPLAINT + "\" does not exist.");				
-			}
-		}else{
-			LOG.warn("Unable to load properties or the file is empty.");
-		}
-		
-		return result;
-	}
 	
 	private JSONObject initFormData(){
 		List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege("acm-complaint-approve");
@@ -160,8 +169,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         		followersOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
         	}
         	complaint.setFollowersOptions(followersOptions);
-        }
-     
+        }     
 			
 		
 		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
@@ -182,7 +190,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		MainInformation mainInformation = new MainInformation();
 		List<String> titles = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".titles"), ",");
 		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".types"), ",");
-		
+
 		mainInformation.setTitles(titles);
 		mainInformation.setAnonimuos("");
 		mainInformation.setTypes(types);
@@ -325,6 +333,115 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		return complaint;
 		
 	}
+	
+	// This search is from database. For now it's not used. We moved to SOLR search.
+	// Maybe this should be removed.
+	private Object searchExistingContact(String existingContactName, String existingContactValue)
+	{
+		SearchResult searchResult = new SearchResult();
+		
+		if ((null != existingContactName && !"".equals(existingContactName)) || (null != existingContactValue && !"".equals(existingContactValue)))
+		{
+			List<Person> persons = personDao.findByNameOrContactValue(existingContactName, existingContactValue);
+			if (null != persons && persons.size() > 0)
+			{
+				List<String> result = new ArrayList<String>();
+				for (Person person : persons)
+				{
+					result.add(person.getId() + "=" + person.getGivenName() + " " + person.getFamilyName());
+				}
+				
+				searchResult.setResult(result);
+			}
+		}
+		
+		
+		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		String jsonString = gson.toJson(searchResult);
+		
+		JSONObject json = new JSONObject(jsonString);
+		
+		return json;
+	}
+	
+	private Object getExistingContact(Long id)
+	{
+		SearchResult searchResult = new SearchResult();
+		
+		Person person = getPersonDao().find(id);
+		
+		if (null != person)
+		{
+			String information = "<strong>Title:</strong> " + person.getTitle() + "<br/>" +
+					             "<strong>First Name:</strong> " + person.getGivenName() + "<br/>" +
+								 "<strong>Last Name:</strong> " + person.getFamilyName() + "<br/>";
+			
+			// Communication Devices
+			information = information + "<strong>Communication Devices:</strong> <br/>";
+			List<ContactMethod> contactMethods = person.getContactMethods();
+			if (null != contactMethods && contactMethods.size() > 0)
+			{
+				for (ContactMethod contactMethod : contactMethods)
+				{
+					information = information + "   - " + contactMethod.getType() + ": " + contactMethod.getValue() + "<br/>";
+				}
+					
+			}
+			else
+			{
+				information = information + "   - No any data.<br/>";
+			}
+			
+			// Organizations
+			information = information + "<strong>Organizations:</strong> <br/>";
+			List<Organization> organizations = person.getOrganizations();
+			if (null != organizations && organizations.size() > 0)
+			{
+				for (Organization organization : organizations)
+				{
+					information = information + "   - " + organization.getOrganizationType() + ": " + organization.getOrganizationValue() + "<br/>";
+				}
+					
+			}
+			else
+			{
+				information = information + "   - No any data.<br/>";
+			}
+			
+			// Locations
+			information = information + "<strong>Locations:</strong> <br/>";
+			List<PostalAddress> locations = person.getAddresses();
+			if (null != locations && locations.size() > 0)
+			{
+				for (PostalAddress location : locations)
+				{
+					information = information + "   - " + location.getType() + ": <br/>" + 
+							                    "      - Address:" + location.getStreetAddress() + "<br/>" + 
+							                    "      - City:" + location.getCity() + "<br/>" + 
+							                    "      - State:" + location.getState() + "<br/>" + 
+							                    "      - Zip Code:" + location.getZip() + "<br/>";
+				}
+					
+			}
+			else
+			{
+				information = information + "   - No any data.<br/>";
+			}
+			
+			searchResult.setInformation(information);
+		}
+		else
+		{
+			LOG.warn("There is no any Person with ID=" + id);
+		}
+		
+		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		String jsonString = gson.toJson(searchResult);
+		
+		JSONObject json = new JSONObject(jsonString);
+		
+		return json;
+	}
 
     public SaveComplaintTransaction getSaveComplaintTransaction()
     {
@@ -353,5 +470,19 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	 */
 	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
 		this.acmPluginManager = acmPluginManager;
+	}
+
+	/**
+	 * @return the personDao
+	 */
+	public PersonDao getPersonDao() {
+		return personDao;
+	}
+
+	/**
+	 * @param personDao the personDao to set
+	 */
+	public void setPersonDao(PersonDao personDao) {
+		this.personDao = personDao;
 	}
 }

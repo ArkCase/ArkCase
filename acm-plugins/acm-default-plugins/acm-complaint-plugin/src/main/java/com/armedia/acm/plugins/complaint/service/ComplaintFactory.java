@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.complaint.service;
 import com.armedia.acm.form.config.Item;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.users.model.AcmParticipant;
@@ -14,6 +15,8 @@ import java.util.List;
 
 public class ComplaintFactory
 {
+	private PersonDao personDao;
+	
     public Complaint asAcmComplaint(com.armedia.acm.plugins.complaint.model.complaint.Complaint formComplaint)
     {
         Complaint retval = new Complaint();
@@ -40,6 +43,15 @@ public class ComplaintFactory
         {
             PersonAssociation pa = new PersonAssociation();
             Person p = new Person();
+
+            if (null != formComplaint.getInitiator().getContactType() && "existingInitiator".equals(formComplaint.getInitiator().getContactType()))
+            {
+            	if (null != formComplaint.getInitiator().getSearchResult() && null != formComplaint.getInitiator().getSearchResult().getId())
+            	{
+            		p = getPersonDao().find(formComplaint.getInitiator().getSearchResult().getId());
+            	}
+            }
+
             pa.setPerson(p);
             retval.setOriginator(pa);
 
@@ -70,28 +82,31 @@ public class ComplaintFactory
         pa.setPersonType(contact.getMainInformation().getType());
         pa.setNotes(contact.getNotes());
         
-        p.setTitle(contact.getMainInformation().getTitle());
-        p.setGivenName(contact.getMainInformation().getFirstName());
-        p.setFamilyName(contact.getMainInformation().getLastName());
-
-        if ( contact.getAlias() != null )
+        if (null == p.getId())
         {
-            p.getPersonAliases().add(contact.getAlias());
-        }
-
-        if ( contact.getLocation() != null && ! contact.getLocation().isEmpty() )
-        {
-            p.getAddresses().addAll(contact.getLocation());
-        }
-
-        if ( contact.getOrganization() != null && ! contact.getOrganization().isEmpty() )
-        {
-            p.getOrganizations().addAll(contact.getOrganization());
-        }
-
-        if ( contact.getCommunicationDevice() != null && ! contact.getCommunicationDevice().isEmpty() )
-        {
-            p.getContactMethods().addAll(contact.getCommunicationDevice());
+	        p.setTitle(contact.getMainInformation().getTitle());
+	        p.setGivenName(contact.getMainInformation().getFirstName());
+	        p.setFamilyName(contact.getMainInformation().getLastName());
+	
+	        if ( contact.getAlias() != null )
+	        {
+	            p.getPersonAliases().add(contact.getAlias());
+	        }
+	
+	        if ( contact.getLocation() != null && ! contact.getLocation().isEmpty() )
+	        {
+	            p.getAddresses().addAll(contact.getLocation());
+	        }
+	
+	        if ( contact.getOrganization() != null && ! contact.getOrganization().isEmpty() )
+	        {
+	            p.getOrganizations().addAll(contact.getOrganization());
+	        }
+	
+	        if ( contact.getCommunicationDevice() != null && ! contact.getCommunicationDevice().isEmpty() )
+	        {
+	            p.getContactMethods().addAll(contact.getCommunicationDevice());
+	        }
         }
 
 
@@ -117,4 +132,18 @@ public class ComplaintFactory
     	return participants;
     }
     
+
+	/**
+	 * @return the personDao
+	 */
+	public PersonDao getPersonDao() {
+		return personDao;
+	}
+
+	/**
+	 * @param personDao the personDao to set
+	 */
+	public void setPersonDao(PersonDao personDao) {
+		this.personDao = personDao;
+	}
 }
