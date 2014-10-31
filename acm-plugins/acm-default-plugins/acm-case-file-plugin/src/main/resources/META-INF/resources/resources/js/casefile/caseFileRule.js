@@ -6,7 +6,7 @@
  * @author jwu
  */
 CaseFile.Rule = {
-    initialize : function() {
+    create : function() {
     }
 };
 

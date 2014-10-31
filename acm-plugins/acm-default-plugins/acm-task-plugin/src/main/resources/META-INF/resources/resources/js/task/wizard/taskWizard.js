@@ -4,13 +4,13 @@
  * @author jwu
  */
 var TaskWizard = TaskWizard || {
-    initialize: function() {
-        TaskWizard.Object.initialize();
-        TaskWizard.Event.initialize();
-        TaskWizard.Page.initialize();
-        TaskWizard.Rule.initialize();
-        TaskWizard.Service.initialize();
-        TaskWizard.Callback.initialize();
+    create: function() {
+        TaskWizard.Object.create();
+        TaskWizard.Event.create();
+        TaskWizard.Page.create();
+        TaskWizard.Rule.create();
+        TaskWizard.Service.create();
+        TaskWizard.Callback.create();
 
         Acm.deferred(TaskWizard.Event.onPostInit);
     }

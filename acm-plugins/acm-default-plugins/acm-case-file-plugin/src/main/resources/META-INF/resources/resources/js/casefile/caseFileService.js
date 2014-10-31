@@ -6,7 +6,7 @@
  * @author jwu
  */
 CaseFile.Service = {
-    initialize : function() {
+    create : function() {
     }
 
     ,API_LIST_CASE_FILE         : "/api/latest/plugin/search/CASE_FILE"

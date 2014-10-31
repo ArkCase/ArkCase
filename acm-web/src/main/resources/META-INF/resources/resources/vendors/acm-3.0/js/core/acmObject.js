@@ -7,7 +7,7 @@
  * @author jwu
  */
 Acm.Object = {
-    initialize : function() {
+    create : function() {
     }
 
 

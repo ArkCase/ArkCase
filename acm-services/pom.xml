@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.15</version>
+        <version>3.0.16</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,6 +28,7 @@
     	<module>acm-service-electronic-signature</module>
     	<module>acm-service-frevvo-forms</module>
         <module>acm-service-notification</module>
+        <module>acm-service-note</module>
   </modules>
 
 

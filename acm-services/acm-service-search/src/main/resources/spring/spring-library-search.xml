@@ -2,14 +2,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
     <context:property-placeholder
         properties-ref="searchPluginProperties"
         ignore-unresolvable="true"
         local-override="false"
-        order="1"/>
+        order="987691"/>
 
 
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
@@ -18,13 +20,50 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.acm/searchPlugin.properties"/>
+        <property name="location" value="file:${user.home}/.acm/solr.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
+                <prop key="solr.host">localhost</prop>
+                <prop key="solr.port">8983</prop>
+                <prop key="solr.contextRoot">solr</prop>
+                <prop key="solr.quicksearch.core">acmQuickSearch</prop>
+                <prop key="solr.advancedsearch.core">acmAdvancedSearch</prop>
+                <prop key="solr.updateHandler">update</prop>
+                <prop key="solr.searchHandler">select</prop>
+                <prop key="solr.enableBatchUpdateBasedOnLastModified">true</prop>
+                <prop key="solr.batchUpdateFrequencyInMilliseconds">3600000</prop>
+                <prop key="solr.batchUpdateBatchSize">50</prop>
             </props>
         </property>
+    </bean>
+
+    <bean id="sendDocumentsToSolr" class="com.armedia.acm.services.search.service.SendDocumentsToSolr">
+        <property name="contextHolder" ref="acmContextHolder"/>
+    </bean>
+    <bean id="jpaObjectsToSearchService" class="com.armedia.acm.services.search.service.JpaObjectsToSearchService">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="sendToSolr" ref="sendDocumentsToSolr"/>
+    </bean>
+
+    <task:scheduler id="searchTaskScheduler" pool-size="1"/>
+    <task:scheduled-tasks scheduler="searchTaskScheduler">
+        <task:scheduled
+                ref="acmJpaBatchUpdateService"
+                method="jpaBatchUpdate"
+                fixed-delay="${solr.batchUpdateFrequencyInMilliseconds}"/>
+    </task:scheduled-tasks>
+
+    <bean id="acmJpaBatchUpdateService" class="com.armedia.acm.services.search.service.AcmJpaBatchUpdateService">
+        <property name="batchUpdateBasedOnLastModifiedEnabled" value="${solr.enableBatchUpdateBasedOnLastModified}"/>
+        <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.acm/solrLastBatchUpdate.properties"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="batchSize" value="${solr.batchUpdateBatchSize}"/>
+        <property name="objectsToSearchService" ref="jpaObjectsToSearchService"/>
     </bean>
 
     <!-- event publishers -->

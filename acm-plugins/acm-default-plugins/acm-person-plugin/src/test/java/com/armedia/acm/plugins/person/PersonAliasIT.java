@@ -1,10 +1,14 @@
 package com.armedia.acm.plugins.person;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.PersonAliasDao;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import java.util.Date;
 
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -15,19 +19,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
                                    "/spring/spring-library-person.xml",
-                                   "/spring/spring-library-person-plugin-test.xml",
-                                   "/spring/spring-library-mule-context-manager.xml",
-                                   "/spring/spring-library-mule-context-manager.xml",
-                                   "/spring/spring-library-activiti-actions.xml",
-                                   "/spring/spring-library-activemq.xml",
-                                   "/spring/spring-library-activiti-configuration.xml",
-                                   "/spring/spring-library-folder-watcher.xml",
-                                   "/spring/spring-library-cmis-configuration.xml",
-                                   "/spring/spring-library-drools-monitor.xml",
-                                   "/spring/spring-library-ecm-file.xml"
+                                   "/spring/spring-library-person-plugin-test-mule.xml"
                                    })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonAliasIT
@@ -37,6 +35,17 @@ public class PersonAliasIT
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    @PersistenceContext
+    private EntityManager em;
+
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
+    @Before
+    public void setUp()
+    {
+        auditAdapter.setUserId("auditUser");
+    }
 
     @Test
     @Transactional
@@ -46,14 +55,15 @@ public class PersonAliasIT
         
         pa.setAliasType("Others");
         pa.setAliasValue("ACM");
-        pa.setModifier("testModifier");
-        pa.setCreator("testCreator");
-        pa.setCreated(new Date());
-        pa.setModified(new Date());
-       
-      
+
+        pa.setPerson(new Person());
+
+        Person p = pa.getPerson();
+        p.setId(500L);
 
         PersonAlias saved = personAliasDao.save(pa);
+
+        em.flush();
 
         assertNotNull(saved.getId());
 

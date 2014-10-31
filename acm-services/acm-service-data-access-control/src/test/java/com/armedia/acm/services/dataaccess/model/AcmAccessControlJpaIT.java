@@ -1,10 +1,12 @@
 package com.armedia.acm.services.dataaccess.model;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -28,6 +30,9 @@ public class AcmAccessControlJpaIT
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
     private String accessLevel = "TEST_ACCESS_LEVEL";
     private String accessorType = "TEST_ACCESSOR_TYPE";
     private String objectType = "TEST OBJECT TYPE";
@@ -38,6 +43,8 @@ public class AcmAccessControlJpaIT
     @Before
     public void setUp() throws Exception
     {
+        auditAdapter.setUserId("auditUser");
+
         String deleteDefault = "DELETE FROM AcmAccessControlDefault a " +
                 "WHERE a.accessLevel = :accessLevel " +
                 "AND a.accessorType = :accessorType " +
@@ -76,8 +83,6 @@ public class AcmAccessControlJpaIT
         accessControlDefault.setAccessLevel(accessLevel);
         accessControlDefault.setAccessorType(accessorType);
         accessControlDefault.setAllowDiscretionaryUpdate(true);
-        accessControlDefault.setCreator("creator");
-        accessControlDefault.setModifier("modifier");
         accessControlDefault.setObjectState(objectState);
         accessControlDefault.setObjectType(objectType);
 
@@ -97,8 +102,6 @@ public class AcmAccessControlJpaIT
         accessControlEntry.setAccessLevel(accessLevel);
         accessControlEntry.setAccessorType(accessorType);
         accessControlEntry.setAllowDiscretionaryUpdate(true);
-        accessControlEntry.setCreator("creator");
-        accessControlEntry.setModifier("modifier");
         accessControlEntry.setObjectState(objectState);
         accessControlEntry.setObjectType(objectType);
         accessControlEntry.setObjectId(objectId);

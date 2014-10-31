@@ -6,7 +6,7 @@
  * @author jwu
  */
 Report.Event = {
-    initialize : function() {
+    create : function() {
 
     }
     ,onPostInit: function() {

@@ -9,17 +9,16 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.armedia.acm.data.AcmEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 @Entity
 @Table(name = "acm_person_assoc")
-public class PersonAssociation implements Serializable
+public class PersonAssociation implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -38,8 +37,8 @@ public class PersonAssociation implements Serializable
     @Column(name = "cm_person_assoc_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-   
-    @ManyToOne( cascade = CascadeType.ALL, optional = false)
+
+    @ManyToOne(cascade = { CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     @JoinColumn(name="cm_person_assoc_person_id", nullable = false) 
     private Person person;
     
@@ -80,36 +79,7 @@ public class PersonAssociation implements Serializable
     @Column(name = "cm_tag")
     private List<String> tags = new ArrayList<>();
 
-    @PrePersist
-    protected void beforeInsert()
-    {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("In beforeInsert()");
-        }
-        if ( getCreated() == null )
-        {
-            setCreated(new Date());
-        }
-
-        if ( getModified() == null )
-        {
-            setModified(new Date());
-        }
-
-   }
-
-    @PreUpdate
-    protected void beforeUpdate()
-    {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("In beforeUpdate()");
-        }
-        setModified(new Date());
-    }
-    
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
@@ -171,55 +141,53 @@ public class PersonAssociation implements Serializable
     public void setPersonDescription(String personDescription) 
     {
         this.personDescription = personDescription;
-    }   
-    
+    }
+
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
+    @Override
     public void setCreated(Date created) 
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator() 
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator) 
     {
         this.creator = creator;
-        
-        if ( getPerson() != null )
-        {
-            getPerson().setCreator(creator);
-        }
     }
 
+    @Override
     public Date getModified() {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified) 
     {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier() 
     {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier) 
     {
         this.modifier = modifier;
-        
-        if ( getPerson() != null )
-        {
-            getPerson().setModifier(modifier);
-        }
     }
 
     public String getNotes()

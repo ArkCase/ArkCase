@@ -6,7 +6,7 @@
  * @author jwu
  */
 TaskWizard.Object = {
-    initialize : function() {
+    create : function() {
         //access data from jsp page
     	var items = $(document).items();
         var parentType = items.properties("parentType").itemValue();
@@ -89,7 +89,17 @@ TaskWizard.Object = {
 	 * Get the start date field value
 	 */
     ,getValueEdtStartDate: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtStartDate);
+        //this is in mm/dd/yyyy format
+        var startDate = Acm.Object.getPlaceHolderInput(this.$edtStartDate);
+        //convert to yyyy-mm-dd format
+        var startDateArr = startDate.split("/");
+        var month = startDateArr[0];
+        var day = startDateArr[1];
+        var year = startDateArr[2];
+        var newStartDate = year + "-" + month + "-" + day;
+        //var newStartDate = startDate.split("/").reverse().join("-");
+        return newStartDate;
+        //return Acm.Object.getPlaceHolderInput(this.$edtStartDate);
     }
 
     /**
@@ -99,18 +109,21 @@ TaskWizard.Object = {
         return Acm.Object.setValueDatePicker(this.$edtStartDate, val);
     }
 
-	/**
-	 * Get the status select option field value
-	 */
-    ,getSelectedTextSelStatus: function() {
-        return Acm.Object.getSelectTextIgnoreFirst(this.$selStatus);
-    }
-
-	/**
-	 * Get the due date field value
-	 */
+    /**
+     * Get the due date field value
+     */
     ,getValueEdtDueDate: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtDueDate);
+        //this is in mm/dd/yyyy format
+        var dueDate = Acm.Object.getPlaceHolderInput(this.$edtDueDate);
+        //convert to yyyy-mm-dd format
+        var dueDateArr = dueDate.split("/");
+        var month = dueDateArr[0];
+        var day = dueDateArr[1];
+        var year = dueDateArr[2];
+        var newDueDate = year + "-" + month + "-" + day;
+        //var newDueDate = dueDate.split("/").reverse().join("-");
+        return newDueDate;
+        //return Acm.Object.getPlaceHolderInput(this.$edtDueDate);
     }
 
     /**
@@ -118,6 +131,12 @@ TaskWizard.Object = {
      */
     ,setValueEdtDueDate: function(val) {
         return Acm.Object.setValueDatePicker(this.$edtDueDate, val);
+    }
+	/**
+	 * Get the status select option field value
+	 */
+    ,getSelectedTextSelStatus: function() {
+        return Acm.Object.getSelectTextIgnoreFirst(this.$selStatus);
     }
     
     /**

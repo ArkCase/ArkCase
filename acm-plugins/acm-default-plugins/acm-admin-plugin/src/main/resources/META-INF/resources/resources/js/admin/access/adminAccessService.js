@@ -6,7 +6,7 @@
  * @author jwu
  */
 AdminAccess.Service = {
-    initialize : function() {
+    create : function() {
     }
 
     ,API_RETRIEVE_ACCESS_CONTROL       : "/api/latest/plugin/dataaccess/accessControlDefaults"

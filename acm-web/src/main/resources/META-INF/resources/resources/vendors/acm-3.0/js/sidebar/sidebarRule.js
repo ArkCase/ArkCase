@@ -6,7 +6,7 @@
  * @author jwu
  */
 Sidebar.Rule = {
-    initialize : function() {
+    create : function() {
     }
 };
 

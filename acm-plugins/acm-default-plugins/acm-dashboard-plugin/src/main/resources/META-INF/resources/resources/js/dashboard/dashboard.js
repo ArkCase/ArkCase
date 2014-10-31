@@ -4,13 +4,13 @@
  * @author jwu
  */
 var Dashboard = Dashboard || {
-    initialize: function() {
-        Dashboard.Object.initialize();
-        Dashboard.Event.initialize();
-        Dashboard.Page.initialize();
-        Dashboard.Rule.initialize();
-        Dashboard.Service.initialize();
-        Dashboard.Callback.initialize();
+    create: function() {
+        Dashboard.Object.create();
+        Dashboard.Event.create();
+        Dashboard.Page.create();
+        Dashboard.Rule.create();
+        Dashboard.Service.create();
+        Dashboard.Callback.create();
 
         Acm.deferred(Dashboard.Event.onPostInit);
     }

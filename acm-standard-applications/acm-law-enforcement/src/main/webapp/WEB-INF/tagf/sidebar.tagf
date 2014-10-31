@@ -23,21 +23,21 @@
                             <c:if test="${acm_privileges[requiredPrivilege]}">
                                 <li class="">
                                         <c:choose>
+                                            <%--Administration has a different icon name--%>
                                             <c:when test="${navTab.actionName == 'Administration'}">
-                                            <%--<a href="<c:url value='${navTab.url}' />" class="auto">--%>
+                                                <%--<li class="">--%>
+                                                <%--<a href="<c:url value='${navTab.url}' />" class="auto" data-target=".admin-collapse" data-toggle="collapse">--%>
 
-                                            <li class="">
-                                                <a href="<c:url value='${navTab.url}' />" class="auto" data-target=".admin-collapse" data-toggle="collapse">
-                                                        <i class="fa <c:url value='${navTab.iconName}' /> icon">
-                                                        </i>
-                                                        <span class="font-bold">${navTab.actionName}</span>
+                                                    <a href="<c:url value='${navTab.url}' />" class="auto">
+                                                            <i class="fa <c:url value='${navTab.iconName}' /> icon"></i>
+                                                            <span class="font-bold">${navTab.actionName}</span>
                                                     </a>
-                                                    <ul class="nav admin-collapse">
+                                                    <%--<ul class="nav admin-collapse">
                                                         <li> <a href="<c:url value='/plugin/admin/access' />"> <i class="i i-circle-sm"></i> <span>Access Control Policy</span> </a> </li>
                                                         <li> <a href="<c:url value='/plugin/admin/locks' />"> <i class="i i-circle-sm"></i> <span>Object Locks</span> </a> </li>
                                                         <li> <a href="<c:url value='/plugin/admin/dashboard' />"> <i class="i i-circle-sm"></i> <span>Dashboard Config</span> </a> </li>
-                                                    </ul>
-                                                </li>                                            
+                                                    </ul>--%>
+                                                <%--</li>--%>
                                             </c:when>
                                             <c:otherwise>
                                                 <a href="<c:url value='${navTab.url}' />" class="auto">

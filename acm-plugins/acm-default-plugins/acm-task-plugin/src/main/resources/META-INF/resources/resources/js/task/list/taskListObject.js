@@ -6,7 +6,7 @@
  * @author jwu
  */
 TaskList.Object = {
-    initialize : function() {
+    create : function() {
 
         this.$noTaskFoundMeassge = $("#noTaskFoundMeassge");
         this.showObject(this.$noTaskFoundMeassge, false);

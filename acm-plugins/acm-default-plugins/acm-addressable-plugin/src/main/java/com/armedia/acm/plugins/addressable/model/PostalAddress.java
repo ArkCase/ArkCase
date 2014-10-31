@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.addressable.model;
 
+import com.armedia.acm.data.AcmEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "acm_postal_address")
-public class PostalAddress implements Serializable
+public class PostalAddress implements Serializable, AcmEntity
 {
 
     private static final long serialVersionUID = 673622283387112922L;
@@ -40,6 +41,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="created"),
+		@XmlElement(name="locationDate"),
 		@XmlElement(name="initiatorLocationDate"),
 		@XmlElement(name="peopleLocationDate")
 		
@@ -50,6 +52,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="creator"),
+		@XmlElement(name="locationAddedBy"),
 		@XmlElement(name="initiatorLocationAddedBy"),
 		@XmlElement(name="peopleLocationAddedBy")
 		
@@ -69,6 +72,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="type"),
+		@XmlElement(name="locationType"),
 		@XmlElement(name="initiatorLocationType"),
 		@XmlElement(name="peopleLocationType")
 		
@@ -81,6 +85,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="streetAddress"),
+		@XmlElement(name="locationAddress"),
 		@XmlElement(name="initiatorLocationAddress"),
 		@XmlElement(name="peopleLocationAddress")
 		
@@ -93,6 +98,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="city"),
+		@XmlElement(name="locationCity"),
 		@XmlElement(name="initiatorLocationCity"),
 		@XmlElement(name="peopleLocationCity")
 		
@@ -102,6 +108,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="state"),
+		@XmlElement(name="locationState"),
 		@XmlElement(name="initiatorLocationState"),
 		@XmlElement(name="peopleLocationState")
 		
@@ -111,6 +118,7 @@ public class PostalAddress implements Serializable
 
     @XmlElements({
 		@XmlElement(name="zip"),
+		@XmlElement(name="locationZip"),
 		@XmlElement(name="initiatorLocationZip"),
 		@XmlElement(name="peopleLocationZip")
 		
@@ -124,28 +132,11 @@ public class PostalAddress implements Serializable
     @PrePersist
     protected void beforeInsert()
     {
-        log.info("In before insert on PostalAddress");
+        log.trace("In before insert on PostalAddress");
         if ( getStatus() == null || getStatus().trim().isEmpty() )
         {
             setStatus("ACTIVE");
         }
-
-        if ( getCreated() == null )
-        {
-            setCreated(new Date());
-        }
-
-        if ( getModified() == null )
-        {
-            setModified(new Date());
-        }
-
-    }
-
-    @PreUpdate
-    protected void beforeUpdate()
-    {
-        setModified(new Date());
     }
 
     public Long getId()
@@ -158,41 +149,49 @@ public class PostalAddress implements Serializable
         this.id = id;
     }
 
+    @Override
     public Date getCreated()
     {
         return created;
     }
 
+    @Override
     public void setCreated(Date created)
     {
         this.created = created;
     }
 
+    @Override
     public String getCreator()
     {
         return creator;
     }
 
+    @Override
     public void setCreator(String creator)
     {
         this.creator = creator;
     }
 
+    @Override
     public Date getModified()
     {
         return modified;
     }
 
+    @Override
     public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
+    @Override
     public String getModifier()
     {
         return modifier;
     }
 
+    @Override
     public void setModifier(String modifier)
     {
         this.modifier = modifier;

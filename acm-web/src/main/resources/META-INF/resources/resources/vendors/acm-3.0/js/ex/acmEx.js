@@ -4,8 +4,8 @@
  * @author jwu
  */
 var AcmEx = AcmEx || {
-    initialize : function() {
-        AcmEx.Object.initialize();
+    create : function() {
+        AcmEx.Object.create();
     }
 
 //    ,Object : {}

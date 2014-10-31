@@ -6,7 +6,7 @@
  * @author jwu
  */
 Sidebar.Event = {
-    initialize : function() {
+    create : function() {
     }
 
     ,onClickLnkNav : function(e) {

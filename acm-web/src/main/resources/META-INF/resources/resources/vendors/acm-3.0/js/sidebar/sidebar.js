@@ -4,22 +4,16 @@
  * @author jwu
  */
 var Sidebar = Sidebar || {
-    initialize: function() {
-        Sidebar.Object.initialize();
-        Sidebar.Event.initialize();
-        Sidebar.Page.initialize();
-        Sidebar.Rule.initialize();
-        Sidebar.Service.initialize();
-        Sidebar.Callback.initialize();
+    create: function() {
+        Sidebar.Object.create();
+        Sidebar.Event.create();
+        Sidebar.Page.create();
+        Sidebar.Rule.create();
+        Sidebar.Service.create();
+        Sidebar.Callback.create();
 
         Acm.deferred(Sidebar.Event.onPostInit);
     }
 
-//    ,Object: {}
-//    ,Event:{}
-//    ,Page: {}
-//    ,Rule: {}
-//    ,Service: {}
-//    ,Callback: {}
 };
 

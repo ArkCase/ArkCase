@@ -6,7 +6,7 @@
  * @author jwu
  */
 CaseFile.Callback = {
-    initialize : function() {
+    create : function() {
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_RETRIEVED, this.onListRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_RETRIEVED, this.onDetailRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_CASEFILE_SAVED, this.onCaseFileSaved);

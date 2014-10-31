@@ -373,7 +373,11 @@ ul.typeahead.dropdown-menu  div.icontype {
 }
 
 
-
+ul.list-group li.list-group-item div.row div.col-xs-12 span.btn-rounded.btn-sm.btn-info {
+	margin-bottom: 5px !important;
+	position: relative;
+	display: inline-block;
+}
 
 .dropdown-menu.pull-left {
   left: 100%;
@@ -1987,6 +1991,10 @@ fieldset[disabled] .btn-success.active {
   background-color: #1ccacc;
   border-color: #1ccacc;
 }
+
+
+
+
 .btn-info:hover,
 .btn-info:focus,
 .btn-info:active,

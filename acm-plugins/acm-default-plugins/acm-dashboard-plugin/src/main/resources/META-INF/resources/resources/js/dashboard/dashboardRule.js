@@ -6,7 +6,7 @@
  * @author jwu
  */
 Dashboard.Rule = {
-    initialize : function() {
+    create : function() {
     }
 };
 

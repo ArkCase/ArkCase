@@ -6,7 +6,7 @@
  * @author jwu
  */
 TaskList.Page = {
-    initialize : function() {
+    create : function() {
     }
 
 	/**

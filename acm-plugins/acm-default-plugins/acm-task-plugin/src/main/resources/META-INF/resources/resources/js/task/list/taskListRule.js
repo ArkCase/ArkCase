@@ -6,7 +6,7 @@
  * @author jwu
  */
 TaskList.Rule = {
-    initialize : function() {
+    create : function() {
     }
 };
 

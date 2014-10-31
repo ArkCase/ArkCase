@@ -6,7 +6,7 @@
  * @author jwu
  */
 Sidebar.Page = {
-    initialize : function() {
+    create : function() {
     }
 };
 

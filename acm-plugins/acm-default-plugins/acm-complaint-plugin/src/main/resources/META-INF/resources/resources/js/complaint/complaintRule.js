@@ -6,7 +6,7 @@
  * @author jwu
  */
 Complaint.Rule = {
-    initialize : function() {
+    create : function() {
     }
 };
 

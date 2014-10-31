@@ -6,7 +6,7 @@
  * @author jwu
  */
 AdminAccess.Event = {
-    initialize : function() {
+    create : function() {
     }
 
     ,onClickBtnTest: function(e) {

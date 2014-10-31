@@ -1,6 +1,4 @@
-/**
- * Created by manoj.dhungana on 10/1/2014.
- */
+
 /**
  * Complaint.JTable
  *
@@ -9,7 +7,7 @@
  * @author jwu
  */
 Complaint.JTable = {
-    initialize : function() {
+    create : function() {
     }
     //
     //------------------ Initiator ------------------
@@ -240,7 +238,7 @@ Complaint.JTable = {
                 }
                 ,personType: {
                     title: 'Type'
-                    ,options: Complaint.getPersonTypes()
+                    ,edit: false
                 }
                 ,personDescription: {
                     title: 'Description'
@@ -270,7 +268,6 @@ Complaint.JTable = {
                     Complaint.JTable._updatePersonAssociation(complaint);
 
                     Complaint.Service.saveComplaint(complaint);
-                    Complaint.Object.refreshJTablePeople();
                 }
             }
             ,formCreated: function (event, data) {
@@ -287,7 +284,12 @@ Complaint.JTable = {
     ,_openInitiatorDevices: function($t, $row) {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
-                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES, sorting: true, actions: {
+                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
+                ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Device'
+                }
+                ,actions: {
                     listAction: function (postData, jtParams) {
                         var index = $row.closest('tr');
                         var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -430,7 +432,12 @@ Complaint.JTable = {
     ,_openInitiatorOrganizations: function($t, $row) {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
-                title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS, sorting: true, actions: {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
+                ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Organization'
+                }
+                ,actions: {
                     listAction: function (postData, jtParams) {
                         var index = $row.closest('tr');
                         var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -575,7 +582,12 @@ Complaint.JTable = {
     ,_openInitiatorLocations: function($t, $row) {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
-                title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS, sorting: true, actions: {
+                title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
+                ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Location'
+                }
+                ,actions: {
                     listAction: function (postData, jtParams) {
                         var index = $row.closest('tr');
                         var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -751,7 +763,12 @@ Complaint.JTable = {
     ,_openInitiatorAliases: function($jt, $row) {
         $jt.jtable('openChildTable', $row.closest('tr')
             , {
-                title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES, sorting: true, actions: {
+                title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
+                ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Alias'
+                }
+                ,actions: {
                     listAction: function (postData, jtParams) {
                         var index = $row.closest('tr');
                         var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -906,11 +923,9 @@ Complaint.JTable = {
         if(personAssociationRecord){
             if(personAssociationRecord.personType == 'Initiator'){
                 if(complaint){
-                    if(complaint.originator){
-                        var currentPerson = personAssociationRecord;
-                        complaint.originator = currentPerson;
-                        Complaint.Object.refreshJTableInitiator();
-                    }
+                    var currentPerson = personAssociationRecord;
+                    complaint.originator = currentPerson;
+                    Complaint.Object.refreshJTableInitiator();
                 }
             }
         }
@@ -958,30 +973,20 @@ Complaint.JTable = {
         this._createJTable4SubTablePeople($s, {
             title: 'People'
             ,paging: false
+            ,messages: {
+                addNewRecord: 'Add Person'
+            }
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var complaint = Complaint.getComplaint();
-                    if(complaint){
+                    if(complaint && complaint.originator){
                         if(complaint.personAssociations){
                             var personAssociations = complaint.personAssociations;
                             var cnt = personAssociations.length;
                             for (var i = 0; i < cnt; i++) {
-                                var person = personAssociations[i].person;
-                                /*if(!complaint.originator)
-                                {
-                                    if(personAssociations[i].personType != 'Initiator'){
-                                        rc.Records.push({
-                                            personId: person.id
-                                            ,title: person.title
-                                            ,givenName: person.givenName
-                                            ,familyName: person.familyName
-                                            ,personType: personAssociations[i].personType
-                                            ,personDescription: personAssociations[i].personDescription
-                                        });
-                                    }
-                                }
-                                else{*/
+                                if(personAssociations[i].id != complaint.originator.id){
+                                    var person = personAssociations[i].person;
                                     rc.Records.push({
                                         personId: person.id
                                         ,title: person.title
@@ -990,7 +995,7 @@ Complaint.JTable = {
                                         ,personType: personAssociations[i].personType
                                         ,personDescription: personAssociations[i].personDescription
                                     });
-                                //}
+                                }
                             }
                         }
                     }
@@ -1056,7 +1061,7 @@ Complaint.JTable = {
                 ,personType: {
                     title: 'Type'
                     //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
-                    ,options: Complaint.getPersonTypes()
+                    ,options: Complaint.getPersonTypesModifiable()
                 }
                 ,personDescription: {
                     title: 'Description'
@@ -1077,10 +1082,6 @@ Complaint.JTable = {
                         newPersonAssociationRecord.person.title = record.title;
                         newPersonAssociationRecord.person.givenName = record.givenName;
                         newPersonAssociationRecord.person.familyName = record.familyName;
-
-                        //check if originator needs to be updated
-                        Complaint.JTable._updateOriginatorRecord(newPersonAssociationRecord,complaint);
-
                         Complaint.Service.savePersonAssociation(newPersonAssociationRecord);
                     }
                 }
@@ -1100,10 +1101,6 @@ Complaint.JTable = {
                             person.title = record.title;
                             person.givenName = record.givenName;
                             person.familyName = record.familyName;
-
-                            //check if originator needs to be updated
-                            Complaint.JTable._updateOriginatorRecord(personAssociations[whichRow],complaint);
-
                             Complaint.Service.saveComplaint(complaint);
                         }
                     }
@@ -1116,14 +1113,9 @@ Complaint.JTable = {
                 if (complaint) {
                     if (complaint.personAssociations) {
                         var personAssociations = complaint.personAssociations;
-                        if (personAssociations[whichRow].person) {
-                            var personId = personAssociations[whichRow].person.id;
-                            //personAssociations.splice(whichRow, 1);
-
-                            //check if originator needs to be updated
-                            Complaint.JTable._updateOriginatorRecord(personAssociations[whichRow],complaint);
-
-                            Complaint.Service.deletePersonById(personId);
+                        if (personAssociations[whichRow]) {
+                            var personAssocId = personAssociations[whichRow].id;
+                            Complaint.Service.deletePersonAssociationById(personAssocId);
                         }
                     }
                 }
@@ -1137,212 +1129,181 @@ Complaint.JTable = {
     ,_openPeopleDevices: function($t, $row) {
         $t.jtable('openChildTable'
             ,$row.closest('tr')
-            ,{
-                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
-                ,sorting: true
-                ,actions: {
-                    listAction: function(postData, jtParams) {
+            , {
+                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES, sorting: true, messages: {
+                    addNewRecord: 'Add Device'
+                }, actions: {
+                    listAction: function (postData, jtParams) {
+                        var rc = AcmEx.Object.jTableGetEmptyRecords();
                         var recordParent = $row.closest('tr').data('record');
-                        var personId = recordParent.personId;
-                        //var rowId = $row.closest('tr')[0].rowIndex;
-                        //var rowId = $row.closest('tr').index();
-                        //var rowIndex = rowId - 1;
-                        //var rowIndex = 0;
-                        //var rowIndex = $row
+                        if (recordParent && recordParent.personId) {
+                            var personId = recordParent.personId;
+
+                            //var rowId = $row.closest('tr')[0].rowIndex;
+                            //var rowId = $row.closest('tr').index();
+                            //var rowIndex = rowId - 1;
+                            //var rowIndex = 0;
+                            //var rowIndex = $row
 //                            .closest('tr') // closest tr parent element
 //                            .prevAll() // all sibling elements in front of it
 //                            .length; // find their count
-                        var rc = AcmEx.Object.jTableGetEmptyRecords();
-                        var complaint = Complaint.getComplaint();
-                        if(complaint){
-                            if(complaint.personAssociations){
-                                var personAssociations = complaint.personAssociations;
-                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                                if (currentPersonAssoc.person) {
-                                    var person = currentPersonAssoc.person;
-                                    if(person.contactMethods) {
-                                        var contactMethods = person.contactMethods;
-                                        var cnt = contactMethods.length;
-                                        for (var i = 0; i < cnt; i++) {
-                                            rc.Records.push({
-                                                personId: person.id
-                                                ,type: contactMethods[i].type
-                                                ,value: Acm.goodValue(contactMethods[i].value)
-                                                ,created: Acm.getDateFromDatetime(contactMethods[i].created)
-                                                ,creator: contactMethods[i].creator
-                                            });
+                            var complaint = Complaint.getComplaint();
+                            if (complaint) {
+                                if (complaint.personAssociations) {
+                                    var personAssociations = complaint.personAssociations;
+                                    var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                    if (currentPersonAssoc.person) {
+                                        var person = currentPersonAssoc.person;
+                                        if (person.contactMethods) {
+                                            var contactMethods = person.contactMethods;
+                                            var cnt = contactMethods.length;
+                                            for (var i = 0; i < cnt; i++) {
+                                                rc.Records.push({
+                                                    personId: person.id,
+                                                    type: contactMethods[i].type,
+                                                    value: Acm.goodValue(contactMethods[i].value),
+                                                    created: Acm.getDateFromDatetime(contactMethods[i].created),
+                                                    creator: contactMethods[i].creator
+                                                });
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                         return rc;
-                    }
-                    ,createAction: function(postData, jtParams) {
-                        var recordParent = $row.closest('tr').data('record');
-                        var personId = recordParent.personId;
-
-                        var record = Acm.urlToJson(postData);
+                    }, createAction: function (postData, jtParams) {
                         var rc = AcmEx.Object.jTableGetEmptyRecord();
-                        var complaint = Complaint.getComplaint();
-                        if (complaint) {
-                            if (complaint.personAssociations) {
-                                var personAssociations = complaint.personAssociations;
-                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                                if (currentPersonAssoc.person) {
-                                    var person = currentPersonAssoc.person;
-                                    rc.Record.personId = person.id;
-                                    rc.Record.type = record.type;
-                                    rc.Record.value = Acm.goodValue(record.value);
-                                    rc.Record.created = Acm.getCurrentDay(); //record.created;
-                                    rc.Record.creator = App.getUserName();   //record.creator;
+                        var recordParent = $row.closest('tr').data('record');
+                        if (recordParent && recordParent.personId) {
+                            var personId = recordParent.personId;
+                            var record = Acm.urlToJson(postData);
+                            var complaint = Complaint.getComplaint();
+                            if (complaint) {
+                                if (complaint.personAssociations) {
+                                    var personAssociations = complaint.personAssociations;
+                                    var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                    if (currentPersonAssoc.person) {
+                                        var person = currentPersonAssoc.person;
+                                        rc.Record.personId = person.id;
+                                        rc.Record.type = record.type;
+                                        rc.Record.value = Acm.goodValue(record.value);
+                                        rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                        rc.Record.creator = App.getUserName();   //record.creator;
+                                    }
                                 }
                             }
                         }
                         return rc;
-                    }
-                    ,updateAction: function(postData, jtParams) {
-                        var recordParent = $row.closest('tr').data('record');
-                        var personId = recordParent.personId;
-
-                        var record = Acm.urlToJson(postData);
+                    }, updateAction: function (postData, jtParams) {
                         var rc = AcmEx.Object.jTableGetEmptyRecord();
-                        var complaint = Complaint.getComplaint();
-                        if (complaint) {
-                            if (complaint.personAssociations) {
-                                var personAssociations = complaint.personAssociations;
-                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                                if (currentPersonAssoc.person) {
-                                    var person = currentPersonAssoc.person;
-                                    rc.Record.personId = person.id;
-                                    rc.Record.type = record.type;
-                                    rc.Record.value = Acm.goodValue(record.value);
-                                    rc.Record.created = Acm.getCurrentDay(); //record.created;
-                                    rc.Record.creator = App.getUserName();   //record.creator;
+                        var recordParent = $row.closest('tr').data('record');
+                        if (recordParent && recordParent.personId) {
+                            var personId = recordParent.personId;
+                            var record = Acm.urlToJson(postData);
+                            var complaint = Complaint.getComplaint();
+                            if (complaint) {
+                                if (complaint.personAssociations) {
+                                    var personAssociations = complaint.personAssociations;
+                                    var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                    if (currentPersonAssoc.person) {
+                                        var person = currentPersonAssoc.person;
+                                        rc.Record.personId = person.id;
+                                        rc.Record.type = record.type;
+                                        rc.Record.value = Acm.goodValue(record.value);
+                                        rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                        rc.Record.creator = App.getUserName();   //record.creator;
+                                    }
                                 }
                             }
                         }
                         return rc;
-                    }
-                    ,deleteAction: function(postData, jtParams) {
+                    }, deleteAction: function (postData, jtParams) {
                         return {
                             "Result": "OK"
                         };
                     }
-                }
-                ,fields: {
+                }, fields: {
                     personId: {
-                        key: false
-                        ,create: false
-                        ,edit: false
-                        ,list: false
-                    }
-                    ,id: {
-                        key: false
-                        ,type: 'hidden'
-                        ,edit: false
-                        ,defaultValue: 0
-                    }
-                    ,type: {
-                        title: 'Type'
-                        ,width: '15%'
-                        ,options: Complaint.getDeviceTypes()
-                    }
-                    ,value: {
-                        title: 'Value'
-                        ,width: '30%'
-                    }
-                    ,created: {
-                        title: 'Date Added'
-                        ,width: '20%'
-                        ,create: false
-                        ,edit: false
+                        key: false, create: false, edit: false, list: false
+                    }, id: {
+                        key: false, type: 'hidden', edit: false, defaultValue: 0
+                    }, type: {
+                        title: 'Type', width: '15%', options: Complaint.getDeviceTypes()
+                    }, value: {
+                        title: 'Value', width: '30%'
+                    }, created: {
+                        title: 'Date Added', width: '20%', create: false, edit: false
                         //,type: 'date'
                         //,displayFormat: 'yy-mm-dd'
+                    }, creator: {
+                        title: 'Added By', width: '30%', create: false, edit: false
                     }
-                    ,creator: {
-                        title: 'Added By'
-                        ,width: '30%'
-                        ,create: false
-                        ,edit: false
-                    }
-                }
-                ,recordAdded : function (event, data) {
+                }, recordAdded: function (event, data) {
                     var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
-                    var record = data.record;
-                    var complaint = Complaint.getComplaint();
-                    if (complaint) {
-                        if (complaint.personAssociations) {
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                if (person.contactMethods) {
-                                    var contactMethods = person.contactMethods;
-                                    var contactMethod = {};
-                                    contactMethod.type = record.type;
-                                    contactMethod.value = Acm.goodValue(record.value);
-                                    contactMethods.push(contactMethod);
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
-                                    Complaint.Service.saveComplaint(complaint);
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var record = data.record;
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    if (person.contactMethods) {
+                                        var contactMethods = person.contactMethods;
+                                        var contactMethod = {};
+                                        contactMethod.type = record.type;
+                                        contactMethod.value = Acm.goodValue(record.value);
+                                        contactMethods.push(contactMethod);
+                                        Complaint.Service.saveComplaint(complaint);
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                ,recordUpdated : function (event, data) {
+                }, recordUpdated: function (event, data) {
                     var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var record = data.record;
-                    var complaint = Complaint.getComplaint();
-                    if (complaint) {
-                        if (complaint.personAssociations) {
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                if (person.contactMethods) {
-                                    var contactMethods = person.contactMethods;
-                                    var contactMethod = contactMethods[whichRow];
-                                    contactMethod.type = record.type;
-                                    contactMethod.value = Acm.goodValue(record.value);
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
-                                    Complaint.Service.saveComplaint(complaint);
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                        var record = data.record;
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    if (person.contactMethods) {
+                                        var contactMethods = person.contactMethods;
+                                        var contactMethod = contactMethods[whichRow];
+                                        contactMethod.type = record.type;
+                                        contactMethod.value = Acm.goodValue(record.value);
+                                        Complaint.Service.saveComplaint(complaint);
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                ,recordDeleted : function (event, data) {
+                }, recordDeleted: function (event, data) {
                     var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var complaint = Complaint.getComplaint();
-                    if (complaint) {
-                        if (complaint.personAssociations) {
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                if (person.contactMethods) {
-                                    var contactMethods = person.contactMethods;
-                                    contactMethods.splice(whichRow, 1);
-
-                                    //check if originator needs to be updated
-                                    Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
-                                    Complaint.Service.saveComplaint(complaint);
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    if (person.contactMethods) {
+                                        var contactMethods = person.contactMethods;
+                                        contactMethods.splice(whichRow, 1);
+                                        Complaint.Service.saveComplaint(complaint);
+                                    }
                                 }
                             }
                         }
@@ -1362,30 +1323,34 @@ Complaint.JTable = {
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
                 ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Organization'
+                }
                 ,actions: {
                 listAction: function (postData, jtParams) {
-                    var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
-                    var complaint = Complaint.getComplaint();
-                    if(complaint){
-                        if(complaint.personAssociations){
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                if(person.organizations) {
-                                    var organizations = person.organizations;
-                                    var cnt = organizations.length;
-                                    for (var i = 0; i < cnt; i++) {
-                                        rc.Records.push({
-                                            personId: person.id,
-                                            type: organizations[i].organizationType,
-                                            value: Acm.goodValue(organizations[i].organizationValue),
-                                            created: Acm.getDateFromDatetime(organizations[i].created),
-                                            creator: organizations[i].creator
-                                        });
+                    var recordParent = $row.closest('tr').data('record');
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    if (person.organizations) {
+                                        var organizations = person.organizations;
+                                        var cnt = organizations.length;
+                                        for (var i = 0; i < cnt; i++) {
+                                            rc.Records.push({
+                                                personId: person.id,
+                                                type: organizations[i].organizationType,
+                                                value: Acm.goodValue(organizations[i].organizationValue),
+                                                created: Acm.getDateFromDatetime(organizations[i].created),
+                                                creator: organizations[i].creator
+                                            });
+                                        }
                                     }
                                 }
                             }
@@ -1394,46 +1359,48 @@ Complaint.JTable = {
                     return rc;
                 }
                 , createAction: function (postData, jtParams) {
-                    var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
-                    var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
-                    var complaint = Complaint.getComplaint();
-                    if (complaint) {
-                        if (complaint.personAssociations) {
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                rc.Record.personId = person.id;
-                                rc.Record.type = record.type;
-                                rc.Record.value = Acm.goodValue(record.value);
-                                rc.Record.created = Acm.getCurrentDay(); //record.created;
-                                rc.Record.creator = App.getUserName();   //record.creator;
+                    var recordParent = $row.closest('tr').data('record');
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var record = Acm.urlToJson(postData);
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    rc.Record.personId = person.id;
+                                    rc.Record.type = record.type;
+                                    rc.Record.value = Acm.goodValue(record.value);
+                                    rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                    rc.Record.creator = App.getUserName();   //record.creator;
+                                }
                             }
                         }
                     }
                     return rc;
                 }
                 , updateAction: function (postData, jtParams) {
-                    var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
-                    var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
-                    var complaint = Complaint.getComplaint();
-                    if (complaint) {
-                        if (complaint.personAssociations) {
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                rc.Record.personId = person.id;
-                                rc.Record.type = record.type;
-                                rc.Record.value = Acm.goodValue(record.value);
-                                rc.Record.created = Acm.getCurrentDay(); //record.created;
-                                rc.Record.creator = App.getUserName();   //record.creator;
+                    var recordParent = $row.closest('tr').data('record');
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var record = Acm.urlToJson(postData);
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    rc.Record.personId = person.id;
+                                    rc.Record.type = record.type;
+                                    rc.Record.value = Acm.goodValue(record.value);
+                                    rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                    rc.Record.creator = App.getUserName();   //record.creator;
+                                }
                             }
                         }
                     }
@@ -1480,27 +1447,24 @@ Complaint.JTable = {
             }
             , recordAdded: function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
-                var personId = recordParent.personId;
-
-                var record = data.record;
-                var complaint = Complaint.getComplaint();
-                if (complaint) {
-                    if (complaint.personAssociations) {
-                        var personAssociations = complaint.personAssociations;
-                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                        if (currentPersonAssoc.person) {
-                            var person = currentPersonAssoc.person;
-                            if (person.organizations) {
-                                var organizations = person.organizations;
-                                var organization = {};
-                                organization.organizationType = record.type;
-                                organization.organizationValue = Acm.goodValue(record.value);
-                                organizations.push(organization);
-
-                                //check if originator needs to be updated
-                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
-                                Complaint.Service.saveComplaint(complaint);
+                if (recordParent && recordParent.personId) {
+                    var personId = recordParent.personId;
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
+                                if (person.organizations) {
+                                    var organizations = person.organizations;
+                                    var organization = {};
+                                    organization.organizationType = record.type;
+                                    organization.organizationValue = Acm.goodValue(record.value);
+                                    organizations.push(organization);
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
                             }
                         }
                     }
@@ -1508,27 +1472,24 @@ Complaint.JTable = {
             }
             , recordUpdated: function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
-                var personId = recordParent.personId;
-
-                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                var record = data.record;
-                var complaint = Complaint.getComplaint();
-                if (complaint) {
-                    if (complaint.personAssociations) {
-                        var personAssociations = complaint.personAssociations;
-                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                        if (currentPersonAssoc.person) {
-                            var person = currentPersonAssoc.person;
-                            if (person.organizations) {
-                                var organizations = person.organizations;
-                                var organization = organizations[whichRow];
-                                organization.organizationType = record.type;
-                                organization.organizationValue = Acm.goodValue(record.value);
-
-                                //check if originator needs to be updated
-                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
-                                Complaint.Service.saveComplaint(complaint);
+                if (recordParent && recordParent.personId) {
+                    var personId = recordParent.personId;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
+                                if (person.organizations) {
+                                    var organizations = person.organizations;
+                                    var organization = organizations[whichRow];
+                                    organization.organizationType = record.type;
+                                    organization.organizationValue = Acm.goodValue(record.value);
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
                             }
                         }
                     }
@@ -1536,33 +1497,30 @@ Complaint.JTable = {
             }
             , recordDeleted: function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
-                var personId = recordParent.personId;
-
-                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                var complaint = Complaint.getComplaint();
-                if (complaint) {
-                    if (complaint.personAssociations) {
-                        var personAssociations = complaint.personAssociations;
-                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                        if (currentPersonAssoc.person) {
-                            var person = currentPersonAssoc.person;
-                            if (person.organizations) {
-                                var organizations = person.organizations;
-                                organizations.splice(whichRow, 1);
-
-                                //check if originator needs to be updated
-                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
-                                Complaint.Service.saveComplaint(complaint);
+                if (recordParent && recordParent.personId) {
+                    var personId = recordParent.personId;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
+                                if (person.organizations) {
+                                    var organizations = person.organizations;
+                                    organizations.splice(whichRow, 1);
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
                             }
                         }
                     }
                 }
             }
-            }
-            ,function (data) { //opened handler
-                data.childTable.jtable('load');
-            });
+        }
+        ,function (data) { //opened handler
+            data.childTable.jtable('load');
+        });
     }
     ,_closePeopleLocations: function($t, $row) {
         $t.jtable('closeChildTable', $row.closest('tr'));
@@ -1573,33 +1531,39 @@ Complaint.JTable = {
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
                 ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Location'
+                }
                 ,actions: {
                 listAction: function(postData, jtParams) {
-                    var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
-                    var complaint = Complaint.getComplaint();
-                    if (complaint) {
-                        if (complaint.personAssociations) {
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                if (person.addresses) {
-                                    var addresses = person.addresses;
-                                    var cnt = addresses.length;
-                                    for (var i = 0; i < cnt; i++) {
-                                        rc.Records.push({
-                                            personId : person.id
-                                            , type: addresses[i].type
-                                            , streetAddress: addresses[i].streetAddress
-                                            , city: addresses[i].city
-                                            , state: addresses[i].state
-                                            , zip: Acm.goodValue(addresses[i].zip)
-                                            , created: Acm.getDateFromDatetime(addresses[i].created)
-                                            , creator: addresses[i].creator
-                                        });
+                    var recordParent = $row.closest('tr').data('record');
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    if (person.addresses) {
+                                        var addresses = person.addresses;
+                                        var cnt = addresses.length;
+                                        if(cnt > 0) {
+                                            for (var i = 0; i < cnt; i++) {
+                                                rc.Records.push({
+                                                    personId: person.id,
+                                                    type: addresses[i].type,
+                                                    streetAddress: addresses[i].streetAddress,
+                                                    city: addresses[i].city,
+                                                    state: addresses[i].state,
+                                                    zip: Acm.goodValue(addresses[i].zip),
+                                                    created: Acm.getDateFromDatetime(addresses[i].created),
+                                                    creator: addresses[i].creator
+                                                });
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -1608,52 +1572,54 @@ Complaint.JTable = {
                     return rc;
                 }
                 ,createAction: function(postData, jtParams) {
-                    var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
-                    var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
-                    var complaint = Complaint.getComplaint();
-                    if (complaint) {
-                        if (complaint.personAssociations) {
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                rc.Record.personId = person.id;
-                                rc.Record.type = record.type;
-                                rc.Record.streetAddress = record.streetAddress;
-                                rc.Record.city = record.city;
-                                rc.Record.state = record.state;
-                                rc.Record.zip = record.zip;
-                                rc.Record.created = Acm.getCurrentDay(); //record.created;
-                                rc.Record.creator = App.getUserName();   //record.creator;
+                    var recordParent = $row.closest('tr').data('record');
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var record = Acm.urlToJson(postData);
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    rc.Record.personId = person.id;
+                                    rc.Record.type = record.type;
+                                    rc.Record.streetAddress = record.streetAddress;
+                                    rc.Record.city = record.city;
+                                    rc.Record.state = record.state;
+                                    rc.Record.zip = record.zip;
+                                    rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                    rc.Record.creator = App.getUserName();   //record.creator;
+                                }
                             }
                         }
                     }
                     return rc;
                 }
                 ,updateAction: function(postData, jtParams) {
-                    var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
-                    var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
-                    var complaint = Complaint.getComplaint();
-                    if (complaint) {
-                        if (complaint.personAssociations) {
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                rc.Record.personId = person.id;
-                                rc.Record.type = record.type;
-                                rc.Record.streetAddress = record.streetAddress;
-                                rc.Record.city = record.city;
-                                rc.Record.state = record.state;
-                                rc.Record.zip = record.zip;
-                                rc.Record.created = record.created;
-                                rc.Record.creator = record.creator;
+                    var recordParent = $row.closest('tr').data('record');
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var record = Acm.urlToJson(postData);
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    rc.Record.personId = person.id;
+                                    rc.Record.type = record.type;
+                                    rc.Record.streetAddress = record.streetAddress;
+                                    rc.Record.city = record.city;
+                                    rc.Record.state = record.state;
+                                    rc.Record.zip = record.zip;
+                                    rc.Record.created = record.created;
+                                    rc.Record.creator = record.creator;
+                                }
                             }
                         }
                     }
@@ -1717,30 +1683,27 @@ Complaint.JTable = {
             }
             ,recordAdded : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
-                var personId = recordParent.personId;
-
-                var record = data.record;
-                var complaint = Complaint.getComplaint();
-                if (complaint) {
-                    if (complaint.personAssociations) {
-                        var personAssociations = complaint.personAssociations;
-                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                        if (currentPersonAssoc.person) {
-                            var person = currentPersonAssoc.person;
-                            if (person.addresses) {
-                                var addresses = person.addresses;
-                                var address = {};
-                                address.type = record.type;
-                                address.streetAddress = record.streetAddress;
-                                address.city = record.city;
-                                address.state = record.state;
-                                address.zip = record.zip;
-                                addresses.push(address);
-
-                                //check if originator needs to be updated
-                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
-                                Complaint.Service.saveComplaint(complaint);
+                if (recordParent && recordParent.personId) {
+                    var personId = recordParent.personId;
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
+                                if (person.addresses) {
+                                    var addresses = person.addresses;
+                                    var address = {};
+                                    address.type = record.type;
+                                    address.streetAddress = record.streetAddress;
+                                    address.city = record.city;
+                                    address.state = record.state;
+                                    address.zip = record.zip;
+                                    addresses.push(address);
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
                             }
                         }
                     }
@@ -1748,30 +1711,27 @@ Complaint.JTable = {
             }
             ,recordUpdated : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
-                var personId = recordParent.personId;
-
-                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                var record = data.record;
-                var complaint = Complaint.getComplaint();
-                if (complaint) {
-                    if (complaint.personAssociations) {
-                        var personAssociations = complaint.personAssociations;
-                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                        if (currentPersonAssoc.person) {
-                            var person = currentPersonAssoc.person;
-                            if (person.addresses) {
-                                var addresses = person.addresses;
-                                var address = addresses[whichRow];
-                                address.type = record.type;
-                                address.streetAddress = record.streetAddress;
-                                address.city = record.city;
-                                address.state = record.state;
-                                address.zip = record.zip;
-
-                                //check if originator needs to be updated
-                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
-                                Complaint.Service.saveComplaint(complaint);
+                if (recordParent && recordParent.personId) {
+                    var personId = recordParent.personId;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
+                                if (person.addresses) {
+                                    var addresses = person.addresses;
+                                    var address = addresses[whichRow];
+                                    address.type = record.type;
+                                    address.streetAddress = record.streetAddress;
+                                    address.city = record.city;
+                                    address.state = record.state;
+                                    address.zip = record.zip;
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
                             }
                         }
                     }
@@ -1779,33 +1739,30 @@ Complaint.JTable = {
             }
             ,recordDeleted : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
-                var personId = recordParent.personId;
-
-                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                var complaint = Complaint.getComplaint();
-                if (complaint) {
-                    if (complaint.personAssociations) {
-                        var personAssociations = complaint.personAssociations;
-                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                        if (currentPersonAssoc.person) {
-                            var person = currentPersonAssoc.person;
-                            if (person.addresses) {
-                                var addresses = person.addresses;
-                                addresses.splice(whichRow, 1);
-
-                                //check if originator needs to be updated
-                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
-                                Complaint.Service.saveComplaint(complaint);
+                if (recordParent && recordParent.personId) {
+                    var personId = recordParent.personId;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
+                                if (person.addresses) {
+                                    var addresses = person.addresses;
+                                    addresses.splice(whichRow, 1);
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
                             }
                         }
                     }
                 }
             }
-            }
-            ,function (data) { //opened handler
-                data.childTable.jtable('load');
-            });
+        }
+        ,function (data) { //opened handler
+            data.childTable.jtable('load');
+        });
     }
     ,_closePeopleAliases: function($jt, $row) {
         $jt.jtable('closeChildTable', $row.closest('tr'));
@@ -1816,30 +1773,37 @@ Complaint.JTable = {
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
                 ,sorting: true
+                ,messages: {
+                    addNewRecord: 'Add Alias'
+                }
                 ,actions: {
                 listAction: function(postData, jtParams) {
-                    var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
-                    var complaint = Complaint.getComplaint();
-                    if (complaint) {
-                        if (complaint.personAssociations) {
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                if (person.personAliases) {
-                                    var personAliases = person.personAliases;
-                                    var cnt = personAliases.length;
-                                    for (var i = 0; i < cnt; i++) {
-                                        rc.Records.push({
-                                            personId: person.id
-                                            ,type: personAliases[i].aliasType
-                                            ,value: Acm.goodValue(personAliases[i].aliasValue)
-                                            ,created: Acm.getDateFromDatetime(personAliases[i].created)
-                                            ,creator: personAliases[i].creator
-                                        });
+                    var recordParent = $row.closest('tr').data('record');
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    if (person.personAliases) {
+                                        var personAliases = person.personAliases;
+                                        var cnt = personAliases.length;
+                                        if(cnt > 0)
+                                        {
+                                            for (var i = 0; i < cnt; i++) {
+                                                rc.Records.push({
+                                                    personId: person.id,
+                                                    type: personAliases[i].aliasType,
+                                                    value: Acm.goodValue(personAliases[i].aliasValue),
+                                                    created: Acm.getDateFromDatetime(personAliases[i].created),
+                                                    creator: personAliases[i].creator
+                                                });
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -1848,47 +1812,49 @@ Complaint.JTable = {
                     return rc;
                 }
                 ,createAction: function(postData, jtParams) {
-                    var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
-                    var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
-                    var complaint = Complaint.getComplaint();
-                    if (complaint) {
-                        //var assocId = complaint.originator.id;
-                        if (complaint.personAssociations) {
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                rc.Record.personId = person.id;
-                                rc.Record.type = record.type;
-                                rc.Record.value = Acm.goodValue(record.value);
-                                rc.Record.created = Acm.getCurrentDay(); //record.created;
-                                rc.Record.creator = App.getUserName();   //record.creator;
+                    var recordParent = $row.closest('tr').data('record');
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var record = Acm.urlToJson(postData);
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            //var assocId = complaint.originator.id;
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    rc.Record.personId = person.id;
+                                    rc.Record.type = record.type;
+                                    rc.Record.value = Acm.goodValue(record.value);
+                                    rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                    rc.Record.creator = App.getUserName();   //record.creator;
+                                }
                             }
                         }
                     }
                     return rc;
                 }
                 ,updateAction: function(postData, jtParams) {
-                    var recordParent = $row.closest('tr').data('record');
-                    var personId = recordParent.personId;
-
-                    var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
-                    var complaint = Complaint.getComplaint();
-                    if (complaint) {
-                        if (complaint.personAssociations) {
-                            var personAssociations = complaint.personAssociations;
-                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                            if (currentPersonAssoc.person) {
-                                var person = currentPersonAssoc.person;
-                                rc.Record.personId = person.id;
-                                rc.Record.type = record.type;
-                                rc.Record.value = Acm.goodValue(record.value);
-                                rc.Record.created = Acm.getCurrentDay(); //record.created;
-                                rc.Record.creator = App.getUserName();   //record.creator;
+                    var recordParent = $row.closest('tr').data('record');
+                    if (recordParent && recordParent.personId) {
+                        var personId = recordParent.personId;
+                        var record = Acm.urlToJson(postData);
+                        var complaint = Complaint.getComplaint();
+                        if (complaint) {
+                            if (complaint.personAssociations) {
+                                var personAssociations = complaint.personAssociations;
+                                var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                                if (currentPersonAssoc.person) {
+                                    var person = currentPersonAssoc.person;
+                                    rc.Record.personId = person.id;
+                                    rc.Record.type = record.type;
+                                    rc.Record.value = Acm.goodValue(record.value);
+                                    rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                    rc.Record.creator = App.getUserName();   //record.creator;
+                                }
                             }
                         }
                     }
@@ -1935,27 +1901,24 @@ Complaint.JTable = {
             }
             ,recordAdded : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
-                var personId = recordParent.personId;
-
-                var record = data.record;
-                var complaint = Complaint.getComplaint();
-                if (complaint) {
-                    if (complaint.personAssociations) {
-                        var personAssociations = complaint.personAssociations;
-                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                        if (currentPersonAssoc.person) {
-                            var person = currentPersonAssoc.person;
-                            if (person.personAliases) {
-                                var personAliases = person.personAliases;
-                                var personAlias = {};
-                                personAlias.aliasType = record.type;
-                                personAlias.aliasValue = Acm.goodValue(record.value);
-                                personAliases.push(personAlias);
-
-                                //check if originator needs to be updated
-                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
-                                Complaint.Service.saveComplaint(complaint);
+                if (recordParent && recordParent.personId) {
+                    var personId = recordParent.personId;
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
+                                if (person.personAliases) {
+                                    var personAliases = person.personAliases;
+                                    var personAlias = {};
+                                    personAlias.aliasType = record.type;
+                                    personAlias.aliasValue = Acm.goodValue(record.value);
+                                    personAliases.push(personAlias);
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
                             }
                         }
                     }
@@ -1963,27 +1926,24 @@ Complaint.JTable = {
             }
             ,recordUpdated : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
-                var personId = recordParent.personId;
-
-                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                var record = data.record;
-                var complaint = Complaint.getComplaint();
-                if (complaint) {
-                    if (complaint.personAssociations) {
-                        var personAssociations = complaint.personAssociations;
-                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                        if (currentPersonAssoc.person) {
-                            var person = currentPersonAssoc.person;
-                            if (person.personAliases) {
-                                var personAliases = person.personAliases;
-                                var personAlias = personAliases[whichRow];
-                                personAlias.aliasType = record.type;
-                                personAlias.aliasValue = Acm.goodValue(record.value);
-
-                                //check if originator needs to be updated
-                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-
-                                Complaint.Service.saveComplaint(complaint);
+                if (recordParent && recordParent.personId) {
+                    var personId = recordParent.personId;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
+                                if (person.personAliases) {
+                                    var personAliases = person.personAliases;
+                                    var personAlias = personAliases[whichRow];
+                                    personAlias.aliasType = record.type;
+                                    personAlias.aliasValue = Acm.goodValue(record.value);
+                                    Complaint.Service.saveComplaint(complaint);
+                                }
                             }
                         }
                     }
@@ -1991,34 +1951,31 @@ Complaint.JTable = {
             }
             ,recordDeleted : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
-                var personId = recordParent.personId;
+                if (recordParent && recordParent.personId) {
+                    var personId = recordParent.personId;
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        if (complaint.personAssociations) {
+                            var personAssociations = complaint.personAssociations;
+                            var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
+                            if (currentPersonAssoc.person) {
+                                var person = currentPersonAssoc.person;
+                                if (person.personAliases) {
+                                    var personAliases = person.personAliases;
+                                    personAliases.splice(whichRow, 1);
+                                    Complaint.Service.saveComplaint(complaint);
 
-                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                var complaint = Complaint.getComplaint();
-                if (complaint) {
-                    if (complaint.personAssociations) {
-                        var personAssociations = complaint.personAssociations;
-                        var currentPersonAssoc = Complaint.JTable._findPersonAssoc(personId, personAssociations);
-                        if (currentPersonAssoc.person) {
-                            var person = currentPersonAssoc.person;
-                            if (person.personAliases) {
-                                var personAliases = person.personAliases;
-                                personAliases.splice(whichRow, 1);
-
-                                //check if originator needs to be updated
-                                Complaint.JTable._updateOriginatorRecord(currentPersonAssoc, complaint);
-                                
-                                Complaint.Service.saveComplaint(complaint);
-
+                                }
                             }
                         }
                     }
                 }
             }
-            }
-            ,function (data) { //opened handler
-                data.childTable.jtable('load');
-            });
+        }
+        ,function (data) { //opened handler
+            data.childTable.jtable('load');
+        });
     }
 
     //----------------- end of People -----------------------
@@ -2034,6 +1991,9 @@ Complaint.JTable = {
         $s.jtable({
             title: 'Documents'
             ,paging: false
+            ,messages: {
+                addNewRecord: 'Add Document'
+            }
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -2156,7 +2116,9 @@ Complaint.JTable = {
                 ,selecting: true
                 ,multiselect: false
                 ,selectingCheckboxes: false
-
+                ,messages: {
+                    addNewRecord: 'Add Task'
+                }
                 ,actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
                         return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
@@ -2269,6 +2231,228 @@ Complaint.JTable = {
         );
     }
     //---------------- end of Tasks --------------------------
+
+    
+    //
+    //----------------- Location ------------------------------
+    //
+    ,createJTableLocation: function($s) {
+        $s.jtable({
+            title: 'Location'
+            ,paging: false
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var c = Complaint.getComplaint();
+                    if (c && c.location) {
+                    	var record = {};
+                        record.id = Acm.goodValue(c.location.id, 0);
+                        record.address = Acm.goodValue(c.location.streetAddress);
+                        record.city = Acm.goodValue(c.location.city);
+                        record.state = Acm.goodValue(c.location.state);
+                        record.zip = Acm.goodValue(c.location.zip);
+                        rc.Records.push(record);
+                    }
+                    return rc;
+                }
+                ,updateAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    rc.Record.address = record.address;
+                    rc.Record.city = record.city;
+                    rc.Record.state = record.state;
+                    rc.Record.zip = record.zip;
+                    return rc;
+                }
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                }
+                ,address: {
+                    title: 'Address'
+                    ,width: '20%'
+                }
+                ,city: {
+                    title: 'City'
+                    ,width: '20%'
+                }
+                ,state: {
+                    title: 'State'
+                    ,width: '20%'
+                }
+                ,zip: {
+                    title: 'Zip'
+                    ,width: '10%'
+                }
+            }
+            ,recordUpdated : function (event, data) {
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    complaint.location.streetAddress = record.address;
+                    complaint.location.city = record.city;
+                    complaint.location.state = record.state;
+                    complaint.location.zip = record.zip;
+
+                    Complaint.Service.saveComplaint(complaint);
+                }
+            }
+        });
+
+        $s.jtable('load');
+    }
+    //----------------- end of Location ----------------------
+
+    //
+    //----------------- Notes ------------------------------
+
+    ,createJTableNotes: function($s) {
+        $s.jtable({
+            title: 'Notes'
+            ,paging: false
+            ,messages: {
+                addNewRecord: 'Add Note'
+            }
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var complaint = Complaint.getComplaint();
+                    if(complaint)
+                    {
+                        var notes = Complaint.cacheNoteList.get(complaint.complaintId);
+                        if (notes) {
+                            for (var i = 0; i < notes.length; i++) {
+                                var noteRecord = notes[i];
+                                var record = {};
+                                record.id = Acm.goodValue(noteRecord.id);
+                                record.note = noteRecord.note;
+                                record.created = Acm.getDateFromDatetime(noteRecord.created);
+                                record.creator = noteRecord.creator;
+                                record.parentId = Acm.goodValue(noteRecord.parentId);
+                                record.parentType = noteRecord.parentType;
+                                rc.Records.push(record);
+                            }
+                        }
+                    }
+                    return rc;
+                }
+                ,formCreated: function(event, data)
+                {
+
+                }
+                ,createAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    var complaint = Complaint.getComplaint();
+                    if (complaint) {
+                        rc.Record.parentId = Acm.goodValue(complaint.complaintId);
+                        rc.Record.parentType = App.OBJTYPE_COMPLAINT;
+                        rc.Record.note = record.note;
+                        rc.Record.created = Acm.getCurrentDay(); //record.created;
+                        rc.Record.creator = App.getUserName();   //record.creator;
+                    }
+                    return rc;
+                }
+                ,updateAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    var complaint = Complaint.getComplaint();
+                    if(complaint){
+                        rc.Record.parentId = Acm.goodValue(complaint.complaintId);
+                        rc.Record.parentType = App.OBJTYPE_COMPLAINT;
+                        rc.Record.note = record.note;
+                        rc.Record.created = Acm.getCurrentDay(); //record.created;
+                        rc.Record.creator = App.getUserName();   //record.creator;
+                    }
+                    return rc;
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                    ,defaultvalue : 0
+                }
+                ,note: {
+                    title: 'Note'
+                    ,type: 'textarea'
+                    ,width: '50%'
+                    ,edit: true
+                }
+                ,created: {
+                    title: 'Created'
+                    ,width: '15%'
+                    ,edit: false
+                    ,create: false
+                }
+                ,creator: {
+                    title: 'Author'
+                    ,width: '15%'
+                    ,edit: false
+                    ,create: false
+                }
+            }
+            ,recordAdded : function (event, data) {
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    var noteToSave = {};
+                    //noteToSave.id = record.id;
+                    noteToSave.note = record.note;
+                    noteToSave.created = Acm.getCurrentDayInternal(); //record.created;
+                    noteToSave.creator = record.creator;   //record.creator;
+                    noteToSave.parentId = complaint.complaintId;
+                    noteToSave.parentType = App.OBJTYPE_COMPLAINT;
+                    Complaint.Service.saveNote(noteToSave);
+                }
+            }
+            ,recordUpdated: function(event,data){
+                var whichRow = data.row.prevAll("tr").length;
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if(complaint){
+                    var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
+                    if (notes) {
+                        if(notes[whichRow]){
+                            var noteToSave;
+                            noteToSave = notes[whichRow];
+                            noteToSave.note = record.note;
+                            Complaint.Service.saveNote(noteToSave);
+                        }
+                    }
+                }
+            }
+            ,recordDeleted : function (event, data) {
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
+                    if (notes) {
+                        var noteToDelete = notes[whichRow];
+                        var noteId = noteToDelete.id;
+                        Complaint.Service.deleteNoteById(noteId);
+                    }
+                }
+            }
+
+            });
+
+        $s.jtable('load');
+    }
+    //----------------- end of Notes ----------------------
 
 
 };

@@ -1,10 +1,12 @@
 package com.armedia.acm.services.users.model;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -26,6 +28,9 @@ public class ParticipantJpaIT
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private String objectType = "TEST OBJECT TYPE";
@@ -36,6 +41,8 @@ public class ParticipantJpaIT
     @Before
     public void setUp() throws Exception
     {
+        auditAdapter.setUserId("auditUser");
+
         String deleteParticipant = "DELETE FROM AcmParticipant a " +
                 "WHERE  a.objectType = :objectType " +
                 "AND a.objectId = :objectId " +
@@ -55,8 +62,6 @@ public class ParticipantJpaIT
     public void storeParticipant()
     {
         AcmParticipant acmParticipant = new AcmParticipant();
-        acmParticipant.setCreator("creator");
-        acmParticipant.setModifier("modifier");
         acmParticipant.setObjectType(objectType);
         acmParticipant.setObjectId(objectId);
         acmParticipant.setParticipantLdapId(participantLdapId);

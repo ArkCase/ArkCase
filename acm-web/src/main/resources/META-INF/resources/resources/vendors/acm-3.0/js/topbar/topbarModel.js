@@ -5,14 +5,14 @@
  */
 Topbar.Model = {
     create : function() {
-        if (Topbar.Model.QuickSearch.create) {this.QuickSearch.create();}
-        if (Topbar.Model.Suggestion.create)  {this.Suggestion.create();}
-        if (Topbar.Model.Asn.create)         {this.Asn.create();}
+        if (Topbar.Model.QuickSearch.create) {Topbar.Model.QuickSearch.create();}
+        if (Topbar.Model.Suggestion.create)  {Topbar.Model.Suggestion.create();}
+        if (Topbar.Model.Asn.create)         {Topbar.Model.Asn.create();}
     }
     ,initialize: function() {
-        //if (Topbar.Model.QuickSearch.initialize) {this.QuickSearch.initialize();}
-        //if (Topbar.Model.Suggestion.initialize)  {this.Suggestion.initialize();}
-        //if (Topbar.Model.Asn.initialize)         {this.Asn.initialize();}
+        if (Topbar.Model.QuickSearch.initialize) {Topbar.Model.QuickSearch.initialize();}
+        if (Topbar.Model.Suggestion.initialize)  {Topbar.Model.Suggestion.initialize();}
+        if (Topbar.Model.Asn.initialize)         {Topbar.Model.Asn.initialize();}
     }
 
     ,QuickSearch: {

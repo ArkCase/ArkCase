@@ -6,7 +6,7 @@
  * @author jwu
  */
 App.Event = {
-    initialize : function() {
+    create : function() {
     }
 
     ,onPostInit: function() {

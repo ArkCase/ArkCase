@@ -6,7 +6,7 @@
  * @author jwu
  */
 Sidebar.Object = {
-    initialize : function() {
+    create : function() {
         this.$ulPlugin = $("#ulPlugin");
         this.$lnkNav   = $("nav a");
         this.$lnkNav.click(function(e){Sidebar.Event.onClickLnkNav(e);});

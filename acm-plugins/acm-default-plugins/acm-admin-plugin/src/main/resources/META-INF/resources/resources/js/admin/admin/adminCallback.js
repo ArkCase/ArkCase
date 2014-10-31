@@ -6,23 +6,24 @@
  * @author jwu
  */
 Admin.Callback = {
-    initialize : function() {
-        //Acm.Dispatcher.addEventListener(this.EVENT_MY_TASKS_RETRIEVED, this.onMyTasksRetrieved);
+    create : function() {
+        Acm.Dispatcher.addEventListener(this.EVENT_ADMIN_ACCESS_UPDATED, this.onAdminAccessUpdate);
     }
 
-    //,EVENT_MY_TASKS_RETRIEVED		: "dashboard-my-tasks-retrieved"
 
-//    ,onMyTasksRetrieved : function(Callback, response) {
-//        var success = false;
-//        if (response) {
-//            Admin.Page.fillMyTasks(response);
-//            success = true;
-//        }
-//
-//        if (!success) {
-//            Acm.Dialog.error("Failed to retrieve my tasks");
-//        }
-//    }
+    //Admin Access Control Policy related Callbacks
+
+    ,EVENT_ADMIN_ACCESS_UPDATED		: "admin-access-default-admin-access-updated"
+
+    ,onAdminAccessUpdate : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to update ACL:" + response.errorMsg);
+        } else {
+            if (Acm.isNotEmpty(response.id)) {
+                //no callback necessary at this moment
+            }
+        }
+    }
 };
 
 

@@ -5,21 +5,21 @@
  */
 describe("TaskWizard", function()
 {
-    it("TaskWizard.Initialize", function() {
-        spyOn(TaskWizard.Object,   "initialize");
-        spyOn(TaskWizard.Event,    "initialize");
-        spyOn(TaskWizard.Page,     "initialize");
-        spyOn(TaskWizard.Rule,     "initialize");
-        spyOn(TaskWizard.Service,  "initialize");
-        spyOn(TaskWizard.Callback, "initialize");
+    it("TaskWizard.create", function() {
+        spyOn(TaskWizard.Object,   "create");
+        spyOn(TaskWizard.Event,    "create");
+        spyOn(TaskWizard.Page,     "create");
+        spyOn(TaskWizard.Rule,     "create");
+        spyOn(TaskWizard.Service,  "create");
+        spyOn(TaskWizard.Callback, "create");
         spyOn(TaskWizard.Event,    "onPostInit");
-        TaskWizard.initialize();
-        expect(TaskWizard.Object  .initialize).toHaveBeenCalled();
-        expect(TaskWizard.Event   .initialize).toHaveBeenCalled();
-        expect(TaskWizard.Page    .initialize).toHaveBeenCalled();
-        expect(TaskWizard.Rule    .initialize).toHaveBeenCalled();
-        expect(TaskWizard.Service .initialize).toHaveBeenCalled();
-        expect(TaskWizard.Callback.initialize).toHaveBeenCalled();
+        TaskWizard.create();
+        expect(TaskWizard.Object  .create).toHaveBeenCalled();
+        expect(TaskWizard.Event   .create).toHaveBeenCalled();
+        expect(TaskWizard.Page    .create).toHaveBeenCalled();
+        expect(TaskWizard.Rule    .create).toHaveBeenCalled();
+        expect(TaskWizard.Service .create).toHaveBeenCalled();
+        expect(TaskWizard.Callback.create).toHaveBeenCalled();
         expect(TaskWizard.Event   .onPostInit).toHaveBeenCalled();
     });
 

@@ -2,7 +2,6 @@
 
 <mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
       xmlns="http://www.mulesoft.org/schema/mule/core"
-      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
       xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       version="CE-3.5.0"
@@ -10,7 +9,6 @@
       xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
-http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
 
@@ -22,17 +20,13 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <vm:inbound-endpoint
                 address="vm://savePersonAssociation.in"
                 exchange-pattern="request-response"
-                doc:name="Save PersonAssociaiton">
+                doc:name="Save PersonAssociation">
         </vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>
 
 
         <timer-interceptor/>
-
-        <set-property doc:name="Added or Updated?"
-                      propertyName="PersonAssociationAdded" value="#[payload.Id == null]"/>
-        <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>
 
         <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
         <scripting:transformer name="savePersonAssociationCreatorModifierTransformer">
@@ -42,8 +36,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         message.getInboundProperty("acmUser").name;
                     if ( user != null )
                     {
-                        payload.creator = payload.creator == null ? user : payload.creator;
-                        payload.modifier = payload.modifier == null ? user : payload.modifier;
+                        message.getInboundProperty("auditAdapter").setUserId(user);
                     }
                     return payload;
                     ]]>
@@ -51,6 +44,10 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             </scripting:script>
 
         </scripting:transformer>
+
+        <set-property doc:name="Added or Updated?"
+                      propertyName="PersonAssociationAdded" value="#[payload.Id == null]"/>
+        <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>
 
         <!-- Tell mule to call the save method ( DAO ). The property must go in the inbound scope.  The only way to do it is to set an outbound
              property, then call an outbound endpoint (thereby starting a new flow).

@@ -6,7 +6,7 @@
  * @author jwu
  */
 Report.Callback = {
-    initialize : function() {
+    create : function() {
     }
 
 

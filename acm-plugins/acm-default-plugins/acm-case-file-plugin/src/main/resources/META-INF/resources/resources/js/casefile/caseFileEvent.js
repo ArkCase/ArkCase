@@ -6,7 +6,7 @@
  * @author jwu
  */
 CaseFile.Event = {
-    initialize : function() {
+    create : function() {
     }
     ,onPostInit: function() {
         var treeInfo = CaseFile.Object.getTreeInfo();
