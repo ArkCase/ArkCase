@@ -2,7 +2,7 @@
 <html lang="en" class="app">
 <head>
 <meta charset="utf-8" />
-<title>Reports | ACM | Armedia Case Management</title>
+<title>Audit | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
@@ -15,7 +15,6 @@
     <script src="js/ie/respond.min.js"></script>
     <script src="js/ie/excanvas.js"></script>
   <![endif]-->
-<script src="resources/js/jquery.min.js"></script>
 </head>
 <body class="">
 <section class="vbox">
@@ -23,17 +22,37 @@
     <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
     <ul class="nav navbar-nav hidden-xs">
       <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
-        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
-          <div class="row m-l-none m-r-none m-t m-b text-center">
-            <div class="col-xs-4">
-              <div class="padder-v2"> <a href="newComplaint.html"> <span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>
-            </div>
-            <div class="col-xs-4">
-              <div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>
-            </div>
-            <div class="col-xs-4">
-              <div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>
-            </div>
+        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">   <div class="row m-l-none m-r-none m-t m-b text-center">
+              <div class="col-xs-4">
+                <div class="padder-v2">
+                  <a href="newComplaint.html">
+                    <span class="m-b-xs block">
+                      <i class="i i-notice i-2x text-primary-lt"></i>
+                    </span>
+                    <small class="text-muted">Complaint</small>
+                  </a>
+                </div>
+              </div>
+              <div class="col-xs-4">
+                <div class="padder-v2">
+                  <a href="newCase.html">
+                    <span class="m-b-xs block">
+                      <i class="i i-folder i-2x text-danger-lt"></i>
+                    </span>
+                    <small class="text-muted">Case</small>
+                  </a>
+                </div>
+              </div>
+              <div class="col-xs-4">
+                <div class="padder-v2">
+                  <a href="newTask.html">
+                    <span class="m-b-xs block">
+                      <i class="i i-checkmark i-2x text-success-lt"></i>
+                    </span>
+                    <small class="text-muted">Task</small>
+                  </a>
+                </div>
+              </div>
           </div>
         </section>
       </li>
@@ -88,13 +107,13 @@
                   <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
                   <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
-                  <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
-                  <li class="active"> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
+                  <li class="active"> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
+<li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
 <li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
-              </nav>
+</nav>
               <!-- / nav --> 
             </div>
           </section>
@@ -103,74 +122,82 @@
       </aside>
       <!-- /.aside -->
       <section id="content">
-        <section class="hbox stretch">
-          <aside class="aside-md bg-light dker b-r" id="subNav">
-            <section class="scrollable">
-              <div class="wrapper b-b header">Reports</div>
-              <div class="wrapper">
-                <label for="priority"  class="label">Report</label>
-                <select name="priority" class="form-control">
-                  <option>Choose Report</option>
-                  <option >Report 1</option>
-                  <option>Report 2</option>
-                  <option>Report 3</option>
-                  <option>Report 4</option>
-                </select>
-                <div class="line line-dashed b-b line-lg pull-in"></div>
-                <label for="priority"  class="label">Date Range</label>
-                <div class="clearfix"></div>
-                <label class="label col-sm-3">From</label>
-                <div class="col-sm-9">
-                  <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
-                </div>
-                <label class="label col-sm-3">To</label>
-                <div class="col-sm-9">
-                  <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
-                </div>
-                <div class="clearfix"></div>
-                <div class="line line-dashed b-b line-lg pull-in"></div>
-                <button class="btn btn-sm btn-default center-block" type="button">Generate Report</button>
+        <section class="vbox">
+          <section class="scrollable padder">
+            <section class="row m-b-md">
+              <div class="col-sm-12">
+                <h3 class="m-b-xs text-black">Audit</h3>
               </div>
             </section>
-          </aside>
-          <aside>
-            <section class="vbox">
-              <header class="header bg-white b-b clearfix">
-                <div class="row m-t-sm">
-                  <div class="col-sm-6 m-b-xs"> <a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default active"><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
-                      <button type="button" class="btn btn-sm btn-default" title="Filter" data-toggle="dropdown"><i class="fa fa-filter"></i> <span class="caret"></span></button>
-                      <ul class="dropdown-menu">
-                        <li><a href="#">Filter 1</a></li>
-                        <li><a href="#">Filter 2</a></li>
-                        <li><a href="#">Filter 3</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="col-sm-6 m-b-xs">
-                    <button class="btn btn-sm btn-default pull-right">Apply</button>
-                    <select class="input-sm form-control input-s-sm inline v-middle pull-right">
-                      <option value="0">Action</option>
-                      <option value="1">Export to Excel</option>
-                    </select>
+            <section class="panel panel-default">
+              <div class="row wrapper">
+                <div class="col-sm-4 m-b-xs">
+                  <select class="input-sm form-control input-s-sm inline v-middle">
+                    <option value="0">Action</option>
+                    <option value="1">Export to Excel</option>
+                  </select>
+                  <button class="btn btn-sm btn-default">Apply</button>
+                </div>
+                <div class="col-sm-5 m-b-xs">
+                  <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-sm btn-default active">
+                      <input type="radio" name="options" id="option1">
+                      Today </label>
+                    <label class="btn btn-sm btn-default">
+                      <input type="radio" name="options" id="option2">
+                      This Week </label>
+                    <label class="btn btn-sm btn-default">
+                      <input type="radio" name="options" id="option2">
+                      This Month </label>
                   </div>
                 </div>
-              </header>
-              <section class="scrollable wrapper w-f">
-                <section class=" panel-default">
-                  <h3><i class="fa fa-long-arrow-left"></i> Enter criteria in the box provided to generate a report.</h3>
-                </section>
-              </section>
-              <footer class="footer bg-white b-t">
-                <div class="row text-center-xs">
-                  <div class="col-md-6 hidden-sm">
-                    <p class="text-muted m-t">Showing 20-30 of 50</p>
-                  </div>
-                  <div class="col-md-6 col-sm-12 text-right text-center-xs">
-                    <ul class="pagination pagination-sm m-t-sm m-b-none">
+                <div class="col-sm-3">
+                  <div class="input-group">
+                    <input type="text" class="input-sm form-control" placeholder="Search">
+                    <span class="input-group-btn">
+                    <button class="btn btn-sm btn-default" type="button">Go!</button>
+                    </span> </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-striped b-t b-light">
+                  <thead>
+                    <tr>
+                      <th width="20"><label class="checkbox m-n i-checks">
+                          <input type="checkbox">
+                          <i></i></label></th>
+                      <th>Object Type</th>
+                      <th>State</th>
+                      <th>Access Level</th>
+                      <th>Decision</th>
+                      <th>User</th>
+                      <th>Date/Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><label class="checkbox m-n i-checks">
+                          <input type="checkbox" name="post[]">
+                          <i></i></label></td>
+                      <td>[Object Type]</td>
+                      <td>[State]</td>
+                      <td>[Access Level]</td>
+                      <td>[Decision]</td>
+                      <td>[User]</td>
+                      <td>[Date/Time]</td>
+                    </tr>
+                      </tr>
+                    
+                  </tbody>
+                </table>
+              </div>
+              <footer class="panel-footer">
+                <div class="row">
+                  <div class="col-sm-8 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small> </div>
+                  <div class="col-sm-4 text-right text-center-xs">
+                    <ul class="pagination pagination-sm m-t-none m-b-none">
                       <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                      <li class="active"><a href="#">1</a></li>
+                      <li><a href="#">1</a></li>
                       <li><a href="#">2</a></li>
                       <li><a href="#">3</a></li>
                       <li><a href="#">4</a></li>
@@ -181,15 +208,13 @@
                 </div>
               </footer>
             </section>
-          </aside>
+          </section>
         </section>
       </section>
     </section>
   </section>
 </section>
-<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
-<script src="resources/js/datepicker/bootstrap-datepicker.js"></script> 
-
+<script src="resources/js/jquery.min.js"></script> 
 <!-- Bootstrap --> 
 <script src="resources/js/bootstrap.js"></script> 
 <!-- App --> 
