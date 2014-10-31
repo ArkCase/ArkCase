@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.complaint;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -14,21 +16,22 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
         "/spring/spring-library-complaint-plugin-test.xml",
+        "/spring/spring-library-complaint-plugin-test-mule.xml",
         "/spring/spring-library-complaint.xml",
-        "/spring/spring-library-mule-context-manager.xml",
-        "/spring/spring-library-person.xml",
         "/spring/spring-library-activiti-actions.xml",
-        "/spring/spring-library-activemq.xml",
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-folder-watcher.xml",
-        "/spring/spring-library-cmis-configuration.xml",
         "/spring/spring-library-drools-monitor.xml",
-        "/spring/spring-library-ecm-file.xml"})
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-context-holder.xml"})
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class ComplaintMuleIT
 {
@@ -39,6 +42,19 @@ public class ComplaintMuleIT
     private ComplaintFactory complaintFactory = new ComplaintFactory();
 
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
+    @Before
+    public void setUp()
+    {
+        auditAdapter.setUserId("auditUser");
+    }
+
 
     @Test
     @Transactional
@@ -52,6 +68,8 @@ public class ComplaintMuleIT
         Authentication auth = new UsernamePasswordAuthenticationToken("testUser", "testUser");
 
         Complaint saved = saveComplaintTransaction.saveComplaint(complaint, auth);
+
+        entityManager.flush();
 
         assertNotNull(saved.getComplaintId());
         assertNotNull(saved.getComplaintNumber());

@@ -1,8 +1,10 @@
 package com.armedia.acm.plugins.complaint;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -21,13 +23,12 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
         "/spring/spring-library-complaint-plugin-test.xml",
+        "/spring/spring-library-complaint-plugin-test-mule.xml",
         "/spring/spring-library-complaint.xml",
-        "/spring/spring-library-person.xml",
-        "/spring/spring-library-mule-context-manager.xml",
         "/spring/spring-library-activiti-actions.xml",
-        "/spring/spring-library-activemq.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-ecm-file.xml"
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-context-holder.xml"
         })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintDaoIT
@@ -38,9 +39,18 @@ public class ComplaintDaoIT
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private ComplaintFactory complaintFactory = new ComplaintFactory();
+
+    @Before
+    public void setUp()
+    {
+        auditAdapter.setUserId("auditUser");
+    }
 
     @Test
     @Transactional

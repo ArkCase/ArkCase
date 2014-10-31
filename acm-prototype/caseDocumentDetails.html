@@ -92,7 +92,8 @@
                   <li class="active"> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
                   <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
-                  <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
+                  <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
+<li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
 <li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
@@ -305,103 +306,55 @@
   </section>
 </section>
 
-
 <script type='text/javascript'>//<![CDATA[ 
 
 $(function() {
     $("#tree").fancytree({
 
-activate: function(event, data) {
-				var node = data.node;
-				// Use <a> href and target attributes to load the content:
-				if( node.data.href ){
-					// Open target
-					window.open(node.data.href, "_self");
-					// or open target in iframe
-//                $("[name=contentFrame]").attr("src", node.data.href);
-				}
-			},
-
-        source: [{
-            title: "Sample Case Title <em>(2014-03-12321)</em>",
-href: "cases.html",
-tooltip: "2014-03-12321",
-            expanded: "fancytree-expanded",
-            children: [{
-                    title: "Details", 
-					href: "caseDetails.html"
-                }, {
-                    title: "People ", 
-					href: "casePeople.html"
-                }, {
-                    title: "Notes", 
-					href: "caseNotes.html"
-                }, {
-                title: "Documents",
-                folder: true,
-				href: "caseDocuments.html",
-expanded: "fancytree-expanded",
-                children: [{
-                        title: "Document Title",
-                        description1: "David Miller", 
-						href: "caseDocumentDetails.html"
-                    }]
-            }, {
-                title: "ROIs",
-                folder: true,
-				href: "caseROI.html",
-expanded: "fancytree-expanded",
-                children: [{
-                        title: "[Document #], [Status]",
-                        description1: "David Miller", 
-						href: "caseROIDetails.html"
-                    }]
-            }, {
-                title: "Tasks",
-                folder: true,
-				href: "caseTasks.html",
-expanded: "fancytree-expanded",
-                children: [{
-                        title: "Subject, Priority",
-                        description1: "David Miller", 
-						href: "caseTaskDetails.html"
-                    }]
-               
-            }, {
-                title: "References",
-                folder: true,
-expanded: "fancytree-expanded", children: [{
-                    title: "Other Complaints",
-                    folder: false, 
-					href: "caseOtherComplaints.html"
-                },{
-                    title: "Other Cases",
-                    folder: false, 
-					href: "caseOtherCases.html"
-                }, {
-                    title: "Other Tasks",
-                    folder: false, 
-					href: "caseOtherTasks.html"
-                }, {
-                    title: "Other Documents",
-                    folder: false, 
-					href: "caseOtherDocuments.html"
-                }]
-            }, {
-                title: "Participants",
-                folder: true,
-expanded: "fancytree-expanded",
-                children: [{
-                    title: "Approvers"
-                }, {
-                    title: "Collaborators"
-                }, {
-                    title: "Watchers"
-                }]
-            }]
-        }]
-    });
-
+	activate: function(event, data) {
+					var node = data.node;
+					// Use <a> href and target attributes to load the content:
+					if( node.data.href ){
+						// Open target
+						window.open(node.data.href, "_self");
+						// or open target in iframe
+						// $("[name=contentFrame]").attr("src", node.data.href);
+					}
+				},
+	source: [{
+		title: "Sample Case Title <em>(2014-03-12321)</em>",
+		href: "cases.html",
+		tooltip: "2014-03-12321",
+		expanded: "fancytree-expanded",
+		children: [{
+				title: "Details", 
+				href: "caseDetails.html"
+			}, {
+				title: "People ", 
+				href: "casePeople.html"
+			},{
+			title: "Documents",
+			href: "caseDocuments.html"
+		}, {
+			title: "Participants",
+			folder: false,
+			href: "casesParticipants.html"
+		}, {
+				title: "Notes", 
+				href: "caseNotes.html"
+			},  {
+			title: "Tasks",
+			href: "caseTasks.html"
+		}, {
+			title: "References",
+			href: "caseOtherComplaints.html"
+		}, {
+			title: "History",
+			folder: false,
+			href: "casesHistory.html"
+		}]
+	}]
+});
 });
 //]]>
 </script> 

@@ -20,6 +20,4 @@ public class ProfileEventPublisher implements ApplicationEventPublisherAware {
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         eventPublisher = applicationEventPublisher;
     }
-
-
 }

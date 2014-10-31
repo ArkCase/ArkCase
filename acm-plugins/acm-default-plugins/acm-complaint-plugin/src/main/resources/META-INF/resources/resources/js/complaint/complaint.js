@@ -8,6 +8,7 @@ var Complaint = Complaint || {
         Complaint.cachePage = new Acm.Model.CacheFifo(2);
         Complaint.cacheComplaint = new Acm.Model.CacheFifo(3);
         Complaint.cachePersonList = new Acm.Model.CacheFifo(3);
+        Complaint.cacheNoteList = new Acm.Model.CacheFifo(3);
 
 
         Complaint.Object.create();
@@ -29,6 +30,7 @@ var Complaint = Complaint || {
     ,cachePersonList: null
     ,cachePage: null
     ,cacheComplaint: null
+    ,cacheNoteList : null
     ,_complaintId: 0
     ,getComplaintId : function() {
         return this._complaintId;
@@ -54,6 +56,10 @@ var Complaint = Complaint || {
     ,_personTypes : ['Initiator', 'Complaintant','Subject','Witness','Wrongdoer','Other']
     ,getPersonTypes : function() {
         return this._personTypes;
+    }
+    ,_personTypesModifiable : ['Complaintant','Subject','Witness','Wrongdoer','Other']
+    ,getPersonTypesModifiable : function() {
+        return this._personTypesModifiable;
     }
 
     ,_personTitles : ['Mr', 'Mrs', 'Ms', 'Miss']

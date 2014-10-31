@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.ecm.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -11,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface EcmFileService
 {
-    @Transactional
+
     ResponseEntity<? extends Object> upload(
             MultipartFile file,
             String acceptHeader,

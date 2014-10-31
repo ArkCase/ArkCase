@@ -330,6 +330,13 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
     </changeSet>
+    
+    <changeSet id="complaint-15-change-location-to-address-id" author="riste.tutureski">
+    	<dropColumn tableName="acm_complaint" columnName="cm_location"/>
+    	<addColumn tableName="acm_complaint">
+    		<column name="cm_address_id" type="NUMBER(32,0)"/>
+    	</addColumn>
+    </changeSet>
 
 </databaseChangeLog>
 
