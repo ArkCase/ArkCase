@@ -21,13 +21,6 @@ Topbar.Service = {
         ,API_TYPEAHEAD_SUGGESTION_BEGIN_      : "/api/latest/plugin/search/quickSearch?q=*"
         ,API_TYPEAHEAD_SUGGESTION_END         : "*&start=0&n=16"
 
-        ,getTypeAheadUrl: function(query) {
-            var url = App.getContextPath() + this.API_TYPEAHEAD_SUGGESTION_BEGIN_
-                + query
-                + this.API_TYPEAHEAD_SUGGESTION_END;
-            return url;
-        }
-
         ,_validateSuggestionData: function(data) {
             if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {
                 return false;
@@ -38,8 +31,12 @@ Topbar.Service = {
             return true;
         }
         ,retrieveSuggestion: function(query, process){
+            var url = App.getContextPath() + this.API_TYPEAHEAD_SUGGESTION_BEGIN_
+                + query
+                + this.API_TYPEAHEAD_SUGGESTION_END;
+
             $.ajax({
-                url: Topbar.Service.Suggestion.getTypeAheadUrl(query)
+                url: url
                 ,cache: false
                 ,success: function(data){
                     if (Topbar.Service.Suggestion._validateSuggestionData(data)) {
