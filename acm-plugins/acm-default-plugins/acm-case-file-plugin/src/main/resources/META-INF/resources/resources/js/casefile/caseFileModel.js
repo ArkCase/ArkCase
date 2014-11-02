@@ -195,11 +195,11 @@ CaseFile.Model = {
                  {nodeType: "prevPage" ,icon: "i-arrow-up"   ,tabIds: ["tabBlank"]}
                 ,{nodeType: "nextPage" ,icon: "i-arrow-down" ,tabIds: ["tabBlank"]}
                 ,{nodeType: "p"        ,icon: ""             ,tabIds: ["tabBlank"]}
-                ,{nodeType: "pc"       ,icon: "i-folder"     ,tabIds: ["tabDetail", "tabPeople"]}
+                ,{nodeType: "pc"       ,icon: "i-folder"     ,tabIds: ["tabTitle","tabDetail","tabPeople","tabDocs","tabParticipants","tabNotes","tabTasks","tabRefs","tabHistory"]}
                 ,{nodeType: "pcd"      ,icon: "",tabIds: ["tabDetail"]}
                 ,{nodeType: "pcp"      ,icon: "",tabIds: ["tabPeople"]}
                 ,{nodeType: "pco"      ,icon: "",tabIds: ["tabDocs"]}
-                ,{nodeType: "pcoc"     ,icon: "",tabIds: ["tabDoc"]}
+                //,{nodeType: "pcoc"     ,icon: "",tabIds: ["tabDoc"]}
                 ,{nodeType: "pca"      ,icon: "",tabIds: ["tabParticipants"]}
                 ,{nodeType: "pcn"      ,icon: "",tabIds: ["tabNotes"]}
                 ,{nodeType: "pct"      ,icon: "",tabIds: ["tabTasks"]}
