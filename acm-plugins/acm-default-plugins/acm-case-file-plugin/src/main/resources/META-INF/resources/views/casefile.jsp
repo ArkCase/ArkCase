@@ -20,13 +20,6 @@
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileService.js'/>"></script>
 
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileObject.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileEvent.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFilePage.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileRule.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileCallback.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileJTable.js'/>"></script>--%>
-
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
     <!-- File Manager -->
@@ -118,40 +111,31 @@
                     <section class="vbox">
                         <section class="scrollable">
                             <div class="wrapper dk  clearfix">
-                                <div class="row" id="tabTop" style="display:none;">
-                                    <p class="dev">tabTop</p>
+                                <div class="row" id="tabTop"  style="display:none;">
                                     <div class="col-xs-12">
                                         <div class="">
                                             <div class=" clearfix">
                                                 <div class="col-xs-2 b-r">
-
-                                                    <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Case Title"></a> </div>
-                                                    <small class="text-muted" id="caseNumber"></small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Case Title"> Sample Case Title</a> </div>
+                                                    <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
                                                 <div class="col-xs-2 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
+                                                    <small class="text-muted">Start Date</small></div>
 
-                                                    <div class="h4 font-bold"><a href="#" id="incidentDate" data-type="date" data-pk="1" data-title="Incident Date"></a></div>
-                                                    <small class="text-muted">Incident Date</small></div>
-                                                <div class="col-xs-2 b-r">
-
-                                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="text" data-pk="1" data-title="Priority"></a></div>
+                                                <div class="col-xs-1 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority">High</a></div>
                                                     <small class="text-muted">Priority</small></div>
                                                 <div class="col-xs-2 b-r">
-
-                                                    <div class="h4 font-bold"><a href="#" id="assignee" data-type="text" data-pk="1" data-title="Assigned To"></a></div>
+                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
                                                     <small class="text-muted">Assigned To</small></div>
                                                 <div class="col-xs-2 b-r">
-
-                                                    <div class="h4 font-bold"><a href="#" id="subjectType" data-type="text" data-pk="1" data-title="Subject Type"></a></div>
+                                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
                                                     <small class="text-muted">Subject Type</small></div>
                                                 <div class="col-xs-2 b-r">
-
-                                                    <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-pk="1" data-title="Status"></a></div>
-                                                    <small class="text-muted">Status</small></div>
-                                                <div class="col-xs-2 b-r">
-
-                                                    <%--<div class="h4 font-bold"><a href="#" id="closeDate" data-type="date" data-pk="1" data-title="Close Date"></a></div>
-                                                    <small class="text-muted">Close Date</small></div>--%>
-
+                                                    <div class="h4 font-bold"><a href="#" id="duedate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
+                                                    <small class="text-muted">Due Date</small></div>
+                                                <div class="col-xs-1">
+                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div> <small class="text-muted">Status</small></div>
                                             </div>
                                         </div>
                                     </div>
@@ -161,99 +145,138 @@
                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No case is selected)</p>
                                 </div>
                             </div>
-                            </div>
-                            </div>
-                            </div>
+
                             <div>
-                                <div class="wrapper" style="margin: 0;">
-                                    <div class="row" id="tabBlank" style="display:none;">
-                                        <%--<p></p>--%>
-                                        <p class="dev">tabBlank</p>
-                                    </div>
+                                <div class="col-md-12" id="tabBlank" style="display:none;">
+                                    <p class="dev">tabBlank</p>
+                                </div>
 
 
-                                    <div class="row" id="tabDetail" style="display:none;">
-                                        <p class="dev">tabDetail</p>
-                                        <div class="pull-right inline">
-                                            <div class="btn-group">
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeCase" data-title="Close Case"><i class="fa fa-archive"></i> Close Case</button>
+                                <div class="wrapper" id="tabTitle" style="display:block;">
+                                    <div class="pull-right inline">
+                                        <div class="btn-group">
+                                            <button class="btn btn-default btn-sm" data-title="Close Complaint"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>
+                                            <button class="btn btn-default btn-sm" data-title="Consolidate Complaint"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="closeCase" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                            <h4 class="modal-title" id="myModalLabel">Close Case</h4>
+                                                        </div>
+                                                        <div class="modal-body"> Are you sure you want to close this case? </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary">Close Case</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="consolidateCase" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                            <h4 class="modal-title" id="myModalLabel">Consolidate Case</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <section class="row">
+                                                                <div class="col-sm-12">
+                                                                    <label for="title" class="label">Enter the complaint you would like to consolidate with:</label>
+                                                                    <input id="title" type="text" class="form-control" placeholder="Case #" >
+                                                                </div>
+                                                            </section>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary">Consolidate Case</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <%--<h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> Case Title</a></h4>--%>
-                                        <hr/>
                                     </div>
-
-
-
-                                    <div class="row" id="tabPeople" style="display:none;">
-                                        <p class="dev">tabPeople</p>
-
-                                        <div class="col-md-12">
-                                            <section class="panel b-a">
-                                                <div id="divPerson" style="width:100%"></div>
-                                            </section>
-                                        </div>
-                                    </div>
-
-                                    <div class="row" id="tabNotes" style="display:none;">
-                                        <p class="dev">tabNotes</p>
-                                    </div>
-
-                                    <div class="row" id="tabNote" style="display:none;">
-                                        <p class="dev">tabNote</p>
-                                    </div>
-
-                                    <div class="row" id="tabDocs" style="display:none;">
-                                        <p class="dev">tabDocs</p>
-                                    </div>
-
-                                    <div class="row" id="tabDoc" style="display:none;">
-                                        <p class="dev">tabDoc</p>
-                                    </div>
-
-                                    <div class="row" id="tabRois" style="display:none;">
-                                        <p class="dev">tabRois</p>
-
-
-                                        <div class="col-md-12">
-                                            <section class="panel b-a">
-                                                <div id="divRois" style="width:100%"></div>
-                                                <input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />
-                                            </section>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row" id="tabRoi" style="display:none;">
-                                        <p class="dev">tabRoi</p>
-                                        <div class="col-md-12">
-                                            <section class="panel b-a">
-                                                <div id="divRoi" style="width:100%"></div>
-                                            </section>
-                                        </div>
-                                    </div>
-
-                                    <div class="row" id="tabTasks" style="display:none;">
-                                        <p class="dev">tabTasks</p>
-                                    </div>
-
-                                    <div class="row" id="tabTask" style="display:none;">
-                                        <p class="dev">tabTask</p>
-                                    </div>
-
-                                    <div class="row" id="tabRefs" style="display:none;">
-                                        <p class="dev">tabRefs</p>
-                                    </div>
-
-                                    <div class="row" id="tabRef" style="display:none;">
-                                        <p class="dev">tabRef</p>
-                                    </div>
-
+                                    <h4 class="m-n">Case Details</h4>
+                                    <hr/>
                                 </div>
-                            </div>
-                            
-                            </div>
 
+                                <div class="col-md-12" id="tabDetail" style="display:none;">
+                                    <p class="dev">tabDetail</p>
+                                    <section class="panel b-a ">
+                                        <div class="panel-heading b-b bg-info">
+                                            <ul class="nav nav-pills pull-right">
+                                                <li>
+                                                    <div class="btn-group padder-v2">
+                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>
+                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>
+                                                        <ul class="dropdown-menu pull-right">
+                                                            <li><a href="#">Other menu items</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                                <li>&nbsp;</li>
+                                            </ul>
+                                            </span> <a href="#" class="font-bold">Details</a></div>
+                                        <div class="panel-body">
+                                            <div class="complaintDetails">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
+                                                <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <div class="col-md-12" id="tabPeople" style="display:none;">
+                                    <p class="dev">tabPeople</p>
+                                    <section class="panel b-a ">
+                                        <div id="divPeople" style="width:100%"></div>
+                                    </section>
+                                </div>
+
+                                <div class="col-md-12" id="tabDocs" style="display:none;">
+                                    <p class="dev">tabDocs</p>
+                                    <section class="panel b-a ">
+                                        <div id="divDocs" style="width:100%"></div>
+                                    </section>
+                                </div>
+
+                                <div class="col-md-12" id="tabParticipants" style="display:none;">
+                                    <p class="dev">tabParticipants</p>
+                                    <section class="panel b-a ">
+                                        <div id="divParticipants" style="width:100%"></div>
+                                    </section>
+                                </div>
+
+                                <div class="col-md-12" id="tabNotes" style="display:none;">
+                                    <p class="dev">tabNotes</p>
+                                    <section class="panel b-a ">
+                                        <div id="divNotes" style="width:100%"></div>
+                                    </section>
+                                </div>
+
+                                <div class="col-md-12" id="tabTasks" style="display:none;">
+                                    <p class="dev">tabTasks</p>
+                                    <section class="panel b-a ">
+                                        <div id="divTasks" style="width:100%"></div>
+                                    </section>
+                                </div>
+
+                                <div class="col-md-12" id="tabRefs" style="display:none;">
+                                    <p class="dev">tabRefs</p>
+                                    <section class="panel b-a ">
+                                        <div id="divRefs" style="width:100%"></div>
+                                    </section>
+                                </div>
+
+                                <div class="col-md-12" id="tabHistory" style="display:none;">
+                                    <p class="dev">tabHistory</p>
+                                    <section class="panel b-a ">
+                                        <div id="divHistory" style="width:100%"></div>
+                                    </section>
+                                </div>
+
+                            </div>
                         </section>
                     </section>
                 </aside>
