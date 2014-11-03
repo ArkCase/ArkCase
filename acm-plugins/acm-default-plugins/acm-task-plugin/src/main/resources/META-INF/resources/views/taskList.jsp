@@ -21,6 +21,7 @@
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListRule.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListJTable.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
 
@@ -28,15 +29,25 @@
     <!-- Summernote WYSIWYG -->
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/${js_summernote}"></script>
+
+    <!-- JTable -->
+    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
+
+    <!-- Fancy Tree -->
+    <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
+    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree}"></script>
+    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree_table}"></script>
+    <script src="<c:url value='/'/>resources/vendors/${vd_contextmenu}/${js_contextmenu}"></script>
     <%--<script>--%>
 
-        <%--var edit = function() {--%>
-            <%--$('.taskDetails').summernote({focus: true});--%>
-        <%--};--%>
-        <%--var save = function() {--%>
-            <%--var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).--%>
-            <%--$('.taskDetails').destroy();--%>
-        <%--};--%>
+    <%--var edit = function() {--%>
+    <%--$('.taskDetails').summernote({focus: true});--%>
+    <%--};--%>
+    <%--var save = function() {--%>
+    <%--var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).--%>
+    <%--$('.taskDetails').destroy();--%>
+    <%--};--%>
 
     <%--</script>--%>
 
@@ -51,23 +62,23 @@
 <section class="scrollable">
 <section class="hbox stretch">
 <aside class="aside-lg" id="email-list">
-    <section class="vbox">
-        <header class="dker header clearfix">
-            <h3 class="m-b-xs text-black pull-left"><spring:message code="task.page.descShort" text="Tasks" /></h3>
-            <div class="btn-toolbar">
+    <section class="vbox animated fadeInLeft">
+        <section class="scrollable">
+            <header class="dk header">
+                <h3 class="m-b-xs text-black pull-left">Tasks</h3>
                 <div class="btn-group inline select pull-right">
-                    <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
+                    <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span></button>
                     <ul class="dropdown-menu text-left text-sm">
                         <li><a href="#">Sort Date Ascending</a></li>
                         <li><a href="#">Sort Date Descending</a></li>
-                        <li><a href="#">Sort Title Ascending</a></li>
-                        <li><a href="#">Sort Title Ascending</a></li>
+                        <li><a href="#">Sort Task ID Ascending</a></li>
+                        <li><a href="#">Sort Task ID Ascending</a></li>
                     </ul>
                 </div>
                 <div class="btn-group select pull-right">
-                    <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
+                    <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span></button>
                     <ul class="dropdown-menu text-left text-sm">
-                        <li><a href="#">All Open Tasks</a></li>
+                        <li><a href="#">All Open Task</a></li>
                         <li><a href="#">Tasks I've Opened</a></li>
                         <li><a href="#">Unapproved Tasks</a></li>
                         <li><a href="#">Approved Tasks</a></li>
@@ -76,24 +87,20 @@
                         <li><a href="#">New Tasks</a></li>
                     </ul>
                 </div>
-            </div>
-        </header>
-        <section class="scrollable hover">
-            <ul class="list-group auto no-radius m-b-none m-t-n-xxs list-group-lg" id="ulTasks">
-            </ul>
-            <!-- Load more tasks action -->
-<!--             <a href="#" class="btn btn-default btn-md col-lg-12 m-b-xs"><i class="fa fa-repeat"></i> Load More...</a>
- -->        </section>
-        <footer class="footer dk clearfix">
-            <form class="m-t-sm">
+            </header>
+            <div class="wrapper">
                 <div class="input-group">
-                    <input type="text" class="input-sm form-control input-s-sm" placeholder="Search">
-                    <div class="input-group-btn">
-                        <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
-                    </div>
+                    <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
+                        <span class="input-group-btn">
+                          <button class="btn btn-sm btn-default" type="button">Go!</button>
+                        </span></div>
+            </div>
+            <div class="row m-b">
+                <div class="col-sm-12">
+                    <div id="tree"></div>
                 </div>
-            </form>
-        </footer>
+            </div>
+        </section>
     </section>
 </aside>
 <!-- /.aside -->
@@ -104,32 +111,32 @@
 
 <aside class="bg-light lter">
     <section class="vbox">
-	    <h4 id="noTaskFoundMeassge" class="m-n">No task assigned to you was found.</h4>
+        <h4 id="noTaskFoundMeassge" class="m-n">No task assigned to you was found.</h4>
         <section id="taskDetailView" class="scrollable">
             <div class="wrapper dk  clearfix">
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="">
                             <div class=" clearfix">
-<!--                                 <div class="col-xs-4 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a></div>
-                                    <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
+                                <div class="col-xs-4 b-r">
+                                    <div class="h4 font-bold"><a href="#" id="taskTitle" data-type="text" data-pk="1" data-title="Enter Task Title"> Sample Title</a></div>
+                                    <small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
                                     <small class="text-muted">Incident Date</small></div>
                                 <div class="col-xs-1 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="priorityParentObj" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
                                     <small class="text-muted">Priority</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">AJ McClary</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1"  data-title="Enter Assignee">AJ McClary</a></div>
                                     <small class="text-muted">Assigned To</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1"  data-title="Enter Subject Type">CRIMINAL</a></div>
                                     <small class="text-muted">Subject Type</small></div>
                                 <div class="col-xs-1">
-                                    <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="statusParentObj" >PENDING</a></div>
                                     <small class="text-muted">Status</small></div>
- -->                            </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -137,14 +144,32 @@
             <div class="wrapper bg-empty  clearfix">
                 <div class="pull-right inline">
                     <div class="btn-group">
-			       		<!-- TODO: when data-toggle is modal, the tooltip won't come up 
-			       		-->
-			            <button class="btn btn-default btn-sm" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
+                        <!-- TODO: when data-toggle is modal, the tooltip won't come up
+                        -->
+                        <button class="btn btn-default btn-sm" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
                         <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete Task"><i class="fa fa-check"></i></button>
+
+
+                        <!-- from the mockup -->
+                        <button class="btn btn-default btn-sm" data-title="Assign Task" data-toggle="modal" data-target="#assign"><i class="fa fa-male"></i> Assign</button>
+                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#reassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
+                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#unassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>
+                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#complete" data-title="Complete Task"><i class="fa fa-check-square-o"></i> Complete</button>
+                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#approve" data-title="Approve Task"><i class="fa fa-check"></i> Approve</button>
+                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#reject" data-title="Reject Task"><i class="fa fa-reply"></i> Reject</button>
+                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#delete" data-title="Delete Task"><i class="fa fa-times"></i> Delete</button>
+
+
+
                     </div>
                 </div>
-                <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
-                <hr/>
+                    <%--
+                                    <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
+                    --%>
+                <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-url="/post" data-title="Enter Task Subject"> Sample Task Subject</a> (12321)</h4>
+                <%--<small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>--%>
+
+            <hr/>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="">
@@ -173,55 +198,86 @@
                 </div>
             </div>
             <div class="wrapper">
-                <div class="row">
+
+
+                <div class="row" id="tabDetails" style="display:none;">
                     <div class="col-md-12">
                         <section class="panel b-a ">
                             <div class="panel-heading b-b bg-info">
                                 <ul class="nav nav-pills pull-right">
                                     <li>
                                         <div class="btn-group padder-v2">
-                                            <button class="btn btn-default btn-sm" id="detailEdit" data-toggle="tooltip" data-title="Edit" ><i class="fa fa-pencil"></i></button>
-                                           	<button class="btn btn-default btn-sm" id="detailCancel" data-toggle="tooltip" data-title="Cancel" ><i class="fa fa-eject"></i></button>
-                                            <button class="btn btn-default btn-sm" id="detailSave" data-toggle="tooltip" data-title="Save" ><i class="fa fa-save"></i></button>
+                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
                                             <ul class="dropdown-menu pull-right">
                                                 <li><a href="#">Other menu items</a></li>
                                             </ul>
                                         </div>
                                     </li>
+                                    <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                 </ul>
-                                <a href="#" class="font-bold">Task Details</a>
-                            </div>
+                                </span> <a href="#" class="font-bold">Task Details</a> </div>
                             <div class="panel-body">
-                                <div class="complaintDetails" id="details"></div>
+                                <div class="taskDetails"></div>
                             </div>
                         </section>
                     </div>
                 </div>
-                
-                
-			    <div class="row">
-			        <div class="col-md-12">
-			            <section class="panel b-a ">
-			                <div class="panel-heading b-b bg-info">
-			                    <ul class="nav nav-pills pull-right">
-			                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-			                    </ul>
-			                    <a href="#" class="font-bold">Electronic Signatures</a> </div>
-			                <div class="panel-body max-200 no-padder">
-			                    <table class="table table-striped th-sortable table-hover">
-			                        <thead>
-			                        <tr>
-			                            <th>Signed By</th>
-			                            <th>Date</th>
-			                        </tr>
-			                        </thead>
-			                        <tbody id="signatureList">
-			                        </tbody>
-			                    </table>
-			                </div>
-			            </section>
-			        </div>
-			    </div>                
+
+
+                <div class="row" id="tabDocuments" style="display:none;">
+                    <div class="col-md-12">
+                        <section class="panel b-a">
+                            <div id="divDocuments" style="width:100%"></div>
+                            <input id="roiFormUrl" type="hidden" value="${roiFormUrl}" style="width:100% display:none;" />
+                        </section>
+                    </div>
+                </div>
+
+
+                <div class="row" id="tabNotes" style="display:none;">
+                    <div class="col-md-12">
+                        <section class="panel b-a">
+                            <div id="divNotes" style="width:100%"></div>
+                        </section>
+                    </div>
+                </div>
+
+
+                <div class="row" id="tabHistory" style="display:none;">
+                    <div class="col-md-12">
+                        <section class="panel b-a">
+                            <div id="divHistory" style="width:100%"></div>
+                        </section>
+                    </div>
+                </div>
+
+
+                <div class="row" id="tabSignature" style="display:none;">
+                    <div class="col-md-12">
+                        <section class="panel b-a ">
+                            <div class="panel-heading b-b bg-info">
+                                <ul class="nav nav-pills pull-right">
+                                    <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                </ul>
+                                <a href="#" class="font-bold">Electronic Signatures</a> </div>
+                            <div class="panel-body max-200 no-padder">
+                                <table class="table table-striped th-sortable table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Signed By</th>
+                                        <th>Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="signatureList" >
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+
             </div>
         </section>
     </section>
@@ -272,26 +328,258 @@
 <!-- Modal -->
 <!-- TODO this should be moved to a common jspf file -->
 <div class="modal fade" id="signatureModal" tabindex="-1" role="dialog" aria-labelledby="signatureModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="signatureModalLabel">Electronically Sign</h4>
-      </div>
-      <%-- Using a form post ajax submit --%>
-      <form id="signatureConfirmForm" method="post" >
-	      <div class="modal-body">
-	      	<div class="clearfix">
-		      <label for="confirmPassword">Password</label>
-		      <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Password" >
-		    </div>
-	      </div>
-      </form>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="signatureConfirmBtn">Confirm</button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="signatureModalLabel">Electronically Sign</h4>
+            </div>
+            <%-- Using a form post ajax submit --%>
+            <form id="signatureConfirmForm" method="post" >
+                <div class="modal-body">
+                    <div class="clearfix">
+                        <label for="confirmPassword">Password</label>
+                        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Password" >
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="signatureConfirmBtn">Confirm</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
+
+
+
+<div class="modal fade" id="assign" tabindex="-1" role="dialog" aria-labelledby="assignModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="assignModalLabel">Assign Task</h4>
+            </div>
+            <div class="modal-body">
+                <p>Who would you like to assign this task to?</p>
+                <section class="panel panel-default">
+                    <div class="row wrapper">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="text" class="input-sm form-control" placeholder="Search people..">
+                                          <span class="input-group-btn">
+                                          <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                          </span> </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped b-t b-light">
+                            <thead>
+                            <tr>
+                                <th width="20"></th>
+                                <th class="th-sortable" data-toggle="class">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                <th>Last Name</th>
+                                <th>Username</th>
+                                <th>Organization</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><label class="checkbox m-n">
+                                    <input type="radio" name="post[]">
+                                    <i></i></label></td>
+                                <td>[First Name]</td>
+                                <td>[Last Name]</td>
+                                <td>[Username]</td>
+                                <td>[Organization]</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 20-30 of 50 items</small> </div>
+                            <div class="col-sm-6 text-right text-center-xs">
+                                <ul class="pagination pagination-sm m-t-none m-b-none">
+                                    <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                    <li><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </footer>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Assign Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="reassign" tabindex="-1" role="dialog" aria-labelledby="reassignModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="reassignModalLabel">Reassign Task</h4>
+            </div>
+            <div class="modal-body">
+                <p>Who would you like to reassign this task to?</p>
+                <section class="panel panel-default">
+                    <div class="row wrapper">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="text" class="input-sm form-control" placeholder="Search people..">
+                                          <span class="input-group-btn">
+                                          <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                          </span> </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped b-t b-light">
+                            <thead>
+                            <tr>
+                                <th width="20"></th>
+                                <th class="th-sortable" data-toggle="class">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                <th>Last Name</th>
+                                <th>Username</th>
+                                <th>Organization</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><label class="checkbox m-n">
+                                    <input type="radio" name="post[]">
+                                    <i></i></label></td>
+                                <td>[First Name]</td>
+                                <td>[Last Name]</td>
+                                <td>[Username]</td>
+                                <td>[Organization]</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 20-30 of 50 items</small> </div>
+                            <div class="col-sm-6 text-right text-center-xs">
+                                <ul class="pagination pagination-sm m-t-none m-b-none">
+                                    <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                    <li><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </footer>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Reassign Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="unassign" tabindex="-1" role="dialog" aria-labelledby="unassignModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="unassignModalLabel">Unassign Task</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to unassign this task?</p>
+                <label>Reason</label>
+                <textarea class="form-control"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Unassign Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="complete" tabindex="-1" role="dialog" aria-labelledby="completeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="completeModalLabel">Complete Task</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to complete this task?</p>
+                <label>Reason</label>
+                <textarea class="form-control"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Complete Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="approveModalLabel">Approve Task</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to approve this task?</p>
+                <label>Reason</label>
+                <textarea class="form-control"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Approve Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="rejectModalLabel">Reject Task</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to reject this task?</p>
+                <label>Reason</label>
+                <textarea class="form-control"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Reject Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="deleteModalLabel">Delete Task</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this task?</p>
+                <label>Reason</label>
+                <textarea class="form-control"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Delete Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 

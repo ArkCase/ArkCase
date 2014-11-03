@@ -23,12 +23,24 @@ TaskList.Service = {
                 ,TaskList.Callback.EVENT_DETAIL_SAVED
             );    	
     }
-    
-    ,listTaskAll : function() {
-            Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK
+    ,listTaskAll : function(treeinfo) {
+            /*Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK
                 ,TaskList.Callback.EVENT_LIST_RETRIEVED
-            );
-        }
+            );*/
+        var taskId = treeinfo.taskId;
+        var initKey = treeinfo.initKey;
+        var start = treeinfo.start;
+        var n = treeinfo.n;
+        var s = treeinfo.s;
+        var q = treeinfo.q;
+
+        var url = App.getContextPath() + this.API_LIST_TASK;
+        url += "?start=" + treeinfo.start;
+        url += "&n=" + treeinfo.n;
+        Acm.Ajax.asyncGet(url
+            ,TaskList.Callback.EVENT_LIST_RETRIEVED
+        );
+    }
 
    	,listTask : function(user) {
         Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK + "?assignee=" + user

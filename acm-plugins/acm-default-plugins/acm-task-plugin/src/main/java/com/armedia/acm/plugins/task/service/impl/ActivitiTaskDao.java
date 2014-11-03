@@ -83,10 +83,10 @@ class ActivitiTaskDao implements TaskDao
         try
         {
             getActivitiTaskService().saveTask(activitiTask);
-
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_TYPE", in.getAttachedToObjectType());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_ID", in.getAttachedToObjectId());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), in.getAttachedToObjectType(), in.getAttachedToObjectId());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_NAME", in.getAttachedToObjectName());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "START_DATE", in.getTaskStartDate());
             String status = in.getStatus() == null ? "ASSIGNED" : in.getStatus();
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "TASK_STATUS", status);
@@ -357,6 +357,8 @@ class ActivitiTaskDao implements TaskDao
         {
             retval.setAttachedToObjectId((Long) hti.getProcessVariables().get("OBJECT_ID"));
             retval.setAttachedToObjectType((String) hti.getProcessVariables().get("OBJECT_TYPE"));
+            retval.setAttachedToObjectName((String) hti.getProcessVariables().get("OBJECT_NAME"));
+
         }
 
         if ( hti.getTaskLocalVariables() != null )
@@ -402,6 +404,11 @@ class ActivitiTaskDao implements TaskDao
             String objectType = (String) taskLocal.get("OBJECT_TYPE");
             acmTask.setAttachedToObjectType(objectType);
         }
+        if ( acmTask.getAttachedToObjectId() == null )
+        {
+            String objectName = (String) taskLocal.get("OBJECT_NAME");
+            acmTask.setAttachedToObjectName(objectName);
+        }
         Date startDate = (Date) taskLocal.get("START_DATE");
         acmTask.setTaskStartDate(startDate);
 
@@ -413,6 +420,9 @@ class ActivitiTaskDao implements TaskDao
 
         String details = (String) taskLocal.get("DETAILS");
         acmTask.setDetails(details);
+
+        log.debug("setting attached to object name");
+        acmTask.setAttachedToObjectName((String) taskLocal.get("OBJECT_NAME"));
     }
 
     private String acmPriorityFromActivitiPriority(int priority)
@@ -471,7 +481,7 @@ class ActivitiTaskDao implements TaskDao
         {
             log.trace("Activiti task id '" + acmTask.getTaskId() + "' for object type '" +
                     acmTask.getAttachedToObjectType() + "'" +
-                    ", object id '" + acmTask.getAttachedToObjectId() + "' found for user '" + acmTask.getAssignee()
+                    ", object id '" + acmTask.getAttachedToObjectId() + ", object number '" + acmTask.getAttachedToObjectName() +"' found for user '" + acmTask.getAssignee()
                     + "'");
         }
 
@@ -510,6 +520,7 @@ class ActivitiTaskDao implements TaskDao
         {
             acmTask.setAttachedToObjectId((Long) activitiTask.getProcessVariables().get("OBJECT_ID"));
             acmTask.setAttachedToObjectType((String) activitiTask.getProcessVariables().get("OBJECT_TYPE"));
+            acmTask.setAttachedToObjectName((String) activitiTask.getProcessVariables().get("OBJECT_NAME"));
         }
     }
 
