@@ -390,8 +390,8 @@ CaseFile.View = {
             }
         }
         ,populateCaseFile: function(c) {
-            this.setTextLabCaseNumber(c.caseNumber);
-            this.setTextLnkCaseTitle(c.title);
+            this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
+            this.setTextLnkCaseTitle(Acm.goodValue(c.title));
             this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));
 
         }
