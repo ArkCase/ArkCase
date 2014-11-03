@@ -12,6 +12,7 @@ public interface EcmFileService
 {
 
     ResponseEntity<? extends Object> upload(
+            String fileType,
             MultipartFile file,
             String acceptHeader,
             String contextPath,

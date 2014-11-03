@@ -13,6 +13,7 @@ public interface EcmFileTransaction
 {
     EcmFile addFileTransaction(
             Authentication authentication,
+            String fileType,
             InputStream fileInputStream,
             String mimeType,
             String fileName,

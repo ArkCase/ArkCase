@@ -126,6 +126,12 @@ public class ROIService extends FrevvoFormAbstractService {
 		return json;
 	}
 
+    @Override
+    public String getFormName()
+    {
+        return FrevvoFormName.ROI;
+    }
+
 	/**
 	 * @return the complaintDao
 	 */

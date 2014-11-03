@@ -443,6 +443,12 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		return json;
 	}
 
+    @Override
+    public String getFormName()
+    {
+        return FrevvoFormName.COMPLAINT;
+    }
+
     public SaveComplaintTransaction getSaveComplaintTransaction()
     {
         return saveComplaintTransaction;

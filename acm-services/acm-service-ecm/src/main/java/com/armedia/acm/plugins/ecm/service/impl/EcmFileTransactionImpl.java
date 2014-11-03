@@ -30,6 +30,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     public EcmFile addFileTransaction(
             Authentication authentication,
+            String fileType,
             InputStream fileInputStream,
             String mimeType,
             String fileName,
@@ -42,6 +43,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         EcmFile toAdd = new EcmFile();
         toAdd.setFileMimeType(mimeType);
         toAdd.setFileName(fileName);
+        toAdd.setFileType(fileType);
 
         ObjectAssociation parent = new ObjectAssociation();
         parent.setParentId(parentObjectId);
