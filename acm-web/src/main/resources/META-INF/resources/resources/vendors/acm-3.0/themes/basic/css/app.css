@@ -373,7 +373,11 @@ ul.typeahead.dropdown-menu  div.icontype {
 }
 
 
-
+ul.list-group li.list-group-item div.row div.col-xs-12 span.btn-rounded.btn-sm.btn-info {
+	margin-bottom: 5px !important;
+	position: relative;
+	display: inline-block;
+}
 
 .dropdown-menu.pull-left {
   left: 100%;
@@ -1039,7 +1043,7 @@ div.panel-body.max-200 {
   display: block;
   width: 12px;
   height: 12px;
-  background: url('../../../../chosen-1.1.0/chosen-sprite.png') -42px 1px no-repeat;
+  background: url('../../resources/css/chosen-sprite.png') -42px 1px no-repeat;
   font-size: 1px;
 
 }
@@ -1062,7 +1066,7 @@ div.panel-body.max-200 {
   display: block;
   width: 100%;
   height: 100%;
-  background: url('../../../../chosen-1.1.0/chosen-sprite.png') no-repeat 0px 2px;
+  background: url('../../css/chosen-sprite.png') no-repeat 0px 2px;
 }
 .chosen-container-single .chosen-search {
   position: relative;
@@ -1081,8 +1085,8 @@ div.panel-body.max-200 {
   height: auto;
   outline: 0;
   border: 1px solid #aaa;
-  background: white url('../../../../chosen-1.1.0/chosen-sprite.png') no-repeat 100% -20px;
-  background: url('../../../../chosen-1.1.0/chosen-sprite.png') no-repeat 100% -20px;
+  background: white url('../../css/chosen-sprite.png') no-repeat 100% -20px;
+  background: url('../../css/chosen-sprite.png') no-repeat 100% -20px;
   font-size: 1em;
   font-family: sans-serif;
   line-height: normal;
@@ -1366,8 +1370,8 @@ div.panel-body.max-200 {
 }
 .chosen-rtl .chosen-search input[type="text"] {
   padding: 4px 5px 4px 20px;
-  background: white url('../../../../chosen-1.1.0/chosen-sprite.png') no-repeat -30px -20px;
-  background: url('../../../../chosen-1.1.0/chosen-sprite.png') no-repeat -30px -20px;
+  background: white url('../../css/chosen-sprite.png') no-repeat -30px -20px;
+  background: url('../../css/chosen-sprite.png') no-repeat -30px -20px;
   direction: rtl;
 }
 .chosen-rtl.chosen-container-single .chosen-single div b {
@@ -1387,7 +1391,7 @@ div.panel-body.max-200 {
   .chosen-container-multi .chosen-choices .search-choice .search-choice-close,
   .chosen-container .chosen-results-scroll-down span,
   .chosen-container .chosen-results-scroll-up span {
-    background-image: url('../../../../chosen-1.1.0/chosen-sprite@2x.png') !important;
+    background-image: url('../../css/chosen-sprite@2x.png') !important;
     background-size: 52px 37px !important;
     background-repeat: no-repeat !important;
   }
@@ -1987,6 +1991,10 @@ fieldset[disabled] .btn-success.active {
   background-color: #1ccacc;
   border-color: #1ccacc;
 }
+
+
+
+
 .btn-info:hover,
 .btn-info:focus,
 .btn-info:active,

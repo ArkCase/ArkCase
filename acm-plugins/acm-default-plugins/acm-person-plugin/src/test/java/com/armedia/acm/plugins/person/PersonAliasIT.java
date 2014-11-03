@@ -1,11 +1,14 @@
 package com.armedia.acm.plugins.person;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.PersonAliasDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import java.util.Date;
 
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -35,6 +38,14 @@ public class PersonAliasIT
     @PersistenceContext
     private EntityManager em;
 
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
+    @Before
+    public void setUp()
+    {
+        auditAdapter.setUserId("auditUser");
+    }
 
     @Test
     @Transactional
@@ -44,10 +55,7 @@ public class PersonAliasIT
         
         pa.setAliasType("Others");
         pa.setAliasValue("ACM");
-        pa.setModifier("testModifier");
-        pa.setCreator("testCreator");
-        pa.setCreated(new Date());
-        pa.setModified(new Date());
+
         pa.setPerson(new Person());
 
         Person p = pa.getPerson();

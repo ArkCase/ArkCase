@@ -43,6 +43,7 @@
                 <prop key="acm.acquireRetryAttempts">30</prop>
                 <prop key="acm.acquireRetryDelay">1000</prop>
                 <prop key="acm.acquireIncrement">5</prop>
+                <prop key="acm.abandonedTimeoutInSeconds">60</prop>
 
                 <!-- whether the schema should be updated at application startup - set to false to run with JRebel  -->
                 <prop key="schema.autoUpdate">true</prop>
@@ -84,7 +85,7 @@
         <property name="logAbandoned" value="true"/>
         <property name="minEvictableIdleTimeMillis" value="1000"/>
         <property name="removeAbandoned" value="true"/>
-        <property name="removeAbandonedTimeout" value="5"/>
+        <property name="removeAbandonedTimeout" value="${acm.abandonedTimeoutInSeconds}"/>
         <property name="timeBetweenEvictionRunsMillis" value="3000"/>
         <property name="testOnConnect" value="true"/>
     </bean>
@@ -144,12 +145,15 @@
         <property name="descriptorListener" ref="objectChangesBySessionAccumulator"/>
     </bean>
 
+    <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
+
     <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer" init-method="initBean">
         <property name="entityManagerFactory" ref="acmEntityManager"/>
         <property name="sessionListener" ref="sessionCommitListener"/>
         <property name="defaultListeners">
             <list>
                 <ref bean="objectChangesBySessionAccumulator"/>
+                <ref bean="auditPropertyEntityAdapter"/>
             </list>
         </property>
     </bean>
