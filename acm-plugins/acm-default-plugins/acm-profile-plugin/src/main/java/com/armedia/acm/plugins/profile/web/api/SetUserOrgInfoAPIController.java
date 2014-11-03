@@ -48,6 +48,7 @@ public class SetUserOrgInfoAPIController {
         }
         UserOrg userOrg = null;
         Organization org = null;
+        boolean isCompanyNameNull = false;
         try {
           userOrg = getUserOrgDao().getUserOrgForUser(user);
         } catch (AcmObjectNotFoundException e) {
@@ -58,13 +59,17 @@ public class SetUserOrgInfoAPIController {
             userOrg = new UserOrg();
             try {
                 //check if the company name already exists
-                org = getOrganizationDao().getOrganizationByOrganizationName(in.getCompanyName().trim());
-            } catch (AcmObjectNotFoundException e1) {
-                if(log.isInfoEnabled()) {
+                if( in.getCompanyName()!=null ) {
+                    org = getOrganizationDao().getOrganizationByOrganizationName(in.getCompanyName().trim());
+                } else {
+                    isCompanyNameNull = true;
+                }
+            } catch ( AcmObjectNotFoundException e1 ) {
+                if( log.isInfoEnabled() ) {
                     log.info("Organization with name: "+in.getCompanyName()+" is not found in the DB");
                 }
                 //if company name doesn't exist create new organization object
-                org = prepareNewOrg(in);
+                org = prepareNewOrg(in,user);
                 org = getOrganizationDao().save(org);
             }
             userOrg.setOrganization(org);
@@ -72,40 +77,56 @@ public class SetUserOrgInfoAPIController {
         }
 
        //case when user changed  his company name
-        if(userOrg.getOrganization().getOrganizationValue()!=null && !userOrg.getOrganization().getOrganizationValue().equals(in.getCompanyName().trim())) {
-            if(log.isInfoEnabled()){
-                log.info("User "+userId+" changed the name of his company");
-            }
-            try {
-                //check if the company name already exists
-                org = getOrganizationDao().getOrganizationByOrganizationName(in.getCompanyName().trim());
-            } catch (AcmObjectNotFoundException e1) {
-                if (log.isInfoEnabled()) {
-                    log.info("Organization with name: " + in.getCompanyName() + " is not found in the DB");
-                }
-                //create new company for the user
-                org = prepareNewOrg(in);
-                org = getOrganizationDao().save(org);
+        if(!isCompanyNameNull) {
+            //check if users add company info for the first time
+            if(userOrg.getOrganization()==null) {
+                org = prepareNewOrg(in,user);
                 userOrg.setOrganization(org);
-
-                //TODO "check if there is records with id of the old company, if not delete the organization record"
             }
-         userOrg.setOrganization(org);
-         userOrg.setUser(user);
+            if (userOrg.getOrganization().getOrganizationValue() != null && !userOrg.getOrganization().getOrganizationValue().equals(in.getCompanyName().trim())) {
+                if (log.isInfoEnabled()) {
+                    log.info("User " + userId + " changed the name of his company");
+                }
+                try {
+                    //check if the company name already exists
+                    org = getOrganizationDao().getOrganizationByOrganizationName(in.getCompanyName().trim());
+                } catch (AcmObjectNotFoundException e1) {
+                    if (log.isInfoEnabled()) {
+                        log.info("Organization with name: " + in.getCompanyName() + " is not found in the DB");
+                    }
+                    //create new company for the user
+                    org = prepareNewOrg(in, user);
+                    org = getOrganizationDao().save(org);
+                    userOrg.setOrganization(org);
+                }
+                userOrg.setOrganization(org);
+                userOrg.setUser(user);
+            }
         }
         userOrg = createUserOrgForUpdate(in, userOrg);
-        getUserOrgDao().updateUserInfo(userOrg);
+        userOrg = getUserOrgDao().updateUserInfo(userOrg);
+        getEventPublisher().publishProfileEvent(userOrg,auth,isCompanyNameNull,true);
         return in;
     }
 
-    private Organization prepareNewOrg(ProfileDTO profileDTO){
+    private Organization prepareNewOrg(ProfileDTO profileDTO, AcmUser user){
         Organization org = new Organization();
         //posible org types
         //complaint.organizationTypes=Non-profit=Non-profit,Government=Government,Corporation=Corporation
         org.setOrganizationType("Corporation");
-        org.setOrganizationValue(profileDTO.getCompanyName());
-        org.setCreator(profileDTO.getFullName());
-        org.setModifier(profileDTO.getFullName());
+        //if profileDTO did not contains fullName take from the user
+        String fullName = profileDTO.getFullName();
+        if( fullName==null ) {
+            fullName = user.getFullName();
+        }
+        org.setCreator(fullName);
+        org.setModifier(fullName);
+        //if user did not provide company name company object will not be created
+        if( profileDTO.getCompanyName()==null || "".equals(profileDTO.getCompanyName().trim()) ){
+            org = null;
+        } else {
+            org.setOrganizationValue(profileDTO.getCompanyName());
+        }
         return org;
     }
     private UserOrg createUserOrgForUpdate(ProfileDTO in,UserOrg userOrgOld){
@@ -115,7 +136,6 @@ public class SetUserOrgInfoAPIController {
             userOrgOld.setState(in.getState());
             userOrgOld.setSecondAddress(in.getSecondAddress());
             userOrgOld.setCity(in.getCity());
-            userOrgOld.setCompanyName(in.getCompanyName().trim());
             userOrgOld.setFax(in.getFax());
             userOrgOld.setFirstAddress(in.getFirstAddress());
             userOrgOld.setImAccount(in.getImAccount());
