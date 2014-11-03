@@ -10,6 +10,10 @@ var Login = Login || {
         sessionStorage.setItem("AcmPriorities", null);
         sessionStorage.setItem("AcmQuickSearchTerm", null);
         sessionStorage.setItem("AcmAsnList", null);
+        sessionStorage.setItem("AcmCaseFileTreeInfo", null);
+        sessionStorage.setItem("AcmComplaintTreeInfo", null);
+        sessionStorage.setItem("AcmAdminTreeInfo", null);
+
     }
 
 
