@@ -8,6 +8,42 @@
 TaskList.Event = {
     create : function() {
     }
+    ,onActivateTreeNode: function(node) {
+        if ("prevPage" == node.key) {
+            var treeInfo = TaskList.Object.getTreeInfo();
+            if (0 < treeInfo.start) {
+                treeInfo.start -= treeInfo.n;
+                if (0 > treeInfo.start) {
+                    treeInfo.start = 0;
+                }
+            }
+            TaskList.Service.listTaskAll(treeInfo);
+            return;
+        }
+        if ("nextPage" == node.key) {
+            var treeInfo = TaskList.Object.getTreeInfo();
+            if (0 > treeInfo.total) {       //should never get to this condition
+                treeInfo.start = 0;
+            } else if ((treeInfo.total - treeInfo.n) > treeInfo.start) {
+                treeInfo.start += treeInfo.n;
+            }
+            TaskList.Service.listTaskAll(treeInfo);
+            return;
+        }
+
+        var taskId = TaskList.Object.getTaskIdByKey(node.key);
+        Task.setTaskId(taskId);
+        if (0 >= taskId) {
+            //show blank TaskList in page
+            return;
+        }
+
+        var task = Task.getTask();
+        if (task) {
+            TaskList.Service.retrieveDetail(taskId);
+        }
+        TaskList.Object.showTab(node.key);
+    }
     ,onClickLnkListItemImage : function(e) {
         var taskId = TaskList.Object.getHiddenTaskId(e);
         if (Task.getTaskId() == taskId) {
@@ -52,15 +88,24 @@ TaskList.Event = {
     }
 
     ,onPostInit: function() {
-        if (TaskList.isSingleObject()) {
-            var taskId = Task.getTaskId();
-            TaskList.Service.retrieveDetail(taskId);
+
+        var treeInfo = TaskList.Object.getTreeInfo();
+        if (0 < treeInfo.taskId) { //single complaint
+            TaskList.setTaskId(treeInfo.taskId);
+            TaskList.Service.retrieveDetail(treeInfo.taskId);
         } else {
             TaskList.Service.listTask(App.getUserName());
         }
 
+        /*if (TaskList.isSingleObject()) {
+            var taskId = Task.getTaskId();
+            TaskList.Service.retrieveDetail(taskId);
+        } else {
+            TaskList.Service.listTask(App.getUserName());
+        }*/
+
         Acm.keepTrying(TaskList.Event._tryInitAssignee, 8, 200);
-        Acm.keepTrying(TaskList.Event._tryInitComplaintType, 8, 200);
+        //Acm.keepTrying(TaskList.Event._tryInitTaskListType, 8, 200);
         Acm.keepTrying(TaskList.Event._tryInitPriority, 8, 200);
 
     }
@@ -100,10 +145,15 @@ TaskList.Event = {
     ,onSaveTitle : function(value) {
         var taskId = Task.getTaskId();
         var t = TaskList.findTask(taskId);
-        t.title = value;
-        var data = this.getTaskData(t);
+        if (null != t) {
+            // get task details
+            TaskList.Service.retrieveDetail(taskId);
+        }
+        var task = Task.getTask();
+        task.title = value;
+        var data = this.getTaskData(task);
     	TaskList.Service.listTaskSaveDetail(data.taskId, data);
-    	TaskList.Page.updateActiveTaskTitle(taskId, value);
+        TaskList.Object.refreshTaskTreeNode(task);
     }
     
     /**
@@ -146,6 +196,15 @@ TaskList.Event = {
      * Save start date value changed
      */
     ,onSaveDueDate : function(value) {
+        var t = this.getSelectedTask();
+        t.dueDate = Acm.xDateToDatetime(value);
+        this.executeSaveTask(t);
+    }
+
+    /**
+     * Save start date value changed
+     */
+    ,onSaveIncidentDate : function(value) {
         var t = this.getSelectedTask();
         t.dueDate = Acm.xDateToDatetime(value);
         this.executeSaveTask(t);

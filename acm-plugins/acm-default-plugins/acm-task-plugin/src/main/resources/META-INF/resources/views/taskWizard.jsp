@@ -172,7 +172,7 @@
                     <div class="col-sm-6">
                         <label  class="label">Associate with Complaint or Case</label>
                         <input type="text" class="input-sm form-control" placeholder="Complaint or Case #" id="complaintId">
-                        <input type="hidden" class="span1" title="refCtrId" id="refCtrId" value="" />
+                        <%--<input type="hidden" class="span1" title="refCtrId" id="refCtrId" value="" />--%>
                     </div>
                 </div>
 
