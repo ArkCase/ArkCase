@@ -302,7 +302,11 @@ Date.now = Date.now || function() { return +new Date; };
     // mobile
   	var mobile = function(option){
   		if(option == 'reset'){
-  			$('[data-toggle^="shift"]').shift('reset');
+            //jwu modified to avoid the "Uncaught TypeError: undefined is not a function"
+            //$('[data-toggle^="shift"]').shift('reset');
+            if ($('[data-toggle^="shift"]').shift) {
+                $('[data-toggle^="shift"]').shift('reset');
+            }
   			return true;
   		}
   		$('[data-toggle^="shift"]').shift('init');

@@ -41,8 +41,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         message.getInboundProperty("acmUser").name;
                     if ( user != null )
                     {
-                        payload.creator = payload.creator == null ? user : payload.creator;
-                        payload.modifier = payload.modifier == null ? user : payload.modifier;
+                        message.getInboundProperty("auditAdapter").setUserId(user);
                     }
                     return payload;
                     ]]>

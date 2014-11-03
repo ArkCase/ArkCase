@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.complaint;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -13,6 +15,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import static org.junit.Assert.*;
 
@@ -38,6 +43,19 @@ public class ComplaintMuleIT
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
+
+    @Before
+    public void setUp()
+    {
+        auditAdapter.setUserId("auditUser");
+    }
+
+
     @Test
     @Transactional
     public void saveComplaintFlow() throws Exception
@@ -50,6 +68,8 @@ public class ComplaintMuleIT
         Authentication auth = new UsernamePasswordAuthenticationToken("testUser", "testUser");
 
         Complaint saved = saveComplaintTransaction.saveComplaint(complaint, auth);
+
+        entityManager.flush();
 
         assertNotNull(saved.getComplaintId());
         assertNotNull(saved.getComplaintNumber());

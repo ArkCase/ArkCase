@@ -18,6 +18,7 @@ import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
@@ -55,6 +56,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private ComplaintDao complaintDao;
 	private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
+    private PersonDao personDao;
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
@@ -92,10 +94,10 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
     		    		HttpServletRequest request, HttpServletResponse response){
 		
 		LOG.info("Execute action \"" + action + "\" for form \"" + formName + "\"");
-		
+
 		// Create and initialize appropriate service for given form name
 		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request, authentication);
-		
+
 		// Initialize some data that should be shown on the form (if there should be any) - this is happening after form is loaded
 		Object result = frevvoFormService.get(action);
 		try{
@@ -262,4 +264,12 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
     {
         this.closeComplaintRequestDao = closeComplaintRequestDao;
     }
+
+	public PersonDao getPersonDao() {
+		return personDao;
+	}
+
+	public void setPersonDao(PersonDao personDao) {
+		this.personDao = personDao;
+	}
 }

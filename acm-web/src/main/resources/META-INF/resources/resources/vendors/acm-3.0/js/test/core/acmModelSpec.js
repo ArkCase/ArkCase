@@ -383,4 +383,46 @@ describe("Acm.Model", function()
         expect(cache2.get("k5")).toEqual({name:"n5",age:25});
     });
 
+
+    it("Acm.Model.CacheFifo: lock", function() {
+        var cache = new Acm.Model.CacheFifo(3);
+        cache.put("k1", {name:"n1",age:1});
+        cache.put("k2", {name:"n2",age:2});
+        cache.put("k3", {name:"n3",age:3});
+        expect(cache.get("k1")).toEqual({name:"n1",age:1});
+        expect(cache.get("k2")).toEqual({name:"n2",age:2});
+        expect(cache.get("k3")).toEqual({name:"n3",age:3});
+
+        cache.lock("k1");
+        cache.put("k4", {name:"n4",age:4});
+        expect(cache.get("k1")).toEqual({name:"n1",age:1}); //k1 survives
+        expect(cache.get("k2")).toEqual(null);
+        expect(cache.get("k3")).toEqual({name:"n3",age:3});
+        expect(cache.get("k4")).toEqual({name:"n4",age:4});
+
+        cache.put("k5", {name:"n5",age:5});
+        expect(cache.get("k1")).toEqual({name:"n1",age:1});
+        expect(cache.get("k2")).toEqual(null);
+        expect(cache.get("k3")).toEqual(null);
+        expect(cache.get("k4")).toEqual({name:"n4",age:4});
+        expect(cache.get("k5")).toEqual({name:"n5",age:5});
+
+        cache.unlock("k1");
+        cache.put("k6", {name:"n6",age:6});
+        expect(cache.get("k1")).toEqual(null);
+        expect(cache.get("k2")).toEqual(null);
+        expect(cache.get("k3")).toEqual(null);
+        expect(cache.get("k4")).toEqual({name:"n4",age:4});
+        expect(cache.get("k5")).toEqual({name:"n5",age:5});
+        expect(cache.get("k6")).toEqual({name:"n6",age:6});
+
+        cache.put("k7", {name:"n7",age:7});
+        expect(cache.get("k1")).toEqual(null);
+        expect(cache.get("k2")).toEqual(null);
+        expect(cache.get("k3")).toEqual(null);
+        expect(cache.get("k4")).toEqual(null);
+        expect(cache.get("k5")).toEqual({name:"n5",age:5});
+        expect(cache.get("k6")).toEqual({name:"n6",age:6});
+        expect(cache.get("k7")).toEqual({name:"n7",age:7});
+    });
 });

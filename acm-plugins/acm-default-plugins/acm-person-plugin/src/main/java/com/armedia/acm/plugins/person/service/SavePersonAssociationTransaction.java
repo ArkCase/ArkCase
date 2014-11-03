@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.person.service;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SavePersonAssociationTransaction
 {
     private MuleClient muleClient;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Transactional
     public PersonAssociation savePersonAsssociation(
@@ -21,6 +23,7 @@ public class SavePersonAssociationTransaction
     {
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", authentication);
+        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
         MuleMessage received = getMuleClient().send("vm://savePersonAssociation.in", personAssociation, messageProps);
         PersonAssociation saved = received.getPayload(PersonAssociation.class);
         MuleException e = received.getInboundProperty("saveException");
@@ -42,5 +45,15 @@ public class SavePersonAssociationTransaction
     public void setMuleClient(MuleClient muleClient)
     {
         this.muleClient = muleClient;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }

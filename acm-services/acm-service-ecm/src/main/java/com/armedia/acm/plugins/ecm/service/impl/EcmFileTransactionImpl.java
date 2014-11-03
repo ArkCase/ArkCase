@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -20,6 +21,8 @@ import java.util.Map;
 public class EcmFileTransactionImpl implements EcmFileTransaction
 {
     private MuleClient muleClient;
+
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -50,6 +53,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         messageProps.put("ecmFolderId", cmisFolderId);
         messageProps.put("inputStream", fileInputStream);
         messageProps.put("acmUser", authentication);
+        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
         MuleMessage received = getMuleClient().send("vm://addFile.in", toAdd, messageProps);
         EcmFile saved = received.getPayload(EcmFile.class);
 
@@ -62,16 +66,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         return saved;
     }
 
-
-
-
-
-
-
-
-
-
-
     public MuleClient getMuleClient()
     {
         return muleClient;
@@ -82,5 +76,13 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.muleClient = muleClient;
     }
 
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
 
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
 }

@@ -1,6 +1,7 @@
 package com.armedia.acm.auth;
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -26,6 +27,7 @@ public class AcmLoginSuccessOperations
     private AcmPluginManager acmPluginManager;
     private AcmApplication acmApplication;
     private UserDao userDao;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     public void onSuccessfulAuthentication(HttpServletRequest request,
                                            Authentication authentication)
@@ -39,6 +41,13 @@ public class AcmLoginSuccessOperations
         addAcmApplicationToSession(request);
 
         addAcmUserToSession(request, authentication);
+
+        recordAuditPropertyUser(authentication);
+    }
+
+    private void recordAuditPropertyUser(Authentication authentication)
+    {
+        getAuditPropertyEntityAdapter().setUserId(authentication.getName());
     }
 
     protected void addUserIdToSession(HttpServletRequest request, Authentication authentication)
@@ -158,5 +167,15 @@ public class AcmLoginSuccessOperations
     public UserDao getUserDao()
     {
         return userDao;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }

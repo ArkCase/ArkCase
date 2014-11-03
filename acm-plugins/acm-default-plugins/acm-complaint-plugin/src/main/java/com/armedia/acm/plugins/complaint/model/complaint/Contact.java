@@ -23,6 +23,22 @@ import com.armedia.acm.plugins.person.model.PersonAlias;
 public class Contact {
 	
 	@XmlElements({
+		@XmlElement(name="contactType"),
+		@XmlElement(name="initiatorContactType"),
+		@XmlElement(name="peopleContactType")
+		
+	})
+	private String contactType;
+	
+	@XmlElements({
+		@XmlElement(name="searchResult"),
+		@XmlElement(name="searchExistingInitiator"),
+		@XmlElement(name="searchExistingPeople")
+		
+	})
+	private SearchResult searchResult;
+	
+	@XmlElements({
 		@XmlElement(name="mainInformation"),
 		@XmlElement(name="initiatorMainInformation"),
 		@XmlElement(name="peopleMainInformation")
@@ -70,6 +86,34 @@ public class Contact {
 	})
 	private String notes;
 	
+	/**
+	 * @return the contactType
+	 */
+	public String getContactType() {
+		return contactType;
+	}
+
+	/**
+	 * @param contactType the contactType to set
+	 */
+	public void setContactType(String contactType) {
+		this.contactType = contactType;
+	}
+
+	/**
+	 * @return the searchResult
+	 */
+	public SearchResult getSearchResult() {
+		return searchResult;
+	}
+
+	/**
+	 * @param searchResult the searchResult to set
+	 */
+	public void setSearchResult(SearchResult searchResult) {
+		this.searchResult = searchResult;
+	}
+
 	/**
 	 * @return the mainInformation
 	 */

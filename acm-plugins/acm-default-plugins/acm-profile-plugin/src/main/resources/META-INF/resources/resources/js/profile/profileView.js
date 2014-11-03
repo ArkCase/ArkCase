@@ -6,17 +6,22 @@
 Profile.View = {
     create : function() {
         if (Profile.View.Info.create) {Profile.View.Info.create();}
-        if (Profile.View.Subscriptions.create) {Profile.View.Subscriptions.create();}
+        if (Profile.View.Subscription.create) {Profile.View.Subscription.create();}
     }
     ,initialize: function() {
         if (Profile.View.Info.initialize) {Profile.View.Info.initialize();}
-        if (Profile.View.Subscriptions.initialize) {Profile.View.Subscriptions.initialize();}
+        if (Profile.View.Subscription.initialize) {Profile.View.Subscription.initialize();}
     }
 
     ,Info: {
         create: function() {
             this.$lnkLocation = $("#location");
-            this.$lnkimaccount = $("#imaccount");
+            this.$h4Location = this.$lnkLocation.parent();
+
+            this.$lnkImAccount = $("#imaccount");
+            this.$lnkImSystem = $("#imsystem");
+            this.$h4Im = this.$lnkImAccount.parent();
+
             this.$lnkOfficephone = $("#officephone");
             this.$lnkMobilephone = $("#mobilephone");
             this.$lnkCompany = $("#company");
@@ -29,34 +34,74 @@ Profile.View = {
             this.$lnkFax = $("#fax");
             this.$lnkWebsite = $("#website");
 
-//            AcmEx.Object.XEditable.useEditable(this.$lnkLocation, {success: function(response, newValue) {
-//                Profile.Controller.Info.onViewChangedLocation(newValue);
-//            }});
-            var isReadOnly = Profile.Model.Info.isReadOnly();
-            if (!isReadOnly) {
+            if (!Profile.Model.Info.isReadOnly()) {
                 AcmEx.Object.XEditable.useEditable(this.$lnkLocation, {success: function(response, newValue) {
-                    Profile.Controller.Info.onViewChangedLocation(newValue);
+                    Profile.Controller.viewChangedLocation(newValue);
+                }});
+                AcmEx.Object.XEditable.useEditable(this.$lnkImAccount, {success: function(response, newValue) {
+                    Profile.Controller.viewChangedImAccount(newValue);
+                }});
+                AcmEx.Object.XEditable.useEditable(this.$lnkImSystem, {success: function(response, newValue) {
+                    Profile.Controller.viewChangedImSystem(newValue);
                 }});
             }
+
+
+            Acm.Dispatcher.addEventListener(Profile.Controller.ME_PROFILE_INFO_RETRIEVED, this.onProfileInfoRetrieved);
+            Acm.Dispatcher.addEventListener(Profile.Controller.ME_PROFILE_INFO_SAVED,     this.onProfileInfoSaved);
         }
         ,initialize: function() {
         }
 
-        ,ctrlProfileInfoChanged: function(info) {
-            this.setValueLnkLocation("profileInfo.location");
+
+        ,onProfileInfoRetrieved: function(profileInfo) {
+            if (profileInfo.hasError) {
+                alert("View: onProfileInfoRetrieved, hasError");
+            } else {
+                Profile.View.Info.populateProfileInfo(profileInfo);
+            }
         }
-        ,ctrlProfileInfoSaved: function() {
-            //remove class "editable-unsave"
-            alert("view notified; todo: remove editable-unsave");
+        ,onProfileInfoSaved: function(profileInfo) {
+            if (profileInfo.hasError) {
+                alert("View: onProfileInfoSaved, hasError");
+                //update the field to as error
+            } else {
+                alert("View: onProfileInfoSaved");
+            }
+
         }
 
-        ,setValueLnkLocation: function(txt) {
+        ,populateProfileInfo: function(profileInfo) {
+            if (Profile.Model.Info.isReadOnly()) {
+                this.setTextH4Location(Acm.goodValue(profileInfo.location));
+                this.setTextH4Im(Acm.goodValue(profileInfo.imAccount) + " (" + Acm.goodValue(profileInfo.imAccount) + ")");
+            } else {
+                this.setTextLnkLocation(Acm.goodValue(profileInfo.location));
+                this.setTextLnkImAccount(Acm.goodValue(profileInfo.imAccount));
+                this.setTextLnkImSystem(Acm.goodValue(profileInfo.imSystem));
+            }
+
+        }
+        ,setTextLnkLocation: function(txt) {
             AcmEx.Object.XEditable.setValue(this.$lnkLocation, txt);
         }
+        ,setTextH4Location: function(txt) {
+            Acm.Object.setText(this.$h4Location, txt);
+        }
+        ,setTextLnkImAccount: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkImAccount, txt);
+        }
+        ,setTextLnkImSystem: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkImSystem, txt);
+        }
+        ,setTextH4Im: function(txt) {
+            Acm.Object.setText(this.$h4Im, txt);
+        }
+
 
     }
 
-    ,Subscriptions: {
+    ,Subscription: {
         create: function() {
             this.$divSubscriptions = $("#divSubscriptions");
             this.useJTable(this.$divSubscriptions);

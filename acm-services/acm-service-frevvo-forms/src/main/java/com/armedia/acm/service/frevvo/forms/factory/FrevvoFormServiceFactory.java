@@ -40,6 +40,7 @@ public class FrevvoFormServiceFactory {
             service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
             service.setUserDao(frevvoFormController.getUserDao());
             service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
+            service.setPersonDao(frevvoFormController.getPersonDao());
             
             return service;
 		}

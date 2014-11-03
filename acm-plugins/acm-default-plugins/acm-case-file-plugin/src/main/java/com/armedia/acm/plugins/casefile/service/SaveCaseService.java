@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
@@ -24,6 +25,7 @@ public class SaveCaseService
     private SaveCaseFileBusinessRule saveRule;
     private CaseFileEventUtility caseFileEventUtility;
     private MuleClient muleClient;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -49,6 +51,7 @@ public class SaveCaseService
         // call Mule flow to create the Alfresco folder
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", auth);
+        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
         MuleMessage received = getMuleClient().send("vm://saveCaseFile.in", retval, messageProps);
         CaseFile saved = received.getPayload(CaseFile.class);
         MuleException e = received.getInboundProperty("saveException");
@@ -104,5 +107,15 @@ public class SaveCaseService
     public void setMuleClient(MuleClient muleClient)
     {
         this.muleClient = muleClient;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }

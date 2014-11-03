@@ -19,52 +19,53 @@ Profile.Service = {
         ,initialize: function() {
         }
 
-        ,retrieveProfileInfo: function() {
-            var info = {};
-            Profile.Model.Info.setProfileInfo(info);
-            Profile.Controller.Info.onModelChangedProfileInfo(info);
-        }
-
-        ,updateProfileInfo: function(info) {
-            Profile.Controller.Info.onModelChangedProfileInfoSaved(info);
-        }
+        ,API_RETRIEVE_PROFILE_INFO_          : "/api/latest/plugin/profile/get/"
+        ,API_SAVE_PROFILE_INFO               : "/api/latest/plugin/profile/userOrgInfo/set"
 
 
-
-
-
-
-        ,API_TYPEAHEAD_SUGGESTION_BEGIN_      : "/api/latest/plugin/search/quickSearch?q=*"
-        ,API_TYPEAHEAD_SUGGESTION_END         : "*&start=0&n=16"
-
-        ,getTypeAheadUrl: function(query) {
-            var url = App.getContextPath() + this.API_TYPEAHEAD_SUGGESTION_BEGIN_
-                + query
-                + this.API_TYPEAHEAD_SUGGESTION_END;
-            return url;
-        }
-
-        ,_validateSuggestionData: function(data) {
-            if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start) || Acm.isEmpty(data.response.docs)) {
+        ,_validateProfile: function(data) {
+            if (Acm.isEmpty(data.userId) || Acm.isEmpty(data.email)) {
                 return false;
             }
             return true;
         }
-        ,retrieveSuggestion: function(query, process){
-            $.ajax({
-                url: Profile.Service.Suggestion.getTypeAheadUrl(query)
-                ,cache: false
-                ,success: function(data){
-                    if (Profile.Service.Suggestion._validateSuggestionData(data)) {
-                        var docs = data.response.docs;
-                        Profile.Model.Suggestion.buildSuggestion(query, docs);
-                        Profile.Controller.Suggestion.onModelChangeSuggestion(process);
+        ,retrieveProfileInfo : function(userId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_PROFILE_INFO_ + userId;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Profile.Controller.modelRetrievedProfile(response);
+
+                    } else {
+                        if (Profile.Service.Info._validateProfile(response)) {
+                            var profileInfo = response;
+                            Profile.Model.Info.setProfileInfo(profileInfo);
+                            Profile.Controller.modelRetrievedProfile(profileInfo);
+                        }
                     }
                 }
-            });
+                ,url
+            )
+        }
+
+        ,saveProfileInfo : function(data) {
+            var profileInfo = data;
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response.hasError) {
+                        Profile.Controller.modelSavedProfileInfo(response);
+
+                    } else {
+                        if (Profile.Service.Info._validateProfile(response)) {
+                            var profileInfo = response;
+                            Profile.Model.Info.setProfileInfo(profileInfo);
+                            Profile.Controller.modelSavedProfileInfo(profileInfo);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_SAVE_PROFILE_INFO
+                ,JSON.stringify(profileInfo)
+            )
         }
     }
 
