@@ -5,27 +5,33 @@
  */
 Profile.Controller = {
     create : function() {
-        if (Profile.Controller.Info.create) {Profile.Controller.Info.create();}
     }
     ,initialize: function() {
-        if (Profile.Controller.Info.initialize) {Profile.Controller.Info.initialize();}
     }
 
-    ,Info: {
-        create : function() {
-        }
-        ,initialize: function() {
-        }
-        ,onViewChangedLocation: function(value) {
-            Profile.Model.Info.ctrlUpdateLocation(value);
-        }
-        ,onModelChangedProfileInfo: function(info) {
-            Profile.View.Info.ctrlProfileInfoChanged(info);
-        }
-        ,onModelChangedProfileInfoSaved: function() {
-            Profile.View.Info.ctrlProfileInfoSaved();
-        }
+    ,ME_PROFILE_INFO_RETRIEVED		  : "profile-info-retrieved"             //param: profileInfo
+    ,ME_PROFILE_INFO_SAVED		      : "profile-info-saved"                 //param: profileInfo
+
+    ,VE_LOCATION_CHANGED              : "profile-location-changed"           //param: location
+    ,VE_IM_ACCOUNT_CHANGED            : "profile-im-account-changed"         //param: imAccount
+    ,VE_IM_SYSTEM_CHANGED             : "profile-im-system-changed"          //param: imSystem
+
+    ,modelRetrievedProfile: function(profileInfo) {
+        Acm.Dispatcher.fireEvent(this.ME_PROFILE_INFO_RETRIEVED, profileInfo);
     }
+    ,modelSavedProfileInfo: function(profileInfo) {
+        Acm.Dispatcher.fireEvent(this.ME_PROFILE_INFO_SAVED, profileInfo);
+    }
+    ,viewChangedLocation: function(location) {
+        Acm.Dispatcher.fireEvent(this.VE_LOCATION_CHANGED, location);
+    }
+    ,viewChangedImAccount: function(imAccount) {
+        Acm.Dispatcher.fireEvent(this.VE_IM_ACCOUNT_CHANGED, imAccount);
+    }
+    ,viewChangedImSystem: function(imSystem) {
+        Acm.Dispatcher.fireEvent(this.VE_IM_SYSTEM_CHANGED, imSystem);
+    }
+
 
 };
 

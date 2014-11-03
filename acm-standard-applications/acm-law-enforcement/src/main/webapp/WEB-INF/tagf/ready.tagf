@@ -58,7 +58,7 @@ jQuery(document).ready(function() {
         acmModules.push(Report);
     }
     if ("undefined" != typeof Profile) {
-        acmModules.push(Report);
+        acmModules.push(Profile);
     }
 
     for (var i = 0; i < acmModules.length; i++) {
