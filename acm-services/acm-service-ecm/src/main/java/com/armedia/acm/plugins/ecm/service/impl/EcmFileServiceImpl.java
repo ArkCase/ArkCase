@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -39,8 +38,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
 
     @Override
-    @Transactional
     public ResponseEntity<? extends Object> upload(
+            String fileType,
             MultipartFile file,
             String acceptHeader,
             String contextPath,
@@ -73,6 +72,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
                     authentication,
+                    fileType,
                     file.getInputStream(),
                     file.getContentType(),
                     file.getOriginalFilename(),

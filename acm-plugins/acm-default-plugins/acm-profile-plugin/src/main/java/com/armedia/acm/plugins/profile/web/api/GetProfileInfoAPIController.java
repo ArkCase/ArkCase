@@ -87,7 +87,6 @@ public class GetProfileInfoAPIController {
         profileDTO.setFullName(userOrgInfo.getUser().getFullName());
 
         profileDTO.setCity(userOrgInfo.getCity());
-        profileDTO.setCompanyName(userOrgInfo.getCompanyName());
         profileDTO.setFax(userOrgInfo.getFax());
         profileDTO.setFirstAddress(userOrgInfo.getFirstAddress());
         profileDTO.setImAccount(userOrgInfo.getImAccount());

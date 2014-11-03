@@ -29,9 +29,6 @@ public class CloseComplaintRequestFactory
     {
         CloseComplaintRequest req = new CloseComplaintRequest();
 
-        req.setModifier(auth.getName());
-        req.setCreator(auth.getName());
-
         List<AcmParticipant> participants = convertItemsToParticipants(form.getApprovers());
         req.setParticipants(participants);
         req.setComplaintId(form.getInformation().getComplaintId());
@@ -45,9 +42,6 @@ public class CloseComplaintRequestFactory
     {
         Disposition disposition = new Disposition();
         req.setDisposition(disposition);
-
-        disposition.setCreator(auth.getName());
-        disposition.setModifier(auth.getName());
 
         if ( form.getInformation() != null )
         {
@@ -64,14 +58,7 @@ public class CloseComplaintRequestFactory
         {
             disposition.setReferExternalContactPersonName(form.getReferExternal().getPerson());
             disposition.setReferExternalOrganizationName(form.getReferExternal().getAgency());
-
             disposition.setReferExternalContactMethod(form.getReferExternal().getContact());
-
-            if ( disposition.getReferExternalContactMethod() != null )
-            {
-                disposition.getReferExternalContactMethod().setCreator(auth.getName());
-                disposition.getReferExternalContactMethod().setModifier(auth.getName());
-            }
         }
     }
     

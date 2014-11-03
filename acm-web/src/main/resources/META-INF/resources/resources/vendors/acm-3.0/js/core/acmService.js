@@ -85,4 +85,35 @@ Acm.Service = {
 	    });
 	}
 
+
+    ,deferredGet: function(callbackSuccess, url, param) {
+        return $.Deferred(function ($dfd) {
+            var arg = {
+                url: url
+                ,type: 'GET'
+                ,dataType: 'json'
+                ,success: function (data) {
+                    var rc = null;
+                    if (data) {
+                        rc = callbackSuccess(data);
+                    }
+
+                    if (rc) {
+                        $dfd.resolve(rc);
+                    } else {
+                        $dfd.reject();
+                    }
+                }
+                ,error: function () {
+                    $dfd.reject();
+                }
+            };
+            if (param) {
+                arg.data = param;
+            }
+            $.ajax(arg);
+        });
+    }
+
+
 };

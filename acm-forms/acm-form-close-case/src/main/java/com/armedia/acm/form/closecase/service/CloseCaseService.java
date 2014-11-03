@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.form.closecase.service;
 
+import com.armedia.acm.frevvo.config.FrevvoFormName;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,5 +42,11 @@ public class CloseCaseService extends FrevvoFormAbstractService {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+    @Override
+    public String getFormName()
+    {
+        return FrevvoFormName.CLOSE_CASE;
+    }
 
 }

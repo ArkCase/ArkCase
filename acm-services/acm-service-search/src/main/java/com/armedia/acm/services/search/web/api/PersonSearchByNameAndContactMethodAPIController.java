@@ -17,6 +17,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 @RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
 public class PersonSearchByNameAndContactMethodAPIController
@@ -32,7 +34,8 @@ public class PersonSearchByNameAndContactMethodAPIController
             @RequestParam(value = "cm", required = true) String contactMethod,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-            Authentication authentication
+            Authentication authentication,
+            HttpServletResponse httpResponse
     ) throws MuleException
     {
         if ( log.isDebugEnabled() )
@@ -64,6 +67,7 @@ public class PersonSearchByNameAndContactMethodAPIController
 
         if ( response.getPayload() instanceof String )
         {
+        	httpResponse.addHeader("X-JSON", response.getPayload().toString());
             return (String) response.getPayload();
         }
 
