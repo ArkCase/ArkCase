@@ -139,5 +139,22 @@
 
     </changeSet>
 
+    <changeSet id="03-drop-companyName-column-add-profile_ecm_folder_id-column" author="marst">
+        <dropColumn tableName="acm_user_org" columnName="cm_company_name"/>
+        <addColumn tableName="acm_user_org">
+            <column name="cm_profile_ecm_folder_id" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <createIndex tableName="acm_user_org" indexName="idx_profile_folder_id">
+            <column name="cm_profile_ecm_folder_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="04-edit-cm-location-and-cm-organization-column" author="marst">
+        <dropNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>
+        <dropNotNullConstraint tableName="acm_user_org" columnName="cm_organization"/>
+    </changeSet>
+
 </databaseChangeLog>
 
