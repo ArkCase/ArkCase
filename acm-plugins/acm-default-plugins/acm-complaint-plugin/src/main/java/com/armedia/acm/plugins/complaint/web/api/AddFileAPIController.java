@@ -29,6 +29,8 @@ public class AddFileAPIController
     private ComplaintDao complaintDao;
     private EcmFileService ecmFileService;
 
+    private final String uploadFileType = "attachment";
+
     @RequestMapping(value = "/file", method = RequestMethod.POST, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
@@ -62,8 +64,8 @@ public class AddFileAPIController
 
             String contextPath = request.getServletContext().getContextPath();
 
-            return getEcmFileService().upload(file, acceptType, contextPath, authentication, folderId, objectType,
-                    objectId, objectName);
+            return getEcmFileService().upload(uploadFileType, file, acceptType, contextPath, authentication, folderId,
+                    objectType, objectId, objectName);
         }
         catch (PersistenceException e)
         {
