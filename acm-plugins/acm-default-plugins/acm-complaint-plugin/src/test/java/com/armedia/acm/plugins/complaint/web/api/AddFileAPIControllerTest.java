@@ -83,6 +83,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
         expect(mockComplaintDao.find(complaint.getComplaintId())).andReturn(complaint);
 
         expect(mockEcmFileService.upload(
+                "attachment",
                 mockMultipartFile,
                 acceptHeader,
                 contextPath,
@@ -129,6 +130,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
         expect(mockComplaintDao.find(complaint.getComplaintId())).andReturn(complaint);
 
         expect(mockEcmFileService.upload(
+                "attachment",
                 mockMultipartFile,
                 acceptHeader,
                 contextPath,

@@ -21,7 +21,8 @@ TaskList.Callback = {
     ,EVENT_TASK_COMPLETED			 : "task-list-task-completed"
     ,EVENT_TASK_SIGNED				 : "task-list-task-signed"
     ,EVENT_LIST_BYTYPEBYID_RETRIEVED : "task-list-signature-byTypeById-retrieved"
-    
+    ,EVENT_DETAIL_SAVED               : "event-detail-saved"
+
     ,onDetailSaved : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to save task detail:"  +response.errorMsg);
@@ -38,9 +39,24 @@ TaskList.Callback = {
         } else {
         	var responseData = response.response;
         	var taskList = responseData.docs;
-        	
+
+            var treeInfo = TaskList.Object.getTreeInfo();
+
+            var start = treeInfo.start;
             TaskList.setTaskList(taskList);
-            TaskList.Page.buildTaskList(taskList);
+
+            var key = treeInfo.initKey;
+            if (null == key) {
+                if (0 < taskList.length) {
+                    var taskId = parseInt(taskList[0].object_id_s);
+                    if (0 < taskId) {
+                        key = start + "." + taskId;
+                    }
+                }
+            } else {
+                treeInfo.initKey = null;
+            }
+            TaskList.Object.refreshTree(key);
         }
     }
     ,onDetailRetrieved : function(Callback, response) {
@@ -57,10 +73,10 @@ TaskList.Callback = {
                 var task = response;
                 Task.setTask(task);
                 TaskList.Object.updateDetail(task);
-                
+
+                var checkTask = Task.getTask();
                 Task.setTaskId(taskId);
-                TaskList.Object.hiliteSelectedItem(taskId);
-                
+
                 // check for signatures
                 TaskList.Service.findSignatureByTypeById(taskId);
 

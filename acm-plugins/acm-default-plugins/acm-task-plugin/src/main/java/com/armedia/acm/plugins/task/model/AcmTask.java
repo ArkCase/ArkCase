@@ -187,6 +187,14 @@ public class AcmTask implements AcmObject
         this.details = details;
     }
 
+    public String getAttachedToObjectName() {
+        return attachedToObjectName;
+    }
+
+    public void setAttachedToObjectName(String attachedToObjectName) {
+        this.attachedToObjectName = attachedToObjectName;
+    }
+
     @Override
     @JsonIgnore
     public String getObjectType()
@@ -210,13 +218,7 @@ public class AcmTask implements AcmObject
 		this.createDate = createDate;
 	}
 
-	public String getAttachedToObjectName() {
-		return attachedToObjectName;
-	}
 
-	public void setAttachedToObjectName(String attachedToObjectName) {
-		this.attachedToObjectName = attachedToObjectName;
-	}
 
 	@Override
 	public String toString() {
@@ -233,6 +235,4 @@ public class AcmTask implements AcmObject
 				+ taskStartDate + ", taskFinishedDate=" + taskFinishedDate
 				+ ", taskDurationInMillis=" + taskDurationInMillis + "]";
 	}
-	
-
 }

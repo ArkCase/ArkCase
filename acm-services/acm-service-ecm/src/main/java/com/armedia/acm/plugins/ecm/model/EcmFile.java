@@ -55,6 +55,9 @@ public class EcmFile implements AcmEntity
     @Column(name = "cm_file_mime_type")
     private String fileMimeType;
 
+    @Column(name = "cm_file_type")
+    private String fileType;
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_target_id")
     private Collection<ObjectAssociation> parentObjects = new ArrayList<>();
@@ -171,6 +174,16 @@ public class EcmFile implements AcmEntity
     public void setFileMimeType(String fileMimeType)
     {
         this.fileMimeType = fileMimeType;
+    }
+
+    public String getFileType()
+    {
+        return fileType;
+    }
+
+    public void setFileType(String fileType)
+    {
+        this.fileType = fileType;
     }
 
     public Collection<ObjectAssociation> getParentObjects()
