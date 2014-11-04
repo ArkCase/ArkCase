@@ -404,7 +404,7 @@ class ActivitiTaskDao implements TaskDao
             String objectType = (String) taskLocal.get("OBJECT_TYPE");
             acmTask.setAttachedToObjectType(objectType);
         }
-        if ( acmTask.getAttachedToObjectId() == null )
+        if ( acmTask.getAttachedToObjectName() == null )
         {
             String objectName = (String) taskLocal.get("OBJECT_NAME");
             acmTask.setAttachedToObjectName(objectName);
