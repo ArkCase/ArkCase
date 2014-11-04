@@ -44,5 +44,50 @@
         <modifyDataType tableName="acm_file" columnName="cm_file_id" newDataType="NUMBER(32,0)"/>
     </changeSet>
 
+    <changeSet id="files-03-add-file-type-column" author="dmiller">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_type" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="files-04-update-file-type-column" author="dmiller">
+        <update tableName="acm_file">
+            <column name="cm_file_type" value="complaint"/>
+            <where>cm_file_name like &apos;Complaint%.pdf&apos;</where>
+        </update>
+        <update tableName="acm_file">
+            <column name="cm_file_type" value="complaint_xml"/>
+            <where>cm_file_mime_type like &apos;%form_complaint.xml%&apos;</where>
+        </update>
+        <update tableName="acm_file">
+            <column name="cm_file_type" value="roi"/>
+            <where>cm_file_name like &apos;Report_of_Investigation%.pdf&apos;</where>
+        </update>
+        <update tableName="acm_file">
+            <column name="cm_file_type" value="roi_xml"/>
+            <where>cm_file_mime_type like &apos;%form_roi.xml%&apos;</where>
+        </update>
+        <update tableName="acm_file">
+            <column name="cm_file_type" value="close_case"/>
+            <where>cm_file_name like &apos;Close_Case%.pdf&apos;</where>
+        </update>
+        <update tableName="acm_file">
+            <column name="cm_file_type" value="close_case_xml"/>
+            <where>cm_file_mime_type like &apos;%form_close_case.xml%&apos;</where>
+        </update>
+        <update tableName="acm_file">
+            <column name="cm_file_type" value="close_complaint"/>
+            <where>cm_file_name like &apos;Close_Complaint%.pdf&apos;</where>
+        </update>
+        <update tableName="acm_file">
+            <column name="cm_file_type" value="close_complaint_xml"/>
+            <where>cm_file_mime_type like &apos;%form_close_complaint.xml%&apos;</where>
+        </update>
+        <update tableName="acm_file">
+            <column name="cm_file_type" value="attachment"/>
+            <where>cm_file_type IS NULL</where>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>
 

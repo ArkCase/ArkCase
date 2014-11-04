@@ -144,46 +144,117 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		return obj;
 	}
 	
-	public void saveAttachments(MultiValueMap<String, MultipartFile> attachments, String targetCmisFolderId, String parentObjectType, Long parentObjectId, String parentObjectName)
+	public void saveAttachments(
+            MultiValueMap<String, MultipartFile> attachments,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            String parentObjectName)
 	{
 		if ( attachments != null )
 		{
+
+
 			for ( Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet() )
 			{
-				final List<MultipartFile> attachmentsList = entry.getValue();
-		            	
-				if (attachmentsList != null && attachmentsList.size() > 0) {
-					for (final MultipartFile attachment : attachmentsList) {
-						try
-						{
-							AcmMultipartFile file = new AcmMultipartFile(attachment.getName(), attachment.getOriginalFilename(), attachment.getContentType(), attachment.isEmpty(), attachment.getSize(), attachment.getBytes(), attachment.getInputStream(), true);
-		                   
-							getEcmFileService().upload(
-		                    		file,
-		                            "application/json",
-		                            getServletContextPath(),
-		                            getAuthentication(),
-		                            targetCmisFolderId,
-		                            parentObjectType,
-		                            parentObjectId,
-		                            parentObjectName
-                    		);
-						}
-			            catch (AcmCreateObjectFailedException e)
-			            {
-			                LOG.error("Could not upload file: " + e.getMessage(), e);
-				        }
-						catch(IOException e1)
-						{
-							LOG.error("Could not create AcmMultipartFile object: " + e1.getMessage(), e1);
-						}
-					}
-				}
+                if ( entry.getKey().startsWith("form_"))
+                {
+                    // form xml...
+                    List<MultipartFile> xml = entry.getValue();
+                    if ( xml != null && xml.size() == 1 )
+                    {
+                        MultipartFile xmlAttachment = xml.get(0);
+                        uploadFile(
+                                getFormName() + "_xml",
+                                targetCmisFolderId,
+                                parentObjectType,
+                                parentObjectId,
+                                parentObjectName,
+                                xmlAttachment);
+                    }
+                }
+                else if ( !entry.getKey().equals("UploadFiles" ) )
+                {
+                    // form pdf
+                    List<MultipartFile> pdf = entry.getValue();
+                    if ( pdf != null && pdf.size() == 1 )
+                    {
+                        MultipartFile pdfAttachment = pdf.get(0);
+                        uploadFile(
+                                getFormName(),
+                                targetCmisFolderId,
+                                parentObjectType,
+                                parentObjectId,
+                                parentObjectName,
+                                pdfAttachment);
+                    }
+                }
+                else
+                {
+                    // this must be the other uploaded files
+                    final List<MultipartFile> attachmentsList = entry.getValue();
+
+                    if (attachmentsList != null && !attachmentsList.isEmpty() )
+                    {
+                        for (final MultipartFile attachment : attachmentsList)
+                        {
+                            uploadFile(
+                                    "attachment",
+                                    targetCmisFolderId,
+                                    parentObjectType,
+                                    parentObjectId,
+                                    parentObjectName,
+                                    attachment);
+                        }
+                    }
+                }
+
 			}
 		}
 	}
-	
-	public String cleanXML(String xml)
+
+    private void uploadFile(String fileType,
+                            String targetCmisFolderId,
+                            String parentObjectType,
+                            Long parentObjectId,
+                            String parentObjectName,
+                            MultipartFile attachment)
+    {
+        try
+        {
+            AcmMultipartFile file = new AcmMultipartFile(
+                attachment.getName(),
+                attachment.getOriginalFilename(),
+                attachment.getContentType(),
+                attachment.isEmpty(),
+                attachment.getSize(),
+                attachment.getBytes(),
+                attachment.getInputStream(),
+                true);
+
+            getEcmFileService().upload(
+                fileType,
+                file,
+                "application/json",
+                getServletContextPath(),
+                getAuthentication(),
+                targetCmisFolderId,
+                parentObjectType,
+                parentObjectId,
+                parentObjectName
+                );
+        }
+        catch (AcmCreateObjectFailedException e)
+        {
+            LOG.error("Could not upload file: " + e.getMessage(), e);
+        }
+        catch(IOException e1)
+        {
+            LOG.error("Could not create AcmMultipartFile object: " + e1.getMessage(), e1);
+        }
+    }
+
+    public String cleanXML(String xml)
 	{
 		if (xml != null){
 			String changedXML = xml.replaceAll("(?s)<rta_label.*?<\\/rta_label>", "");
