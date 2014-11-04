@@ -16,12 +16,15 @@ public class EcmFileAddedEvent extends AcmEvent
     private Long parentObjectId;
     private String parentObjectName;
     private String ecmFileId;
+    private EcmFile source;
 
 
 
     public EcmFileAddedEvent(EcmFile uploaded, Authentication authentication)
     {
         super(uploaded);
+
+        setSource(uploaded);
 
         setEventType("com.armedia.acm.ecm.file.added");
         setObjectType("FILE");
@@ -84,5 +87,16 @@ public class EcmFileAddedEvent extends AcmEvent
     public void setEcmFileId(String ecmFileId)
     {
         this.ecmFileId = ecmFileId;
+    }
+
+    @Override
+    public EcmFile getSource()
+    {
+        return source;
+    }
+
+    public void setSource(EcmFile source)
+    {
+        this.source = source;
     }
 }
