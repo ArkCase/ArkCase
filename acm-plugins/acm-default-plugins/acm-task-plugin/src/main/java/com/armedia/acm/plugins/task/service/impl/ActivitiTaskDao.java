@@ -420,9 +420,6 @@ class ActivitiTaskDao implements TaskDao
 
         String details = (String) taskLocal.get("DETAILS");
         acmTask.setDetails(details);
-
-        log.debug("setting attached to object name");
-        acmTask.setAttachedToObjectName((String) taskLocal.get("OBJECT_NAME"));
     }
 
     private String acmPriorityFromActivitiPriority(int priority)
