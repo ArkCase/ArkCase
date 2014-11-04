@@ -166,7 +166,7 @@
                     <%--
                                     <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
                     --%>
-                <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-url="/post" data-title="Enter Task Subject"> Sample Task Subject</a> (12321)</h4>
+                <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-url="/post" data-title="Enter Task Subject"> Sample Task Subject</a></h4>
                 <%--<small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>--%>
 
             <hr/>
