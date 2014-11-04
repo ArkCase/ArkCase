@@ -30,7 +30,7 @@ Profile.Service = {
             if (Acm.isEmpty(data.userId) || Acm.isEmpty(data.email)) {
                 return false;
             }
-            if (Acm.isArray(data.groups)) {
+            if (!Acm.isArray(data.groups)) {
                 return false;
             }
             return true;

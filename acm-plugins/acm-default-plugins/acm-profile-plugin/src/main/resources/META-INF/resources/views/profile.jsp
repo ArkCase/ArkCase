@@ -67,11 +67,11 @@
                                                 <div class="row">
                                                     <div class="col-xs-12" id="groups">
 
-                                                        <span class="btn-rounded btn-sm btn-info"> Richmond Field Office</span>
-                                                        <span class="btn-rounded btn-sm btn-info"> Internal Affairs</span>
-                                                        <span class="btn-rounded btn-sm btn-info"> Forensic Accountants</span>
-                                                        <span class="btn-rounded btn-sm btn-info"> Group 4</span>
-                                                        <span class="btn-rounded btn-sm btn-info"> Group 5</span>
+                                                        <%--<span class="btn-rounded btn-sm btn-info"> Richmond Field Office</span>--%>
+                                                        <%--<span class="btn-rounded btn-sm btn-info"> Internal Affairs</span>--%>
+                                                        <%--<span class="btn-rounded btn-sm btn-info"> Forensic Accountants</span>--%>
+                                                        <%--<span class="btn-rounded btn-sm btn-info"> Group 4</span>--%>
+                                                        <%--<span class="btn-rounded btn-sm btn-info"> Group 5</span>--%>
 
 
 
@@ -85,49 +85,49 @@
                                     <section class="panel panel-default bg-gradient">
 
 
-                                        <h4 class="padder">Subscriptions</h4>
+                                        <%--<h4 class="padder">Subscriptions</h4>--%>
 
-                                        <table class="table table-striped b-light">
-                                            <thead>
-                                            <tr>
+                                        <%--<table class="table table-striped b-light">--%>
+                                            <%--<thead>--%>
+                                            <%--<tr>--%>
 
-                                                <th class="th-sortable" data-toggle="class">Type</th>
-                                                <th>ID</th>
-                                                <th>Title</th>
-                                                <th>Date</th>
-                                                <th width="30"></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
+                                                <%--<th class="th-sortable" data-toggle="class">Type</th>--%>
+                                                <%--<th>ID</th>--%>
+                                                <%--<th>Title</th>--%>
+                                                <%--<th>Date</th>--%>
+                                                <%--<th width="30"></th>--%>
+                                            <%--</tr>--%>
+                                            <%--</thead>--%>
+                                            <%--<tbody>--%>
+                                            <%--<tr>--%>
 
-                                                <td>[Object]</td>
-                                                <td>[ID]</td>
-                                                <td>[Title]</td>
-                                                <td>MM/DD/YYYY</td>
+                                                <%--<td>[Object]</td>--%>
+                                                <%--<td>[ID]</td>--%>
+                                                <%--<td>[Title]</td>--%>
+                                                <%--<td>MM/DD/YYYY</td>--%>
 
-                                                <td><a href="#" class="active" data-toggle="class"><i class="fa fa-times text-danger text-active"></i><i class="fa  fa-check-circle text-success text"></i></a></td>
-                                            </tr>
-                                            </tr>
+                                                <%--<td><a href="#" class="active" data-toggle="class"><i class="fa fa-times text-danger text-active"></i><i class="fa  fa-check-circle text-success text"></i></a></td>--%>
+                                            <%--</tr>--%>
+                                            <%--</tr>--%>
 
-                                            </tbody>
-                                        </table>
+                                            <%--</tbody>--%>
+                                        <%--</table>--%>
 
 
-                                        <footer class="panel-footer">
-                                            <div class="row">
-                                                <div class="col-sm-5 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small> </div>
-                                                <div class="col-sm-7 text-right text-center-xs">
-                                                    <ul class="pagination pagination-sm m-t-none m-b-none">
-                                                        <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                                                        <li><a href="#">1</a></li>
-                                                        <li><a href="#">2</a></li>
-                                                        <li><a href="#">3</a></li>
-                                                        <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </footer>
+                                        <%--<footer class="panel-footer">--%>
+                                            <%--<div class="row">--%>
+                                                <%--<div class="col-sm-5 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small> </div>--%>
+                                                <%--<div class="col-sm-7 text-right text-center-xs">--%>
+                                                    <%--<ul class="pagination pagination-sm m-t-none m-b-none">--%>
+                                                        <%--<li><a href="#"><i class="fa fa-chevron-left"></i></a></li>--%>
+                                                        <%--<li><a href="#">1</a></li>--%>
+                                                        <%--<li><a href="#">2</a></li>--%>
+                                                        <%--<li><a href="#">3</a></li>--%>
+                                                        <%--<li><a href="#"><i class="fa fa-chevron-right"></i></a></li>--%>
+                                                    <%--</ul>--%>
+                                                <%--</div>--%>
+                                            <%--</div>--%>
+                                        <%--</footer>--%>
 
                                         <div id="divSubscriptions" style="width:100%"></div>
                                     </section>
