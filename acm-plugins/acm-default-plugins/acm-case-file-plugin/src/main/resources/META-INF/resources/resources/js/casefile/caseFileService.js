@@ -89,6 +89,9 @@ CaseFile.Service = {
         ,API_SAVE_CASE_FILE         : "/api/latest/plugin/casefile/"
 
         ,_validateCaseFile: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
             if (Acm.isEmpty(data.id) || Acm.isEmpty(data.caseNumber)) {
                 return false;
             }
@@ -159,24 +162,57 @@ CaseFile.Service = {
             );
         }
 
-        ,saveCaseFile : function(data) {
+        ,saveCaseFile : function(data, handler) {
             var caseFile = data;
             Acm.Service.asyncPost(
                 function(response) {
                     if (response.hasError) {
-                        CaseFile.Controller.modelSavedCaseFile(response);
+                        if (handler) {
+                            handler(response);
+                        } else {
+                            CaseFile.Controller.modelSavedCaseFile(response);
+                        }
 
                     } else {
                         if (CaseFile.Service.Detail._validateCaseFile(response)) {
                             var caseFile = response;
                             CaseFile.Model.cacheCaseFile.put(caseFile.id, caseFile);
-                            CaseFile.Controller.modelSavedCaseFile(caseFile);
+                            if (handler) {
+                                handler(caseFile);
+                            } else {
+                                CaseFile.Controller.modelSavedCaseFile(caseFile);
+                            }
                         }
                     }
                 }
                 ,App.getContextPath() + this.API_SAVE_CASE_FILE
                 ,JSON.stringify(caseFile)
             )
+        }
+        ,_dataWrapper: function(data, value) {
+            if (data.hasError) {
+                return data;
+            } else {
+                return value;
+            }
+        }
+        ,saveCaseTitle: function(caseFileId, title) {
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            caseFile.title = title;
+            this.saveCaseFile(caseFile
+                ,function(data) {
+                    CaseFile.Controller.modelSavedCaseTitle(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.title));
+                }
+            );
+        }
+        ,saveIncidentDate: function(caseFileId, created) {
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            caseFile.created = created;
+            this.saveCaseFile(caseFile
+                ,function(data) {
+                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.created));
+                }
+            );
         }
 
         ,closeCaseFile : function(data) {
@@ -188,6 +224,97 @@ CaseFile.Service = {
         }
     }
 
+    ,Lookup: {
+        create: function() {
+        }
+        ,initialize: function() {
+        }
+
+        ,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
+        ,API_GET_SUBJECT_TYPES         : "/api/latest/plugin/complaint/types"
+        ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
+
+        ,_validateAssignees: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,retrieveAssignees : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedCaseFile(response);
+
+                    } else {
+                        if (CaseFile.Service.Lookup._validateAssignees(response)) {
+                            var assignees = response;
+                            CaseFile.Model.Lookup.setAssignees(assignees);
+                            CaseFile.Controller.modelFoundAssignees(assignees);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_ASSIGNEES
+            )
+        }
+
+        ,_validateSubjectTypes: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,retrieveSubjectTypes : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedCaseFile(response);
+
+                    } else {
+                        if (CaseFile.Service.Lookup._validateSubjectTypes(response)) {
+                            var subjectTypes = response;
+                            CaseFile.Model.Lookup.setSubjectTypes(subjectTypes);
+                            CaseFile.Controller.modelFoundSubjectTypes(subjectTypes);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_SUBJECT_TYPES
+            )
+        }
+
+        ,_validatePriorities: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,retrievePriorities : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedCaseFile(response);
+
+                    } else {
+                        if (CaseFile.Service.Lookup._validatePriorities(response)) {
+                            var priorities = response;
+                            CaseFile.Model.Lookup.setPriorities(priorities);
+                            CaseFile.Controller.modelFoundPriorities(priorities);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_PRIORITIES
+            )
+        }
+    }
     ,Document: {
         create: function() {
         }

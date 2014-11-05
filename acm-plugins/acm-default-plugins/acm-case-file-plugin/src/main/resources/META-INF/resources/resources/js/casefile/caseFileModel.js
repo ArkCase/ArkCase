@@ -50,7 +50,9 @@ CaseFile.Model = {
             CaseFile.Service.Detail.retrieveCaseFile(caseFileId);
         }
     }
-    ,onCaseTitleChanged: function(caseFileId, caseTitle) {
+    ,onCaseTitleChanged: function(caseFileId, title) {
+        CaseFile.Service.Detail.saveCaseTitle(caseFileId, title);
+
         var pageId = CaseFile.Model.Tree.Config.getPageId();
         var caseFiles = CaseFile.Model.cachePage.get(pageId);
         if (caseFiles) {
@@ -59,28 +61,16 @@ CaseFile.Model = {
                 if (c) {
                     var cid = parseInt(Acm.goodValue(c.object_id_s, 0));
                     if (cid == caseFileId) {
-                        c.title_t = caseTitle;
+                        c.title_t = title;
                         CaseFile.Model.cachePage.put(pageId, caseFiles);
                         break;
                     }
                 }
             } //end for i
         }
-
-        //save case title to database
-        //var caseFile = CaseFile.Model.getCaseFileCurrent();
-        var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-        if (caseFile) {
-            caseFile.title = caseTitle;
-            CaseFile.Service.Detail.saveCaseFile(caseFile);
-        }
     }
-    ,onIncidentDateChanged: function(caseFileId, incidentDate) {
-        var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-        if (caseFile) {
-            caseFile.created = incidentDate;
-            CaseFile.Service.Detail.saveCaseFile(caseFile);
-        }
+    ,onIncidentDateChanged: function(caseFileId, created) {
+        CaseFile.Service.Detail.saveIncidentDate(caseFileId, created);
     }
 
     ,_objectType: "CASE"
@@ -314,8 +304,50 @@ CaseFile.Model = {
 
     ,Lookup: {
         create: function() {
+            this._assignees    = new Acm.Model.SessionData("AcmCaseAssignees");
+            this._subjectTypes = new Acm.Model.SessionData("AcmCaseTypes");
+            this._priorities   = new Acm.Model.SessionData("AcmCasePriorities");
         }
         ,initialize: function() {
+            var assignees = CaseFile.Model.Lookup.getAssignees();
+            if (Acm.isEmpty(assignees)) {
+                CaseFile.Service.Lookup.retrieveAssignees();
+            } else {
+                CaseFile.Controller.modelFoundAssignees(assignees);
+            }
+
+            var subjectTypes = CaseFile.Model.Lookup.getSubjectTypes();
+            if (Acm.isEmpty(subjectTypes)) {
+                CaseFile.Service.Lookup.retrieveSubjectTypes();
+            } else {
+                CaseFile.Controller.modelFoundSubjectTypes(subjectTypes);
+            }
+
+            var priorities = CaseFile.Model.Lookup.getPriorities();
+            if (Acm.isEmpty(priorities)) {
+                CaseFile.Service.Lookup.retrievePriorities();
+            } else {
+                CaseFile.Controller.modelFoundPriorities(priorities);
+            }
+        }
+
+        ,getAssignees: function() {
+            return this._assignees.get();
+        }
+        ,setAssignees: function(assignees) {
+            this._assignees.set(assignees);
+        }
+        ,getSubjectTypes: function() {
+            return this._subjectTypes.get();
+        }
+        ,setSubjectTypes: function(subjectTypes) {
+            this._subjectTypes.set(subjectTypes);
+        }
+        ,getPriorities: function() {
+            return this._priorities.get();
+        }
+        ,setPriorities: function(priorities) {
+            this._priorities.set(priorities);
         }
 
 

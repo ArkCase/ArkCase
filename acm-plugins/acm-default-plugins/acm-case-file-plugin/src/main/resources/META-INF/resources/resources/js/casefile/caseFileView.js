@@ -31,11 +31,10 @@ CaseFile.View = {
                 CaseFile.View.Tree.refreshTree(key);
             }
         }
-        ,onCaseTitleChanged: function(caseFileId, caseTitle) {
-            CaseFile.View.Tree.updateTitle(caseFileId, caseTitle);
+        ,onCaseTitleChanged: function(caseFileId, title) {
+            CaseFile.View.Tree.updateTitle(caseFileId, title);
         }
 
-//////////////////////////////////////////////////
 
         ,refreshTree: function(key) {
             this.tree.reload().done(function(){
@@ -108,17 +107,6 @@ CaseFile.View = {
 //                // (index #2 is rendered by fancytree)
 //            }
 
-//            ,source: function() {
-//                var rc = [
-//                    {title: "Node 1", key: "1"}
-//                    ,{title: "Folder 2", key: "2", folder: true, children: [
-//                        {title: "Node 2.1", key: "3", myOwnAttr: "abc"},
-//                        {title: "Node 2.2", key: "4"}
-//                    ]}
-//                    ,{title: "Folder 30", key: "30", folder: true, lazy: true}
-//                ];
-//                return rc;
-//            }
                 ,lazyLoad: function(event, data) {
                     CaseFile.View.Tree.lazyLoad(event, data);
                 }
@@ -231,10 +219,10 @@ CaseFile.View = {
                 case CaseFile.Model.Tree.Key.NODE_TYPE_PART_PAGE + CaseFile.Model.Tree.Key.NODE_TYPE_PART_OBJECT: //"pc":
                     data.result = AcmEx.FancyTreeBuilder
                         .reset()
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS       //level 2: /CaseFile/Details
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS         //level 2: /CaseFile/Details
                             ,title: "Details"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE       //level 2: /CaseFile/People
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE          //level 2: /CaseFile/People
                             ,title: "People"
                         })
                         .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS       //level 2: /CaseFile/Documents
@@ -243,19 +231,19 @@ CaseFile.View = {
 //                            ,lazy: true
 //                            ,cache: false
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS       //level 2: /CaseFile/Participants
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS    //level 2: /CaseFile/Participants
                             ,title: "Participants"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES       //level 2: /CaseFile/Notes
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES           //level 2: /CaseFile/Notes
                             ,title: "Notes"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS       //level 2: /CaseFile/Tasks
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/Tasks
                             ,title: "Tasks"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS       //level 2: /CaseFile/References
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/References
                             ,title: "References"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY       //level 2: /CaseFile/History
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY         //level 2: /CaseFile/History
                             ,title: "History"
                         })
                         .getTree();
@@ -287,6 +275,7 @@ CaseFile.View = {
 
                 default:
                     data.result = [];
+                    break;
             }
         }
 
@@ -318,36 +307,102 @@ CaseFile.View = {
             return menu;
         }
     }
+
+
     ,Detail: {
         create: function() {
-            this.$tabTop = $("#tabTop");
-            this.$tabTopBlank = $("#tabTopBlank");
+            this.$tabTop          = $("#tabTop");
+            this.$tabTopBlank     = $("#tabTopBlank");
 
-            this.$labCaseNumber = $("#caseNumber"); //this.$lnkCloseDate.parent("div").next("small");
-            this.$lnkCaseTitle  = $("#caseTitle");
+            this.$labCaseNumber   = $("#caseNumber");
+            this.$lnkCaseTitle    = $("#caseTitle");
+            this.$lnkIncidentDate = $("#incident");
+            this.$lnkPriority     = $("#priority");
+            this.$lnkAssignee     = $("#assigned");
+            this.$lnkSubjectType  = $("#type");
+            this.$lnkDueDate      = $("#dueDate");
+            this.$lnkStatus       = $("#status");
+
             AcmEx.Object.XEditable.useEditable(this.$lnkCaseTitle, {
                 success: function(response, newValue) {
                     CaseFile.Controller.viewChangedCaseTitle(CaseFile.Model.getCaseFileId(), newValue);
                 }
             });
-
-            this.$lnkIncidentDate = $("#incidentDate");
             AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
                 success: function(response, newValue) {
                     CaseFile.Controller.viewChangedIncidentDate(CaseFile.Model.getCaseFileId(), newValue);
                 }
             });
+            AcmEx.Object.XEditable.useEditableDate(this.$lnkDueDate, {
+                success: function(response, newValue) {
+                    CaseFile.Controller.viewChangedDueDate(CaseFile.Model.getCaseFileId(), newValue);
+                }
+            });
 
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED, this.onCaseFileRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_SAVED,     this.onCaseFileSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ASSIGNEES_FOUND        ,this.onAssigneesFound);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_SUBJECT_TYPES_FOUND    ,this.onSubjectTypesFound);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PRIORITIES_FOUND       ,this.onPrioritiesFound);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_SAVED        ,this.onCaseFileSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_TITLE_SAVED       ,this.onCaseTitleSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_INCIDENT_DATE_SAVED    ,this.onIncidentDateSaved);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_TREE_NODE_SELECTED, this.onTreeNodeSelected);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED, this.onCaseFileSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_TREE_NODE_SELECTED     ,this.onTreeNodeSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
         }
         ,initialize: function() {
         }
 
+
+        ,onAssigneesFound: function(assignees) {
+            var choices = [];
+            $.each(assignees, function(idx, val) {
+                var opt = {};
+                opt.value = val.userId;
+                opt.text = val.fullName;
+                choices.push(opt);
+            });
+
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkAssignee, {
+                source: choices
+                ,success: function(response, newValue) {
+                    CaseFile.Controller.viewChangedAssignee(CaseFile.Model.getCaseFileId(), newValue);
+                }
+            });
+        }
+        ,onSubjectTypesFound: function(subjectTypes) {
+            var choices = [];
+            $.each(subjectTypes, function(idx, val) {
+                var opt = {};
+                opt.value = val;
+                opt.text = val;
+                choices.push(opt);
+            });
+
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkSubjectType, {
+                source: choices
+                ,success: function(response, newValue) {
+                    CaseFile.Controller.viewChangedSubjectType(CaseFile.Model.getCaseFileId(), newValue);
+                }
+            });
+        }
+        ,onPrioritiesFound: function(priorities) {
+            var choices = []; //[{value: "", text: "Choose Priority"}];
+            $.each(priorities, function(idx, val) {
+                var opt = {};
+                opt.value = val;
+                opt.text = val;
+                choices.push(opt);
+            });
+
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkPriority, {
+                source: choices
+                ,success: function(response, newValue) {
+                    CaseFile.Controller.viewChangedPriority(CaseFile.Model.getCaseFileId(), newValue);
+                }
+            });
+        }
         ,onTreeNodeSelected: function(key) {
             CaseFile.View.Detail.showPanel(key);
         }
@@ -366,16 +421,26 @@ CaseFile.View = {
                 CaseFile.View.Detail.populateCaseFile(caseFile);
             }
         }
-        ,onCaseFileSaved: function(caseFile) {
-            //todo: pop ASN message
-            if (caseFile.hasError) {
-                alert("View: onCaseFileSaved, hasError");
-            } else {
-                alert("View: onCaseFileSaved");
+//        ,onCaseFileSaved: function(caseFile) {
+//            //todo: pop ASN message
+//            if (caseFile.hasError) {
+//                alert("View: onCaseFileSaved, hasError");
+//            } else {
+//                alert("View: onCaseFileSaved");
+//            }
+//
+//        }
+        ,onCaseTitleSaved: function(caseFileId, title) {
+            if (title.hasError) {
+                //alert("View: onCaseTitleSaved, hasError, errorMsg:" + title.errorMsg);
+                CaseFile.View.Detail.setTextLnkCaseTitle("(Error)");
             }
-
         }
-
+        ,onIncidentDateSaved: function(caseFileId, created) {
+            if (created.hasError) {
+                CaseFile.View.Detail.setTextLnkIncidentDate("(Error)");
+            }
+        }
 
         ,showTopPanel: function(show) {
             Acm.Object.show(this.$tabTop, show);
@@ -393,6 +458,7 @@ CaseFile.View = {
             this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
             this.setTextLnkCaseTitle(Acm.goodValue(c.title));
             this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));
+            this.setTextLnkDueDate(Acm.getDateFromDatetime(c.created));
 
         }
 
@@ -405,15 +471,11 @@ CaseFile.View = {
         }
         ,setTextLnkIncidentDate: function(txt) {
             AcmEx.Object.XEditable.setDate(this.$lnkIncidentDate, txt);
-//            if(txt){
-//                Acm.Object.setText(this.$lnkIncidentDate, txt);
-//            }
-//            else{
-//                txt = "Unknown"
-//                Acm.Object.setText(this.$lnkIncidentDate, txt);
-//            }
-//            //this.$lnkIncidentDate.editable("setValue", txt, true);
         }
+        ,setTextLnkDueDate: function(txt) {
+            AcmEx.Object.XEditable.setDate(this.$lnkDueDate, txt);
+        }
+
         ,populateCaseFile_old: function(c) {
             this.setTextLabCaseNumber(c.caseNumber);
             this.setTextLnkCaseTitle(c.title);
