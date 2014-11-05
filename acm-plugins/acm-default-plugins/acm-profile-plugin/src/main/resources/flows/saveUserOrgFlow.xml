@@ -44,6 +44,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         payload.creator = payload.creator == null ? user : payload.creator;
                         payload.modifier = payload.modifier == null ? user : payload.modifier;
                     }
+                    payload.creator="test";
                     return payload;
                     ]]>
                 </scripting:text>
