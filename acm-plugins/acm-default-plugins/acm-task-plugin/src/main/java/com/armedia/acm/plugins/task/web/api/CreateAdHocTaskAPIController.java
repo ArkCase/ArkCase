@@ -52,13 +52,25 @@ public class CreateAdHocTaskAPIController
         try
         {
         	in.setOwner(authentication.getName());
-        	
             //find the complaint id by name
-            String objectId = findObjectIdByName(in.getAttachedToObjectName(), authentication);
-            in.setAttachedToObjectId(Long.parseLong(objectId));
+            String objectId;
+            String objectNumber;
+            if(in.getAttachedToObjectName() != ""){
+                objectNumber = in.getAttachedToObjectName();
+                in.setAttachedToObjectName(objectNumber);
+                objectId  = findObjectIdByName(in.getAttachedToObjectName(), authentication);
+            }
+            else{
+                objectId = null;
+            }
+            if(objectId != null){
+                in.setAttachedToObjectId(Long.parseLong(objectId));
+            }
+            else{
+                in.setAttachedToObjectId(null);
+            }
 
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
-
             publishAdHocTaskCreatedEvent(authentication, httpSession, adHocTask, true);
 
             return adHocTask;
@@ -102,33 +114,36 @@ public class CreateAdHocTaskAPIController
      * @throws MuleException
      */
     private String findObjectIdByName(String name, Authentication authentication) throws MuleException {
-        String query = "name:" + name;
-        
-        //for now use both COMPLAINT and Complaint. But in the future only COMPLAINT is valid
-        query += " AND (object_type_s: COMPLAINT OR object_type_s: Complaint)";
-                
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
-        }
-     
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", 0);
-        headers.put("maxRows", 10);
-        headers.put("sort", "");
+        if(name != null){
+            String query = "name:" + name;
 
-        MuleMessage response = getMuleClient().send("vm://quickSearchQuery.in", "", headers);
-        log.debug("Response type: " + response.getPayload().getClass());
+            //for now use both COMPLAINT and Complaint. But in the future only COMPLAINT is valid
+            query += " AND (object_type_s: COMPLAINT OR object_type_s: Complaint)";
 
-        SolrResponse solrResponse = getSolrData(response);
-        
-        if ( solrResponse == null ) {
-        	throw new NullPointerException("Object id not found.");
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
+            }
+
+            Map<String, Object> headers = new HashMap<>();
+            headers.put("query", query);
+            headers.put("firstRow", 0);
+            headers.put("maxRows", 10);
+            headers.put("sort", "");
+
+            MuleMessage response = getMuleClient().send("vm://quickSearchQuery.in", "", headers);
+            log.debug("Response type: " + response.getPayload().getClass());
+
+            SolrResponse solrResponse = getSolrData(response);
+
+            if ( solrResponse == null ) {
+                throw new NullPointerException("Object id not found.");
+            }
+            else {
+                return solrResponse.getResponse().getDocs().get(0).getObject_id_s();
+            }
         }
-        else {
-        	return solrResponse.getResponse().getDocs().get(0).getObject_id_s();
-        }
+        return null;
     }
     
     /**

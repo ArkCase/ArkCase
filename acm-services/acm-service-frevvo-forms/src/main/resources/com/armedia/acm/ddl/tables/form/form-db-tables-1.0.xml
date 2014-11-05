@@ -54,6 +54,10 @@
                 constraintName="pk_form_approver"/>
     </changeSet>
 
+    <changeSet id="forms-03-form-approvers-table-not-needed-anymore" author="dmiller">
+        <dropTable tableName="acm_form_approver"/>
+    </changeSet>
+
     
 
 </databaseChangeLog>

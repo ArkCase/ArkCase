@@ -35,6 +35,8 @@ public class UploadProfileImgAPIController {
     private UserDao userDao;
     private EcmFileService ecmFileService;
 
+    private final String uploadFileType = "user_profile";
+
     @RequestMapping(value = "/img", method = RequestMethod.POST, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
@@ -67,8 +69,8 @@ public class UploadProfileImgAPIController {
 
                     String contextPath = request.getServletContext().getContextPath();
 
-                    return getEcmFileService().upload(file, acceptType, contextPath, authentication, folderId, objectType,
-                            objectId, objectName);
+                    return getEcmFileService().upload(uploadFileType, file, acceptType, contextPath, authentication,
+                            folderId, objectType, objectId, objectName);
                 }
                 catch (AcmObjectNotFoundException e) {
                     throw new AcmObjectNotFoundException("profile",in.getUserOrgId() , e.getMessage(), e);

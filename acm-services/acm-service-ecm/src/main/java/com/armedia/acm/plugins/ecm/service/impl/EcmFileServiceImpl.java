@@ -39,6 +39,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     public ResponseEntity<? extends Object> upload(
+            String fileType,
             MultipartFile file,
             String acceptHeader,
             String contextPath,
@@ -71,6 +72,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
                     authentication,
+                    fileType,
                     file.getInputStream(),
                     file.getContentType(),
                     file.getOriginalFilename(),

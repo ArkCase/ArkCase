@@ -19,6 +19,8 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     private String priority;
     private Long parentObjectId;
     private String parentObjectType;
+    private String parentObjectName;
+
 
     public AcmApplicationTaskEvent(AcmTask source, String taskEvent, String eventUser, boolean succeeded, String ipAddress)
     {
@@ -41,6 +43,8 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
         setPriority(source.getPriority());
         setParentObjectId(source.getAttachedToObjectId());
         setParentObjectType(source.getAttachedToObjectType());
+        setParentObjectName(source.getAttachedToObjectName());
+
     }
 
     @Override
@@ -135,6 +139,16 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     public void setParentObjectType(String parentObjectType) {
         this.parentObjectType = parentObjectType;
     }
-    
-    
+
+    @Override
+    public String getParentObjectName() {
+        return parentObjectName;
+    }
+
+    public void setParentObjectName(String parentObjectName) {
+        this.parentObjectName = parentObjectName;
+    }
+
+
+
 }
