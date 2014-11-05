@@ -59,6 +59,10 @@
         <property name="loginSuccessEventListener" ref="acmLoginSuccessListener"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
     </bean>
+
+    <bean id="acmAuditPropertyInterceptor" class="com.armedia.acm.auth.AcmAuditPropertyInterceptor">
+        <property name="entityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
     
     <bean id="acmLoginSuccessOperations" class="com.armedia.acm.auth.AcmLoginSuccessOperations">
         <property name="acmPluginManager" ref="acmPluginManager"/>
