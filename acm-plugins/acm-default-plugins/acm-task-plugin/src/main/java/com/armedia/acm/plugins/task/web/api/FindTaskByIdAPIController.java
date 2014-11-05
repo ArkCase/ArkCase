@@ -45,7 +45,6 @@ public class FindTaskByIdAPIController
         {
             AcmTask retval = getTaskDao().findById(taskId);
             raiseEvent(authentication, session, retval, true);
-
             return retval;
         } catch (AcmTaskException | ActivitiException e)
         {

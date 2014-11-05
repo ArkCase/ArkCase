@@ -26,6 +26,8 @@ public class FileUploadController
 
     private EcmFileService ecmFileService;
 
+    private final String uploadFileType = "attachment";
+
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<? extends Object> uploadFile(
@@ -40,7 +42,7 @@ public class FileUploadController
     {
 
         String contextPath = request.getServletContext().getContextPath();
-        return getEcmFileService().upload(file, acceptType, contextPath, authentication, cmisFolderId,
+        return getEcmFileService().upload(uploadFileType, file, acceptType, contextPath, authentication, cmisFolderId,
                 parentObjectType, parentObjectId, parentObjectName);
 
     }

@@ -68,7 +68,9 @@ TaskWizard.Object = {
 	 * Get the complaint id or case id field value
 	 */
     ,getValueEdtComplaint: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtComplaint);
+        //return Acm.Object.getPlaceHolderInput(this.$edtComplaint);
+        return Acm.Object.getValue(this.$edtComplaint);
+
     }
 
     /**
@@ -82,7 +84,9 @@ TaskWizard.Object = {
 	 * Get the subject/title field value
 	 */
     ,getValueEdtSubject: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtSubject);
+        //return Acm.Object.getPlaceHolderInput(this.$edtSubject);
+        return Acm.Object.getValue(this.$edtSubject);
+
     }
 
 	/**
@@ -136,15 +140,15 @@ TaskWizard.Object = {
 	 * Get the status select option field value
 	 */
     ,getSelectedTextSelStatus: function() {
-        return Acm.Object.getSelectTextIgnoreFirst(this.$selStatus);
+        return Acm.Object.getSelectValueIgnoreFirst(this.$selStatus);
     }
     
     /**
      * get the priority selected option text/label
-     */
+     *//*
     ,getSelectedTextSelPriority: function() {
         return Acm.Object.getSelectTextIgnoreFirst(this.$prioritySel);
-    }
+    }*/
     
 	/**
 	 * Get the completed percentage field value
@@ -304,7 +308,7 @@ TaskWizard.Object = {
         data.status = this.getSelectedTextSelStatus();
         //data.priority = this.getValueEdtPriority();
         data.dueDate = this.getValueEdtDueDate();
-        data.priority = this.getSelectedTextSelPriority();
+        data.priority = this.getSelectedValueSelPriority();
         data.percentComplete = this.getValueEdtCompletedStatus();
         data.details = this.getHtmlDivDetail();
         data.adhocTask = true;

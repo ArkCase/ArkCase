@@ -80,6 +80,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         Date due = new Date();
         String title = "title";
         String objectType = "objectType";
+        String objectName = "objectName";
         Long objectId = 400L;
         Date start = new Date();
         String status = "status";
@@ -98,6 +99,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         in.setTitle(title);
         in.setAttachedToObjectId(objectId);
         in.setAttachedToObjectType(objectType);
+        in.setAttachedToObjectName(objectName);
         in.setPercentComplete(percentComplete);
         in.setOwner(owner);
         in.setCreateDate(start);
@@ -117,8 +119,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockTask.getId()).andReturn(taskId.toString()).atLeastOnce();
         mockTaskService.setVariableLocal(taskId.toString(), "OBJECT_TYPE", objectType);
-        mockTaskService.setVariableLocal(taskId.toString(), objectType, objectId);
         mockTaskService.setVariableLocal(taskId.toString(), "OBJECT_ID", objectId);
+        mockTaskService.setVariableLocal(taskId.toString(), objectType, objectId);
+        mockTaskService.setVariableLocal(taskId.toString(), "OBJECT_NAME", objectName);
         mockTaskService.setVariableLocal(taskId.toString(), "START_DATE", start);
         mockTaskService.setVariableLocal(taskId.toString(), "TASK_STATUS", status);
         mockTaskService.setVariableLocal(taskId.toString(), "PERCENT_COMPLETE", percentComplete);
@@ -147,10 +150,12 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String processName = "processName";
         Long objectId = 250L;
         String objectType = "objectType";
+        String objectName = "objectName";
 
         Map<String, Object> pvars = new HashMap<>();
         pvars.put("OBJECT_ID", objectId);
         pvars.put("OBJECT_TYPE", objectType);
+        pvars.put("OBJECT_NAME", objectName);
 
         Map<String, Object> taskLocalVars = new HashMap<>();
         taskLocalVars.put("START_DATE", new Date());
@@ -225,10 +230,13 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         Long objectId = 250L;
         String objectType = "objectType";
+        String objectName = "objectName";
 
         Map<String, Object> pvars = new HashMap<>();
         pvars.put("OBJECT_ID", objectId);
         pvars.put("OBJECT_TYPE", objectType);
+        pvars.put("OBJECT_NAME", objectName);
+
 
         Map<String, Object> taskLocalVars = new HashMap<>();
         taskLocalVars.put("START_DATE", new Date());
@@ -271,6 +279,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(title, task.getTitle());
         assertEquals(objectId, task.getAttachedToObjectId());
         assertEquals(objectType, task.getAttachedToObjectType());
+        assertEquals(objectName, task.getAttachedToObjectName());
         assertEquals(user, task.getAssignee());
         assertEquals(processName, task.getBusinessProcessName());
         assertFalse(task.isAdhocTask());
@@ -299,10 +308,12 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         Long objectId = 250L;
         String objectType = "objectType";
+        String objectName = "objectName";
 
         Map<String, Object> pvars = new HashMap<>();
         pvars.put("OBJECT_ID", objectId);
         pvars.put("OBJECT_TYPE", objectType);
+        pvars.put("OBJECT_NAME",objectName);
 
         expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
         expect(mockTaskQuery.taskId(String.valueOf(taskId))).andReturn(mockTaskQuery);
@@ -353,6 +364,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(title, task.getTitle());
         assertEquals(objectId, task.getAttachedToObjectId());
         assertEquals(objectType, task.getAttachedToObjectType());
+        assertEquals(objectName, task.getAttachedToObjectName());
         assertEquals(user, task.getAssignee());
         assertEquals(processName, task.getBusinessProcessName());
         assertFalse(task.isAdhocTask());
@@ -412,10 +424,13 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         Long objectId = 250L;
         String objectType = "objectType";
+        String objectName = "objectName";
+
 
         Map<String, Object> pvars = new HashMap<>();
         pvars.put("OBJECT_ID", objectId);
         pvars.put("OBJECT_TYPE", objectType);
+        pvars.put("OBJECT_NAME", objectName);
 
         Map<String, Object> taskLocalVars = new HashMap<>();
         taskLocalVars.put("START_DATE", new Date());
@@ -464,6 +479,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(title, found.getTitle());
         assertEquals(objectId, found.getAttachedToObjectId());
         assertEquals(objectType, found.getAttachedToObjectType());
+        assertEquals(objectName, found.getAttachedToObjectName());
         assertEquals(user, found.getAssignee());
         assertEquals(processName, found.getBusinessProcessName());
         assertFalse(found.isAdhocTask());
