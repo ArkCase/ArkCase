@@ -19,6 +19,8 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -48,6 +50,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	private UserDao userDao;
 	private EcmFileService ecmFileService;
     private String servletContextPath;
+    private String userIpAddress;
 
 
 	@Override
@@ -144,17 +147,17 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		return obj;
 	}
 	
-	public void saveAttachments(
+	public FrevvoUploadedFiles saveAttachments(
             MultiValueMap<String, MultipartFile> attachments,
             String targetCmisFolderId,
             String parentObjectType,
             Long parentObjectId,
-            String parentObjectName)
+            String parentObjectName) throws AcmCreateObjectFailedException
 	{
+        FrevvoUploadedFiles retval = new FrevvoUploadedFiles();
+
 		if ( attachments != null )
 		{
-
-
 			for ( Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet() )
 			{
                 if ( entry.getKey().startsWith("form_"))
@@ -164,13 +167,14 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                     if ( xml != null && xml.size() == 1 )
                     {
                         MultipartFile xmlAttachment = xml.get(0);
-                        uploadFile(
+                        EcmFile formXml = uploadFile(
                                 getFormName() + "_xml",
                                 targetCmisFolderId,
                                 parentObjectType,
                                 parentObjectId,
                                 parentObjectName,
                                 xmlAttachment);
+                        retval.setFormXml(formXml);
                     }
                 }
                 else if ( !entry.getKey().equals("UploadFiles" ) )
@@ -180,13 +184,14 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                     if ( pdf != null && pdf.size() == 1 )
                     {
                         MultipartFile pdfAttachment = pdf.get(0);
-                        uploadFile(
+                        EcmFile pdfRendition = uploadFile(
                                 getFormName(),
                                 targetCmisFolderId,
                                 parentObjectType,
                                 parentObjectId,
                                 parentObjectName,
                                 pdfAttachment);
+                        retval.setPdfRendition(pdfRendition);
                     }
                 }
                 else
@@ -198,27 +203,31 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                     {
                         for (final MultipartFile attachment : attachmentsList)
                         {
-                            uploadFile(
+                            EcmFile uploaded = uploadFile(
                                     "attachment",
                                     targetCmisFolderId,
                                     parentObjectType,
                                     parentObjectId,
                                     parentObjectName,
                                     attachment);
+                            retval.getUploadedFiles().add(uploaded);
                         }
                     }
                 }
 
 			}
 		}
+
+        return retval;
 	}
 
-    private void uploadFile(String fileType,
+    private EcmFile uploadFile(String fileType,
                             String targetCmisFolderId,
                             String parentObjectType,
                             Long parentObjectId,
                             String parentObjectName,
                             MultipartFile attachment)
+            throws AcmCreateObjectFailedException
     {
         try
         {
@@ -232,25 +241,21 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                 attachment.getInputStream(),
                 true);
 
-            getEcmFileService().upload(
+            EcmFile uploaded = getEcmFileService().upload(
                 fileType,
                 file,
-                "application/json",
-                getServletContextPath(),
                 getAuthentication(),
                 targetCmisFolderId,
                 parentObjectType,
                 parentObjectId,
-                parentObjectName
-                );
+                parentObjectName);
+
+            return uploaded;
         }
-        catch (AcmCreateObjectFailedException e)
+        catch (IOException e)
         {
             LOG.error("Could not upload file: " + e.getMessage(), e);
-        }
-        catch(IOException e1)
-        {
-            LOG.error("Could not create AcmMultipartFile object: " + e1.getMessage(), e1);
+            throw new AcmCreateObjectFailedException("file", e.getMessage(), e);
         }
     }
 
@@ -277,4 +282,15 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		return null;
 	}
 
+    @Override
+    public String getUserIpAddress()
+    {
+        return userIpAddress;
+    }
+
+    @Override
+    public void setUserIpAddress(String userIpAddress)
+    {
+        this.userIpAddress = userIpAddress;
+    }
 }
