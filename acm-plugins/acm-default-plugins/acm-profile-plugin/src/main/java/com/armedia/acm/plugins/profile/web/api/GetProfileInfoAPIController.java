@@ -91,6 +91,11 @@ public class GetProfileInfoAPIController {
         profileDTO.setFirstAddress(userOrgInfo.getFirstAddress());
         profileDTO.setImAccount(userOrgInfo.getImAccount());
         profileDTO.setImSystem(userOrgInfo.getImSystem());
+        if(userOrgInfo.getOrganization()!=null) {
+            profileDTO.setCompanyName(userOrgInfo.getOrganization().getOrganizationValue());
+        } else {
+            profileDTO.setCompanyName(null);
+        }
         profileDTO.setLocation(userOrgInfo.getLocation());
         profileDTO.setMainOfficePhone(userOrgInfo.getMainOfficePhone());
         profileDTO.setMobilePhoneNumber(userOrgInfo.getMobilePhoneNumber());
