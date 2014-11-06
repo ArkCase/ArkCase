@@ -12,7 +12,7 @@ TaskList.JTable = {
 
     ,createJTableDocuments: function($s) {
         $s.jtable({
-            title: 'Documents'
+            title: 'Documents Under Review'
             ,paging: false
             ,messages: {
                 addNewRecord: 'Add Document'
@@ -37,7 +37,7 @@ TaskList.JTable = {
                 }
                 ,createAction: function(postData, jtParams) {
                     //custom web form creation takes over; this action should never be called
-                    var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:"", status:""}};
+                    var rc = {"Result": "OK", "Record": {id:0, title:"", type:"", created:"", author:"", status:""}};
                     return rc;
                 }
                 ,updateAction: function(postData, jtParams) {
@@ -56,7 +56,7 @@ TaskList.JTable = {
                 id: {
                     title: 'ID'
                     ,key: true
-                    ,list: false
+                    ,list: true
                     ,create: false
                     ,edit: false
                 }
@@ -75,8 +75,8 @@ TaskList.JTable = {
                     ,width: '15%'
                     ,edit: false
                 }
-                ,creator: {
-                    title: 'Creator'
+                ,author: {
+                    title: 'Author'
                     ,width: '15%'
                     ,edit: false
                 }
@@ -111,6 +111,153 @@ TaskList.JTable = {
     }
     //----------------- end of Documents ----------------------
 
+
+    ,createJTableAttachments: function($s) {
+        $s.jtable({
+            title: 'Attachments'
+            ,paging: false
+            ,messages: {
+                addNewRecord: 'Add Attachment'
+            }
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    /*var task = TaskList.getTask();
+                     if (task && task.childObjects) {
+                     for (var i = 0; i < task.childObjects.length; i++) {
+                     var childObject = task.childObjects[i];
+                     var record = {};
+                     record.id = Acm.goodValue(childObject.targetId, 0);
+                     record.title = Acm.goodValue(childObject.targetName);
+                     record.created = Acm.getDateFromDatetime(childObject.created);
+                     record.creator = Acm.goodValue(childObject.creator);
+                     record.status = Acm.goodValue(childObject.status);
+                     rc.Records.push(record);
+                     }
+                     }*/
+                    return rc;
+                }
+                ,createAction: function(postData, jtParams) {
+                    //custom web form creation takes over; this action should never be called
+                    var rc = {"Result": "OK", "Record": {id:0, title:"", type:"", created:"", author:""}};
+                    return rc;
+                }
+                /*,updateAction: function(postData, jtParams) {
+                    *//*var record = Acm.urlToJson(postData);
+                     var rc = AcmEx.Object.jTableGetEmptyRecord();
+                     //id,created,creator is readonly
+                     //rc.Record.id = record.id;
+                     //rc.Record.created = record.created;
+                     //rc.Record.creator = record.creator;
+                     rc.Record.title = record.title;
+                     rc.Record.status = record.status;*//*
+                    return rc;
+                }*/
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: true
+                    ,create: false
+                    ,edit: false
+                }
+                ,title: {
+                    title: 'Title'
+                    ,width: '10%'
+                    ,display: function (commData) {
+                        var a = "<a href='" + App.getContextPath() + Complaint.Service.API_DOWNLOAD_DOCUMENT
+                            + ((0 >= commData.record.id)? "#" : commData.record.id)
+                            + "'>" + commData.record.title + "</a>";
+                        return $(a);
+                    }
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '10%'
+                }
+                ,created: {
+                    title: 'Created'
+                    ,width: '15%'
+                    ,edit: false
+                }
+                ,author: {
+                    title: 'Author'
+                    ,width: '15%'
+                    ,edit: false
+                }
+            }
+            /*
+            ,recordUpdated : function (event, data) {
+                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                 var record = data.record;
+                 var c = Complaint.getComplaint();
+                 if (c) {
+                 if (c.childObjeccts) {
+                 if (0 < c.childObjects.length && whichRow < c.childObjects.length) {
+                 var childObject = c.childObjects[whichRow];
+                 //id,created,creator is readonly
+                 //childObject.Record.id = record.id;
+                 //childObject.Record.created = record.created;
+                 //childObject.Record.creator = record.creator;
+                 childObject.Record.title = record.title;
+                 childObject.Record.status = record.status;
+
+                 Complaint.Service.saveComplaint(c);
+                }
+                }
+                }
+             }*/
+        });
+
+        $s.jtable('load');
+    }
+    //----------------- end of Attachments ----------------------
+
+
+
+    ,createJTableWorkflowOverview: function($s) {
+        $s.jtable({
+            title: 'Workflow Overview'
+            ,paging: false
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    return rc;
+                }
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                }
+                ,participant: {
+                    title: 'Participant'
+                    ,width: '15%'
+                    ,edit: false
+                }
+                ,role: {
+                    title: 'Role'
+                    ,width: '15%'
+                    ,edit: false
+                }
+                ,status: {
+                    title: 'Status'
+                    ,width: '30%'
+                }
+                ,dateTime : {
+                    title: 'Date/Time'
+                    ,width: '20%'
+                }
+            }
+        });
+
+        $s.jtable('load');
+    }
+    //----------------- end of Attachments ----------------------
 
 
     //
@@ -261,7 +408,7 @@ TaskList.JTable = {
 
 
     //
-    //----------------- Notes ------------------------------
+    //----------------- Event Log ------------------------------
 
     ,createJTableEvents: function($s) {
         var sortMap = {};

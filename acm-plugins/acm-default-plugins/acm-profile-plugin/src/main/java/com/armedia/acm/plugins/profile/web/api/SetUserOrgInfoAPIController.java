@@ -40,7 +40,7 @@ public class SetUserOrgInfoAPIController {
     public ProfileDTO setUserOrgInfo(
             @RequestBody ProfileDTO in,
             Authentication auth
-    ) throws AcmCreateObjectFailedException {
+    ) throws AcmCreateObjectFailedException, AcmProfileException {
         String userId = (String) auth.getName();
         AcmUser user = getUserDao().findByUserId(userId);
         if ( log.isInfoEnabled()) {
@@ -49,8 +49,12 @@ public class SetUserOrgInfoAPIController {
         UserOrg userOrg = null;
         Organization org = null;
         boolean isCompanyNameNull = false;
+        boolean isChangingCompany = false;
         try {
           userOrg = getUserOrgDao().getUserOrgForUser(user);
+            if( userOrg.getOrganization() == null && in.getCompanyName() == null ){
+                isCompanyNameNull = true;
+            }
         } catch (AcmObjectNotFoundException e) {
            if(log.isInfoEnabled()) {
                log.info("There are no user and company info for the user: "+userId +", new record will be created and info will be added");
@@ -78,12 +82,18 @@ public class SetUserOrgInfoAPIController {
 
        //case when user changed  his company name
         if(!isCompanyNameNull) {
-            //check if users add company info for the first time
-            if(userOrg.getOrganization()==null) {
+            if(userOrg.getOrganization()== null && in.getCompanyName()!=null ) {
                 org = prepareNewOrg(in,user);
+                org = getOrganizationDao().save(org);
                 userOrg.setOrganization(org);
+            } else if(userOrg.getOrganization() != null && in.getCompanyName() != null){
+                if(!userOrg.getOrganization().getOrganizationValue().trim().equals(in.getCompanyName().trim())){
+                    isChangingCompany = true;
+                }
+            } else if(userOrg.getOrganization()!= null && in.getCompanyName() == null ){
+                throw new AcmProfileException("Detaching from company not allowed!, companyName is null, Pls provide a company name");
             }
-            if (userOrg.getOrganization().getOrganizationValue() != null && !userOrg.getOrganization().getOrganizationValue().equals(in.getCompanyName().trim())) {
+            if (isChangingCompany) {
                 if (log.isInfoEnabled()) {
                     log.info("User " + userId + " changed the name of his company");
                 }
@@ -93,7 +103,7 @@ public class SetUserOrgInfoAPIController {
                 } catch (AcmObjectNotFoundException e1) {
                     if (log.isInfoEnabled()) {
                         log.info("Organization with name: " + in.getCompanyName() + " is not found in the DB");
-                    }
+                     }
                     //create new company for the user
                     org = prepareNewOrg(in, user);
                     org = getOrganizationDao().save(org);

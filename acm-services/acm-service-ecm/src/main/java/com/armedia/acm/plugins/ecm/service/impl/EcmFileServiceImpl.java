@@ -36,35 +36,21 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private ApplicationEventPublisher applicationEventPublisher;
 
-
     @Override
-    public ResponseEntity<? extends Object> upload(
+    public EcmFile upload(
             String fileType,
             MultipartFile file,
-            String acceptHeader,
-            String contextPath,
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
             Long parentObjectId,
             String parentObjectName) throws AcmCreateObjectFailedException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Single files");
-            log.debug("Accept header: '" + acceptHeader + "'");
-        }
-
         if ( log.isInfoEnabled() )
         {
             log.info("The user '" + authentication.getName() + "' uploaded file: '" + file.getOriginalFilename() + "'");
             log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
         }
-
-        HttpHeaders responseHeaders = contentTypeFromAcceptHeader(acceptHeader);
-
-
-        log.debug("context path: '" + contextPath + "'");
 
         EcmFileAddedEvent event = null;
 
@@ -83,9 +69,52 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             event = new EcmFileAddedEvent(uploaded, authentication);
 
+            event.setSucceeded(true);
+            applicationEventPublisher.publishEvent(event);
+
+            return uploaded;
+        } catch (IOException | MuleException e)
+        {
+            if ( event != null )
+            {
+                event.setSucceeded(false);
+                applicationEventPublisher.publishEvent(event);
+            }
+            log.error("Could not upload file: " + e.getMessage(), e);
+            throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
+        }
+    }
+
+
+    @Override
+    public ResponseEntity<? extends Object> upload(
+            String fileType,
+            MultipartFile file,
+            String acceptHeader,
+            String contextPath,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            String parentObjectName) throws AcmCreateObjectFailedException
+    {
+
+        HttpHeaders responseHeaders = contentTypeFromAcceptHeader(acceptHeader);
+
+        try
+        {
+            EcmFile uploaded = upload(
+                    fileType,
+                    file,
+                    authentication,
+                    targetCmisFolderId,
+                    parentObjectType,
+                    parentObjectId,
+                    parentObjectName);
+
             FileUpload fileUpload = fileUploadFromEcmFile(file, contextPath, uploaded);
 
-            Object retval = null;
+            Object retval;
 
             if ( responseHeaders.getContentType().equals(MediaType.TEXT_PLAIN) )
             {
@@ -100,19 +129,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 retval = jsonMap;
             }
 
-
-
-            event.setSucceeded(true);
-            applicationEventPublisher.publishEvent(event);
-
             return new ResponseEntity<>(retval, responseHeaders, HttpStatus.OK);
-        } catch (IOException | MuleException e)
+        } catch (IOException  e)
         {
-            if ( event != null )
-            {
-                event.setSucceeded(false);
-                applicationEventPublisher.publishEvent(event);
-            }
             log.error("Could not upload file: " + e.getMessage(), e);
             throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
         }

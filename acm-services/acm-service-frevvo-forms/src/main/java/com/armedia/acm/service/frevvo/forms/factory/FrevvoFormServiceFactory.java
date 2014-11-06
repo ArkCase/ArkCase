@@ -96,6 +96,7 @@ public class FrevvoFormServiceFactory {
             service.setComplaintDao(frevvoFormController.getComplaintDao());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             service.setCloseComplaintRequestDao(frevvoFormController.getCloseComplaintRequestDao());
+            service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
             
             return service;
 		}
