@@ -214,6 +214,42 @@ CaseFile.Service = {
                 }
             );
         }
+        ,saveAssignee: function(caseFileId, assignee) {
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            caseFile.assignee = assignee;
+            this.saveCaseFile(caseFile
+                ,function(data) {
+                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.assignee));
+                }
+            );
+        }
+        ,saveSubjectType: function(caseFileId, caseType) {
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            caseFile.caseType = caseType;
+            this.saveCaseFile(caseFile
+                ,function(data) {
+                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.caseType));
+                }
+            );
+        }
+        ,savePriority: function(caseFileId, priority) {
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            caseFile.priority = priority;
+            this.saveCaseFile(caseFile
+                ,function(data) {
+                    CaseFile.Controller.modelSavedPriority(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.priority));
+                }
+            );
+        }
+        ,saveDueDate: function(caseFileId, dueDate) {
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            caseFile.created = dueDate;
+            this.saveCaseFile(caseFile
+                ,function(data) {
+                    CaseFile.Controller.modelSavedDueDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.created));
+                }
+            );
+        }
 
         ,closeCaseFile : function(data) {
             var caseFileId = CaseFile.getCaseFileId();
