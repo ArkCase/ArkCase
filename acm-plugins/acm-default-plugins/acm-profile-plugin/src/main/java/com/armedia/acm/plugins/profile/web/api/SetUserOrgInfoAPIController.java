@@ -9,9 +9,11 @@ import com.armedia.acm.plugins.profile.exception.AcmProfileException;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.service.ProfileEventPublisher;
+import com.armedia.acm.plugins.profile.service.SaveUserOrgTransaction;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.activiti.engine.impl.juel.ExpressionFactoryImpl;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -34,6 +36,7 @@ public class SetUserOrgInfoAPIController {
     private UserDao userDao;
     private UserOrgDao userOrgDao;
     private OrganizationDao organizationDao;
+    private SaveUserOrgTransaction saveUserOrgTransaction;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -114,7 +117,14 @@ public class SetUserOrgInfoAPIController {
             }
         }
         userOrg = createUserOrgForUpdate(in, userOrg);
-        userOrg = getUserOrgDao().updateUserInfo(userOrg);
+        try {
+            userOrg = getSaveUserOrgTransaction().saveUserOrg(userOrg,auth);
+        } catch (MuleException e) {
+            if(log.isErrorEnabled()){
+               log.error("Saving of the info for user and organization throw an exception",e);
+            }
+            throw new AcmCreateObjectFailedException("user organization info",e.getMessage(),e.getCause());
+        }
         getEventPublisher().publishProfileEvent(userOrg,auth,isCompanyNameNull,true);
         return in;
     }
@@ -154,8 +164,16 @@ public class SetUserOrgInfoAPIController {
             userOrgOld.setMainOfficePhone(in.getMainOfficePhone());
             userOrgOld.setOfficePhoneNumber(in.getOfficePhoneNumber());
             userOrgOld.setMobilePhoneNumber(in.getMobilePhoneNumber());
-
+         //   userOrgOld.setEcmFolderPath("User Profile");
         return userOrgOld;
+    }
+
+    public SaveUserOrgTransaction getSaveUserOrgTransaction() {
+        return saveUserOrgTransaction;
+    }
+
+    public void setSaveUserOrgTransaction(SaveUserOrgTransaction saveUserOrgTransaction) {
+        this.saveUserOrgTransaction = saveUserOrgTransaction;
     }
 
     public OrganizationDao getOrganizationDao() {
