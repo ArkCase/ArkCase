@@ -149,8 +149,8 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
                 complaint.getComplaintNumber());
 
 		CloseComplaintFormEvent event = new CloseComplaintFormEvent(
-				complaint.getComplaintNumber(), savedRequest, uploadedFiles, mode, getAuthentication().getName(),
-				getUserIpAddress(), true);
+				complaint.getComplaintNumber(), complaint.getComplaintId(), savedRequest, uploadedFiles, mode,
+				getAuthentication().getName(), getUserIpAddress(), true);
 		getApplicationEventPublisher().publishEvent(event);
 		
 		return true;

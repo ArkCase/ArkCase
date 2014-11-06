@@ -175,6 +175,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
         expect(mockTask.getCreateTime()).andReturn(null);
         expect(mockTask.getOwner()).andReturn(user);
+        expect(mockTask.getProcessInstanceId()).andReturn(null);
 
         mockTaskService.complete(String.valueOf(taskId));
 
@@ -260,6 +261,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getProcessDefinitionId()).andReturn(processId);
         expect(mockTask.getCreateTime()).andReturn(null);
         expect(mockTask.getOwner()).andReturn(user);
+        expect(mockTask.getProcessInstanceId()).andReturn("250").atLeastOnce();
 
         expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
@@ -345,6 +347,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstance.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
         expect(mockHistoricTaskInstance.getAssignee()).andReturn(user);
         expect(mockHistoricTaskInstance.getProcessDefinitionId()).andReturn(processId);
+        expect(mockHistoricTaskInstance.getProcessInstanceId()).andReturn("250").atLeastOnce();
+
 
         expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
@@ -456,6 +460,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getProcessDefinitionId()).andReturn(processId);
         expect(mockTask.getCreateTime()).andReturn(null);
         expect(mockTask.getOwner()).andReturn(user);
+        expect(mockTask.getProcessInstanceId()).andReturn("250").atLeastOnce();
 
         expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
