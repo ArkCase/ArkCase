@@ -14,8 +14,8 @@ var Task = Task || {
     ,getTask : function() {
         return this._task;
     }
-    ,setTask : function(c) {
-        this._task = c;
+    ,setTask : function(task) {
+        this._task = task;
     }
     ,getTaskId : function() {
         return this._task.taskId;

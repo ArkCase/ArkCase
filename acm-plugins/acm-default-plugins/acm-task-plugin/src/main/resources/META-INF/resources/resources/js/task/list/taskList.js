@@ -5,6 +5,12 @@
  */
 var TaskList = TaskList || {
     create: function() {
+        TaskList.cachePage = new Acm.Model.CacheFifo(2);
+        TaskList.cacheTask = new Acm.Model.CacheFifo(3);
+        TaskList.cacheParentObject = new Acm.Model.CacheFifo(3);
+
+
+
         TaskList.Object.create();
         TaskList.Event.create();
         TaskList.Page.create();
@@ -21,6 +27,40 @@ var TaskList = TaskList || {
     ,Rule: {}
     ,Service: {}
     ,Callback: {}
+
+    ,cachePage: null
+    ,cacheTask: null
+    ,cacheParentObject: null
+
+    ,_parentObjId: 0
+    ,getParentObjId: function(){
+        return this._parentObjId;
+    }
+    ,setParentObjId : function(id) {
+        this._parentObjId = id;
+    }
+    ,getParentObj: function() {
+        if (0 >= this._parentObjId) {
+            return null;
+        }
+        return this.cacheParentObject.get(this._parentObjId);
+    }
+
+
+
+    ,_taskId: 0
+    ,getTaskId : function() {
+        return this._taskId;
+    }
+    ,setTaskId : function(id) {
+        this._taskId = id;
+    }
+    ,getTask: function() {
+        if (0 >= this._taskId) {
+            return null;
+        }
+        return this.cacheTask.get(this._taskId);
+    }
 
     ,_taskList: []
     ,getTaskList: function() {

@@ -119,22 +119,22 @@
                         <div class="">
                             <div class=" clearfix">
                                 <div class="col-xs-4 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="taskTitle" data-type="text" data-pk="1" data-title="Enter Task Title"> Sample Title</a></div>
-                                    <small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>
+                                    <div class="h4 font-bold"><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Enter Task Title"></a></div>
+                                    <small class="text-muted"><a href="#" id="parentObjNumber" ></a></small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
                                     <small class="text-muted">Incident Date</small></div>
                                 <div class="col-xs-1 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="priorityParentObj" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
                                     <small class="text-muted">Priority</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1"  data-title="Enter Assignee">AJ McClary</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="parentObjAssigned" data-type="select" data-pk="1"  data-title="Enter Assignee"></a></div>
                                     <small class="text-muted">Assigned To</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1"  data-title="Enter Subject Type">CRIMINAL</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-title="Enter Subject Type"></a></div>
                                     <small class="text-muted">Subject Type</small></div>
                                 <div class="col-xs-1">
-                                    <div class="h4 font-bold"><a href="#" id="statusParentObj" >PENDING</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="parentObjStatus" ></a></div>
                                     <small class="text-muted">Status</small></div>
                             </div>
                         </div>
@@ -147,17 +147,15 @@
                         <!-- TODO: when data-toggle is modal, the tooltip won't come up
                         -->
                         <button class="btn btn-default btn-sm" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
-                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Complete Task"><i class="fa fa-check"></i></button>
-
 
                         <!-- from the mockup -->
-                        <button class="btn btn-default btn-sm" data-title="Assign Task" data-toggle="modal" data-target="#assign"><i class="fa fa-male"></i> Assign</button>
-                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#reassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
-                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#unassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>
-                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#complete" data-title="Complete Task"><i class="fa fa-check-square-o"></i> Complete</button>
-                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#approve" data-title="Approve Task"><i class="fa fa-check"></i> Approve</button>
-                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#reject" data-title="Reject Task"><i class="fa fa-reply"></i> Reject</button>
-                        <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#delete" data-title="Delete Task"><i class="fa fa-times"></i> Delete</button>
+                        <button class="btn btn-default btn-sm" id="btnAssign" data-title="Assign Task" data-toggle="modal" data-target="#assign"><i class="fa fa-male"></i> Assign</button>
+                        <button class="btn btn-default btn-sm" id="btnReassign" data-toggle="modal" data-target="#reassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
+                        <button class="btn btn-default btn-sm" id="btnUnassign" data-toggle="modal" data-target="#unassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>
+                        <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" data-target="#complete" data-title="Complete Task"><i class="fa fa-check-square-o"></i> Complete</button>
+                        <button class="btn btn-default btn-sm" id="btnApprove" data-toggle="modal" data-target="#approve" data-title="Approve Task"><i class="fa fa-check"></i> Approve</button>
+                        <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" data-title="Reject Task"><i class="fa fa-reply"></i> Reject</button>
+                        <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" data-target="#delete" data-title="Delete Task"><i class="fa fa-times"></i> Delete</button>
 
 
 
@@ -166,7 +164,7 @@
                     <%--
                                     <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
                     --%>
-                <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-url="/post" data-title="Enter Task Subject"> Sample Task Subject</a></h4>
+                <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-title="Enter Task Subject"> Sample Task Subject</a></h4>
                 <%--<small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>--%>
 
             <hr/>
@@ -181,7 +179,7 @@
                                     <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="text" data-pk="1" data-title="Enter Owner"></a></div>
                                     <small class="text-muted">Owner</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="text" data-pk="1" data-title="Enter priority"></a></div>
+                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter priority"></a></div>
                                     <small class="text-muted">Priority</small></div>
                                 <div class="col-xs-2 b-r">
                                     <div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-title="Enter Start Date"></a></div>
@@ -224,12 +222,45 @@
                     </div>
                 </div>
 
+                <div class="row" id="tabReworkInstructions" style="display:none;">
+                    <div class="col-md-12">
+                        <section class="panel b-a ">
+                            <div class="panel-heading b-b bg-info">
+                                <ul class="nav nav-pills pull-right">
+                                    <li>
+                                        <div class="btn-group padder-v2">
+                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li><a href="#">Other menu items</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                </ul>
+                                </span> <a href="#" class="font-bold">Rework Instructions</a> </div>
+                            <div class="panel-body">
+                                <div class="taskReworkInstructions"></div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
 
                 <div class="row" id="tabDocuments" style="display:none;">
                     <div class="col-md-12">
                         <section class="panel b-a">
                             <div id="divDocuments" style="width:100%"></div>
                             <input id="roiFormUrl" type="hidden" value="${roiFormUrl}" style="width:100% display:none;" />
+                        </section>
+                    </div>
+                </div>
+
+
+                <div class="row" id="tabAttachments" style="display:none;">
+                    <div class="col-md-12">
+                        <section class="panel b-a">
+                            <div id="divAttachments" style="width:100%"></div>
                         </section>
                     </div>
                 </div>
@@ -243,6 +274,14 @@
                     </div>
                 </div>
 
+
+                <div class="row" id="tabWorkflowOverview" style="display:none;">
+                    <div class="col-md-12">
+                        <section class="panel b-a">
+                            <div id="divWorkflowOverview" style="width:100%"></div>
+                        </section>
+                    </div>
+                </div>
 
                 <div class="row" id="tabHistory" style="display:none;">
                     <div class="col-md-12">
@@ -504,25 +543,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="complete" tabindex="-1" role="dialog" aria-labelledby="completeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="completeModalLabel">Complete Task</h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to complete this task?</p>
-                <label>Reason</label>
-                <textarea class="form-control"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Complete Task</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <div class="modal fade" id="approve" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

@@ -13,6 +13,7 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_COMPLETED, this.onTaskCompleted);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_SIGNED, this.onTaskSigned);
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_BYTYPEBYID_RETRIEVED, this.onFindByTypeByIdRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_DETAIL_RETRIEVED, this.onComplaintDetailRetrieved);
     }
 
     ,EVENT_LIST_RETRIEVED			 : "task-list-retrieved"
@@ -22,6 +23,7 @@ TaskList.Callback = {
     ,EVENT_TASK_SIGNED				 : "task-list-task-signed"
     ,EVENT_LIST_BYTYPEBYID_RETRIEVED : "task-list-signature-byTypeById-retrieved"
     ,EVENT_DETAIL_SAVED               : "event-detail-saved"
+    ,EVENT_COMPLAINT_DETAIL_RETRIEVED : "complaint-detail-retrieved"
 
     ,onDetailSaved : function(Callback, response) {
         if (response.hasError) {
@@ -43,6 +45,8 @@ TaskList.Callback = {
             var treeInfo = TaskList.Object.getTreeInfo();
 
             var start = treeInfo.start;
+            TaskList.cachePage.put(start,taskList);
+
             TaskList.setTaskList(taskList);
 
             var key = treeInfo.initKey;
@@ -65,21 +69,52 @@ TaskList.Callback = {
         } else {
         	var taskId = response.taskId
             if (Acm.isNotEmpty(taskId)) {
-                var curId = Task.getTaskId();
-                if (curId != response.taskId) {
+                var taskId = TaskList.getTaskId();
+                if (taskId != response.taskId) {
                     return;         //user clicks another task before callback, do nothing
                 }
-
                 var task = response;
-                Task.setTask(task);
+                TaskList.cacheTask.put(taskId, task);
                 TaskList.Object.updateDetail(task);
-
-                var checkTask = Task.getTask();
-                Task.setTaskId(taskId);
+                if(response.attachedToObjectId != null){
+                    var parentObjId = response.attachedToObjectId;
+                    TaskList.setParentObjId(parentObjId);
+                    //if(response.attachedToObjectType.ignoreCase == "complaint")
+                    TaskList.Service.retrieveComplaintDetail(parentObjId);
+                }
+                else{
+                    var parentObj = {};
+                    TaskList.Object.updateParentObjDetail(parentObj);
+                }
 
                 // check for signatures
                 TaskList.Service.findSignatureByTypeById(taskId);
+            }
+        }
+    }
 
+    ,onComplaintDetailRetrieved : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to retrieve complaint detail:" + response.errorMsg);
+        } else {
+            if (Acm.isNotEmpty(response.complaintId)) {
+                var complaint = response;
+                var complaintId = TaskList.getParentObjId();
+                if (complaintId != complaint.complaintId) {
+                    return;         //user clicks another complaint before callback, do nothing
+                }
+                TaskList.cacheParentObject.put(complaintId+"_complaint", complaint);
+
+                //pack data into parent object
+                var parentObj = {}
+                parentObj.title = complaint.complaintTitle;
+                parentObj.incidentDate = complaint.created;
+                parentObj.priority =  complaint.priority;
+                parentObj.assignee = complaint.creator;
+                parentObj.status = complaint.status;
+                parentObj.subjectType = complaint.complaintType;
+                parentObj.number = complaint.complaintNumber;
+                TaskList.Object.updateParentObjDetail(parentObj);
             }
         }
     }
@@ -88,13 +123,12 @@ TaskList.Callback = {
      * Based on an AJAX call resposne, update the task details section
      */
     ,processTaskDetailUpdate : function(response) {
-        var curId = Task.getTaskId();
-        if (curId != response.taskId) {
+        var taskId = TaskList.getTaskId();
+        if (taskId != response.taskId) {
             return;         //user clicks another task before callback, do nothing
         }
-
         var task = response;
-        Task.setTask(task);
+        TaskList.cacheTask.put(taskId,task)
         TaskList.Object.updateDetail(task);    	
     }
     
@@ -114,7 +148,7 @@ TaskList.Callback = {
     }
     ,onTaskSigned : function(Callback, response) {
         if (response.hasError) {
-            Acm.Dialog.error("Failed to electronically sign task:"  +response.errorMsg);
+            Acm.Dialog.error("Failed to electronically sign task. Incorrect parameters.");
         } else {
         	var taskId = response.objectId;
             if (Acm.isNotEmpty(taskId)) {
@@ -131,7 +165,7 @@ TaskList.Callback = {
     }
     ,onFindByTypeByIdRetrieved : function(Callback, response) {
         if (response.hasError) {
-            Acm.Dialog.error("Failed to retrieve signature list by type and by id:" + response.errorMsg);
+            Acm.Dialog.error("Failed to retrieve signature list");
         } else {
         	TaskList.Page.buildSignatureList(response);
         }
