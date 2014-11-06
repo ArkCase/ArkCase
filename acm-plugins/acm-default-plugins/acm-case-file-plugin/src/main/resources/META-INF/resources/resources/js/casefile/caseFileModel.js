@@ -14,11 +14,23 @@ CaseFile.Model = {
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_TITLE_CHANGED     ,this.onCaseTitleChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_INCIDENT_DATE_CHANGED  ,this.onIncidentDateChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ASSIGNEE_CHANGED       ,this.onAssigneeChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SUBJECT_TYPE_CHANGED   ,this.onSubjectTypeChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PRIORITY_CHANGED       ,this.onPriorityChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DUE_DATE_CHANGED       ,this.onDueDateChanged);
 
         if (CaseFile.Model.Tree.create)    {CaseFile.Model.Tree.create();}
         if (CaseFile.Model.Lookup.create)  {CaseFile.Model.Lookup.create();}
     }
     ,initialize: function() {
+        var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
+        if (0 < treeInfo.caseFileId) { //single caseFile
+            CaseFile.Model.setCaseFileId(treeInfo.caseFileId);
+            CaseFile.Service.Detail.retrieveCaseFile(treeInfo.caseFileId);
+        } else {
+            CaseFile.Service.List.retrieveCaseFileList(treeInfo);
+        }
+
         if (CaseFile.Model.Tree.initialize)    {CaseFile.Model.Tree.initialize();}
         if (CaseFile.Model.Lookup.initialize)  {CaseFile.Model.Lookup.initialize();}
     }
@@ -71,6 +83,18 @@ CaseFile.Model = {
     }
     ,onIncidentDateChanged: function(caseFileId, created) {
         CaseFile.Service.Detail.saveIncidentDate(caseFileId, created);
+    }
+    ,onAssigneeChanged: function(caseFileId, assignee) {
+        CaseFile.Service.Detail.saveAssignee(caseFileId, assignee);
+    }
+    ,onSubjectTypeChanged: function(caseFileId, caseType) {
+        CaseFile.Service.Detail.saveSubjectType(caseFileId, caseType);
+    }
+    ,onPriorityChanged: function(caseFileId, priority) {
+        CaseFile.Service.Detail.savePriority(caseFileId, priority);
+    }
+    ,onDueDateChanged: function(caseFileId, dueDate) {
+        CaseFile.Service.Detail.saveDueDate(caseFileId, dueDate);
     }
 
     ,_objectType: "CASE"

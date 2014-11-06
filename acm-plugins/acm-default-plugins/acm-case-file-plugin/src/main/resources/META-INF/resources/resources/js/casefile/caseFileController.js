@@ -7,13 +7,6 @@ CaseFile.Controller = {
     create : function() {
     }
     ,initialize: function() {
-        var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
-        if (0 < treeInfo.caseFileId) { //single caseFile
-            CaseFile.Model.setCaseFileId(treeInfo.caseFileId);
-            CaseFile.Service.Detail.retrieveCaseFile(treeInfo.caseFileId);
-        } else {
-            CaseFile.Service.List.retrieveCaseFileList(treeInfo);
-        }
     }
 
     ,ME_ASSIGNEES_FOUND                 : "case-file-assignees"                    //param: assignees
@@ -26,7 +19,10 @@ CaseFile.Controller = {
 
     ,ME_CASE_TITLE_SAVED                : "case-file-case-title-saved"             //param: caseFileId, caseTitle
     ,ME_INCIDENT_DATE_SAVED             : "case-file-incident-date-saved"          //param: caseFileId, created
+    ,ME_ASSIGNEE_SAVED                  : "case-file-assignee-saved"               //param: caseFileId, assignee
+    ,ME_SUBJECT_TYPE_SAVED              : "case-file-subject-type-saved"           //param: caseFileId, caseType
     ,ME_PRIORITY_SAVED                  : "case-file-priority-saved"               //param: caseFileId, priority
+    ,ME_DUE_DATE_SAVED                  : "case-file-due-date-saved"               //param: caseFileId, dueDate
 
     ,VE_PREV_PAGE_CLICKED               : "case-file-prev-page-clicked"            //param: none
     ,VE_NEXT_PAGE_CLICKED		        : "case-file-next-page-clicked"            //param: none
@@ -36,8 +32,9 @@ CaseFile.Controller = {
     ,VE_CASE_TITLE_CHANGED              : "case-file-case-title-changed"           //param: caseFileId, title
     ,VE_INCIDENT_DATE_CHANGED           : "case-file-incident-date-changed"        //param: caseFileId, created
     ,VE_ASSIGNEE_CHANGED                : "case-file-assignee-changed"             //param: caseFileId, assignee
-    ,VE_SUBJECT_TYPE_CHANGED            : "case-file-subject-type-changed"         //param: caseFileId, subjectType
+    ,VE_SUBJECT_TYPE_CHANGED            : "case-file-subject-type-changed"         //param: caseFileId, caseType
     ,VE_PRIORITY_CHANGED                : "case-file-priority-changed"             //param: caseFileId, priority
+    ,VE_DUE_DATE_CHANGED                : "case-file-due-date-changed"             //param: caseFileId, dueDate
 
     ,modelFoundAssignees: function(assignees) {
         Acm.Dispatcher.fireEvent(this.ME_ASSIGNEES_FOUND, assignees);
@@ -63,8 +60,17 @@ CaseFile.Controller = {
     ,modelSavedIncidentDate : function(caseFileId, created) {
         Acm.Dispatcher.fireEvent(this.ME_INCIDENT_DATE_SAVED, caseFileId, created);
     }
+    ,modelSavedAssignee : function(caseFileId, assignee) {
+        Acm.Dispatcher.fireEvent(this.ME_ASSIGNEE_SAVED, caseFileId, assignee);
+    }
+    ,modelSavedSubjectType : function(caseFileId, caseType) {
+        Acm.Dispatcher.fireEvent(this.ME_SUBJECT_TYPE_SAVED, caseFileId, caseType);
+    }
     ,modelSavedPriority : function(caseFileId, priority) {
         Acm.Dispatcher.fireEvent(this.ME_PRIORITY_SAVED, caseFileId, priority);
+    }
+    ,modelSavedDueDate : function(caseFileId, dueDate) {
+        Acm.Dispatcher.fireEvent(this.ME_DUE_DATE_SAVED, caseFileId, dueDate);
     }
     ,viewClickedPrevPage: function() {
         Acm.Dispatcher.fireEvent(this.VE_PREV_PAGE_CLICKED);
@@ -87,14 +93,15 @@ CaseFile.Controller = {
     ,viewChangedAssignee: function(caseFileId, assignee) {
         Acm.Dispatcher.fireEvent(this.VE_ASSIGNEE_CHANGED, caseFileId, assignee);
     }
-    ,viewChangedSubjectType: function(caseFileId, subjectType) {
-        Acm.Dispatcher.fireEvent(this.VE_SUBJECT_TYPE_CHANGED, caseFileId, subjectType);
+    ,viewChangedSubjectType: function(caseFileId, caseType) {
+        Acm.Dispatcher.fireEvent(this.VE_SUBJECT_TYPE_CHANGED, caseFileId, caseType);
     }
     ,viewChangedPriority: function(caseFileId, priority) {
         Acm.Dispatcher.fireEvent(this.VE_PRIORITY_CHANGED, caseFileId, priority);
     }
-
-
+    ,viewChangedDueDate: function(caseFileId, dueDate) {
+        Acm.Dispatcher.fireEvent(this.VE_DUE_DATE_CHANGED, caseFileId, dueDate);
+    }
 
 };
 

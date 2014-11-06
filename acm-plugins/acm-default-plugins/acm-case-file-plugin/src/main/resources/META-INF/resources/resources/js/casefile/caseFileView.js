@@ -347,6 +347,10 @@ CaseFile.View = {
             //Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_SAVED        ,this.onCaseFileSaved);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_TITLE_SAVED       ,this.onCaseTitleSaved);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_INCIDENT_DATE_SAVED    ,this.onIncidentDateSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ASSIGNEE_SAVED         ,this.onAssigneeSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_SUBJECT_TYPE_SAVED     ,this.onSubjectTypeSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PRIORITY_SAVED         ,this.onPrioritySaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_DUE_DATE_SAVED         ,this.onDueDateSaved);
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_TREE_NODE_SELECTED     ,this.onTreeNodeSelected);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
@@ -441,6 +445,26 @@ CaseFile.View = {
                 CaseFile.View.Detail.setTextLnkIncidentDate("(Error)");
             }
         }
+        ,onAssigneeSaved: function(caseFileId, assginee) {
+            if (assginee.hasError) {
+                CaseFile.View.Detail.setTextLnkAssignee("(Error)");
+            }
+        }
+        ,onSubjectTypeSaved: function(caseFileId, subjectType) {
+            if (subjectType.hasError) {
+                CaseFile.View.Detail.setTextLnkSubjectType("(Error)");
+            }
+        }
+        ,onPrioritySaved: function(caseFileId, priority) {
+            if (priority.hasError) {
+                CaseFile.View.Detail.setTextLnkPriority("(Error)");
+            }
+        }
+        ,onDueDateSaved: function(caseFileId, created) {
+            if (created.hasError) {
+                CaseFile.View.Detail.setTextLnkDueDate("(Error)");
+            }
+        }
 
         ,showTopPanel: function(show) {
             Acm.Object.show(this.$tabTop, show);
@@ -458,8 +482,11 @@ CaseFile.View = {
             this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
             this.setTextLnkCaseTitle(Acm.goodValue(c.title));
             this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));
+            this.setTextLnkAssignee(Acm.goodValue(c.creator));
+            this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
+            this.setTextLnkPriority(Acm.goodValue(c.priority));
             this.setTextLnkDueDate(Acm.getDateFromDatetime(c.created));
-
+            this.setTextLnkStatus(Acm.goodValue(c.status));
         }
 
         ,setTextLabCaseNumber: function(txt) {
@@ -472,8 +499,20 @@ CaseFile.View = {
         ,setTextLnkIncidentDate: function(txt) {
             AcmEx.Object.XEditable.setDate(this.$lnkIncidentDate, txt);
         }
+        ,setTextLnkAssignee: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkAssignee, txt);
+        }
+        ,setTextLnkSubjectType: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkSubjectType, txt);
+        }
+        ,setTextLnkPriority: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkPriority, txt);
+        }
         ,setTextLnkDueDate: function(txt) {
             AcmEx.Object.XEditable.setDate(this.$lnkDueDate, txt);
+        }
+        ,setTextLnkStatus: function(txt) {
+            Acm.Object.setText(this.$lnkStatus, txt);
         }
 
         ,populateCaseFile_old: function(c) {

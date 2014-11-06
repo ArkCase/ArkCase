@@ -152,7 +152,7 @@
                                 </div>
 
 
-                                <div class="wrapper" id="tabTitle" style="display:block;">
+                                <div class="wrapper" id="tabTitle" style="display:none;">
                                     <div class="pull-right inline">
                                         <div class="btn-group">
                                             <button class="btn btn-default btn-sm" data-title="Close Complaint"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>

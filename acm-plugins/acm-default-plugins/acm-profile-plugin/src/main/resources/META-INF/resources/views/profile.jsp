@@ -57,6 +57,8 @@
                                                     <small> E-mail Address </small>
                                                 </div>
                                             </div>
+
+                                            <div><a href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Change Picture</u></a></div>
                                         </div>
                                     </section>
 
