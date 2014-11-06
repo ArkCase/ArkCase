@@ -1,6 +1,10 @@
 package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -16,13 +20,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class FindTaskByIdAPIController
 {
     private TaskDao taskDao;
+
+    private EcmFileDao fileDao;
+    private ObjectAssociationDao objectAssociationDao;
+
     private TaskEventPublisher taskEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -32,8 +40,7 @@ public class FindTaskByIdAPIController
     public AcmTask findTaskById(
             @PathVariable("taskId") Long taskId,
             Authentication authentication,
-            HttpSession session,
-            HttpServletResponse response
+            HttpSession session
     ) throws AcmObjectNotFoundException
     {
         if ( log.isInfoEnabled() )
@@ -44,9 +51,22 @@ public class FindTaskByIdAPIController
         try
         {
             AcmTask retval = getTaskDao().findById(taskId);
+
+            if ( retval.getReviewDocumentPdfRenditionId() != null )
+            {
+                EcmFile docUnderReview = getFileDao().find(retval.getReviewDocumentPdfRenditionId());
+                retval.setDocumentUnderReview(docUnderReview);
+            }
+
+            List<ObjectAssociation> childObjects = getObjectAssociations(retval);
+            retval.setChildObjects(childObjects);
+
             raiseEvent(authentication, session, retval, true);
+
             return retval;
-        } catch (AcmTaskException | ActivitiException e)
+
+        }
+        catch (AcmTaskException | ActivitiException e)
         {
             // gen up a fake task so we can audit the failure
             AcmTask fakeTask = new AcmTask();
@@ -56,6 +76,14 @@ public class FindTaskByIdAPIController
             log.error("Could not find task with id '" + taskId + "': " + e.getMessage(), e);
             throw new AcmObjectNotFoundException("task", taskId, e.getMessage(), e);
         }
+    }
+
+    private List<ObjectAssociation> getObjectAssociations(AcmTask task)
+    {
+        String parentType = task.getBusinessProcessId() == null ? "TASK" : "BUSINESS_PROCESS";
+        Long parentId = task.getBusinessProcessId() == null ? task.getTaskId() : task.getBusinessProcessId();
+
+        return getObjectAssociationDao().findByParentTypeAndId(parentType, parentId);
     }
 
     protected void raiseEvent(Authentication authentication, HttpSession session, AcmTask task, boolean succeeded)
@@ -85,5 +113,25 @@ public class FindTaskByIdAPIController
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {
         this.taskEventPublisher = taskEventPublisher;
+    }
+
+    public EcmFileDao getFileDao()
+    {
+        return fileDao;
+    }
+
+    public void setFileDao(EcmFileDao fileDao)
+    {
+        this.fileDao = fileDao;
+    }
+
+    public ObjectAssociationDao getObjectAssociationDao()
+    {
+        return objectAssociationDao;
+    }
+
+    public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao)
+    {
+        this.objectAssociationDao = objectAssociationDao;
     }
 }
