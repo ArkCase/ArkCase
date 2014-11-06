@@ -9,7 +9,7 @@
     <changeSet id="03-profile-tables" author="marst" failOnError="false">
 
         <createTable tableName="acm_user_org">
-            <column name="cm_user_org_id" type="NUMBER(32,0)">
+                <column name="cm_user_org_id" type="NUMBER(32,0)">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_user_org"/>
@@ -38,7 +38,7 @@
             <column name="cm_zip" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_website" type="VARCHAR(128)" defaultValue="ACTIVE">
+                <column name="cm_website" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="true"/>
             </column>
             <column name="cm_organization" type="NUMBER(32,0)">
@@ -87,6 +87,7 @@
     </changeSet>
 
     <changeSet id="04-edit-cm-location-and-cm-organization-column" author="marst">
+        <addNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>
         <dropNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>
         <dropNotNullConstraint tableName="acm_user_org" columnName="cm_organization"/>
     </changeSet>
