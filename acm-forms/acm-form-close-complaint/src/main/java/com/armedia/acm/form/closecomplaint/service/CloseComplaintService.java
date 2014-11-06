@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.armedia.acm.form.closecomplaint.model.CloseComplaintFormEvent;
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +44,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	private ComplaintDao complaintDao;
 	private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
+	private ApplicationEventPublisher applicationEventPublisher;
 			
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#init()
@@ -128,7 +132,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
         	}
         }
         
-        getCloseComplaintRequestDao().save(closeComplaintRequest);
+        CloseComplaintRequest savedRequest = getCloseComplaintRequestDao().save(closeComplaintRequest);
 		
 		// Update Status to "IN APPROVAL"
 		if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
@@ -137,7 +141,17 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		
 		// TODO: Support versioning for "edit" mode
 		// Save attachments
-		saveAttachments(attachments, complaint.getEcmFolderId(), FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), complaint.getComplaintNumber());
+		FrevvoUploadedFiles uploadedFiles = saveAttachments(
+                attachments,
+                complaint.getEcmFolderId(),
+                FrevvoFormName.COMPLAINT.toUpperCase(),
+                complaint.getComplaintId(),
+                complaint.getComplaintNumber());
+
+		CloseComplaintFormEvent event = new CloseComplaintFormEvent(
+				complaint.getComplaintNumber(), savedRequest, uploadedFiles, mode, getAuthentication().getName(),
+				getUserIpAddress(), true);
+		getApplicationEventPublisher().publishEvent(event);
 		
 		return true;
 	}
@@ -292,4 +306,14 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
     {
         this.closeComplaintRequestDao = closeComplaintRequestDao;
     }
+
+	public ApplicationEventPublisher getApplicationEventPublisher()
+	{
+		return applicationEventPublisher;
+	}
+
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+	{
+		this.applicationEventPublisher = applicationEventPublisher;
+	}
 }

@@ -40,7 +40,6 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
         mockFileService = createMock(EcmFileService.class);
         unit.setEcmFileService(mockFileService);
 
-        unit.setServletContextPath("/acm");
         unit.setAuthentication(mockAuthentication);
     }
 
@@ -67,8 +66,6 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
         expect(mockFileService.upload(
                 eq(unit.getFormName() + "_xml"),
                 capture(capturedFile),
-                eq("application/json"),
-                eq(unit.getServletContextPath()),
                 eq(unit.getAuthentication()),
                 eq("cmisId"),
                 eq("parentType"),

@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
@@ -122,12 +123,16 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	@RequestMapping(value = "/{formName}/save")
     public void doSave(Authentication authentication, 
     		    		@PathVariable("formName") String formName,
-    		    		HttpServletRequest request, HttpServletResponse response){
+    		    		HttpServletRequest request,
+						HttpServletResponse response,
+						HttpSession session)
+	{
 		
 		LOG.info("Save form \"" + formName + "\"");
 
 		// Create and initialize appropriate service for given form name
 		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request, authentication);
+		frevvoFormService.setUserIpAddress((String) session.getAttribute("acm_ip_address"));
 		
 		try{
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;

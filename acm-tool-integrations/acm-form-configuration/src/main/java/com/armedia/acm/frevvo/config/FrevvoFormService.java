@@ -48,5 +48,8 @@ public interface FrevvoFormService {
     public void setServletContextPath(String servletContextPath);
 
     String getFormName();
+
+	void setUserIpAddress(String userIpAddress);
+	String getUserIpAddress();
 	
 }
