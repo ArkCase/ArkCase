@@ -15,6 +15,8 @@ TaskList.Service = {
     ,API_SIGN_TASK         	   : "/api/latest/plugin/signature/confirm/"
     ,API_FIND_BYTASKBYID_TASK_SIGNATURE : "/api/latest/plugin/signature/find/"
     ,API_SAVE_DETAIL       				: "/api/latest/plugin/task/save/"
+    ,API_RETRIEVE_COMPLAINT_DETAIL        : "/api/latest/plugin/complaint/byId/"
+
 
 
     ,listTaskSaveDetail : function(taskId, data) {
@@ -50,6 +52,11 @@ TaskList.Service = {
     ,retrieveDetail : function(taskId) {
         Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_DETAIL + taskId
             ,TaskList.Callback.EVENT_DETAIL_RETRIEVED
+        );
+    }
+    ,retrieveComplaintDetail : function(complaintId) {
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_COMPLAINT_DETAIL + complaintId
+            ,TaskList.Callback.EVENT_COMPLAINT_DETAIL_RETRIEVED
         );
     }
     ,completeTask : function(taskId) {

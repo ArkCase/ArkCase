@@ -10,35 +10,35 @@ TaskList.Object = {
 
         this.$noTaskFoundMeassge = $("#noTaskFoundMeassge");
         this.showObject(this.$noTaskFoundMeassge, false);
-        this.$taskDetailView	 = $("#taskDetailView");
 
-        this.$ulTasks           = $("#ulTasks");
-        this.$asideTasks        = this.$ulTasks.closest("aside");
 
-        var items = $(document).items();
-        var taskId = items.properties("taskId").itemValue();
-        if (Acm.isNotEmpty(taskId)) {
-            Task.setTaskId(taskId);
-            this.showAsideTasks(false);
-            TaskList.setSingleObject(true);
-        } else {
-            TaskList.setSingleObject(false);
-        }
-
-        this.$btnComplete       = $("button[data-title='Complete']");
         this.$btnSignConfirm    = $("#signatureConfirmBtn");
         this.$btnReject         = $("button[data-title='Reject']");
-        this.$btnComplete.click(function(e) {TaskList.Event.onClickBtnComplete(e);});
         this.$btnSignConfirm.click(function(e) {TaskList.Event.onClickBtnSignConfirm(e);});
         this.$btnReject.click(function(e) {TaskList.Event.onClickBtnReject(e);});
 
-        this.$lnkTitle          = $("#taskTitle");
-        this.$lnkTitle.editable({placement: 'bottom'
-            ,emptytext: "Unknown"
-            ,success: function(response, newValue) {
-                TaskList.Event.onSaveTitle(newValue);
-            }
-        });
+        //parent object information
+        this.$lnkParentObjTitle          = $("#parentObjTitle");
+        this.$lnkParentNumber = $("#parentObjNumber");
+        this.$lnkParentObjIncidentDate = $("#parentObjIncidentDate");
+        this.$lnkParentObjPriority       = $("#parentObjPriority");
+        this.$lnkParentObjAssigned       = $("#parentObjAssigned");
+        this.$lnkParentObjSubjectType  = $("#parentObjSubjectType");
+        this.$lnkParentObjStatus         = $("#parentObjStatus");
+        // end of parent object information
+
+
+        //modal dialog buttons
+        this.$btnApproveTask = $("#btnApprove");
+        this.$btnReassignTask = $("#btnReassign");
+        this.$btnUnassignTask = $("#btnUnassign");
+        this.$btnCompleteTask = $("#btnComplete");
+        this.$btnRejectTask = $("#btnReject");
+        this.$btnDeleteTask = $("#btnDelete");
+
+
+        this.$lnkStatus = $("#status");
+        this.$lnkStatus.editable('disable');
 
         this.$lnkTaskSubject = $("#taskSubject");
         this.$lnkTaskSubject.editable({placement: 'bottom'
@@ -47,9 +47,7 @@ TaskList.Object = {
                 TaskList.Event.onSaveTitle(newValue);
             }
         });
-        this.$h4TitleHeader     = this.$lnkTitle.parent();
 
-        this.$lnkParentNumber = $("#parentNumber");
 
         this.$perCompleted		= $("#percentageCompleted");
         this.$perCompleted.editable({placement: 'bottom'
@@ -84,34 +82,7 @@ TaskList.Object = {
             }
         });
 
-        this.$lnkIncidentDate        = $("#incident");
-        this.$lnkIncidentDate.editable({placement: 'bottom'
-            ,emptytext: "Unknown"
-            ,format: 'mm/dd/yyyy'
-            ,viewformat: 'mm/dd/yyyy'
-            ,datepicker: {
-                weekStart: 1
-            }
-            ,success: function(response, newValue) {
-                TaskList.Event.onSaveIncidentDate(newValue);
-            }
-        });
-
         this.$lnkPriority       = $("#priority");
-        this.$lnkPriority.editable({placement: 'bottom'
-            ,emptytext: "Unknown"
-            ,success: function(response, newValue) {
-                TaskList.Event.onSavePriority(newValue);
-            }
-        });
-
-        this.$lnkPriority       = $("#priority");
-        this.$lnkPriority.editable({placement: 'bottom'
-            ,emptytext: "Unknown"
-            ,success: function(response, newValue) {
-                TaskList.Event.onSavePriority(newValue);
-            }
-        });
 
         this.$lnkOwner          = $("#taskOwner");
         this.$lnkOwner.editable({placement: 'bottom'
@@ -121,16 +92,9 @@ TaskList.Object = {
             }
         });
 
-        this.$lnkAssigned       = $("#assigned");
-        this.$lnkComplaintType  = $("#type");
-
-        this.$lnkStatus         = $("#status");
-        this.$lnkStatus.editable('disable');
-
-
         this.$divDetails        = $(".taskDetails");
-        this.$btnEditDetails    = $("#tabDetail button:eq(0)");
-        this.$btnSaveDetails    = $("#tabDetail button:eq(1)");
+        this.$btnEditDetails    = $("#tabDetails button:eq(0)");
+        this.$btnSaveDetails    = $("#tabDetails button:eq(1)");
         this.$btnEditDetails.on("click", function(e) {TaskList.Event.onClickBtnEditDetails(e);});
         this.$btnSaveDetails.on("click", function(e) {TaskList.Event.onClickBtnSaveDetails(e);});
 
@@ -142,13 +106,6 @@ TaskList.Object = {
                 TaskList.Event.onSaveOwner(newValue);
             }
         });
-
-        this.$lnkAssigned       = $("#assigned");
-        this.$lnkComplaintType  = $("#type");
-
-        this.$lnkStatus         = $("#status");
-        this.$lnkStatus.editable('disable');
-
 
         this.$listSignature     = $("#signatureList");
 
@@ -170,6 +127,14 @@ TaskList.Object = {
 
         this.$divHistory = $("#divHistory");
         TaskList.JTable.createJTableEvents(this.$divHistory);
+
+        this.$divWorkflowOverview = $("#divWorkflowOverview");
+        TaskList.JTable.createJTableWorkflowOverview(this.$divWorkflowOverview);
+
+        this.$divReworkInstructions = $(".taskReworkInstructions");
+
+        this.$divAttachments = $("#divAttachments");
+        TaskList.JTable.createJTableAttachments(this.$divAttachments);
 
     }
 
@@ -195,11 +160,8 @@ TaskList.Object = {
     ,getPageIdByKey: function(key) {
         return this._parseKey(key).pageId;
     }
-    ,getChildIdByKey: function(key) {
-        return this._parseKey(key).childId;
-    }
     ,_parseKey: function(key) {
-        var parts = {pageId: -1, taskId: 0, sub: "", childId: 0};
+        var parts = {pageId: -1, taskId: 0, sub: ""};
         if (Acm.isEmpty(key)) {
             return parts;
         }
@@ -212,19 +174,21 @@ TaskList.Object = {
             }
         }
         if (2 <= arr.length) {
-            var taskId = parseInt(arr[1]);
+            var taskId;
+            if(arr[1].indexOf("adHoc") != -1){
+                var adHocTaskId = arr[1];
+                taskId = adHocTaskId.replace("adHoc", "");
+                taskId = parseInt(taskId);
+            }
+            else{
+                taskId = parseInt(arr[1]);
+            }
             if (! isNaN(taskId)) {
                 parts.taskId = taskId;
             }
         }
         if (3 <= arr.length) {
             parts.sub = arr[2];
-        }
-        if (4 <= arr.length) {
-            var childId = parseInt(arr[3]);
-            if (! isNaN(taskId)) {
-                parts.childId = childId;
-            }
         }
         return parts;
     }
@@ -243,21 +207,46 @@ TaskList.Object = {
                 return "p";
             }
         } else if (2 == arr.length) {
-            return "task";
+            if(arr[1].indexOf("adHoc") != -1){
+                return "taskAdHoc";
+            }
+            else{
+                return "task";
+            }
         } else if (3 == arr.length) {
             return "task" + arr[2];
         }
+         else if (4 == arr.length) {
+            return "taskAdHoc";
+        }
+        else if (5 == arr.length) {
+            return "task" + arr[4];
+        }
+
         return null;
     }
     ,_mapNodeTab: {
         task     : ["tabDetails",
                     "tabDocuments",
                     "tabNotes",
-                    "tabHistory"],
-        taskdetails  : ["tabDetails"],
-        taskdocuments: ["tabDocuments"],
-        tasknotes    : ["tabNotes"],
-        taskhistory  : ["tabHistory"]
+                    "tabHistory",
+                    "tabReworkInstructions",
+                    "tabWorkflowOverview",
+                    "tabAttachments"],
+
+        taskAdHoc     : ["tabDetails",
+                        "tabNotes",
+                        "tabHistory",
+                        "tabWorkflowOverview",
+                        "tabAttachments"],
+
+        taskDetails  : ["tabDetails"],
+        taskDocuments: ["tabDocuments"],
+        taskNotes    : ["tabNotes"],
+        taskHistory  : ["tabHistory"],
+        taskReworkInstructions : ["tabReworkInstructions"],
+        taskWorkflowOverview : ["tabWorkflowOverview"],
+        taskAttachments: ["tabAttachments"]
     }
     ,_getTabIdsByKey: function(key) {
         var nodeType = this.getNodeTypeByKey(key);
@@ -276,6 +265,9 @@ TaskList.Object = {
             ,"tabDocuments"
             ,"tabNotes"
             ,"tabHistory"
+            ,"tabWorkflowOverview"
+            ,"tabReworkInstructions"
+            ,"tabAttachments"
         ];
         var tabIdsToShow = this._getTabIdsByKey(key);
         for (var i = 0; i < tabIds.length; i++) {
@@ -299,7 +291,10 @@ TaskList.Object = {
         if (task && task.taskId) {
             var node = this.$tree.fancytree("getTree").getNodeByKey(this._getTaskKey(task.taskId));
             if (node) {
-                node.setTitle(Acm.goodValue(task.title));
+                //var dueDate = Acm.getDateFromDatetime(task.dueDate);
+                //var nodeTitle = Acm.goodValue(Acm.getDateFromDatetime(task.dueDate) + "," + task.priority + "," + task.title);
+                var nodeTitle = task.priority + "," + task.title;
+                node.setTitle(nodeTitle);
             }
         }
     }
@@ -375,7 +370,7 @@ TaskList.Object = {
         var acmIcon = null;
 
         var start = treeInfo.start;
-        var tasks = TaskList.getTaskList();
+        var tasks = TaskList.cachePage.get(start);
         if (null == tasks || 0 >= tasks.length) {
             return builder.getTree();
         }
@@ -395,10 +390,22 @@ TaskList.Object = {
         var pageId = start.toString();
         for (var i = 0; i < tasks.length; i++) {
             var task = tasks[i];
-            var taskId = parseInt(task.object_id_s);
+            var taskBranchID = task.object_id_s;
+            //var taskBranchID = task.taskId;
+
+            //check if task is associated with an object or not
+            var adHoc = true;
+            if(task.parent_object_id_i != null && task.parent_object_type_s != null){
+                adHoc = false;
+            }
+            else{
+                adHoc = true;
+            }
+            //&& task.due_dt != null
+            //task.due_dt + "," +
             var taskBranchTitle;
-            if(task.title_t != null && task.priority_s != null){
-                taskBranchTitle = task.title_t + "," + task.priority_s;
+            if(task.title_t != null && task.priority_s != null ){
+                taskBranchTitle = task.priority_s +","+ task.title_t;
             }
             else if((task.title_t != null || task.title_t != "") && (task.priority_s == null || task.priority_s == "")){
                 taskBranchTitle = task.title_t;
@@ -406,24 +413,61 @@ TaskList.Object = {
             else{
                 taskBranchTitle = "No title";
             }
-            builder.addBranch({key: pageId + "." + taskId                      //level 1: /Task
-                , title: taskBranchTitle,
-                tooltip: task.name,
-                expanded: false
-            })
 
-                .addLeaf({key: pageId + "." + taskId + ".details"                   //level 2: /Task/Details
-                    , title: "Details"
+            if(adHoc == false){
+                builder.addBranch({key: pageId + "." + taskBranchID                      //level 1: /Task
+                    , title: taskBranchTitle,
+                    tooltip: task.name,
+                    expanded: false
                 })
-                .addLeaf({key: pageId + "." + taskId + ".documents"                   //level 2: /Task/Documents
-                    , title: "Documents"
+
+                    .addLeaf({key: pageId + "." + taskBranchID + ".Details"                   //level 2: /Task/Details
+                        , title: "Details"
+                    })
+                    .addLeaf({key: pageId + "." + taskBranchID + ".ReworkInstructions"                   //level 2: /Task/Rework Instructions
+                        , title: "Rework Instructions"
+                    })
+                    .addLeaf({key: pageId + "." + taskBranchID + ".Documents"                   //level 2: /Task/Documents
+                        , title: "Documents Under Review"
+                    })
+                    .addLeaf({key: pageId + "." + taskBranchID + ".Attachments"                   //level 2: /Task/Attachments
+                        , title: "Attachments"
+                    })
+                    .addLeaf({key: pageId + "." + taskBranchID + ".Notes"                   //level 2: /Task/Notes
+                        , title: "Notes"
+                    })
+                    .addLeaf({key: pageId + "." + taskBranchID + ".WorkflowOverview"                   //level 2: /Task/Workflow Overview
+                        , title: "Workflow Overview"
+                    })
+                    .addLeafLast({key: pageId + "." + taskBranchID + ".History"                   //level 2: /Task/History
+                        , title: "History"
+                    })
+
+            }
+            else{
+
+                builder.addBranch({key: pageId + "." + "adHoc"+taskBranchID                      //level 1: /Task
+                    , title: taskBranchTitle,
+                    tooltip: task.name,
+                    expanded: false
                 })
-                .addLeaf({key: pageId + "." + taskId + ".notes"                   //level 2: /Task/Notes
-                    , title: "Notes"
-                })
-                .addLeafLast({key: pageId + "." + taskId + ".history"                   //level 2: /Task/History
-                    , title: "History"
-                })
+
+                    .addLeaf({key: pageId + "." + taskBranchID + ".Details"                   //level 2: /Task/Details
+                        , title: "Details"
+                    })
+                    .addLeaf({key: pageId + "." + taskBranchID + ".Attachments"                   //level 2: /Task/Attachments
+                        , title: "Attachments"
+                    })
+                    .addLeaf({key: pageId + "." + taskBranchID + ".Notes"                   //level 2: /Task/Notes
+                        , title: "Notes"
+                    })
+                    .addLeaf({key: pageId + "." + taskBranchID + ".WorkflowOverview"                   //level 2: /Task/Workflow Overview
+                        , title: "Workflow Overview"
+                    })
+                    .addLeafLast({key: pageId + "." + taskBranchID + ".History"                   //level 2: /Task/History
+                        , title: "History"
+                    })
+            }
         }
 
         if ((0 > treeInfo.total)                                    //unknown size
@@ -460,9 +504,7 @@ TaskList.Object = {
 
     //----------------- end of tree -----------------
 
-    ,showAsideTasks: function(show) {
-        Acm.Object.show(this.$asideTasks, show);
-    }
+
 
     ,showObject : function(obj, show) {
         Acm.Object.show(obj, show);
@@ -478,34 +520,34 @@ TaskList.Object = {
     ,hideSignatureModal: function() {
         this.$modalSignConfirm.modal('hide');
     }
-    ,getHtmlUlTasks: function() {
-        return Acm.Object.getHtml(this.$ulTasks);
-    }
-    ,setHtmlUlTasks: function(val) {
-        return Acm.Object.setHtml(this.$ulTasks, val);
-    }
-    ,registerClickListItemEvents: function() {
-        this.$ulTasks.find("a.text-ellipsis").click(function(e) {TaskList.Event.onClickLnkListItem(this);});
-        this.$ulTasks.find("a.thumb-sm").click(function(e) {TaskList.Event.onClickLnkListItemImage(this);});
-    }
-    ,getHiddenTaskId: function(e) {
-        var $hidden = $(e).siblings("input[type='hidden']");
-        return $hidden.val();
-    }
-    ,setValueLnkTitle: function(txt) {
-        this.$lnkTitle.editable("setValue", txt);
-    }
+
 
     ,setValueLnkTaskSubject: function(txt) {
         this.$lnkTaskSubject.editable("setValue", txt);
     }
-
     ,setValueLnkPerCompleted : function(txt) {
         if ( txt ) {
             this.$perCompleted.editable("setValue", txt)
         }
         else {
             this.$perCompleted.editable("setValue", "0")
+        }
+    }
+    ,setValueTaskOwner : function(owner) {
+        if ( owner ) {
+            this.$lnkOwner.editable("setValue", owner, false);
+        }
+        else {
+            this.$lnkOwner.editable("setValue", "Unknown", false);
+        }
+
+    }
+    ,setValueLnkPriority: function(txt) {
+        if (txt) {
+            this.$lnkPriority.editable("setValue", txt);
+        }
+        else {
+            this.$lnkPriority.editable("setValue", "Uknown");
         }
     }
     ,setValueLnkStartDate : function(date) {
@@ -524,6 +566,24 @@ TaskList.Object = {
             this.$lnkDueDate.editable("setValue", "Unknown", true);
         }
     }
+    ,setValueAssignedStatus : function(status) {
+        if ( status ) {
+            this.$lnkStatus.editable("setValue", status);
+        }
+        else {
+            this.$lnkStatus.editable("setValue", "Unassigned");
+        }
+    }
+
+    ,setValueDetails : function(details) {
+        if ( details ) {
+            Acm.Object.setHtml(this.$divDetails, details);
+        }
+        else {
+            Acm.Object.setHtml(this.$divDetails, "");
+        }
+    }
+
     ,setNumericValueLnkPriority: function(txt) {
         var priorityValue;
         if(txt == "Low"){
@@ -540,44 +600,69 @@ TaskList.Object = {
         }
         this.$lnkPriority.editable("setValue", priorityValue);
     }
-    ,setValueLnkPriority: function(txt) {
-        this.$lnkPriority.editable("setValue", txt);
+
+
+
+    //parent object information setters
+    ,setLnkParentObjTitle: function(txt) {
+        if (txt) {
+            Acm.Object.setText(this.$lnkParentObjTitle, txt);
+        }
+        else {
+            Acm.Object.setText(this.$lnkParentObjTitle, "Unknown");
+        }
     }
-    ,setValueLnkAssigned: function(txt) {
-        this.$lnkAssigned.editable("setValue", txt);
+    ,setValueLnkParentObjNumber: function(txt) {
+        if (txt) {
+            Acm.Object.setText(this.$lnkParentNumber, txt);
+        }
+        else {
+            Acm.Object.setText(this.$lnkParentNumber, "Unknown");
+        }
     }
-    ,setValueLnkParentNumber: function(txt) {
-        Acm.Object.setText(this.$lnkParentNumber, txt);
+    ,setValueLnkParentObjIncidentDate: function(date) {
+        if ( date ) {
+            Acm.Object.setText(this.$lnkParentObjIncidentDate, date);
+        }
+        else {
+            Acm.Object.setText(this.$lnkParentObjIncidentDate, "Unknown");
+        }
     }
-    ,initPriority: function(data){
+    ,setLnkParentObjPriority: function(txt) {
+        if (txt) {
+            Acm.Object.setText(this.$lnkParentObjPriority, txt);
+        }
+        else {
+            Acm.Object.setText(this.$lnkParentObjPriority, "Unknown");
+        }
+    }
+    ,setLnkParentObjAssigned: function(txt) {
+        if (txt) {
+            Acm.Object.setText(this.$lnkParentObjAssigned, txt);
+        }
+        else {
+            Acm.Object.setText(this.$lnkParentObjAssigned, "Unknown");
+        }
+    }
+    ,setLnkParentObjSubjectType: function(txt) {
+        if(txt){
+            Acm.Object.setText(this.$lnkParentObjSubjectType, txt);
+        }
+        else{
+            Acm.Object.setText(this.$lnkParentObjSubjectType, "Unknown");
+        }
+    }
+    ,setLnkParentObjStatus: function(txt) {
+        if(txt){
+            Acm.Object.setText(this.$lnkParentObjStatus, txt);
+        }
+        else{
+            Acm.Object.setText(this.$lnkParentObjStatus, "Unknown");
+        }
+    }
+
+    ,initPriority: function(data) {
         var choices = []; //[{value: "", text: "Choose Priority"}];
-        $.each(data,function(idx,val){
-            var opt= {};
-            opt.value = val;
-            opt.text = val;
-            choices.push(opt);
-        });
-
-        this.$lnkPriority.editable({placement: 'bottom', value:"",emptytext: "Unknown",
-
-            source: choices
-        })
-    }
-    ,initAssignee: function(data) {
-        var choices = []; //[{value: "", text: "Choose Assignee"}];
-        $.each(data, function(idx, val) {
-            var opt = {};
-            opt.value = val.userId;
-            opt.text = val.fullName;
-            choices.push(opt);
-        });
-
-        this.$lnkAssigned.editable({placement: 'bottom', value: "",emptytext: "Unknown",
-            source: choices
-        });
-    }
-    ,initComplaintType: function(data) {
-        var choices = []; //[{value: "", text: "Choose Type"}];
         $.each(data, function(idx, val) {
             var opt = {};
             opt.value = val;
@@ -585,50 +670,50 @@ TaskList.Object = {
             choices.push(opt);
         });
 
-        this.$lnkComplaintType.editable({placement: 'bottom', value: "",emptytext: "Unknown",
-            source: choices
+        this.$lnkPriority.editable({placement: 'bottom'
+            ,emptytext: "Unknown"
+            ,value: ""
+            ,source: choices
+            ,success: function(response, newValue) {
+                TaskList.Event.onSavePriority(newValue);
+            }
         });
     }
 
-    ,setValueAssignedStatus : function(status) {
-        if ( status ) {
-            this.$lnkStatus.editable("setValue", "Assigned");
+    ,updateDetail: function(task) {
+        if(task.attachedToObjectId != null && task.attachedToObjectType != null){
+            adHoc = false;
+            this.$btnCompleteTask.hide();
+            this.$btnDeleteTask.hide();
+            this.$btnApproveTask.show();
+            this.$btnRejectTask.show();
         }
-        else {
-            this.$lnkStatus.editable("setValue", "Unassigned");
-        }
-
-    }
-
-    ,setValueTaskOwner : function(owner) {
-        if ( owner ) {
-            this.$lnkOwner.editable("setValue", owner, false);
-        }
-        else {
-            this.$lnkOwner.editable("setValue", "Unknown", false);
+        else{
+            this.$btnApproveTask.hide();
+            this.$btnRejectTask.hide();
+            this.$btnCompleteTask.show();
+            this.$btnDeleteTask.show();
         }
 
+        TaskList.Object.refreshTaskTreeNode(task);
+        this.setValueLnkTaskSubject(task.title);
+        this.setValueLnkPerCompleted(task.percentComplete);
+        this.setValueLnkStartDate(Acm.getDateFromDatetime(task.taskStartDate));
+        this.setValueLnkDueDate(Acm.getDateFromDatetime(task.dueDate));
+        this.setValueLnkPriority(task.priority);
+        this.setValueTaskOwner(task.owner);
+        this.setValueAssignedStatus(task.status);
+        this.setValueDetails(task.details);
     }
-    ,setValueDetails : function(details) {
-        if ( details ) {
-            Acm.Object.setHtml(this.$divDetails, details);
-        }
-        else {
-            Acm.Object.setHtml(this.$divDetails, "");
-        }
-    }
-    ,updateDetail: function(t) {
-        this.setValueLnkParentNumber(t.attachedToObjectName);
-        this.setValueLnkTaskSubject(t.title + "(" + t.attachedToObjectName + ")");
-        this.setValueLnkTitle(t.title);
-        this.setValueLnkPerCompleted(t.percentComplete);
-        this.setValueLnkStartDate(Acm.getDateFromDatetime(t.taskStartDate));
-        this.setValueLnkDueDate(Acm.getDateFromDatetime(t.dueDate));
-        this.setValueLnkPriority(t.priority);
-        this.setValueLnkAssigned(t.assignee);
-        this.setValueTaskOwner(t.owner);
-        this.setValueAssignedStatus(t.assignee);
-        this.setValueDetails(t.details);
+
+    ,updateParentObjDetail: function(parentObj) {
+        this.setLnkParentObjTitle(parentObj.title);
+        this.setValueLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObj.incidentDate));
+        this.setLnkParentObjPriority(parentObj.priority);
+        this.setLnkParentObjAssigned(parentObj.assignee);
+        this.setLnkParentObjStatus(parentObj.status);
+        this.setLnkParentObjSubjectType(parentObj.subjectType);
+        this.setValueLnkParentObjNumber(parentObj.number);
     }
 
     ,editDivDetails: function() {
@@ -638,50 +723,6 @@ TaskList.Object = {
         return AcmEx.Object.saveSummerNote(this.$divDetails);
     }
 
-//============= Old Stuff ==========================
-    ,setValueEdtTitle: function(val) {
-        return Acm.Object.setPlaceHolderInput(this.$edtTitle, val);
-    }
-    ,setValueEdtPriority: function(val) {
-        return Acm.Object.setPlaceHolderInput(this.$edtPriority, val);
-    }
-    ,setValueEdtDueDate: function(val) {
-        return Acm.Object.setPlaceHolderInput(this.$edtDueDate, val);
-    }
-    ,setValueEdtAssignee: function(val) {
-        return Acm.Object.setPlaceHolderInput(this.$edtAssignee, val);
-    }
-    ,setValueEdtTaskId: function(val) {
-        return Acm.Object.setPlaceHolderInput(this.$edtTaskId, val);
-    }
-    ,setValueEdtBusinessProcessName: function(val) {
-        return Acm.Object.setPlaceHolderInput(this.$edtBusinessProcessName, val);
-    }
-//    ,setValueEdtAttachedToObjectType: function(val) {
-//        return Acm.Object.setPlaceHolderInput(this.$edtAttachedToObjectType, val);
-//    }
-//    ,setValueEdtAttachedToObjectId: function(val) {
-//        return Acm.Object.setPlaceHolderInput(this.$edtAttachedToObjectId, val);
-//    }
-    ,setTextNodeScanAttachedToObjectType: function(val) {
-        Acm.Object.setTextNodeText(this.scanAttachedToObjectType, val);
-    }
-    ,setTextNodeScanAttachedToObjectId: function(val) {
-        Acm.Object.setTextNodeText(this.scanAttachedToObjectId, val);
-    }
-    ,setHrefLnkAttachedToObject: function(val) {
-        this.lnkAttachedToObject.attr("href", val);
-    }
-//    ,setCheckedChkAdhocTask: function(val) {
-//        Acm.Object.setChecked(this.$chkAdhocTask, val);
-//    }
-    ,setValueEdtAdhocTask: function(val) {
-        return Acm.Object.setPlaceHolderInput(this.$edtAdhocTask, val);
-    }
-    ,showDivExtra: function(show) {
-        Acm.Object.show(this.$divExtra, show);
-    }
-//=======================================
 };
 
 
