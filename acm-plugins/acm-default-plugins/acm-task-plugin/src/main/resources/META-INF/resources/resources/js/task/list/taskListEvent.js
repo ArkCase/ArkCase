@@ -32,49 +32,19 @@ TaskList.Event = {
         }
 
         var taskId = TaskList.Object.getTaskIdByKey(node.key);
-        Task.setTaskId(taskId);
+        TaskList.setTaskId(taskId);
         if (0 >= taskId) {
             //show blank TaskList in page
             return;
         }
 
-        var task = Task.getTask();
+        var task = TaskList.cacheTask.get(taskId);
         if (task) {
+            TaskList.Object.updateDetail(task);
+        } else {
             TaskList.Service.retrieveDetail(taskId);
         }
         TaskList.Object.showTab(node.key);
-    }
-    ,onClickLnkListItemImage : function(e) {
-        var taskId = TaskList.Object.getHiddenTaskId(e);
-        if (Task.getTaskId() == taskId) {
-            return;
-        } else {
-            Task.setTaskId(taskId);
-        }
-
-        this.doClickLnkListItem();
-    }
-    ,onClickLnkListItem : function(e) {
-        var taskId = TaskList.Object.getHiddenTaskId(e);
-        if (Task.getTaskId() == taskId) {
-            return;
-        } else {
-            Task.setTaskId(taskId);
-        }
-
-        this.doClickLnkListItem();
-    }
-    ,doClickLnkListItem: function() {
-        var taskId = Task.getTaskId();
-        var t = TaskList.findTask(taskId);
-        if (null != t) {
-        	// get task details
-        	TaskList.Service.retrieveDetail(taskId);
-        }
-    }
-    ,onClickBtnComplete : function(e) {
-        var taskId = Task.getTaskId();
-        TaskList.Service.completeTask(taskId);
     }
     ,onClickBtnSignConfirm : function(e) {
         var taskId = Task.getTaskId();
@@ -90,28 +60,27 @@ TaskList.Event = {
     ,onPostInit: function() {
 
         var treeInfo = TaskList.Object.getTreeInfo();
-        if (0 < treeInfo.taskId) { //single complaint
+        TaskList.setTaskId(treeInfo.taskId);
+
+        if (0 < treeInfo.taskId) { //single task
             TaskList.setTaskId(treeInfo.taskId);
             TaskList.Service.retrieveDetail(treeInfo.taskId);
         } else {
             TaskList.Service.listTask(App.getUserName());
         }
+        var data = App.Object.getPriorities();
+        if (Acm.isEmpty(data)) {
+            App.Service.getPriorities();
+        }
 
-        /*if (TaskList.isSingleObject()) {
-            var taskId = Task.getTaskId();
-            TaskList.Service.retrieveDetail(taskId);
-        } else {
-            TaskList.Service.listTask(App.getUserName());
-        }*/
-
-        Acm.keepTrying(TaskList.Event._tryInitAssignee, 8, 200);
+        //Acm.keepTrying(TaskList.Event._tryInitAssignee, 8, 200);
         //Acm.keepTrying(TaskList.Event._tryInitTaskListType, 8, 200);
         Acm.keepTrying(TaskList.Event._tryInitPriority, 8, 200);
 
     }
 
 
-    ,_tryInitAssignee: function() {
+    /*,_tryInitAssignee: function() {
         var data = App.Object.getApprovers();
         if (Acm.isNotEmpty(data)) {
             TaskList.Object.initAssignee(data);
@@ -119,7 +88,7 @@ TaskList.Event = {
         } else {
             return false;
         }
-    }
+    }*/
     ,_tryInitComplaintType: function() {
         var data = App.Object.getComplaintTypes();
         if (Acm.isNotEmpty(data)) {
@@ -143,16 +112,9 @@ TaskList.Event = {
      * Save title value changed
      */
     ,onSaveTitle : function(value) {
-        var taskId = Task.getTaskId();
-        var t = TaskList.findTask(taskId);
-        if (null != t) {
-            // get task details
-            TaskList.Service.retrieveDetail(taskId);
-        }
-        var task = Task.getTask();
+        var task = TaskList.getTask();
         task.title = value;
-        var data = this.getTaskData(task);
-    	TaskList.Service.listTaskSaveDetail(data.taskId, data);
+        TaskList.Service.listTaskSaveDetail(task.taskId, task);
         TaskList.Object.refreshTaskTreeNode(task);
     }
     
@@ -160,65 +122,48 @@ TaskList.Event = {
      * Save owner value changed
      */
     ,onSaveOwner : function(value) {
-        var t = this.getSelectedTask();
-        t.owner = value;
-        this.executeSaveTask(t);
+        var task = TaskList.getTask();
+        task.owner = value;
+        TaskList.Service.listTaskSaveDetail(task.taskId, task);
     }
     
     /**
      * Save percentage completed value changed
      */
     ,onSavePerComplete : function(value) {
-        var t = this.getSelectedTask();
-        t.percentComplete = value;
-        this.executeSaveTask(t);
+        var task = TaskList.getTask();
+        task.percentComplete = value;
+        TaskList.Service.listTaskSaveDetail(task.taskId, task);
     }
 
     /**
      * Save priority value changed
      */
     ,onSavePriority : function(value) {
-        var t = this.getSelectedTask();
-        t.priority = value;
-        this.executeSaveTask(t);
+        var task = TaskList.getTask();
+        task.priority = value;
+        TaskList.Service.listTaskSaveDetail(task.taskId, task);
+        TaskList.Object.refreshTaskTreeNode(task);
     }
 
     /**
      * Save start date value changed
      */
     ,onSaveStartDate : function(value) {
-        var t = this.getSelectedTask();
-        t.taskStartDate = Acm.xDateToDatetime(value);
-        this.executeSaveTask(t);
+        var task = TaskList.getTask();
+        task.taskStartDate = Acm.xDateToDatetime(value);
+        TaskList.Service.listTaskSaveDetail(task.taskId, task);
     }
     
     /**
      * Save start date value changed
      */
     ,onSaveDueDate : function(value) {
-        var t = this.getSelectedTask();
-        t.dueDate = Acm.xDateToDatetime(value);
-        this.executeSaveTask(t);
+        var task = TaskList.getTask();
+        task.dueDate = Acm.xDateToDatetime(value);
+        TaskList.Service.listTaskSaveDetail(task.taskId, task);
     }
 
-    /**
-     * Save start date value changed
-     */
-    ,onSaveIncidentDate : function(value) {
-        var t = this.getSelectedTask();
-        t.dueDate = Acm.xDateToDatetime(value);
-        this.executeSaveTask(t);
-    }
-    
-    /**
-     * Save start date value changed
-     */
-    ,onSaveStatus : function(value) {
-        var t = this.getSelectedTask();
-        t.status = value;
-        this.executeSaveTask(t);
-    }
-    
     /**
      * Open the detail section editor
      */
@@ -227,40 +172,18 @@ TaskList.Event = {
     }
 
     /**
-     * Cancel and close the detail section editor
-     */
-    ,onClickBtnCancelDetails: function(e) {
-        TaskList.Object.cancelEditDivDetails();
-    }
-
-    /**
      * Save the detail section update to backend
      */
     ,onClickBtnSaveDetails : function(e) {
-        var t = this.getSelectedTask();
+        var task = TaskList.getTask();
         var value = TaskList.Object.saveDivDetails();
-        t.details = value;
-        this.executeSaveTask(t);    	
+        task.details = value;
+        TaskList.Service.listTaskSaveDetail(task.taskId, task);
     }
     /////////////////////////////////////////////////////////////////////////////////
     // This section should move to the request object file
     /////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Get the current selected taskid and find the task object
-     */
-    ,getSelectedTask : function () {
-        var taskId = Task.getTaskId();
-        return TaskList.findTask(taskId);
-    }
-    
-    /**
-     * Execute the save task object
-     */
-    ,executeSaveTask : function(task) {
-        var data = this.getTaskData(task);
-    	TaskList.Service.listTaskSaveDetail(data.taskId, data);
-    }
-    
+
     /**
      * Setup the task object to be saved. We have to send
      * all the attributes of the task object to the backend.
