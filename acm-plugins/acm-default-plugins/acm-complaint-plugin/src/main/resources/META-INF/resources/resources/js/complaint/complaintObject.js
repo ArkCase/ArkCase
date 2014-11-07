@@ -88,9 +88,13 @@ Complaint.Object = {
         this.$lnkComplaintClose = $("#closeComplaint");
         this.$lnkComplaintClose.click(function(e){Complaint.Event.onCloseComplaint(e)});
         
+        this.$lnkEditComplaintClose = $("#editCloseComplaint");
+        this.$lnkEditComplaintClose.click(function(e){Complaint.Event.onEditCloseComplaint(e)});
+        
         var formUrls = new Object();
         formUrls["roi"] = $('#roiFormUrl').val();
         formUrls["close_complaint"] = $('#closeComplaintFormUrl').val();
+        formUrls["edit_close_complaint"] = $('#editCloseComplaintFormUrl').val();
         this.setFormUrls(formUrls);
     }
 
@@ -270,8 +274,12 @@ Complaint.Object = {
         
         if (c.status === 'CLOSED' || c.status === 'IN APPROVAL'){
         	this.$lnkComplaintClose.hide();
+        	if (c.status === 'IN APPROVAL'){
+        		this.$lnkEditComplaintClose.show();
+        	}
         }else{
         	this.$lnkComplaintClose.show();
+        	this.$lnkEditComplaintClose.hide();
         }
 
         this.refreshJTableLocation();

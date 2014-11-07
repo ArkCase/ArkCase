@@ -13,10 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -37,6 +34,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     @RequestMapping(value = "/download/byId/{ecmFileId}", method = RequestMethod.GET)
     @ResponseBody
     public void downloadFileById(
+            @RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
             @PathVariable("ecmFileId") Long fileId,
             Authentication authentication,
             HttpSession httpSession,
@@ -59,7 +57,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
             getApplicationEventPublisher().publishEvent(event);
 
-            download(ecmFile.getEcmFileId(), response);
+            download(ecmFile.getEcmFileId(), response,inline);
         }
         else
         {
@@ -70,6 +68,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     @RequestMapping(value = "/download/{fileId}", method = RequestMethod.GET)
     @ResponseBody
     public void downloadFile(
+            @RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
             @PathVariable("fileId") String fileId,
             Authentication authentication,
             HttpSession httpSession,
@@ -81,7 +80,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             log.info("Downloading file '" + fileId + "'");
         }
 
-        download(fileId, response);
+        download(fileId, response,inline);
     }
 
     /**
@@ -91,6 +90,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     @RequestMapping(value = "/download/workspace:/SpacesStore/{fileId}", method = RequestMethod.GET)
     @ResponseBody
     public void downloadAlfrescoFile(
+            @RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
             @PathVariable("fileId") String fileId,
             Authentication authentication,
             HttpSession httpSession,
@@ -104,17 +104,17 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
         fileId = "workspace://SpacesStore/" + fileId;
 
-        download(fileId, response);
+        download(fileId, response,inline);
     }
 
-    protected void download(String fileId, HttpServletResponse response) throws IOException, MuleException, AcmObjectNotFoundException
+    protected void download(String fileId, HttpServletResponse response,boolean isInline) throws IOException, MuleException, AcmObjectNotFoundException
     {
 
         MuleMessage downloadedFile = getMuleClient().send("vm://downloadFileFlow.in", fileId, null);
 
         if ( downloadedFile.getPayload() instanceof ContentStream )
         {
-            handleFilePayload((ContentStream) downloadedFile.getPayload(), response);
+            handleFilePayload((ContentStream) downloadedFile.getPayload(), response,isInline);
         }
         else
         {
@@ -124,7 +124,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     }
 
     // called for normal processing - file was found
-    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response) throws IOException
+    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response, boolean isInline) throws IOException
     {
 
         String mimeType = filePayload.getMimeType();
@@ -135,7 +135,9 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         try
         {
             fileIs = filePayload.getStream();
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            if(!isInline) {
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            }
             response.setContentType(mimeType);
             byte[] buffer = new byte[1024];
             int read;

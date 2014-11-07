@@ -32,6 +32,7 @@ import java.util.List;
 @RequestMapping({"/api/v1/plugin/profile", "/api/latest/plugin/profile"})
 public class GetProfileInfoAPIController {
 
+    private final String URL="/api/latest/ecm/download/";
     private UserDao userDao;
     private UserOrgDao userOrgDao;
 
@@ -91,6 +92,11 @@ public class GetProfileInfoAPIController {
         profileDTO.setFirstAddress(userOrgInfo.getFirstAddress());
         profileDTO.setImAccount(userOrgInfo.getImAccount());
         profileDTO.setImSystem(userOrgInfo.getImSystem());
+        if(userOrgInfo.getOrganization()!=null) {
+            profileDTO.setCompanyName(userOrgInfo.getOrganization().getOrganizationValue());
+        } else {
+            profileDTO.setCompanyName(null);
+        }
         profileDTO.setLocation(userOrgInfo.getLocation());
         profileDTO.setMainOfficePhone(userOrgInfo.getMainOfficePhone());
         profileDTO.setMobilePhoneNumber(userOrgInfo.getMobilePhoneNumber());
@@ -100,8 +106,12 @@ public class GetProfileInfoAPIController {
         profileDTO.setWebsite(userOrgInfo.getWebsite());
         profileDTO.setZip(userOrgInfo.getZip());
         profileDTO.setUserId(userOrgInfo.getUser().getUserId());
-        profileDTO.setPictureUrl("");
-
+        profileDTO.setEcmFileId(userOrgInfo.getEcmFileId());
+        if(userOrgInfo.getEcmFileId()!=null) {
+            profileDTO.setPictureUrl(URL + userOrgInfo.getEcmFileId() + "?inline=true");
+        } else {
+            profileDTO.setPictureUrl("");
+        }
         return profileDTO;
     }
 

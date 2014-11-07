@@ -1,8 +1,15 @@
 package com.armedia.acm.plugins.complaint.dao;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
@@ -10,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
+import com.armedia.acm.services.users.model.AcmParticipant;
 
 /**
  * Created by armdev on 10/17/14.
@@ -54,5 +62,27 @@ public class CloseComplaintRequestDao extends AcmAbstractDao<CloseComplaintReque
     	}
     	
     	return result;
+    }
+    
+    public int delete(List<AcmParticipant> participants)
+    {
+    	CriteriaBuilder builder = getEm().getCriteriaBuilder();
+    	 
+
+    	CriteriaDelete<AcmParticipant> delete = builder.createCriteriaDelete(AcmParticipant.class);
+    	Root<AcmParticipant> acmParticipant = delete.from(AcmParticipant.class);
+    	
+    	if (null != participants && participants.size() > 0)
+    	{
+    		Collection<Predicate> predicates = new ArrayList<Predicate>();
+    		for (AcmParticipant participant : participants)
+    		{
+    			predicates.add(builder.equal(acmParticipant.<Long>get("id"), participant.getId()));
+    		}
+    		delete.where(builder.or(predicates.toArray(new Predicate[predicates.size()])));
+    	}
+    	Query query = getEm().createQuery(delete);
+    	
+    	return query.executeUpdate();
     }
 }
