@@ -1,5 +1,9 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -25,6 +29,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
+import java.util.ArrayList;
+
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,6 +49,8 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
     private FindTaskByIdAPIController unit;
 
     private TaskDao mockTaskDao;
+    private EcmFileDao mockFileDao;
+    private ObjectAssociationDao mockObjectAssociationDao;
     private TaskEventPublisher mockTaskEventPublisher;
     private Authentication mockAuthentication;
 
@@ -55,6 +63,8 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         mockTaskDao = createMock(TaskDao.class);
+        mockFileDao = createMock(EcmFileDao.class);
+        mockObjectAssociationDao = createMock(ObjectAssociationDao.class);
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
@@ -62,6 +72,8 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         unit = new FindTaskByIdAPIController();
 
         unit.setTaskDao(mockTaskDao);
+        unit.setObjectAssociationDao(mockObjectAssociationDao);
+        unit.setFileDao(mockFileDao);
         unit.setTaskEventPublisher(mockTaskEventPublisher);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
@@ -73,14 +85,18 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         String ipAddress = "ipAddress";
         String title = "The Test Title";
         Long taskId = 500L;
+        Long docUnderReviewId = 250L;
 
         AcmTask returned = new AcmTask();
         returned.setTaskId(taskId);
         returned.setTitle(title);
+        returned.setReviewDocumentPdfRenditionId(docUnderReviewId);
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockTaskDao.findById(taskId)).andReturn(returned);
+        expect(mockObjectAssociationDao.findByParentTypeAndId("TASK", taskId)).andReturn(new ArrayList<ObjectAssociation>());
+        expect(mockFileDao.find(returned.getReviewDocumentPdfRenditionId())).andReturn(new EcmFile());
 
         Capture<AcmApplicationTaskEvent> eventRaised = new Capture<>();
         mockTaskEventPublisher.publishTaskEvent(capture(eventRaised));
@@ -102,6 +118,7 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
 
+
         String json = result.getResponse().getContentAsString();
 
         log.info("results: " + json);
@@ -114,6 +131,9 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         AcmApplicationTaskEvent event = eventRaised.getValue();
         assertTrue(event.isSucceeded());
         assertEquals(taskId, event.getObjectId());
+
+        assertTrue(fromJson.getChildObjects().isEmpty());
+        assertNotNull(fromJson.getDocumentUnderReview());
     }
 
     @Test

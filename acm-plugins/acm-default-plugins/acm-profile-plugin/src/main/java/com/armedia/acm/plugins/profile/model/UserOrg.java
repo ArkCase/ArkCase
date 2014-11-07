@@ -9,6 +9,7 @@ import javax.annotation.Generated;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,6 +79,8 @@ public class UserOrg implements Serializable{
     @Column(name = "cm_profile_ecm_folder_id")
     private String ecmFolderId;
 
+    @Column(name = "cm_ecm_fileId")
+    private Long ecmFileId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cm_user")
@@ -234,4 +237,11 @@ public class UserOrg implements Serializable{
         this.website = website;
     }
 
+    public Long getEcmFileId() {
+        return ecmFileId;
+    }
+
+    public void setEcmFileId(Long ecmFileId) {
+        this.ecmFileId = ecmFileId;
+    }
 }

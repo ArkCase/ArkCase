@@ -99,7 +99,7 @@ public class Organization implements Serializable, AcmEntity
     public void setOrganizationId(Long organizationId) {
         this.organizationId = organizationId;
     }
-    
+
 
     public String getOrganizationType() {
         return organizationType;

@@ -359,6 +359,10 @@ class ActivitiTaskDao implements TaskDao
             retval.setAttachedToObjectId((Long) hti.getProcessVariables().get("OBJECT_ID"));
             retval.setAttachedToObjectType((String) hti.getProcessVariables().get("OBJECT_TYPE"));
             retval.setAttachedToObjectName((String) hti.getProcessVariables().get("OBJECT_NAME"));
+            retval.setWorkflowRequestId((Long) hti.getProcessVariables().get("REQUEST_ID"));
+            retval.setWorkflowRequestType((String) hti.getProcessVariables().get("REQUEST_TYPE"));
+            retval.setReviewDocumentPdfRenditionId((Long) hti.getProcessVariables().get("pdfRenditionId"));
+            retval.setReviewDocumentFormXmlId((Long) hti.getProcessVariables().get("formXmlId"));
 
         }
 
@@ -376,6 +380,8 @@ class ActivitiTaskDao implements TaskDao
                     getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(pid).singleResult();
             retval.setBusinessProcessName(pd.getName());
             retval.setAdhocTask(false);
+            retval.setBusinessProcessId(
+                    hti.getProcessInstanceId() == null ? null : Long.valueOf(hti.getProcessInstanceId()));
         }
         else
         {
@@ -495,6 +501,8 @@ class ActivitiTaskDao implements TaskDao
                     getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(pid).singleResult();
             acmTask.setBusinessProcessName(pd.getName());
             acmTask.setAdhocTask(false);
+            acmTask.setBusinessProcessId(
+                    activitiTask.getProcessInstanceId() == null ? null : Long.valueOf(activitiTask.getProcessInstanceId()));
         }
         else
         {
@@ -519,6 +527,10 @@ class ActivitiTaskDao implements TaskDao
             acmTask.setAttachedToObjectId((Long) activitiTask.getProcessVariables().get("OBJECT_ID"));
             acmTask.setAttachedToObjectType((String) activitiTask.getProcessVariables().get("OBJECT_TYPE"));
             acmTask.setAttachedToObjectName((String) activitiTask.getProcessVariables().get("OBJECT_NAME"));
+            acmTask.setWorkflowRequestId((Long) activitiTask.getProcessVariables().get("REQUEST_ID"));
+            acmTask.setWorkflowRequestType((String) activitiTask.getProcessVariables().get("REQUEST_TYPE"));
+            acmTask.setReviewDocumentPdfRenditionId((Long) activitiTask.getProcessVariables().get("pdfRenditionId"));
+            acmTask.setReviewDocumentFormXmlId((Long) activitiTask.getProcessVariables().get("formXmlId"));
         }
     }
 
