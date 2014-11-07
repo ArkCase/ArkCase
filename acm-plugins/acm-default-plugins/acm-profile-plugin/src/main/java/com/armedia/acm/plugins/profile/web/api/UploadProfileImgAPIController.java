@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 
 /**
  * Created by marjan.stefanoski on 31.10.2014.
@@ -58,6 +59,8 @@ public class UploadProfileImgAPIController {
                     if ( in == null ) {
                         throw new AcmObjectNotFoundException("userOrg", in.getUserOrgId(), "No info found for Profile", null);
                     }
+
+                    File newName = new File("profile");
 
                     String folderId = in.getEcmFolderId();
                     String objectType = "PROFILE_IMG";

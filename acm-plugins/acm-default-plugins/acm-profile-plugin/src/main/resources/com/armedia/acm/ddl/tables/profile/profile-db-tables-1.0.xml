@@ -87,8 +87,35 @@
     </changeSet>
 
     <changeSet id="04-edit-cm-location-and-cm-organization-column" author="marst">
+        <!--<addNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>-->
         <dropNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>
         <dropNotNullConstraint tableName="acm_user_org" columnName="cm_organization"/>
+    </changeSet>
+
+    <changeSet id="05-add-fileId-creator-modifier-and-date-fields" author="marst">
+        <addColumn tableName="acm_user_org">
+            <column name="cm_ecm_fileId"  type="NUMBER(32,0)" defaultValue="-1"></column>
+        </addColumn>
+        <!--<addColumn tableName="acm_user_org">-->
+            <!--<column name="cm_user_org_created" type="TIMESTAMP WITH TIME ZONE">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+        <!--</addColumn>-->
+        <!--<addColumn tableName="acm_user_org">-->
+            <!--<column name="cm_user_org_creator" type="VARCHAR(1024)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+        <!--</addColumn>-->
+        <!--<addColumn tableName="acm_user_org">-->
+            <!--<column name="cm_user_org_modified" type="TIMESTAMP WITH TIME ZONE">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+        <!--</addColumn>-->
+        <!--<addColumn tableName="acm_user_org">-->
+            <!--<column name="cm_user_org_modifier" type="VARCHAR(1024)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+        <!--</addColumn>-->
     </changeSet>
 
 </databaseChangeLog>
