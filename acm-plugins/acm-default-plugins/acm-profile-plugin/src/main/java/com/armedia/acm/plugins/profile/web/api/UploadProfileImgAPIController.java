@@ -13,14 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 
 /**
  * Created by marjan.stefanoski on 31.10.2014.
@@ -42,7 +40,7 @@ public class UploadProfileImgAPIController {
     })
     public ResponseEntity<? extends Object> uploadProfileImage(
             @RequestParam("userId") String userId,
-            @RequestParam("files[]") MultipartFile file,
+            @RequestParam("file") MultipartFile file,
             @RequestHeader("Accept") String acceptType,
             HttpServletRequest request,
             Authentication authentication) throws AcmCreateObjectFailedException, AcmObjectNotFoundException {
@@ -57,10 +55,12 @@ public class UploadProfileImgAPIController {
                 }
                 UserOrg in = null;
                 try {
-                      in  = getUserOrgDao().getUserOrgForUser(user);
+                      in = getUserOrgDao().getUserOrgForUser(user);
                     if ( in == null ) {
                         throw new AcmObjectNotFoundException("userOrg", in.getUserOrgId(), "No info found for Profile", null);
                     }
+
+                    File newName = new File("profile");
 
                     String folderId = in.getEcmFolderId();
                     String objectType = "PROFILE_IMG";

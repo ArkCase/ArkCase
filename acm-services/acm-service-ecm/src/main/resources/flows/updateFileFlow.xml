@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
+
+    <flow name="updateFile" doc:name="Update the existing file with new version">
+        <description>
+            The incoming payload is EcmFile that should be updated. The return payload is CMIS ObjectId after check-in process is finished.
+            If the object ID does not represent a CMIS document while check-out/check-in, the flow returns the Mule NullPayload.
+        </description>
+
+        <vm:inbound-endpoint
+                address="vm://updateFile.in"
+                exchange-pattern="request-response"
+                doc:name="Update File">
+        </vm:inbound-endpoint>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
+
+        <timer-interceptor/>
+
+		<enricher target="#[flowVars['object']]">
+		        <cmis:check-out  documentId="#[message.inboundProperties.ecmFileId]"/>
+		</enricher>
+		
+		<cmis:check-in filename="#[message.inboundProperties.fileName]" 
+		               documentId="#[flowVars['object'].id]"
+					   content-ref="#[message.inboundProperties.inputStream]" 
+					   checkinComment="Updating file with new version"
+					   major="true"
+					   mimeType="#[message.inboundProperties.mimeType]"/>
+					   
+		<catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
+            <set-property propertyName="updateException" value="#[exception]"/>
+        </catch-exception-strategy>
+
+    </flow>
+
+</mule>

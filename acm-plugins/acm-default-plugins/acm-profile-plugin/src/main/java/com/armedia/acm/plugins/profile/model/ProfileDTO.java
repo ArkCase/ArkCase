@@ -28,6 +28,7 @@ public class ProfileDTO {
     private String fullName;
     private String email;
     private String pictureUrl;
+    private Long ecmFileId;
 
     private List<String> groups;
 
@@ -173,6 +174,14 @@ public class ProfileDTO {
 
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
+    }
+
+    public Long getEcmFileId() {
+        return ecmFileId;
+    }
+
+    public void setEcmFileId(Long ecmFileId) {
+        this.ecmFileId = ecmFileId;
     }
 
     public List<String> getGroups() {

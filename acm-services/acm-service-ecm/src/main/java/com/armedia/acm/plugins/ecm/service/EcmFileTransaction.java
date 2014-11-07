@@ -22,4 +22,10 @@ public interface EcmFileTransaction
             Long parentObjectId,
             String parentObjectName)
             throws MuleException;
+    
+    EcmFile updateFileTransaction(
+            Authentication authentication,
+            EcmFile ecmFile,
+            InputStream fileInputStream)
+            throws MuleException;
 }
