@@ -14,11 +14,15 @@ public class CloseComplaintFormEvent extends AcmEvent
     private CloseComplaintRequest request;
     private FrevvoUploadedFiles frevvoUploadedFiles;
     private String complaintNumber;
+    private Long complaintId;
+    private String mode;
 
-    public CloseComplaintFormEvent(String complaintNumber, CloseComplaintRequest source, FrevvoUploadedFiles files, String mode,
-                                   String user, String ipAddress, boolean succeeded)
+    public CloseComplaintFormEvent(String complaintNumber, Long complaintId, CloseComplaintRequest source,
+                                   FrevvoUploadedFiles files, String mode, String user, String ipAddress,
+                                   boolean succeeded)
     {
         super(source);
+        setMode(mode);
 
         setUserId(user);
         setEventDate(new Date());
@@ -36,6 +40,7 @@ public class CloseComplaintFormEvent extends AcmEvent
         setFrevvoUploadedFiles(files);
 
         setComplaintNumber(complaintNumber);
+        setComplaintId(complaintId);
     }
 
     public CloseComplaintRequest getRequest()
@@ -66,5 +71,25 @@ public class CloseComplaintFormEvent extends AcmEvent
     public void setComplaintNumber(String complaintNumber)
     {
         this.complaintNumber = complaintNumber;
+    }
+
+    public Long getComplaintId()
+    {
+        return complaintId;
+    }
+
+    public void setComplaintId(Long complaintId)
+    {
+        this.complaintId = complaintId;
+    }
+
+    public String getMode()
+    {
+        return mode;
+    }
+
+    public void setMode(String mode)
+    {
+        this.mode = mode;
     }
 }

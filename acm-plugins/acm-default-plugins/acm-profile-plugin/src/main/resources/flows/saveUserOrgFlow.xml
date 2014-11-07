@@ -41,23 +41,20 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         message.getInboundProperty("acmUser").name;
                     if ( user != null )
                     {
-                        payload.creator = payload.creator == null ? user : payload.creator;
-                        payload.modifier = payload.modifier == null ? user : payload.modifier;
+                        message.getInboundProperty("auditAdapter").setUserId(user);
                     }
-                    payload.creator="test";
+                    payload.ecmFolderPath="/Sites/acm/documentLibrary/User Profile/"+user;
                     return payload;
                     ]]>
                 </scripting:text>
             </scripting:script>
-
         </scripting:transformer>
-
         <!-- Tell mule to call the save method (as opposed to other DAO methods that may also take an EcmFile
              parameter).  The property must go in the inbound scope.  The only way to do it is to set an outbound
              property, then call an outbound endpoint (thereby starting a new flow).
         -->
-        <set-property propertyName="daoMethod" value="save"/>
-        <vm:outbound-endpoint address="vm://userOrgDao.in" exchange-pattern="request-response"/>
+        <!--<set-property propertyName="daoMethod" value="save"/>-->
+        <!--<vm:outbound-endpoint address="vm://userOrgDao.in" exchange-pattern="request-response"/>-->
 
         <!--I don't need to save excel files with the user profile image -->
 
@@ -67,23 +64,28 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         <choice>
             <when expression="#[payload.ecmFolderPath != null]">
+                <logger category="com.armedia.acm.plugins.profile" level="INFO" message="INSIDE."/>
                 <processor-chain>
                     <!-- store the userOrg (Profile info) in a flow variable so the enricher can see it -->
                     <set-variable variableName="userOrg" value="#[message.payload]"/>
                     <!-- update the userOrg with the ID of the folder -->
-                    <enricher  source="#[message.payload.id]" target="#[flowVars['userOrg'].ecmFolderId]">
+                    <enricher source="#[message.payload.id]" target="#[flowVars['userOrg'].ecmFolderId]">
                         <cmis:get-or-create-folder-by-path folderPath="#[payload.ecmFolderPath]"/>
                     </enricher>
                     <logger category="com.armedia.acm.plugins.profile" level="DEBUG"
                             message="Folder Id: #[payload.ecmFolderId]"/>
                 </processor-chain>
-
             </when>
             <otherwise>
                 <logger category="com.armedia.acm.plugins.profile" level="INFO" message="No need to create folder."/>
             </otherwise>
         </choice>
 
+        <logger category="com.armedia.acm.plugins.profile" level="INFO" message="Folder Path: #[payload.ecmFolderPath]"/>
+        <logger category="com.armedia.acm.plugins.profile" level="INFO" message="Folder ID: #[payload.ecmFolderPath]"/>
+
+        <set-property propertyName="daoMethod" value="save"/>
+        <vm:outbound-endpoint address="vm://userOrgDao.in" exchange-pattern="request-response"/>
 
         <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.plugins.profile" message="Exception saving: #[exception.message]"/>

@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.profile.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
@@ -9,9 +10,11 @@ import com.armedia.acm.plugins.profile.exception.AcmProfileException;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.service.ProfileEventPublisher;
+import com.armedia.acm.plugins.profile.service.SaveUserOrgTransaction;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.activiti.engine.impl.juel.ExpressionFactoryImpl;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -30,10 +33,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SetUserOrgInfoAPIController {
 
     private Logger log = LoggerFactory.getLogger(getClass());
+    private final String URL="/api/latest/ecm/download/";
     private ProfileEventPublisher eventPublisher;
     private UserDao userDao;
     private UserOrgDao userOrgDao;
     private OrganizationDao organizationDao;
+    private SaveUserOrgTransaction saveUserOrgTransaction;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -49,7 +54,7 @@ public class SetUserOrgInfoAPIController {
         UserOrg userOrg = null;
         Organization org = null;
         boolean isCompanyNameNull = false;
-        boolean isChangingCompany = false;
+        boolean isChangingCompany = true;
         try {
           userOrg = getUserOrgDao().getUserOrgForUser(user);
             if( userOrg.getOrganization() == null && in.getCompanyName() == null ){
@@ -82,15 +87,10 @@ public class SetUserOrgInfoAPIController {
 
        //case when user changed  his company name
         if(!isCompanyNameNull) {
-            if(userOrg.getOrganization()== null && in.getCompanyName()!=null ) {
-                org = prepareNewOrg(in,user);
-                org = getOrganizationDao().save(org);
-                userOrg.setOrganization(org);
-            } else if(userOrg.getOrganization() != null && in.getCompanyName() != null){
-                if(!userOrg.getOrganization().getOrganizationValue().trim().equals(in.getCompanyName().trim())){
-                    isChangingCompany = true;
-                }
-            } else if(userOrg.getOrganization()!= null && in.getCompanyName() == null ){
+            if ( (  userOrg.getOrganization()!= null && in.getCompanyName() != null ) &&
+                    userOrg.getOrganization().getOrganizationValue().trim().equals(in.getCompanyName().trim())) {
+                        isChangingCompany = false;
+            } else if( userOrg.getOrganization()!= null && in.getCompanyName() == null ){
                 throw new AcmProfileException("Detaching from company not allowed!, companyName is null, Pls provide a company name");
             }
             if (isChangingCompany) {
@@ -114,8 +114,16 @@ public class SetUserOrgInfoAPIController {
             }
         }
         userOrg = createUserOrgForUpdate(in, userOrg);
-        userOrg = getUserOrgDao().updateUserInfo(userOrg);
+        try {
+            userOrg = getSaveUserOrgTransaction().saveUserOrg(userOrg,auth);
+        } catch (MuleException e) {
+            if(log.isErrorEnabled()){
+               log.error("Saving of the info for user and organization throw an exception",e);
+            }
+            throw new AcmCreateObjectFailedException("user organization info",e.getMessage(),e.getCause());
+        }
         getEventPublisher().publishProfileEvent(userOrg,auth,isCompanyNameNull,true);
+        in.setPictureUrl(URL + in.getEcmFileId() + "?inline=true");
         return in;
     }
 
@@ -154,8 +162,16 @@ public class SetUserOrgInfoAPIController {
             userOrgOld.setMainOfficePhone(in.getMainOfficePhone());
             userOrgOld.setOfficePhoneNumber(in.getOfficePhoneNumber());
             userOrgOld.setMobilePhoneNumber(in.getMobilePhoneNumber());
-
+            userOrgOld.setEcmFileId(in.getEcmFileId());
         return userOrgOld;
+    }
+
+    public SaveUserOrgTransaction getSaveUserOrgTransaction() {
+        return saveUserOrgTransaction;
+    }
+
+    public void setSaveUserOrgTransaction(SaveUserOrgTransaction saveUserOrgTransaction) {
+        this.saveUserOrgTransaction = saveUserOrgTransaction;
     }
 
     public OrganizationDao getOrganizationDao() {

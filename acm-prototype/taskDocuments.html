@@ -188,17 +188,7 @@
                     </div>
                     <div class="col-md-12">
                       <section class="panel b-a">
-                        <div class="panel-heading b-b bg-info">
-                          <ul class="nav nav-pills pull-right">
-                            <li style="margin-right:5px"></li>
-                            <li>
-                              <div class="btn-group padder-v2">
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
-                              </div>
-                            </li>
-                            <li> </li>
-                          </ul>
-                          <a href="#" class="font-bold">Documents</a></div>
+                        <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Document Under Review</a></div>
                         <div class="panel-body max-200 no-padder">
                           <table class="table table-striped th-sortable table-hover">
                             <thead>
@@ -208,10 +198,7 @@
                                 <th>Type</th>
                                 <th>Created</th>
                                 <th>Author</th>
-                                <th>Priority</th>
-                                <th>Due</th>
                                 <th>Status</th>
-                                <th width="10%">Action</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -221,15 +208,7 @@
                                 <td>[Type]</td>
                                 <td>[Created]</td>
                                 <td>[Author]</td>
-                                <td>[Priority]</td>
-                                <td>[Due]</td>
                                 <td>[Status]</td>
-                                <td><select name="select2" class="input-sm form-control input-s-sm inline v-middle">
-                                  <option value="0">Choose Action</option>
-                                  <option value="1">Delete</option>
-                                  <option value="1">Approve</option>
-                                  <option value="1">Reject</option>
-                                </select></td>
                               </tr>
                             </tbody>
                           </table>
@@ -289,19 +268,28 @@ $(function() {
 					}
 				},
 	source: [{
-		title: "Subject, Priority",
+		title: "Due Date, Priority, Subject",
 		href: "tasks.html",
 		tooltip: "2014-03-12321",
 		expanded: "fancytree-expanded",
 		children: [{
 				title: "Details", 
 				href: "taskDetails.html"
+			},{
+				title: "Rework Instructions", 
+				href: "taskRework.html"
 			}, {
-			title: "Documents",
+			title: "Documents Under Review",
 			href: "taskDocuments.html"
-		}, {
+			}, {
+				title: "Attachments",
+				href: "tasksAttach.html"
+			}, {
 				title: "Notes", 
 				href: "taskNotes.html"
+			}, {
+				title: "Workflow Overview", 
+				href: "taskWorkflow.html"
 			}, {
 			title: "History",
 			folder: false,
@@ -312,7 +300,6 @@ $(function() {
 });
 //]]>
 </script> 
-
 
 <!-- Summernote WYSIWYG -->
 <link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>

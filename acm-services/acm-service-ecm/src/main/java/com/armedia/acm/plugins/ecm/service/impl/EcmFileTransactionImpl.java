@@ -4,6 +4,8 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+
+import org.apache.chemistry.opencmis.client.api.ObjectId;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -66,6 +68,38 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
         return saved;
+    }
+    
+    @Override
+    public EcmFile updateFileTransaction(
+            Authentication authentication,
+            EcmFile ecmFile,
+            InputStream fileInputStream)
+            throws MuleException
+    {
+ 
+        Map<String, Object> messageProps = new HashMap<>();
+        messageProps.put("ecmFileId", ecmFile.getEcmFileId());
+        messageProps.put("fileName", ecmFile.getFileName());
+        messageProps.put("mimeType", ecmFile.getFileMimeType());
+        messageProps.put("inputStream", fileInputStream);
+        messageProps.put("acmUser", authentication);
+        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
+        MuleMessage received = getMuleClient().send("vm://updateFile.in", ecmFile, messageProps);
+        ObjectId objectId = received.getPayload(ObjectId.class);
+
+        MuleException e = received.getInboundProperty("updateException");
+        if ( e != null )
+        {
+            throw e;
+        }
+        
+        if (null == objectId || !objectId.getId().replaceAll(";.*", "").equals(ecmFile.getEcmFileId()))
+        {
+        	throw new RuntimeException("Updating of the file " + ecmFile.getFileName() + " failed.");
+        }
+
+        return ecmFile;
     }
 
     public MuleClient getMuleClient()
