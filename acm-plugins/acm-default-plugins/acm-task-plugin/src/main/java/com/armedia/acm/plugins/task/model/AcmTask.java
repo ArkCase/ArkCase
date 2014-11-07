@@ -6,7 +6,9 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AcmTask implements AcmObject
 {
@@ -36,6 +38,8 @@ public class AcmTask implements AcmObject
     private Long reviewDocumentFormXmlId;
     private EcmFile documentUnderReview;
     private List<ObjectAssociation> childObjects;
+    private String outcomeName;
+    private Map<String, String> outcomes = new HashMap<>();
 
     public Long getTaskId()
     {
@@ -326,5 +330,25 @@ public class AcmTask implements AcmObject
     public void setBusinessProcessId(Long businessProcessId)
     {
         this.businessProcessId = businessProcessId;
+    }
+
+    public void setOutcomeName(String outcomeName)
+    {
+        this.outcomeName = outcomeName;
+    }
+
+    public String getOutcomeName()
+    {
+        return outcomeName;
+    }
+
+    public Map<String, String> getOutcomes()
+    {
+        return outcomes;
+    }
+
+    public void setOutcomes(Map<String, String> outcomes)
+    {
+        this.outcomes = outcomes;
     }
 }
