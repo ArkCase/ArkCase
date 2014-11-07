@@ -9,6 +9,7 @@ import javax.annotation.Generated;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,6 +79,22 @@ public class UserOrg implements Serializable{
     @Column(name = "cm_profile_ecm_folder_id")
     private String ecmFolderId;
 
+    @Column(name = "cm_ecm_fileId")
+    private Long ecmFileId;
+//
+//    @Column(name = "cm_user_org_created", nullable = false, insertable = true, updatable = false)
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date created;
+//
+//    @Column(name = "cm_user_org_creator", insertable = true, updatable = false)
+//    private String creator;
+//
+//    @Column(name = "cm_user_org_modified", nullable = false)
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date modified;
+//
+//    @Column(name = "cm_user_org_modifier")
+//    private String modifier;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cm_user")
@@ -234,4 +251,43 @@ public class UserOrg implements Serializable{
         this.website = website;
     }
 
+    public Long getEcmFileId() {
+        return ecmFileId;
+    }
+
+    public void setEcmFileId(Long ecmFileId) {
+        this.ecmFileId = ecmFileId;
+    }
+
+//    public Date getCreated() {
+//        return created;
+//    }
+//
+//    public void setCreated(Date created) {
+//        this.created = created;
+//    }
+//
+//    public String getCreator() {
+//        return creator;
+//    }
+//
+//    public void setCreator(String creator) {
+//        this.creator = creator;
+//    }
+//
+//    public Date getModified() {
+//        return modified;
+//    }
+//
+//    public void setModified(Date modified) {
+//        this.modified = modified;
+//    }
+//
+//    public String getModifier() {
+//        return modifier;
+//    }
+//
+//    public void setModifier(String modifier) {
+//        this.modifier = modifier;
+//    }
 }
