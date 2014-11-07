@@ -7,6 +7,8 @@ AcmEx.Object = {
     create : function() {
     }
 
+    //This set of functions are to be retired in future.
+    //Please use AcmEx.Object.SummerNote.xxxx()
     ,getSummerNote : function($s) {
         return $s.code();
     }
@@ -24,6 +26,26 @@ AcmEx.Object = {
     ,cancelSummerNote: function($s) {
         $s.summernote({focus: false});
         $s.destroy();
+    }
+    ,SummerNote: {
+        get: function($s) {
+            return $s.code();
+        }
+        ,set: function($s, value) {
+            $s.code(value);
+        }
+        ,edit: function($s) {
+            $s.summernote({focus: true});
+        }
+        ,save: function($s) {
+            var aHtml = $s.code(); //save HTML If you need(aHTML: array).
+            $s.destroy();
+            return aHtml;
+        }
+        ,cancel: function($s) {
+            $s.summernote({focus: false});
+            $s.destroy();
+        }
     }
 
     //
