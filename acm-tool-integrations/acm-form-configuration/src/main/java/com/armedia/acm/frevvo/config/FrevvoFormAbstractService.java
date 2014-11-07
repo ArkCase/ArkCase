@@ -20,7 +20,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -51,6 +53,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	private EcmFileService ecmFileService;
     private String servletContextPath;
     private String userIpAddress;
+    private EcmFileDao ecmFileDao;
 
 
 	@Override
@@ -160,6 +163,10 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		{
 			for ( Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet() )
 			{
+				String mode = getRequest().getParameter("mode");
+				String xmlId = getRequest().getParameter("xmlId");
+				String pdfId = getRequest().getParameter("pdfId");
+				
                 if ( entry.getKey().startsWith("form_"))
                 {
                     // form xml...
@@ -167,13 +174,37 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                     if ( xml != null && xml.size() == 1 )
                     {
                         MultipartFile xmlAttachment = xml.get(0);
-                        EcmFile formXml = uploadFile(
+                        
+                        EcmFile formXml = null;
+                        
+                        // Update XML form if the mode is "edit", otherwise create new
+                        if ("edit".equals(mode) && null != xmlId && !"".equals(xmlId))
+                        {
+                        	EcmFile file = null;
+                        	try{
+                        		Long id = Long.parseLong(xmlId);
+                        		file = getEcmFileDao().find(id);
+                        	}
+                        	catch(Exception e)
+                        	{
+                        		LOG.warn("The file with id=" + xmlId + " is not found. The update will not proceed.");
+                        	}
+                        	
+                        	formXml = getEcmFileService().update(
+                        			file,
+                        			xmlAttachment,
+                        			getAuthentication());
+                        }
+                        else
+                        {
+                        	formXml = uploadFile(
                                 getFormName() + "_xml",
                                 targetCmisFolderId,
                                 parentObjectType,
                                 parentObjectId,
                                 parentObjectName,
                                 xmlAttachment);
+                        }
                         retval.setFormXml(formXml);
                     }
                 }
@@ -184,13 +215,35 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                     if ( pdf != null && pdf.size() == 1 )
                     {
                         MultipartFile pdfAttachment = pdf.get(0);
-                        EcmFile pdfRendition = uploadFile(
-                                getFormName(),
-                                targetCmisFolderId,
-                                parentObjectType,
-                                parentObjectId,
-                                parentObjectName,
-                                pdfAttachment);
+                        EcmFile pdfRendition = null;
+                        
+                        // Update PDF form if the mode is "edit", otherwise create new
+                        if ("edit".equals(mode) && null != pdfId && !"".equals(pdfId))
+                        {
+                        	EcmFile file = null;
+                        	try{
+                        		Long id = Long.parseLong(pdfId);
+                        		file = getEcmFileDao().find(id);
+                        	}
+                        	catch(Exception e)
+                        	{
+                        		LOG.warn("The file with id=" + pdfId + " is not found. The update will not proceed.");
+                        	}
+                        	pdfRendition = getEcmFileService().update(
+                        			file,
+                        			pdfAttachment,
+                        			getAuthentication());
+                        }
+                        else
+                        {
+                        	pdfRendition = uploadFile(
+	                                getFormName(),
+	                                targetCmisFolderId,
+	                                parentObjectType,
+	                                parentObjectId,
+	                                parentObjectName,
+	                                pdfAttachment);
+                        }
                         retval.setPdfRendition(pdfRendition);
                     }
                 }
@@ -293,4 +346,18 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     {
         this.userIpAddress = userIpAddress;
     }
+
+	/**
+	 * @return the ecmFileDao
+	 */
+	public EcmFileDao getEcmFileDao() {
+		return ecmFileDao;
+	}
+
+	/**
+	 * @param ecmFileDao the ecmFileDao to set
+	 */
+	public void setEcmFileDao(EcmFileDao ecmFileDao) {
+		this.ecmFileDao = ecmFileDao;
+	}
 }

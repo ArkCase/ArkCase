@@ -30,6 +30,14 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     @Override
     public void onApplicationEvent(CloseComplaintFormEvent closeComplaintFormEvent)
     {
+        if (!"edit".equals(closeComplaintFormEvent.getMode()))
+        {
+            handleNewCloseComplaintRequest(closeComplaintFormEvent);
+        }
+    }
+
+    protected void handleNewCloseComplaintRequest(CloseComplaintFormEvent closeComplaintFormEvent)
+    {
         EcmFile pdfRendition = closeComplaintFormEvent.getFrevvoUploadedFiles().getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
         configuration.setEcmFile(pdfRendition);
@@ -60,10 +68,15 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         pvars.put("reviewers", reviewers);
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", author);
-        pvars.put("closeComplaintRequestId", closeComplaintFormEvent.getRequest().getId());
         pvars.put("pdfRenditionId", closeComplaintFormEvent.getFrevvoUploadedFiles().getPdfRendition().getFileId());
         pvars.put("formXmlId", closeComplaintFormEvent.getFrevvoUploadedFiles().getFormXml().getFileId());
-        pvars.put("complaintNumber", closeComplaintFormEvent.getComplaintNumber());
+
+        pvars.put("OBJECT_TYPE", "COMPLAINT");
+        pvars.put("OBJECT_ID", closeComplaintFormEvent.getComplaintId());
+        pvars.put("OBJECT_NAME", closeComplaintFormEvent.getComplaintNumber());
+        pvars.put("COMPLAINT", closeComplaintFormEvent.getComplaintId());
+        pvars.put("REQUEST_TYPE", "CLOSE_COMPLAINT_REQUEST");
+        pvars.put("REQUEST_ID", closeComplaintFormEvent.getRequest().getId());
 
         log.debug("starting process: " + processName);
 

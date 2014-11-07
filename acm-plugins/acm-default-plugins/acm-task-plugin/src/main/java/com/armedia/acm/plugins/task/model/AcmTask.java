@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.task.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
+import java.util.List;
 
 public class AcmTask implements AcmObject
 {
@@ -17,6 +20,7 @@ public class AcmTask implements AcmObject
     private String assignee;
     private String owner;					//creator
     private String businessProcessName;
+    private Long businessProcessId;
     private boolean adhocTask;
     private boolean completed;
     private String status;
@@ -26,6 +30,12 @@ public class AcmTask implements AcmObject
     private Date taskStartDate;
     private Date taskFinishedDate;
     private Long taskDurationInMillis;
+    private String workflowRequestType;
+    private Long workflowRequestId;
+    private Long reviewDocumentPdfRenditionId;
+    private Long reviewDocumentFormXmlId;
+    private EcmFile documentUnderReview;
+    private List<ObjectAssociation> childObjects;
 
     public Long getTaskId()
     {
@@ -218,21 +228,103 @@ public class AcmTask implements AcmObject
 		this.createDate = createDate;
 	}
 
+    public String getWorkflowRequestType()
+    {
+        return workflowRequestType;
+    }
 
+    public void setWorkflowRequestType(String workflowRequestType)
+    {
+        this.workflowRequestType = workflowRequestType;
+    }
 
-	@Override
-	public String toString() {
-		return "AcmTask [taskId=" + taskId + ", priority=" + priority
-				+ ", title=" + title + ", dueDate=" + dueDate
-				+ ", attachedToObjectType=" + attachedToObjectType
-				+ ", attachedToObjectName=" + attachedToObjectName
-				+ ", attachedToObjectId=" + attachedToObjectId + ", assignee="
-				+ assignee + ", owner=" + owner + ", businessProcessName="
-				+ businessProcessName + ", adhocTask=" + adhocTask
-				+ ", completed=" + completed + ", status=" + status
-				+ ", percentComplete=" + percentComplete + ", details="
-				+ details + ", createDate=" + createDate + ", taskStartDate="
-				+ taskStartDate + ", taskFinishedDate=" + taskFinishedDate
-				+ ", taskDurationInMillis=" + taskDurationInMillis + "]";
-	}
+    public Long getWorkflowRequestId()
+    {
+        return workflowRequestId;
+    }
+
+    public void setWorkflowRequestId(Long workflowRequestId)
+    {
+        this.workflowRequestId = workflowRequestId;
+    }
+
+    public Long getReviewDocumentPdfRenditionId()
+    {
+        return reviewDocumentPdfRenditionId;
+    }
+
+    public void setReviewDocumentPdfRenditionId(Long reviewDocumentPdfRenditionId)
+    {
+        this.reviewDocumentPdfRenditionId = reviewDocumentPdfRenditionId;
+    }
+
+    public Long getReviewDocumentFormXmlId()
+    {
+        return reviewDocumentFormXmlId;
+    }
+
+    public void setReviewDocumentFormXmlId(Long reviewDocumentFormXmlId)
+    {
+        this.reviewDocumentFormXmlId = reviewDocumentFormXmlId;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "AcmTask{" +
+                "taskId=" + taskId +
+                ", priority='" + priority + '\'' +
+                ", title='" + title + '\'' +
+                ", dueDate=" + dueDate +
+                ", attachedToObjectType='" + attachedToObjectType + '\'' +
+                ", attachedToObjectName='" + attachedToObjectName + '\'' +
+                ", attachedToObjectId=" + attachedToObjectId +
+                ", assignee='" + assignee + '\'' +
+                ", owner='" + owner + '\'' +
+                ", businessProcessName='" + businessProcessName + '\'' +
+                ", adhocTask=" + adhocTask +
+                ", completed=" + completed +
+                ", status='" + status + '\'' +
+                ", percentComplete=" + percentComplete +
+                ", details='" + details + '\'' +
+                ", createDate=" + createDate +
+                ", taskStartDate=" + taskStartDate +
+                ", taskFinishedDate=" + taskFinishedDate +
+                ", taskDurationInMillis=" + taskDurationInMillis +
+                ", workflowRequestType='" + workflowRequestType + '\'' +
+                ", workflowRequestId='" + workflowRequestId + '\'' +
+                ", reviewDocumentPdfRenditionId=" + reviewDocumentPdfRenditionId +
+                ", reviewDocumentFormXmlId=" + reviewDocumentFormXmlId +
+                '}';
+    }
+
+    public void setDocumentUnderReview(EcmFile documentUnderReview)
+    {
+        this.documentUnderReview = documentUnderReview;
+    }
+
+    public EcmFile getDocumentUnderReview()
+    {
+        return documentUnderReview;
+    }
+
+    public void setChildObjects(List<ObjectAssociation> childObjects)
+    {
+        this.childObjects = childObjects;
+    }
+
+    public List<ObjectAssociation> getChildObjects()
+    {
+        return childObjects;
+    }
+
+    public Long getBusinessProcessId()
+    {
+        return businessProcessId;
+    }
+
+    public void setBusinessProcessId(Long businessProcessId)
+    {
+        this.businessProcessId = businessProcessId;
+    }
 }

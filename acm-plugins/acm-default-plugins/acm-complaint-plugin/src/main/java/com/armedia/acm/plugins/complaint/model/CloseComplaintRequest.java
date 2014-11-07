@@ -45,7 +45,7 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_close_complaint_status")
     private String status = "IN APPROVAL";
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_object_id")
     private List<AcmParticipant> participants = new ArrayList<>();
 

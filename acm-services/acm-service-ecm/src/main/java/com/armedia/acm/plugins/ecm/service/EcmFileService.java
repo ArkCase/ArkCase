@@ -60,4 +60,17 @@ public interface EcmFileService
             String parentObjectType,
             Long parentObjectId,
             String parentObjectName) throws AcmCreateObjectFailedException;
+    
+    /**
+     * 
+     * @param ecmFile
+     * @param file
+     * @param authentication
+     * @return
+     * @throws AcmCreateObjectFailedException
+     */
+    EcmFile update(
+    		EcmFile ecmFile,
+            MultipartFile file,
+            Authentication authentication) throws AcmCreateObjectFailedException;
 }

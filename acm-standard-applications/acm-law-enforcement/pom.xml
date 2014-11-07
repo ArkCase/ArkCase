@@ -161,11 +161,11 @@
             <artifactId>acm-cmis-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
             <artifactId>acm-alfresco-rma-integration</artifactId>
             <version>${acm.version}</version>
-        </dependency>
+        </dependency>  -->
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-users</artifactId>

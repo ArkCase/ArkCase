@@ -162,6 +162,7 @@
 	                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> Close Complaint</button>
 	                                            	<button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
 	                                            	<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />
+	                                            	<input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />
 	                                            </div>
 	                                        </div>
                                         </div>
