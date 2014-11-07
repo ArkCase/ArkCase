@@ -45,6 +45,8 @@ public class TaskToQuickSearchJsonConverter
         quickSearchMap.put("priority_s", event.getPriority());
         quickSearchMap.put("parent_object_id_i", event.getParentObjectId());
         quickSearchMap.put("parent_object_type_s", event.getParentObjectType());
+        quickSearchMap.put("due_dt", event.getDueDate());
+        quickSearchMap.put("adhocTask_b", event.isAdhocTask());
         quickSearchMap.put(SearchConstants.SOLR_OBJECT_TYPE_FIELD_NAME, TASK_TYPE);
 
         // retrieve acm read access for object and enrich business object map with acls
