@@ -14,6 +14,9 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_SIGNED, this.onTaskSigned);
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_BYTYPEBYID_RETRIEVED, this.onFindByTypeByIdRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_DETAIL_RETRIEVED, this.onComplaintDetailRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_NOTE_SAVED, this.onNoteSaved);
+        Acm.Dispatcher.addEventListener(this.EVENT_NOTE_DELETED, this.onNoteDeleted);
+        Acm.Dispatcher.addEventListener(this.EVENT_NOTE_LIST_RETRIEVED, this.onNotesListRetrieved);
     }
 
     ,EVENT_LIST_RETRIEVED			 : "task-list-retrieved"
@@ -24,6 +27,9 @@ TaskList.Callback = {
     ,EVENT_LIST_BYTYPEBYID_RETRIEVED : "task-list-signature-byTypeById-retrieved"
     ,EVENT_DETAIL_SAVED               : "event-detail-saved"
     ,EVENT_COMPLAINT_DETAIL_RETRIEVED : "complaint-detail-retrieved"
+    ,EVENT_NOTE_SAVED           : "object-note-saved"
+    ,EVENT_NOTE_DELETED         : "object-note-deleted"
+    ,EVENT_NOTE_LIST_RETRIEVED  : "object-note-listed"
 
     ,onDetailSaved : function(Callback, response) {
         if (response.hasError) {
@@ -43,7 +49,7 @@ TaskList.Callback = {
         	var taskList = responseData.docs;
 
             var treeInfo = TaskList.Object.getTreeInfo();
-
+            treeInfo.total = taskList.length;
             var start = treeInfo.start;
             TaskList.cachePage.put(start,taskList);
 
@@ -54,7 +60,12 @@ TaskList.Callback = {
                 if (0 < taskList.length) {
                     var taskId = parseInt(taskList[0].object_id_s);
                     if (0 < taskId) {
-                        key = start + "." + taskId;
+                        if(taskList[0].adhocTask_b == true){
+                            key = start + "." + "adHoc"+ taskId;
+                        }
+                        else{
+                            key = start + "." + taskId;
+                        }
                     }
                 }
             } else {
@@ -74,8 +85,33 @@ TaskList.Callback = {
                     return;         //user clicks another task before callback, do nothing
                 }
                 var task = response;
+                //handle single task situation
+                var treeInfo = TaskList.Object.getTreeInfo();
+                if (0 < treeInfo.taskId) {
+                    treeInfo.total = 1;
+
+                    var pageId = treeInfo.start;
+                    var taskSolr = {};
+                    taskSolr.due_dt = task.dueDate;
+                    taskSolr.title_t = task.title;
+                    taskSolr.priority_s = task.priority;
+                    taskSolr.object_id_s = task.taskId;
+                    taskSolr.parent_object_id_i = task.attachedToObjectId;
+                    taskSolr.parent_object_type_s = task.attachedToObjectType;
+                    taskSolr.adhocTask_b = task.adhocTask;
+                    TaskList.cachePage.put(pageId, [taskSolr]);
+                    var key;
+                    if(task.adhocTask == true){
+                        key = pageId + "." + "adHoc" + treeInfo.taskId.toString();
+                    }
+                    else{
+                        key = pageId + "." + treeInfo.taskId.toString();
+                    }
+                    TaskList.Object.refreshTree(key);
+                }
+
                 TaskList.cacheTask.put(taskId, task);
-                TaskList.Object.updateDetail(task);
+
                 if(response.attachedToObjectId != null){
                     var parentObjId = response.attachedToObjectId;
                     TaskList.setParentObjId(parentObjId);
@@ -86,9 +122,32 @@ TaskList.Callback = {
                     var parentObj = {};
                     TaskList.Object.updateParentObjDetail(parentObj);
                 }
-
                 // check for signatures
                 TaskList.Service.findSignatureByTypeById(taskId);
+
+
+                //check for notes
+                var parentId;
+                var parentType;
+                if(task.businessProcessId != null){
+                    parentId = task.businessProcessId;
+                    parentType = App.OBJTYPE_BUSINESS_PROCESS;
+                }
+                else{
+                    parentId = task.taskId;
+                    parentType = App.OBJTYPE_TASK;
+                }
+                var notes = TaskList.cacheNoteList.get(parentId);
+                if (notes) {
+                    TaskList.Object.refreshJTableNotes();
+                    //TaskList.Object.updateDetail(task);
+                } else {
+                    TaskList.Service.retrieveNotes(parentId,parentType);
+                }
+
+                //load all the details
+                TaskList.Object.updateDetail(task);
+
             }
         }
     }
@@ -168,6 +227,91 @@ TaskList.Callback = {
             Acm.Dialog.error("Failed to retrieve signature list");
         } else {
         	TaskList.Page.buildSignatureList(response);
+        }
+    }
+
+    ,onNoteSaved: function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to create or save note:" + response.errorMsg);
+        } else {
+            //update the note list cache manually instead of calling service
+            //next refresh will update the cache anyway
+            var task = TaskList.getTask();
+            var id;
+            if(task != null){
+                if(task.businessProcessId != null){
+                    id = task.businessProcessId;
+                }
+                else{
+                    id = task.taskId;
+                }
+            }
+            var oldNotesList = TaskList.cacheNoteList.get(id);
+            var updatedNotesList = {};
+            var isNew = true;
+            if(oldNotesList){
+                for(var i = 0; i < oldNotesList.length; i++){
+                    if(response.id == oldNotesList[i].id){
+                        oldNotesList[i] = response;
+                        updatedNotesList = oldNotesList;
+                        isNew = false;
+                    }
+                }
+                if(isNew == true){
+                    updatedNotesList = oldNotesList;
+                    updatedNotesList.push(response);
+                }
+                TaskList.cacheNoteList.put(id, updatedNotesList);
+            }
+        }
+    }
+    ,onNoteDeleted : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to delete note:" + response.errorMsg);
+        } else {
+            //update the note list cache manually instead of calling service
+            //next refresh will update the cache anyway
+            var task = TaskList.getTask();
+            var id;
+            if(task != null){
+                if(task.businessProcessId != null){
+                    id = task.businessProcessId;
+                }
+                else{
+                    id = task.taskId;
+                }
+            }
+            var oldNotesList = TaskList.cacheNoteList.get(id);
+            if(oldNotesList){
+                var updatedNotesList = {};
+                var deletedNoteId = response.deletedNoteId;
+                for(var i = 0; i < oldNotesList.length; i++)
+                {
+                    if(oldNotesList[i].id == deletedNoteId){
+                        oldNotesList.splice(i, 1);
+                        updatedNotesList = oldNotesList;
+                        TaskList.cacheNoteList.put(id, updatedNotesList);
+                    }
+                }
+            }
+        }
+    }
+    ,onNotesListRetrieved : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to list notes:" + response.errorMsg);
+        } else {
+            var task = TaskList.getTask();
+            var id;
+            if(task != null){
+                if(task.businessProcessId != null){
+                    id = task.businessProcessId;
+                }
+                else{
+                    id = task.taskId;
+                }
+            }
+            TaskList.cacheNoteList.put(id,response)
+            TaskList.Object.refreshJTableNotes();
         }
     }
 };

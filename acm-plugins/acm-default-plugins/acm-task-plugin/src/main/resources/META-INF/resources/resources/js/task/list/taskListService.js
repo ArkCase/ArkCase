@@ -16,7 +16,10 @@ TaskList.Service = {
     ,API_FIND_BYTASKBYID_TASK_SIGNATURE : "/api/latest/plugin/signature/find/"
     ,API_SAVE_DETAIL       				: "/api/latest/plugin/task/save/"
     ,API_RETRIEVE_COMPLAINT_DETAIL        : "/api/latest/plugin/complaint/byId/"
-
+    ,API_SAVE_NOTE               : "/api/latest/plugin/note"
+    ,API_DELETE_NOTE             : "/api/latest/plugin/note/"
+    ,API_LIST_NOTES              : "/api/latest/plugin/note/"
+    ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
 
 
     ,listTaskSaveDetail : function(taskId, data) {
@@ -75,5 +78,21 @@ TaskList.Service = {
     	var url = App.getContextPath() + this.API_FIND_BYTASKBYID_TASK_SIGNATURE + Task.getObjectType() + "/" + taskId;
     	
         Acm.Ajax.asyncGet(url, TaskList.Callback.EVENT_LIST_BYTYPEBYID_RETRIEVED);
+    }
+    ,saveNote : function(data) {
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_NOTE
+            ,JSON.stringify(data)
+            ,TaskList.Callback.EVENT_NOTE_SAVED
+        );
+    }
+    ,deleteNoteById: function(noteId){
+        var url = (App.getContextPath() + this.API_DELETE_NOTE + noteId);
+        Acm.Ajax.asyncDelete(App.getContextPath() + this.API_DELETE_NOTE + noteId
+            ,TaskList.Callback.EVENT_NOTE_DELETED
+        );
+    }
+    ,retrieveNotes : function(parentId, parentType) {
+        var url = (App.getContextPath() + this.API_LIST_NOTES + parentType + "/" + parentId);
+        Acm.Ajax.asyncGet(url ,TaskList.Callback.EVENT_NOTE_LIST_RETRIEVED);
     }
 }

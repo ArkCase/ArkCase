@@ -19,9 +19,12 @@ public class AcmTaskSolr implements AcmObject
     private String status_s;
     private String _version_;
     private Date create_dt;
+    private Date due_dt;
     private Long parent_object_id_i;
     private String deny_acl_ss;
     private String allow_acl_ss;
+    private boolean adhocTask;
+
 	public String getId() {
 		return id;
 	}
@@ -94,6 +97,12 @@ public class AcmTaskSolr implements AcmObject
 	public void setCreate_dt(Date create_dt) {
 		this.create_dt = create_dt;
 	}
+    public Date getDue_dt() {
+        return due_dt;
+    }
+    public void setDue_dt(Date due_dt) {
+        this.due_dt = due_dt;
+    }
 	public Long getParent_object_id_i() {
 		return parent_object_id_i;
 	}
@@ -112,7 +121,9 @@ public class AcmTaskSolr implements AcmObject
 	public void setAllow_acl_ss(String allow_acl_ss) {
 		this.allow_acl_ss = allow_acl_ss;
 	}
-	@Override
+    public Boolean isAdhocTask() {return adhocTask;}
+    public void setAdhocTask(boolean adhocTask) {this.adhocTask = adhocTask;}
+    @Override
 	public String getObjectType() {
 		return object_type_s;
 	}
@@ -124,9 +135,9 @@ public class AcmTaskSolr implements AcmObject
 				+ ", object_id_s=" + object_id_s + ", assignee_s=" + assignee_s
 				+ ", owner_s=" + owner_s + ", name=" + name + ", status_s="
 				+ status_s + ", _version_=" + _version_ + ", create_dt="
-				+ create_dt + ", parent_object_id_i=" + parent_object_id_i
+				+ create_dt + ", due_dt=" + due_dt +", parent_object_id_i=" + parent_object_id_i
 				+ ", deny_acl_ss=" + deny_acl_ss + ", allow_acl_ss="
-				+ allow_acl_ss + "]";
+				+ allow_acl_ss + ", adhocTask=" + adhocTask +"]";
 	}
 
 }

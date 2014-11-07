@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Query;
 import java.security.Principal;
 import java.util.*;
 
@@ -520,6 +521,7 @@ class ActivitiTaskDao implements TaskDao
             acmTask.setAttachedToObjectName((String) activitiTask.getProcessVariables().get("OBJECT_NAME"));
         }
     }
+
 
     public TaskService getActivitiTaskService()
     {
