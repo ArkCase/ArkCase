@@ -206,6 +206,9 @@ CaseFile.Service = {
             );
         }
         ,saveIncidentDate: function(caseFileId, created) {
+            alert("need start date property to save");
+            return;
+
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             caseFile.created = created;
             this.saveCaseFile(caseFile
@@ -215,6 +218,9 @@ CaseFile.Service = {
             );
         }
         ,saveAssignee: function(caseFileId, assignee) {
+            alert("need assignee property to save");
+            return;
+
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             caseFile.assignee = assignee;
             this.saveCaseFile(caseFile
@@ -242,11 +248,23 @@ CaseFile.Service = {
             );
         }
         ,saveDueDate: function(caseFileId, dueDate) {
+            alert("need dueDate property to save");
+            return;
+
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             caseFile.created = dueDate;
             this.saveCaseFile(caseFile
                 ,function(data) {
                     CaseFile.Controller.modelSavedDueDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.created));
+                }
+            );
+        }
+        ,saveDetail: function(caseFileId, htmlDetail) {
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            caseFile.title = htmlDetail;
+            this.saveCaseFile(caseFile
+                ,function(data) {
+                    CaseFile.Controller.modelSavedDetail(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.title));
                 }
             );
         }

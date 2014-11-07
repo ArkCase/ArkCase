@@ -18,6 +18,7 @@ CaseFile.Model = {
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SUBJECT_TYPE_CHANGED   ,this.onSubjectTypeChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PRIORITY_CHANGED       ,this.onPriorityChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DUE_DATE_CHANGED       ,this.onDueDateChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DETAIL_CHANGED         ,this.onDetailChanged);
 
         if (CaseFile.Model.Tree.create)    {CaseFile.Model.Tree.create();}
         if (CaseFile.Model.Lookup.create)  {CaseFile.Model.Lookup.create();}
@@ -95,6 +96,9 @@ CaseFile.Model = {
     }
     ,onDueDateChanged: function(caseFileId, dueDate) {
         CaseFile.Service.Detail.saveDueDate(caseFileId, dueDate);
+    }
+    ,onDetailChanged: function(caseFileId, htmlDetail) {
+        CaseFile.Service.Detail.saveDetail(caseFileId, htmlDetail);
     }
 
     ,_objectType: "CASE"

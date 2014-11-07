@@ -6,10 +6,12 @@
 CaseFile.View = {
     create : function() {
         if (CaseFile.View.Tree.create)    {CaseFile.View.Tree.create();}
+        if (CaseFile.View.Action.create)  {CaseFile.View.Action.create();}
         if (CaseFile.View.Detail.create)  {CaseFile.View.Detail.create();}
     }
     ,initialize: function() {
         if (CaseFile.View.Tree.initialize)    {CaseFile.View.Tree.initialize();}
+        if (CaseFile.View.Action.initialize)  {CaseFile.View.Action.initialize();}
         if (CaseFile.View.Detail.initialize)  {CaseFile.View.Detail.initialize();}
     }
 
@@ -35,6 +37,18 @@ CaseFile.View = {
             CaseFile.View.Tree.updateTitle(caseFileId, title);
         }
 
+        ,onTreeNodeActivated: function(node) {
+            if ("prevPage" == node.key) {
+                CaseFile.Controller.viewClickedPrevPage();
+            } else if ("nextPage" == node.key) {
+                CaseFile.Controller.viewClickedNextPage();
+            } else {
+                var caseFileId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(node.key);
+                CaseFile.Controller.viewSelectedCaseFile(caseFileId);
+            }
+
+            CaseFile.Controller.viewSelectedTreeNode(node.key);
+        }
 
         ,refreshTree: function(key) {
             this.tree.reload().done(function(){
@@ -50,20 +64,7 @@ CaseFile.View = {
             this.tree.activateKey(key);
         }
 
-
-        ,onTreeNodeActivated: function(node) {
-            if ("prevPage" == node.key) {
-                CaseFile.Controller.viewClickedPrevPage();
-            } else if ("nextPage" == node.key) {
-                CaseFile.Controller.viewClickedNextPage();
-            } else {
-                var caseFileId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(node.key);
-                CaseFile.Controller.viewSelectedCaseFile(caseFileId);
-            }
-
-            CaseFile.Controller.viewSelectedTreeNode(node.key);
-        }
-
+        ,_activeKey: null
         ,_useFancyTree: function($s) {
             $s.fancytree({
                 activate: function(event, data) {
@@ -72,6 +73,22 @@ CaseFile.View = {
                     var nodeType = CaseFile.Model.Tree.Key.getNodeTypeByKey(key);
 
                     CaseFile.View.Tree.onTreeNodeActivated(data.node);
+
+                    CaseFile.View.Tree._activeKey = key;
+                }
+                ,beforeActivate: function(event, data) {
+                    if (App.Object.Dirty.isDirty()) {
+                        var node = data.node;
+                        var key = node.key;
+                        if (key == CaseFile.View.Tree._activeKey) {
+                            return true;
+                        } else {
+                            var reason = App.Object.Dirty.getFirst();
+                            Acm.Dialog.alert("Need to save data first: " + reason);
+                            return false;
+                        }
+                    }
+                    return true;
                 }
                 ,dblclick: function(event, data) {
                     var node = data.node;
@@ -309,10 +326,59 @@ CaseFile.View = {
     }
 
 
+    ,Action: {
+        create: function() {
+            this.$dlgCloseCase          = $("#closeCase");
+            this.$dlgConsolidateCase    = $("#consolidateCase");
+            this.$edtConsolidateCase    = $("#edtConsolidateCase");
+            this.$btnCloseCase          = $("#tabTitle button[data-title='Close Case']");
+            this.$btnConsolidateCase    = $("#tabTitle button[data-title='Consolidate Case']");
+            this.$btnCloseCase          .on("click", function(e) {CaseFile.View.Action.onClickBtnCloseCase      (e, this);});
+            this.$btnConsolidateCase    .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
+        }
+        ,initialize: function() {
+        }
+
+        ,onClickBtnCloseCase: function() {
+            CaseFile.View.Action.showDlgCloseCase(function(event, ctrl){
+                alert("close case");
+            });
+        }
+        ,onClickBtnConsolidateCase: function() {
+            CaseFile.View.Action.setValueEdtConsolidateCase("");
+            CaseFile.View.Action.showDlgConsolidateCase(function(event, ctrl) {
+                var caseNumber = CaseFile.View.Action.getValueEdtConsolidateCase();
+                alert("Consolidate case:" + caseNumber);
+                var z = 1;
+            });
+        }
+        ,showDlgCloseCase: function(onClickBtnPrimary) {
+            Acm.Dialog.bootstrapModal(this.$dlgCloseCase, onClickBtnPrimary);
+        }
+        ,showDlgConsolidateCase: function(onClickBtnPrimary) {
+            Acm.Dialog.bootstrapModal(this.$dlgConsolidateCase, onClickBtnPrimary);
+        }
+        ,getValueEdtConsolidateCase: function() {
+            return Acm.Object.getValue(this.$edtConsolidateCase);
+        }
+        ,setValueEdtConsolidateCase: function(val) {
+            Acm.Object.setValue(this.$edtConsolidateCase, val);
+        }
+    }
+
+
     ,Detail: {
         create: function() {
             this.$tabTop          = $("#tabTop");
             this.$tabTopBlank     = $("#tabTopBlank");
+
+            this.$divDetail       = $(".divDetail");
+//            this.$btnEditDetail   = $("#tabDetail button:eq(0)");
+//            this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
+            this.$btnEditDetail   = $("#tabDetail button:eq(0)");
+            this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
+            this.$btnEditDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnEditDetail(e, this);});
+            this.$btnSaveDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnSaveDetail(e, this);});
 
             this.$labCaseNumber   = $("#caseNumber");
             this.$lnkCaseTitle    = $("#caseTitle");
@@ -351,6 +417,7 @@ CaseFile.View = {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_SUBJECT_TYPE_SAVED     ,this.onSubjectTypeSaved);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PRIORITY_SAVED         ,this.onPrioritySaved);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_DUE_DATE_SAVED         ,this.onDueDateSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_DETAIL_SAVED           ,this.onDetailSaved);
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_TREE_NODE_SELECTED     ,this.onTreeNodeSelected);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
@@ -407,17 +474,6 @@ CaseFile.View = {
                 }
             });
         }
-        ,onTreeNodeSelected: function(key) {
-            CaseFile.View.Detail.showPanel(key);
-        }
-        ,onCaseFileSelected: function(caseFileId) {
-            CaseFile.View.Detail.showTopPanel(0 < caseFileId);
-
-            var caseFile = CaseFile.Model.cacheCaseFile.get(caseFileId);
-            if (caseFile) {
-                CaseFile.View.Detail.populateCaseFile(caseFile);
-            }
-        }
         ,onCaseFileRetrieved: function(caseFile) {
             if (caseFile.hasError) {
                 alert("View: onCaseFileRetrieved, hasError");
@@ -465,6 +521,39 @@ CaseFile.View = {
                 CaseFile.View.Detail.setTextLnkDueDate("(Error)");
             }
         }
+        ,onDetailSaved: function(caseFileId, htmlDetail) {
+            if (htmlDetail.hasError) {
+                CaseFile.View.Detail.setHtmlDivDetail("(Error)");
+            }
+        }
+
+
+
+        ,onTreeNodeSelected: function(key) {
+            CaseFile.View.Detail.showPanel(key);
+        }
+        ,onCaseFileSelected: function(caseFileId) {
+            CaseFile.View.Detail.showTopPanel(0 < caseFileId);
+
+            var caseFile = CaseFile.Model.cacheCaseFile.get(caseFileId);
+            if (caseFile) {
+                CaseFile.View.Detail.populateCaseFile(caseFile);
+            }
+        }
+
+        ,onClickBtnEditDetail: function(event, ctrl) {
+            App.Object.Dirty.declare("Editing case detail");
+            CaseFile.View.Detail.editDivDetail();
+        }
+        ,onClickBtnSaveDetail: function(event, ctrl) {
+            //var c = Complaint.getComplaint();
+            var htmlDetail = CaseFile.View.Detail.saveDivDetail();
+            //c.details = html;
+            //Complaint.Service.saveComplaint(c);
+            CaseFile.Controller.viewChangedDetail(CaseFile.Model.getCaseFileId(), htmlDetail);
+            App.Object.Dirty.clear("Editing case detail");
+        }
+
 
         ,showTopPanel: function(show) {
             Acm.Object.show(this.$tabTop, show);
@@ -485,8 +574,9 @@ CaseFile.View = {
             this.setTextLnkAssignee(Acm.goodValue(c.creator));
             this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
             this.setTextLnkPriority(Acm.goodValue(c.priority));
-            this.setTextLnkDueDate(Acm.getDateFromDatetime(c.created));
+            this.setTextLnkDueDate(Acm.getDateFromDatetime("c.dueDate"));
             this.setTextLnkStatus(Acm.goodValue(c.status));
+            this.setHtmlDivDetail(Acm.goodValue("c.details"));
         }
 
         ,setTextLabCaseNumber: function(txt) {
@@ -513,6 +603,18 @@ CaseFile.View = {
         }
         ,setTextLnkStatus: function(txt) {
             Acm.Object.setText(this.$lnkStatus, txt);
+        }
+        ,getHtmlDivDetail: function() {
+            return AcmEx.Object.getSummernote(this.$divDetail);
+        }
+        ,setHtmlDivDetail: function(html) {
+            AcmEx.Object.SummerNote.set(this.$divDetail, html);
+        }
+        ,editDivDetail: function() {
+            AcmEx.Object.SummerNote.edit(this.$divDetail);
+        }
+        ,saveDivDetail: function() {
+            return AcmEx.Object.SummerNote.save(this.$divDetail);
         }
 
         ,populateCaseFile_old: function(c) {

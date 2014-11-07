@@ -155,15 +155,17 @@
                                 <div class="wrapper" id="tabTitle" style="display:none;">
                                     <div class="pull-right inline">
                                         <div class="btn-group">
-                                            <button class="btn btn-default btn-sm" data-title="Close Complaint"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>
-                                            <button class="btn btn-default btn-sm" data-title="Consolidate Complaint"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>
+                                            <%--<button class="btn btn-default btn-sm" data-title="Close Case"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
+                                            <button class="btn btn-default btn-sm" data-title="Close Case" ><i class="fa fa-archive"></i> Close</button>
+                                            <%--<button class="btn btn-default btn-sm" data-title="Consolidate Case"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>--%>
+                                            <button class="btn btn-default btn-sm" data-title="Consolidate Case"><i class="fa fa-random"></i> Consolidate</button>
                                             <!-- Modal -->
-                                            <div class="modal fade" id="closeCase" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal fade" id="closeCase" tabindex="-1" role="dialog" aria-labelledby="labCloseCase" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                            <h4 class="modal-title" id="myModalLabel">Close Case</h4>
+                                                            <h4 class="modal-title" id="labCloseCase">Close Case</h4>
                                                         </div>
                                                         <div class="modal-body"> Are you sure you want to close this case? </div>
                                                         <div class="modal-footer">
@@ -173,18 +175,18 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="modal fade" id="consolidateCase" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal fade" id="consolidateCase" tabindex="-1" role="dialog" aria-labelledby="labConsolidateCase" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                            <h4 class="modal-title" id="myModalLabel">Consolidate Case</h4>
+                                                            <h4 class="modal-title" id="labConsolidateCase">Consolidate Case</h4>
                                                         </div>
                                                         <div class="modal-body">
                                                             <section class="row">
                                                                 <div class="col-sm-12">
-                                                                    <label for="title" class="label">Enter the complaint you would like to consolidate with:</label>
-                                                                    <input id="title" type="text" class="form-control" placeholder="Case #" >
+                                                                    <label for="edtConsolidateCase" class="label">Enter the case you would like to consolidate with:</label>
+                                                                    <input id="edtConsolidateCase" type="text" class="form-control" placeholder="Case #" >
                                                                 </div>
                                                             </section>
                                                         </div>
@@ -197,8 +199,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <h4 class="m-n">Case Details</h4>
-                                    <hr/>
+                                    <%--<h4 class="m-n">Case Details</h4>--%>
+                                    <%--<hr/>--%>
                                 </div>
 
                                 <div class="col-md-12" id="tabDetail" style="display:none;">
@@ -208,8 +210,10 @@
                                             <ul class="nav nav-pills pull-right">
                                                 <li>
                                                     <div class="btn-group padder-v2">
-                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>
-                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>
+                                                        <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>--%>
+                                                        <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>--%>
+                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
                                                         <ul class="dropdown-menu pull-right">
                                                             <li><a href="#">Other menu items</a></li>
                                                         </ul>
@@ -219,10 +223,7 @@
                                             </ul>
                                             </span> <a href="#" class="font-bold">Details</a></div>
                                         <div class="panel-body">
-                                            <div class="complaintDetails">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
-                                                <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
-                                            </div>
+                                            <div class="divDetail"></div>
                                         </div>
                                     </section>
                                 </div>

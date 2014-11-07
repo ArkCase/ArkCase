@@ -23,6 +23,7 @@ CaseFile.Controller = {
     ,ME_SUBJECT_TYPE_SAVED              : "case-file-subject-type-saved"           //param: caseFileId, caseType
     ,ME_PRIORITY_SAVED                  : "case-file-priority-saved"               //param: caseFileId, priority
     ,ME_DUE_DATE_SAVED                  : "case-file-due-date-saved"               //param: caseFileId, dueDate
+    ,ME_DETAIL_SAVED                    : "case-file-detail-saved"                 //param: caseFileId, htmlDetail
 
     ,VE_PREV_PAGE_CLICKED               : "case-file-prev-page-clicked"            //param: none
     ,VE_NEXT_PAGE_CLICKED		        : "case-file-next-page-clicked"            //param: none
@@ -35,6 +36,7 @@ CaseFile.Controller = {
     ,VE_SUBJECT_TYPE_CHANGED            : "case-file-subject-type-changed"         //param: caseFileId, caseType
     ,VE_PRIORITY_CHANGED                : "case-file-priority-changed"             //param: caseFileId, priority
     ,VE_DUE_DATE_CHANGED                : "case-file-due-date-changed"             //param: caseFileId, dueDate
+    ,VE_DETAIL_CHANGED                  : "case-file-detail-changed"               //param: caseFileId, htmlDetail
 
     ,modelFoundAssignees: function(assignees) {
         Acm.Dispatcher.fireEvent(this.ME_ASSIGNEES_FOUND, assignees);
@@ -72,6 +74,10 @@ CaseFile.Controller = {
     ,modelSavedDueDate : function(caseFileId, dueDate) {
         Acm.Dispatcher.fireEvent(this.ME_DUE_DATE_SAVED, caseFileId, dueDate);
     }
+    ,modelSavedDetail : function(caseFileId, htmlDetail) {
+        Acm.Dispatcher.fireEvent(this.ME_DETAIL_SAVED, caseFileId, htmlDetail);
+    }
+
     ,viewClickedPrevPage: function() {
         Acm.Dispatcher.fireEvent(this.VE_PREV_PAGE_CLICKED);
     }
@@ -101,6 +107,9 @@ CaseFile.Controller = {
     }
     ,viewChangedDueDate: function(caseFileId, dueDate) {
         Acm.Dispatcher.fireEvent(this.VE_DUE_DATE_CHANGED, caseFileId, dueDate);
+    }
+    ,viewChangedDetail: function(caseFileId, htmlDetail) {
+        Acm.Dispatcher.fireEvent(this.VE_DETAIL_CHANGED, caseFileId, htmlDetail);
     }
 
 };
