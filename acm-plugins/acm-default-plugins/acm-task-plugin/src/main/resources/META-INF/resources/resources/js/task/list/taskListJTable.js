@@ -35,11 +35,11 @@ TaskList.JTable = {
                     }
                     return rc;
                 }
-                ,createAction: function(postData, jtParams) {
+                /*,createAction: function(postData, jtParams) {
                     //custom web form creation takes over; this action should never be called
                     var rc = {"Result": "OK", "Record": {id:0, title:"", type:"", created:"", author:"", status:""}};
                     return rc;
-                }
+                }*/
                 ,updateAction: function(postData, jtParams) {
                     var record = Acm.urlToJson(postData);
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
@@ -323,7 +323,7 @@ TaskList.JTable = {
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
                     var task = TaskList.getTask();
                     if (task) {
-                        rc.Record.parentId = Acm.goodValue(record.parentId);
+                        rc.Record.parentId = record.parentId;
                         rc.Record.parentType = record.parentType;
                         rc.Record.note = record.note;
                         rc.Record.created = Acm.getCurrentDay(); //record.created;

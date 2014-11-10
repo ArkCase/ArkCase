@@ -715,12 +715,26 @@ TaskList.Object = {
             this.$btnRejectTask.hide();
             this.$btnCompleteTask.show();
             this.$btnDeleteTask.show();
+
+            //this.refreshJTableDetails();
+            this.refreshJTableAttachments();
+            this.refreshJTableNotes();
+            this.refreshJTableWorkflowOverview();
+            this.refreshJTableHistory();
         }
         else{
             this.$btnCompleteTask.hide();
             this.$btnDeleteTask.hide();
             this.$btnApproveTask.show();
             this.$btnRejectTask.show();
+
+            //this.refreshJTableDetails();
+            this.refreshJTableAttachments();
+            this.refreshJTableNotes();
+            this.refreshJTableWorkflowOverview();
+            this.refreshJTableHistory();
+            this.refreshJTableDocuments();
+            this.refreshJTableInstructions();
         }
         TaskList.Object.refreshTaskTreeNode(task);
         this.setValueLnkTaskSubject(task.title);
@@ -731,6 +745,10 @@ TaskList.Object = {
         this.setValueTaskOwner(task.owner);
         this.setValueAssignedStatus(task.status);
         this.setValueDetails(task.details);
+
+
+
+
     }
 
     ,updateParentObjDetail: function(parentObj) {
@@ -751,6 +769,30 @@ TaskList.Object = {
     }
     ,refreshJTableNotes: function(){
         AcmEx.Object.jTableLoad(this.$divNotes);
+
+    }
+    ,refreshJTableAttachments: function(){
+        AcmEx.Object.jTableLoad(this.$divAttachments);
+
+    }
+    ,refreshJTableDetails: function(){
+        AcmEx.Object.jTableLoad(this.$divDetails);
+
+    }
+    ,refreshJTableDocuments: function(){
+        AcmEx.Object.jTableLoad(this.$divDocuments);
+
+    }
+    ,refreshJTableHistory: function(){
+        AcmEx.Object.jTableLoad(this.$divHistory);
+
+    }
+    ,refreshJTableInstructions: function(){
+        AcmEx.Object.jTableLoad(this.$divReworkInstructions);
+
+    }
+    ,refreshJTableWorkflowOverview: function(){
+        AcmEx.Object.jTableLoad(this.$divWorkflowOverview);
 
     }
 };
