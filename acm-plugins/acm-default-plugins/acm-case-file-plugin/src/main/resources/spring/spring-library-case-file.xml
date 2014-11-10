@@ -11,13 +11,17 @@
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="dao" ref="caseFileDao"/>
     </bean>
-
+    <bean id="caseFileToSolrTransformer" class="com.armedia.acm.plugins.casefile.service.CaseFileToSolrTransformer">
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="caseFileDao" ref="caseFileDao"/>
+    </bean>
     <bean id="acmCasePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ACM Case Files"/>
         <property name="privileges">
             <list>
                 <ref bean="caseFileListPrivilege"/>
                 <ref bean="saveCasePrivilege"/>
+                <ref bean="acmCaseApprovePrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
@@ -77,6 +81,21 @@
                     <property name="url" value="/api/{version}/plugin/casebystatus/summary"/>
                     <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
                 </bean>
+                <bean id="addFileToCase" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/case/file"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmCaseApprovePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-case-approve"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_ADMINISTRATOR</value>
             </list>
         </property>
     </bean>
