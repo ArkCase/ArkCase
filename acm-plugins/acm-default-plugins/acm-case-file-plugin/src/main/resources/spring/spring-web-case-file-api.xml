@@ -37,4 +37,8 @@
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
 
+    <bean id="addCaseFileController" class="com.armedia.acm.plugins.casefile.web.api.AddFileToCaseAPIController">
+        <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
 </beans>

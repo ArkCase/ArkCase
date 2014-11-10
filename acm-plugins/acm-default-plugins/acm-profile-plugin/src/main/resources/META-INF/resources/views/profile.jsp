@@ -57,6 +57,14 @@
                                                     <small> E-mail Address </small>
                                                 </div>
                                             </div>
+
+                                            <div>
+                                                <a id="lnkChangePicture" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Change Picture</u></a>
+                                                <form id="formPicture" style="display:block;">
+                                                    <input type="file" id="file" name="file">
+                                                    <input type="submit">
+                                                </form>
+                                            </div>
                                         </div>
                                     </section>
 

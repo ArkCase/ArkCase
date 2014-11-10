@@ -87,4 +87,18 @@ Acm.Dialog = {
         bootbox.prompt(msg, callback);
     }
 
+    ,bootstrapModal: function($s, onClickBtnPrimary, onClickBtnDefault) {
+        if (onClickBtnPrimary) {
+            $s.find("button.btn-primary").unbind("click").on("click", function(e){
+                onClickBtnPrimary(e, this);
+                $s.modal("hide");
+            });
+        }
+        if (onClickBtnDefault) {
+            $s.find("button.btn-default").unbind("click").on("click", function(e){onClickBtnDefault(e, this);});
+        }
+
+        $s.modal("show");
+    }
+
 }

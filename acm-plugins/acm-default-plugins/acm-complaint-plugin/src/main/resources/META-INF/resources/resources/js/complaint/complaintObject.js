@@ -233,7 +233,7 @@ Complaint.Object = {
     }
     ,getHtmlDivDetails: function() {
         //return AcmEx.Object.getSummernote(this.$divDetails);
-        return Acm.Object.getHtml(this.$divDetails);
+        return Acm.Object.getHtml(this.pictureUrl);
     }
     ,setHtmlDivDetails: function(html) {
         //AcmEx.Object.setSummerNote(this.$divDetails, html);

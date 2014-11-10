@@ -163,7 +163,6 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
         	
         	if (null != closeComplaintRequestFromDatabase){
         		closeComplaintRequest.setId(closeComplaintRequestFromDatabase.getId());
-        		// TODO: CHECK IF THIS WORKS PROPERLY. I WAS UNABLE TO TEST BECAUSE I HAVE PROBLEMS WITH PARTICIPANTS (THEY ARE EMPTY EVEN WE HAVE IN THE DATABASE)
         		getCloseComplaintRequestDao().delete(closeComplaintRequestFromDatabase.getParticipants());
         	}
         }
