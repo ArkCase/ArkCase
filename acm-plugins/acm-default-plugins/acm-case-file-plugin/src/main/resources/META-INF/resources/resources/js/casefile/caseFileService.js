@@ -11,6 +11,116 @@ CaseFile.Service = {
     ,initialize: function() {
     }
 
+    ,Lookup: {
+        create: function() {
+        }
+        ,initialize: function() {
+        }
+
+        ,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
+        ,API_GET_SUBJECT_TYPES         : "/api/latest/plugin/complaint/types"
+        ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
+
+        ,_validateAssignees: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,retrieveAssignees : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedCaseFile(response);
+
+                    } else {
+                        if (CaseFile.Service.Lookup._validateAssignees(response)) {
+                            var assignees = response;
+                            CaseFile.Model.Lookup.setAssignees(assignees);
+                            CaseFile.Controller.modelFoundAssignees(assignees);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_ASSIGNEES
+            )
+        }
+
+        ,_validateSubjectTypes: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,retrieveSubjectTypes : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedCaseFile(response);
+
+                    } else {
+                        if (CaseFile.Service.Lookup._validateSubjectTypes(response)) {
+                            var subjectTypes = response;
+                            CaseFile.Model.Lookup.setSubjectTypes(subjectTypes);
+                            CaseFile.Controller.modelFoundSubjectTypes(subjectTypes);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_SUBJECT_TYPES
+            )
+        }
+
+        ,_validatePriorities: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,retrievePriorities : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedCaseFile(response);
+
+                    } else {
+                        if (CaseFile.Service.Lookup._validatePriorities(response)) {
+                            var priorities = response;
+                            CaseFile.Model.Lookup.setPriorities(priorities);
+                            CaseFile.Controller.modelFoundPriorities(priorities);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_PRIORITIES
+            )
+        }
+    }
+
+    ,Solr: {
+        validateJson: function(data) {
+            if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.responseHeader.status)) {
+                return false;
+            }
+//            if (0 != responseHeader.status) {
+//                return false;
+//            }
+            if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start) || Acm.isEmpty(data.response.docs)) {
+                return false;
+            }
+            return true;
+        }
+    }
+
     ,List: {
         create: function() {
         }
@@ -20,13 +130,7 @@ CaseFile.Service = {
         ,API_RETRIEVE_CASE_FILE_LIST         : "/api/latest/plugin/search/CASE_FILE"
 
         ,_validateList: function(data) {
-            if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start) || Acm.isEmpty(data.response.docs)) {
-                return false;
-            }
-            return true;
+            return CaseFile.Service.Solr.validateJson(data);
         }
         ,retrieveCaseFileList: function(treeInfo){
             var caseFileId = treeInfo.caseFileId;
@@ -59,17 +163,20 @@ CaseFile.Service = {
 
                             var key = treeInfo.initKey;
 
+                            var caseFileId;
                             if (null == key) {
                                 if (0 < caseFiles.length) {
-                                    var caseFileId = parseInt(caseFiles[0].object_id_s);
+                                    caseFileId = parseInt(caseFiles[0].object_id_s);
                                     if (0 < caseFileId) {
                                         key = start + "." + caseFileId;
                                     }
                                 }
                             } else {
+                                caseFileId = CaseFile.Model.getCaseFileIdByKey(key);
                                 treeInfo.initKey = null;
                             }
 
+                            CaseFile.Model.setCaseFileId(caseFileId);
                             CaseFile.Controller.modelRetrievedCaseFileList(key);
                         }
                     }
@@ -278,97 +385,66 @@ CaseFile.Service = {
         }
     }
 
-    ,Lookup: {
+
+    ,Tasks: {
         create: function() {
         }
         ,initialize: function() {
         }
 
-        ,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
-        ,API_GET_SUBJECT_TYPES         : "/api/latest/plugin/complaint/types"
-        ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
+        ,API_RETRIEVE_TASKS_         : "/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId="
 
-        ,_validateAssignees: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (!Acm.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
-        ,retrieveAssignees : function() {
-            Acm.Service.asyncGet(
-                function(response) {
-                    if (response.hasError) {
-                        CaseFile.Controller.modelRetrievedCaseFile(response);
+        ,retrieveTaskListDeferred : function(caseFileId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + CaseFile.Service.Tasks.API_RETRIEVE_TASKS_;
+                    url += caseFileId;
 
-                    } else {
-                        if (CaseFile.Service.Lookup._validateAssignees(response)) {
-                            var assignees = response;
-                            CaseFile.Model.Lookup.setAssignees(assignees);
-                            CaseFile.Controller.modelFoundAssignees(assignees);
+                    //for test
+                    //url = App.getContextPath() + "/api/latest/plugin/search/CASE_FILE";
+
+                    return url;
+                }
+                ,function(data) {
+                    var jtData = null
+                    if (CaseFile.Service.Solr.validateJson(data)) {
+                        var responseHeader = data.responseHeader;
+                        if (0 == responseHeader.status) {
+                            //response.start should match to jtParams.jtStartIndex
+                            //response.docs.length should be <= jtParams.jtPageSize
+
+                            var response = data.response;
+                            var taskList = [];
+                            for (var i = 0; i < response.docs.length; i++) {
+                                var doc = response.docs[i];
+                                var task = {};
+                                task.id = doc.object_id_s;
+                                task.title = Acm.goodValue(response.docs[i].name); //title_t ?
+                                task.created = Acm.getDateFromDatetime(doc.create_dt);
+                                task.priority = "[priority]";
+                                task.dueDate = "[due6]";
+                                task.status = Acm.goodValue(doc.status_s);
+                                task.assignee = Acm.goodValue(doc.assignee_s);
+                                taskList.push(task);
+                            }
+                            CaseFile.Model.Tasks.cacheTaskList.put(caseFileId, taskList);
+
+                            jtData = callbackSuccess(taskList);
+
+                        } else {
+                            if (Acm.isNotEmpty(data.error)) {
+                                //todo: report error to controller. data.error.msg + "(" + data.error.code + ")";
+                            }
                         }
                     }
+
+                    return jtData;
                 }
-                ,App.getContextPath() + this.API_GET_ASSIGNEES
-            )
-        }
-
-        ,_validateSubjectTypes: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (!Acm.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
-        ,retrieveSubjectTypes : function() {
-            Acm.Service.asyncGet(
-                function(response) {
-                    if (response.hasError) {
-                        CaseFile.Controller.modelRetrievedCaseFile(response);
-
-                    } else {
-                        if (CaseFile.Service.Lookup._validateSubjectTypes(response)) {
-                            var subjectTypes = response;
-                            CaseFile.Model.Lookup.setSubjectTypes(subjectTypes);
-                            CaseFile.Controller.modelFoundSubjectTypes(subjectTypes);
-                        }
-                    }
-                }
-                ,App.getContextPath() + this.API_GET_SUBJECT_TYPES
-            )
-        }
-
-        ,_validatePriorities: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (!Acm.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
-        ,retrievePriorities : function() {
-            Acm.Service.asyncGet(
-                function(response) {
-                    if (response.hasError) {
-                        CaseFile.Controller.modelRetrievedCaseFile(response);
-
-                    } else {
-                        if (CaseFile.Service.Lookup._validatePriorities(response)) {
-                            var priorities = response;
-                            CaseFile.Model.Lookup.setPriorities(priorities);
-                            CaseFile.Controller.modelFoundPriorities(priorities);
-                        }
-                    }
-                }
-                ,App.getContextPath() + this.API_GET_PRIORITIES
-            )
+            );
         }
     }
+
     ,Document: {
         create: function() {
         }
@@ -388,40 +464,6 @@ CaseFile.Service = {
         }
 
         ,downloadDocument : function(caseFileId, callbackSuccess) {
-            return Acm.Service.deferredGet(
-                function(response) {
-                    if (!response.hasError) {
-                        if (CaseFile.Service.Detail._validate(response)) {
-                            var caseFile = response;
-                            CaseFile.Model.cacheCaseFile.put(caseFile.id, caseFile);
-                            return callbackSuccess(response);
-                        }
-                    }
-                }
-                ,App.getContextPath() + CaseFile.Service.TaskList.API_RETRIEVE_TASKS_ + caseFileId
-            );
-        }
-    }
-
-    ,TaskList: {
-        create: function() {
-        }
-        ,initialize: function() {
-        }
-
-        ,API_RETRIEVE_TASKS_         : "/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId="
-
-        ,_validate: function(data) {
-            if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start) || Acm.isEmpty(data.response.docs)) {
-                return false;
-            }
-            return true;
-        }
-
-        ,retrieveTaskListDeferred : function(caseFileId, callbackSuccess) {
             return Acm.Service.deferredGet(
                 function(response) {
                     if (!response.hasError) {
