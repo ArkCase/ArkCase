@@ -87,6 +87,7 @@
     </changeSet>
 
     <changeSet id="04-edit-cm-location-and-cm-organization-column" author="marst">
+        <addNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>
         <dropNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>
         <dropNotNullConstraint tableName="acm_user_org" columnName="cm_organization"/>
     </changeSet>
