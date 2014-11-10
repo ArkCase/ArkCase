@@ -5,13 +5,59 @@
  */
 Profile.View = {
     create : function() {
-        if (Profile.View.Info.create) {Profile.View.Info.create();}
-        if (Profile.View.Subscription.create) {Profile.View.Subscription.create();}
+        if (Profile.View.Picture.create)          {Profile.View.Picture.create();}
+        if (Profile.View.Info.create)             {Profile.View.Info.create();}
+        if (Profile.View.Subscription.create)     {Profile.View.Subscription.create();}
     }
     ,initialize: function() {
-        if (Profile.View.Info.initialize) {Profile.View.Info.initialize();}
+        if (Profile.View.Picture.initialize)      {Profile.View.Picture.initialize();}
+        if (Profile.View.Info.initialize)         {Profile.View.Info.initialize();}
         if (Profile.View.Subscription.initialize) {Profile.View.Subscription.initialize();}
     }
+
+    ,Picture: {
+        create: function() {
+            this.$lnkChangePicture = $("#lnkChangePicture");
+            this.$imgPicture       = $("#picture");
+            this.$formPicture      = $("#formPicture");
+            this.$fileInput        = $("#file");
+
+            this.$lnkChangePicture.on("click", function(e) {Profile.View.Picture.onClickLnkChnagePicture(e, this);});
+            this.$fileInput.on("change", function(e) {Profile.View.Picture.onChangeFileInput(e, this);});
+
+            this.$formPicture.submit(function(e) {Profile.View.Picture.onSubmitFormPicture(e, this);});
+        }
+        ,initialize: function() {
+        }
+
+        ,onClickLnkChnagePicture: function(event, ctrl) {
+            Profile.View.Picture.$fileInput.click();
+            var z = 1;
+        }
+        ,onChangeFileInput: function(event, ctrl) {
+            //alert("chnage");
+        }
+        ,onSubmitFormPicture: function(event, ctrl) {
+            event.preventDefault();
+
+            var _this = Profile.View.Picture;
+            var fd = new FormData();
+            fd.append("userId", "ann-acm");
+            fd.append("file", _this.$fileInput[0].files[0]);
+            var url = App.getContextPath() + "/api/latest/plugin/profile/img";
+            $.ajax({
+                url: url,
+                data: fd,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function(data){
+                    alert("yes");;
+                }
+            });
+        }
+    }
+
 
     ,Info: {
         create: function() {
@@ -117,7 +163,10 @@ Profile.View = {
         }
 
         ,populateProfileInfo: function(profileInfo) {
-            var pictureUrl = (Acm.isEmpty(profileInfo.pictureUrl)) ? this.getDefaultImgPicture() : profileInfo.pictureUrl;
+            var ecmFileId = Acm.goodValue(profileInfo.ecmFileId, -1);
+            var pictureUrl = (0 < ecmFileId)? "/api/latest/ecm/download/byId/" + ecmFileId + "?inline=true"
+                : this.getDefaultImgPicture();
+            //var pictureUrl = (Acm.isEmpty(profileInfo.pictureUrl)) ? this.getDefaultImgPicture() : profileInfo.pictureUrl;
             this.setSrcImgPicture(pictureUrl);
 
             this.setTextH4FullName     (Acm.goodValue(profileInfo.fullName));

@@ -7,20 +7,35 @@ CaseFile.Model = {
     create : function() {
         this.cachePage = new Acm.Model.CacheFifo(2);
         this.cacheCaseFile = new Acm.Model.CacheFifo(3);
-        this.cacheCaseEvents = new Acm.Model.CacheFifo(3);
+        //this.cacheCaseEvents = new Acm.Model.CacheFifo(3);
 
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PREV_PAGE_CLICKED      ,this.onPrevPageClicked);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NEXT_PAGE_CLICKED      ,this.onNextPageClicked);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_TITLE_CHANGED     ,this.onCaseTitleChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_INCIDENT_DATE_CHANGED  ,this.onIncidentDateChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ASSIGNEE_CHANGED       ,this.onAssigneeChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SUBJECT_TYPE_CHANGED   ,this.onSubjectTypeChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PRIORITY_CHANGED       ,this.onPriorityChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DUE_DATE_CHANGED       ,this.onDueDateChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DETAIL_CHANGED         ,this.onDetailChanged);
 
-        if (CaseFile.Model.Tree.create)    {CaseFile.Model.Tree.create();}
         if (CaseFile.Model.Lookup.create)  {CaseFile.Model.Lookup.create();}
+        if (CaseFile.Model.Tree.create)    {CaseFile.Model.Tree.create();}
+        if (CaseFile.Model.Tasks.create)   {CaseFile.Model.Tasks.create();}
     }
     ,initialize: function() {
-        if (CaseFile.Model.Tree.initialize)    {CaseFile.Model.Tree.initialize();}
+        var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
+        if (0 < treeInfo.caseFileId) { //single caseFile
+            CaseFile.Model.setCaseFileId(treeInfo.caseFileId);
+            CaseFile.Service.Detail.retrieveCaseFile(treeInfo.caseFileId);
+        } else {
+            CaseFile.Service.List.retrieveCaseFileList(treeInfo);
+        }
+
         if (CaseFile.Model.Lookup.initialize)  {CaseFile.Model.Lookup.initialize();}
+        if (CaseFile.Model.Tree.initialize)    {CaseFile.Model.Tree.initialize();}
+        if (CaseFile.Model.Tasks.initialize)   {CaseFile.Model.Tasks.initialize();}
     }
 
     ,onPrevPageClicked: function() {
@@ -50,7 +65,9 @@ CaseFile.Model = {
             CaseFile.Service.Detail.retrieveCaseFile(caseFileId);
         }
     }
-    ,onCaseTitleChanged: function(caseFileId, caseTitle) {
+    ,onCaseTitleChanged: function(caseFileId, title) {
+        CaseFile.Service.Detail.saveCaseTitle(caseFileId, title);
+
         var pageId = CaseFile.Model.Tree.Config.getPageId();
         var caseFiles = CaseFile.Model.cachePage.get(pageId);
         if (caseFiles) {
@@ -59,31 +76,34 @@ CaseFile.Model = {
                 if (c) {
                     var cid = parseInt(Acm.goodValue(c.object_id_s, 0));
                     if (cid == caseFileId) {
-                        c.title_t = caseTitle;
+                        c.title_t = title;
                         CaseFile.Model.cachePage.put(pageId, caseFiles);
                         break;
                     }
                 }
             } //end for i
         }
-
-        //save case title to database
-        //var caseFile = CaseFile.Model.getCaseFileCurrent();
-        var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-        if (caseFile) {
-            caseFile.title = caseTitle;
-            CaseFile.Service.Detail.saveCaseFile(caseFile);
-        }
     }
-    ,onIncidentDateChanged: function(caseFileId, incidentDate) {
-        var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-        if (caseFile) {
-            caseFile.created = incidentDate;
-            CaseFile.Service.Detail.saveCaseFile(caseFile);
-        }
+    ,onIncidentDateChanged: function(caseFileId, created) {
+        CaseFile.Service.Detail.saveIncidentDate(caseFileId, created);
+    }
+    ,onAssigneeChanged: function(caseFileId, assignee) {
+        CaseFile.Service.Detail.saveAssignee(caseFileId, assignee);
+    }
+    ,onSubjectTypeChanged: function(caseFileId, caseType) {
+        CaseFile.Service.Detail.saveSubjectType(caseFileId, caseType);
+    }
+    ,onPriorityChanged: function(caseFileId, priority) {
+        CaseFile.Service.Detail.savePriority(caseFileId, priority);
+    }
+    ,onDueDateChanged: function(caseFileId, dueDate) {
+        CaseFile.Service.Detail.saveDueDate(caseFileId, dueDate);
+    }
+    ,onDetailChanged: function(caseFileId, htmlDetail) {
+        CaseFile.Service.Detail.saveDetail(caseFileId, htmlDetail);
     }
 
-    ,_objectType: "CASE"
+    ,_objectType: "CASE_FILE"
     ,getObjectType: function() {
         return this._objectType;
     }
@@ -105,6 +125,13 @@ CaseFile.Model = {
         return this.getCaseFile(this._caseFileId);
     }
 
+    ,Tasks: {
+        create : function() {
+            this.cacheTaskList = new Acm.Model.CacheFifo(4);
+        }
+        ,initialize: function() {
+        }
+    }
 
     ,Tree: {
         create : function() {
@@ -314,8 +341,50 @@ CaseFile.Model = {
 
     ,Lookup: {
         create: function() {
+            this._assignees    = new Acm.Model.SessionData("AcmCaseAssignees");
+            this._subjectTypes = new Acm.Model.SessionData("AcmCaseTypes");
+            this._priorities   = new Acm.Model.SessionData("AcmCasePriorities");
         }
         ,initialize: function() {
+            var assignees = CaseFile.Model.Lookup.getAssignees();
+            if (Acm.isEmpty(assignees)) {
+                CaseFile.Service.Lookup.retrieveAssignees();
+            } else {
+                CaseFile.Controller.modelFoundAssignees(assignees);
+            }
+
+            var subjectTypes = CaseFile.Model.Lookup.getSubjectTypes();
+            if (Acm.isEmpty(subjectTypes)) {
+                CaseFile.Service.Lookup.retrieveSubjectTypes();
+            } else {
+                CaseFile.Controller.modelFoundSubjectTypes(subjectTypes);
+            }
+
+            var priorities = CaseFile.Model.Lookup.getPriorities();
+            if (Acm.isEmpty(priorities)) {
+                CaseFile.Service.Lookup.retrievePriorities();
+            } else {
+                CaseFile.Controller.modelFoundPriorities(priorities);
+            }
+        }
+
+        ,getAssignees: function() {
+            return this._assignees.get();
+        }
+        ,setAssignees: function(assignees) {
+            this._assignees.set(assignees);
+        }
+        ,getSubjectTypes: function() {
+            return this._subjectTypes.get();
+        }
+        ,setSubjectTypes: function(subjectTypes) {
+            this._subjectTypes.set(subjectTypes);
+        }
+        ,getPriorities: function() {
+            return this._priorities.get();
+        }
+        ,setPriorities: function(priorities) {
+            this._priorities.set(priorities);
         }
 
 
