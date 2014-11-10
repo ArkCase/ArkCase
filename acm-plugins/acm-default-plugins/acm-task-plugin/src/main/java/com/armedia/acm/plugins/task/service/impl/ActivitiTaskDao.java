@@ -5,6 +5,8 @@ import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.service.TaskDao;
+import org.activiti.bpmn.model.*;
+import org.activiti.bpmn.model.Process;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
@@ -373,14 +375,11 @@ class ActivitiTaskDao implements TaskDao
         }
 
         String pid = hti.getProcessDefinitionId();
+        String processInstanceId = hti.getProcessInstanceId();
+        String taskDefinitionKey = hti.getTaskDefinitionKey();
         if ( pid != null )
         {
-            ProcessDefinition pd =
-                    getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(pid).singleResult();
-            retval.setBusinessProcessName(pd.getName());
-            retval.setAdhocTask(false);
-            retval.setBusinessProcessId(
-                    hti.getProcessInstanceId() == null ? null : Long.valueOf(hti.getProcessInstanceId()));
+            findProcessNameAndTaskOutcomes(retval, pid, processInstanceId, taskDefinitionKey);
         }
         else
         {
@@ -396,6 +395,54 @@ class ActivitiTaskDao implements TaskDao
         }
 
         return retval;
+    }
+
+    private void findProcessNameAndTaskOutcomes(AcmTask retval, String processDefinitionId, String processInstanceId, String taskDefinitionKey)
+    {
+        ProcessDefinition pd =
+                getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(processDefinitionId).singleResult();
+        retval.setBusinessProcessName(pd.getName());
+        retval.setAdhocTask(false);
+        retval.setBusinessProcessId(
+                processInstanceId == null ? null : Long.valueOf(processInstanceId));
+
+        List<FormProperty> formProperties = findFormPropertiesForTask(processDefinitionId, taskDefinitionKey);
+        if ( formProperties != null )
+        {
+            for ( FormProperty fp : formProperties )
+            {
+                log.debug("form property name: " + fp.getName() + "; id: " + fp.getId());
+                if ( fp.getId() != null && fp.getId().endsWith("Outcome"))
+                {
+                    retval.setOutcomeName(fp.getId());
+                    for ( FormValue fv : fp.getFormValues() )
+                    {
+                        log.debug(fv.getId() + " = " + fv.getName());
+                        retval.getOutcomes().put(fv.getId(), fv.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    private List<FormProperty> findFormPropertiesForTask(String processDefinitionId, String taskDefinitionKey)
+    {
+        BpmnModel model = getActivitiRepositoryService().getBpmnModel(processDefinitionId);
+
+        List<Process> processes = model.getProcesses();
+
+        Process p = processes.get(0);
+
+        FlowElement taskFlowElement = p.getFlowElement(taskDefinitionKey);
+
+        log.debug("task flow type: " + taskFlowElement.getClass().getName());
+
+        UserTask ut = (UserTask) taskFlowElement;
+
+        List<FormProperty> formProperties = ut.getFormProperties();
+
+        return formProperties;
+
     }
 
     private void extractTaskLocalVariables(AcmTask acmTask, Map<String, Object> taskLocal)
@@ -478,7 +525,17 @@ class ActivitiTaskDao implements TaskDao
             extractTaskLocalVariables(acmTask, activitiTask.getTaskLocalVariables());
         }
 
-        findBusinessProcessName(activitiTask, acmTask);
+        String pid = activitiTask.getProcessDefinitionId();
+        String processInstanceId = activitiTask.getProcessInstanceId();
+        String taskDefinitionKey = activitiTask.getTaskDefinitionKey();
+        if ( pid != null )
+        {
+            findProcessNameAndTaskOutcomes(acmTask, pid, processInstanceId, taskDefinitionKey);
+        }
+        else
+        {
+            acmTask.setAdhocTask(true);
+        }
 
         if ( log.isTraceEnabled() )
         {
@@ -491,23 +548,7 @@ class ActivitiTaskDao implements TaskDao
         return acmTask;
     }
 
-    protected void findBusinessProcessName(Task activitiTask, AcmTask acmTask)
-    {
-        String pid = activitiTask.getProcessDefinitionId();
-        if ( pid != null )
-        {
-            ProcessDefinition pd =
-                    getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(pid).singleResult();
-            acmTask.setBusinessProcessName(pd.getName());
-            acmTask.setAdhocTask(false);
-            acmTask.setBusinessProcessId(
-                    activitiTask.getProcessInstanceId() == null ? null : Long.valueOf(activitiTask.getProcessInstanceId()));
-        }
-        else
-        {
-            acmTask.setAdhocTask(true);
-        }
-    }
+
 
     private Date shiftDateFromToday(int daysFromToday){
         Date nextDate;

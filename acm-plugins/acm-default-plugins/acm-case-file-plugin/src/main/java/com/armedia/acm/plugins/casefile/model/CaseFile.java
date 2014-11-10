@@ -3,26 +3,17 @@ package com.armedia.acm.plugins.casefile.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.services.users.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="acm_case_file")
@@ -48,6 +39,15 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_case_status")
     private String status;
 
+    @Lob
+    @Column(name = "cm_case_details")
+    private String details;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Column(name = "cm_case_incident_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date incidentDate;
+
     @Column(name = "cm_case_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
@@ -72,12 +72,24 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_case_priority")
     private String priority;
 
+    @OneToMany (cascade = {CascadeType.ALL})
+    @JoinColumn(name = "cm_object_id")
+    private List<AcmParticipant> participants = new ArrayList<>();
+
+    /**
+     * These approvers are added by the web application and they become the assignees of the Activiti business process.
+     * They are not persisted to the database.
+     */
+    @Transient
+    private List<String> approvers;
+
     /**
      * This field is only used when the complaint is created. Usually it will be null.  Use the ecmFolderId
      * to get the CMIS object ID of the complaint folder.
      */
     @Transient
     private String ecmFolderPath;
+
 
     /**
      * CMIS object ID of the folder where the complaint's attachments/content files are stored.
@@ -244,6 +256,38 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
 
     public void setPriority(String priority) {
         this.priority = priority;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public Date getIncidentDate() {
+        return incidentDate;
+    }
+
+    public void setIncidentDate(Date incidentDate) {
+        this.incidentDate = incidentDate;
+    }
+
+    public List<AcmParticipant> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<AcmParticipant> participants) {
+        this.participants = participants;
+    }
+
+    public List<String> getApprovers() {
+        return approvers;
+    }
+
+    public void setApprovers(List<String> approvers) {
+        this.approvers = approvers;
     }
 
     @Override
