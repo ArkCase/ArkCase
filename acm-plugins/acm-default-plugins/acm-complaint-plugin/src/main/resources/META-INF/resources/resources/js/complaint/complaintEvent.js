@@ -191,7 +191,7 @@ Complaint.Event = {
     ,_tryInitPriority: function() {
         var data = App.Object.getPriorities();
         if (Acm.isNotEmpty(data)) {
-            Complaint.Object.initPriority(data);
+            Complaint.Object.$lnkPriority(data);
             return true;
         } else {
             return false;

@@ -470,7 +470,7 @@ public class DocumentApprovalProcessIT
 
         for ( FormProperty fp : formProperties )
         {
-            log.debug("fp name: " + fp.getName());
+            log.debug("fp name: " + fp.getName() + "; id: " + fp.getId());
             for ( FormValue fv : fp.getFormValues() )
             {
                 log.debug(fv.getId() + " = " + fv.getName());

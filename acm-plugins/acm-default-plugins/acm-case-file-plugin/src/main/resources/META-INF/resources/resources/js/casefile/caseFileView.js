@@ -6,11 +6,15 @@
 CaseFile.View = {
     create : function() {
         if (CaseFile.View.Tree.create)    {CaseFile.View.Tree.create();}
+        if (CaseFile.View.Action.create)  {CaseFile.View.Action.create();}
         if (CaseFile.View.Detail.create)  {CaseFile.View.Detail.create();}
+        if (CaseFile.View.Tasks.create)   {CaseFile.View.Tasks.create();}
     }
     ,initialize: function() {
         if (CaseFile.View.Tree.initialize)    {CaseFile.View.Tree.initialize();}
+        if (CaseFile.View.Action.initialize)  {CaseFile.View.Action.initialize();}
         if (CaseFile.View.Detail.initialize)  {CaseFile.View.Detail.initialize();}
+        if (CaseFile.View.Tasks.initialize)   {CaseFile.View.Tasks.initialize();}
     }
 
     ,Tree: {
@@ -31,11 +35,22 @@ CaseFile.View = {
                 CaseFile.View.Tree.refreshTree(key);
             }
         }
-        ,onCaseTitleChanged: function(caseFileId, caseTitle) {
-            CaseFile.View.Tree.updateTitle(caseFileId, caseTitle);
+        ,onCaseTitleChanged: function(caseFileId, title) {
+            CaseFile.View.Tree.updateTitle(caseFileId, title);
         }
 
-//////////////////////////////////////////////////
+        ,onTreeNodeActivated: function(node) {
+            if ("prevPage" == node.key) {
+                CaseFile.Controller.viewClickedPrevPage();
+            } else if ("nextPage" == node.key) {
+                CaseFile.Controller.viewClickedNextPage();
+            } else {
+                var caseFileId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(node.key);
+                CaseFile.Controller.viewSelectedCaseFile(caseFileId);
+            }
+
+            CaseFile.Controller.viewSelectedTreeNode(node.key);
+        }
 
         ,refreshTree: function(key) {
             this.tree.reload().done(function(){
@@ -51,20 +66,7 @@ CaseFile.View = {
             this.tree.activateKey(key);
         }
 
-
-        ,onTreeNodeActivated: function(node) {
-            if ("prevPage" == node.key) {
-                CaseFile.Controller.viewClickedPrevPage();
-            } else if ("nextPage" == node.key) {
-                CaseFile.Controller.viewClickedNextPage();
-            } else {
-                var caseFileId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(node.key);
-                CaseFile.Controller.viewSelectedCaseFile(caseFileId);
-            }
-
-            CaseFile.Controller.viewSelectedTreeNode(node.key);
-        }
-
+        ,_activeKey: null
         ,_useFancyTree: function($s) {
             $s.fancytree({
                 activate: function(event, data) {
@@ -73,6 +75,22 @@ CaseFile.View = {
                     var nodeType = CaseFile.Model.Tree.Key.getNodeTypeByKey(key);
 
                     CaseFile.View.Tree.onTreeNodeActivated(data.node);
+
+                    CaseFile.View.Tree._activeKey = key;
+                }
+                ,beforeActivate: function(event, data) {
+                    if (App.Object.Dirty.isDirty()) {
+                        var node = data.node;
+                        var key = node.key;
+                        if (key == CaseFile.View.Tree._activeKey) {
+                            return true;
+                        } else {
+                            var reason = App.Object.Dirty.getFirst();
+                            Acm.Dialog.alert("Need to save data first: " + reason);
+                            return false;
+                        }
+                    }
+                    return true;
                 }
                 ,dblclick: function(event, data) {
                     var node = data.node;
@@ -108,17 +126,6 @@ CaseFile.View = {
 //                // (index #2 is rendered by fancytree)
 //            }
 
-//            ,source: function() {
-//                var rc = [
-//                    {title: "Node 1", key: "1"}
-//                    ,{title: "Folder 2", key: "2", folder: true, children: [
-//                        {title: "Node 2.1", key: "3", myOwnAttr: "abc"},
-//                        {title: "Node 2.2", key: "4"}
-//                    ]}
-//                    ,{title: "Folder 30", key: "30", folder: true, lazy: true}
-//                ];
-//                return rc;
-//            }
                 ,lazyLoad: function(event, data) {
                     CaseFile.View.Tree.lazyLoad(event, data);
                 }
@@ -231,10 +238,10 @@ CaseFile.View = {
                 case CaseFile.Model.Tree.Key.NODE_TYPE_PART_PAGE + CaseFile.Model.Tree.Key.NODE_TYPE_PART_OBJECT: //"pc":
                     data.result = AcmEx.FancyTreeBuilder
                         .reset()
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS       //level 2: /CaseFile/Details
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS         //level 2: /CaseFile/Details
                             ,title: "Details"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE       //level 2: /CaseFile/People
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE          //level 2: /CaseFile/People
                             ,title: "People"
                         })
                         .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS       //level 2: /CaseFile/Documents
@@ -243,19 +250,19 @@ CaseFile.View = {
 //                            ,lazy: true
 //                            ,cache: false
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS       //level 2: /CaseFile/Participants
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS    //level 2: /CaseFile/Participants
                             ,title: "Participants"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES       //level 2: /CaseFile/Notes
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES           //level 2: /CaseFile/Notes
                             ,title: "Notes"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS       //level 2: /CaseFile/Tasks
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/Tasks
                             ,title: "Tasks"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS       //level 2: /CaseFile/References
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/References
                             ,title: "References"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY       //level 2: /CaseFile/History
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY         //level 2: /CaseFile/History
                             ,title: "History"
                         })
                         .getTree();
@@ -287,6 +294,7 @@ CaseFile.View = {
 
                 default:
                     data.result = [];
+                    break;
             }
         }
 
@@ -318,35 +326,210 @@ CaseFile.View = {
             return menu;
         }
     }
+
+
+    ,Action: {
+        create: function() {
+            this.$dlgCloseCase          = $("#closeCase");
+            this.$dlgConsolidateCase    = $("#consolidateCase");
+            this.$edtConsolidateCase    = $("#edtConsolidateCase");
+            this.$btnCloseCase          = $("#tabTitle button[data-title='Close Case']");
+            this.$btnConsolidateCase    = $("#tabTitle button[data-title='Consolidate Case']");
+            this.$btnCloseCase          .on("click", function(e) {CaseFile.View.Action.onClickBtnCloseCase      (e, this);});
+            this.$btnConsolidateCase    .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
+        }
+        ,initialize: function() {
+        }
+
+        ,onClickBtnCloseCase: function() {
+            CaseFile.View.Action.showDlgCloseCase(function(event, ctrl){
+                alert("close case");
+            });
+        }
+        ,onClickBtnConsolidateCase: function() {
+            CaseFile.View.Action.setValueEdtConsolidateCase("");
+            CaseFile.View.Action.showDlgConsolidateCase(function(event, ctrl) {
+                var caseNumber = CaseFile.View.Action.getValueEdtConsolidateCase();
+                alert("Consolidate case:" + caseNumber);
+                var z = 1;
+            });
+        }
+        ,showDlgCloseCase: function(onClickBtnPrimary) {
+            Acm.Dialog.bootstrapModal(this.$dlgCloseCase, onClickBtnPrimary);
+        }
+        ,showDlgConsolidateCase: function(onClickBtnPrimary) {
+            Acm.Dialog.bootstrapModal(this.$dlgConsolidateCase, onClickBtnPrimary);
+        }
+        ,getValueEdtConsolidateCase: function() {
+            return Acm.Object.getValue(this.$edtConsolidateCase);
+        }
+        ,setValueEdtConsolidateCase: function(val) {
+            Acm.Object.setValue(this.$edtConsolidateCase, val);
+        }
+    }
+
+
     ,Detail: {
         create: function() {
-            this.$tabTop = $("#tabTop");
-            this.$tabTopBlank = $("#tabTopBlank");
+            this.$tabTop          = $("#tabTop");
+            this.$tabTopBlank     = $("#tabTopBlank");
 
-            this.$labCaseNumber = $("#caseNumber"); //this.$lnkCloseDate.parent("div").next("small");
-            this.$lnkCaseTitle  = $("#caseTitle");
+            this.$divDetail       = $(".divDetail");
+//            this.$btnEditDetail   = $("#tabDetail button:eq(0)");
+//            this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
+            this.$btnEditDetail   = $("#tabDetail button:eq(0)");
+            this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
+            this.$btnEditDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnEditDetail(e, this);});
+            this.$btnSaveDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnSaveDetail(e, this);});
+
+            this.$labCaseNumber   = $("#caseNumber");
+            this.$lnkCaseTitle    = $("#caseTitle");
+            this.$lnkIncidentDate = $("#incident");
+            this.$lnkPriority     = $("#priority");
+            this.$lnkAssignee     = $("#assigned");
+            this.$lnkSubjectType  = $("#type");
+            this.$lnkDueDate      = $("#dueDate");
+            this.$lnkStatus       = $("#status");
+
             AcmEx.Object.XEditable.useEditable(this.$lnkCaseTitle, {
                 success: function(response, newValue) {
                     CaseFile.Controller.viewChangedCaseTitle(CaseFile.Model.getCaseFileId(), newValue);
                 }
             });
-
-            this.$lnkIncidentDate = $("#incidentDate");
             AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
                 success: function(response, newValue) {
                     CaseFile.Controller.viewChangedIncidentDate(CaseFile.Model.getCaseFileId(), newValue);
                 }
             });
+            AcmEx.Object.XEditable.useEditableDate(this.$lnkDueDate, {
+                success: function(response, newValue) {
+                    CaseFile.Controller.viewChangedDueDate(CaseFile.Model.getCaseFileId(), newValue);
+                }
+            });
 
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED, this.onCaseFileRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_SAVED,     this.onCaseFileSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ASSIGNEES_FOUND        ,this.onAssigneesFound);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_SUBJECT_TYPES_FOUND    ,this.onSubjectTypesFound);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PRIORITIES_FOUND       ,this.onPrioritiesFound);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_SAVED        ,this.onCaseFileSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_TITLE_SAVED       ,this.onCaseTitleSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_INCIDENT_DATE_SAVED    ,this.onIncidentDateSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ASSIGNEE_SAVED         ,this.onAssigneeSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_SUBJECT_TYPE_SAVED     ,this.onSubjectTypeSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PRIORITY_SAVED         ,this.onPrioritySaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_DUE_DATE_SAVED         ,this.onDueDateSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_DETAIL_SAVED           ,this.onDetailSaved);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_TREE_NODE_SELECTED, this.onTreeNodeSelected);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED, this.onCaseFileSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_TREE_NODE_SELECTED     ,this.onTreeNodeSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
         }
         ,initialize: function() {
         }
+
+
+        ,onAssigneesFound: function(assignees) {
+            var choices = [];
+            $.each(assignees, function(idx, val) {
+                var opt = {};
+                opt.value = val.userId;
+                opt.text = val.fullName;
+                choices.push(opt);
+            });
+
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkAssignee, {
+                source: choices
+                ,success: function(response, newValue) {
+                    CaseFile.Controller.viewChangedAssignee(CaseFile.Model.getCaseFileId(), newValue);
+                }
+            });
+        }
+        ,onSubjectTypesFound: function(subjectTypes) {
+            var choices = [];
+            $.each(subjectTypes, function(idx, val) {
+                var opt = {};
+                opt.value = val;
+                opt.text = val;
+                choices.push(opt);
+            });
+
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkSubjectType, {
+                source: choices
+                ,success: function(response, newValue) {
+                    CaseFile.Controller.viewChangedSubjectType(CaseFile.Model.getCaseFileId(), newValue);
+                }
+            });
+        }
+        ,onPrioritiesFound: function(priorities) {
+            var choices = []; //[{value: "", text: "Choose Priority"}];
+            $.each(priorities, function(idx, val) {
+                var opt = {};
+                opt.value = val;
+                opt.text = val;
+                choices.push(opt);
+            });
+
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkPriority, {
+                source: choices
+                ,success: function(response, newValue) {
+                    CaseFile.Controller.viewChangedPriority(CaseFile.Model.getCaseFileId(), newValue);
+                }
+            });
+        }
+        ,onCaseFileRetrieved: function(caseFile) {
+            if (caseFile.hasError) {
+                alert("View: onCaseFileRetrieved, hasError");
+            } else {
+                CaseFile.View.Detail.populateCaseFile(caseFile);
+            }
+        }
+//        ,onCaseFileSaved: function(caseFile) {
+//            //todo: pop ASN message
+//            if (caseFile.hasError) {
+//                alert("View: onCaseFileSaved, hasError");
+//            } else {
+//                alert("View: onCaseFileSaved");
+//            }
+//
+//        }
+        ,onCaseTitleSaved: function(caseFileId, title) {
+            if (title.hasError) {
+                //alert("View: onCaseTitleSaved, hasError, errorMsg:" + title.errorMsg);
+                CaseFile.View.Detail.setTextLnkCaseTitle("(Error)");
+            }
+        }
+        ,onIncidentDateSaved: function(caseFileId, created) {
+            if (created.hasError) {
+                CaseFile.View.Detail.setTextLnkIncidentDate("(Error)");
+            }
+        }
+        ,onAssigneeSaved: function(caseFileId, assginee) {
+            if (assginee.hasError) {
+                CaseFile.View.Detail.setTextLnkAssignee("(Error)");
+            }
+        }
+        ,onSubjectTypeSaved: function(caseFileId, subjectType) {
+            if (subjectType.hasError) {
+                CaseFile.View.Detail.setTextLnkSubjectType("(Error)");
+            }
+        }
+        ,onPrioritySaved: function(caseFileId, priority) {
+            if (priority.hasError) {
+                CaseFile.View.Detail.setTextLnkPriority("(Error)");
+            }
+        }
+        ,onDueDateSaved: function(caseFileId, created) {
+            if (created.hasError) {
+                CaseFile.View.Detail.setTextLnkDueDate("(Error)");
+            }
+        }
+        ,onDetailSaved: function(caseFileId, htmlDetail) {
+            if (htmlDetail.hasError) {
+                CaseFile.View.Detail.setHtmlDivDetail("(Error)");
+            }
+        }
+
+
 
         ,onTreeNodeSelected: function(key) {
             CaseFile.View.Detail.showPanel(key);
@@ -359,21 +542,18 @@ CaseFile.View = {
                 CaseFile.View.Detail.populateCaseFile(caseFile);
             }
         }
-        ,onCaseFileRetrieved: function(caseFile) {
-            if (caseFile.hasError) {
-                alert("View: onCaseFileRetrieved, hasError");
-            } else {
-                CaseFile.View.Detail.populateCaseFile(caseFile);
-            }
-        }
-        ,onCaseFileSaved: function(caseFile) {
-            //todo: pop ASN message
-            if (caseFile.hasError) {
-                alert("View: onCaseFileSaved, hasError");
-            } else {
-                alert("View: onCaseFileSaved");
-            }
 
+        ,onClickBtnEditDetail: function(event, ctrl) {
+            App.Object.Dirty.declare("Editing case detail");
+            CaseFile.View.Detail.editDivDetail();
+        }
+        ,onClickBtnSaveDetail: function(event, ctrl) {
+            //var c = Complaint.getComplaint();
+            var htmlDetail = CaseFile.View.Detail.saveDivDetail();
+            //c.details = html;
+            //Complaint.Service.saveComplaint(c);
+            CaseFile.Controller.viewChangedDetail(CaseFile.Model.getCaseFileId(), htmlDetail);
+            App.Object.Dirty.clear("Editing case detail");
         }
 
 
@@ -393,7 +573,12 @@ CaseFile.View = {
             this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
             this.setTextLnkCaseTitle(Acm.goodValue(c.title));
             this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));
-
+            this.setTextLnkAssignee(Acm.goodValue(c.creator));
+            this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
+            this.setTextLnkPriority(Acm.goodValue(c.priority));
+            this.setTextLnkDueDate(Acm.getDateFromDatetime("c.dueDate"));
+            this.setTextLnkStatus(Acm.goodValue(c.status));
+            this.setHtmlDivDetail(Acm.goodValue("c.details"));
         }
 
         ,setTextLabCaseNumber: function(txt) {
@@ -405,15 +590,35 @@ CaseFile.View = {
         }
         ,setTextLnkIncidentDate: function(txt) {
             AcmEx.Object.XEditable.setDate(this.$lnkIncidentDate, txt);
-//            if(txt){
-//                Acm.Object.setText(this.$lnkIncidentDate, txt);
-//            }
-//            else{
-//                txt = "Unknown"
-//                Acm.Object.setText(this.$lnkIncidentDate, txt);
-//            }
-//            //this.$lnkIncidentDate.editable("setValue", txt, true);
         }
+        ,setTextLnkAssignee: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkAssignee, txt);
+        }
+        ,setTextLnkSubjectType: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkSubjectType, txt);
+        }
+        ,setTextLnkPriority: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkPriority, txt);
+        }
+        ,setTextLnkDueDate: function(txt) {
+            AcmEx.Object.XEditable.setDate(this.$lnkDueDate, txt);
+        }
+        ,setTextLnkStatus: function(txt) {
+            Acm.Object.setText(this.$lnkStatus, txt);
+        }
+        ,getHtmlDivDetail: function() {
+            return AcmEx.Object.getSummernote(this.$divDetail);
+        }
+        ,setHtmlDivDetail: function(html) {
+            AcmEx.Object.SummerNote.set(this.$divDetail, html);
+        }
+        ,editDivDetail: function() {
+            AcmEx.Object.SummerNote.edit(this.$divDetail);
+        }
+        ,saveDivDetail: function() {
+            return AcmEx.Object.SummerNote.save(this.$divDetail);
+        }
+
         ,populateCaseFile_old: function(c) {
             this.setTextLabCaseNumber(c.caseNumber);
             this.setTextLnkCaseTitle(c.title);
@@ -428,279 +633,168 @@ CaseFile.View = {
 //        this.refreshJTableClosingDocs();
         }
     }
-    ,TopPanel: {
+
+    ,Tasks: {
         create: function() {
-            this.$formSearch = $("form[role='search']");
-            this.$edtSearch = this.$formSearch.find("input.typeahead");
-            this.useTypeAhead(this.$edtSearch);
+            this.$divTasks          = $("#divTasks");
+            this.createJTableTasks(this.$divTasks);
+            this.$spanAddTask       = this.$divTasks.find(".jtable-toolbar-item-add-record");
+            this.$spanAddTask.unbind("click").on("click", function(e){CaseFile.View.Tasks.onClickSpanAddTask(e, this);});
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
         }
         ,initialize: function() {
         }
 
-        ,ctrlUpdateSuggestion: function(process) {
-            process(CaseFile.Model.Suggestion.getKeys());
+        ,URL_TASK_DETAIL:  "/plugin/task/"
+        ,URL_NEW_TASK_:    "/plugin/task/wizard?parentType=CASE_FILE&reference="
+
+        ,onCaseFileSelected: function(caseFileId) {
+            AcmEx.Object.jTableLoad(CaseFile.View.Tasks.$divTasks);
         }
-        ,showPanel: function(show) {
-            //old showTop()
+        ,onClickSpanAddTask: function(event, ctrl) {
+            alert("onClickSpanAddTask");
+            return;
+            var caseFile = CaseFile.Model.getCaseFileCurrent();
+            if (caseFile) {
+                var caseNumber = Acm.goodValue(caseFile.caseNumber);
+                var url = CaseFile.View.Tasks.URL_NEW_TASK  + caseNumber;
+                App.gotoPage(url);
+            }
         }
-        ,useTypeAhead: function($s) {
-            $s.typeahead({
-                source: function ( query, process ) {
-                    _.debounce(CaseFile.Service.Suggestion.retrieveSuggestion( query, process ), 300);
+        ,onClickBtnTaskAssign: function(event, ctrl) {
+            alert("onClickBtnTaskAssign");
+        }
+        ,onClickBtnTaskUnassign: function(event, ctrl) {
+            alert("onClickBtnTaskUnassign");
+        }
+
+        ,_makeJtData: function(taskList) {
+            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            if (taskList) {
+                for (var i = 0; i < taskList.length; i++) {
+                    var Record = {};
+                    Record.id       = taskList[i].id;
+                    Record.title    = taskList[i].title;
+                    Record.created  = taskList[i].created;
+                    Record.priority = taskList[i].priority;
+                    Record.dueDate  = taskList[i].dueDate;
+                    Record.status   = taskList[i].status;
+                    Record.assignee = taskList[i].assignee;
+                    jtData.Records.push(Record);
                 }
-                ,highlighter: function( item ){
-                    html = '<div class="ctr">';
-                    var ctr = CaseFile.Model.Suggestion.getObject(item);
-                    if (ctr) {
-                        var icon = "";
-                        var type = Acm.goodValue(ctr.object_type_s, "UNKNOWN");
-                        if (type == "COMPLAINT") {
-                            icon = '<i class="i i-notice i-2x"></i>';
-                        } else if (type == "CASE") {
-                            icon = '<i class="i i-folder i-2x"></i>';
-                        } else if (type == "TASK") {
-                            icon = '<i class="i i-checkmark i-2x"></i>';
-                        } else if (type == "DOCUMENT") {
-                            icon = '<i class="i i-file i-2x"></i>';
-                        } else {
-                            icon = '<i class="i i-circle i-2x"></i>';
+                jtData.TotalRecordCount = taskList.length;
+            }
+            return jtData;
+        }
+        ,createJTableTasks: function($jt) {
+            var sortMap = {};
+            sortMap["title"] = "title_t";
+
+            AcmEx.Object.JTable.usePaging($jt
+                ,{
+                    title: 'Tasks'
+                    ,selecting: true
+                    ,multiselect: false
+                    ,selectingCheckboxes: false
+                    ,messages: {
+                        addNewRecord: 'Add Task'
+                    }
+                    ,actions: {
+                        pagingListAction: function (postData, jtParams, sortMap) {
+                            var caseFileId = CaseFile.Model.getCaseFileId();
+                            if (0 >= caseFileId) {
+                                var rc = AcmEx.Object.JTable.getEmptyRecords();
+                                var z = 1;
+                                return rc;
+                            }
+
+                            var taskList = CaseFile.Model.Tasks.cacheTaskList.get(caseFileId);
+                            if (taskList) {
+                                return CaseFile.View.Tasks._makeJtData(taskList);
+
+                            } else {
+                                return CaseFile.Service.Tasks.retrieveTaskListDeferred(caseFileId
+                                    ,postData
+                                    ,jtParams
+                                    ,sortMap
+                                    ,function(data) {
+                                        var taskList = data;
+                                        var rc = CaseFile.View.Tasks._makeJtData(taskList);
+                                        var z = 1;
+                                        return rc;
+                                    }
+                                    ,function(error) {
+                                    }
+                                );
+                            }  //end else
                         }
 
-                        html += '<div class="icontype">' + icon + '</div>'
-                            + '<div class="title">' + Acm.goodValue(ctr.title_t) + '</div>'
-                            + '<div class="identifier">' + Acm.goodValue(ctr.name) + ' ('+ Acm.goodValue(ctr.object_type_s) + ')' + '</div>'
-                            + '<div class="author">By ' + ctr.author  + ' on '+ Acm.getDateTimeFromDatetime(ctr.last_modified) + '</div>'
-                        html += '</div>';
+                        ,createAction: function(postData, jtParams) {
+                            return AcmEx.Object.JTable.getEmptyRecord();
+                        }
                     }
-                    return html;
-                }
-                , updater: function ( selectedtitle ) {
-                    var ctr = CaseFile.Model.Suggestion.getObject(selectedtitle);
-                    $( "#ctrId" ).val(ctr.object_id_s);
-                    return selectedtitle;
-                }
-                ,hint: true
-                ,highlight: true
-                ,minLength: 1
 
-            }); //end $s.typeahead
+                    ,fields: {
+                        id: {
+                            title: 'ID'
+                            ,key: true
+                            ,list: true
+                            ,create: false
+                            ,edit: false
+                            ,sorting: false
+                        }
+                        ,title: {
+                            title: 'Title'
+                            ,width: '30%'
+                            ,sorting: false
+                        }
+                        ,created: {
+                            title: 'Created'
+                            ,width: '15%'
+                            ,sorting: false
+                        }
+                        ,priority: {
+                            title: 'Priority'
+                            ,width: '10%'
+                            ,sorting: false
+                        }
+                        ,dueDate: {
+                            title: 'Due'
+                            ,width: '15%'
+                            ,sorting: true
+                        }
+                        ,status: {
+                            title: 'Status'
+                            ,width: '10%'
+                            ,sorting: false
+                        }
+                        ,description: {
+                            title: 'Action'
+                            ,width: '10%'
+                            ,sorting: false
+                            ,edit: false
+                            ,create: false
+                            ,display: function (commData) {
+                                var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                                var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
+
+                                $a.click(function (e) {
+                                    CaseFile.View.Tasks.onClickBtnTaskAssign(e, this);
+                                    e.preventDefault();
+                                });
+                                $b.click(function (e) {
+                                    CaseFile.View.Tasks.onClickBtnTaskUnassign(e, this);
+                                    e.preventDefault();
+                                });
+                                return $a.add($b);
+                            }
+                        }
+                    } //end field
+                } //end arg
+                ,sortMap
+            );
         }
     }
-
-    ,Roi: {
-        create: function() {
-            this.$ulAsn = $("ul.nav-user");
-            this.$spanCntWarning = $('a .count', this.$ulAsn);
-            this.$spanCntTotal = $('header .count', this.$ulAsn);
-            this.$divAsnList = $('.list-group', this.$ulAsn);
-            this.$lnkAsn = $("ul.nav-user a[data-toggle='dropdown']");
-            this.$lnkAsn.on("click", function(e) {CaseFile.View.Asn.onClickLnkAsn(e, this);});
-            this.$sectionAsn = this.$divAsnList.closest("section.dropdown-menu");
-        }
-        ,initialize: function() {
-        }
-
-
-        ,_removeAsnFromPopup: function(asnIdToRemove) {
-            //if only one child left, remove whole list
-            var $children = this.$divAsnList.children();
-            var childCnt = $children.length;
-            if (1 >= childCnt) {
-                this.closeAsnList();
-                return;
-            }
-
-            $children.each(function(i){
-                var $hidAsnId = $(this).find("input[name='asnId']");
-                var asnId = $hidAsnId.val();
-                if (asnId) {
-                    if (asnIdToRemove == asnId) {
-                        $(this).remove();
-                    }
-                }
-            }); //end each
-        }
-        ,_registerToRemove: function(asnList) {
-            for (var i = 0; i < asnList.length; i++) {
-                var asn = asnList[i];
-                if (asn && asn.id) {
-                    Acm.Timer.registerListener(asn.id
-                        ,8
-                        ,function(asnId) {
-                            CaseFile.View.Asn._removeAsnFromPopup(asnId);
-                            CaseFile.Controller.Asn.onViewChangedAsnAction(asnId, CaseFile.Model.Asn.ACTION_EXPIRED);
-                            return false;
-                        }
-                    );
-                }
-            }
-        }
-        ,showAsnList: function(asnList) {
-            var visibleAsnList = Acm.Object.isVisible(this.$divAsnList);
-            var visibleAsnHeader = Acm.Object.isVisible(this.$divAsnList.prev());
-            if (!visibleAsnList) {          //no list is shown, popup new ASNs
-                var asnListNew = CaseFile.Model.Asn.buildAsnListNew(asnList);
-                this.$divAsnList.empty();
-                this.$divAsnList.prev().hide();
-                this.$divAsnList.next().hide();
-                this._buildAsnListUiDropdown(asnListNew);
-                this._registerToRemove(asnListNew);
-                this.$sectionAsn.fadeIn();
-
-            } else if (!visibleAsnHeader) { //ASN popup is already shown, update new ASN
-                var newMore = CaseFile.Model.Asn.getAsnListNewMore(asnList);
-                this._buildAsnListUiPopup(newMore);
-                this._registerToRemove(newMore);
-
-                var noLonger = CaseFile.Model.Asn.getAsnListNewNoLonger(asnList);
-                for (var j = 0; j < noLonger.length; j++) {
-                    var asn = noLonger[j];
-                    if (asn && asn.id) {
-                        this._removeAsnFromPopup(asn.id);
-                    }
-                } //for j
-
-                CaseFile.Model.Asn.buildAsnListNew(asnList);
-
-            } else {        //user is viewing ASN list; do nothing
-                return;
-            }
-        }
-        ,closeAsnList: function() {
-            this.$sectionAsn.fadeOut();
-//            this.$divAsnList.empty();
-//            this.$divAsnList.prev().hide();
-//            this.$divAsnList.next().hide();
-        }
-        ,onClickLnkAsn: function(event, ctrl) {
-            var asnList = CaseFile.Model.Asn.getAsnList();
-            var countTotal = this._getAsnCount(asnList);
-            this.setTextSpanCntTotal(countTotal);
-
-            this.$divAsnList.empty();
-            this.$divAsnList.prev().show();
-            this.$divAsnList.next().show();
-
-            this._buildAsnListUi(asnList);
-            this.$sectionAsn.toggle();
-        }
-        ,onClickBtnMarkAsRead: function(event, ctrl) {
-            var $self = $(ctrl);
-            var $msg = $self.closest("div.list-group-item");
-            var $hidAsnId = $msg.find("input[name='asnId']");
-            var asnId = $hidAsnId.val();
-            alert("onClickBtnMarkAsRead, asnId=" + asnId);
-            var z = 1;
-        }
-        ,onClickBtnSeeResult: function(event, ctrl) {
-            var $self = $(ctrl);
-            var $msg = $self.closest("div.list-group-item");
-            var $hidAsnId = $msg.find("input[name='asnId']");
-            var asnId = $hidAsnId.val();
-            alert("onClickBtnSeeResult, asnId=" + asnId);
-            var z = 1;
-        }
-        ,onClickBtnAck: function(event, ctrl) {
-            var $self = $(ctrl);
-            var $msg = $self.closest("div.list-group-item");
-            var $hidAsnId = $msg.find("input[name='asnId']");
-            var asnId = $hidAsnId.val();
-
-            CaseFile.View.Asn._removeAsnFromPopup(asnId);
-            CaseFile.Controller.Asn.onViewChangedAsnAction(asnId, CaseFile.Model.Asn.ACTION_ACK);
-        }
-        ,_buildAsnListUiDropdown: function(asnList) {
-            this._buildAsnListUi(asnList, "dropdown");
-        }
-        ,_buildAsnListUiPopup: function(asnList) {
-            this._buildAsnListUi(asnList, "popup");
-        }
-        ,_buildAsnListUiLocal: function(asnList) {
-            this._buildAsnListUi(asnList, "local");
-        }
-        ,_buildAsnListUi: function(asnList, type) {
-            var countTotal = this._getAsnCount(asnList);
-            for (var i = 0; i < countTotal; i++) {
-                var asn = asnList[i];
-                var msg = "<div class='media list-group-item "
-                    + asn.status
-                    + "><a href=''#'><span class='pull-left thumb-sm text-center'>"
-                    + "<i class='fa fa-file fa-2x text-success'></i></span>"
-                    + "<span class='media-body block m-b-none'>"
-                    + Acm.goodValue(asn.note)
-                    + "<br><small class='text-muted'>"
-                    + Acm.goodValue(asn.created)
-                    + "</small></span></a><input type='hidden' name='asnId' value='"
-                    + Acm.goodValue(asn.id)
-                    + "' /><input type='button' name='markAsRead' value='MarkAsRead'/>"
-                    + "<input type='button' name='seeResult' value='See Result'/>"
-                    ;
-
-                if ("New" == Acm.goodValue(asn.action)) {
-                    msg += "<input type='button' name='ack' value='Acknowledge'/>";
-                }
-                msg += "</div>";
-
-                $(msg).hide().prependTo(this.$divAsnList)
-                    .css('display','block')
-                    //.slideDown()
-                    //.fadeToggle()
-                ;
-            } //for i
-
-            this.$divAsnList.find("input[name='markAsRead']").unbind("click").on("click", function(e) {CaseFile.View.Asn.onClickBtnMarkAsRead(e, this);});
-            this.$divAsnList.find("input[name='seeResult']") .unbind("click").on("click", function(e) {CaseFile.View.Asn.onClickBtnSeeResult(e, this);});
-            this.$divAsnList.find("input[name='ack']")       .unbind("click").on("click", function(e) {CaseFile.View.Asn.onClickBtnAck(e, this);});
-
-        }
-        ,_getAsnCount: function(asnList) {
-            var count = 0;
-            if (Acm.isArray(asnList)) {
-                count = asnList.length;
-            }
-            return count;
-        }
-        ,updateAsnCount: function(asnList) {
-            var countTotal = this._getAsnCount(asnList);
-            var countNew = 0;
-            for (var i = 0; i < countTotal; i++) {
-                var asn = asnList[i];
-                if ("New" == Acm.goodValue(asn.action)) {
-                    countNew++;
-                }
-            }
-            this.setTextSpanCntWarning(countTotal);
-            this.warnSpanCntWarning(0 < countNew);
-        }
-        ,setTextSpanCntWarning: function(text) {
-            this.$spanCntWarning.fadeOut().fadeIn().text(text);
-        }
-        ,warnSpanCntWarning: function(warn) {
-            if (warn) {
-                this.$spanCntWarning.addClass("bg-danger");
-            } else {
-                this.$spanCntWarning.removeClass("bg-danger");
-            }
-        }
-        ,setTextSpanCntTotal: function(text) {
-            this.$spanCntTotal.text(text);
-        }
-
-
-        ,ctrlUpdateAsnList: function(asnList) {
-            CaseFile.View.Asn.updateAsnCount(asnList);
-            CaseFile.View.Asn.showAsnList(asnList);
-        }
-        ,ctrlNotifyAsnListError: function(errorMsg) {
-            Acm.Dialog.error("Failed to retrieve notifications:" + errorMsg);
-        }
-        ,ctrlNotifyAsnListUpdateError: function(errorMsg) {
-            Acm.Dialog.error("Failed to update notifications:" + errorMsg);
-        }
-        ,ctrlNotifyAsnListUpdateSuccess: function() {
-            Acm.Dialog.error("Notifications updated");
-        }
-
-    } //Asn
 };
 

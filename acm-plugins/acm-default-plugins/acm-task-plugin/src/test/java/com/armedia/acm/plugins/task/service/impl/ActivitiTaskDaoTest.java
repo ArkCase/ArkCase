@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import org.activiti.bpmn.model.*;
+import org.activiti.bpmn.model.Process;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
@@ -43,6 +45,11 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private HistoricTaskInstanceQuery mockHistoricTaskInstanceQuery;
 
     private ActivitiTaskDao unit;
+    private BpmnModel mockBpmnModel;
+    private Process mockProcess;
+    private UserTask mockFlowElement;
+    private FormProperty mockFormProperty;
+    private FormValue mockFormValue;
 
     @Before
     public void setUp() throws Exception
@@ -57,6 +64,11 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockHistoricTaskInstance = createMock(HistoricTaskInstance.class);
         mockHistoryService = createMock(HistoryService.class);
         mockHistoricTaskInstanceQuery = createMock(HistoricTaskInstanceQuery.class);
+        mockBpmnModel = createMock(BpmnModel.class);
+        mockProcess = createMock(Process.class);
+        mockFlowElement = createMock(UserTask.class);
+        mockFormProperty = createMock(FormProperty.class);
+        mockFormValue = createMock(FormValue.class);
 
 
         unit = new ActivitiTaskDao();
@@ -200,6 +212,18 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockProcessDefinition.getName()).andReturn(processName);
 
+        String taskDefKey = "taskDefinitionKey";
+        expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
+        expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
+        expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
+        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
+        expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
+        expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
+        expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
+        expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
+        expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+
         replayAll();
 
         AcmTask completed = unit.completeTask(mockAuthentication, taskId);
@@ -268,6 +292,18 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
 
         expect(mockProcessDefinition.getName()).andReturn(processName);
+
+        String taskDefKey = "taskDefinitionKey";
+        expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
+        expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
+        expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
+        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
+        expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
+        expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
+        expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
+        expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
+        expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
 
         replayAll();
 
@@ -355,6 +391,18 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
 
         expect(mockProcessDefinition.getName()).andReturn(processName);
+
+        String taskDefKey = "taskDefinitionKey";
+        expect(mockHistoricTaskInstance.getTaskDefinitionKey()).andReturn(taskDefKey);
+        expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
+        expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
+        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
+        expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
+        expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
+        expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
+        expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
+        expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
 
         replayAll();
 
@@ -468,6 +516,18 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockProcessDefinition.getName()).andReturn(processName);
 
+        String taskDefKey = "taskDefinitionKey";
+        expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
+        expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
+        expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
+        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
+        expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
+        expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
+        expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
+        expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
+        expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+
         replayAll();
 
         List<AcmTask> tasks = unit.tasksForUser(user);
@@ -493,6 +553,15 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals("taskStatus", found.getStatus());
         assertEquals("details", found.getDetails());
         assertEquals(Integer.valueOf(25), found.getPercentComplete());
+        assertEquals(1, found.getOutcomes().size());
+        assertEquals("TestOutcome", found.getOutcomeName());
+
+        String outcomeId = found.getOutcomes().keySet().iterator().next();
+        String outcomeName = found.getOutcomes().values().iterator().next();
+
+        assertEquals("formValueId", outcomeId);
+        assertEquals("formValueName", outcomeName);
+
 
     }
 }

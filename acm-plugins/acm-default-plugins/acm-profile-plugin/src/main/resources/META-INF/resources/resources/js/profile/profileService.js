@@ -53,13 +53,13 @@ Profile.Service = {
                 ,url
             )
         }
-        ,saveProfileInfo : function(data, callbackHandler) {
+        ,saveProfileInfo : function(data, handler) {
             var profileInfo = data;
             Acm.Service.asyncPost(
                 function(response) {
                     if (response.hasError) {
-                        if (callbackHandler) {
-                            callbackHandler(response);
+                        if (handler) {
+                            handler(response);
                         } else {
                             Profile.Controller.modelSavedProfileInfo(response);
                         }
@@ -68,8 +68,8 @@ Profile.Service = {
                         if (Profile.Service.Info._validateProfile(response)) {
                             var profileInfo = response;
                             Profile.Model.Info.setProfileInfo(profileInfo);
-                            if (callbackHandler) {
-                                callbackHandler(profileInfo);
+                            if (handler) {
+                                handler(profileInfo);
                             } else {
                                 Profile.Controller.modelSavedProfileInfo(profileInfo);
                             }
