@@ -14,6 +14,7 @@ import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
@@ -64,23 +65,29 @@ public class CloseComplaintRequestDao extends AcmAbstractDao<CloseComplaintReque
     	return result;
     }
     
+    @Transactional
     public int delete(List<AcmParticipant> participants)
     {
     	CriteriaBuilder builder = getEm().getCriteriaBuilder();
     	 
-
     	CriteriaDelete<AcmParticipant> delete = builder.createCriteriaDelete(AcmParticipant.class);
     	Root<AcmParticipant> acmParticipant = delete.from(AcmParticipant.class);
     	
+    	List<Long> ids = new ArrayList<Long>();
     	if (null != participants && participants.size() > 0)
     	{
-    		Collection<Predicate> predicates = new ArrayList<Predicate>();
+    		
     		for (AcmParticipant participant : participants)
     		{
-    			predicates.add(builder.equal(acmParticipant.<Long>get("id"), participant.getId()));
+    			ids.add(participant.getId());
     		}
-    		delete.where(builder.or(predicates.toArray(new Predicate[predicates.size()])));
+    		
     	}
+    	
+    	delete.where(
+    			acmParticipant.<Long>get("id").in(ids)
+    	);
+    	
     	Query query = getEm().createQuery(delete);
     	
     	return query.executeUpdate();
