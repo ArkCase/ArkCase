@@ -7,6 +7,8 @@ AcmEx.Object = {
     create : function() {
     }
 
+    //This set of functions are to be retired in future.
+    //Please use AcmEx.Object.SummerNote.xxxx()
     ,getSummerNote : function($s) {
         return $s.code();
     }
@@ -25,9 +27,30 @@ AcmEx.Object = {
         $s.summernote({focus: false});
         $s.destroy();
     }
+    ,SummerNote: {
+        get: function($s) {
+            return $s.code();
+        }
+        ,set: function($s, value) {
+            $s.code(value);
+        }
+        ,edit: function($s) {
+            $s.summernote({focus: true});
+        }
+        ,save: function($s) {
+            var aHtml = $s.code(); //save HTML If you need(aHTML: array).
+            $s.destroy();
+            return aHtml;
+        }
+        ,cancel: function($s) {
+            $s.summernote({focus: false});
+            $s.destroy();
+        }
+    }
 
     //
-    // JTable functions
+    //JTable functions are to be retired in future.
+    //Please use AcmEx.Object.JTable.xxxx()
     //
     ,JTABLE_DEFAULT_PAGE_SIZE: 8
     ,jTableGetEmptyRecords: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
@@ -120,6 +143,52 @@ AcmEx.Object = {
 
         $jt.jtable('load');
     }
+
+    ,JTable: {
+        JTABLE_DEFAULT_PAGE_SIZE: 8
+        ,getEmptyRecords: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
+        ,getEmptyRecord: function() { return {"Result": "OK","Record": {}};}
+        ,setTitle: function($jt, title) {
+            //todo: passing $jt
+            Acm.Object.setText($(".jtable-title-text"), title);
+        }
+        ,load: function($jt) {
+            $jt.jtable('load');
+        }
+        ,usePaging: function($jt, jtArg, sortMap) {
+            jtArg.paging = true;
+            if (!jtArg.pageSize) {
+                jtArg.pageSize = AcmEx.Object.JTable.JTABLE_DEFAULT_PAGE_SIZE;
+            }
+            if (!jtArg.recordAdded) {
+                jtArg.recordAdded = function(event, data){
+                    $jt.jtable('load');
+                }
+            }
+            if (!jtArg.recordUpdated) {
+                jtArg.recordUpdated = function(event, data){
+                    $jt.jtable('load');
+                }
+            }
+
+            if (sortMap) {
+                jtArg.sorting = true;
+            } else if (!jtArg.sorting) {
+                jtArg.sorting = false;
+            }
+
+            if (jtArg.actions.pagingListAction){
+                jtArg.actions.listAction = function(postData, jtParams) {
+                    return jtArg.actions.pagingListAction(postData, jtParams, sortMap);
+                }
+            }
+
+            $jt.jtable(jtArg);
+
+            $jt.jtable('load');
+        }
+    }
+
 
     //
     // x-editable

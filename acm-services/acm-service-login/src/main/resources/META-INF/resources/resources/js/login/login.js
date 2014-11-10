@@ -8,6 +8,11 @@ var Login = Login || {
         sessionStorage.setItem("AcmApprovers", null);
         sessionStorage.setItem("AcmComplaintTypes", null);
         sessionStorage.setItem("AcmPriorities", null);
+
+        sessionStorage.setItem("AcmCaseAssignees", null);
+        sessionStorage.setItem("AcmCaseTypes", null);
+        sessionStorage.setItem("AcmCasePriorities", null);
+
         sessionStorage.setItem("AcmQuickSearchTerm", null);
         sessionStorage.setItem("AcmAsnList", null);
         sessionStorage.setItem("AcmCaseFileTreeInfo", null);
