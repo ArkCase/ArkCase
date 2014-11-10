@@ -7,7 +7,7 @@ CaseFile.Model = {
     create : function() {
         this.cachePage = new Acm.Model.CacheFifo(2);
         this.cacheCaseFile = new Acm.Model.CacheFifo(3);
-        this.cacheCaseEvents = new Acm.Model.CacheFifo(3);
+        //this.cacheCaseEvents = new Acm.Model.CacheFifo(3);
 
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PREV_PAGE_CLICKED      ,this.onPrevPageClicked);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NEXT_PAGE_CLICKED      ,this.onNextPageClicked);
@@ -20,8 +20,9 @@ CaseFile.Model = {
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DUE_DATE_CHANGED       ,this.onDueDateChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DETAIL_CHANGED         ,this.onDetailChanged);
 
-        if (CaseFile.Model.Tree.create)    {CaseFile.Model.Tree.create();}
         if (CaseFile.Model.Lookup.create)  {CaseFile.Model.Lookup.create();}
+        if (CaseFile.Model.Tree.create)    {CaseFile.Model.Tree.create();}
+        if (CaseFile.Model.Tasks.create)   {CaseFile.Model.Tasks.create();}
     }
     ,initialize: function() {
         var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
@@ -32,8 +33,9 @@ CaseFile.Model = {
             CaseFile.Service.List.retrieveCaseFileList(treeInfo);
         }
 
-        if (CaseFile.Model.Tree.initialize)    {CaseFile.Model.Tree.initialize();}
         if (CaseFile.Model.Lookup.initialize)  {CaseFile.Model.Lookup.initialize();}
+        if (CaseFile.Model.Tree.initialize)    {CaseFile.Model.Tree.initialize();}
+        if (CaseFile.Model.Tasks.initialize)   {CaseFile.Model.Tasks.initialize();}
     }
 
     ,onPrevPageClicked: function() {
@@ -101,7 +103,7 @@ CaseFile.Model = {
         CaseFile.Service.Detail.saveDetail(caseFileId, htmlDetail);
     }
 
-    ,_objectType: "CASE"
+    ,_objectType: "CASE_FILE"
     ,getObjectType: function() {
         return this._objectType;
     }
@@ -123,6 +125,13 @@ CaseFile.Model = {
         return this.getCaseFile(this._caseFileId);
     }
 
+    ,Tasks: {
+        create : function() {
+            this.cacheTaskList = new Acm.Model.CacheFifo(4);
+        }
+        ,initialize: function() {
+        }
+    }
 
     ,Tree: {
         create : function() {

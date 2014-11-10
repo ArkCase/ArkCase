@@ -6,6 +6,7 @@
 var AcmEx = AcmEx || {
     create : function() {
         AcmEx.Object.create();
+        AcmEx.Service.create();
     }
 
 //    ,Object : {}
