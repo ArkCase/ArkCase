@@ -498,8 +498,8 @@ CaseFile.View = {
                 CaseFile.View.Detail.setTextLnkCaseTitle("(Error)");
             }
         }
-        ,onIncidentDateSaved: function(caseFileId, created) {
-            if (created.hasError) {
+        ,onIncidentDateSaved: function(caseFileId, incidentDate) {
+            if (incidentDate.hasError) {
                 CaseFile.View.Detail.setTextLnkIncidentDate("(Error)");
             }
         }
@@ -523,8 +523,8 @@ CaseFile.View = {
                 CaseFile.View.Detail.setTextLnkDueDate("(Error)");
             }
         }
-        ,onDetailSaved: function(caseFileId, htmlDetail) {
-            if (htmlDetail.hasError) {
+        ,onDetailSaved: function(caseFileId, details) {
+            if (details.hasError) {
                 CaseFile.View.Detail.setHtmlDivDetail("(Error)");
             }
         }
@@ -548,10 +548,7 @@ CaseFile.View = {
             CaseFile.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
-            //var c = Complaint.getComplaint();
             var htmlDetail = CaseFile.View.Detail.saveDivDetail();
-            //c.details = html;
-            //Complaint.Service.saveComplaint(c);
             CaseFile.Controller.viewChangedDetail(CaseFile.Model.getCaseFileId(), htmlDetail);
             App.Object.Dirty.clear("Editing case detail");
         }
@@ -572,13 +569,13 @@ CaseFile.View = {
         ,populateCaseFile: function(c) {
             this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
             this.setTextLnkCaseTitle(Acm.goodValue(c.title));
-            this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));
+            this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
             this.setTextLnkAssignee(Acm.goodValue(c.creator));
             this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
             this.setTextLnkPriority(Acm.goodValue(c.priority));
-            this.setTextLnkDueDate(Acm.getDateFromDatetime("c.dueDate"));
+            this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
             this.setTextLnkStatus(Acm.goodValue(c.status));
-            this.setHtmlDivDetail(Acm.goodValue("c.details"));
+            this.setHtmlDivDetail(Acm.goodValue(c.details));
         }
 
         ,setTextLabCaseNumber: function(txt) {
@@ -704,9 +701,7 @@ CaseFile.View = {
                         pagingListAction: function (postData, jtParams, sortMap) {
                             var caseFileId = CaseFile.Model.getCaseFileId();
                             if (0 >= caseFileId) {
-                                var rc = AcmEx.Object.JTable.getEmptyRecords();
-                                var z = 1;
-                                return rc;
+                                return AcmEx.Object.JTable.getEmptyRecords();
                             }
 
                             var taskList = CaseFile.Model.Tasks.cacheTaskList.get(caseFileId);
@@ -720,9 +715,7 @@ CaseFile.View = {
                                     ,sortMap
                                     ,function(data) {
                                         var taskList = data;
-                                        var rc = CaseFile.View.Tasks._makeJtData(taskList);
-                                        var z = 1;
-                                        return rc;
+                                        return CaseFile.View.Tasks._makeJtData(taskList);
                                     }
                                     ,function(error) {
                                     }
