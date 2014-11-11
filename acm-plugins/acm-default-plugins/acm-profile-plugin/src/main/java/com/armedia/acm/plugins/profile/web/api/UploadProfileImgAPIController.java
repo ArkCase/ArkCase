@@ -5,8 +5,10 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.UserOrg;
+import com.armedia.acm.plugins.profile.service.SaveUserOrgTransaction;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -32,6 +34,7 @@ public class UploadProfileImgAPIController {
     private UserOrgDao userOrgDao;
     private UserDao userDao;
     private EcmFileService ecmFileService;
+    private SaveUserOrgTransaction saveUserOrgTransaction;
 
     private final String uploadFileType = "user_profile";
 
@@ -55,21 +58,26 @@ public class UploadProfileImgAPIController {
                 }
                 UserOrg in = null;
                 try {
-                      in = getUserOrgDao().getUserOrgForUser(user);
-                    if ( in == null ) {
-                        throw new AcmObjectNotFoundException("userOrg", in.getUserOrgId(), "No info found for Profile", null);
-                    }
+                        in = getUserOrgDao().getUserOrgForUser(user);
+                        //this "if()" part is a workaround for already added rows in acm_user_org table but with profileEcmFolderID=null
+                        if( in.getEcmFolderId() == null ){
+                            try {
+                                   in = getSaveUserOrgTransaction().saveUserOrg(in,authentication);
+                            } catch (MuleException e) {
+                                if(log.isErrorEnabled()){
+                                    log.error("Saving of the info for user and organization throw an exception",e);
+                                }
+                                throw new AcmCreateObjectFailedException("user organization info",e.getMessage(),e.getCause());
+                            }
+                        }
+                        String folderId = in.getEcmFolderId();
+                        String objectType = "PROFILE_IMG";
+                        Long objectId = in.getUserOrgId();
+                        String objectName = in.getUser().getFullName();
 
-                    File newName = new File("profile");
+                        String contextPath = request.getServletContext().getContextPath();
 
-                    String folderId = in.getEcmFolderId();
-                    String objectType = "PROFILE_IMG";
-                    Long objectId = in.getUserOrgId();
-                    String objectName = in.getUser().getFullName();
-
-                    String contextPath = request.getServletContext().getContextPath();
-
-                    return getEcmFileService().upload(uploadFileType, file, acceptType, contextPath, authentication,
+                        return getEcmFileService().upload(uploadFileType, file, acceptType, contextPath, authentication,
                             folderId, objectType, objectId, objectName);
                 }
                 catch (AcmObjectNotFoundException e) {
@@ -99,5 +107,13 @@ public class UploadProfileImgAPIController {
 
     public void setEcmFileService(EcmFileService ecmFileService) {
         this.ecmFileService = ecmFileService;
+    }
+
+    public SaveUserOrgTransaction getSaveUserOrgTransaction() {
+        return saveUserOrgTransaction;
+    }
+
+    public void setSaveUserOrgTransaction(SaveUserOrgTransaction saveUserOrgTransaction) {
+        this.saveUserOrgTransaction = saveUserOrgTransaction;
     }
 }
