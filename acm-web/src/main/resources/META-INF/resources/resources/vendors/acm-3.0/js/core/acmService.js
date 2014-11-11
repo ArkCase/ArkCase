@@ -21,7 +21,8 @@ Acm.Service = {
             arg.dataType = 'json';
         }
         if (arg.data) {
-            if (!arg.contentType) {
+            if (Acm.isEmpty(arg.contentType)) {
+            //if (!arg.contentType) {
                 arg.contentType = "application/json; charset=utf-8";
             }
             if (!arg.beforeSend) {

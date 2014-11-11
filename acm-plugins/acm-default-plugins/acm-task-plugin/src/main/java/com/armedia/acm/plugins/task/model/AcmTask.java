@@ -5,10 +5,9 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AcmTask implements AcmObject
 {
@@ -38,8 +37,10 @@ public class AcmTask implements AcmObject
     private Long reviewDocumentFormXmlId;
     private EcmFile documentUnderReview;
     private List<ObjectAssociation> childObjects;
+    private String reworkInstructions;
     private String outcomeName;
-    private Map<String, String> outcomes = new HashMap<>();
+    private List<TaskOutcome> availableOutcomes = new ArrayList<>();
+    private TaskOutcome taskOutcome;
 
     public Long getTaskId()
     {
@@ -342,13 +343,33 @@ public class AcmTask implements AcmObject
         return outcomeName;
     }
 
-    public Map<String, String> getOutcomes()
+    public List<TaskOutcome> getAvailableOutcomes()
     {
-        return outcomes;
+        return availableOutcomes;
     }
 
-    public void setOutcomes(Map<String, String> outcomes)
+    public void setAvailableOutcomes(List<TaskOutcome> availableOutcomes)
     {
-        this.outcomes = outcomes;
+        this.availableOutcomes = availableOutcomes;
+    }
+
+    public String getReworkInstructions()
+    {
+        return reworkInstructions;
+    }
+
+    public void setReworkInstructions(String reworkInstructions)
+    {
+        this.reworkInstructions = reworkInstructions;
+    }
+
+    public TaskOutcome getTaskOutcome()
+    {
+        return taskOutcome;
+    }
+
+    public void setTaskOutcome(TaskOutcome taskOutcome)
+    {
+        this.taskOutcome = taskOutcome;
     }
 }

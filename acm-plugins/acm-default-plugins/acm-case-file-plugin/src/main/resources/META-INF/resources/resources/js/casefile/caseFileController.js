@@ -18,12 +18,12 @@ CaseFile.Controller = {
     ,ME_CASE_FILE_SAVED                 : "case-file-detail-saved"                 //param: caseFile
 
     ,ME_CASE_TITLE_SAVED                : "case-file-case-title-saved"             //param: caseFileId, caseTitle
-    ,ME_INCIDENT_DATE_SAVED             : "case-file-incident-date-saved"          //param: caseFileId, created
+    ,ME_INCIDENT_DATE_SAVED             : "case-file-incident-date-saved"          //param: caseFileId, incidentDate
     ,ME_ASSIGNEE_SAVED                  : "case-file-assignee-saved"               //param: caseFileId, assignee
     ,ME_SUBJECT_TYPE_SAVED              : "case-file-subject-type-saved"           //param: caseFileId, caseType
     ,ME_PRIORITY_SAVED                  : "case-file-priority-saved"               //param: caseFileId, priority
     ,ME_DUE_DATE_SAVED                  : "case-file-due-date-saved"               //param: caseFileId, dueDate
-    ,ME_DETAIL_SAVED                    : "case-file-detail-saved"                 //param: caseFileId, htmlDetail
+    ,ME_DETAIL_SAVED                    : "case-file-detail-saved"                 //param: caseFileId, details
 
     ,VE_PREV_PAGE_CLICKED               : "case-file-prev-page-clicked"            //param: none
     ,VE_NEXT_PAGE_CLICKED		        : "case-file-next-page-clicked"            //param: none
@@ -31,12 +31,12 @@ CaseFile.Controller = {
     ,VE_TREE_NODE_SELECTED		        : "case-file-tree-node-selected"           //param: node key
 
     ,VE_CASE_TITLE_CHANGED              : "case-file-case-title-changed"           //param: caseFileId, title
-    ,VE_INCIDENT_DATE_CHANGED           : "case-file-incident-date-changed"        //param: caseFileId, created
+    ,VE_INCIDENT_DATE_CHANGED           : "case-file-incident-date-changed"        //param: caseFileId, incidentDate
     ,VE_ASSIGNEE_CHANGED                : "case-file-assignee-changed"             //param: caseFileId, assignee
     ,VE_SUBJECT_TYPE_CHANGED            : "case-file-subject-type-changed"         //param: caseFileId, caseType
     ,VE_PRIORITY_CHANGED                : "case-file-priority-changed"             //param: caseFileId, priority
     ,VE_DUE_DATE_CHANGED                : "case-file-due-date-changed"             //param: caseFileId, dueDate
-    ,VE_DETAIL_CHANGED                  : "case-file-detail-changed"               //param: caseFileId, htmlDetail
+    ,VE_DETAIL_CHANGED                  : "case-file-detail-changed"               //param: caseFileId, details
 
     ,modelFoundAssignees: function(assignees) {
         Acm.Dispatcher.fireEvent(this.ME_ASSIGNEES_FOUND, assignees);
@@ -59,8 +59,8 @@ CaseFile.Controller = {
     ,modelSavedCaseTitle : function(caseFileId, title) {
         Acm.Dispatcher.fireEvent(this.ME_CASE_TITLE_SAVED, caseFileId, title);
     }
-    ,modelSavedIncidentDate : function(caseFileId, created) {
-        Acm.Dispatcher.fireEvent(this.ME_INCIDENT_DATE_SAVED, caseFileId, created);
+    ,modelSavedIncidentDate : function(caseFileId, incidentDate) {
+        Acm.Dispatcher.fireEvent(this.ME_INCIDENT_DATE_SAVED, caseFileId, incidentDate);
     }
     ,modelSavedAssignee : function(caseFileId, assignee) {
         Acm.Dispatcher.fireEvent(this.ME_ASSIGNEE_SAVED, caseFileId, assignee);
@@ -74,8 +74,8 @@ CaseFile.Controller = {
     ,modelSavedDueDate : function(caseFileId, dueDate) {
         Acm.Dispatcher.fireEvent(this.ME_DUE_DATE_SAVED, caseFileId, dueDate);
     }
-    ,modelSavedDetail : function(caseFileId, htmlDetail) {
-        Acm.Dispatcher.fireEvent(this.ME_DETAIL_SAVED, caseFileId, htmlDetail);
+    ,modelSavedDetail : function(caseFileId, details) {
+        Acm.Dispatcher.fireEvent(this.ME_DETAIL_SAVED, caseFileId, details);
     }
 
     ,viewClickedPrevPage: function() {
@@ -85,6 +85,7 @@ CaseFile.Controller = {
         Acm.Dispatcher.fireEvent(this.VE_NEXT_PAGE_CLICKED);
     }
     ,viewSelectedCaseFile: function(caseFileId) {
+        //CaseFile.Model.setCaseFileId(caseFileId);
         Acm.Dispatcher.fireEvent(this.VE_CASE_FILE_SELECTED, caseFileId);
     }
     ,viewSelectedTreeNode: function(nodeKey) {
@@ -93,8 +94,8 @@ CaseFile.Controller = {
     ,viewChangedCaseTitle: function(caseFileId, title) {
         Acm.Dispatcher.fireEvent(this.VE_CASE_TITLE_CHANGED, caseFileId, title);
     }
-    ,viewChangedIncidentDate: function(caseFileId, created) {
-        Acm.Dispatcher.fireEvent(this.VE_INCIDENT_DATE_CHANGED, caseFileId, created);
+    ,viewChangedIncidentDate: function(caseFileId, incidentDate) {
+        Acm.Dispatcher.fireEvent(this.VE_INCIDENT_DATE_CHANGED, caseFileId, incidentDate);
     }
     ,viewChangedAssignee: function(caseFileId, assignee) {
         Acm.Dispatcher.fireEvent(this.VE_ASSIGNEE_CHANGED, caseFileId, assignee);
@@ -108,8 +109,8 @@ CaseFile.Controller = {
     ,viewChangedDueDate: function(caseFileId, dueDate) {
         Acm.Dispatcher.fireEvent(this.VE_DUE_DATE_CHANGED, caseFileId, dueDate);
     }
-    ,viewChangedDetail: function(caseFileId, htmlDetail) {
-        Acm.Dispatcher.fireEvent(this.VE_DETAIL_CHANGED, caseFileId, htmlDetail);
+    ,viewChangedDetail: function(caseFileId, details) {
+        Acm.Dispatcher.fireEvent(this.VE_DETAIL_CHANGED, caseFileId, details);
     }
 
 };

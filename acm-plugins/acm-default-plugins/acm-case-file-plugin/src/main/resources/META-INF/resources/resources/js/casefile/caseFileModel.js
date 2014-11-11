@@ -58,8 +58,6 @@ CaseFile.Model = {
         CaseFile.Service.List.retrieveCaseFileList(treeInfo);
     }
     ,onCaseFileSelected: function(caseFileId) {
-        CaseFile.Model.setCaseFileId(caseFileId);
-
         var caseFile = CaseFile.Model.cacheCaseFile.get(caseFileId);
         if (!caseFile) {
             CaseFile.Service.Detail.retrieveCaseFile(caseFileId);
@@ -84,8 +82,8 @@ CaseFile.Model = {
             } //end for i
         }
     }
-    ,onIncidentDateChanged: function(caseFileId, created) {
-        CaseFile.Service.Detail.saveIncidentDate(caseFileId, created);
+    ,onIncidentDateChanged: function(caseFileId, incidentDate) {
+        CaseFile.Service.Detail.saveIncidentDate(caseFileId, incidentDate);
     }
     ,onAssigneeChanged: function(caseFileId, assignee) {
         CaseFile.Service.Detail.saveAssignee(caseFileId, assignee);
@@ -99,8 +97,8 @@ CaseFile.Model = {
     ,onDueDateChanged: function(caseFileId, dueDate) {
         CaseFile.Service.Detail.saveDueDate(caseFileId, dueDate);
     }
-    ,onDetailChanged: function(caseFileId, htmlDetail) {
-        CaseFile.Service.Detail.saveDetail(caseFileId, htmlDetail);
+    ,onDetailChanged: function(caseFileId, details) {
+        CaseFile.Service.Detail.saveDetail(caseFileId, details);
     }
 
     ,_objectType: "CASE_FILE"
@@ -121,8 +119,44 @@ CaseFile.Model = {
         }
         return this.cacheCaseFile.get(caseFileId);
     }
-    ,getCaseFileCurrent: function() {
-        return this.getCaseFile(this._caseFileId);
+//    ,getCaseFileCurrent: function() {
+//        return this.getCaseFile(this._caseFileId);
+//    }
+
+    ,getAssignee: function(caseFile) {
+        var assignee = null;
+        if (caseFile) {
+            if (Acm.isArray(caseFile.participants)) {
+                for (var i = 0; i < caseFile.participants.length; i++) {
+                    var participant =  caseFile.participants[i];
+                    if ("assignee" == participant.participantType) {
+                        assignee = participant.participantLdapId;
+                        break;
+                    }
+                }
+            }
+        }
+        return assignee;
+    }
+    ,setAssignee: function(caseFile, assignee) {
+        if (caseFile) {
+            if (!Acm.isArray(caseFile.participants)) {
+                caseFile.participants = [];
+            }
+
+            for (var i = 0; i < caseFile.participants.length; i++) {
+                if ("assignee" == caseFile.participants[i].participantType) {
+                    caseFile.participants[i].participantLdapId = assignee;
+                    return;
+                }
+            }
+
+
+            participant = {};
+            participant.participantType = "assignee";
+            participant.participantLdapId = assignee;
+            caseFile.participants.push(participant);
+        }
     }
 
     ,Tasks: {
@@ -169,7 +203,7 @@ CaseFile.Model = {
 
             ,_treeInfo: {
                 start           : 0
-                ,n              : 10
+                ,n              : 50
                 ,total          : -1
                 ,s              : null
                 ,q              : null

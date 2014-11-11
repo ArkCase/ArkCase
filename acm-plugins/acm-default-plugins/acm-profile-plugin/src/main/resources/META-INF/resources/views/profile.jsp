@@ -60,9 +60,9 @@
 
                                             <div>
                                                 <a id="lnkChangePicture" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Change Picture</u></a>
-                                                <form id="formPicture" style="display:block;">
+                                                <form id="formPicture" style="display:none;">
                                                     <input type="file" id="file" name="file">
-                                                    <input type="submit">
+                                                    <%--<input type="submit">--%>
                                                 </form>
                                             </div>
                                         </div>
