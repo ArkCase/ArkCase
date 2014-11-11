@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.task.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ public class TaskOutcome
 {
     private String name;
     private String description;
-    private List<String> fieldsRequiredWhenOutcomeIsChosen;
+    private List<String> fieldsRequiredWhenOutcomeIsChosen = new ArrayList<>();
 
     public String getName()
     {
