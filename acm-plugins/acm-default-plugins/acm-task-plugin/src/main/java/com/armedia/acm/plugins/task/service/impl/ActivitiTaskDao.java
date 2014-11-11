@@ -99,6 +99,11 @@ class ActivitiTaskDao implements TaskDao
 
             getActivitiTaskService().setVariable(activitiTask.getId(), "REWORK_INSTRUCTIONS", in.getReworkInstructions());
 
+            if ( in.getTaskOutcome() != null )
+            {
+                getActivitiTaskService().setVariableLocal(activitiTask.getId(), "outcome", in.getTaskOutcome().getName());
+            }
+
             in.setTaskId(Long.valueOf(activitiTask.getId()));
             in.setCreateDate(activitiTask.getCreateTime());
             return in;
@@ -385,6 +390,7 @@ class ActivitiTaskDao implements TaskDao
         if ( pid != null )
         {
             findProcessNameAndTaskOutcomes(retval, pid, processInstanceId, taskDefinitionKey);
+            findSelectedTaskOutcome(hti, retval);
         }
         else
         {
@@ -402,7 +408,28 @@ class ActivitiTaskDao implements TaskDao
         return retval;
     }
 
-    private void findProcessNameAndTaskOutcomes(AcmTask retval, String processDefinitionId, String processInstanceId, String taskDefinitionKey)
+    private void findSelectedTaskOutcome(HistoricTaskInstance hti, AcmTask retval)
+    {
+        // check for selected task outcome
+        String outcomeId = (String) hti.getTaskLocalVariables().get("outcome");
+        if ( outcomeId != null )
+        {
+            for ( TaskOutcome availableOutcome : retval.getAvailableOutcomes() )
+            {
+                if ( outcomeId.equals(availableOutcome.getName()) )
+                {
+                    retval.setTaskOutcome(availableOutcome);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void findProcessNameAndTaskOutcomes(
+            AcmTask retval,
+            String processDefinitionId,
+            String processInstanceId,
+            String taskDefinitionKey)
     {
         ProcessDefinition pd =
                 getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(processDefinitionId).singleResult();
@@ -427,7 +454,7 @@ class ActivitiTaskDao implements TaskDao
                         outcome.setName(fv.getId());
                         outcome.setDescription(fv.getName());
                         outcome.setFieldsRequiredWhenOutcomeIsChosen(getRequiredFieldsPerOutcomeMap().get(fv.getId()));
-                        retval.getOutcomes().add(outcome);
+                        retval.getAvailableOutcomes().add(outcome);
                     }
                 }
             }

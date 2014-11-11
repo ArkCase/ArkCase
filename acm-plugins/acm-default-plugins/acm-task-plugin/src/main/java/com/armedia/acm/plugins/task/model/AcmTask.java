@@ -7,9 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AcmTask implements AcmObject
 {
@@ -41,7 +39,8 @@ public class AcmTask implements AcmObject
     private List<ObjectAssociation> childObjects;
     private String reworkInstructions;
     private String outcomeName;
-    private List<TaskOutcome> outcomes = new ArrayList<>();
+    private List<TaskOutcome> availableOutcomes = new ArrayList<>();
+    private TaskOutcome taskOutcome;
 
     public Long getTaskId()
     {
@@ -344,14 +343,14 @@ public class AcmTask implements AcmObject
         return outcomeName;
     }
 
-    public List<TaskOutcome> getOutcomes()
+    public List<TaskOutcome> getAvailableOutcomes()
     {
-        return outcomes;
+        return availableOutcomes;
     }
 
-    public void setOutcomes(List<TaskOutcome> outcomes)
+    public void setAvailableOutcomes(List<TaskOutcome> availableOutcomes)
     {
-        this.outcomes = outcomes;
+        this.availableOutcomes = availableOutcomes;
     }
 
     public String getReworkInstructions()
@@ -362,5 +361,15 @@ public class AcmTask implements AcmObject
     public void setReworkInstructions(String reworkInstructions)
     {
         this.reworkInstructions = reworkInstructions;
+    }
+
+    public TaskOutcome getTaskOutcome()
+    {
+        return taskOutcome;
+    }
+
+    public void setTaskOutcome(TaskOutcome taskOutcome)
+    {
+        this.taskOutcome = taskOutcome;
     }
 }
