@@ -4,6 +4,7 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
+import com.armedia.acm.plugins.task.model.TaskOutcome;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.Process;
@@ -28,6 +29,7 @@ class ActivitiTaskDao implements TaskDao
     private Logger log = LoggerFactory.getLogger(getClass());
     private HistoryService activitiHistoryService;
     private Map<String, Integer> priorityLevelToNumberMap;
+    private Map<String, List<String>> requiredFieldsPerOutcomeMap;
 
 
 
@@ -94,6 +96,8 @@ class ActivitiTaskDao implements TaskDao
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "TASK_STATUS", status);
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "PERCENT_COMPLETE", in.getPercentComplete());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "DETAILS", in.getDetails());
+
+            getActivitiTaskService().setVariable(activitiTask.getId(), "REWORK_INSTRUCTIONS", in.getReworkInstructions());
 
             in.setTaskId(Long.valueOf(activitiTask.getId()));
             in.setCreateDate(activitiTask.getCreateTime());
@@ -364,6 +368,7 @@ class ActivitiTaskDao implements TaskDao
             retval.setWorkflowRequestType((String) hti.getProcessVariables().get("REQUEST_TYPE"));
             retval.setReviewDocumentPdfRenditionId((Long) hti.getProcessVariables().get("pdfRenditionId"));
             retval.setReviewDocumentFormXmlId((Long) hti.getProcessVariables().get("formXmlId"));
+            retval.setReworkInstructions((String) hti.getProcessVariables().get("REWORK_INSTRUCTIONS"));
 
         }
 
@@ -418,7 +423,11 @@ class ActivitiTaskDao implements TaskDao
                     for ( FormValue fv : fp.getFormValues() )
                     {
                         log.debug(fv.getId() + " = " + fv.getName());
-                        retval.getOutcomes().put(fv.getId(), fv.getName());
+                        TaskOutcome outcome = new TaskOutcome();
+                        outcome.setName(fv.getId());
+                        outcome.setDescription(fv.getName());
+                        outcome.setFieldsRequiredWhenOutcomeIsChosen(getRequiredFieldsPerOutcomeMap().get(fv.getId()));
+                        retval.getOutcomes().add(outcome);
                     }
                 }
             }
@@ -571,6 +580,7 @@ class ActivitiTaskDao implements TaskDao
             acmTask.setWorkflowRequestType((String) activitiTask.getProcessVariables().get("REQUEST_TYPE"));
             acmTask.setReviewDocumentPdfRenditionId((Long) activitiTask.getProcessVariables().get("pdfRenditionId"));
             acmTask.setReviewDocumentFormXmlId((Long) activitiTask.getProcessVariables().get("formXmlId"));
+            acmTask.setReworkInstructions((String) activitiTask.getProcessVariables().get("REWORK_INSTRUCTIONS"));
         }
     }
 
@@ -612,5 +622,15 @@ class ActivitiTaskDao implements TaskDao
     public void setPriorityLevelToNumberMap(Map<String, Integer> priorityLevelToNumberMap)
     {
         this.priorityLevelToNumberMap = priorityLevelToNumberMap;
+    }
+
+    public Map<String, List<String>> getRequiredFieldsPerOutcomeMap()
+    {
+        return requiredFieldsPerOutcomeMap;
+    }
+
+    public void setRequiredFieldsPerOutcomeMap(Map<String, List<String>> requiredFieldsPerOutcomeMap)
+    {
+        this.requiredFieldsPerOutcomeMap = requiredFieldsPerOutcomeMap;
     }
 }
