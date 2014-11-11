@@ -118,6 +118,14 @@ class ActivitiTaskDao implements TaskDao
     @Transactional
     public AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId) throws AcmTaskException
     {
+        return completeTask(userThatCompletedTheTask, taskId, null, null);
+    }
+
+    @Override
+    public AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId, String outcomePropertyName, String outcomeId)
+            throws AcmTaskException
+    {
+
         verifyCompleteTaskArgs(userThatCompletedTheTask, taskId);
 
         String user = userThatCompletedTheTask.getName();
@@ -144,6 +152,12 @@ class ActivitiTaskDao implements TaskDao
 
         try
         {
+            if ( outcomePropertyName != null && outcomeId != null )
+            {
+                getActivitiTaskService().setVariable(strTaskId, outcomePropertyName, outcomeId);
+                getActivitiTaskService().setVariableLocal(strTaskId, "outcome", outcomeId);
+            }
+
             getActivitiTaskService().complete(strTaskId);
 
             HistoricTaskInstance hti =
