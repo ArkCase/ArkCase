@@ -17,44 +17,50 @@ Profile.View = {
 
     ,Picture: {
         create: function() {
+            //this.$imgPicture       = $("#picture");
             this.$lnkChangePicture = $("#lnkChangePicture");
-            this.$imgPicture       = $("#picture");
             this.$formPicture      = $("#formPicture");
             this.$fileInput        = $("#file");
 
             this.$lnkChangePicture.on("click", function(e) {Profile.View.Picture.onClickLnkChnagePicture(e, this);});
             this.$fileInput.on("change", function(e) {Profile.View.Picture.onChangeFileInput(e, this);});
-
             this.$formPicture.submit(function(e) {Profile.View.Picture.onSubmitFormPicture(e, this);});
+
+
+            Acm.Dispatcher.addEventListener(Profile.Controller.ME_PROFILE_INFO_RETRIEVED  ,this.onProfileInfoRetrieved);
+            Acm.Dispatcher.addEventListener(Profile.Controller.ME_PICTURE_UPLOADED        ,this.onPictureUploaded);
         }
         ,initialize: function() {
         }
 
         ,onClickLnkChnagePicture: function(event, ctrl) {
             Profile.View.Picture.$fileInput.click();
-            var z = 1;
         }
         ,onChangeFileInput: function(event, ctrl) {
-            //alert("chnage");
+            Profile.View.Picture.$formPicture.submit();
         }
         ,onSubmitFormPicture: function(event, ctrl) {
             event.preventDefault();
 
             var _this = Profile.View.Picture;
             var fd = new FormData();
-            fd.append("userId", "ann-acm");
+            fd.append("userId", App.getUserName());
             fd.append("file", _this.$fileInput[0].files[0]);
-            var url = App.getContextPath() + "/api/latest/plugin/profile/img";
-            $.ajax({
-                url: url,
-                data: fd,
-                processData: false,
-                contentType: false,
-                type: 'POST',
-                success: function(data){
-                    alert("yes");;
-                }
-            });
+            Profile.Service.Picture.uploadImage(fd);
+        }
+
+
+        ,onProfileInfoRetrieved: function(profileInfo) {
+            if (Profile.Model.Info.isReadOnly()) {
+                //disable chnage pic link
+            } else {
+                //enable chnage pic link
+            }
+        }
+        ,onPictureUploaded: function(uploadInfo) {
+            if (uploadInfo.hasError) {
+                alert("View: onPictureUploaded, hasError, errorMsg:" + uploadInfo.errorMsg);
+            }
         }
     }
 
@@ -158,16 +164,14 @@ Profile.View = {
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_MAIN_PHONE_SAVED        ,this.onMainPhoneSaved);
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_FAX_SAVED               ,this.onFaxSaved);
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_WEBSITE_SAVED           ,this.onWebsiteSaved);
+            Acm.Dispatcher.addEventListener(Profile.Controller.ME_ECM_FILE_ID_SAVED       ,this.onEcmFileIdSaved);
+
         }
         ,initialize: function() {
         }
 
         ,populateProfileInfo: function(profileInfo) {
-            var ecmFileId = Acm.goodValue(profileInfo.ecmFileId, -1);
-            var pictureUrl = (0 < ecmFileId)? "/api/latest/ecm/download/byId/" + ecmFileId + "?inline=true"
-                : this.getDefaultImgPicture();
-            //var pictureUrl = (Acm.isEmpty(profileInfo.pictureUrl)) ? this.getDefaultImgPicture() : profileInfo.pictureUrl;
-            this.setSrcImgPicture(pictureUrl);
+            this._displayPicture(Acm.goodValue(profileInfo.ecmFileId, -1));
 
             this.setTextH4FullName     (Acm.goodValue(profileInfo.fullName));
             this.setTextH4Email        (Acm.goodValue(profileInfo.email));
@@ -205,6 +209,12 @@ Profile.View = {
                 this.setTextLnkWebsite     (Acm.goodValue(profileInfo.website));
             }
 
+        }
+        ,_displayPicture: function(ecmFileId) {
+            var pictureUrl = (0 < ecmFileId)? CaseFile.Service.Info.getPictureUrl(ecmFileId)
+                : this.getDefaultImgPicture();
+            //var pictureUrl = (Acm.isEmpty(profileInfo.pictureUrl)) ? this.getDefaultImgPicture() : profileInfo.pictureUrl;
+            this.setSrcImgPicture(pictureUrl);
         }
         ,_displayGroups: function(groups) {
             if (Acm.isArray(groups)) {
@@ -400,6 +410,14 @@ Profile.View = {
                 Profile.View.Info.setTextLnkWebsite("(Error)");
             }
         }
+        ,onEcmFileIdSaved: function(ecmFileId) {
+            if (ecmFileId.hasError) {
+                //report error
+            } else {
+                Profile.View.Info._displayPicture(ecmFileId)
+            }
+        }
+
 
 
     }

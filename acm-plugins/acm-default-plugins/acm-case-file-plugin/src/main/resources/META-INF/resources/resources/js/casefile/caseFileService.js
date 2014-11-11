@@ -312,27 +312,21 @@ CaseFile.Service = {
                 }
             );
         }
-        ,saveIncidentDate: function(caseFileId, created) {
-            alert("need start date property to save");
-            return;
-
+        ,saveIncidentDate: function(caseFileId, incidentDate) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.created = created;
+            caseFile.incidentDate = incidentDate;
             this.saveCaseFile(caseFile
                 ,function(data) {
-                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.created));
+                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.incidentDate));
                 }
             );
         }
         ,saveAssignee: function(caseFileId, assignee) {
-            alert("need assignee property to save");
-            return;
-
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.assignee = assignee;
+            CaseFile.Model.setAssignee(caseFile, assignee);
             this.saveCaseFile(caseFile
                 ,function(data) {
-                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.assignee));
+                    CaseFile.Controller.modelSavedAssignee(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.assignee));
                 }
             );
         }
@@ -341,7 +335,7 @@ CaseFile.Service = {
             caseFile.caseType = caseType;
             this.saveCaseFile(caseFile
                 ,function(data) {
-                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.caseType));
+                    CaseFile.Controller.modelSavedSubjectType(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.caseType));
                 }
             );
         }
@@ -359,19 +353,19 @@ CaseFile.Service = {
             return;
 
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.created = dueDate;
+            caseFile.dueDate = dueDate;
             this.saveCaseFile(caseFile
                 ,function(data) {
-                    CaseFile.Controller.modelSavedDueDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.created));
+                    CaseFile.Controller.modelSavedDueDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.dueDate));
                 }
             );
         }
-        ,saveDetail: function(caseFileId, htmlDetail) {
+        ,saveDetail: function(caseFileId, details) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.title = htmlDetail;
+            caseFile.details = details;
             this.saveCaseFile(caseFile
                 ,function(data) {
-                    CaseFile.Controller.modelSavedDetail(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.title));
+                    CaseFile.Controller.modelSavedDetail(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.details));
                 }
             );
         }

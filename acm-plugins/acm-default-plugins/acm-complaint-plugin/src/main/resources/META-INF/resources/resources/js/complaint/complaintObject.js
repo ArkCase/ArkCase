@@ -293,7 +293,7 @@ Complaint.Object = {
     //
     ,_treeInfo: {
         start           : 0
-        ,n              : 10
+        ,n              : 50
         ,total          : -1
         ,s              : null
         ,q              : null

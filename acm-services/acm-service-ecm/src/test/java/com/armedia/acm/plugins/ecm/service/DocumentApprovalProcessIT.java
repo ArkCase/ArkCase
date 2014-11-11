@@ -151,15 +151,17 @@ public class DocumentApprovalProcessIT
         // send for rework second task
         Task second = reviews.get(1);
         ts.setVariable(second.getId(), "reviewOutcome", "SEND_FOR_REWORK");
+        ts.setVariable(second.getId(), "REWORK_INSTRUCTIONS", "rework instructions");
         ts.complete(second.getId());
 
         // should be only the rework task now.
-        List<Task> reworkTasks = ts.createTaskQuery().processInstanceId(pi.getProcessInstanceId()).list();
+        List<Task> reworkTasks = ts.createTaskQuery().includeProcessVariables().processInstanceId(pi.getProcessInstanceId()).list();
         assertEquals(1, reworkTasks.size());
 
         Task rework = reworkTasks.get(0);
         assertEquals("authorReworksDocument", rework.getTaskDefinitionKey());
         assertEquals(documentAuthor, rework.getAssignee());
+        assertEquals("rework instructions", rework.getProcessVariables().get("REWORK_INSTRUCTIONS"));
 
         ts.setVariable(rework.getId(), "reworkOutcome", "CANCEL_DOCUMENT");
         ts.complete(rework.getId());

@@ -161,6 +161,24 @@
                 <entry key="Expedite" value="90"/>
             </map>
         </property>
+        <property name="requiredFieldsPerOutcomeMap">
+            <map>
+                <entry key="APPROVE">
+                    <list/>
+                </entry>
+                <entry key="SEND_FOR_REWORK">
+                    <list>
+                        <value>reworkInstructions</value>
+                    </list>
+                </entry>
+                <entry key="RESUBMIT">
+                    <list/>
+                </entry>
+                <entry key="CANCEL_DOCUMENT">
+                    <list/>
+                </entry>
+            </map>
+        </property>
     </bean>
 
     <bean id="taskEventPublisher" class="com.armedia.acm.plugins.task.service.TaskEventPublisher"/>

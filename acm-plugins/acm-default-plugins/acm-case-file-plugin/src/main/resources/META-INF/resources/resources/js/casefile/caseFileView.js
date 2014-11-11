@@ -67,6 +67,14 @@ CaseFile.View = {
         }
 
         ,_activeKey: null
+        ,getActiveKey: function() {
+            return this._activeKey;
+        }
+        ,getActiveCaseId: function() {
+            var caseFileId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(this._activeKey);
+            return caseFileId;
+        }
+
         ,_useFancyTree: function($s) {
             $s.fancytree({
                 activate: function(event, data) {
@@ -74,9 +82,8 @@ CaseFile.View = {
                     var key = node.key;
                     var nodeType = CaseFile.Model.Tree.Key.getNodeTypeByKey(key);
 
-                    CaseFile.View.Tree.onTreeNodeActivated(data.node);
-
                     CaseFile.View.Tree._activeKey = key;
+                    CaseFile.View.Tree.onTreeNodeActivated(data.node);
                 }
                 ,beforeActivate: function(event, data) {
                     if (App.Object.Dirty.isDirty()) {
@@ -375,8 +382,6 @@ CaseFile.View = {
             this.$tabTopBlank     = $("#tabTopBlank");
 
             this.$divDetail       = $(".divDetail");
-//            this.$btnEditDetail   = $("#tabDetail button:eq(0)");
-//            this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
             this.$btnEditDetail   = $("#tabDetail button:eq(0)");
             this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
             this.$btnEditDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnEditDetail(e, this);});
@@ -498,8 +503,8 @@ CaseFile.View = {
                 CaseFile.View.Detail.setTextLnkCaseTitle("(Error)");
             }
         }
-        ,onIncidentDateSaved: function(caseFileId, created) {
-            if (created.hasError) {
+        ,onIncidentDateSaved: function(caseFileId, incidentDate) {
+            if (incidentDate.hasError) {
                 CaseFile.View.Detail.setTextLnkIncidentDate("(Error)");
             }
         }
@@ -523,8 +528,8 @@ CaseFile.View = {
                 CaseFile.View.Detail.setTextLnkDueDate("(Error)");
             }
         }
-        ,onDetailSaved: function(caseFileId, htmlDetail) {
-            if (htmlDetail.hasError) {
+        ,onDetailSaved: function(caseFileId, details) {
+            if (details.hasError) {
                 CaseFile.View.Detail.setHtmlDivDetail("(Error)");
             }
         }
@@ -548,10 +553,7 @@ CaseFile.View = {
             CaseFile.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
-            //var c = Complaint.getComplaint();
             var htmlDetail = CaseFile.View.Detail.saveDivDetail();
-            //c.details = html;
-            //Complaint.Service.saveComplaint(c);
             CaseFile.Controller.viewChangedDetail(CaseFile.Model.getCaseFileId(), htmlDetail);
             App.Object.Dirty.clear("Editing case detail");
         }
@@ -570,15 +572,19 @@ CaseFile.View = {
             }
         }
         ,populateCaseFile: function(c) {
-            this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
-            this.setTextLnkCaseTitle(Acm.goodValue(c.title));
-            this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));
-            this.setTextLnkAssignee(Acm.goodValue(c.creator));
-            this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
-            this.setTextLnkPriority(Acm.goodValue(c.priority));
-            this.setTextLnkDueDate(Acm.getDateFromDatetime("c.dueDate"));
-            this.setTextLnkStatus(Acm.goodValue(c.status));
-            this.setHtmlDivDetail(Acm.goodValue("c.details"));
+            if (c) {
+                this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
+                this.setTextLnkCaseTitle(Acm.goodValue(c.title));
+                this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
+                this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
+                this.setTextLnkPriority(Acm.goodValue(c.priority));
+                this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
+                this.setTextLnkStatus(Acm.goodValue(c.status));
+                this.setHtmlDivDetail(Acm.goodValue(c.details));
+
+                var assignee = CaseFile.Model.getAssignee(c);
+                this.setTextLnkAssignee(Acm.goodValue(assignee));
+            }
         }
 
         ,setTextLabCaseNumber: function(txt) {
@@ -655,7 +661,8 @@ CaseFile.View = {
         ,onClickSpanAddTask: function(event, ctrl) {
             alert("onClickSpanAddTask");
             return;
-            var caseFile = CaseFile.Model.getCaseFileCurrent();
+            var caseFileId = CaseFile.Model.getCaseFileId();
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             if (caseFile) {
                 var caseNumber = Acm.goodValue(caseFile.caseNumber);
                 var url = CaseFile.View.Tasks.URL_NEW_TASK  + caseNumber;
@@ -702,11 +709,9 @@ CaseFile.View = {
                     }
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
-                            var caseFileId = CaseFile.Model.getCaseFileId();
+                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                             if (0 >= caseFileId) {
-                                var rc = AcmEx.Object.JTable.getEmptyRecords();
-                                var z = 1;
-                                return rc;
+                                return AcmEx.Object.JTable.getEmptyRecords();
                             }
 
                             var taskList = CaseFile.Model.Tasks.cacheTaskList.get(caseFileId);
@@ -720,9 +725,7 @@ CaseFile.View = {
                                     ,sortMap
                                     ,function(data) {
                                         var taskList = data;
-                                        var rc = CaseFile.View.Tasks._makeJtData(taskList);
-                                        var z = 1;
-                                        return rc;
+                                        return CaseFile.View.Tasks._makeJtData(taskList);
                                     }
                                     ,function(error) {
                                     }
