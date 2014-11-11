@@ -13,6 +13,8 @@ Profile.Model = {
 
     ,Info: {
         create: function() {
+            Acm.Dispatcher.addEventListener(Profile.Controller.ME_PICTURE_UPLOADED        ,this.onPictureUploaded);
+
             Acm.Dispatcher.addEventListener(Profile.Controller.VE_LOCATION_CHANGED        ,this.onLocationChanged);
             Acm.Dispatcher.addEventListener(Profile.Controller.VE_IM_ACCOUNT_CHANGED      ,this.onImAccountChanged);
             Acm.Dispatcher.addEventListener(Profile.Controller.VE_IM_SYSTEM_CHANGED       ,this.onImSystemChanged);
@@ -45,6 +47,10 @@ Profile.Model = {
         }
 
 
+        ,onPictureUploaded: function(uploadInfo) {
+            var ecmFileId = 0;
+            Profile.Service.Info.saveEcmFileId(ecmFileId);
+        }
         ,onLocationChanged: function(location) {
             Profile.Service.Info.saveLocation(location);
         }
@@ -87,6 +93,7 @@ Profile.Model = {
         ,onWebsiteChanged: function(website) {
             Profile.Service.Info.saveWebsite(website);
         }
+
 
     }
 

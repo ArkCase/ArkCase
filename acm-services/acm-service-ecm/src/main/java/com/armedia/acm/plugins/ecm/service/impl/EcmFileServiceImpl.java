@@ -1,9 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.FileUpload;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -55,8 +53,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
         }
 
-        EcmFileAddedEvent event = null;
-
         try
         {
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
@@ -70,19 +66,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     parentObjectId,
                     parentObjectName);
 
-            event = new EcmFileAddedEvent(uploaded, authentication);
-
-            event.setSucceeded(true);
-            applicationEventPublisher.publishEvent(event);
-
             return uploaded;
         } catch (IOException | MuleException e)
         {
-            if ( event != null )
-            {
-                event.setSucceeded(false);
-                applicationEventPublisher.publishEvent(event);
-            }
             log.error("Could not upload file: " + e.getMessage(), e);
             throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
         }

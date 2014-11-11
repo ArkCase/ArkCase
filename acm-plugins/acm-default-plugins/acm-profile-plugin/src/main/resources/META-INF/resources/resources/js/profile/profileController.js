@@ -25,6 +25,9 @@ Profile.Controller = {
     ,ME_MAIN_PHONE_SAVED              : "profile-main-phone-saved"           //param: mainOfficePhone
     ,ME_FAX_SAVED                     : "profile-fax-saved"                  //param: fax
     ,ME_WEBSITE_SAVED                 : "profile-website-saved"              //param: website
+    ,ME_ECM_FILE_ID_SAVED             : "profile-ecm-file-id-saved"          //param: ecmFileId
+
+    ,ME_PICTURE_UPLOADED              : "profile-picture-uploaded"           //param: uploadInfo
 
     ,VE_LOCATION_CHANGED              : "profile-location-changed"           //param: location
     ,VE_IM_ACCOUNT_CHANGED            : "profile-im-account-changed"         //param: imAccount
@@ -89,6 +92,13 @@ Profile.Controller = {
     ,modelSavedWebsite: function(website) {
         Acm.Dispatcher.fireEvent(this.ME_WEBSITE_SAVED, website);
     }
+    ,modelSavedEcmFileId: function(ecmFileId) {
+        Acm.Dispatcher.fireEvent(this.ME_ECM_FILE_ID_SAVED, ecmFileId);
+    }
+    ,modelUploadedPicture: function(uploadInfo) {
+        Acm.Dispatcher.fireEvent(this.ME_PICTURE_UPLOADED, uploadInfo);
+    }
+
     ,viewChangedLocation: function(location) {
         Acm.Dispatcher.fireEvent(this.VE_LOCATION_CHANGED, location);
     }

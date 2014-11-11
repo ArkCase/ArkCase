@@ -312,15 +312,15 @@ CaseFile.Service = {
                 }
             );
         }
-        ,saveIncidentDate: function(caseFileId, created) {
+        ,saveIncidentDate: function(caseFileId, incidentDate) {
             alert("need start date property to save");
             return;
 
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.created = created;
+            caseFile.incidentDate = incidentDate;
             this.saveCaseFile(caseFile
                 ,function(data) {
-                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.created));
+                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.incidentDate));
                 }
             );
         }
@@ -359,19 +359,19 @@ CaseFile.Service = {
             return;
 
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.created = dueDate;
+            caseFile.dueDate = dueDate;
             this.saveCaseFile(caseFile
                 ,function(data) {
-                    CaseFile.Controller.modelSavedDueDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.created));
+                    CaseFile.Controller.modelSavedDueDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.dueDate));
                 }
             );
         }
-        ,saveDetail: function(caseFileId, htmlDetail) {
+        ,saveDetail: function(caseFileId, details) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.title = htmlDetail;
+            caseFile.details = details;
             this.saveCaseFile(caseFile
                 ,function(data) {
-                    CaseFile.Controller.modelSavedDetail(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.title));
+                    CaseFile.Controller.modelSavedDetail(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.details));
                 }
             );
         }

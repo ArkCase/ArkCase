@@ -22,7 +22,9 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-library-case-file.xml",
         "classpath:/spring/spring-library-data-source.xml",
-        "classpath:/spring/test-case-file-context.xml"
+        "classpath:/spring/test-case-file-context.xml",
+        "classpath:/spring/spring-library-user-service.xml",
+        "classpath:/spring/spring-library-context-holder.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class CaseFileDaoIT
