@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,8 +39,9 @@ public class AcmTask implements AcmObject
     private Long reviewDocumentFormXmlId;
     private EcmFile documentUnderReview;
     private List<ObjectAssociation> childObjects;
+    private String reworkInstructions;
     private String outcomeName;
-    private Map<String, String> outcomes = new HashMap<>();
+    private List<TaskOutcome> outcomes = new ArrayList<>();
 
     public Long getTaskId()
     {
@@ -342,13 +344,23 @@ public class AcmTask implements AcmObject
         return outcomeName;
     }
 
-    public Map<String, String> getOutcomes()
+    public List<TaskOutcome> getOutcomes()
     {
         return outcomes;
     }
 
-    public void setOutcomes(Map<String, String> outcomes)
+    public void setOutcomes(List<TaskOutcome> outcomes)
     {
         this.outcomes = outcomes;
+    }
+
+    public String getReworkInstructions()
+    {
+        return reworkInstructions;
+    }
+
+    public void setReworkInstructions(String reworkInstructions)
+    {
+        this.reworkInstructions = reworkInstructions;
     }
 }
