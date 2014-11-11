@@ -49,22 +49,10 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 </scripting:text>
             </scripting:script>
         </scripting:transformer>
-        <!-- Tell mule to call the save method (as opposed to other DAO methods that may also take an EcmFile
-             parameter).  The property must go in the inbound scope.  The only way to do it is to set an outbound
-             property, then call an outbound endpoint (thereby starting a new flow).
-        -->
-        <!--<set-property propertyName="daoMethod" value="save"/>-->
-        <!--<vm:outbound-endpoint address="vm://userOrgDao.in" exchange-pattern="request-response"/>-->
 
-        <!--I don't need to save excel files with the user profile image -->
-
-        <!--<component doc:name="Save UserOrg Business Rules">-->
-            <!--<spring-object bean="saveUserOrgBusinessRule"/>-->
-        <!--</component>-->
 
         <choice>
             <when expression="#[payload.ecmFolderPath != null]">
-                <logger category="com.armedia.acm.plugins.profile" level="INFO" message="INSIDE."/>
                 <processor-chain>
                     <!-- store the userOrg (Profile info) in a flow variable so the enricher can see it -->
                     <set-variable variableName="userOrg" value="#[message.payload]"/>
@@ -81,9 +69,10 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             </otherwise>
         </choice>
 
-        <logger category="com.armedia.acm.plugins.profile" level="INFO" message="Folder Path: #[payload.ecmFolderPath]"/>
-        <logger category="com.armedia.acm.plugins.profile" level="INFO" message="Folder ID: #[payload.ecmFolderPath]"/>
-
+        <!-- Tell mule to call the save method (as opposed to other DAO methods that may also take an EcmFile
+             parameter).  The property must go in the inbound scope.  The only way to do it is to set an outbound
+             property, then call an outbound endpoint (thereby starting a new flow).
+        -->
         <set-property propertyName="daoMethod" value="save"/>
         <vm:outbound-endpoint address="vm://userOrgDao.in" exchange-pattern="request-response"/>
 

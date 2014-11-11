@@ -85,4 +85,12 @@
           </column>
       </addColumn>
   </changeSet>
+
+    <changeSet id="05-add-due-date-column-to-acm-case-file-table" author="marst">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_due_date" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
