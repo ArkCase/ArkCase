@@ -8,6 +8,7 @@ var TaskList = TaskList || {
         TaskList.cachePage = new Acm.Model.CacheFifo(2);
         TaskList.cacheTask = new Acm.Model.CacheFifo(3);
         TaskList.cacheParentObject = new Acm.Model.CacheFifo(3);
+        TaskList.cacheNoteList = new Acm.Model.CacheFifo(3);
 
 
 
@@ -28,6 +29,7 @@ var TaskList = TaskList || {
     ,Service: {}
     ,Callback: {}
 
+    ,cacheNoteList: null
     ,cachePage: null
     ,cacheTask: null
     ,cacheParentObject: null

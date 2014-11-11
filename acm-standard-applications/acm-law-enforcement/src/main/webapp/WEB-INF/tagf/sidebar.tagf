@@ -23,6 +23,15 @@
                             <c:if test="${acm_privileges[requiredPrivilege]}">
                                 <li class="">
                                         <c:choose>
+
+                                            <%--Audit has a different icon name--%>
+                                            <c:when test="${navTab.actionName == 'Audit'}">
+
+                                                <a href="<c:url value='${navTab.url}' />" class="auto">
+                                                    <i class="fa <c:url value='${navTab.iconName}' /> icon"></i>
+                                                    <span class="font-bold">${navTab.actionName}</span>
+                                                </a>
+                                            </c:when>
                                             <%--Administration has a different icon name--%>
                                             <c:when test="${navTab.actionName == 'Administration'}">
                                                 <%--<li class="">--%>
