@@ -23,6 +23,8 @@
         <module>acm-admin-plugin</module>
         <module>acm-report-plugin</module>
         <module>acm-profile-plugin</module>
+        <module>acm-audit-plugin</module>
+
     </modules>
 
 

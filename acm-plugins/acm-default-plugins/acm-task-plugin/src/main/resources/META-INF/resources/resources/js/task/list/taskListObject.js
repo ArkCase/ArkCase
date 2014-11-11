@@ -8,6 +8,26 @@
 TaskList.Object = {
     create : function() {
 
+        var ti = this.getTreeInfo();
+        /*var tiApp = App.getComplaintTreeInfo();
+        if (tiApp) {
+            ti.initKey = tiApp.initKey;
+            ti.start = tiApp.start;
+            ti.n = tiApp.n;
+            ti.s = tiApp.s;
+            ti.q = tiApp.q;
+            ti.complaintId = tiApp.complaintId;
+            App.setComplaintTreeInfo(null);
+        }*/
+
+        var items = $(document).items();
+        var taskId = items.properties("taskId").itemValue();
+        if (Acm.isNotEmpty(taskId)) {
+            ti.taskId = taskId;
+        }
+        /*var token = items.properties("token").itemValue();
+        this.setToken(token);*/
+
         this.$noTaskFoundMeassge = $("#noTaskFoundMeassge");
         this.showObject(this.$noTaskFoundMeassge, false);
 
@@ -41,9 +61,12 @@ TaskList.Object = {
         this.$lnkStatus.editable('disable');
 
         this.$lnkTaskSubject = $("#taskSubject");
+
         this.$lnkTaskSubject.editable({placement: 'bottom'
-            ,emptytext: "Unknown"
-            ,success: function(response, newValue) {
+            ,emptytext: "N/A"
+            ,color: "black"
+
+        ,success: function(response, newValue) {
                 TaskList.Event.onSaveTitle(newValue);
             }
         });
@@ -51,14 +74,14 @@ TaskList.Object = {
 
         this.$perCompleted		= $("#percentageCompleted");
         this.$perCompleted.editable({placement: 'bottom'
-            ,emptytext: "Unknown"
+            ,emptytext: "N/A"
             ,success: function(response, newValue) {
                 TaskList.Event.onSavePerComplete(newValue);
             }
         });
         this.$lnkStartDate      = $("#startDate");
         this.$lnkStartDate.editable({placement: 'bottom'
-            ,emptytext: "Unknown"
+            ,emptytext: "N/A"
             ,format: 'mm/dd/yyyy'
             ,viewformat: 'mm/dd/yyyy'
             ,datepicker: {
@@ -71,7 +94,7 @@ TaskList.Object = {
 
         this.$lnkDueDate        = $("#dueDate");
         this.$lnkDueDate.editable({placement: 'bottom'
-            ,emptytext: "Unknown"
+            ,emptytext: "N/A"
             ,format: 'mm/dd/yyyy'
             ,viewformat: 'mm/dd/yyyy'
             ,datepicker: {
@@ -86,7 +109,7 @@ TaskList.Object = {
 
         this.$lnkOwner          = $("#taskOwner");
         this.$lnkOwner.editable({placement: 'bottom'
-            ,emptytext: "Unknown"
+            ,emptytext: "N/A"
             ,success: function(response, newValue) {
                 TaskList.Event.onSaveOwner(newValue);
             }
@@ -101,7 +124,7 @@ TaskList.Object = {
 
         this.$lnkOwner          = $("#taskOwner");
         this.$lnkOwner.editable({placement: 'bottom'
-            ,emptytext: "Unknown"
+            ,emptytext: "N/A"
             ,success: function(response, newValue) {
                 TaskList.Event.onSaveOwner(newValue);
             }
@@ -125,6 +148,11 @@ TaskList.Object = {
         this.$divDocuments = $("#divDocuments");
         TaskList.JTable.createJTableDocuments(this.$divDocuments);
 
+        /*TaskList.Page.createEditCloseComplaintReqButton();
+        this.$spanEditCloseComplaintReqBtn = $("#spanEditCloseComplaintReqBtn");
+        this.$spanEditCloseComplaintReqBtn  = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+        this.$spanEditCloseComplaintReqBtn.unbind("click").on("click", function(e){TaskList.Event.onEditCloseComplaint(e, this);});*/
+
         this.$divHistory = $("#divHistory");
         TaskList.JTable.createJTableEvents(this.$divHistory);
 
@@ -136,6 +164,26 @@ TaskList.Object = {
         this.$divAttachments = $("#divAttachments");
         TaskList.JTable.createJTableAttachments(this.$divAttachments);
 
+        //frevvo edit close complaint
+        this.$lnkEditComplaintClose = $("#editCloseComplaint");
+        this.$lnkEditComplaintClose.click(function(e){TaskList.Event.onEditCloseComplaint(e)});
+
+        var formUrls = new Object();
+        formUrls["roi"] = $('#roiFormUrl').val();
+        formUrls["close_complaint"] = $('#closeComplaintFormUrl').val();
+        formUrls["edit_close_complaint"] = $('#editCloseComplaintFormUrl').val();
+        this.setFormUrls(formUrls);
+
+    }
+
+    //frevvo edit close complaint
+
+    ,_formUrls: null
+    ,getFormUrls: function() {
+        return this._formUrls;
+    }
+    ,setFormUrls: function(formUrls) {
+        this._formUrls = formUrls;
     }
 
     //  Use this to build the Admin tree structure
@@ -238,7 +286,8 @@ TaskList.Object = {
                         "tabNotes",
                         "tabHistory",
                         "tabWorkflowOverview",
-                        "tabAttachments"],
+                        "tabAttachments",
+                        ],
 
         taskDetails  : ["tabDetails"],
         taskDocuments: ["tabDocuments"],
@@ -289,11 +338,15 @@ TaskList.Object = {
             task = TaskList.getTask();
         }
         if (task && task.taskId) {
-            var node = this.$tree.fancytree("getTree").getNodeByKey(this._getTaskKey(task.taskId));
+            var key;
+            if(task.adhocTask == true){
+                key = "adHoc" + task.taskId;
+            }
+            else{key = task.taskId;}
+            var node = this.$tree.fancytree("getTree").getNodeByKey(this._getTaskKey(key));
+            //var node = this.$tree.fancytree("getActiveNode");
             if (node) {
-                //var dueDate = Acm.getDateFromDatetime(task.dueDate);
-                //var nodeTitle = Acm.goodValue(Acm.getDateFromDatetime(task.dueDate) + "," + task.priority + "," + task.title);
-                var nodeTitle = task.priority + "," + task.title;
+                var nodeTitle = Acm.goodValue(Acm.getDateFromDatetime(task.dueDate) + "," + task.priority + "," + task.title);
                 node.setTitle(nodeTitle);
             }
         }
@@ -389,35 +442,36 @@ TaskList.Object = {
         //populate task data
         var pageId = start.toString();
         for (var i = 0; i < tasks.length; i++) {
-            var task = tasks[i];
-            var taskBranchID = task.object_id_s;
-            //var taskBranchID = task.taskId;
+            var taskSolr = tasks[i];
+            var taskBranchID = taskSolr.object_id_s;
 
             //check if task is associated with an object or not
-            var adHoc = true;
-            if(task.parent_object_id_i != null && task.parent_object_type_s != null){
-                adHoc = false;
-            }
-            else{
+            var adHoc;
+            if(taskSolr.adhocTask_b == true){
                 adHoc = true;
             }
-            //&& task.due_dt != null
-            //task.due_dt + "," +
-            var taskBranchTitle;
-            if(task.title_t != null && task.priority_s != null ){
-                taskBranchTitle = task.priority_s +","+ task.title_t;
+            else{
+                adHoc = false;
             }
-            else if((task.title_t != null || task.title_t != "") && (task.priority_s == null || task.priority_s == "")){
-                taskBranchTitle = task.title_t;
+            //&& task.due_dt != null
+            //
+            var taskBranchTitle;
+            if(taskSolr.title_t != null && taskSolr.priority_s != null && taskSolr.due_dt != null){
+                taskBranchTitle = Acm.getDateFromDatetime(taskSolr.due_dt) + "," + taskSolr.priority_s +","+ taskSolr.title_t;
+            }
+            else if(taskSolr.title_t != null && taskSolr.priority_s != null){
+                taskBranchTitle = taskSolr.priority_s +","+ taskSolr.title_t;
+            }
+            else if(taskSolr.title_t != null){
+                taskBranchTitle = taskSolr.title_t;
             }
             else{
                 taskBranchTitle = "No title";
             }
-
             if(adHoc == false){
                 builder.addBranch({key: pageId + "." + taskBranchID                      //level 1: /Task
                     , title: taskBranchTitle,
-                    tooltip: task.name,
+                    tooltip: taskSolr.name,
                     expanded: false
                 })
 
@@ -448,7 +502,7 @@ TaskList.Object = {
 
                 builder.addBranch({key: pageId + "." + "adHoc"+taskBranchID                      //level 1: /Task
                     , title: taskBranchTitle,
-                    tooltip: task.name,
+                    tooltip: taskSolr.name,
                     expanded: false
                 })
 
@@ -538,7 +592,7 @@ TaskList.Object = {
             this.$lnkOwner.editable("setValue", owner, false);
         }
         else {
-            this.$lnkOwner.editable("setValue", "Unknown", false);
+            this.$lnkOwner.editable("setValue", "N/A", false);
         }
 
     }
@@ -547,7 +601,7 @@ TaskList.Object = {
             this.$lnkPriority.editable("setValue", txt);
         }
         else {
-            this.$lnkPriority.editable("setValue", "Uknown");
+            this.$lnkPriority.editable("setValue", "N/A");
         }
     }
     ,setValueLnkStartDate : function(date) {
@@ -555,7 +609,7 @@ TaskList.Object = {
             this.$lnkStartDate.editable("setValue", date, true);
         }
         else {
-            this.$lnkStartDate.editable("setValue", "Unknown", true);
+            this.$lnkStartDate.editable("setValue", "N/A", true);
         }
     }
     ,setValueLnkDueDate: function(date) {
@@ -563,7 +617,7 @@ TaskList.Object = {
             this.$lnkDueDate.editable("setValue", date, true);
         }
         else {
-            this.$lnkDueDate.editable("setValue", "Unknown", true);
+            this.$lnkDueDate.editable("setValue", "N/A", true);
         }
     }
     ,setValueAssignedStatus : function(status) {
@@ -571,7 +625,7 @@ TaskList.Object = {
             this.$lnkStatus.editable("setValue", status);
         }
         else {
-            this.$lnkStatus.editable("setValue", "Unassigned");
+            this.$lnkStatus.editable("setValue", "N/A");
         }
     }
 
@@ -609,7 +663,7 @@ TaskList.Object = {
             Acm.Object.setText(this.$lnkParentObjTitle, txt);
         }
         else {
-            Acm.Object.setText(this.$lnkParentObjTitle, "Unknown");
+            Acm.Object.setText(this.$lnkParentObjTitle, "N/A");
         }
     }
     ,setValueLnkParentObjNumber: function(txt) {
@@ -617,7 +671,7 @@ TaskList.Object = {
             Acm.Object.setText(this.$lnkParentNumber, txt);
         }
         else {
-            Acm.Object.setText(this.$lnkParentNumber, "Unknown");
+            Acm.Object.setText(this.$lnkParentNumber, "N/A");
         }
     }
     ,setValueLnkParentObjIncidentDate: function(date) {
@@ -625,7 +679,7 @@ TaskList.Object = {
             Acm.Object.setText(this.$lnkParentObjIncidentDate, date);
         }
         else {
-            Acm.Object.setText(this.$lnkParentObjIncidentDate, "Unknown");
+            Acm.Object.setText(this.$lnkParentObjIncidentDate, "N/A");
         }
     }
     ,setLnkParentObjPriority: function(txt) {
@@ -633,7 +687,7 @@ TaskList.Object = {
             Acm.Object.setText(this.$lnkParentObjPriority, txt);
         }
         else {
-            Acm.Object.setText(this.$lnkParentObjPriority, "Unknown");
+            Acm.Object.setText(this.$lnkParentObjPriority, "N/A");
         }
     }
     ,setLnkParentObjAssigned: function(txt) {
@@ -641,7 +695,7 @@ TaskList.Object = {
             Acm.Object.setText(this.$lnkParentObjAssigned, txt);
         }
         else {
-            Acm.Object.setText(this.$lnkParentObjAssigned, "Unknown");
+            Acm.Object.setText(this.$lnkParentObjAssigned, "N/A");
         }
     }
     ,setLnkParentObjSubjectType: function(txt) {
@@ -649,7 +703,7 @@ TaskList.Object = {
             Acm.Object.setText(this.$lnkParentObjSubjectType, txt);
         }
         else{
-            Acm.Object.setText(this.$lnkParentObjSubjectType, "Unknown");
+            Acm.Object.setText(this.$lnkParentObjSubjectType, "N/A");
         }
     }
     ,setLnkParentObjStatus: function(txt) {
@@ -657,7 +711,7 @@ TaskList.Object = {
             Acm.Object.setText(this.$lnkParentObjStatus, txt);
         }
         else{
-            Acm.Object.setText(this.$lnkParentObjStatus, "Unknown");
+            Acm.Object.setText(this.$lnkParentObjStatus, "N/A");
         }
     }
 
@@ -671,7 +725,7 @@ TaskList.Object = {
         });
 
         this.$lnkPriority.editable({placement: 'bottom'
-            ,emptytext: "Unknown"
+            ,emptytext: "N/A"
             ,value: ""
             ,source: choices
             ,success: function(response, newValue) {
@@ -679,22 +733,34 @@ TaskList.Object = {
             }
         });
     }
-
     ,updateDetail: function(task) {
-        if(task.attachedToObjectId != null && task.attachedToObjectType != null){
-            adHoc = false;
-            this.$btnCompleteTask.hide();
-            this.$btnDeleteTask.hide();
-            this.$btnApproveTask.show();
-            this.$btnRejectTask.show();
-        }
-        else{
+        if(task.adhocTask){
             this.$btnApproveTask.hide();
             this.$btnRejectTask.hide();
             this.$btnCompleteTask.show();
             this.$btnDeleteTask.show();
-        }
 
+            //this.refreshJTableDetails();
+            this.refreshJTableAttachments();
+            this.refreshJTableNotes();
+            this.refreshJTableWorkflowOverview();
+            this.refreshJTableHistory();
+            //this.refreshJTableDocuments();
+        }
+        else{
+            this.$btnCompleteTask.hide();
+            this.$btnDeleteTask.hide();
+            this.$btnApproveTask.show();
+            this.$btnRejectTask.show();
+
+            //this.refreshJTableDetails();
+            this.refreshJTableAttachments();
+            this.refreshJTableNotes();
+            this.refreshJTableWorkflowOverview();
+            this.refreshJTableHistory();
+            this.refreshJTableDocuments();
+            this.refreshJTableInstructions();
+        }
         TaskList.Object.refreshTaskTreeNode(task);
         this.setValueLnkTaskSubject(task.title);
         this.setValueLnkPerCompleted(task.percentComplete);
@@ -704,6 +770,10 @@ TaskList.Object = {
         this.setValueTaskOwner(task.owner);
         this.setValueAssignedStatus(task.status);
         this.setValueDetails(task.details);
+
+
+
+
     }
 
     ,updateParentObjDetail: function(parentObj) {
@@ -722,7 +792,38 @@ TaskList.Object = {
     ,saveDivDetails: function() {
         return AcmEx.Object.saveSummerNote(this.$divDetails);
     }
+    ,refreshJTableNotes: function(){
+        AcmEx.Object.jTableLoad(this.$divNotes);
 
+    }
+    ,refreshJTableAttachments: function(){
+        AcmEx.Object.jTableLoad(this.$divAttachments);
+
+    }
+    ,refreshJTableDetails: function(){
+        AcmEx.Object.jTableLoad(this.$divDetails);
+
+    }
+    ,refreshJTableDocuments: function(){
+        AcmEx.Object.jTableLoad(this.$divDocuments);
+
+    }
+    ,refreshJTableHistory: function(){
+        AcmEx.Object.jTableLoad(this.$divHistory);
+
+    }
+    ,refreshJTableInstructions: function(){
+        AcmEx.Object.jTableLoad(this.$divReworkInstructions);
+
+    }
+    ,refreshJTableWorkflowOverview: function(){
+        AcmEx.Object.jTableLoad(this.$divWorkflowOverview);
+
+    }
+
+    /*,beforeSpanAddItem: function(html) {
+        this.$spanEditCloseComplaintReqBtn.before(html);
+    }*/
 };
 
 
