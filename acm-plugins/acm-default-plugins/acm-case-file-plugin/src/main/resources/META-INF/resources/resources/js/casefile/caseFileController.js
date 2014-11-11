@@ -85,7 +85,7 @@ CaseFile.Controller = {
         Acm.Dispatcher.fireEvent(this.VE_NEXT_PAGE_CLICKED);
     }
     ,viewSelectedCaseFile: function(caseFileId) {
-        CaseFile.Model.setCaseFileId(caseFileId);
+        //CaseFile.Model.setCaseFileId(caseFileId);
         Acm.Dispatcher.fireEvent(this.VE_CASE_FILE_SELECTED, caseFileId);
     }
     ,viewSelectedTreeNode: function(nodeKey) {

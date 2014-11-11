@@ -67,6 +67,14 @@ CaseFile.View = {
         }
 
         ,_activeKey: null
+        ,getActiveKey: function() {
+            return this._activeKey;
+        }
+        ,getActiveCaseId: function() {
+            var caseFileId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(this._activeKey);
+            return caseFileId;
+        }
+
         ,_useFancyTree: function($s) {
             $s.fancytree({
                 activate: function(event, data) {
@@ -74,9 +82,8 @@ CaseFile.View = {
                     var key = node.key;
                     var nodeType = CaseFile.Model.Tree.Key.getNodeTypeByKey(key);
 
-                    CaseFile.View.Tree.onTreeNodeActivated(data.node);
-
                     CaseFile.View.Tree._activeKey = key;
+                    CaseFile.View.Tree.onTreeNodeActivated(data.node);
                 }
                 ,beforeActivate: function(event, data) {
                     if (App.Object.Dirty.isDirty()) {
@@ -375,8 +382,6 @@ CaseFile.View = {
             this.$tabTopBlank     = $("#tabTopBlank");
 
             this.$divDetail       = $(".divDetail");
-//            this.$btnEditDetail   = $("#tabDetail button:eq(0)");
-//            this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
             this.$btnEditDetail   = $("#tabDetail button:eq(0)");
             this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
             this.$btnEditDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnEditDetail(e, this);});
@@ -567,15 +572,19 @@ CaseFile.View = {
             }
         }
         ,populateCaseFile: function(c) {
-            this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
-            this.setTextLnkCaseTitle(Acm.goodValue(c.title));
-            this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
-            this.setTextLnkAssignee(Acm.goodValue(c.creator));
-            this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
-            this.setTextLnkPriority(Acm.goodValue(c.priority));
-            this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
-            this.setTextLnkStatus(Acm.goodValue(c.status));
-            this.setHtmlDivDetail(Acm.goodValue(c.details));
+            if (c) {
+                this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
+                this.setTextLnkCaseTitle(Acm.goodValue(c.title));
+                this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
+                this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
+                this.setTextLnkPriority(Acm.goodValue(c.priority));
+                this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
+                this.setTextLnkStatus(Acm.goodValue(c.status));
+                this.setHtmlDivDetail(Acm.goodValue(c.details));
+
+                var assignee = CaseFile.Model.getAssignee(c);
+                this.setTextLnkAssignee(Acm.goodValue(assignee));
+            }
         }
 
         ,setTextLabCaseNumber: function(txt) {
@@ -652,7 +661,8 @@ CaseFile.View = {
         ,onClickSpanAddTask: function(event, ctrl) {
             alert("onClickSpanAddTask");
             return;
-            var caseFile = CaseFile.Model.getCaseFileCurrent();
+            var caseFileId = CaseFile.Model.getCaseFileId();
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             if (caseFile) {
                 var caseNumber = Acm.goodValue(caseFile.caseNumber);
                 var url = CaseFile.View.Tasks.URL_NEW_TASK  + caseNumber;
@@ -699,7 +709,7 @@ CaseFile.View = {
                     }
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
-                            var caseFileId = CaseFile.Model.getCaseFileId();
+                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                             if (0 >= caseFileId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
