@@ -83,12 +83,16 @@
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
                                     <ul class="dropdown-menu text-left text-sm">
                                         <li><a href="#">All Open Cases</a></li>
-                                        <li><a href="#">Cases I've Opened</a></li>
-                                        <li><a href="#">Unapproved Cases</a></li>
-                                        <li><a href="#">Approved Cases</a></li>
-                                        <li><a href="#">Cases From Group</a></li>
-                                        <li><a href="#">Closed or Expired Cases</a></li>
-                                        <li><a href="#">New Cases</a></li>
+                                        <%--<li><a href="#">Cases I've Opened</a></li>--%>
+                                        <%--<li><a href="#">Unapproved Cases</a></li>--%>
+                                        <%--<li><a href="#">Approved Cases</a></li>--%>
+                                        <%--<li><a href="#">Cases From Group</a></li>--%>
+                                        <%--<li><a href="#">Closed or Expired Cases</a></li>--%>
+                                        <%--<li><a href="#">New Cases</a></li>--%>
+                                        <li><a href="#">All Closed</a></li>
+                                        <li><a href="#">All Inactive</a></li>
+                                        <%--<li><a href="#">All Destroyed</a></li>--%>
+                                        <%--<li><a href="#">All Archived</a></li>--%>
                                     </ul>
                                 </div>
                             </header>
@@ -135,7 +139,7 @@
                                                     <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
                                                     <small class="text-muted">Due Date</small></div>
                                                 <div class="col-xs-1">
-                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div> <small class="text-muted">Status</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div> <small class="text-muted">State</small></div>
                                             </div>
                                         </div>
                                     </div>

@@ -313,9 +313,6 @@ CaseFile.Service = {
             );
         }
         ,saveIncidentDate: function(caseFileId, incidentDate) {
-            alert("need start date property to save");
-            return;
-
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             caseFile.incidentDate = incidentDate;
             this.saveCaseFile(caseFile
@@ -325,14 +322,11 @@ CaseFile.Service = {
             );
         }
         ,saveAssignee: function(caseFileId, assignee) {
-            alert("need assignee property to save");
-            return;
-
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.assignee = assignee;
+            CaseFile.Model.setAssignee(caseFile, assignee);
             this.saveCaseFile(caseFile
                 ,function(data) {
-                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.assignee));
+                    CaseFile.Controller.modelSavedAssignee(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.assignee));
                 }
             );
         }
@@ -341,7 +335,7 @@ CaseFile.Service = {
             caseFile.caseType = caseType;
             this.saveCaseFile(caseFile
                 ,function(data) {
-                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.caseType));
+                    CaseFile.Controller.modelSavedSubjectType(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.caseType));
                 }
             );
         }
