@@ -8,7 +8,6 @@
 TaskList.Page = {
     create : function() {
     }
-
 	/**
 	 * Build the task list on the left panel with attributes like task title, created date, and created by. register each task
 	 * object for the click event. Populate the right side task details panel. If no task was listed, hide the right side

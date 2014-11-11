@@ -211,5 +211,93 @@ TaskList.Event = {
         data.taskDurationInMillis = t.taskDurationInMillis;
         return data;
     }
-    
+
+    //frevvo edit close complaint
+    ,onEditCloseComplaint: function(e) {
+        /*var doc = {
+            "fileId" : 4056,
+            "status" : "ACTIVE",
+            "created" : "2014-11-06T20:15:27.541+0000",
+            "creator" : "ecmillar",
+            "modified" : "2014-11-06T20:15:27.541+0000",
+            "modifier" : "ecmillar",
+            "ecmFileId" : "workspace://SpacesStore/88fa9bbd-f1ae-4b94-985a-ace90d3da228",
+            "fileName" : "Close_Complaint_06112014151525629.pdf",
+            "fileMimeType" : "application/pdf;frevvo-snapshot=true; charset=utf-8",
+            "fileType" : "close_complaint",
+            "parentObjects" : [{
+                "associationId" : 4057,
+                "status" : "ACTIVE",
+                "parentName" : "20140806_198",
+                "parentType" : "COMPLAINT",
+                "parentId" : 409,
+                "targetName" : "Close_Complaint_06112014151525629.pdf",
+                "targetType" : "FILE",
+                "targetId" : 4056,
+                "created" : "2014-11-06T20:15:27.541+0000",
+                "creator" : "ecmillar",
+                "modified" : "2014-11-06T20:15:27.541+0000",
+                "modifier" : "ecmillar"
+            }
+            ]
+        };*/
+        var task = TaskList.getTask();
+        var documentUnderReview = null;
+        var parentName = null;
+        var parentId = null;
+        var reviewDocumentPdfRenditionId = null;
+        var reviewDocumentFormXmlId = null;
+        var workflowRequestId = null;
+
+        //task.documentUnderReview = doc;
+        if(task.documentUnderReview != null){
+            var documentUnderReview = task.documentUnderReview = doc;
+            var parentName = documentUnderReview.parentObjects[0].parentName;
+            var parentId = documentUnderReview.parentObjects[0].parentId;
+            var reviewDocumentPdfRenditionId = task.reviewDocumentPdfRenditionId = 785;
+            var reviewDocumentFormXmlId = task.reviewDocumentFormXmlId = 783;
+            var workflowRequestId = task.workflowRequestId = 780;
+
+            var url = TaskList.Object.getFormUrls() != null ? TaskList.Object.getFormUrls()['edit_close_complaint'] : '';
+            if (url != null && url != '') {
+                url = url.replace("_data=(", "_data=(complaintId:'" +  parentId + "',complaintNumber:'" + parentName +
+                    "',mode:'edit',xmlId:" + "'" + reviewDocumentFormXmlId + "'" + ",pdfId:" + "'" + reviewDocumentPdfRenditionId + "'" + ",requestId:" + "'" + workflowRequestId + "'" + ",");
+                //url = url.replace("_data=(", "_data=(complaintId:'" + "409" + "',complaintNumber:'" + "20140806_198" + "',mode:'edit',xmlId:'783',pdfId:'785',requestId:'780',");
+
+                this._showPopup(url, "", 860, 700);
+            }
+        }
+        else{
+            Acm.Dialog.info("Edit cannot be performed without documents under review")
+        }
+    }
+
+    ,_showPopup: function(url, title, w, h) {
+
+        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+        width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+        height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+        var top = ((height / 2) - (h / 2)) + dualScreenTop;
+        var newWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+
+        if (window.focus) {
+            newWindow.focus();
+        }
+
+        this._checkClosePopup(newWindow);
+    }
+
+    ,_checkClosePopup: function(newWindow){
+        var timer = setInterval(function() {
+            if(newWindow.closed) {
+                clearInterval(timer);
+                Complaint.Object.refreshJTableDocuments();
+            }
+        }, 1000);
+    }
 };

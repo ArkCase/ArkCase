@@ -54,6 +54,7 @@
                 <ref bean="searchNavigatorAction"/>
                 <ref bean="adminNavigatorAction"/>
                 <ref bean="reportNavigatorAction"/>
+                <ref bean="auditNavigatorAction"/>
             </list>
         </property>
         <property name="businessObjects">
@@ -310,6 +311,14 @@
         <property name="url" value="/plugin/admin"/>
         <property name="requiredPrivilege" value="acm-admin"/>
     </bean>
+
+    <bean id="auditNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Audit"/>
+        <property name="iconName" value="fa-bolt"/>
+        <property name="url" value="/plugin/audit"/>
+        <property name="requiredPrivilege" value="acm-audit"/>
+    </bean>
+
     <bean id="reportNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Report"/>
         <property name="iconName" value="i-stats"/>

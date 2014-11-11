@@ -148,6 +148,11 @@ TaskList.Object = {
         this.$divDocuments = $("#divDocuments");
         TaskList.JTable.createJTableDocuments(this.$divDocuments);
 
+        /*TaskList.Page.createEditCloseComplaintReqButton();
+        this.$spanEditCloseComplaintReqBtn = $("#spanEditCloseComplaintReqBtn");
+        this.$spanEditCloseComplaintReqBtn  = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+        this.$spanEditCloseComplaintReqBtn.unbind("click").on("click", function(e){TaskList.Event.onEditCloseComplaint(e, this);});*/
+
         this.$divHistory = $("#divHistory");
         TaskList.JTable.createJTableEvents(this.$divHistory);
 
@@ -159,6 +164,26 @@ TaskList.Object = {
         this.$divAttachments = $("#divAttachments");
         TaskList.JTable.createJTableAttachments(this.$divAttachments);
 
+        //frevvo edit close complaint
+        this.$lnkEditComplaintClose = $("#editCloseComplaint");
+        this.$lnkEditComplaintClose.click(function(e){TaskList.Event.onEditCloseComplaint(e)});
+
+        var formUrls = new Object();
+        formUrls["roi"] = $('#roiFormUrl').val();
+        formUrls["close_complaint"] = $('#closeComplaintFormUrl').val();
+        formUrls["edit_close_complaint"] = $('#editCloseComplaintFormUrl').val();
+        this.setFormUrls(formUrls);
+
+    }
+
+    //frevvo edit close complaint
+
+    ,_formUrls: null
+    ,getFormUrls: function() {
+        return this._formUrls;
+    }
+    ,setFormUrls: function(formUrls) {
+        this._formUrls = formUrls;
     }
 
     //  Use this to build the Admin tree structure
@@ -262,7 +287,7 @@ TaskList.Object = {
                         "tabHistory",
                         "tabWorkflowOverview",
                         "tabAttachments",
-                        "tabDocuments"],
+                        ],
 
         taskDetails  : ["tabDetails"],
         taskDocuments: ["tabDocuments"],
@@ -708,7 +733,6 @@ TaskList.Object = {
             }
         });
     }
-
     ,updateDetail: function(task) {
         if(task.adhocTask){
             this.$btnApproveTask.hide();
@@ -721,6 +745,7 @@ TaskList.Object = {
             this.refreshJTableNotes();
             this.refreshJTableWorkflowOverview();
             this.refreshJTableHistory();
+            //this.refreshJTableDocuments();
         }
         else{
             this.$btnCompleteTask.hide();
@@ -795,6 +820,10 @@ TaskList.Object = {
         AcmEx.Object.jTableLoad(this.$divWorkflowOverview);
 
     }
+
+    /*,beforeSpanAddItem: function(html) {
+        this.$spanEditCloseComplaintReqBtn.before(html);
+    }*/
 };
 
 
