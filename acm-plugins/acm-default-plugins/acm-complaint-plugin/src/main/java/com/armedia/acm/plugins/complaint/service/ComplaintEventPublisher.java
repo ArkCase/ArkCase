@@ -3,12 +3,14 @@ package com.armedia.acm.plugins.complaint.service;
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintApprovalWorkflowRequestedEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintSearchResultEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
 import com.armedia.acm.plugins.complaint.model.FindComplaintByIdEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -93,5 +95,13 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         event.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(event);
+    }
+    
+    public void publishComplaintClosedEvent(Complaint source, Authentication authentication, boolean succeeded)
+    {
+    	ComplaintClosedEvent event = new ComplaintClosedEvent(source);
+    	event.setSucceeded(succeeded);
+    	
+    	eventPublisher.publishEvent(event);
     }
 }
