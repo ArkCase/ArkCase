@@ -135,7 +135,7 @@
                                     <small class="text-muted">Subject Type</small></div>
                                 <div class="col-xs-1">
                                     <div class="h4 font-bold"><a href="#" id="parentObjStatus" ></a></div>
-                                    <small class="text-muted">Status</small></div>
+                                    <small class="text-muted">State</small></div>
                             </div>
                         </div>
                     </div>
@@ -188,8 +188,8 @@
                                     <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
                                     <small class="text-muted">Due Date</small></div>
                                 <div class="col-xs-2">
-                                    <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-title="Enter Task Status"></a></div>
-                                    <small class="text-muted">Status</small></div>
+                                    <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-title="Enter Task State"></a></div>
+                                    <small class="text-muted">State</small></div>
                             </div>
                         </div>
                     </div>
@@ -291,6 +291,17 @@
                     </div>
                 </div>
 
+
+                <div class="row" id="tabCloseComplaintButton" style="display:none;">
+                    <div class="col-md-12">
+                        <div class="pull-right inline">
+                            <div class="btn-group">
+                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
+                                <input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row" id="tabSignature" style="display:none;">
                     <div class="col-md-12">
