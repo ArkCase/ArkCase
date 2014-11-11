@@ -58,8 +58,6 @@ CaseFile.Model = {
         CaseFile.Service.List.retrieveCaseFileList(treeInfo);
     }
     ,onCaseFileSelected: function(caseFileId) {
-        CaseFile.Model.setCaseFileId(caseFileId);
-
         var caseFile = CaseFile.Model.cacheCaseFile.get(caseFileId);
         if (!caseFile) {
             CaseFile.Service.Detail.retrieveCaseFile(caseFileId);
@@ -84,8 +82,8 @@ CaseFile.Model = {
             } //end for i
         }
     }
-    ,onIncidentDateChanged: function(caseFileId, created) {
-        CaseFile.Service.Detail.saveIncidentDate(caseFileId, created);
+    ,onIncidentDateChanged: function(caseFileId, incidentDate) {
+        CaseFile.Service.Detail.saveIncidentDate(caseFileId, incidentDate);
     }
     ,onAssigneeChanged: function(caseFileId, assignee) {
         CaseFile.Service.Detail.saveAssignee(caseFileId, assignee);
@@ -99,8 +97,8 @@ CaseFile.Model = {
     ,onDueDateChanged: function(caseFileId, dueDate) {
         CaseFile.Service.Detail.saveDueDate(caseFileId, dueDate);
     }
-    ,onDetailChanged: function(caseFileId, htmlDetail) {
-        CaseFile.Service.Detail.saveDetail(caseFileId, htmlDetail);
+    ,onDetailChanged: function(caseFileId, details) {
+        CaseFile.Service.Detail.saveDetail(caseFileId, details);
     }
 
     ,_objectType: "CASE_FILE"

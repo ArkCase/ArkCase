@@ -7,10 +7,40 @@
  */
 Profile.Service = {
     create : function() {
-        if (this.Info.create) {Profile.Service.Info.create();}
+        if (this.Picture.create) {this.Picture.create();}
+        if (this.Info.create)    {this.Info.create();}
     }
     ,initialize: function() {
-        if (this.Info.initialize) {Profile.Service.Info.initialize();}
+        if (Profile.Service.Picture.initialize) {Profile.Service.Picture.initialize();}
+        if (Profile.Service.Info.initialize)    {Profile.Service.Info.initialize();}
+    }
+
+    ,Picture: {
+        create: function() {
+        }
+        ,initialize: function() {
+        }
+
+        ,API_UPLOAD_IMAGE: "/api/latest/plugin/profile/img"
+
+        ,uploadImage: function(fd) {
+            var url = App.getContextPath() + this.API_UPLOAD_IMAGE;
+            Acm.Service.ajax({
+                url: url
+                ,data: fd
+                ,processData: false
+                ,contentType: false
+                ,type: 'POST'
+                ,success: function(response){
+                    if (response.hasError) {
+                        Profile.Controller.modelUploadedPicture(response);
+                    } else {
+                        var uploadInfo = response;
+                        Profile.Controller.modelUploadedPicture(uploadInfo);
+                    }
+                }
+            });
+        }
     }
 
     ,Info: {
@@ -21,8 +51,12 @@ Profile.Service = {
 
         ,API_RETRIEVE_PROFILE_INFO_          : "/api/latest/plugin/profile/get/"
         ,API_SAVE_PROFILE_INFO               : "/api/latest/plugin/profile/userOrgInfo/set"
+        ,API_DOWNLOAD_PICTURE_BEGIN_         : "/api/latest/ecm/download/byId/"
+        ,API_DOWNLOAD_PICTURE_END            : "?inline=true"
 
-
+        ,getPictureUrl: function(ecmFileId) {
+            return this.API_DOWNLOAD_PICTURE_BEGIN_ + ecmFileId + this.API_DOWNLOAD_PICTURE_END;
+        }
         ,_validateProfile: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
@@ -213,6 +247,16 @@ Profile.Service = {
                 }
             );
         }
+        ,saveEcmFileId: function(ecmFileId) {
+            var profileInfo = Profile.Model.Info.getProfileInfo();
+            profileInfo.ecmFileId = ecmFileId;
+            this.saveProfileInfo(profileInfo
+                ,function(data) {
+                    Profile.Controller.modelSavedEcmFileId(Profile.Service.Info._dataWrapper(data, data.ecmFileId));
+                }
+            );
+        }
+
     }
 
 

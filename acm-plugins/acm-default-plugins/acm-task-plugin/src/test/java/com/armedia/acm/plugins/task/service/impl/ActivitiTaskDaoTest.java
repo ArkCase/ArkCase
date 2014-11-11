@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.TaskOutcome;
 import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.Process;
 import org.activiti.engine.HistoryService;
@@ -81,6 +82,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         unit.setActivitiRepositoryService(mockRepositoryService);
         unit.setActivitiHistoryService(mockHistoryService);
         unit.setPriorityLevelToNumberMap(acmPriorityToActivitiPriority);
+        unit.setRequiredFieldsPerOutcomeMap(new HashMap<String, List<String>>());
     }
 
     @Test
@@ -115,6 +117,11 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         in.setPercentComplete(percentComplete);
         in.setOwner(owner);
         in.setCreateDate(start);
+        in.setReworkInstructions("rework instructions");
+
+        TaskOutcome selected = new TaskOutcome();
+        selected.setName("outcome name");
+        in.setTaskOutcome(selected);
 
         expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
         expect(mockTaskQuery.taskId(taskId.toString())).andReturn(mockTaskQuery);
@@ -138,6 +145,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService.setVariableLocal(taskId.toString(), "TASK_STATUS", status);
         mockTaskService.setVariableLocal(taskId.toString(), "PERCENT_COMPLETE", percentComplete);
         mockTaskService.setVariableLocal(taskId.toString(), "DETAILS", details);
+        mockTaskService.setVariable(taskId.toString(), "REWORK_INSTRUCTIONS", in.getReworkInstructions());
+        mockTaskService.setVariableLocal(taskId.toString(), "outcome", in.getTaskOutcome().getName());
 
         replayAll();
 
@@ -374,6 +383,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         taskLocalVars.put("TASK_STATUS", "taskStatus");
         taskLocalVars.put("PERCENT_COMPLETE", 50);
         taskLocalVars.put("DETAILS", "details");
+        taskLocalVars.put("outcome", "formValueId");
 
         expect(mockHistoricTaskInstance.getId()).andReturn(taskId.toString());
         expect(mockHistoricTaskInstance.getDueDate()).andReturn(dueDate);
@@ -426,6 +436,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals("taskStatus", task.getStatus());
         assertEquals("details", task.getDetails());
         assertEquals(Integer.valueOf(50), task.getPercentComplete());
+
+        assertNotNull(task.getTaskOutcome());
+        assertEquals("formValueId", task.getTaskOutcome().getName());
     }
 
     @Test
@@ -553,14 +566,13 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals("taskStatus", found.getStatus());
         assertEquals("details", found.getDetails());
         assertEquals(Integer.valueOf(25), found.getPercentComplete());
-        assertEquals(1, found.getOutcomes().size());
+        assertEquals(1, found.getAvailableOutcomes().size());
         assertEquals("TestOutcome", found.getOutcomeName());
 
-        String outcomeId = found.getOutcomes().keySet().iterator().next();
-        String outcomeName = found.getOutcomes().values().iterator().next();
+        TaskOutcome taskOutcome = found.getAvailableOutcomes().get(0);
 
-        assertEquals("formValueId", outcomeId);
-        assertEquals("formValueName", outcomeName);
+        assertEquals("formValueId", taskOutcome.getName());
+        assertEquals("formValueName", taskOutcome.getDescription());
 
 
     }
