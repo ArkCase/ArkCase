@@ -251,12 +251,12 @@ TaskList.Event = {
 
         //task.documentUnderReview = doc;
         if(task.documentUnderReview != null){
-            var documentUnderReview = task.documentUnderReview = doc;
+            var documentUnderReview = task.documentUnderReview;
             var parentName = documentUnderReview.parentObjects[0].parentName;
             var parentId = documentUnderReview.parentObjects[0].parentId;
-            var reviewDocumentPdfRenditionId = task.reviewDocumentPdfRenditionId = 785;
-            var reviewDocumentFormXmlId = task.reviewDocumentFormXmlId = 783;
-            var workflowRequestId = task.workflowRequestId = 780;
+            var reviewDocumentPdfRenditionId = task.reviewDocumentPdfRenditionId;
+            var reviewDocumentFormXmlId = task.reviewDocumentFormXmlId;
+            var workflowRequestId = task.workflowRequestId;
 
             var url = TaskList.Object.getFormUrls() != null ? TaskList.Object.getFormUrls()['edit_close_complaint'] : '';
             if (url != null && url != '') {
