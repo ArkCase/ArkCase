@@ -17,6 +17,7 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_SAVED, this.onNoteSaved);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_DELETED, this.onNoteDeleted);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_LIST_RETRIEVED, this.onNotesListRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_WORKFLOW_HISTORY_RETRIEVED, this.onWorkflowHistoryRetrieved);
     }
 
     ,EVENT_LIST_RETRIEVED			 : "task-list-retrieved"
@@ -30,6 +31,7 @@ TaskList.Callback = {
     ,EVENT_NOTE_SAVED           : "object-note-saved"
     ,EVENT_NOTE_DELETED         : "object-note-deleted"
     ,EVENT_NOTE_LIST_RETRIEVED  : "object-note-listed"
+    ,EVENT_WORKFLOW_HISTORY_RETRIEVED: "workflow-history-retrieved"
 
     ,onDetailSaved : function(Callback, response) {
         if (response.hasError) {
@@ -143,6 +145,11 @@ TaskList.Callback = {
                     //TaskList.Object.updateDetail(task);
                 } else {
                     TaskList.Service.retrieveNotes(parentId,parentType);
+                }
+                
+                // Workflow History
+                if (task && task.businessProcessId){
+                	TaskList.Service.retrieveWorkflowHistory(task.businessProcessId);
                 }
 
                 //load all the details
@@ -312,6 +319,18 @@ TaskList.Callback = {
             }
             TaskList.cacheNoteList.put(id,response)
             TaskList.Object.refreshJTableNotes();
+        }
+    }
+    
+    ,onWorkflowHistoryRetrieved : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to retrieve workflow history.");
+        } else {
+        	var task = TaskList.getTask();
+        	task.workflowHistory = response;
+        	
+            TaskList.cacheTask.put(task.taskId, task);
+            TaskList.Object.refreshJTableWorkflowOverview();
         }
     }
 };

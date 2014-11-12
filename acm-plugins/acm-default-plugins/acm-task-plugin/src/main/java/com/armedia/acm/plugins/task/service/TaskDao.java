@@ -3,6 +3,8 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
+import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
@@ -58,4 +60,6 @@ public interface TaskDao
 
     AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId, String outcomePropertyName, String outcomeId)
         throws AcmTaskException;
+    
+    List<WorkflowHistoryInstance> getWorkflowHistory(String processId);
 }

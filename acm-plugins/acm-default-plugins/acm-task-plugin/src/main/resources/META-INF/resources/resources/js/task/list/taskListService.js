@@ -20,6 +20,7 @@ TaskList.Service = {
     ,API_DELETE_NOTE             : "/api/latest/plugin/note/"
     ,API_LIST_NOTES              : "/api/latest/plugin/note/"
     ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
+    ,API_RETRIEVE_WORKFLOW_HISTORY       : "/api/latest/plugin/task/history/"
 
 
     ,listTaskSaveDetail : function(taskId, data) {
@@ -94,5 +95,9 @@ TaskList.Service = {
     ,retrieveNotes : function(parentId, parentType) {
         var url = (App.getContextPath() + this.API_LIST_NOTES + parentType + "/" + parentId);
         Acm.Ajax.asyncGet(url ,TaskList.Callback.EVENT_NOTE_LIST_RETRIEVED);
+    }
+    ,retrieveWorkflowHistory : function(businessProcessId) {
+    	var url = App.getContextPath() + this.API_RETRIEVE_WORKFLOW_HISTORY + businessProcessId;
+        Acm.Ajax.asyncGet(url, TaskList.Callback.EVENT_WORKFLOW_HISTORY_RETRIEVED);
     }
 }

@@ -224,6 +224,22 @@ TaskList.JTable = {
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    
+                    var task = TaskList.getTask();
+                    
+                    if (task && task.workflowHistory){
+                    	var workflowHistory = task.workflowHistory;
+                    	for (var i = 0; i < workflowHistory.length; i++){
+                    		var record = {};
+                            record.id = Acm.goodValue(workflowHistory[i].id);;
+                            record.participant = Acm.goodValue(workflowHistory[i].participant);
+                            record.role = Acm.goodValue(workflowHistory[i].role);
+                            record.status = Acm.goodValue(workflowHistory[i].status);
+                            record.dateTime = Acm.getDateTimeFromDatetime(workflowHistory[i].startDate);
+                            rc.Records.push(record);
+                    	}
+                    }
+                    
                     return rc;
                 }
             }
