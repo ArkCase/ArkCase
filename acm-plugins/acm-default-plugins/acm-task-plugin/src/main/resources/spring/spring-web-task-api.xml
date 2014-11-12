@@ -15,6 +15,10 @@
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
     </bean>
+    <bean id="completeTaskWithOutcomeAPIController" class="com.armedia.acm.plugins.task.web.api.CompleteTaskWithOutcomeAPIController">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
+    </bean>
 
     <bean id="createAdHocTaskAPIController" class="com.armedia.acm.plugins.task.web.api.CreateAdHocTaskAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
