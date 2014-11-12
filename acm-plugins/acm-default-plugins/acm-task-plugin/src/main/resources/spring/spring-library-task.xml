@@ -99,6 +99,11 @@
                     <property name="url" value="/api/{version}/plugin/task/byId/{taskId}"/>
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
                 </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/task/history/{businessProcessId}"/>
+                    <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
@@ -158,6 +163,7 @@
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
         <property name="activitiHistoryService" ref="activitiHistoryService"/>
+        <property name="userDao" ref="userJpaDao" />
         <property name="priorityLevelToNumberMap">
             <map>
                 <entry key="Low" value="10"/>
