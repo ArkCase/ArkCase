@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.task.service;
 
-import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
@@ -56,4 +55,7 @@ public interface TaskDao
     AcmTask findById(Long taskId) throws AcmTaskException;
 
     AcmTask save(AcmTask in) throws AcmTaskException;
+
+    AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId, String outcomePropertyName, String outcomeId)
+        throws AcmTaskException;
 }
