@@ -11,6 +11,7 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_RETRIEVED, this.onDetailRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_SAVED, this.onDetailSaved);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_COMPLETED, this.onTaskCompleted);
+        Acm.Dispatcher.addEventListener(this.EVENT_TASK_COMPLETED_WITH_OUTCOME, this.onTaskCompletedWithOutcome);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_SIGNED, this.onTaskSigned);
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_BYTYPEBYID_RETRIEVED, this.onFindByTypeByIdRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_DETAIL_RETRIEVED, this.onComplaintDetailRetrieved);
@@ -24,6 +25,7 @@ TaskList.Callback = {
     ,EVENT_LIST_SAVED				 : "task-list-saved"
     ,EVENT_DETAIL_RETRIEVED			 : "task-list-detail-retrieved"
     ,EVENT_TASK_COMPLETED			 : "task-list-task-completed"
+    ,EVENT_TASK_COMPLETED_WITH_OUTCOME : "task-completed-with-outcome"
     ,EVENT_TASK_SIGNED				 : "task-list-task-signed"
     ,EVENT_LIST_BYTYPEBYID_RETRIEVED : "task-list-signature-byTypeById-retrieved"
     ,EVENT_DETAIL_SAVED               : "event-detail-saved"
@@ -212,6 +214,17 @@ TaskList.Callback = {
             }
         }
     }
+    ,onTaskCompletedWithOutcome : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to complete task with outcome:"  +response.errorMsg);
+        } else {
+            TaskList.Object.hideAllWorkflowButtons();
+            var taskId = TaskList.getTaskId();
+            var workflowHistory = TaskList.getWorkflowHistory();
+            workflowHistory[0].status = response.status;
+            TaskList.cacheWorkflowHistory.put(taskId,workflowHistory);
+        }
+    }
     ,onTaskSigned : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error("Failed to electronically sign task. Incorrect parameters.");
@@ -326,10 +339,13 @@ TaskList.Callback = {
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve workflow history.");
         } else {
-        	var task = TaskList.getTask();
+        	/*var task = TaskList.getTask();
         	task.workflowHistory = response;
         	
             TaskList.cacheTask.put(task.taskId, task);
+             */
+            var taskId = TaskList.getTaskId();
+            TaskList.cacheWorkflowHistory.put(taskId, response);
             TaskList.Object.refreshJTableWorkflowOverview();
         }
     }

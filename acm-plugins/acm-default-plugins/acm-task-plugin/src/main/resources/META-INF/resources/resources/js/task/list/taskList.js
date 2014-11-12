@@ -9,6 +9,7 @@ var TaskList = TaskList || {
         TaskList.cacheTask = new Acm.Model.CacheFifo(3);
         TaskList.cacheParentObject = new Acm.Model.CacheFifo(3);
         TaskList.cacheNoteList = new Acm.Model.CacheFifo(3);
+        TaskList.cacheWorkflowHistory = new Acm.Model.CacheFifo(3);
 
 
 
@@ -33,6 +34,7 @@ var TaskList = TaskList || {
     ,cachePage: null
     ,cacheTask: null
     ,cacheParentObject: null
+    ,cacheWorkflowHistory: null
 
     ,_parentObjId: 0
     ,getParentObjId: function(){
@@ -63,6 +65,12 @@ var TaskList = TaskList || {
         }
         return this.cacheTask.get(this._taskId);
     }
+    ,getWorkflowHistory: function() {
+    if (0 >= this._taskId) {
+        return null;
+    }
+    return this.cacheWorkflowHistory.get(this._taskId);
+}
 
     ,_taskList: []
     ,getTaskList: function() {

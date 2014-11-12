@@ -12,6 +12,7 @@ TaskList.Service = {
     ,API_LIST_TASK             : "/api/latest/plugin/search/" + Task.getObjectType()
     ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/task/byId/"
     ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask/"
+    ,API_COMPLETE_TASK_WITH_OUTCOME         : "/api/latest/plugin/task/completeTask"
     ,API_SIGN_TASK         	   : "/api/latest/plugin/signature/confirm/"
     ,API_FIND_BYTASKBYID_TASK_SIGNATURE : "/api/latest/plugin/signature/find/"
     ,API_SAVE_DETAIL       				: "/api/latest/plugin/task/save/"
@@ -67,6 +68,12 @@ TaskList.Service = {
         Acm.Ajax.asyncPost(App.getContextPath() + this.API_COMPLETE_TASK + taskId
             ,"{}"
             ,TaskList.Callback.EVENT_TASK_COMPLETED
+        );
+    }
+    ,completeTaskWithOutcome : function(data) {
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_COMPLETE_TASK_WITH_OUTCOME
+            ,JSON.stringify(data)
+            ,TaskList.Callback.EVENT_TASK_COMPLETED_WITH_OUTCOME
         );
     }
     ,signTask : function(taskId) {
