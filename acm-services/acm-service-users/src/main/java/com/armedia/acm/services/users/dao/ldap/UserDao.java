@@ -18,7 +18,7 @@ import javax.persistence.criteria.Root;
 import java.util.Date;
 import java.util.List;
 
-public class UserDao extends AcmAbstractDao
+public class UserDao extends AcmAbstractDao<AcmUser>
 {
     @PersistenceContext
     private EntityManager entityManager;
