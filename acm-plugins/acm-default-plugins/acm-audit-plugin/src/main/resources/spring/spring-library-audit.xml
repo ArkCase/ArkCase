@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <context:property-placeholder
+            properties-ref="auditPluginProperties"
+            ignore-unresolvable="true"
+            local-override="false"
+            order="1"/>
+
+
+    <!-- keeping this bean for now even though we are not using any properties yet.  -->
+    <bean id="auditPluginProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/auditPlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
+
+
+    <bean id="auditPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="Audit Plugin"/>
+        <property name="pluginProperties" ref="auditPluginProperties"/>
+        <property name="privileges">
+            <list>
+                <ref bean="auditPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="auditUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/audit"/>
+                    <property name="requiredPrivilege" ref="auditPrivilege"/>
+                </bean>
+            </list>
+        </property>
+
+    </bean>
+
+    <bean id="auditPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-audit"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_ANALYST</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
+
+
+</beans>
