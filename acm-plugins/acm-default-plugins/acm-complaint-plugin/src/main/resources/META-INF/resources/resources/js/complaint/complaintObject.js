@@ -87,10 +87,7 @@ Complaint.Object = {
         
         this.$lnkComplaintClose = $("#closeComplaint");
         this.$lnkComplaintClose.click(function(e){Complaint.Event.onCloseComplaint(e)});
-        
-        this.$lnkEditComplaintClose = $("#editCloseComplaint");
-        this.$lnkEditComplaintClose.click(function(e){Complaint.Event.onEditCloseComplaint(e)});
-        
+
         var formUrls = new Object();
         formUrls["roi"] = $('#roiFormUrl').val();
         formUrls["close_complaint"] = $('#closeComplaintFormUrl').val();
@@ -100,6 +97,14 @@ Complaint.Object = {
 
 
 
+    ,_formUrls: null
+    ,getFormUrls: function() {
+        return this._formUrls;
+    }
+    ,setFormUrls: function(formUrls) {
+        this._formUrls = formUrls;
+    }
+
     ,_token: ""
     ,getToken: function() {
         return this._token;
@@ -108,13 +113,7 @@ Complaint.Object = {
         this._token = token;
     }
     
-    ,_formUrls: null
-    ,getFormUrls: function() {
-    	return this._formUrls;
-    }
-    ,setFormUrls: function(formUrls) {
-    	this._formUrls = formUrls;
-    }
+
 
     ,beforeSpanAddDocument: function(html) {
         this.$spanAddDocument.before(html);
@@ -274,12 +273,8 @@ Complaint.Object = {
         
         if (c.status === 'CLOSED' || c.status === 'IN APPROVAL'){
         	this.$lnkComplaintClose.hide();
-        	if (c.status === 'IN APPROVAL'){
-        		this.$lnkEditComplaintClose.show();
-        	}
         }else{
         	this.$lnkComplaintClose.show();
-        	this.$lnkEditComplaintClose.hide();
         }
 
         this.refreshJTableLocation();

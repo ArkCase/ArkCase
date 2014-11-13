@@ -145,23 +145,16 @@ TaskWizard.Object = {
     
     /**
      * get the priority selected option text/label
-     *//*
+     */
     ,getSelectedTextSelPriority: function() {
-        return Acm.Object.getSelectTextIgnoreFirst(this.$prioritySel);
-    }*/
+        return Acm.Object.getSelectValueIgnoreFirst(this.$prioritySel);
+    }
     
 	/**
 	 * Get the completed percentage field value
 	 */
     ,getValueEdtCompletedStatus: function() {
         return Acm.Object.getPlaceHolderInput(this.$completedStatus);
-    }
-
-    /**
-     * get the priority selected option value
-     */
-    ,getSelectedValueSelPriority: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$prioritySel);
     }
 
 
@@ -308,7 +301,7 @@ TaskWizard.Object = {
         data.status = this.getSelectedTextSelStatus();
         //data.priority = this.getValueEdtPriority();
         data.dueDate = this.getValueEdtDueDate();
-        data.priority = this.getSelectedValueSelPriority();
+        data.priority = this.getSelectedTextSelPriority();
         data.percentComplete = this.getValueEdtCompletedStatus();
         data.details = this.getHtmlDivDetail();
         data.adhocTask = true;

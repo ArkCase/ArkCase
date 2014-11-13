@@ -169,6 +169,7 @@ Complaint.Event = {
         	this._showPopup(url, "", 860, 700);        	
         }
     }
+<<<<<<< HEAD
     ,onEditCloseComplaint: function(e) {
     	var c = Complaint.getComplaint();
     	
@@ -181,8 +182,37 @@ Complaint.Event = {
                     Complaint.Object.refreshJTableDocuments();
                 }
             );
+=======
+    ,_showPopup: function(url, title, w, h) {
+
+        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+        width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+        height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+        var top = ((height / 2) - (h / 2)) + dualScreenTop;
+        var newWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+
+        if (window.focus) {
+            newWindow.focus();
+>>>>>>> 20bbd4884144df922666929b95e6b4f07ab99ad1
         }
+
+        this._checkClosePopup(newWindow);
     }
+
+    ,_checkClosePopup: function(newWindow){
+        var timer = setInterval(function() {
+            if(newWindow.closed) {
+                clearInterval(timer);
+                Complaint.Object.refreshJTableDocuments();
+            }
+        }, 1000);
+    }
+
 
     ,_tryInitAssignee: function() {
         var data = App.Object.getApprovers();
@@ -212,33 +242,6 @@ Complaint.Event = {
         }
     }
     
-    ,_showPopup: function(url, title, w, h) {
-        
-        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
 
-        width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-        height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-
-        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
-        var top = ((height / 2) - (h / 2)) + dualScreenTop;
-        var newWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
-
-        
-        if (window.focus) {
-            newWindow.focus();
-        }
-        
-        this._checkClosePopup(newWindow);
-    }
-    
-    ,_checkClosePopup: function(newWindow){
-        var timer = setInterval(function() {
-            if(newWindow.closed) {
-                clearInterval(timer);
-                Complaint.Object.refreshJTableDocuments();
-            }
-        }, 1000);
-    }
 
 };

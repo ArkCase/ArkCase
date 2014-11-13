@@ -135,7 +135,7 @@
                                     <small class="text-muted">Subject Type</small></div>
                                 <div class="col-xs-1">
                                     <div class="h4 font-bold"><a href="#" id="parentObjStatus" ></a></div>
-                                    <small class="text-muted">Status</small></div>
+                                    <small class="text-muted">State</small></div>
                             </div>
                         </div>
                     </div>
@@ -146,16 +146,22 @@
                     <div class="btn-group">
                         <!-- TODO: when data-toggle is modal, the tooltip won't come up
                         -->
-                        <button class="btn btn-default btn-sm" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
+                        <button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
 
                         <!-- from the mockup -->
                         <button class="btn btn-default btn-sm" id="btnAssign" data-title="Assign Task" data-toggle="modal" data-target="#assign"><i class="fa fa-male"></i> Assign</button>
                         <button class="btn btn-default btn-sm" id="btnReassign" data-toggle="modal" data-target="#reassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
                         <button class="btn btn-default btn-sm" id="btnUnassign" data-toggle="modal" data-target="#unassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>
                         <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" data-target="#complete" data-title="Complete Task"><i class="fa fa-check-square-o"></i> Complete</button>
-                        <button class="btn btn-default btn-sm" id="btnApprove" data-toggle="modal" data-target="#approve" data-title="Approve Task"><i class="fa fa-check"></i> Approve</button>
                         <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" data-title="Reject Task"><i class="fa fa-reply"></i> Reject</button>
                         <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" data-target="#delete" data-title="Delete Task"><i class="fa fa-times"></i> Delete</button>
+
+                        <%--task approval workflow buttons--%>
+                        <button class="btn btn-default btn-sm" id="btnApprove" data-title="Approve Document"><i class="fa fa-check"></i>Approve Document</button>
+                        <button class="btn btn-default btn-sm" id="btnSendForRework" data-title="Send for Rework"><i class="fa fa-times"></i> Send For Rework</button>
+                        <button class="btn btn-default btn-sm" id="btnResubmit" data-title="Resubmit"><i class="fa fa-times"></i>Resubmit</button>
+                        <button class="btn btn-default btn-sm" id="btnCancelRequest" data-title="Cancel Request"><i class="fa fa-times"></i>Cancel Request</button>
+
 
 
 
@@ -164,7 +170,7 @@
                     <%--
                                     <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
                     --%>
-                <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-title="Enter Task Subject"> Sample Task Subject</a></h4>
+                <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-title="Enter Task Subject"></a></h4>
                 <%--<small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>--%>
 
             <hr/>
@@ -188,8 +194,8 @@
                                     <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
                                     <small class="text-muted">Due Date</small></div>
                                 <div class="col-xs-2">
-                                    <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-title="Enter Task Status"></a></div>
-                                    <small class="text-muted">Status</small></div>
+                                    <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-title="Enter Task State"></a></div>
+                                    <small class="text-muted">State</small></div>
                             </div>
                         </div>
                     </div>
@@ -291,6 +297,17 @@
                     </div>
                 </div>
 
+
+                <div class="row" id="tabCloseComplaintButton" style="display:none;">
+                    <div class="col-md-12">
+                        <div class="pull-right inline">
+                            <div class="btn-group">
+                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
+                                <input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row" id="tabSignature" style="display:none;">
                     <div class="col-md-12">

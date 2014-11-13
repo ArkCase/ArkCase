@@ -15,9 +15,10 @@ var App = App || {
 
     ,OBJTYPE_CASE:        "Case"
     ,OBJTYPE_COMPLAINT:   "COMPLAINT"
-    ,OBJTYPE_TASK:        "Task"
+    ,OBJTYPE_TASK:        "TASK"
     ,OBJTYPE_DOCUMENT:    "Document"
     ,OBJTYPE_PEOPLE:    "People"
+    ,OBJTYPE_BUSINESS_PROCESS: "BUSINESS_PROCESS"
 
 
     ,getContextPath: function() {

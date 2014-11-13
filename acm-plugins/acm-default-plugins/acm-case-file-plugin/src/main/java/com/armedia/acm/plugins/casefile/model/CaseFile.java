@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.casefile.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.users.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,10 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name="acm_case_file")
@@ -94,7 +92,61 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     @Transient
     private String ecmFolderPath;
 
+    @OneToMany (cascade = CascadeType.ALL)
+    @JoinColumn(name = "cm_person_assoc_parent_id")
+    private List<PersonAssociation> personAssociations = new ArrayList<>();
 
+    // the same person could originate many complaints, but each complaint is originated by
+    // only one person, so a ManyToOne mapping makes sense here.
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cm_originator_id")
+    private PersonAssociation originator;
+
+    @PrePersist
+    protected void beforeInsert()
+    {
+        if ( getStatus() == null || getStatus().trim().isEmpty() )
+        {
+            setStatus("DRAFT");
+        }
+
+        if ( getOriginator() != null )
+        {
+            personAssociationResolver(getOriginator());
+        }
+
+        setupChildPointers();
+    }
+
+    private void setupChildPointers()
+    {
+        for ( ObjectAssociation childObject : childObjects )
+        {
+            childObject.setParentId(getId());
+        }
+        for ( PersonAssociation persAssoc : personAssociations)
+        {
+            personAssociationResolver(persAssoc);
+        }
+        for ( AcmParticipant ap : getParticipants() )
+        {
+            ap.setObjectId(getId());
+            ap.setObjectType("CASE");
+        }
+    }
+
+    @PreUpdate
+    protected void beforeUpdate()
+    {
+        setupChildPointers();
+    }
+    private void personAssociationResolver (PersonAssociation personAssoc)
+    {
+        personAssoc.setParentId(getId());
+        personAssoc.setParentType("CASE");
+
+        personAssoc.getPerson().setPersonAssociations(Arrays.asList(personAssoc));
+    }
     /**
      * CMIS object ID of the folder where the complaint's attachments/content files are stored.
      */
@@ -104,6 +156,27 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_parent_id")
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
+
+    public Collection<ObjectAssociation> getChildObjects()
+    {
+        return Collections.unmodifiableCollection(childObjects);
+    }
+
+    public void addChildObject(ObjectAssociation childObject)
+    {
+        childObjects.add(childObject);
+        childObject.setParentName(getCaseNumber());
+        childObject.setParentType("CASE");
+        childObject.setParentId(getId());
+    }
+
+    public PersonAssociation getOriginator() {
+        return originator;
+    }
+
+    public void setOriginator(PersonAssociation originator) {
+        this.originator = originator;
+    }
 
     public Long getId()
     {
@@ -242,16 +315,6 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     public void setDisposition(String disposition)
     {
         this.disposition = disposition;
-    }
-
-    public Collection<ObjectAssociation> getChildObjects()
-    {
-        return childObjects;
-    }
-
-    public void setChildObjects(Collection<ObjectAssociation> childObjects)
-    {
-        this.childObjects = childObjects;
     }
 
     public String getPriority() {

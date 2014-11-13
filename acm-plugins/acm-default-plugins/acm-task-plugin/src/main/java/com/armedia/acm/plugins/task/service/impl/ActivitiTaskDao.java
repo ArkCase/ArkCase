@@ -5,7 +5,11 @@ import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.model.TaskOutcome;
+import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
 import com.armedia.acm.plugins.task.service.TaskDao;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+
 import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.Process;
 import org.activiti.engine.ActivitiException;
@@ -13,12 +17,15 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Query;
 import java.security.Principal;
 import java.util.*;
 
@@ -30,6 +37,7 @@ class ActivitiTaskDao implements TaskDao
     private HistoryService activitiHistoryService;
     private Map<String, Integer> priorityLevelToNumberMap;
     private Map<String, List<String>> requiredFieldsPerOutcomeMap;
+    private UserDao userDao;
 
 
 
@@ -118,6 +126,14 @@ class ActivitiTaskDao implements TaskDao
     @Transactional
     public AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId) throws AcmTaskException
     {
+        return completeTask(userThatCompletedTheTask, taskId, null, null);
+    }
+
+    @Override
+    public AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId, String outcomePropertyName, String outcomeId)
+            throws AcmTaskException
+    {
+
         verifyCompleteTaskArgs(userThatCompletedTheTask, taskId);
 
         String user = userThatCompletedTheTask.getName();
@@ -144,6 +160,12 @@ class ActivitiTaskDao implements TaskDao
 
         try
         {
+            if ( outcomePropertyName != null && outcomeId != null )
+            {
+                getActivitiTaskService().setVariable(strTaskId, outcomePropertyName, outcomeId);
+                getActivitiTaskService().setVariableLocal(strTaskId, "outcome", outcomeId);
+            }
+
             getActivitiTaskService().complete(strTaskId);
 
             HistoricTaskInstance hti =
@@ -347,6 +369,62 @@ class ActivitiTaskDao implements TaskDao
         throw new AcmTaskException("Task with ID '" + taskId + "' does not exist.");
 
     }
+    
+    @Override
+	public List<WorkflowHistoryInstance> getWorkflowHistory(String processId) {
+    	
+    	List<WorkflowHistoryInstance> retval = new ArrayList<WorkflowHistoryInstance>();
+    	
+    	HistoricTaskInstanceQuery query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(processId).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    	
+    	if (null != query)
+    	{	    	
+	    	List<HistoricTaskInstance> historicTaskInstances = query.list();
+	    	
+	    	if (null != historicTaskInstances && historicTaskInstances.size() > 0)
+	    	{
+	    		for (HistoricTaskInstance historicTaskInstance : historicTaskInstances)
+	    		{
+	    			AcmUser user = getUserDao().findByUserId(historicTaskInstance.getAssignee());
+	    			
+	    			String id = historicTaskInstance.getId();
+	    			String participant = user.getFullName();
+	    			// TODO: For now Role is empty. This is agreed with Dave. Once we have that information, we should add it here.
+	    			String role = "";
+	    			String status = "";
+	    			Date startDate = historicTaskInstance.getStartTime();
+	    			Date endDate = historicTaskInstance.getEndTime();
+	    			
+	    			Map<String, Object> localVariables = historicTaskInstance.getTaskLocalVariables();
+	    			if (null != localVariables && localVariables.containsKey("outcome"))
+	    			{
+	    				String outcome = (String) localVariables.get("outcome");
+	    				status = WordUtils.capitalizeFully(outcome.replaceAll("_", " "));	
+	    			}
+	    			else if (null != historicTaskInstance.getEndTime())
+    				{
+    					status = "Completed";
+    				}else
+    				{
+    					status = "Assigned";
+    				}
+	    			
+	    			WorkflowHistoryInstance workflowHistoryInstance = new WorkflowHistoryInstance();
+	    			
+	    			workflowHistoryInstance.setId(id);
+	    			workflowHistoryInstance.setParticipant(participant);
+	    			workflowHistoryInstance.setRole(role);
+	    			workflowHistoryInstance.setStatus(status);
+	    			workflowHistoryInstance.setStartDate(startDate);
+	    			workflowHistoryInstance.setEndDate(endDate);
+	    			
+	    			retval.add(workflowHistoryInstance);
+	    		}
+	    	}
+    	}
+    	
+		return retval;
+	}
 
     protected AcmTask acmTaskFromHistoricActivitiTask(HistoricTaskInstance hti)
     {
@@ -611,6 +689,7 @@ class ActivitiTaskDao implements TaskDao
         }
     }
 
+
     public TaskService getActivitiTaskService()
     {
         return activitiTaskService;
@@ -660,4 +739,14 @@ class ActivitiTaskDao implements TaskDao
     {
         this.requiredFieldsPerOutcomeMap = requiredFieldsPerOutcomeMap;
     }
+
+	public UserDao getUserDao() 
+	{
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) 
+	{
+		this.userDao = userDao;
+	}
 }

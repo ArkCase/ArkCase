@@ -1,6 +1,6 @@
-package com.armedia.acm.services.users.service.ldap;
-
-import com.armedia.acm.services.users.model.AcmUser;
+//package com.armedia.acm.services.users.service.ldap;
+//
+//import com.armedia.acm.services.users.model.AcmUser;
 //import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 //import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 //import com.armedia.acm.services.search.model.solr.SolrDocument;
@@ -9,8 +9,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 //import java.util.List;
 //
 ///**
-// * Created by marjan.stefanoski on 11.11.2014.
-// */
+//* Created by marjan.stefanoski on 11.11.2014.
+//*/
 //public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmUser> {
 //
 //    @Override
