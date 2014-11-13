@@ -48,6 +48,7 @@
 
                                                     <div>
                                                         <a id="lnkChangePicture" href="#">&nbsp;&nbsp;&nbsp;&nbsp;<u>Change Picture</u></a>
+                                                        <img id="picLoading" src="<c:url value='/'/>resources/vendors/${acm_theme}/images/ajax-loader.gif" class="dker" style="display:none;">
                                                         <form id="formPicture" style="display:none;">
                                                             <input type="file" id="file" name="file">
                                                                 <%--<input type="submit">--%>
