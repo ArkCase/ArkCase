@@ -48,7 +48,7 @@
 	                        <div class="line line-dashed b-b line-lg pull-in"></div>
 	                        <label for="Case State"  class="label" id="caseStatuslbl">Case State</label>
 	                        <select name="cStatus" class="form-control" id ="selectCaseStatus">
-	                            <option value="Choose Case State">Choose Case State</option>
+	                            <option value="Choose State">Choose State</option>
 	                            <%--<option value="ACTIVE">Active</option>
 	                            <option value="APPROVED">Approved</option>--%>
                                 <option value="OPEN">OPEN</option>
