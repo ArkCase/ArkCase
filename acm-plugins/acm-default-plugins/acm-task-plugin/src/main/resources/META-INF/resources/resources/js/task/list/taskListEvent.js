@@ -53,13 +53,21 @@ TaskList.Event = {
         TaskList.Service.signTask(taskId);
     }
     ,onClickBtnReject : function(e) {
-        alert("onClickBtnReject");
-        var taskId = Task.getTaskId();
+        //alert("onClickBtnReject");
+        var taskId = TaskList.getTaskId();
+    }
+    ,onClickBtnAdHocTaskComplete : function(e) {
+        var taskId = TaskList.getTaskId();
+        TaskList.Service.completeTask(taskId);
+    }
+    ,onClickBtnAdHocTaskDelete : function(e) {
+        var taskId = TaskList.getTaskId();
+        TaskList.Service.deleteTask(taskId);
+
     }
 
     ,onClickBtnTaskOutcomeApprove : function(e) {
         var task = TaskList.getTask();
-        var requiredField = {};
         for(var i = 0; i < task.availableOutcomes.length; i++){
             var availableOutcome = task.availableOutcomes[i];
             if(availableOutcome.name == "APPROVE"){
@@ -89,44 +97,24 @@ TaskList.Event = {
         }
     }
     ,onClickBtnTaskOutcomeResubmit : function(e) {
-        /*var task = TaskList.getTask();
-        var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
-        if(reworkInstructions == null || reworkInstructions == ""){
-            Acm.Dialog.error("Invalid rework instructions")
-        }
-        else{
-            //reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
-            task.reworkInstructions = reworkInstructions;
-
-            var requiredField = {};
-            for(var i = 0; i < task.availableOutcomes.length; i++){
-                var availableOutcome = task.availableOutcomes[i];
-                if(availableOutcome.name == "SEND_FOR_REWORK"){
-                    task.taskOutcome = availableOutcome;
-                }
+        var task = TaskList.getTask();
+        for(var i = 0; i < task.availableOutcomes.length; i++){
+            var availableOutcome = task.availableOutcomes[i];
+            if(availableOutcome.name == "RESUBMIT"){
+                task.taskOutcome = availableOutcome;
             }
-            TaskList.Service.completeTaskWithOutcome(task);
-        }*/
+        }
+        TaskList.Service.completeTaskWithOutcome(task);
     }
     ,onClickBtnTaskOutcomeCancelRequest : function(e) {
-        /*var task = TaskList.getTask();
-        var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
-        if(reworkInstructions == null || reworkInstructions == ""){
-            Acm.Dialog.error("Invalid rework instructions")
-        }
-        else{
-            //reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
-            task.reworkInstructions = reworkInstructions;
-
-            var requiredField = {};
-            for(var i = 0; i < task.availableOutcomes.length; i++){
-                var availableOutcome = task.availableOutcomes[i];
-                if(availableOutcome.name == "SEND_FOR_REWORK"){
-                    task.taskOutcome = availableOutcome;
-                }
+        var task = TaskList.getTask();
+        for(var i = 0; i < task.availableOutcomes.length; i++){
+            var availableOutcome = task.availableOutcomes[i];
+            if(availableOutcome.name == "CANCEL_DOCUMENT"){
+                task.taskOutcome = availableOutcome;
             }
-            TaskList.Service.completeTaskWithOutcome(task);
-        }*/
+        }
+        TaskList.Service.completeTaskWithOutcome(task);
     }
     ,onPostInit: function() {
 
@@ -137,7 +125,9 @@ TaskList.Event = {
             TaskList.setTaskId(treeInfo.taskId);
             TaskList.Service.retrieveDetail(treeInfo.taskId);
         } else {
-            TaskList.Service.listTask(App.getUserName());
+//            TaskList.Service.listTask(App.getUserName());
+            TaskList.Service.listTaskAll(treeInfo,App.getUserName());
+
         }
         var data = App.Object.getPriorities();
         if (Acm.isEmpty(data)) {
