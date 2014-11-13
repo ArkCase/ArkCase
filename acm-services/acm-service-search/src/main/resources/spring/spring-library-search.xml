@@ -144,6 +144,16 @@
         <property name="respondPredicate" ref="eventSucceededPredicate"/>
     </bean>
 
+    <bean id="sendAdHocTaskDeleteToSolrAction" class="com.armedia.acm.event.EventResponse">
+        <property name="eventName" value="com.armedia.acm.app.task.delete"/>
+        <property name="action" ref="sendQuickSearchTaskRecordsToSolrAction"/>
+        <property name="enabled" value="true"/>
+        <property name="parameters">
+            <map/>
+        </property>
+        <property name="respondPredicate" ref="eventSucceededPredicate"/>
+    </bean>
+
     <bean id="sendAdHocTaskSaveToSolrAction" class="com.armedia.acm.event.EventResponse">
         <property name="eventName" value="com.armedia.acm.app.task.save"/>
         <property name="action" ref="sendQuickSearchTaskRecordsToSolrAction"/>

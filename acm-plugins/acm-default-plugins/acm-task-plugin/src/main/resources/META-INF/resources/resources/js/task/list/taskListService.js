@@ -13,6 +13,7 @@ TaskList.Service = {
     ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/task/byId/"
     ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask/"
     ,API_COMPLETE_TASK_WITH_OUTCOME         : "/api/latest/plugin/task/completeTask"
+    ,API_DELETE_TASK         : "/api/latest/plugin/task/deleteTask/"
     ,API_SIGN_TASK         	   : "/api/latest/plugin/signature/confirm/"
     ,API_FIND_BYTASKBYID_TASK_SIGNATURE : "/api/latest/plugin/signature/find/"
     ,API_SAVE_DETAIL       				: "/api/latest/plugin/task/save/"
@@ -30,7 +31,7 @@ TaskList.Service = {
                 ,TaskList.Callback.EVENT_DETAIL_SAVED
             );    	
     }
-    ,listTaskAll : function(treeinfo) {
+    ,listTaskAll : function(treeinfo,user) {
             /*Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK
                 ,TaskList.Callback.EVENT_LIST_RETRIEVED
             );*/
@@ -41,8 +42,8 @@ TaskList.Service = {
         var s = treeinfo.s;
         var q = treeinfo.q;
 
-        var url = App.getContextPath() + this.API_LIST_TASK;
-        url += "?start=" + treeinfo.start;
+        var url = App.getContextPath() + this.API_LIST_TASK  + "?assignee=" + user;
+        url += "&start=" + treeinfo.start;
         url += "&n=" + treeinfo.n;
         Acm.Ajax.asyncGet(url
             ,TaskList.Callback.EVENT_LIST_RETRIEVED
@@ -50,6 +51,7 @@ TaskList.Service = {
     }
 
    	,listTask : function(user) {
+        var url =App.getContextPath() + this.API_LIST_TASK + "?assignee=" + user;
         Acm.Ajax.asyncGet(App.getContextPath() + this.API_LIST_TASK + "?assignee=" + user
             ,TaskList.Callback.EVENT_LIST_RETRIEVED
         );
@@ -74,6 +76,12 @@ TaskList.Service = {
         Acm.Ajax.asyncPost(App.getContextPath() + this.API_COMPLETE_TASK_WITH_OUTCOME
             ,JSON.stringify(data)
             ,TaskList.Callback.EVENT_TASK_COMPLETED_WITH_OUTCOME
+        );
+    }
+    ,deleteTask : function(taskId) {
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_DELETE_TASK + taskId
+            ,"{}"
+            ,TaskList.Callback.EVENT_TASK_DELETED
         );
     }
     ,signTask : function(taskId) {
