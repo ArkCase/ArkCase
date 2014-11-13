@@ -26,5 +26,7 @@
     <!-- NOTE: LdapAuthenticateService beans (of class com.armedia.acm.services.users.service.ldap.LdapAuthenticateService) should
          be defined in dynamically-loaded Spring config files, placed in the ACM spring configuration folder
          ($HOME/.acm/spring). -->
-
+<bean id="userToSolrTransformer" class="com.armedia.acm.services.users.service.ldap.UserToSolrTransformer">
+    <property name="userDao" ref="userJpaDao"/>
+</bean>
 </beans>

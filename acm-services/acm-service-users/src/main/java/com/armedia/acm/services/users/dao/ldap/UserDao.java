@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.dao.ldap;
 
 
+import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.*;
 
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ import javax.persistence.criteria.Root;
 import java.util.Date;
 import java.util.List;
 
-public class UserDao
+public class UserDao extends AcmAbstractDao
 {
     @PersistenceContext
     private EntityManager entityManager;
@@ -212,4 +213,8 @@ public class UserDao
     }
 
 
+    @Override
+    protected Class getPersistenceClass() {
+        return AcmUser.class;
+    }
 }
