@@ -188,6 +188,56 @@ class ActivitiTaskDao implements TaskDao
         }
     }
 
+
+    @Override
+    @Transactional
+    public AcmTask deleteTask(Principal userThatCompletedTheTask, Long taskId) throws AcmTaskException
+    {
+        verifyCompleteTaskArgs(userThatCompletedTheTask, taskId);
+
+        String user = userThatCompletedTheTask.getName();
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info("Deleting task '" + taskId + "' for user '" + user + "'");
+        }
+
+        String strTaskId = String.valueOf(taskId);
+
+        Task existingTask = getActivitiTaskService().
+                createTaskQuery().
+                includeProcessVariables().
+                includeTaskLocalVariables().
+                taskId(strTaskId).
+                singleResult();
+
+        verifyTaskExists(taskId, existingTask);
+
+        verifyUserIsTheAssignee(taskId, user, existingTask);
+
+        AcmTask retval = acmTaskFromActivitiTask(existingTask);
+
+        try
+        {
+            getActivitiTaskService().deleteTask(strTaskId);
+
+            HistoricTaskInstance hti =
+                    getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
+
+            retval.setTaskStartDate(hti.getStartTime());
+            retval.setTaskFinishedDate(hti.getEndTime());
+            retval.setTaskDurationInMillis(hti.getDurationInMillis());
+            retval.setCompleted(true);
+
+            return retval;
+        }
+        catch (ActivitiException e)
+        {
+            log.error("Could not close task '" + taskId + "' for user '" + user + "': " + e.getMessage(), e);
+            throw new AcmTaskException(e);
+        }
+    }
+
     protected void verifyCompleteTaskArgs(Principal userThatCompletedTheTask, Long taskId)
     {
         if ( userThatCompletedTheTask == null || taskId == null )
@@ -374,11 +424,19 @@ class ActivitiTaskDao implements TaskDao
     }
     
     @Override
-	public List<WorkflowHistoryInstance> getWorkflowHistory(String processId) {
+	public List<WorkflowHistoryInstance> getWorkflowHistory(String id, boolean adhoc) {
     	
     	List<WorkflowHistoryInstance> retval = new ArrayList<WorkflowHistoryInstance>();
     	
-    	HistoricTaskInstanceQuery query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(processId).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    	HistoricTaskInstanceQuery query = null;
+    	
+    	if (!adhoc)
+    	{
+    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(id).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    	}
+    	else{
+    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(id).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    	}
     	
     	if (null != query)
     	{	    	
@@ -390,7 +448,7 @@ class ActivitiTaskDao implements TaskDao
 	    		{
 	    			AcmUser user = getUserDao().findByUserId(historicTaskInstance.getAssignee());
 	    			
-	    			String id = historicTaskInstance.getId();
+	    			String taskId = historicTaskInstance.getId();
 	    			String participant = user.getFullName();
 	    			// TODO: For now Role is empty. This is agreed with Dave. Once we have that information, we should add it here.
 	    			String role = "";
@@ -414,7 +472,7 @@ class ActivitiTaskDao implements TaskDao
 	    			
 	    			WorkflowHistoryInstance workflowHistoryInstance = new WorkflowHistoryInstance();
 	    			
-	    			workflowHistoryInstance.setId(id);
+	    			workflowHistoryInstance.setId(taskId);
 	    			workflowHistoryInstance.setParticipant(participant);
 	    			workflowHistoryInstance.setRole(role);
 	    			workflowHistoryInstance.setStatus(status);

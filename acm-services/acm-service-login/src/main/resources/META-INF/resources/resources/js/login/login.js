@@ -5,6 +5,11 @@
  */
 var Login = Login || {
     create: function() {
+        //
+        //to do, move to individual plugin ro acm-law app
+        //
+        sessionStorage.setItem("AcmProfile", null);
+
         sessionStorage.setItem("AcmApprovers", null);
         sessionStorage.setItem("AcmComplaintTypes", null);
         sessionStorage.setItem("AcmPriorities", null);
@@ -20,6 +25,7 @@ var Login = Login || {
         sessionStorage.setItem("AcmAdminTreeInfo", null);
 
     }
+
 
 
 };
