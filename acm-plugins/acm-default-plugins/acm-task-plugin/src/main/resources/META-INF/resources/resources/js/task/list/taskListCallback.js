@@ -151,7 +151,9 @@ TaskList.Callback = {
                 
                 // Workflow History
                 if (task && task.businessProcessId){
-                	TaskList.Service.retrieveWorkflowHistory(task.businessProcessId);
+                	TaskList.Service.retrieveWorkflowHistory(task.businessProcessId, "false");
+                }else if (task && task.taskId){
+                	TaskList.Service.retrieveWorkflowHistory(task.taskId, "true");
                 }
 
                 //load all the details

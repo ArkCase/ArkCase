@@ -26,15 +26,15 @@ public class WorkflowHistoryAPIController {
 	
 	private TaskDao taskDao;
 
-	@RequestMapping(value = "/history/{businessProcessId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/history/{id}/{adhoc}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public List<WorkflowHistoryInstance> getWorkflowHistory(@PathVariable("businessProcessId") String businessProcessId, Authentication authentication)
+	public List<WorkflowHistoryInstance> getWorkflowHistory(@PathVariable("id") String id, @PathVariable("adhoc") boolean adhoc, Authentication authentication)
 	{
 		List<WorkflowHistoryInstance> retval = new ArrayList<WorkflowHistoryInstance>();
 		
-		if (null != businessProcessId)
+		if (null != id)
 		{
-			retval = getTaskDao().getWorkflowHistory(businessProcessId);
+			retval = getTaskDao().getWorkflowHistory(id, adhoc);
 		}
 		
 		return retval;

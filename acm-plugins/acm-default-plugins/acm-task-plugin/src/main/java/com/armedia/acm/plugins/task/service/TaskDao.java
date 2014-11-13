@@ -61,5 +61,5 @@ public interface TaskDao
     AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId, String outcomePropertyName, String outcomeId)
         throws AcmTaskException;
     
-    List<WorkflowHistoryInstance> getWorkflowHistory(String processId);
+    List<WorkflowHistoryInstance> getWorkflowHistory(String id, boolean adhoc);
 }

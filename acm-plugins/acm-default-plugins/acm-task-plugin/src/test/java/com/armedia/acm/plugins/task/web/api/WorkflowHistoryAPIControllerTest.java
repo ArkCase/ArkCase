@@ -62,7 +62,7 @@ public class WorkflowHistoryAPIControllerTest extends EasyMockSupport
     }
 
     @Test
-    public void workflowHistoryTest() throws Exception
+    public void workflowHistoryNonAdhocTest() throws Exception
     {        
         WorkflowHistoryInstance instance = new WorkflowHistoryInstance();
         instance.setId("id");
@@ -75,15 +75,61 @@ public class WorkflowHistoryAPIControllerTest extends EasyMockSupport
         String ipAddress = "ipAddress";
         String businessProecessId = "businessProecessId";
 
-        expect(mockTaskDao.getWorkflowHistory(businessProecessId)).andReturn(Arrays.asList(instance));
+        expect(mockTaskDao.getWorkflowHistory(businessProecessId, false)).andReturn(Arrays.asList(instance));
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
-        mockHttpSession.setAttribute("businessProecessId", businessProecessId);
+        mockHttpSession.setAttribute("id", businessProecessId);
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/task/history/{businessProecessId}", businessProecessId)
+                get("/api/v1/plugin/task/history/{id}/false", businessProecessId)
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andReturn();
+
+        verifyAll();
+
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
+
+        String returned = result.getResponse().getContentAsString();
+
+        log.info("results: " + returned);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        List<WorkflowHistoryInstance> foundWorkflowHistory = objectMapper.readValue(returned,
+                objectMapper.getTypeFactory().constructParametricType(List.class, WorkflowHistoryInstance.class));
+
+        assertEquals(1, foundWorkflowHistory.size());
+
+        WorkflowHistoryInstance found = foundWorkflowHistory.get(0);
+        assertEquals(instance.getId(), found.getId());
+    }
+    
+    @Test
+    public void workflowHistoryAdhocTest() throws Exception
+    {        
+        WorkflowHistoryInstance instance = new WorkflowHistoryInstance();
+        instance.setId("id");
+        instance.setParticipant("participant");
+        instance.setRole("role");
+        instance.setStatus("status");
+        instance.setStartDate(new Date());
+        instance.setEndDate(new Date());
+        
+        String ipAddress = "ipAddress";
+        String taskId = "taskId";
+
+        expect(mockTaskDao.getWorkflowHistory(taskId, true)).andReturn(Arrays.asList(instance));
+
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+        mockHttpSession.setAttribute("id", taskId);
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(
+                get("/api/v1/plugin/task/history/{id}/true", taskId)
                 .accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andReturn();
 

@@ -374,11 +374,19 @@ class ActivitiTaskDao implements TaskDao
     }
     
     @Override
-	public List<WorkflowHistoryInstance> getWorkflowHistory(String processId) {
+	public List<WorkflowHistoryInstance> getWorkflowHistory(String id, boolean adhoc) {
     	
     	List<WorkflowHistoryInstance> retval = new ArrayList<WorkflowHistoryInstance>();
     	
-    	HistoricTaskInstanceQuery query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(processId).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    	HistoricTaskInstanceQuery query = null;
+    	
+    	if (!adhoc)
+    	{
+    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(id).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    	}
+    	else{
+    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(id).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    	}
     	
     	if (null != query)
     	{	    	
@@ -390,7 +398,7 @@ class ActivitiTaskDao implements TaskDao
 	    		{
 	    			AcmUser user = getUserDao().findByUserId(historicTaskInstance.getAssignee());
 	    			
-	    			String id = historicTaskInstance.getId();
+	    			String taskId = historicTaskInstance.getId();
 	    			String participant = user.getFullName();
 	    			// TODO: For now Role is empty. This is agreed with Dave. Once we have that information, we should add it here.
 	    			String role = "";
@@ -414,7 +422,7 @@ class ActivitiTaskDao implements TaskDao
 	    			
 	    			WorkflowHistoryInstance workflowHistoryInstance = new WorkflowHistoryInstance();
 	    			
-	    			workflowHistoryInstance.setId(id);
+	    			workflowHistoryInstance.setId(taskId);
 	    			workflowHistoryInstance.setParticipant(participant);
 	    			workflowHistoryInstance.setRole(role);
 	    			workflowHistoryInstance.setStatus(status);
