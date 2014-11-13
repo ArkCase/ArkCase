@@ -11,18 +11,21 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_RETRIEVED, this.onDetailRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_SAVED, this.onDetailSaved);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_COMPLETED, this.onTaskCompleted);
+        Acm.Dispatcher.addEventListener(this.EVENT_TASK_COMPLETED_WITH_OUTCOME, this.onTaskCompletedWithOutcome);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_SIGNED, this.onTaskSigned);
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_BYTYPEBYID_RETRIEVED, this.onFindByTypeByIdRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_DETAIL_RETRIEVED, this.onComplaintDetailRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_SAVED, this.onNoteSaved);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_DELETED, this.onNoteDeleted);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_LIST_RETRIEVED, this.onNotesListRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_WORKFLOW_HISTORY_RETRIEVED, this.onWorkflowHistoryRetrieved);
     }
 
     ,EVENT_LIST_RETRIEVED			 : "task-list-retrieved"
     ,EVENT_LIST_SAVED				 : "task-list-saved"
     ,EVENT_DETAIL_RETRIEVED			 : "task-list-detail-retrieved"
     ,EVENT_TASK_COMPLETED			 : "task-list-task-completed"
+    ,EVENT_TASK_COMPLETED_WITH_OUTCOME : "task-completed-with-outcome"
     ,EVENT_TASK_SIGNED				 : "task-list-task-signed"
     ,EVENT_LIST_BYTYPEBYID_RETRIEVED : "task-list-signature-byTypeById-retrieved"
     ,EVENT_DETAIL_SAVED               : "event-detail-saved"
@@ -30,6 +33,7 @@ TaskList.Callback = {
     ,EVENT_NOTE_SAVED           : "object-note-saved"
     ,EVENT_NOTE_DELETED         : "object-note-deleted"
     ,EVENT_NOTE_LIST_RETRIEVED  : "object-note-listed"
+    ,EVENT_WORKFLOW_HISTORY_RETRIEVED: "workflow-history-retrieved"
 
     ,onDetailSaved : function(Callback, response) {
         if (response.hasError) {
@@ -144,6 +148,11 @@ TaskList.Callback = {
                 } else {
                     TaskList.Service.retrieveNotes(parentId,parentType);
                 }
+                
+                // Workflow History
+                if (task && task.businessProcessId){
+                	TaskList.Service.retrieveWorkflowHistory(task.businessProcessId);
+                }
 
                 //load all the details
                 TaskList.Object.updateDetail(task);
@@ -203,6 +212,17 @@ TaskList.Callback = {
                     TaskList.Service.listTask(App.getUserName());
                 }
             }
+        }
+    }
+    ,onTaskCompletedWithOutcome : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to complete task with outcome:"  +response.errorMsg);
+        } else {
+            TaskList.Object.hideAllWorkflowButtons();
+            var taskId = TaskList.getTaskId();
+            var workflowHistory = TaskList.getWorkflowHistory();
+            workflowHistory[0].status = response.status;
+            TaskList.cacheWorkflowHistory.put(taskId,workflowHistory);
         }
     }
     ,onTaskSigned : function(Callback, response) {
@@ -312,6 +332,21 @@ TaskList.Callback = {
             }
             TaskList.cacheNoteList.put(id,response)
             TaskList.Object.refreshJTableNotes();
+        }
+    }
+    
+    ,onWorkflowHistoryRetrieved : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to retrieve workflow history.");
+        } else {
+        	/*var task = TaskList.getTask();
+        	task.workflowHistory = response;
+        	
+            TaskList.cacheTask.put(task.taskId, task);
+             */
+            var taskId = TaskList.getTaskId();
+            TaskList.cacheWorkflowHistory.put(taskId, response);
+            TaskList.Object.refreshJTableWorkflowOverview();
         }
     }
 };

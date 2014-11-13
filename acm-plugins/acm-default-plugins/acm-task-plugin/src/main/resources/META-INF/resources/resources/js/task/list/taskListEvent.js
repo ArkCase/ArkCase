@@ -57,6 +57,77 @@ TaskList.Event = {
         var taskId = Task.getTaskId();
     }
 
+    ,onClickBtnTaskOutcomeApprove : function(e) {
+        var task = TaskList.getTask();
+        var requiredField = {};
+        for(var i = 0; i < task.availableOutcomes.length; i++){
+            var availableOutcome = task.availableOutcomes[i];
+            if(availableOutcome.name == "APPROVE"){
+                task.taskOutcome = availableOutcome;
+            }
+        }
+        TaskList.Service.completeTaskWithOutcome(task);
+    }
+    ,onClickBtnTaskOutcomeRework : function(e) {
+        var task = TaskList.getTask();
+        var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
+        if(reworkInstructions == null || reworkInstructions == ""){
+            Acm.Dialog.error("Invalid rework instructions")
+        }
+        else{
+            //reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
+            task.reworkInstructions = reworkInstructions;
+
+            var requiredField = {};
+            for(var i = 0; i < task.availableOutcomes.length; i++){
+                var availableOutcome = task.availableOutcomes[i];
+                if(availableOutcome.name == "SEND_FOR_REWORK"){
+                    task.taskOutcome = availableOutcome;
+                }
+            }
+            TaskList.Service.completeTaskWithOutcome(task);
+        }
+    }
+    ,onClickBtnTaskOutcomeResubmit : function(e) {
+        /*var task = TaskList.getTask();
+        var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
+        if(reworkInstructions == null || reworkInstructions == ""){
+            Acm.Dialog.error("Invalid rework instructions")
+        }
+        else{
+            //reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
+            task.reworkInstructions = reworkInstructions;
+
+            var requiredField = {};
+            for(var i = 0; i < task.availableOutcomes.length; i++){
+                var availableOutcome = task.availableOutcomes[i];
+                if(availableOutcome.name == "SEND_FOR_REWORK"){
+                    task.taskOutcome = availableOutcome;
+                }
+            }
+            TaskList.Service.completeTaskWithOutcome(task);
+        }*/
+    }
+    ,onClickBtnTaskOutcomeCancelRequest : function(e) {
+        /*var task = TaskList.getTask();
+        var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
+        if(reworkInstructions == null || reworkInstructions == ""){
+            Acm.Dialog.error("Invalid rework instructions")
+        }
+        else{
+            //reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
+            task.reworkInstructions = reworkInstructions;
+
+            var requiredField = {};
+            for(var i = 0; i < task.availableOutcomes.length; i++){
+                var availableOutcome = task.availableOutcomes[i];
+                if(availableOutcome.name == "SEND_FOR_REWORK"){
+                    task.taskOutcome = availableOutcome;
+                }
+            }
+            TaskList.Service.completeTaskWithOutcome(task);
+        }*/
+    }
     ,onPostInit: function() {
 
         var treeInfo = TaskList.Object.getTreeInfo();
@@ -180,6 +251,25 @@ TaskList.Event = {
         task.details = value;
         TaskList.Service.listTaskSaveDetail(task.taskId, task);
     }
+
+    /**
+     * Open the rework instructions section editor
+     */
+    ,onClickBtnEditReworkInstructions: function(e) {
+        TaskList.Object.editDivReworkInstructions();
+    }
+
+    /**
+     * Save the rework instructions section update to backend
+     */
+    ,onClickBtnSaveReworkInstructions : function(e) {
+        var task = TaskList.getTask();
+        var value = TaskList.Object.saveDivReworkInstructions();
+        task.reworkInstructions = value;
+        TaskList.Service.listTaskSaveDetail(task.taskId, task);
+    }
+
+
     /////////////////////////////////////////////////////////////////////////////////
     // This section should move to the request object file
     /////////////////////////////////////////////////////////////////////////////////
@@ -251,12 +341,12 @@ TaskList.Event = {
 
         //task.documentUnderReview = doc;
         if(task.documentUnderReview != null){
-            var documentUnderReview = task.documentUnderReview = doc;
+            var documentUnderReview = task.documentUnderReview;
             var parentName = documentUnderReview.parentObjects[0].parentName;
             var parentId = documentUnderReview.parentObjects[0].parentId;
-            var reviewDocumentPdfRenditionId = task.reviewDocumentPdfRenditionId = 785;
-            var reviewDocumentFormXmlId = task.reviewDocumentFormXmlId = 783;
-            var workflowRequestId = task.workflowRequestId = 780;
+            var reviewDocumentPdfRenditionId = task.reviewDocumentPdfRenditionId;
+            var reviewDocumentFormXmlId = task.reviewDocumentFormXmlId;
+            var workflowRequestId = task.workflowRequestId;
 
             var url = TaskList.Object.getFormUrls() != null ? TaskList.Object.getFormUrls()['edit_close_complaint'] : '';
             if (url != null && url != '') {

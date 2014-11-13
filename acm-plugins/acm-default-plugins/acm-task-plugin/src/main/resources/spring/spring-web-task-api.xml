@@ -37,5 +37,9 @@
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
     </bean>
+    
+    <bean id="workflowHistoryAPIController" class="com.armedia.acm.plugins.task.web.api.WorkflowHistoryAPIController">
+    	<property name="taskDao" ref="acmTaskDao" />
+    </bean>
 
 </beans>

@@ -33,6 +33,7 @@ TaskList.Object = {
 
 
         this.$btnSignConfirm    = $("#signatureConfirmBtn");
+        this.$btnSignature = $("#btnSignature");
         this.$btnReject         = $("button[data-title='Reject']");
         this.$btnSignConfirm.click(function(e) {TaskList.Event.onClickBtnSignConfirm(e);});
         this.$btnReject.click(function(e) {TaskList.Event.onClickBtnReject(e);});
@@ -45,16 +46,30 @@ TaskList.Object = {
         this.$lnkParentObjAssigned       = $("#parentObjAssigned");
         this.$lnkParentObjSubjectType  = $("#parentObjSubjectType");
         this.$lnkParentObjStatus         = $("#parentObjStatus");
+
         // end of parent object information
 
 
-        //modal dialog buttons
+        //workflow approval buttons
         this.$btnApproveTask = $("#btnApprove");
+        this.$btnApproveTask.click(function(e) {TaskList.Event.onClickBtnTaskOutcomeApprove(e);});
+
+        this.$btnSendForRework = $("#btnSendForRework");
+        this.$btnSendForRework.click(function(e) {TaskList.Event.onClickBtnTaskOutcomeRework(e);});
+
+        this.$btnResubmit = $("#btnResubmit");
+        this.$btnResubmit.click(function(e) {TaskList.Event.onClickBtnTaskOutcomeResubmit(e);});
+
+        this.$btnCancelRequest = $("#btnCancelRequest");
+        this.$btnCancelRequest.click(function(e) {TaskList.Event.onClickBtnTaskOutcomeCancelRequest(e);});
+
+        this.$bthAssignTask = $("#btnAssign");
         this.$btnReassignTask = $("#btnReassign");
         this.$btnUnassignTask = $("#btnUnassign");
         this.$btnCompleteTask = $("#btnComplete");
         this.$btnRejectTask = $("#btnReject");
         this.$btnDeleteTask = $("#btnDelete");
+        this.hideAllWorkflowButtons();
 
 
         this.$lnkStatus = $("#status");
@@ -160,6 +175,10 @@ TaskList.Object = {
         TaskList.JTable.createJTableWorkflowOverview(this.$divWorkflowOverview);
 
         this.$divReworkInstructions = $(".taskReworkInstructions");
+        this.$btnEditReworkInstructions    = $("#tabReworkInstructions button:eq(0)");
+        this.$btnSaveReworkInstructions    = $("#tabReworkInstructions button:eq(1)");
+        this.$btnEditReworkInstructions.on("click", function(e) {TaskList.Event.onClickBtnEditReworkInstructions(e);});
+        this.$btnSaveReworkInstructions.on("click", function(e) {TaskList.Event.onClickBtnSaveReworkInstructions(e);});
 
         this.$divAttachments = $("#divAttachments");
         TaskList.JTable.createJTableAttachments(this.$divAttachments);
@@ -177,6 +196,7 @@ TaskList.Object = {
     }
 
     //frevvo edit close complaint
+
 
     ,_formUrls: null
     ,getFormUrls: function() {
@@ -456,14 +476,14 @@ TaskList.Object = {
             //&& task.due_dt != null
             //
             var taskBranchTitle;
-            if(taskSolr.title_t != null && taskSolr.priority_s != null && taskSolr.due_dt != null){
-                taskBranchTitle = Acm.getDateFromDatetime(taskSolr.due_dt) + "," + taskSolr.priority_s +","+ taskSolr.title_t;
+            if(taskSolr.name != null && taskSolr.priority_s != null && taskSolr.due_dt != null){
+                taskBranchTitle = Acm.getDateFromDatetime(taskSolr.due_dt) + "," + taskSolr.priority_s +","+ taskSolr.name;
             }
-            else if(taskSolr.title_t != null && taskSolr.priority_s != null){
-                taskBranchTitle = taskSolr.priority_s +","+ taskSolr.title_t;
+            else if(taskSolr.name != null && taskSolr.priority_s != null){
+                taskBranchTitle = taskSolr.priority_s +","+ taskSolr.name;
             }
-            else if(taskSolr.title_t != null){
-                taskBranchTitle = taskSolr.title_t;
+            else if(taskSolr.name != null){
+                taskBranchTitle = taskSolr.name;
             }
             else{
                 taskBranchTitle = "No title";
@@ -735,31 +755,49 @@ TaskList.Object = {
     }
     ,updateDetail: function(task) {
         if(task.adhocTask){
-            this.$btnApproveTask.hide();
-            this.$btnRejectTask.hide();
+            this.hideAllWorkflowButtons();
             this.$btnCompleteTask.show();
             this.$btnDeleteTask.show();
 
-            //this.refreshJTableDetails();
             this.refreshJTableAttachments();
             this.refreshJTableNotes();
             this.refreshJTableWorkflowOverview();
             this.refreshJTableHistory();
-            //this.refreshJTableDocuments();
         }
         else{
-            this.$btnCompleteTask.hide();
-            this.$btnDeleteTask.hide();
-            this.$btnApproveTask.show();
-            this.$btnRejectTask.show();
+            this.hideAllWorkflowButtons();
+            if(task.completed != true){
+                if(task.availableOutcomes != null){
+                    for(var i = 0; i < task.availableOutcomes.length; i++){
+                        var availableOutcomes = task.availableOutcomes;
+                        switch (availableOutcomes[i].name){
+                            case "APPROVE":
+                                this.$btnApproveTask.show();
+                                break;
 
-            //this.refreshJTableDetails();
+                            case "SEND_FOR_REWORK":
+                                this.$btnSendForRework.show();
+                                break;
+
+                            case "RESUBMIT":
+                                this.$btnResubmit.show();
+                                break;
+
+                            case "CANCEL_REQUEST":
+                                this.$btnCancelRequest.show();
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
             this.refreshJTableAttachments();
             this.refreshJTableNotes();
             this.refreshJTableWorkflowOverview();
             this.refreshJTableHistory();
             this.refreshJTableDocuments();
-            this.refreshJTableInstructions();
         }
         TaskList.Object.refreshTaskTreeNode(task);
         this.setValueLnkTaskSubject(task.title);
@@ -770,10 +808,6 @@ TaskList.Object = {
         this.setValueTaskOwner(task.owner);
         this.setValueAssignedStatus(task.status);
         this.setValueDetails(task.details);
-
-
-
-
     }
 
     ,updateParentObjDetail: function(parentObj) {
@@ -791,6 +825,12 @@ TaskList.Object = {
     }
     ,saveDivDetails: function() {
         return AcmEx.Object.saveSummerNote(this.$divDetails);
+    }
+    ,editDivReworkInstructions: function() {
+        AcmEx.Object.editSummerNote(this.$divReworkInstructions);
+    }
+    ,saveDivReworkInstructions: function() {
+        return AcmEx.Object.saveSummerNote(this.$divReworkInstructions);
     }
     ,refreshJTableNotes: function(){
         AcmEx.Object.jTableLoad(this.$divNotes);
@@ -821,9 +861,19 @@ TaskList.Object = {
 
     }
 
-    /*,beforeSpanAddItem: function(html) {
-        this.$spanEditCloseComplaintReqBtn.before(html);
-    }*/
+    ,hideAllWorkflowButtons: function(){
+        this.$btnApproveTask.hide();
+        this.$btnSendForRework.hide();
+        this.$btnResubmit.hide();
+        this.$btnCancelRequest.hide();
+        this.$btnReassignTask.hide();
+        this.$btnUnassignTask.hide();
+        this.$btnCompleteTask.hide();
+        this.$btnRejectTask.hide();
+        this.$btnDeleteTask.hide();
+        this.$bthAssignTask.hide();
+        this.$btnSignature.hide();
+    }
 };
 
 
