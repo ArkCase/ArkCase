@@ -175,7 +175,12 @@ Complaint.Event = {
     	var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()['close_complaint'] : '';
         if (url != null && url != '') {
         	url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',mode:'edit',xmlId:'816',pdfId:'818',requestId:'813',");
-        	this._showPopup(url, "", 860, 700);        	
+        	//this._showPopup(url, "", 860, 700);
+            Acm.Dialog.openWindow(url, "", 860, 700
+                ,function() {
+                    Complaint.Object.refreshJTableDocuments();
+                }
+            );
         }
     }
 
