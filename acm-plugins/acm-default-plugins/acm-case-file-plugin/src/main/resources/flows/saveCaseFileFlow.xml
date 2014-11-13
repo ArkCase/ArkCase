@@ -56,7 +56,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         <cmis:get-or-create-folder-by-path folderPath="#[payload.ecmFolderPath]"/>
                     </enricher>
                     <logger category="com.armedia.acm.plugins.casefile" level="DEBUG"
-                            message="Folder Id: #[payload.ecmFolderId]"/>
+                             message="Folder Id: #[payload.ecmFolderId]"/>
                 </processor-chain>
             </when>
             <otherwise>
