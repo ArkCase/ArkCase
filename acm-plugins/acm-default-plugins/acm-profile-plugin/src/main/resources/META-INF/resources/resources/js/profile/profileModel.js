@@ -42,6 +42,8 @@ Profile.Model = {
     }
     ,Info: {
         create: function() {
+            this._profileInfo    = new Acm.Model.SessionData("AcmProfile");
+
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_PICTURE_UPLOADED        ,this.onPictureUploaded);
 
             Acm.Dispatcher.addEventListener(Profile.Controller.VE_LOCATION_CHANGED        ,this.onLocationChanged);
@@ -60,15 +62,20 @@ Profile.Model = {
             Acm.Dispatcher.addEventListener(Profile.Controller.VE_WEBSITE_CHANGED         ,this.onWebsiteChanged);
         }
         ,initialize: function() {
-            Profile.Service.Info.retrieveProfileInfo(App.getUserName());
+            var profileInfo = Profile.Model.Info.getProfileInfo();
+            if (profileInfo) {
+                Profile.Controller.modelRetrievedProfile(profileInfo);
+            } else {
+                Profile.Service.Info.retrieveProfileInfo(App.getUserName());
+            }
         }
 
-        ,_profileInfo: {}
+        //,_profileInfo: null
         ,getProfileInfo: function() {
-            return this._profileInfo;
+            return this._profileInfo.get();
         }
         ,setProfileInfo: function(profileInfo) {
-            this._profileInfo = profileInfo;
+            this._profileInfo.set(profileInfo);
         }
 
         ,isReadOnly: function() {

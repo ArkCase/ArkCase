@@ -17,6 +17,7 @@ Profile.View = {
 
     ,Picture: {
         create: function() {
+            this.$imgPicLoading    = $("#picLoading");
             //this.$imgPicture       = $("#picture");
             this.$lnkChangePicture = $("#lnkChangePicture");
             this.$formPicture      = $("#formPicture");
@@ -47,6 +48,7 @@ Profile.View = {
             fd.append("userId", App.getUserName());
             fd.append("file", _this.$fileInput[0].files[0]);
             Profile.Service.Picture.uploadImage(fd);
+            Profile.View.Picture.showImgPicLoading(true);
         }
 
 
@@ -61,6 +63,11 @@ Profile.View = {
             if (uploadInfo.hasError) {
                 alert("View: onPictureUploaded, hasError, errorMsg:" + uploadInfo.errorMsg);
             }
+            Profile.View.Picture.showImgPicLoading(false);
+        }
+
+        ,showImgPicLoading: function(show) {
+            Acm.Object.show(this.$imgPicLoading, show);
         }
     }
 
@@ -213,8 +220,11 @@ Profile.View = {
         ,_displayPicture: function(ecmFileId) {
             var pictureUrl = (0 < ecmFileId)? Profile.Service.Info.getPictureUrl(ecmFileId)
                 : this.getDefaultImgPicture();
-            //var pictureUrl = (Acm.isEmpty(profileInfo.pictureUrl)) ? this.getDefaultImgPicture() : profileInfo.pictureUrl;
+
             this.setSrcImgPicture(pictureUrl);
+
+            $("#sidebarPic").attr("src", pictureUrl);
+
         }
         ,_displayGroups: function(groups) {
             if (Acm.isArray(groups)) {
