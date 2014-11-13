@@ -169,20 +169,20 @@ Complaint.Event = {
         	this._showPopup(url, "", 860, 700);        	
         }
     }
-<<<<<<< HEAD
     ,onEditCloseComplaint: function(e) {
-    	var c = Complaint.getComplaint();
-    	
-    	var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()['close_complaint'] : '';
+        var c = Complaint.getComplaint();
+
+        var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()['close_complaint'] : '';
         if (url != null && url != '') {
-        	url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',mode:'edit',xmlId:'816',pdfId:'818',requestId:'813',");
-        	//this._showPopup(url, "", 860, 700);
+            url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',mode:'edit',xmlId:'816',pdfId:'818',requestId:'813',");
+            //this._showPopup(url, "", 860, 700);
             Acm.Dialog.openWindow(url, "", 860, 700
-                ,function() {
+                , function () {
                     Complaint.Object.refreshJTableDocuments();
                 }
             );
-=======
+        }
+    }
     ,_showPopup: function(url, title, w, h) {
 
         var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
@@ -198,7 +198,6 @@ Complaint.Event = {
 
         if (window.focus) {
             newWindow.focus();
->>>>>>> 20bbd4884144df922666929b95e6b4f07ab99ad1
         }
 
         this._checkClosePopup(newWindow);
