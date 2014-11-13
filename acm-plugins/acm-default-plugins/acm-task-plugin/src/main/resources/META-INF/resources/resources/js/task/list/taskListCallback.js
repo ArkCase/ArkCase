@@ -12,6 +12,7 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_DETAIL_SAVED, this.onDetailSaved);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_COMPLETED, this.onTaskCompleted);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_COMPLETED_WITH_OUTCOME, this.onTaskCompletedWithOutcome);
+        Acm.Dispatcher.addEventListener(this.EVENT_TASK_DELETED, this.onTaskDeleted);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_SIGNED, this.onTaskSigned);
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_BYTYPEBYID_RETRIEVED, this.onFindByTypeByIdRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_DETAIL_RETRIEVED, this.onComplaintDetailRetrieved);
@@ -26,6 +27,7 @@ TaskList.Callback = {
     ,EVENT_DETAIL_RETRIEVED			 : "task-list-detail-retrieved"
     ,EVENT_TASK_COMPLETED			 : "task-list-task-completed"
     ,EVENT_TASK_COMPLETED_WITH_OUTCOME : "task-completed-with-outcome"
+    ,EVENT_TASK_DELETED                 : "task-list-task-deleted"
     ,EVENT_TASK_SIGNED				 : "task-list-task-signed"
     ,EVENT_LIST_BYTYPEBYID_RETRIEVED : "task-list-signature-byTypeById-retrieved"
     ,EVENT_DETAIL_SAVED               : "event-detail-saved"
@@ -207,12 +209,9 @@ TaskList.Callback = {
             Acm.Dialog.error("Failed to complete task:"  +response.errorMsg);
         } else {
             if (Acm.isNotEmpty(response.taskId)) {
-                if (TaskList.isSingleObject()) {
-                    App.gotoPage(TaskList.Page.URL_DASHBOARD);
-                } else {
-                    //todo: remove item from local copy list, no need to call service to retrieve list
-                    TaskList.Service.listTask(App.getUserName());
-                }
+                TaskList.Object.hideAllWorkflowButtons();
+                var taskId = TaskList.getTaskId();
+                TaskList.cacheTask.put(taskId,response);
             }
         }
     }
@@ -220,11 +219,23 @@ TaskList.Callback = {
         if (response.hasError) {
             Acm.Dialog.error("Failed to complete task with outcome:"  +response.errorMsg);
         } else {
-            TaskList.Object.hideAllWorkflowButtons();
             var taskId = TaskList.getTaskId();
-            var workflowHistory = TaskList.getWorkflowHistory();
-            workflowHistory[0].status = response.status;
+            TaskList.cacheTask.put(taskId,response);
+            /*var workflowHistory = TaskList.getWorkflowHistory();
+            workflowHistory.push(response.status);
             TaskList.cacheWorkflowHistory.put(taskId,workflowHistory);
+            TaskList.Object.refreshJTableWorkflowOverview();*/
+        }
+    }
+    ,onTaskDeleted : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to delete task:"  +response.errorMsg);
+        } else {
+            if (Acm.isNotEmpty(response.taskId)) {
+                TaskList.Object.hideAllWorkflowButtons();
+                var taskId = TaskList.getTaskId();
+                TaskList.cacheTask.put(taskId,response);
+            }
         }
     }
     ,onTaskSigned : function(Callback, response) {

@@ -188,6 +188,56 @@ class ActivitiTaskDao implements TaskDao
         }
     }
 
+
+    @Override
+    @Transactional
+    public AcmTask deleteTask(Principal userThatCompletedTheTask, Long taskId) throws AcmTaskException
+    {
+        verifyCompleteTaskArgs(userThatCompletedTheTask, taskId);
+
+        String user = userThatCompletedTheTask.getName();
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info("Deleting task '" + taskId + "' for user '" + user + "'");
+        }
+
+        String strTaskId = String.valueOf(taskId);
+
+        Task existingTask = getActivitiTaskService().
+                createTaskQuery().
+                includeProcessVariables().
+                includeTaskLocalVariables().
+                taskId(strTaskId).
+                singleResult();
+
+        verifyTaskExists(taskId, existingTask);
+
+        verifyUserIsTheAssignee(taskId, user, existingTask);
+
+        AcmTask retval = acmTaskFromActivitiTask(existingTask);
+
+        try
+        {
+            getActivitiTaskService().deleteTask(strTaskId);
+
+            HistoricTaskInstance hti =
+                    getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
+
+            retval.setTaskStartDate(hti.getStartTime());
+            retval.setTaskFinishedDate(hti.getEndTime());
+            retval.setTaskDurationInMillis(hti.getDurationInMillis());
+            retval.setCompleted(true);
+
+            return retval;
+        }
+        catch (ActivitiException e)
+        {
+            log.error("Could not close task '" + taskId + "' for user '" + user + "': " + e.getMessage(), e);
+            throw new AcmTaskException(e);
+        }
+    }
+
     protected void verifyCompleteTaskArgs(Principal userThatCompletedTheTask, Long taskId)
     {
         if ( userThatCompletedTheTask == null || taskId == null )

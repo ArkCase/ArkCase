@@ -46,6 +46,9 @@ Profile.Controller = {
 
     ,modelRetrievedProfile: function(profileInfo) {
         Acm.Dispatcher.fireEvent(this.ME_PROFILE_INFO_RETRIEVED, profileInfo);
+        //Sidebar.Controller.modelRetrievedProfile(profileInfo);
+        //var z = 1;
+        //Acm.Dispatcher.fireEvent(Sidebar.Controller.ME_PROFILE_INFO_RETRIEVED, profileInfo);
     }
     ,modelSavedProfileInfo: function(profileInfo) {
         Acm.Dispatcher.fireEvent(this.ME_PROFILE_INFO_SAVED, profileInfo);
