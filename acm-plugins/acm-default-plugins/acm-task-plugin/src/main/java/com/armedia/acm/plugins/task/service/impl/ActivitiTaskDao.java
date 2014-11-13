@@ -389,6 +389,8 @@ class ActivitiTaskDao implements TaskDao
 	    			
 	    			String id = historicTaskInstance.getId();
 	    			String participant = user.getFullName();
+	    			// TODO: For now Role is empty. This is agreed with Dave. Once we have that information, we should add it here.
+	    			String role = "";
 	    			String status = "";
 	    			Date startDate = historicTaskInstance.getStartTime();
 	    			Date endDate = historicTaskInstance.getEndTime();
@@ -411,6 +413,7 @@ class ActivitiTaskDao implements TaskDao
 	    			
 	    			workflowHistoryInstance.setId(id);
 	    			workflowHistoryInstance.setParticipant(participant);
+	    			workflowHistoryInstance.setRole(role);
 	    			workflowHistoryInstance.setStatus(status);
 	    			workflowHistoryInstance.setStartDate(startDate);
 	    			workflowHistoryInstance.setEndDate(endDate);
