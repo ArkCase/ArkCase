@@ -12,6 +12,7 @@ CaseFile.Model = {
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PREV_PAGE_CLICKED      ,this.onPrevPageClicked);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NEXT_PAGE_CLICKED      ,this.onNextPageClicked);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_TITLE_CHANGED     ,this.onCaseTitleChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_INCIDENT_DATE_CHANGED  ,this.onIncidentDateChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ASSIGNEE_CHANGED       ,this.onAssigneeChanged);
@@ -19,6 +20,7 @@ CaseFile.Model = {
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PRIORITY_CHANGED       ,this.onPriorityChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DUE_DATE_CHANGED       ,this.onDueDateChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DETAIL_CHANGED         ,this.onDetailChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CHILD_OBJECT_CHANGED   ,this.onChildObjectChanged);
 
         if (CaseFile.Model.Lookup.create)  {CaseFile.Model.Lookup.create();}
         if (CaseFile.Model.Tree.create)    {CaseFile.Model.Tree.create();}
@@ -39,6 +41,8 @@ CaseFile.Model = {
     }
 
     ,onPrevPageClicked: function() {
+        CaseFile.Model.setCaseFileId(0);
+
         var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
         if (0 < treeInfo.start) {
             treeInfo.start -= treeInfo.n;
@@ -49,6 +53,8 @@ CaseFile.Model = {
         CaseFile.Service.List.retrieveCaseFileList(treeInfo);
     }
     ,onNextPageClicked: function() {
+        CaseFile.Model.setCaseFileId(0);
+
         var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
         if (0 > treeInfo.total) {       //should never get to this condition
             treeInfo.start = 0;
@@ -58,6 +64,7 @@ CaseFile.Model = {
         CaseFile.Service.List.retrieveCaseFileList(treeInfo);
     }
     ,onCaseFileSelected: function(caseFileId) {
+        CaseFile.Model.setCaseFileId(caseFileId);
         var caseFile = CaseFile.Model.cacheCaseFile.get(caseFileId);
         if (!caseFile) {
             CaseFile.Service.Detail.retrieveCaseFile(caseFileId);
@@ -100,6 +107,10 @@ CaseFile.Model = {
     ,onDetailChanged: function(caseFileId, details) {
         CaseFile.Service.Detail.saveDetail(caseFileId, details);
     }
+    ,onChildObjectChanged: function(caseFileId, idx, childObject) {
+        CaseFile.Service.Detail.saveChildObject(caseFileId, idx, childObject);
+    }
+
 
     ,_objectType: "CASE_FILE"
     ,getObjectType: function() {
@@ -119,9 +130,9 @@ CaseFile.Model = {
         }
         return this.cacheCaseFile.get(caseFileId);
     }
-//    ,getCaseFileCurrent: function() {
-//        return this.getCaseFile(this._caseFileId);
-//    }
+    ,getCaseFileCurrent: function() {
+        return this.getCaseFile(this._caseFileId);
+    }
 
     ,getAssignee: function(caseFile) {
         var assignee = null;

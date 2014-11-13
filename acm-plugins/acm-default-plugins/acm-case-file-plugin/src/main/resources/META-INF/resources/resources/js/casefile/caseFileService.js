@@ -202,6 +202,12 @@ CaseFile.Service = {
             if (Acm.isEmpty(data.id) || Acm.isEmpty(data.caseNumber)) {
                 return false;
             }
+            if (!Acm.isArray(data.childObjects)) {
+                return false;
+            }
+            if (!Acm.isArray(data.participants)) {
+                return false;
+            }
             return true;
         }
         ,retrieveCaseFile : function(caseFileId) {
@@ -305,80 +311,118 @@ CaseFile.Service = {
         }
         ,saveCaseTitle: function(caseFileId, title) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.title = title;
-            this.saveCaseFile(caseFile
-                ,function(data) {
-                    CaseFile.Controller.modelSavedCaseTitle(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.title));
-                }
-            );
+            if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
+                caseFile.title = title;
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        CaseFile.Controller.modelSavedCaseTitle(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.title));
+                    }
+                );
+            }
         }
         ,saveIncidentDate: function(caseFileId, incidentDate) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.incidentDate = incidentDate;
-            this.saveCaseFile(caseFile
-                ,function(data) {
-                    CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.incidentDate));
-                }
-            );
+            if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
+                caseFile.incidentDate = incidentDate;
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.incidentDate));
+                    }
+                );
+            }
         }
         ,saveAssignee: function(caseFileId, assignee) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            CaseFile.Model.setAssignee(caseFile, assignee);
-            this.saveCaseFile(caseFile
-                ,function(data) {
-                    CaseFile.Controller.modelSavedAssignee(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.assignee));
-                }
-            );
+            if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
+                CaseFile.Model.setAssignee(caseFile, assignee);
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        CaseFile.Controller.modelSavedAssignee(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.assignee));
+                    }
+                );
+            }
         }
         ,saveSubjectType: function(caseFileId, caseType) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.caseType = caseType;
-            this.saveCaseFile(caseFile
-                ,function(data) {
-                    CaseFile.Controller.modelSavedSubjectType(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.caseType));
-                }
-            );
+            if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
+                caseFile.caseType = caseType;
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        CaseFile.Controller.modelSavedSubjectType(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.caseType));
+                    }
+                );
+            }
         }
         ,savePriority: function(caseFileId, priority) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.priority = priority;
-            this.saveCaseFile(caseFile
-                ,function(data) {
-                    CaseFile.Controller.modelSavedPriority(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.priority));
-                }
-            );
+            if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
+                caseFile.priority = priority;
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        CaseFile.Controller.modelSavedPriority(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.priority));
+                    }
+                );
+            }
         }
         ,saveDueDate: function(caseFileId, dueDate) {
             alert("need dueDate property to save");
             return;
 
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.dueDate = dueDate;
-            this.saveCaseFile(caseFile
-                ,function(data) {
-                    CaseFile.Controller.modelSavedDueDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.dueDate));
-                }
-            );
+            if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
+                caseFile.dueDate = dueDate;
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        CaseFile.Controller.modelSavedDueDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.dueDate));
+                    }
+                );
+            }
         }
         ,saveDetail: function(caseFileId, details) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
-            caseFile.details = details;
-            this.saveCaseFile(caseFile
-                ,function(data) {
-                    CaseFile.Controller.modelSavedDetail(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.details));
+            if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
+                caseFile.details = details;
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        CaseFile.Controller.modelSavedDetail(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.details));
+                    }
+                );
+            }
+        }
+        ,saveChildObject: function(caseFileId, idx, childObject) {
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
+                if (caseFile.childObjects.length > idx && 0 <= idx) {
+                    caseFile.childObjects[idx].title  = childObject.title;
+                    caseFile.childObjects[idx].status = childObject.status;
+                    this.saveCaseFile(caseFile
+                        ,function(data) {
+                            CaseFile.Controller.modelSavedxxxxxxxxxx(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.childObjects));
+                        }
+                    );
                 }
-            );
+            }
         }
 
-        ,closeCaseFile : function(data) {
-            var caseFileId = CaseFile.getCaseFileId();
+//        ,closeCaseFile : function(data) {
+//            var caseFileId = CaseFile.getCaseFileId();
 //            Acm.Ajax.asyncPost(App.getContextPath() + this.API_CLOSE_CASE_FILE_ + caseFileId
 //                ,JSON.stringify(data)
 //                ,CaseFile.Callback.EVENT_CASEFILE_CLOSED
 //            );
-        }
+//        }
+//        ,consolidateCase: function(data) {
+//        }
     }
 
+    ,Documents: {
+        create: function() {
+        }
+        ,initialize: function() {
+        }
+
+        ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
+    }
 
     ,Tasks: {
         create: function() {
@@ -417,7 +461,7 @@ CaseFile.Service = {
                                 task.title = Acm.goodValue(response.docs[i].name); //title_t ?
                                 task.created = Acm.getDateFromDatetime(doc.create_dt);
                                 task.priority = "[priority]";
-                                task.dueDate = "[due6]";
+                                task.dueDate = "[due]";
                                 task.status = Acm.goodValue(doc.status_s);
                                 task.assignee = Acm.goodValue(doc.assignee_s);
                                 taskList.push(task);
@@ -439,13 +483,13 @@ CaseFile.Service = {
         }
     }
 
-    ,Document: {
+    ,Notes: {
         create: function() {
         }
         ,initialize: function() {
         }
 
-        ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
+        ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
 
         ,_validate: function(data) {
             if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {

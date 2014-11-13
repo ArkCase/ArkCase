@@ -8,7 +8,10 @@
     <title><spring:message code="caseFile.page.title" text="Case Files | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
         <span itemprop="caseFileId">${caseId}</span>
-        <span itemprop="roiFormUrl">${roiFormUrl}</span>
+        <span itemprop="urlRoiForm">${roiFormUrl}</span>
+        <span itemprop="urlCloseCaseForm">${closeCaseFormUrl}</span>
+        <span itemprop="urlEditCloseCaseForm">${editCloseCaseFormUrl}</span>
+        <span itemprop="test">test</span>
     </div>
 </jsp:attribute>
 

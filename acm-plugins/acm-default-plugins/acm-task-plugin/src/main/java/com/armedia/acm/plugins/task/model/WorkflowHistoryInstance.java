@@ -13,6 +13,7 @@ public class WorkflowHistoryInstance {
 
 	private String id;
 	private String participant;
+	private String role;
 	private String status;
 	private Date startDate;
 	private Date endDate;
@@ -45,6 +46,20 @@ public class WorkflowHistoryInstance {
 		this.participant = participant;
 	}
 	
+	/**
+	 * @return the role
+	 */
+	public String getRole() {
+		return role;
+	}
+
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	/**
 	 * @return the status
 	 */

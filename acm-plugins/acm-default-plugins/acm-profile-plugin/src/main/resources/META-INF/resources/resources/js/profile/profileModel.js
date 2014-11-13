@@ -5,12 +5,41 @@
  */
 Profile.Model = {
     create : function() {
-        if (Profile.Model.Info.create) {Profile.Model.Info.create();}
+        if (Profile.Model.Picture.create) {Profile.Model.Picture.create();}
+        if (Profile.Model.Info.create)    {Profile.Model.Info.create();}
     }
     ,initialize: function() {
-        if (Profile.Model.Info.initialize) {Profile.Model.Info.initialize();}
+        if (Profile.Model.Picture.initialize) {Profile.Model.Picture.initialize();}
+        if (Profile.Model.Info.initialize)    {Profile.Model.Info.initialize();}
     }
 
+    ,Picture: {
+        create: function() {
+        }
+        ,initialize: function() {
+        }
+
+        ,_uploadInfo: null
+        ,setUploadInfo: function(uploadInfo) {
+            this._uploadInfo = uploadInfo;
+        }
+        ,getEcmFileId: function(uploadInfo) {
+            var ecmFileId = -1;
+            if (uploadInfo) {
+                if (Acm.isArray(uploadInfo.files)) {
+                    if (0 < uploadInfo.files.length) {
+                        var url = Acm.goodValue(uploadInfo.files[0].url); //url in format of "acm/file/123"
+                        var idx = url.lastIndexOf("/");
+                        if (0 <= idx) {
+                            ecmFileId = parseInt(url.substring(idx+1)) || (-1);
+                        }
+                    }
+                }
+            }
+            return ecmFileId;
+        }
+
+    }
     ,Info: {
         create: function() {
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_PICTURE_UPLOADED        ,this.onPictureUploaded);
@@ -48,8 +77,10 @@ Profile.Model = {
 
 
         ,onPictureUploaded: function(uploadInfo) {
-            var ecmFileId = 0;
-            Profile.Service.Info.saveEcmFileId(ecmFileId);
+            if (!uploadInfo.hasError) {
+                var ecmFileId = Profile.Model.Picture.getEcmFileId(uploadInfo);
+                Profile.Service.Info.saveEcmFileId(ecmFileId);
+            }
         }
         ,onLocationChanged: function(location) {
             Profile.Service.Info.saveLocation(location);
@@ -93,7 +124,6 @@ Profile.Model = {
         ,onWebsiteChanged: function(website) {
             Profile.Service.Info.saveWebsite(website);
         }
-
 
     }
 

@@ -46,6 +46,13 @@
 
                                                     <div class="thumb-lg avatar"> <img id="picture" src="" default="<c:url value='/'/>resources/vendors/${acm_theme}/images/nopic.png" class="dker"></div>
 
+                                                    <div>
+                                                        <a id="lnkChangePicture" href="#">&nbsp;&nbsp;&nbsp;&nbsp;<u>Change Picture</u></a>
+                                                        <form id="formPicture" style="display:none;">
+                                                            <input type="file" id="file" name="file">
+                                                                <%--<input type="submit">--%>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                                 <div class="col-xs-6">
 
@@ -56,14 +63,6 @@
                                                     <h4 id="email"></h4>
                                                     <small> E-mail Address </small>
                                                 </div>
-                                            </div>
-
-                                            <div>
-                                                <a id="lnkChangePicture" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Change Picture</u></a>
-                                                <form id="formPicture" style="display:none;">
-                                                    <input type="file" id="file" name="file">
-                                                    <%--<input type="submit">--%>
-                                                </form>
                                             </div>
                                         </div>
                                     </section>
