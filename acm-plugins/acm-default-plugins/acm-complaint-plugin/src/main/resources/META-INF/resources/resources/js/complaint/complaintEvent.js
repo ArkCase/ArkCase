@@ -169,6 +169,20 @@ Complaint.Event = {
         	this._showPopup(url, "", 860, 700);        	
         }
     }
+    ,onEditCloseComplaint: function(e) {
+        var c = Complaint.getComplaint();
+
+        var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()['close_complaint'] : '';
+        if (url != null && url != '') {
+            url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',mode:'edit',xmlId:'816',pdfId:'818',requestId:'813',");
+            //this._showPopup(url, "", 860, 700);
+            Acm.Dialog.openWindow(url, "", 860, 700
+                , function () {
+                    Complaint.Object.refreshJTableDocuments();
+                }
+            );
+        }
+    }
     ,_showPopup: function(url, title, w, h) {
 
         var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;

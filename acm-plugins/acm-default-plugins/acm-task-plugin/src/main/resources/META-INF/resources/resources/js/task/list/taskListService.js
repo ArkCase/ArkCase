@@ -111,8 +111,8 @@ TaskList.Service = {
         var url = (App.getContextPath() + this.API_LIST_NOTES + parentType + "/" + parentId);
         Acm.Ajax.asyncGet(url ,TaskList.Callback.EVENT_NOTE_LIST_RETRIEVED);
     }
-    ,retrieveWorkflowHistory : function(businessProcessId) {
-    	var url = App.getContextPath() + this.API_RETRIEVE_WORKFLOW_HISTORY + businessProcessId;
+    ,retrieveWorkflowHistory : function(id, adhoc) {
+    	var url = App.getContextPath() + this.API_RETRIEVE_WORKFLOW_HISTORY + id + '/' + adhoc;
         Acm.Ajax.asyncGet(url, TaskList.Callback.EVENT_WORKFLOW_HISTORY_RETRIEVED);
     }
 }

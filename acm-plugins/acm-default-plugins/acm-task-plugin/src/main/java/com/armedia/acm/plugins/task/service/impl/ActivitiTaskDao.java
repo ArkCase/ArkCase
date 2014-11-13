@@ -97,7 +97,10 @@ class ActivitiTaskDao implements TaskDao
             getActivitiTaskService().saveTask(activitiTask);
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_TYPE", in.getAttachedToObjectType());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_ID", in.getAttachedToObjectId());
-            getActivitiTaskService().setVariableLocal(activitiTask.getId(), in.getAttachedToObjectType(), in.getAttachedToObjectId());
+            if ( in.getAttachedToObjectType() != null )
+            {
+                getActivitiTaskService().setVariableLocal(activitiTask.getId(), in.getAttachedToObjectType(), in.getAttachedToObjectId());
+            }
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_NAME", in.getAttachedToObjectName());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "START_DATE", in.getTaskStartDate());
             String status = in.getStatus() == null ? "ASSIGNED" : in.getStatus();
@@ -421,11 +424,19 @@ class ActivitiTaskDao implements TaskDao
     }
     
     @Override
-	public List<WorkflowHistoryInstance> getWorkflowHistory(String processId) {
+	public List<WorkflowHistoryInstance> getWorkflowHistory(String id, boolean adhoc) {
     	
     	List<WorkflowHistoryInstance> retval = new ArrayList<WorkflowHistoryInstance>();
     	
-    	HistoricTaskInstanceQuery query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(processId).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    	HistoricTaskInstanceQuery query = null;
+    	
+    	if (!adhoc)
+    	{
+    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(id).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    	}
+    	else{
+    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(id).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    	}
     	
     	if (null != query)
     	{	    	
@@ -437,8 +448,10 @@ class ActivitiTaskDao implements TaskDao
 	    		{
 	    			AcmUser user = getUserDao().findByUserId(historicTaskInstance.getAssignee());
 	    			
-	    			String id = historicTaskInstance.getId();
+	    			String taskId = historicTaskInstance.getId();
 	    			String participant = user.getFullName();
+	    			// TODO: For now Role is empty. This is agreed with Dave. Once we have that information, we should add it here.
+	    			String role = "";
 	    			String status = "";
 	    			Date startDate = historicTaskInstance.getStartTime();
 	    			Date endDate = historicTaskInstance.getEndTime();
@@ -459,8 +472,9 @@ class ActivitiTaskDao implements TaskDao
 	    			
 	    			WorkflowHistoryInstance workflowHistoryInstance = new WorkflowHistoryInstance();
 	    			
-	    			workflowHistoryInstance.setId(id);
+	    			workflowHistoryInstance.setId(taskId);
 	    			workflowHistoryInstance.setParticipant(participant);
+	    			workflowHistoryInstance.setRole(role);
 	    			workflowHistoryInstance.setStatus(status);
 	    			workflowHistoryInstance.setStartDate(startDate);
 	    			workflowHistoryInstance.setEndDate(endDate);

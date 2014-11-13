@@ -28,11 +28,16 @@ AcmEx.Object = {
         $s.destroy();
     }
     ,SummerNote: {
-        get: function($s) {
+        use: function($s) {
+            $s.summernote();
+        }
+        ,get: function($s) {
             return $s.code();
         }
         ,set: function($s, value) {
+            $s.summernote();
             $s.code(value);
+            $s.destroy();
         }
         ,edit: function($s) {
             $s.summernote({focus: true});

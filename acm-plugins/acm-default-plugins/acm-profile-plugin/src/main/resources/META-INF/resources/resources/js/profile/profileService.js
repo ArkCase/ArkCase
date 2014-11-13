@@ -23,11 +23,26 @@ Profile.Service = {
 
         ,API_UPLOAD_IMAGE: "/api/latest/plugin/profile/img"
 
-        ,uploadImage: function(fd) {
+        ,_validateUploadInfo: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.files)) {
+                return false;
+            }
+            if (!Acm.isArray(data.files)) {
+                return false;
+            }
+            if (0 >= data.files.length) {
+                return false;
+            }
+            return true;
+        }
+        ,uploadImage: function(formData) {
             var url = App.getContextPath() + this.API_UPLOAD_IMAGE;
             Acm.Service.ajax({
                 url: url
-                ,data: fd
+                ,data: formData
                 ,processData: false
                 ,contentType: false
                 ,type: 'POST'
@@ -35,8 +50,11 @@ Profile.Service = {
                     if (response.hasError) {
                         Profile.Controller.modelUploadedPicture(response);
                     } else {
-                        var uploadInfo = response;
-                        Profile.Controller.modelUploadedPicture(uploadInfo);
+                        if (Profile.Service.Picture._validateUploadInfo(response)) {
+                            var uploadInfo = response;
+                            Profile.Model.Picture.setUploadInfo(uploadInfo);
+                            Profile.Controller.modelUploadedPicture(uploadInfo);
+                        }
                     }
                 }
             });
@@ -51,11 +69,14 @@ Profile.Service = {
 
         ,API_RETRIEVE_PROFILE_INFO_          : "/api/latest/plugin/profile/get/"
         ,API_SAVE_PROFILE_INFO               : "/api/latest/plugin/profile/userOrgInfo/set"
-        ,API_DOWNLOAD_PICTURE_BEGIN_         : "/api/latest/ecm/download/byId/"
+        ,API_DOWNLOAD_PICTURE_BEGIN_         : "/api/latest/plugin/ecm/download/byId/"
         ,API_DOWNLOAD_PICTURE_END            : "?inline=true"
 
         ,getPictureUrl: function(ecmFileId) {
-            return this.API_DOWNLOAD_PICTURE_BEGIN_ + ecmFileId + this.API_DOWNLOAD_PICTURE_END;
+            if (0 >= ecmFileId) {
+                return "";
+            }
+            return App.getContextPath() + this.API_DOWNLOAD_PICTURE_BEGIN_ + ecmFileId + this.API_DOWNLOAD_PICTURE_END;
         }
         ,_validateProfile: function(data) {
             if (Acm.isEmpty(data)) {

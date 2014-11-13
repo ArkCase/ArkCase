@@ -107,7 +107,7 @@
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/task/history/{businessProcessId}"/>
+                    <property name="url" value="/api/{version}/plugin/task/history/{id}/{adhoc}"/>
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
                 </bean>
             </list>
