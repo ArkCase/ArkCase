@@ -30,6 +30,17 @@ public interface TaskDao
     AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId) throws AcmTaskException;
 
     /**
+     * Complete a task on behalf of the given user.  Returns an AcmTask including historical information
+     * (task start date, task duration in milliseconds, etc).
+     *
+     * @param userThatDeletedTheTask
+     * @param taskId
+     * @return
+     * @throws AcmTaskException
+     */
+    AcmTask deleteTask(Principal userThatDeletedTheTask, Long taskId) throws AcmTaskException;
+
+    /**
      * List of open tasks assigned to a user, sorted by descending due date.
      * @param user
      * @return
@@ -61,5 +72,5 @@ public interface TaskDao
     AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId, String outcomePropertyName, String outcomeId)
         throws AcmTaskException;
     
-    List<WorkflowHistoryInstance> getWorkflowHistory(String processId);
+    List<WorkflowHistoryInstance> getWorkflowHistory(String id, boolean adhoc);
 }

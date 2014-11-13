@@ -67,8 +67,12 @@ TaskList.Object = {
         this.$btnReassignTask = $("#btnReassign");
         this.$btnUnassignTask = $("#btnUnassign");
         this.$btnCompleteTask = $("#btnComplete");
+        this.$btnCompleteTask.click(function(e) {TaskList.Event.onClickBtnAdHocTaskComplete(e);});
+
         this.$btnRejectTask = $("#btnReject");
         this.$btnDeleteTask = $("#btnDelete");
+        this.$btnDeleteTask.click(function(e) {TaskList.Event.onClickBtnAdHocTaskDelete(e);});
+
         this.hideAllWorkflowButtons();
 
 
@@ -122,13 +126,13 @@ TaskList.Object = {
 
         this.$lnkPriority       = $("#priority");
 
-        this.$lnkOwner          = $("#taskOwner");
+      /*  this.$lnkOwner          = $("#taskOwner");
         this.$lnkOwner.editable({placement: 'bottom'
             ,emptytext: "N/A"
             ,success: function(response, newValue) {
                 TaskList.Event.onSaveOwner(newValue);
             }
-        });
+        });*/
 
         this.$divDetails        = $(".taskDetails");
         this.$btnEditDetails    = $("#tabDetails button:eq(0)");
@@ -654,7 +658,15 @@ TaskList.Object = {
             Acm.Object.setHtml(this.$divDetails, details);
         }
         else {
-            Acm.Object.setHtml(this.$divDetails, "");
+            Acm.Object.setHtml(this.$divDetails, null);
+        }
+    }
+    ,setValueReworkInstructions : function(reworkInstructions) {
+        if ( reworkInstructions ) {
+            Acm.Object.setHtml(this.$divReworkInstructions, reworkInstructions);
+        }
+        else {
+            Acm.Object.setHtml(this.$divReworkInstructions, null);
         }
     }
 
@@ -756,8 +768,11 @@ TaskList.Object = {
     ,updateDetail: function(task) {
         if(task.adhocTask){
             this.hideAllWorkflowButtons();
-            this.$btnCompleteTask.show();
-            this.$btnDeleteTask.show();
+            if(task.completed != true){
+                this.$btnCompleteTask.show();
+                this.$btnDeleteTask.show();
+            }
+            this.setTaskDetails(task);
 
             this.refreshJTableAttachments();
             this.refreshJTableNotes();
@@ -783,7 +798,7 @@ TaskList.Object = {
                                 this.$btnResubmit.show();
                                 break;
 
-                            case "CANCEL_REQUEST":
+                            case "CANCEL_DOCUMENT":
                                 this.$btnCancelRequest.show();
                                 break;
 
@@ -793,21 +808,17 @@ TaskList.Object = {
                     }
                 }
             }
+            TaskList.Object.refreshTaskTreeNode(task);
+            this.setTaskDetails(task);
+            this.setValueReworkInstructions(task.reworkInstructions);
+
             this.refreshJTableAttachments();
             this.refreshJTableNotes();
             this.refreshJTableWorkflowOverview();
             this.refreshJTableHistory();
             this.refreshJTableDocuments();
         }
-        TaskList.Object.refreshTaskTreeNode(task);
-        this.setValueLnkTaskSubject(task.title);
-        this.setValueLnkPerCompleted(task.percentComplete);
-        this.setValueLnkStartDate(Acm.getDateFromDatetime(task.taskStartDate));
-        this.setValueLnkDueDate(Acm.getDateFromDatetime(task.dueDate));
-        this.setValueLnkPriority(task.priority);
-        this.setValueTaskOwner(task.owner);
-        this.setValueAssignedStatus(task.status);
-        this.setValueDetails(task.details);
+
     }
 
     ,updateParentObjDetail: function(parentObj) {
@@ -873,6 +884,16 @@ TaskList.Object = {
         this.$btnDeleteTask.hide();
         this.$bthAssignTask.hide();
         this.$btnSignature.hide();
+    }
+    ,setTaskDetails : function(task){
+        this.setValueLnkTaskSubject(task.title);
+        this.setValueLnkPerCompleted(task.percentComplete);
+        this.setValueLnkStartDate(Acm.getDateFromDatetime(task.taskStartDate));
+        this.setValueLnkDueDate(Acm.getDateFromDatetime(task.dueDate));
+        this.setValueLnkPriority(task.priority);
+        this.setValueTaskOwner(task.owner);
+        this.setValueAssignedStatus(task.status);
+        this.setValueDetails(task.details);
     }
 };
 

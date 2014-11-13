@@ -251,6 +251,98 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     }
 
     @Test
+    public void deleteTask() throws Exception
+    {
+        Long taskId = 500L;
+        String user = "user";
+        Date dueDate = new Date();
+        Date started = new Date();
+        Date ended = new Date();
+        long taskDuration = 9876543L;
+        String acmPriority = "Medium";
+        int activitiPriority = 50;
+        String title = "task Title";
+        String processId = "processId";
+        String processName = "processName";
+        Long objectId = 250L;
+        String objectType = "objectType";
+
+        Map<String, Object> pvars = new HashMap<>();
+        pvars.put("OBJECT_ID", objectId);
+        pvars.put("OBJECT_TYPE", objectType);
+
+        Map<String, Object> taskLocalVars = new HashMap<>();
+        taskLocalVars.put("START_DATE", new Date());
+        taskLocalVars.put("TASK_STATUS", "taskStatus");
+        taskLocalVars.put("PERCENT_COMPLETE", 75);
+        taskLocalVars.put("DETAILS", "task details");
+
+        expect(mockAuthentication.getName()).andReturn(user);
+
+        expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.includeTaskLocalVariables()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.includeProcessVariables()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.taskId(String.valueOf(taskId))).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.singleResult()).andReturn(mockTask);
+
+        expect(mockTask.getAssignee()).andReturn(user).atLeastOnce();
+        expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
+        expect(mockTask.getCreateTime()).andReturn(null);
+        expect(mockTask.getOwner()).andReturn(user);
+        expect(mockTask.getProcessInstanceId()).andReturn(null);
+
+        mockTaskService.deleteTask(String.valueOf(taskId));
+
+        expect(mockHistoryService.createHistoricTaskInstanceQuery()).andReturn(mockHistoricTaskInstanceQuery);
+        expect(mockHistoricTaskInstanceQuery.taskId(String.valueOf(taskId))).andReturn(mockHistoricTaskInstanceQuery);
+        expect(mockHistoricTaskInstanceQuery.singleResult()).andReturn(mockHistoricTaskInstance);
+
+        expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
+        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended);
+        expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
+
+        expect(mockTask.getId()).andReturn(taskId.toString());
+        expect(mockTask.getDueDate()).andReturn(dueDate);
+        expect(mockTask.getPriority()).andReturn(activitiPriority);
+        expect(mockTask.getName()).andReturn(title);
+        expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
+        expect(mockTask.getProcessDefinitionId()).andReturn(processId);
+
+        expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
+
+        expect(mockProcessDefinition.getName()).andReturn(processName);
+
+        String taskDefKey = "taskDefinitionKey";
+        expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
+        expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
+        expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
+        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
+        expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
+        expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
+        expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
+        expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
+        expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+
+        replayAll();
+        AcmTask deleted = unit.deleteTask(mockAuthentication, taskId);
+
+        verifyAll();
+
+        assertNotNull(deleted);
+        assertEquals(taskId, deleted.getTaskId());
+        assertTrue(deleted.isCompleted());
+        assertEquals(acmPriority, deleted.getPriority());
+
+        assertNotNull(deleted.getTaskStartDate());
+        assertEquals("taskStatus", deleted.getStatus());
+        assertEquals("task details", deleted.getDetails());
+        assertEquals(Integer.valueOf(75), deleted.getPercentComplete());
+    }
+
+    @Test
     public void findById() throws Exception
     {
         String user = "user";
