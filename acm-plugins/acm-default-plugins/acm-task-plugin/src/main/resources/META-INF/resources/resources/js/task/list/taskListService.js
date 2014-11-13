@@ -12,6 +12,7 @@ TaskList.Service = {
     ,API_LIST_TASK             : "/api/latest/plugin/search/" + Task.getObjectType()
     ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/task/byId/"
     ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask/"
+    ,API_COMPLETE_TASK_WITH_OUTCOME         : "/api/latest/plugin/task/completeTask"
     ,API_SIGN_TASK         	   : "/api/latest/plugin/signature/confirm/"
     ,API_FIND_BYTASKBYID_TASK_SIGNATURE : "/api/latest/plugin/signature/find/"
     ,API_SAVE_DETAIL       				: "/api/latest/plugin/task/save/"
@@ -20,6 +21,7 @@ TaskList.Service = {
     ,API_DELETE_NOTE             : "/api/latest/plugin/note/"
     ,API_LIST_NOTES              : "/api/latest/plugin/note/"
     ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
+    ,API_RETRIEVE_WORKFLOW_HISTORY       : "/api/latest/plugin/task/history/"
 
 
     ,listTaskSaveDetail : function(taskId, data) {
@@ -68,6 +70,12 @@ TaskList.Service = {
             ,TaskList.Callback.EVENT_TASK_COMPLETED
         );
     }
+    ,completeTaskWithOutcome : function(data) {
+        Acm.Ajax.asyncPost(App.getContextPath() + this.API_COMPLETE_TASK_WITH_OUTCOME
+            ,JSON.stringify(data)
+            ,TaskList.Callback.EVENT_TASK_COMPLETED_WITH_OUTCOME
+        );
+    }
     ,signTask : function(taskId) {
     	var formURL = App.getContextPath() + this.API_SIGN_TASK + Task.getObjectType() + "/" + taskId;
     	var theForm = TaskList.Object.getSignatureForm();
@@ -94,5 +102,9 @@ TaskList.Service = {
     ,retrieveNotes : function(parentId, parentType) {
         var url = (App.getContextPath() + this.API_LIST_NOTES + parentType + "/" + parentId);
         Acm.Ajax.asyncGet(url ,TaskList.Callback.EVENT_NOTE_LIST_RETRIEVED);
+    }
+    ,retrieveWorkflowHistory : function(businessProcessId) {
+    	var url = App.getContextPath() + this.API_RETRIEVE_WORKFLOW_HISTORY + businessProcessId;
+        Acm.Ajax.asyncGet(url, TaskList.Callback.EVENT_WORKFLOW_HISTORY_RETRIEVED);
     }
 }
