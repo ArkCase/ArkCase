@@ -5,16 +5,45 @@
  */
 CaseFile.View = {
     create : function() {
-        if (CaseFile.View.Tree.create)    {CaseFile.View.Tree.create();}
-        if (CaseFile.View.Action.create)  {CaseFile.View.Action.create();}
-        if (CaseFile.View.Detail.create)  {CaseFile.View.Detail.create();}
-        if (CaseFile.View.Tasks.create)   {CaseFile.View.Tasks.create();}
+        if (CaseFile.View.MicroData.create)      {CaseFile.View.MicroData.create();}
+        if (CaseFile.View.Tree.create)           {CaseFile.View.Tree.create();}
+        if (CaseFile.View.Action.create)         {CaseFile.View.Action.create();}
+        if (CaseFile.View.Detail.create)         {CaseFile.View.Detail.create();}
+        if (CaseFile.View.Documents.create)      {CaseFile.View.Documents.create();}
+        if (CaseFile.View.Tasks.create)          {CaseFile.View.Tasks.create();}
     }
     ,initialize: function() {
-        if (CaseFile.View.Tree.initialize)    {CaseFile.View.Tree.initialize();}
-        if (CaseFile.View.Action.initialize)  {CaseFile.View.Action.initialize();}
-        if (CaseFile.View.Detail.initialize)  {CaseFile.View.Detail.initialize();}
-        if (CaseFile.View.Tasks.initialize)   {CaseFile.View.Tasks.initialize();}
+        if (CaseFile.View.MicroData.initialize)  {CaseFile.View.MicroData.initialize();}
+        if (CaseFile.View.Tree.initialize)       {CaseFile.View.Tree.initialize();}
+        if (CaseFile.View.Action.initialize)     {CaseFile.View.Action.initialize();}
+        if (CaseFile.View.Detail.initialize)     {CaseFile.View.Detail.initialize();}
+        if (CaseFile.View.Documents.initialize)  {CaseFile.View.Documents.initialize();}
+        if (CaseFile.View.Tasks.initialize)      {CaseFile.View.Tasks.initialize();}
+    }
+
+    ,MicroData: {
+        create : function() {
+            var items = $(document).items();
+            this.caseFileId = items.properties("caseFileId").itemValue();
+            this.urlRoiForm = items.properties("urlRoiForm").itemValue();
+            this.urlCloseCaseForm = items.properties("urlCloseCaseForm").itemValue();
+            this.urlEditCloseCaseForm = items.properties("urlEditCloseCaseForm").itemValue();
+        }
+        ,initialize: function() {
+        }
+
+        ,getCaseFileId: function() {
+            return this.caseFileId;
+        }
+        ,getUrlRoiFormUrl: function() {
+            return this.urlRoiForm;
+        }
+        ,getUrlCloseCaseForm: function() {
+            return this.urlCloseCaseForm;
+        }
+        ,getUrlEditCloseCaseForm: function() {
+            return this.urlEditCloseCaseForm;
+        }
     }
 
     ,Tree: {
@@ -350,15 +379,28 @@ CaseFile.View = {
 
         ,onClickBtnCloseCase: function() {
             CaseFile.View.Action.showDlgCloseCase(function(event, ctrl){
-                alert("close case");
+                var urlCloseCaseForm = CaseFile.View.MicroData.getUrlCloseCaseForm();
+                var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                var c = CaseFile.Model.getCaseFile(caseFileId);
+                if (Acm.isNotEmpty(urlCloseCaseForm) && Acm.isNotEmpty(c)) {
+                    if (Acm.isNotEmpty(c.caseNumber)) {
+                        urlCloseCaseForm = urlCloseCaseForm.replace("_data=(", "_data=(caseFileId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',");
+                        Acm.Dialog.openWindow(url, "", 860, 700
+                            ,function() {
+                                CaseFile.Controller.viewCaseFileClosed(caseFileId);
+                            }
+                        );
+                    }
+                }
             });
         }
+
+
         ,onClickBtnConsolidateCase: function() {
             CaseFile.View.Action.setValueEdtConsolidateCase("");
             CaseFile.View.Action.showDlgConsolidateCase(function(event, ctrl) {
                 var caseNumber = CaseFile.View.Action.getValueEdtConsolidateCase();
                 alert("Consolidate case:" + caseNumber);
-                var z = 1;
             });
         }
         ,showDlgCloseCase: function(onClickBtnPrimary) {
@@ -382,6 +424,7 @@ CaseFile.View = {
             this.$tabTopBlank     = $("#tabTopBlank");
 
             this.$divDetail       = $(".divDetail");
+            //this.$divDetail.summernote();
             this.$btnEditDetail   = $("#tabDetail button:eq(0)");
             this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
             this.$btnEditDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnEditDetail(e, this);});
@@ -613,7 +656,7 @@ CaseFile.View = {
             Acm.Object.setText(this.$lnkStatus, txt);
         }
         ,getHtmlDivDetail: function() {
-            return AcmEx.Object.getSummernote(this.$divDetail);
+            return AcmEx.Object.SummerNote.get(this.$divDetail);
         }
         ,setHtmlDivDetail: function(html) {
             AcmEx.Object.SummerNote.set(this.$divDetail, html);
@@ -640,6 +683,157 @@ CaseFile.View = {
         }
     }
 
+    ,Documents: {
+        create: function() {
+            this.$divDocuments          = $("#divDocs");
+            this.createJTableDocuments(this.$divDocuments);
+            this.$spanAddDocument       = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+            this.$spanAddDocument.unbind("click").on("click", function(e){CaseFile.View.Documents.onClickSpanAddDocument(e, this);});
+
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_CLOSED       ,this.onCaseFileClosed);
+
+        }
+        ,initialize: function() {
+        }
+
+        ,onCaseFileRetrieved: function(caseFile) {
+            if (caseFile.hasError) {
+                //empty table?
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+            }
+        }
+        ,onCaseFileSelected: function(caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+        }
+        ,onCaseFileClosed: function(caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+        }
+        ,onClickSpanAddDocument: function(event, ctrl) {
+            alert("onClickSpanAddDocument");
+            return;
+        }
+
+        ,createJTableDocuments: function($s) {
+            $s.jtable({
+                title: 'Documents'
+                ,paging: false
+                ,messages: {
+                    addNewRecord: 'Add Document'
+                }
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        if (0 >= caseFileId) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+                        }
+
+                        var rc = AcmEx.Object.JTable.getEmptyRecords();
+                        var c = CaseFile.Model.getCaseFile(caseFileId);
+                        if (c && Acm.isArray(c.childObjects)) {
+                            for (var i = 0; i < c.childObjects.length; i++) {
+                                var childObject = c.childObjects[i];
+                                var record = {};
+                                record.id = Acm.goodValue(childObject.targetId, 0);
+                                record.title = Acm.goodValue(childObject.targetName);
+                                record.created = Acm.getDateFromDatetime(childObject.created);
+                                record.creator = Acm.goodValue(childObject.creator);
+                                record.status = Acm.goodValue(childObject.status);
+                                rc.Records.push(record);
+                            }
+                        }
+                        //return rc;
+
+//for test
+                        return {
+                            "Result": "OK"
+                            ,"Records": [
+                                {"id": 11, "title": "Nick Name", "created": "01-02-03", "creator": "123 do re mi", "status": "JJ"}
+                                ,{"id": 12, "title": "Some Name", "created": "14-05-15", "creator": "xyz abc", "status": "Ice Man"}
+                            ]
+                            ,"TotalRecordCount": 2
+                        };
+                    }
+                    ,createAction: function(postData, jtParams) {
+                        //custom web form creation takes over; this action should never be called
+                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:"", status:""}};
+                        return rc;
+                    }
+                    ,updateAction: function(postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.JTable.getEmptyRecord();
+                        //id,created,creator is readonly
+                        //rc.Record.id = record.id;
+                        //rc.Record.created = record.created;
+                        //rc.Record.creator = record.creator;
+                        rc.Record.title = record.title;
+                        rc.Record.status = record.status;
+                        return rc;
+                    }
+                }
+                ,fields: {
+                    id: {
+                        title: 'ID'
+                        ,key: true
+                        ,list: false
+                        ,create: false
+                        ,edit: false
+                    }
+                    ,title: {
+                        title: 'Title'
+                        ,width: '10%'
+                        ,display: function (commData) {
+                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
+                                + ((0 >= commData.record.id)? "#" : commData.record.id)
+                                + "'>" + commData.record.title + "</a>";
+                            return $(a);
+                        }
+                    }
+                    ,created: {
+                        title: 'Created'
+                        ,width: '15%'
+                        ,edit: false
+                    }
+                    ,creator: {
+                        title: 'Creator'
+                        ,width: '15%'
+                        ,edit: false
+                    }
+                    ,status: {
+                        title: 'Status'
+                        ,width: '30%'
+                    }
+                }
+                ,recordUpdated : function (event, data) {
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                    var c = CaseFile.Model.getCaseFile(caseFileId);
+                    if (c && Acm.isArray(c.childObjects)) {
+                        if (0 < c.childObjects.length && whichRow < c.childObjects.length) {
+//                                var childObject = c.childObjects[whichRow];
+//                                //id,created,creator is readonly
+//                                //childObject.Record.id = record.id;
+//                                //childObject.Record.created = record.created;
+//                                //childObject.Record.creator = record.creator;
+
+                            var childObject = {Record:{}};
+                            childObject.Record.title = record.title;
+                            childObject.Record.status = record.status;
+
+                            CaseFile.Controller.viewChangedChildObject(caseFileId, whichRow, childObject);
+                        }
+                    }
+                }
+            });
+
+            $s.jtable('load');
+        }
+    }
+
     ,Tasks: {
         create: function() {
             this.$divTasks          = $("#divTasks");
@@ -647,6 +841,7 @@ CaseFile.View = {
             this.$spanAddTask       = this.$divTasks.find(".jtable-toolbar-item-add-record");
             this.$spanAddTask.unbind("click").on("click", function(e){CaseFile.View.Tasks.onClickSpanAddTask(e, this);});
 
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
         }
         ,initialize: function() {
@@ -655,8 +850,16 @@ CaseFile.View = {
         ,URL_TASK_DETAIL:  "/plugin/task/"
         ,URL_NEW_TASK_:    "/plugin/task/wizard?parentType=CASE_FILE&reference="
 
+
+        ,onCaseFileRetrieved: function(caseFile) {
+            if (caseFile.hasError) {
+                //empty table?
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
+            }
+        }
         ,onCaseFileSelected: function(caseFileId) {
-            AcmEx.Object.jTableLoad(CaseFile.View.Tasks.$divTasks);
+            AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
         }
         ,onClickSpanAddTask: function(event, ctrl) {
             alert("onClickSpanAddTask");
