@@ -43,7 +43,14 @@ public class SaveCaseFileAPIController
 
         try
         {
-            return getSaveCaseService().saveCase(in, auth, ipAddress);
+            CaseFile saved = getSaveCaseService().saveCase(in, auth, ipAddress);
+
+            // since the approver list is not persisted to the database, we want to send them back to the caller...
+            // the approver list is only here to send to the Activiti engine.  After the workflow is started the
+            // approvers are stored in Activiti.
+            saved.setApprovers(in.getApprovers());
+
+            return saved;
         }
         catch (MuleException | PersistenceException | RuntimeDroolsException e)
         {

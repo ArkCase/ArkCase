@@ -177,7 +177,7 @@
             <div class="padder-v text-center clearfix">
                 <div class="col-xs-12">
                     <div class="h4 font-bold"><a href="#" id="status" ></a></div>
-                    <small class="text-muted">Status</small> </div>
+                    <small class="text-muted">State</small> </div>
             </div>
         </div>
     </div>

@@ -51,6 +51,9 @@ jQuery(document).ready(function() {
     if ("undefined" != typeof Admin) {
         acmModules.push(Admin);
     }
+    if ("undefined" != typeof Audit) {
+        acmModules.push(Audit);
+    }
     if ("undefined" != typeof AdminAccess) {
         acmModules.push(AdminAccess);
     }

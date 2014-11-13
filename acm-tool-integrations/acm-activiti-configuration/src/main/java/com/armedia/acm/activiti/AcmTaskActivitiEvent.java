@@ -17,6 +17,7 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
     private Long parentObjectId;
     private String parentObjectType;
     private String parentObjectName;
+    private boolean adhocTask;
 
 
     public AcmTaskActivitiEvent(Task source, String taskEvent, Long parentObjectId, String parentObjectType, String parentObjectName) {
@@ -38,7 +39,6 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
         setParentObjectId(parentObjectId);
         setParentObjectType(parentObjectType);
         setParentObjectName(parentObjectName);
-
     }
 
     private String determinePriority(int priority)
@@ -149,5 +149,8 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
         this.parentObjectName = parentObjectName;
     }
 
+    @Override
+    public boolean isAdhocTask() {return adhocTask;}
 
+    public void setAdhocTask(boolean adhocTask) {this.adhocTask = adhocTask;}
 }
