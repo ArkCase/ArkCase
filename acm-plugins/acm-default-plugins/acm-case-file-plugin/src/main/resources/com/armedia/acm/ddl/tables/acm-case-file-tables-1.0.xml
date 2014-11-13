@@ -93,4 +93,12 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="06-add-originator-to-acm-case-file-table" author="marst">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_originator_id" type="RAW(16)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

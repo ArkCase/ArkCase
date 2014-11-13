@@ -22,7 +22,7 @@ Profile.View = {
             this.$formPicture      = $("#formPicture");
             this.$fileInput        = $("#file");
 
-            this.$lnkChangePicture.on("click", function(e) {Profile.View.Picture.onClickLnkChnagePicture(e, this);});
+            this.$lnkChangePicture.on("click", function(e) {Profile.View.Picture.onClickLnkChangePicture(e, this);});
             this.$fileInput.on("change", function(e) {Profile.View.Picture.onChangeFileInput(e, this);});
             this.$formPicture.submit(function(e) {Profile.View.Picture.onSubmitFormPicture(e, this);});
 
@@ -33,7 +33,7 @@ Profile.View = {
         ,initialize: function() {
         }
 
-        ,onClickLnkChnagePicture: function(event, ctrl) {
+        ,onClickLnkChangePicture: function(event, ctrl) {
             Profile.View.Picture.$fileInput.click();
         }
         ,onChangeFileInput: function(event, ctrl) {
@@ -211,7 +211,7 @@ Profile.View = {
 
         }
         ,_displayPicture: function(ecmFileId) {
-            var pictureUrl = (0 < ecmFileId)? CaseFile.Service.Info.getPictureUrl(ecmFileId)
+            var pictureUrl = (0 < ecmFileId)? Profile.Service.Info.getPictureUrl(ecmFileId)
                 : this.getDefaultImgPicture();
             //var pictureUrl = (Acm.isEmpty(profileInfo.pictureUrl)) ? this.getDefaultImgPicture() : profileInfo.pictureUrl;
             this.setSrcImgPicture(pictureUrl);
@@ -412,7 +412,7 @@ Profile.View = {
         }
         ,onEcmFileIdSaved: function(ecmFileId) {
             if (ecmFileId.hasError) {
-                //report error
+                alert("Save FildId: " + ecmFileId.errorMsg);
             } else {
                 Profile.View.Info._displayPicture(ecmFileId)
             }
