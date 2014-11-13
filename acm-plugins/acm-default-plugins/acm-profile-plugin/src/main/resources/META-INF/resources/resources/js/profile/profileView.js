@@ -213,8 +213,11 @@ Profile.View = {
         ,_displayPicture: function(ecmFileId) {
             var pictureUrl = (0 < ecmFileId)? Profile.Service.Info.getPictureUrl(ecmFileId)
                 : this.getDefaultImgPicture();
-            //var pictureUrl = (Acm.isEmpty(profileInfo.pictureUrl)) ? this.getDefaultImgPicture() : profileInfo.pictureUrl;
+
             this.setSrcImgPicture(pictureUrl);
+
+            $("#sidebarPic").attr("src", pictureUrl);
+
         }
         ,_displayGroups: function(groups) {
             if (Acm.isArray(groups)) {
