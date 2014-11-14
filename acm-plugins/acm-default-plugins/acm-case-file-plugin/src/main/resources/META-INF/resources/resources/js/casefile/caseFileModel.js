@@ -24,6 +24,7 @@ CaseFile.Model = {
 
         if (CaseFile.Model.Lookup.create)  {CaseFile.Model.Lookup.create();}
         if (CaseFile.Model.Tree.create)    {CaseFile.Model.Tree.create();}
+        if (CaseFile.Model.Notes.create)   {CaseFile.Model.Notes.create();}
         if (CaseFile.Model.Tasks.create)   {CaseFile.Model.Tasks.create();}
     }
     ,initialize: function() {
@@ -37,6 +38,7 @@ CaseFile.Model = {
 
         if (CaseFile.Model.Lookup.initialize)  {CaseFile.Model.Lookup.initialize();}
         if (CaseFile.Model.Tree.initialize)    {CaseFile.Model.Tree.initialize();}
+        if (CaseFile.Model.Notes.initialize)   {CaseFile.Model.Notes.initialize();}
         if (CaseFile.Model.Tasks.initialize)   {CaseFile.Model.Tasks.initialize();}
     }
 
@@ -167,6 +169,14 @@ CaseFile.Model = {
             participant.participantType = "assignee";
             participant.participantLdapId = assignee;
             caseFile.participants.push(participant);
+        }
+    }
+
+    ,Notes: {
+        create : function() {
+            this.cacheNoteList = new Acm.Model.CacheFifo(4);
+        }
+        ,initialize: function() {
         }
     }
 
