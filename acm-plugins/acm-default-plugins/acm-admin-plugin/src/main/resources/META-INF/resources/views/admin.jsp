@@ -141,10 +141,10 @@
                                                 <div class="col-xs-12">
                                                     <div class="col-xs-3 b-r"><label>Choose Reports</label>
                                                         <select name=""  size="10" multiple class="form-control">
-                                                            <option>Report 1</option>
-                                                            <option>Report 2</option>
-                                                            <option>Report 3</option>
-                                                            <option>Report 4</option>
+                                                            <option>Case Summary Report</option>
+                                                            <option>Complaint Report</option>
+                                                            <%--<option>Report 3</option>
+                                                            <option>Report 4</option>--%>
                                                         </select></div>
                                                     <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection" onclick="save()"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
                                                     <div class="col-xs-3 b-r"><label>Not Authorized</label>
