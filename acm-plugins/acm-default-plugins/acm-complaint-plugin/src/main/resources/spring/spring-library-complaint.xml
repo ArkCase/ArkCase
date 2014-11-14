@@ -79,6 +79,7 @@
         <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
         <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
+        <property name="saveCaseService" ref="saveCaseService"/>
     </bean>
 
     <bean id="closeComplaintRequestProcessEndHandler" class="com.armedia.acm.plugins.complaint.service.CloseComplaintRequestProcessEndHandler">
