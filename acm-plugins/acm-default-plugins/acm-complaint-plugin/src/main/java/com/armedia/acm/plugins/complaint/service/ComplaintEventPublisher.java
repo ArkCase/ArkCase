@@ -17,6 +17,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
+import java.util.Date;
+
 /**
  * Created by armdev on 4/10/14.
  */
@@ -97,11 +99,10 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(event);
     }
     
-    public void publishComplaintClosedEvent(Complaint source, Authentication authentication, boolean succeeded)
+    public void publishComplaintClosedEvent(Complaint source, String userId, boolean succeeded, Date closeDate)
     {
-    	ComplaintClosedEvent event = new ComplaintClosedEvent(source);
-    	event.setSucceeded(succeeded);
-    	
+    	ComplaintClosedEvent event = new ComplaintClosedEvent(source, succeeded, userId, closeDate);
+
     	eventPublisher.publishEvent(event);
     }
 }
