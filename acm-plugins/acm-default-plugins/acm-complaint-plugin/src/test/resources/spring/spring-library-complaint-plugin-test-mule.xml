@@ -17,5 +17,7 @@
 
     <!-- need a saveCaseService bean to start the Spring app context, but it doesn't have to work -->
     <bean id="saveCaseService" class="com.armedia.acm.plugins.casefile.service.SaveCaseService"/>
+    <!-- same for a case dao -->
+    <bean id="caseFileDao" class="com.armedia.acm.plugins.casefile.dao.CaseFileDao"/>
 
 </beans>
