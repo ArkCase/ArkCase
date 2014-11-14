@@ -7,7 +7,6 @@ CaseFile.Model = {
     create : function() {
         this.cachePage = new Acm.Model.CacheFifo(2);
         this.cacheCaseFile = new Acm.Model.CacheFifo(3);
-        //this.cacheCaseEvents = new Acm.Model.CacheFifo(3);
 
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PREV_PAGE_CLICKED      ,this.onPrevPageClicked);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NEXT_PAGE_CLICKED      ,this.onNextPageClicked);
@@ -22,10 +21,12 @@ CaseFile.Model = {
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DETAIL_CHANGED         ,this.onDetailChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CHILD_OBJECT_CHANGED   ,this.onChildObjectChanged);
 
-        if (CaseFile.Model.Lookup.create)  {CaseFile.Model.Lookup.create();}
-        if (CaseFile.Model.Tree.create)    {CaseFile.Model.Tree.create();}
-        if (CaseFile.Model.Notes.create)   {CaseFile.Model.Notes.create();}
-        if (CaseFile.Model.Tasks.create)   {CaseFile.Model.Tasks.create();}
+        if (CaseFile.Model.Lookup.create)        {CaseFile.Model.Lookup.create();}
+        if (CaseFile.Model.Tree.create)          {CaseFile.Model.Tree.create();}
+        if (CaseFile.Model.Notes.create)         {CaseFile.Model.Notes.create();}
+        if (CaseFile.Model.Tasks.create)         {CaseFile.Model.Tasks.create();}
+        if (CaseFile.Model.References.create)    {CaseFile.Model.References.create();}
+        if (CaseFile.Model.Events.create)        {CaseFile.Model.Events.create();}
     }
     ,initialize: function() {
         var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
@@ -36,10 +37,12 @@ CaseFile.Model = {
             CaseFile.Service.List.retrieveCaseFileList(treeInfo);
         }
 
-        if (CaseFile.Model.Lookup.initialize)  {CaseFile.Model.Lookup.initialize();}
-        if (CaseFile.Model.Tree.initialize)    {CaseFile.Model.Tree.initialize();}
-        if (CaseFile.Model.Notes.initialize)   {CaseFile.Model.Notes.initialize();}
-        if (CaseFile.Model.Tasks.initialize)   {CaseFile.Model.Tasks.initialize();}
+        if (CaseFile.Model.Lookup.initialize)     {CaseFile.Model.Lookup.initialize();}
+        if (CaseFile.Model.Tree.initialize)       {CaseFile.Model.Tree.initialize();}
+        if (CaseFile.Model.Notes.initialize)      {CaseFile.Model.Notes.initialize();}
+        if (CaseFile.Model.Tasks.initialize)      {CaseFile.Model.Tasks.initialize();}
+        if (CaseFile.Model.References.initialize) {CaseFile.Model.References.initialize();}
+        if (CaseFile.Model.Events.initialize)     {CaseFile.Model.Events.initialize();}
     }
 
     ,onPrevPageClicked: function() {
@@ -183,6 +186,22 @@ CaseFile.Model = {
     ,Tasks: {
         create : function() {
             this.cacheTaskList = new Acm.Model.CacheFifo(4);
+        }
+        ,initialize: function() {
+        }
+    }
+
+    ,References: {
+        create : function() {
+            this.cacheReferenceList = new Acm.Model.CacheFifo(4);
+        }
+        ,initialize: function() {
+        }
+    }
+
+    ,Events: {
+        create : function() {
+            this.cacheEventList = new Acm.Model.CacheFifo(4);
         }
         ,initialize: function() {
         }

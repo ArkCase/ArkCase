@@ -428,7 +428,7 @@ CaseFile.Service = {
         }
         ,API_SAVE_NOTE               : "/api/latest/plugin/note"
         ,API_DELETE_NOTE_            : "/api/latest/plugin/note/"
-        ,API_LIST_NOTES_             : "/api/latest/plugin/note/CASE/"
+        ,API_LIST_NOTES_             : "/api/latest/plugin/note/"
 
         ,_validateNotes: function(data) {
             if (Acm.isEmpty(data)) {
@@ -439,27 +439,27 @@ CaseFile.Service = {
             }
             return true;
         }
+        ,_validateNote: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentId)) {
+                return false;
+            }
+            return true;
+        }
         ,retrieveNoteListDeferred : function(caseFileId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
             return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
                 ,function() {
                     var url;
-                    url =  App.getContextPath() + CaseFile.Service.Notes.API_LIST_NOTES_;
+                    url =  App.getContextPath() + CaseFile.Service.Notes.API_LIST_NOTES_ + CaseFile.Model.getObjectType() + "/";
                     url += caseFileId;
-
-                    //for test
-                    //url = App.getContextPath() + "/api/latest/plugin/search/CASE_FILE";
-
                     return url;
                 }
                 ,function(data) {
-                    //test
-                    data = [];
-                    var note1 = {id:101, note:"hello1", created:"2014-04-21T16:51:33.914+0000", creator:"ann-acm", parentId:100, parentType:"CASE"};
-                    var note2 = {id:102, note:"hello2", created:"2014-04-22T16:51:33.914+0000", creator:"ann-acm", parentId:100, parentType:"CASE"};
-                    data.push(note1);
-                    data.push(note2);
-                    ////////////////////
-
                     var jtData = null
                     if (CaseFile.Service.Notes._validateNotes(data)) {
                         var noteList = data;
@@ -471,6 +471,81 @@ CaseFile.Service = {
                     return jtData;
                 }
             );
+        }
+
+
+        ,saveNote : function(data) {
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelSavedNote(response);
+
+                    } else {
+                        if (CaseFile.Service.Notes._validateNote(response)) {
+                            var note = response;
+                            var caseFileId = CaseFile.Model.getCaseFileId();
+                            if (caseFileId == note.parentId) {
+                                var noteList = CaseFile.Model.Notes.cacheNoteList.get(caseFileId);
+                                var found = -1;
+                                for (var i = 0; i < noteList.length; i++) {
+                                    if (note.id == noteList[i].id) {
+                                        found = i;
+                                        break;
+                                    }
+                                }
+                                if (0 > found) {                //add new note
+                                    noteList.push(note);
+                                } else {                        // update existing note
+                                    noteList[found] = note;
+                                }
+
+                                //CaseFile.Model.cacheNoteList.put(caseFileId, noteList);
+                                CaseFile.Controller.modelSavedNote(note);
+                            }
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_SAVE_NOTE
+                ,JSON.stringify(data)
+            )
+        }
+
+
+        ,_validateDeletedNote: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.deletedNoteId)) {
+                return false;
+            }
+            return true;
+        }
+        ,deleteNote : function(noteId) {
+            var url = App.getContextPath() + this.API_DELETE_NOTE_ + noteId;
+
+            Acm.Service.asyncDelete(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelDeletedNote(response);
+
+                    } else {
+                        if (CaseFile.Service.Notes._validateDeletedNote(response)) {
+                            var caseFileId = CaseFile.Model.getCaseFileId();
+                            if (response.deletedNoteId == noteId) {
+                                var noteList = CaseFile.Model.Notes.cacheNoteList.get(caseFileId);
+                                for (var i = 0; i < noteList.length; i++) {
+                                    if (noteId == noteList[i].id) {
+                                        noteList.splice(i, 1);
+                                        CaseFile.Controller.modelDeletedNote(noteId);
+                                        return;
+                                    }
+                                } //end for
+                            }
+                        }
+                    } //end else
+                }
+                ,url
+            )
         }
     }
 

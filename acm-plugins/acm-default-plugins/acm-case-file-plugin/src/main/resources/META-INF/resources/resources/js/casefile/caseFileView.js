@@ -12,8 +12,10 @@ CaseFile.View = {
         if (CaseFile.View.People.create)    	  {CaseFile.View.People.create();}
         if (CaseFile.View.Documents.create)       {CaseFile.View.Documents.create();}
         if (CaseFile.View.Participants.create)    {CaseFile.View.Participants.create();}
-        if (CaseFile.View.Tasks.create)           {CaseFile.View.Tasks.create();}
         if (CaseFile.View.Notes.create)           {CaseFile.View.Notes.create();}
+        if (CaseFile.View.Tasks.create)           {CaseFile.View.Tasks.create();}
+        if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
+        if (CaseFile.View.Events.create)          {CaseFile.View.Events.create();}
     }
     ,initialize: function() {
         if (CaseFile.View.MicroData.initialize)   {CaseFile.View.MicroData.initialize();}
@@ -23,8 +25,10 @@ CaseFile.View = {
         if (CaseFile.View.People.initialize)	  {CaseFile.View.People.initialize();}
         if (CaseFile.View.Documents.initialize)   {CaseFile.View.Documents.initialize();}
         if (CaseFile.View.Participants.initialize){CaseFile.View.Participants.initialize();}
-        if (CaseFile.View.Tasks.initialize)       {CaseFile.View.Tasks.initialize();}
         if (CaseFile.View.Notes.initialize)       {CaseFile.View.Notes.initialize();}
+        if (CaseFile.View.Tasks.initialize)       {CaseFile.View.Tasks.initialize();}
+        if (CaseFile.View.References.initialize)  {CaseFile.View.References.initialize();}
+        if (CaseFile.View.Events.initialize)      {CaseFile.View.Events.initialize();}
     }
 
     ,MicroData: {
@@ -477,17 +481,17 @@ CaseFile.View = {
 
             AcmEx.Object.XEditable.useEditable(this.$lnkCaseTitle, {
                 success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedCaseTitle(CaseFile.Model.getCaseFileId(), newValue);
+                    CaseFile.Controller.viewChangedCaseTitle(CaseFile.View.Tree.getActiveCaseId(), newValue);
                 }
             });
             AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
                 success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedIncidentDate(CaseFile.Model.getCaseFileId(), newValue);
+                    CaseFile.Controller.viewChangedIncidentDate(CaseFile.View.Tree.getActiveCaseId(), newValue);
                 }
             });
             AcmEx.Object.XEditable.useEditableDate(this.$lnkDueDate, {
                 success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedDueDate(CaseFile.Model.getCaseFileId(), newValue);
+                    CaseFile.Controller.viewChangedDueDate(CaseFile.View.Tree.getActiveCaseId(), newValue);
                 }
             });
 
@@ -524,7 +528,7 @@ CaseFile.View = {
             AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkAssignee, {
                 source: choices
                 ,success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedAssignee(CaseFile.Model.getCaseFileId(), newValue);
+                    CaseFile.Controller.viewChangedAssignee(CaseFile.View.Tree.getActiveCaseId(), newValue);
                 }
             });
         }
@@ -540,7 +544,7 @@ CaseFile.View = {
             AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkSubjectType, {
                 source: choices
                 ,success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedSubjectType(CaseFile.Model.getCaseFileId(), newValue);
+                    CaseFile.Controller.viewChangedSubjectType(CaseFile.View.Tree.getActiveCaseId(), newValue);
                 }
             });
         }
@@ -556,7 +560,7 @@ CaseFile.View = {
             AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkPriority, {
                 source: choices
                 ,success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedPriority(CaseFile.Model.getCaseFileId(), newValue);
+                    CaseFile.Controller.viewChangedPriority(CaseFile.View.Tree.getActiveCaseId(), newValue);
                 }
             });
         }
@@ -632,7 +636,7 @@ CaseFile.View = {
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = CaseFile.View.Detail.saveDivDetail();
-            CaseFile.Controller.viewChangedDetail(CaseFile.Model.getCaseFileId(), htmlDetail);
+            CaseFile.Controller.viewChangedDetail(CaseFile.View.Tree.getActiveCaseId(), htmlDetail);
             App.Object.Dirty.clear("Editing case detail");
         }
 
@@ -2079,30 +2083,14 @@ CaseFile.View = {
                         ,create: false
                         ,edit: false
                     }
-                    ,xxxxxxxx: {
+                    ,name: {
                         title: 'Name'
-                        ,width: '10%'
-//                        ,display: function (commData) {
-//                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
-//                                + ((0 >= commData.record.id)? "#" : commData.record.id)
-//                                + "'>" + commData.record.title + "</a>";
-//                            return $(a);
-//                        }
+                        ,width: '70%'
                     }
-//                    ,created: {
-//                        title: 'Created'
-//                        ,width: '15%'
-//                        ,edit: false
-//                    }
-//                    ,creator: {
-//                        title: 'Creator'
-//                        ,width: '15%'
-//                        ,edit: false
-//                    }
-//                    ,status: {
-//                        title: 'Status'
-//                        ,width: '30%'
-//                    }
+                    ,type: {
+                        title: 'Type'
+                        ,width: '30%'
+                    }
                 }
                 ,recordUpdated : function (event, data) {
 //                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
@@ -2168,7 +2156,7 @@ CaseFile.View = {
             var report = CaseFile.View.Documents.getSelectReport();
             var token = CaseFile.View.MicroData.getToken();
 
-            var caseFileId = CaseFile.Model.getCaseFileId();
+            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             if (caseFile) {
                 var url = CaseFile.View.MicroData.getFormUrls()[report];
@@ -2322,14 +2310,31 @@ CaseFile.View = {
             this.createJTableNotes(this.$divNotes);
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_NOTE_SAVED             ,this.onNoteSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_NOTE_DELETED           ,this.onNoteDeleted);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
         }
         ,initialize: function() {
         }
 
+//
         ,onCaseFileRetrieved: function(caseFile) {
             if (caseFile.hasError) {
                 //empty table?
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Notes.$divNotes);
+            }
+        }
+        ,onNoteSaved: function(caseFile) {
+            if (caseFile.hasError) {
+                //show error
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Notes.$divNotes);
+            }
+        }
+        ,onNoteDeleted: function(caseFile) {
+            if (caseFile.hasError) {
+                //show error
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.Notes.$divNotes);
             }
@@ -2396,7 +2401,7 @@ CaseFile.View = {
                         ,createAction: function(postData, jtParams) {
                             var record = Acm.urlToJson(postData);
                             var rc = AcmEx.Object.JTable.getEmptyRecord();
-                            var caseFileId = CaseFile.Model.getCaseFileId();
+                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
                             if (caseFile) {
                                 rc.Record.parentId = Acm.goodValue(caseFileId, 0);
@@ -2410,7 +2415,7 @@ CaseFile.View = {
                         ,updateAction: function(postData, jtParams) {
                             var record = Acm.urlToJson(postData);
                             var rc = AcmEx.Object.jTableGetEmptyRecord();
-                            var caseFileId = CaseFile.Model.getCaseFileId();
+                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
                             if (caseFile) {
                                 rc.Record.parentId = Acm.goodValue(caseFileId, 0);
@@ -2458,48 +2463,43 @@ CaseFile.View = {
                     } //end field
                     ,recordAdded : function (event, data) {
                         var record = data.record;
-                        alert("add");
-//                        var complaint = Complaint.getComplaint();
-//                        if (complaint) {
-//                            var noteToSave = {};
-//                            //noteToSave.id = record.id;
-//                            noteToSave.note = record.note;
-//                            noteToSave.created = Acm.getCurrentDayInternal(); //record.created;
-//                            noteToSave.creator = record.creator;   //record.creator;
-//                            noteToSave.parentId = complaint.complaintId;
-//                            noteToSave.parentType = App.OBJTYPE_COMPLAINT;
-//                            Complaint.Service.saveNote(noteToSave);
-//                        }
+                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        if (0 < caseFileId) {
+                            var noteToSave = {};
+                            //noteToSave.id = record.id;
+                            noteToSave.note = record.note;
+                            noteToSave.created = Acm.getCurrentDayInternal(); //record.created;
+                            noteToSave.creator = record.creator;   //record.creator;
+                            noteToSave.parentId = caseFileId;
+                            noteToSave.parentType = CaseFile.Model.getObjectType();
+                            CaseFile.Service.Notes.saveNote(noteToSave);
+                        }
                     }
                     ,recordUpdated: function(event,data){
                         var whichRow = data.row.prevAll("tr").length;
                         var record = data.record;
-                        alert("update");
-//                        var complaint = Complaint.getComplaint();
-//                        if(complaint){
-//                            var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
-//                            if (notes) {
-//                                if(notes[whichRow]){
-//                                    var noteToSave;
-//                                    noteToSave = notes[whichRow];
-//                                    noteToSave.note = record.note;
-//                                    Complaint.Service.saveNote(noteToSave);
-//                                }
-//                            }
-//                        }
+                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        if (0 < caseFileId) {
+                            var notes = CaseFile.Model.Notes.cacheNoteList.get(caseFileId);
+                            if (notes) {
+                                if(notes[whichRow]){
+                                    notes[whichRow].note = record.note;
+                                    CaseFile.Service.Notes.saveNote(notes[whichRow]);
+                                }
+                            }
+                        }
                     }
                     ,recordDeleted : function (event, data) {
                         var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                        alert("delete");
-//                        var complaint = Complaint.getComplaint();
-//                        if (complaint) {
-//                            var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
-//                            if (notes) {
-//                                var noteToDelete = notes[whichRow];
-//                                var noteId = noteToDelete.id;
-//                                Complaint.Service.deleteNoteById(noteId);
-//                            }
-//                        }
+                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        if (0 < caseFileId) {
+                            var notes = CaseFile.Model.Notes.cacheNoteList.get(caseFileId);
+                            if (notes) {
+                                if(notes[whichRow]){
+                                    CaseFile.Service.Notes.deleteNote(notes[whichRow].id);
+                                }
+                            }
+                        }
                     }
                 } //end arg
                 ,sortMap
@@ -2533,7 +2533,7 @@ CaseFile.View = {
             AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
         }
         ,onClickSpanAddTask: function(event, ctrl) {
-            var caseFileId = CaseFile.Model.getCaseFileId();
+            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             if (caseFile) {
                 var caseNumber = Acm.goodValue(caseFile.caseNumber);
@@ -2664,6 +2664,318 @@ CaseFile.View = {
                                 });
                                 return $a.add($b);
                             }
+                        }
+                    } //end field
+                } //end arg
+                ,sortMap
+            );
+        }
+    }
+
+    ,References: {
+        create: function() {
+            this.$divReferences          = $("#divRefs");
+            this.createJTableReferences(this.$divReferences);
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+        }
+        ,initialize: function() {
+        }
+
+        ,onCaseFileRetrieved: function(caseFile) {
+            if (caseFile.hasError) {
+                //empty table?
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.References.$divReferences);
+            }
+        }
+        ,onCaseFileSelected: function(caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.References.$divReferences);
+        }
+
+        ,_makeJtData: function(refList) {
+            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+//            if (refList) {
+//                for (var i = 0; i < refList.length; i++) {
+//                    var Record = {};
+//                    Record.id         = Acm.goodValue(refList[i].id, 0);
+//                    Record.note       = Acm.goodValue(refList[i].note);
+//                    Record.created    = Acm.getDateFromDatetime(refList[i].created);
+//                    Record.creator    = Acm.goodValue(refList[i].creator);
+//                    //Record.parentId   = Acm.goodValue(refList[i].parentId);
+//                    //Record.parentType = Acm.goodValue(refList[i].parentType);
+//                    jtData.Records.push(Record);
+//                }
+//                jtData.TotalRecordCount = refList.length;
+//            }
+            return jtData;
+        }
+        ,createJTableReferences: function($jt) {
+            var sortMap = {};
+            sortMap["created"] = "created";
+
+            AcmEx.Object.JTable.usePaging($jt
+                ,{
+                    title: 'References'
+                    ,selecting: true
+                    ,multiselect: false
+                    ,selectingCheckboxes: false
+                    ,messages: {
+                        addNewRecord: 'Add Reference'
+                    }
+                    ,actions: {
+                        pagingListAction: function (postData, jtParams, sortMap) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+
+//                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+//                            if (0 >= caseFileId) {
+//                                return AcmEx.Object.JTable.getEmptyRecords();
+//                            }
+//
+//                            var refList = CaseFile.Model.References.cacheReferenceList.get(caseFileId);
+//                            if (refList) {
+//                                return CaseFile.View.References._makeJtData(refList);
+//
+//                            } else {
+//                                return CaseFile.Service.References.retrieveReferenceListDeferred(caseFileId
+//                                    ,postData
+//                                    ,jtParams
+//                                    ,sortMap
+//                                    ,function(data) {
+//                                        var refList = data;
+//                                        return CaseFile.View.References._makeJtData(refList);
+//                                    }
+//                                    ,function(error) {
+//                                    }
+//                                );
+//                            }  //end else
+                        }
+                        ,createAction: function(postData, jtParams) {
+                            var record = Acm.urlToJson(postData);
+                            var rc = AcmEx.Object.JTable.getEmptyRecord();
+//                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+//                            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+//                            if (caseFile) {
+//                                rc.Record.parentId = Acm.goodValue(caseFileId, 0);
+//                                rc.Record.parentType = CaseFile.Model.getObjectType();
+//                                rc.Record.note = record.note;
+//                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+//                                rc.Record.creator = App.getUserName();   //record.creator;
+//                            }
+                            return rc;
+                        }
+                        ,updateAction: function(postData, jtParams) {
+                            var record = Acm.urlToJson(postData);
+                            var rc = AcmEx.Object.jTableGetEmptyRecord();
+//                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+//                            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+//                            if (caseFile) {
+//                                rc.Record.parentId = Acm.goodValue(caseFileId, 0);
+//                                rc.Record.parentType = CaseFile.Model.getObjectType();
+//                                rc.Record.note = record.note;
+//                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+//                                rc.Record.creator = App.getUserName();   //record.creator;
+//                            }
+                            return rc;
+                        }
+                        ,deleteAction: function(postData, jtParams) {
+                            return {
+                                "Result": "OK"
+                            };
+                        }
+                    }
+
+                    ,fields: {
+                        id: {
+                            title: 'ID'
+                            ,key: true
+                            ,list: false
+                            ,create: false
+                            ,edit: false
+                            ,defaultvalue : 0
+                        }
+                        ,title: {
+                            title: 'Title'
+                            ,width: '30%'
+                            ,edit: true
+                            ,create: false
+                        }
+                        ,incidentDate: {
+                            title: 'Incident Date'
+                            ,width: '14%'
+                            ,edit: false
+                            ,create: false
+                        }
+                        ,priority: {
+                            title: 'Priority'
+                            ,width: '14%'
+                            ,edit: false
+                            ,create: false
+                        }
+                        ,assignee: {
+                            title: 'Assigned To'
+                            ,width: '14%'
+                            ,edit: false
+                            ,create: false
+                        }
+                        ,type: {
+                            title: 'Subject Type'
+                            ,width: '14%'
+                            ,edit: false
+                            ,create: false
+                        }
+                        ,status: {
+                            title: 'Status'
+                            ,width: '14%'
+                            ,edit: false
+                            ,create: false
+                        }
+                    } //end field
+                    ,recordAdded : function (event, data) {
+                        var record = data.record;
+//                        var complaint = Complaint.getComplaint();
+//                        if (complaint) {
+//                            var noteToSave = {};
+//                            //noteToSave.id = record.id;
+//                            noteToSave.note = record.note;
+//                            noteToSave.created = Acm.getCurrentDayInternal(); //record.created;
+//                            noteToSave.creator = record.creator;   //record.creator;
+//                            noteToSave.parentId = complaint.complaintId;
+//                            noteToSave.parentType = App.OBJTYPE_COMPLAINT;
+//                            Complaint.Service.saveNote(noteToSave);
+//                        }
+                    }
+                    ,recordUpdated: function(event,data){
+                        var whichRow = data.row.prevAll("tr").length;
+                        var record = data.record;
+//                        var complaint = Complaint.getComplaint();
+//                        if(complaint){
+//                            var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
+//                            if (notes) {
+//                                if(notes[whichRow]){
+//                                    var noteToSave;
+//                                    noteToSave = notes[whichRow];
+//                                    noteToSave.note = record.note;
+//                                    Complaint.Service.saveNote(noteToSave);
+//                                }
+//                            }
+//                        }
+                    }
+                    ,recordDeleted : function (event, data) {
+                        var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+//                        var complaint = Complaint.getComplaint();
+//                        if (complaint) {
+//                            var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
+//                            if (notes) {
+//                                var noteToDelete = notes[whichRow];
+//                                var noteId = noteToDelete.id;
+//                                Complaint.Service.deleteNoteById(noteId);
+//                            }
+//                        }
+                    }
+                } //end arg
+                ,sortMap
+            );
+        }
+    }
+
+    ,Events: {
+        create: function() {
+            this.$divEvents          = $("#divEvents");
+            this.createJTableEvents(this.$divEvents);
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+        }
+        ,initialize: function() {
+        }
+
+        ,onCaseFileRetrieved: function(caseFile) {
+            if (caseFile.hasError) {
+                //empty table?
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Events.$divEvents);
+            }
+        }
+        ,onCaseFileSelected: function(caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Events.$divEvents);
+        }
+
+        ,_makeJtData: function(eventList) {
+            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+//            if (eventList) {
+//                for (var i = 0; i < eventList.length; i++) {
+//                    var Record = {};
+//                    Record.id         = Acm.goodValue(eventList[i].id, 0);
+//                    Record.note       = Acm.goodValue(eventList[i].note);
+//                    Record.created    = Acm.getDateFromDatetime(eventList[i].created);
+//                    Record.creator    = Acm.goodValue(eventList[i].creator);
+//                    //Record.parentId   = Acm.goodValue(eventList[i].parentId);
+//                    //Record.parentType = Acm.goodValue(eventList[i].parentType);
+//                    jtData.Records.push(Record);
+//                }
+//                jtData.TotalRecordCount = eventList.length;
+//            }
+            return jtData;
+        }
+        ,createJTableEvents: function($jt) {
+            var sortMap = {};
+            sortMap["created"] = "created";
+
+            AcmEx.Object.JTable.usePaging($jt
+                ,{
+                    title: 'Events'
+                    ,selecting: true
+                    ,multiselect: false
+                    ,selectingCheckboxes: false
+                    ,messages: {
+                        addNewRecord: 'Add Event'
+                    }
+                    ,actions: {
+                        pagingListAction: function (postData, jtParams, sortMap) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+
+//                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+//                            if (0 >= caseFileId) {
+//                                return AcmEx.Object.JTable.getEmptyRecords();
+//                            }
+//
+//                            var eventList = CaseFile.Model.Events.cacheEventList.get(caseFileId);
+//                            if (eventList) {
+//                                return CaseFile.View.Events._makeJtData(eventList);
+//
+//                            } else {
+//                                return CaseFile.Service.Events.retrieveEventListDeferred(caseFileId
+//                                    ,postData
+//                                    ,jtParams
+//                                    ,sortMap
+//                                    ,function(data) {
+//                                        var eventList = data;
+//                                        return CaseFile.View.Events._makeJtData(eventList);
+//                                    }
+//                                    ,function(error) {
+//                                    }
+//                                );
+//                            }  //end else
+                        }
+                    }
+                    , fields: {
+                        id: {
+                            title: 'ID'
+                            ,key: true
+                            ,list: false
+                            ,create: false
+                            ,edit: false
+                        }, eventType: {
+                            title: 'Event Name'
+                            ,width: '50%'
+                        }, eventDate: {
+                            title: 'Date'
+                            ,width: '25%'
+                        }, userId: {
+                            title: 'User'
+                            ,width: '25%'
                         }
                     } //end field
                 } //end arg
