@@ -123,6 +123,8 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
         for ( ObjectAssociation childObject : childObjects )
         {
             childObject.setParentId(getId());
+            childObject.setParentName(getCaseNumber());
+            childObject.setParentType("CASE");
         }
         for ( PersonAssociation persAssoc : personAssociations)
         {
@@ -196,6 +198,7 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     public void setCaseNumber(String caseNumber)
     {
         this.caseNumber = caseNumber;
+        setupChildPointers();
     }
 
     public String getCaseType()
