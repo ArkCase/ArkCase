@@ -31,7 +31,7 @@ public class CloseComplaintRequestFactory
 
         List<AcmParticipant> participants = convertItemsToParticipants(form.getApprovers());
         req.setParticipants(participants);
-        req.setComplaintId(form.getInformation().getComplaintId());
+        req.setComplaintId(form.getInformation().getId());
 
         populateDisposition(form, auth, req);
 
