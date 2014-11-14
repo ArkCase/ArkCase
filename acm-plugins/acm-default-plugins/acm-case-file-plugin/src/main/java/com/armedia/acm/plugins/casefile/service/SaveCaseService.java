@@ -46,7 +46,7 @@ public class SaveCaseService
 
         log.info("Saving case: retval is null? " + ( retval == null));
 
-        getSaveRule().applyRules(retval);
+        retval = getSaveRule().applyRules(retval);
 
         // call Mule flow to create the Alfresco folder
         Map<String, Object> messageProps = new HashMap<>();

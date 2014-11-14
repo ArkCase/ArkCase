@@ -501,6 +501,18 @@
                "modifier": "ann-acm",
                "notes": null
              }],
+         "participants" : [{
+             "id" : 436,
+             "objectType" : "COMPLAINT",
+             "objectId" : 158,
+             "participantType" : "assignee",
+             "participantLdapId" : "ecmillar",
+             "created" : "2014-10-02T20:56:50.482+0000",
+             "creator" : "ecmillar",
+             "modified" : "2014-10-23T19:19:07.804+0000",
+             "modifier" : "ebmillar"
+           }
+         ],
          "dueDate": "2014-09-22T04:00:00.000+0000",
          "tag": "no tag",
          "frequency": "low",
@@ -1011,7 +1023,70 @@
     "modifier":"ann-acm",
     "notes":"sample note describing the person"
      }
-    </code></pre><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the request body was invalid (did not match the expected JSON format). The response body will be empty.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess><span class=parent>/plugin</span>/dataaccess</a> <span class=methods></span></h4></div><div id=panel__plugin_dataaccess class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess_accessControlDefaults><span class=parent>/plugin/dataaccess</span>/accessControlDefaults</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_dataaccess_accessControlDefaults class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a page of the default access controls.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_dataaccess_accessControlDefaults_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/dataaccess</span>/accessControlDefaults</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a page of the default access controls.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_dataaccess_accessControlDefaults_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_dataaccess_accessControlDefaults_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_dataaccess_accessControlDefaults_get_request><h3>Query Parameters</h3><ul><li><strong>s</strong> <em>(string)</em><p>A property to sort by. Must be one of the properties shown in the resultPage of the example response. Multiple values are allowed.</p></li><li><strong>start</strong> <em>(integer)</em><p>index of the first row to be returned. The first page starts at row 0.</p></li><li><strong>n</strong> <em>(integer)</em><p>maximum rows to be returned.</p></li></ul></div><div class=tab-pane id=_plugin_dataaccess_accessControlDefaults_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response. Includes integers for totalCount, startRow, and maxRows, and an array of default ACL objects.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+    </code></pre><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>Usually means the request body was invalid (did not match the expected JSON format). The response body will be empty.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_profile><span class=parent>/plugin</span>/profile</a> <span class=methods></span></h4></div><div id=panel__plugin_profile class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_profile_get__userId_><span class=parent>/plugin/profile</span>/get/{userId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_profile_get__userId__get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_profile_get__userId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_profile_get__userId__get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a user profile (User and Company) information&#39;s</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_profile_get__userId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/profile</span>/get/{userId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a user profile (User and Company) information&#39;s</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_profile_get__userId__get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_profile_get__userId__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_profile_get__userId__get_request><h3>URI Parameters</h3><ul><li><strong>userId</strong>: <em>required (string)</em><p>User login name of the user whose profile is desired.</p></li></ul></div><div class=tab-pane id=_plugin_profile_get__userId__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+          "userId":"ann-acm",
+          "companyName":"Armedia",
+          "firstAddress":"1234 Some Name",
+          "secondAddress":"Suite 123",
+          "mainOfficePhone":"111-111-1111",
+          "fax":"555-555-5555",
+          "city":"Vienna",
+          "state":"VA",
+          "zip":"12345",
+          "website":"www.armedia.com",
+          "location":"Pentagon",
+          "imAccount":"DMiler",
+          "imSystem":"Skype",
+          "officePhoneNumber":"555-555-5555",
+          "mobilePhoneNumber":"555-555-5555",
+          "fullName":"Ann Administrator",
+          "email":"acm@armedia.com",
+          "pictureUrl":"",
+          "groups":["ACM_ADMINISTRATOR_DEV"]
+        }
+        </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_profile_userOrgInfo><span class=parent>/plugin/profile</span>/userOrgInfo</a> <span class=methods></span></h4></div><div id=panel__plugin_profile_userOrgInfo class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_profile_userOrgInfo_set><span class=parent>/plugin/profile/userOrgInfo</span>/set</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_profile_userOrgInfo_set_post><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_profile_userOrgInfo_set class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_profile_userOrgInfo_set_post class=list-group-item><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Update the user profile data (for the User and for the Company)</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_profile_userOrgInfo_set_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/profile/userOrgInfo</span>/set</h4></div><div class=modal-body><div class="alert alert-info"><p>Update the user profile data (for the User and for the Company)</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_profile_userOrgInfo_set_post_request data-toggle=tab>Request</a></li><li><a href=#_plugin_profile_userOrgInfo_set_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_profile_userOrgInfo_set_post_request><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+             "userId":"ann-acm",
+             "companyName":"Armedia TEST",
+             "firstAddress":"1234 NEW NAME",
+             "secondAddress":"Suite 1234",
+             "mainOfficePhone":"111-111-1111",
+             "fax":"555-555-5555",
+             "city":"Vienna",
+             "state":"VA",
+             "zip":"12345",
+             "website":"www.armedia.org",
+             "location":"Pentagon",
+             "imAccount":"DMiler",
+             "imSystem":"Skype",
+             "officePhoneNumber":"555-555-5555",
+             "mobilePhoneNumber":"555-555-5555",
+             "fullName":"Ann Administrator",
+             "email":"acm@armedia.com",
+             "pictureUrl":"",
+             "groups":["ACM_ADMINISTRATOR_DEV"]
+            }
+            </code></pre></div><div class=tab-pane id=_plugin_profile_userOrgInfo_set_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>The same data that was sent for update in the POST.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+              "userId":"ann-acm",
+              "companyName":"Armedia TEST",
+              "firstAddress":"1234 NEW NAME",
+              "secondAddress":"Suite 1234",
+              "mainOfficePhone":"111-111-1111",
+              "fax":"555-555-5555",
+              "city":"Vienna",
+              "state":"VA",
+              "zip":"12345",
+              "website":"www.armedia.org",
+              "location":"Pentagon",
+              "imAccount":"DMiler",
+              "imSystem":"Skype",
+              "officePhoneNumber":"555-555-5555",
+              "mobilePhoneNumber":"555-555-5555",
+              "fullName":"Ann Administrator",
+              "email":"acm@armedia.com",
+              "pictureUrl":"",
+              "groups":["ACM_ADMINISTRATOR_DEV"]
+             }
+            </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess><span class=parent>/plugin</span>/dataaccess</a> <span class=methods></span></h4></div><div id=panel__plugin_dataaccess class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__plugin_dataaccess_accessControlDefaults><span class=parent>/plugin/dataaccess</span>/accessControlDefaults</a> <span class=methods><a href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span></a></span></h4></div><div id=panel__plugin_dataaccess_accessControlDefaults class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_plugin_dataaccess_accessControlDefaults_get class=list-group-item><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span><div class=method_description><p>Get a page of the default access controls.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_plugin_dataaccess_accessControlDefaults_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get <span class="glyphicon glyphicon-lock" title="Authentication required"></span></span> <span class=parent>/plugin/dataaccess</span>/accessControlDefaults</h4></div><div class=modal-body><div class="alert alert-info"><p>Get a page of the default access controls.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_plugin_dataaccess_accessControlDefaults_get_request data-toggle=tab>Request</a></li><li><a href=#_plugin_dataaccess_accessControlDefaults_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_plugin_dataaccess_accessControlDefaults_get_request><h3>Query Parameters</h3><ul><li><strong>s</strong> <em>(string)</em><p>A property to sort by. Must be one of the properties shown in the resultPage of the example response. Multiple values are allowed.</p></li><li><strong>start</strong> <em>(integer)</em><p>index of the first row to be returned. The first page starts at row 0.</p></li><li><strong>n</strong> <em>(integer)</em><p>maximum rows to be returned.</p></li></ul></div><div class=tab-pane id=_plugin_dataaccess_accessControlDefaults_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response. Includes integers for totalCount, startRow, and maxRows, and an array of default ACL objects.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
           "totalCount" : 98,    // total number of default access controls
           "startRow" : 0,       // start row (from the request)
           "maxRows" : 1,        // max rows (from the request)

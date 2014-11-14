@@ -235,7 +235,6 @@
                                 </div>
 
                                 <div class="col-md-12" id="tabPeople" style="display:none;">
-                                    <p class="dev">tabPeople</p>
                                     <section class="panel b-a ">
                                         <div id="divPeople" style="width:100%"></div>
                                     </section>
