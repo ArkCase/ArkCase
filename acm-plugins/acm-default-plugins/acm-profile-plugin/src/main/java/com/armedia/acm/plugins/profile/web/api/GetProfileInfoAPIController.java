@@ -66,7 +66,7 @@ public class GetProfileInfoAPIController {
              userOrg = getUserOrgDao().getUserOrgForUser(user);
         } catch ( AcmObjectNotFoundException e ){
             if(log.isInfoEnabled()){
-                log.info("Profile info for the user: " + userId + "is not found",e);
+                log.info("Profile info for the user: " + userId + "is not found");
             }
             //add only user data like full name, email, userId , groups
             userOrg = new UserOrg();
@@ -75,7 +75,7 @@ public class GetProfileInfoAPIController {
                     userOrg = getSaveUserOrgTransaction().saveUserOrg(userOrg,authentication);
             } catch ( MuleException e1 ) {
                 if( log.isErrorEnabled() ) {
-                    log.error("Saving of the info for user and organization throw an exception",e);
+                    log.error("Saving the info for user and organization throw an exception",e);
                 }
                 throw new AcmCreateObjectFailedException("user organization info",e.getMessage(),e.getCause());
             }
