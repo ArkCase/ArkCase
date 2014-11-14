@@ -101,4 +101,14 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="case-file-07-drop-raw-originator-id" author="dmiller">
+        <dropColumn tableName="acm_case_file" columnName="cm_originator_id"/>
+    </changeSet>
+
+    <changeSet id="case-file-08-add-number-originator-id" author="dmiller">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_originator_id" type="NUMBER(32,0)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

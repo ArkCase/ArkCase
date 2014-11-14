@@ -25,6 +25,7 @@ CaseFile.View = {
         create : function() {
             var items = $(document).items();
             this.caseFileId = items.properties("caseFileId").itemValue();
+            this.token = items.properties("token").itemValue();
             this.urlRoiForm = items.properties("urlRoiForm").itemValue();
             this.urlCloseCaseForm = items.properties("urlCloseCaseForm").itemValue();
             this.urlEditCloseCaseForm = items.properties("urlEditCloseCaseForm").itemValue();
@@ -34,6 +35,9 @@ CaseFile.View = {
 
         ,getCaseFileId: function() {
             return this.caseFileId;
+        }
+        ,getToken: function() {
+            return this.token;
         }
         ,getUrlRoiFormUrl: function() {
             return this.urlRoiForm;
@@ -385,9 +389,11 @@ CaseFile.View = {
                 if (Acm.isNotEmpty(urlCloseCaseForm) && Acm.isNotEmpty(c)) {
                     if (Acm.isNotEmpty(c.caseNumber)) {
                         urlCloseCaseForm = urlCloseCaseForm.replace("_data=(", "_data=(caseFileId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',");
-                        Acm.Dialog.openWindow(url, "", 860, 700
+
+                        //CaseFile.View.Action._showPopup(urlCloseCaseForm, "", 860, 700);
+                        Acm.Dialog.openWindow(urlCloseCaseForm, "", 860, 700
                             ,function() {
-                                CaseFile.Controller.viewCaseFileClosed(caseFileId);
+                                CaseFile.Controller.viewClosedCaseFile(caseFileId);
                             }
                         );
                     }
@@ -415,6 +421,35 @@ CaseFile.View = {
         ,setValueEdtConsolidateCase: function(val) {
             Acm.Object.setValue(this.$edtConsolidateCase, val);
         }
+
+//        ,_showPopup: function(url, title, w, h) {
+//
+//            var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+//            var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+//
+//            width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+//            height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+//
+//            var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+//            var top = ((height / 2) - (h / 2)) + dualScreenTop;
+//            var newWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+//
+//
+//            if (window.focus) {
+//                newWindow.focus();
+//            }
+//
+//            this._checkClosePopup(newWindow);
+//        }
+//
+//        ,_checkClosePopup: function(newWindow){
+//            var timer = setInterval(function() {
+//                if(newWindow.closed) {
+//                    clearInterval(timer);
+//                    CaseFile.Controller.viewClosedCaseFile();
+//                }
+//            }, 1000);
+//        }
     }
 
 
@@ -424,7 +459,6 @@ CaseFile.View = {
             this.$tabTopBlank     = $("#tabTopBlank");
 
             this.$divDetail       = $(".divDetail");
-            //this.$divDetail.summernote();
             this.$btnEditDetail   = $("#tabDetail button:eq(0)");
             this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
             this.$btnEditDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnEditDetail(e, this);});
@@ -578,7 +612,6 @@ CaseFile.View = {
         }
 
 
-
         ,onTreeNodeSelected: function(key) {
             CaseFile.View.Detail.showPanel(key);
         }
@@ -685,15 +718,17 @@ CaseFile.View = {
 
     ,Documents: {
         create: function() {
-            this.$divDocuments          = $("#divDocs");
+            this.$divDocuments    = $("#divDocs");
             this.createJTableDocuments(this.$divDocuments);
-            this.$spanAddDocument       = this.$divDocuments.find(".jtable-toolbar-item-add-record");
-            this.$spanAddDocument.unbind("click").on("click", function(e){CaseFile.View.Documents.onClickSpanAddDocument(e, this);});
-
+            AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments, CaseFile.View.Documents.onClickSpanAddDocument);
+            this.$spanAddDocument = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+            CaseFile.View.Documents.fillReportSelection();
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_CLOSED       ,this.onCaseFileClosed);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DOCUMENT_ADDED         ,this.onDocumentAdded);
+
 
         }
         ,initialize: function() {
@@ -712,9 +747,46 @@ CaseFile.View = {
         ,onCaseFileClosed: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
         }
+        ,onDocumentAdded: function(caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+        }
+
         ,onClickSpanAddDocument: function(event, ctrl) {
-            alert("onClickSpanAddDocument");
-            return;
+            var report = CaseFile.View.Documents.getSelectReport();
+            var token = CaseFile.View.MicroData.getToken();
+
+            var caseFileId = CaseFile.Model.getCaseFileId();
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            if (caseFile) {
+                var url = CaseFile.View.MicroData.getUrlRoiFormUrl(); //find solution to select url based on report value; hard coded for now  xxxxxxxxxxxxxx
+                if (Acm.isNotEmpty(url)) {
+                    url = url.replace("_data=(", "_data=(type:'case', caseFileId:'" + caseFileId
+                        + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
+                        + "',caseTitle:'" + Acm.goodValue(caseFile.title)
+                        + "',casePriority:'" + Acm.goodValue(caseFile.priority)
+                        + "',");
+
+                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30
+                        ,function() {
+                            CaseFile.Controller.viewAddedDocument(caseFileId);
+                        }
+                    );
+                }
+            }
+
+        }
+
+        ,fillReportSelection: function() {
+            var html = "<span>"
+                + "<select class='input-sm form-control input-s-sm inline v-middle'>"
+                + "<option value='roi'>Report of Investigation</option>"
+                + "</select>"
+                + "</span>";
+
+            this.$spanAddDocument.before(html);
+        }
+        ,getSelectReport: function() {
+            return Acm.Object.getSelectValue(this.$spanAddDocument.prev().find("select"));
         }
 
         ,createJTableDocuments: function($s) {
@@ -745,17 +817,17 @@ CaseFile.View = {
                                 rc.Records.push(record);
                             }
                         }
-                        //return rc;
+                        return rc;
 
 //for test
-                        return {
-                            "Result": "OK"
-                            ,"Records": [
-                                {"id": 11, "title": "Nick Name", "created": "01-02-03", "creator": "123 do re mi", "status": "JJ"}
-                                ,{"id": 12, "title": "Some Name", "created": "14-05-15", "creator": "xyz abc", "status": "Ice Man"}
-                            ]
-                            ,"TotalRecordCount": 2
-                        };
+//                        return {
+//                            "Result": "OK"
+//                            ,"Records": [
+//                                {"id": 11, "title": "Nick Name", "created": "01-02-03", "creator": "123 do re mi", "status": "JJ"}
+//                                ,{"id": 12, "title": "Some Name", "created": "14-05-15", "creator": "xyz abc", "status": "Ice Man"}
+//                            ]
+//                            ,"TotalRecordCount": 2
+//                        };
                     }
                     ,createAction: function(postData, jtParams) {
                         //custom web form creation takes over; this action should never be called
@@ -838,8 +910,7 @@ CaseFile.View = {
         create: function() {
             this.$divTasks          = $("#divTasks");
             this.createJTableTasks(this.$divTasks);
-            this.$spanAddTask       = this.$divTasks.find(".jtable-toolbar-item-add-record");
-            this.$spanAddTask.unbind("click").on("click", function(e){CaseFile.View.Tasks.onClickSpanAddTask(e, this);});
+            AcmEx.Object.JTable.clickAddRecordHandler(this.$divTasks, CaseFile.View.Tasks.onClickSpanAddTask);
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
@@ -849,7 +920,6 @@ CaseFile.View = {
 
         ,URL_TASK_DETAIL:  "/plugin/task/"
         ,URL_NEW_TASK_:    "/plugin/task/wizard?parentType=CASE_FILE&reference="
-
 
         ,onCaseFileRetrieved: function(caseFile) {
             if (caseFile.hasError) {
@@ -862,13 +932,11 @@ CaseFile.View = {
             AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
         }
         ,onClickSpanAddTask: function(event, ctrl) {
-            alert("onClickSpanAddTask");
-            return;
             var caseFileId = CaseFile.Model.getCaseFileId();
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             if (caseFile) {
                 var caseNumber = Acm.goodValue(caseFile.caseNumber);
-                var url = CaseFile.View.Tasks.URL_NEW_TASK  + caseNumber;
+                var url = CaseFile.View.Tasks.URL_NEW_TASK_  + caseNumber;
                 App.gotoPage(url);
             }
         }

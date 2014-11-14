@@ -74,6 +74,15 @@
             <bean class="com.armedia.acm.plugins.complaint.service.ComplaintUpdateStatusPredicate"/>
         </property>
     </bean>
+    
+    <bean id="closeCompaintRequestService" class="com.armedia.acm.plugins.complaint.service.CloseCompaintRequestService">
+        <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
+        <property name="complaintDao" ref="acmComplaintDao"/>
+    </bean>
+
+    <bean id="closeComplaintRequestProcessEndHandler" class="com.armedia.acm.plugins.complaint.service.CloseComplaintRequestProcessEndHandler">
+        <property name="closeCompaintRequestService" ref="closeCompaintRequestService"/>
+    </bean>
     <!-- end of event responses -->
 
     <!-- event action handlers -->

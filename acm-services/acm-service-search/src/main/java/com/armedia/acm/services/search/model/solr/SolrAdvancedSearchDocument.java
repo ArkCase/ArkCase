@@ -1,5 +1,7 @@
 package com.armedia.acm.services.search.model.solr;
 
+import org.codehaus.plexus.util.StringOutputStream;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +44,9 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String person_title_lcs;
     private String first_name_lcs;
     private String last_name_lcs;
+
+    /////////////////// for acm users ///////////////
+    private String email_lcs;
 
     /////////////////// for orgs, contact methods, and other objects with a type and a value /////////////
     private String type_lcs;
@@ -401,5 +406,13 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     public void setModifier_lcs(String modifier_lcs)
     {
         this.modifier_lcs = modifier_lcs;
+    }
+
+    public String getEmail_lcs() {
+        return email_lcs;
+    }
+
+    public void setEmail_lcs(String email_lcs) {
+        this.email_lcs = email_lcs;
     }
 }
