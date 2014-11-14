@@ -76,15 +76,24 @@ Acm.Service = {
         });
     }
 
-	,asyncPut : function(callback, url, param) {
-	    jQuery.ajax({type: 'PUT'
-	        ,url: url
-	        ,data: param
-	        ,success: function(response) {
+    ,asyncPut : function(callback, url, param) {
+        jQuery.ajax({type: 'PUT'
+            ,url: url
+            ,data: param
+            ,success: function(response) {
                 callback(response);
-	        }
-	    });
-	}
+            }
+        });
+    }
+
+    ,asyncDelete : function(callback, url) {
+        jQuery.ajax({type: 'DELETE'
+            ,url: url
+            ,success: function(response) {
+                callback(response);
+            }
+        });
+    }
 
 
     ,deferredGet: function(callbackSuccess, url, param) {

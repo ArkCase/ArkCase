@@ -25,6 +25,9 @@ CaseFile.Controller = {
     ,ME_DUE_DATE_SAVED                  : "case-file-due-date-saved"               //param: caseFileId, dueDate
     ,ME_DETAIL_SAVED                    : "case-file-detail-saved"                 //param: caseFileId, details
 
+    ,ME_NOTE_SAVED                      : "case-file-note-saved"                   //param: note
+    ,ME_NOTE_DELETED                    : "case-file-note-deleted"                 //param: noteId
+
     ,VE_PREV_PAGE_CLICKED               : "case-file-prev-page-clicked"            //param: none
     ,VE_NEXT_PAGE_CLICKED		        : "case-file-next-page-clicked"            //param: none
     ,VE_CASE_FILE_SELECTED		        : "case-file-case-file-selected"           //param: caseFileId
@@ -82,6 +85,14 @@ CaseFile.Controller = {
     ,modelSavedDetail : function(caseFileId, details) {
         Acm.Dispatcher.fireEvent(this.ME_DETAIL_SAVED, caseFileId, details);
     }
+
+    ,modelSavedNote : function(note) {
+        Acm.Dispatcher.fireEvent(this.ME_NOTE_SAVED, note);
+    }
+    ,modelDeletedNote : function(noteId) {
+        Acm.Dispatcher.fireEvent(this.ME_NOTE_DELETED, noteId);
+    }
+
 
     ,viewClickedPrevPage: function() {
         Acm.Dispatcher.fireEvent(this.VE_PREV_PAGE_CLICKED);
