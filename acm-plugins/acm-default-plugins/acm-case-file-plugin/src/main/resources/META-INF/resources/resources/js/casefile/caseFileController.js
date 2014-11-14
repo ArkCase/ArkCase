@@ -25,6 +25,9 @@ CaseFile.Controller = {
     ,ME_DUE_DATE_SAVED                  : "case-file-due-date-saved"               //param: caseFileId, dueDate
     ,ME_DETAIL_SAVED                    : "case-file-detail-saved"                 //param: caseFileId, details
 
+    ,ME_NOTE_SAVED                      : "case-file-note-saved"                   //param: note
+    ,ME_NOTE_DELETED                    : "case-file-note-deleted"                 //param: noteId
+
     ,VE_PREV_PAGE_CLICKED               : "case-file-prev-page-clicked"            //param: none
     ,VE_NEXT_PAGE_CLICKED		        : "case-file-next-page-clicked"            //param: none
     ,VE_CASE_FILE_SELECTED		        : "case-file-case-file-selected"           //param: caseFileId
@@ -39,6 +42,7 @@ CaseFile.Controller = {
     ,VE_DETAIL_CHANGED                  : "case-file-detail-changed"               //param: caseFileId, details
 
     ,VE_CASE_FILE_CLOSED                : "case-file-case-file-closed"             //param: caseFileId
+    ,VE_DOCUMENT_ADDED                  : "case-file-document-added"               //param: caseFileId
     ,VE_CHILD_OBJECT_CHANGED            : "case-file-child-object-changed"         //param: caseFileId, idx, childObject; childObject format: {Record: {title:"xxx", status="xxx"}}
 
 
@@ -82,6 +86,14 @@ CaseFile.Controller = {
         Acm.Dispatcher.fireEvent(this.ME_DETAIL_SAVED, caseFileId, details);
     }
 
+    ,modelSavedNote : function(note) {
+        Acm.Dispatcher.fireEvent(this.ME_NOTE_SAVED, note);
+    }
+    ,modelDeletedNote : function(noteId) {
+        Acm.Dispatcher.fireEvent(this.ME_NOTE_DELETED, noteId);
+    }
+
+
     ,viewClickedPrevPage: function() {
         Acm.Dispatcher.fireEvent(this.VE_PREV_PAGE_CLICKED);
     }
@@ -116,13 +128,16 @@ CaseFile.Controller = {
     ,viewChangedDetail: function(caseFileId, details) {
         Acm.Dispatcher.fireEvent(this.VE_DETAIL_CHANGED, caseFileId, details);
     }
-    ,viewCaseFileClosed: function(caseFileId) {
+    ,viewClosedCaseFile: function(caseFileId) {
         Acm.Dispatcher.fireEvent(this.VE_CASE_FILE_CLOSED, caseFileId);
+    }
+    ,viewAddedDocument: function(caseFileId) {
+        Acm.Dispatcher.fireEvent(this.VE_DOCUMENT_ADDED, caseFileId);
     }
     ,viewChangedChildObject: function(caseFileId, idx, childObject) {
         Acm.Dispatcher.fireEvent(this.VE_CHILD_OBJECT_CHANGED, caseFileId, idx, childObject);
     }
 
-    ()
+
 };
 

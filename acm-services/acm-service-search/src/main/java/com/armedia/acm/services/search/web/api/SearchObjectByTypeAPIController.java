@@ -39,12 +39,13 @@ public class SearchObjectByTypeAPIController {
 
     @RequestMapping(value = "/{objectType}", method  = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String searchObjectByType(  
+    public String searchObjectByType(
     		@PathVariable("objectType") String objectType,
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             @RequestParam(value = "assignee", required = false, defaultValue = "") String assignee,
+            @RequestParam(value = "activeOnly", required = false, defaultValue = "true") boolean activeOnly,
             Authentication authentication,
             HttpSession httpSession
     ) throws MuleException, Exception
@@ -53,6 +54,11 @@ public class SearchObjectByTypeAPIController {
         
         if (!StringUtils.isBlank(assignee)) {
             query += " AND assignee_s:" + assignee;
+        }
+
+        if ( activeOnly )
+        {
+            query += " AND -status_s:COMPLETE AND -status_s:DELETE";
         }
         
         if ( log.isDebugEnabled() )
