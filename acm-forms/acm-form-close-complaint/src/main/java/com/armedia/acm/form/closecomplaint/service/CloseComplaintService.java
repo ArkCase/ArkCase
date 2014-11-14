@@ -27,9 +27,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
-import com.armedia.acm.form.closecomplaint.model.CloseComplaintInformation;
 import com.armedia.acm.form.closecomplaint.model.ExistingCase;
 import com.armedia.acm.form.closecomplaint.model.ReferExternal;
+import com.armedia.acm.form.config.CloseInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
@@ -134,10 +134,10 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		}
 		
 		// Get Complaint depends on the complaint ID
-		Complaint complaint = getComplaintDao().find(form.getInformation().getComplaintId());
+		Complaint complaint = getComplaintDao().find(form.getInformation().getId());
 		
 		if (complaint == null) {
-			LOG.warn("Cannot find complaint by given complaintId=" + form.getInformation().getComplaintId());
+			LOG.warn("Cannot find complaint by given complaintId=" + form.getInformation().getId());
 			return false;
 		}
 		
@@ -195,7 +195,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		String mode = getRequest().getParameter("mode");
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
-		CloseComplaintInformation information = new CloseComplaintInformation();
+		CloseInformation information = new CloseInformation();
 		if (!"edit".equals(mode))
 		{
 			information.setCloseDate(new Date());
