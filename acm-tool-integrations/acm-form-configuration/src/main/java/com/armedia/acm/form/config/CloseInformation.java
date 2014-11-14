@@ -1,51 +1,70 @@
 /**
  * 
  */
-package com.armedia.acm.form.closecomplaint.model;
+package com.armedia.acm.form.config;
 
 import java.util.Date;
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 
 /**
  * @author riste.tutureski
  *
  */
-public class CloseComplaintInformation {
+@XmlAccessorType(XmlAccessType.FIELD)
+public class CloseInformation {
 
-	private Long complaintId;
-	private String complaintNumber;
+	@XmlElements({
+		@XmlElement(name="id"),
+		@XmlElement(name="complaintId"),
+		@XmlElement(name="caseId")
+		
+	})
+	private Long id;
+	
+	@XmlElements({
+		@XmlElement(name="number"),
+		@XmlElement(name="complaintNumber"),
+		@XmlElement(name="caseNumber")
+		
+	})
+	private String number;
 	private Date closeDate;
 	private String disposition;
 	private List<String> dispositions;
 	
 	/**
-	 * @return the complaintId
+	 * @return the id
 	 */
-	public Long getComplaintId() {
-		return complaintId;
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	/**
-	 * @param complaintId the complaintId to set
+	 * @return the number
 	 */
-	public void setComplaintId(Long complaintId) {
-		this.complaintId = complaintId;
+	public String getNumber() {
+		return number;
 	}
-	
+
 	/**
-	 * @return the complaintNumber
+	 * @param number the number to set
 	 */
-	public String getComplaintNumber() {
-		return complaintNumber;
+	public void setNumber(String number) {
+		this.number = number;
 	}
-	
-	/**
-	 * @param complaintNumber the complaintNumber to set
-	 */
-	public void setComplaintNumber(String complaintNumber) {
-		this.complaintNumber = complaintNumber;
-	}
-	
+
 	/**
 	 * @return the closeDate
 	 */

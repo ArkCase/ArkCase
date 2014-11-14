@@ -27,16 +27,27 @@ public class CloseComplaintRequestProcessEndHandler implements ApplicationListen
 
         if ( isCloseComplaintWorkflow )
         {
-            Long complaintId = (Long) acmBusinessProcessEvent.getProcessVariables().get("OBJECT_ID");
-            Long requestId = (Long) acmBusinessProcessEvent.getProcessVariables().get("REQUEST_ID");
-            String user = acmBusinessProcessEvent.getUserId();
+            try
+            {
+                Long complaintId = (Long) acmBusinessProcessEvent.getProcessVariables().get("OBJECT_ID");
+                Long requestId = (Long) acmBusinessProcessEvent.getProcessVariables().get("REQUEST_ID");
+                String user = acmBusinessProcessEvent.getUserId();
 
-            log.debug("Request: " + requestId);
-            log.debug("Complaint: " + complaintId);
-            log.debug("User: " + user);
+                log.debug("Request: " + requestId);
+                log.debug("Complaint: " + complaintId);
+                log.debug("User: " + user);
 
-            getCloseCompaintRequestService().handleCloseComplaintRequestApproved(complaintId, requestId, user,
-                    acmBusinessProcessEvent.getEventDate());
+                getCloseCompaintRequestService().handleCloseComplaintRequestApproved(complaintId, requestId, user,
+                        acmBusinessProcessEvent.getEventDate());
+            }
+            catch ( Exception e)
+            {
+                // we want to log an exception here so we can see what went wrong.  And we can't throw an
+                // exception from an event handler; plus, we want the exception to propagate, which will roll
+                // back all Activiti updates.  So we catch the exception, log it, and throw a runtime exception.
+                log.error("Exception handling completed close case request: " + e.getMessage(), e);
+                throw new RuntimeException(e);
+            }
         }
     }
 

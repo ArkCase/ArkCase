@@ -18,11 +18,11 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-                                   "/spring/spring-library-notification.xml",
-                                   "/spring/spring-library-data-source.xml",
-                                   "/spring/spring-library-mule-context-manager.xml",
-                                   "/spring/spring-library-activemq.xml",
-                                   "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-notification.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-mule-context-manager.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-mule-context-manager.xml",
         "/spring/spring-library-activiti-actions.xml",
@@ -31,9 +31,11 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-drools-monitor.xml",
         "/spring/spring-library-cmis-configuration.xml",
-        "/spring/spring-library-ecm-file.xml"
-
-                                   })
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-event.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NotificationIT
 {
