@@ -453,11 +453,11 @@ CaseFile.Service = {
                 }
                 ,function(data) {
                     //test
-//                    data = [];
-//                    var note1 = {id:101, note:"hello1", created:"2014-04-21T16:51:33.914+0000", creator:"ann-acm", parentId:100, parentType:"CASE"};
-//                    var note2 = {id:102, note:"hello2", created:"2014-04-22T16:51:33.914+0000", creator:"ann-acm", parentId:100, parentType:"CASE"};
-//                    data.push(note1);
-//                    data.push(note2);
+                    data = [];
+                    var note1 = {id:101, note:"hello1", created:"2014-04-21T16:51:33.914+0000", creator:"ann-acm", parentId:100, parentType:"CASE"};
+                    var note2 = {id:102, note:"hello2", created:"2014-04-22T16:51:33.914+0000", creator:"ann-acm", parentId:100, parentType:"CASE"};
+                    data.push(note1);
+                    data.push(note2);
                     ////////////////////
 
                     var jtData = null
