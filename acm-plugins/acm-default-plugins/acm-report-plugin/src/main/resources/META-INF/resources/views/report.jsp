@@ -46,7 +46,7 @@
 
 						<section id="caseStatusSection">
 	                        <div class="line line-dashed b-b line-lg pull-in"></div>
-	                        <label for="Case State"  class="label" id="caseStatuslbl">Case State</label>
+	                        <label for="State"  class="label" id="caseStatuslbl">State</label>
 	                        <select name="cStatus" class="form-control" id ="selectCaseStatus">
 	                            <option value="Choose State">Choose State</option>
 	                            <%--<option value="ACTIVE">Active</option>
