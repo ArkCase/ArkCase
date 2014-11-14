@@ -5,20 +5,24 @@
  */
 CaseFile.View = {
     create : function() {
-        if (CaseFile.View.MicroData.create)      {CaseFile.View.MicroData.create();}
-        if (CaseFile.View.Tree.create)           {CaseFile.View.Tree.create();}
-        if (CaseFile.View.Action.create)         {CaseFile.View.Action.create();}
-        if (CaseFile.View.Detail.create)         {CaseFile.View.Detail.create();}
-        if (CaseFile.View.Documents.create)      {CaseFile.View.Documents.create();}
-        if (CaseFile.View.Tasks.create)          {CaseFile.View.Tasks.create();}
+        if (CaseFile.View.MicroData.create)       {CaseFile.View.MicroData.create();}
+        if (CaseFile.View.Tree.create)            {CaseFile.View.Tree.create();}
+        if (CaseFile.View.Action.create)          {CaseFile.View.Action.create();}
+        if (CaseFile.View.Detail.create)          {CaseFile.View.Detail.create();}
+        if (CaseFile.View.Documents.create)       {CaseFile.View.Documents.create();}
+        if (CaseFile.View.Participants.create)    {CaseFile.View.Participants.create();}
+        if (CaseFile.View.Tasks.create)           {CaseFile.View.Tasks.create();}
+        if (CaseFile.View.Notes.create)           {CaseFile.View.Notes.create();}
     }
     ,initialize: function() {
-        if (CaseFile.View.MicroData.initialize)  {CaseFile.View.MicroData.initialize();}
-        if (CaseFile.View.Tree.initialize)       {CaseFile.View.Tree.initialize();}
-        if (CaseFile.View.Action.initialize)     {CaseFile.View.Action.initialize();}
-        if (CaseFile.View.Detail.initialize)     {CaseFile.View.Detail.initialize();}
-        if (CaseFile.View.Documents.initialize)  {CaseFile.View.Documents.initialize();}
-        if (CaseFile.View.Tasks.initialize)      {CaseFile.View.Tasks.initialize();}
+        if (CaseFile.View.MicroData.initialize)   {CaseFile.View.MicroData.initialize();}
+        if (CaseFile.View.Tree.initialize)        {CaseFile.View.Tree.initialize();}
+        if (CaseFile.View.Action.initialize)      {CaseFile.View.Action.initialize();}
+        if (CaseFile.View.Detail.initialize)      {CaseFile.View.Detail.initialize();}
+        if (CaseFile.View.Documents.initialize)   {CaseFile.View.Documents.initialize();}
+        if (CaseFile.View.Participants.initialize){CaseFile.View.Participants.initialize();}
+        if (CaseFile.View.Tasks.initialize)       {CaseFile.View.Tasks.initialize();}
+        if (CaseFile.View.Notes.initialize)       {CaseFile.View.Notes.initialize();}
     }
 
     ,MicroData: {
@@ -367,7 +371,6 @@ CaseFile.View = {
         }
     }
 
-
     ,Action: {
         create: function() {
             this.$dlgCloseCase          = $("#closeCase");
@@ -451,7 +454,6 @@ CaseFile.View = {
 //            }, 1000);
 //        }
     }
-
 
     ,Detail: {
         create: function() {
@@ -716,6 +718,143 @@ CaseFile.View = {
         }
     }
 
+    ,Participants: {
+        create: function() {
+            this.$divParticipants    = $("#divParticipants");
+            this.createJTableParticipants(this.$divParticipants);
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+        }
+        ,initialize: function() {
+        }
+
+        ,onCaseFileRetrieved: function(caseFile) {
+            if (caseFile.hasError) {
+                //empty table?
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+            }
+        }
+        ,onCaseFileSelected: function(caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+        }
+
+        ,createJTableParticipants: function($s) {
+            AcmEx.Object.JTable.useBasic($s, {
+                title: 'Participants'
+                ,paging: false
+                ,messages: {
+                    addNewRecord: 'Add Participants'
+                }
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        if (0 >= caseFileId) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+                        }
+
+                        var rc = AcmEx.Object.JTable.getEmptyRecords();
+                        var c = CaseFile.Model.getCaseFile(caseFileId);
+//                        if (c && Acm.isArray(c.participants)) {
+//                            for (var i = 0; i < c.participants.length; i++) {
+//                                var participant = c.participants[i];
+//                                var record = {};
+//                                record.id = Acm.goodValue(childObject.targetId, 0);
+//                                record.title = Acm.goodValue(childObject.targetName);
+//                                record.created = Acm.getDateFromDatetime(childObject.created);
+//                                record.creator = Acm.goodValue(childObject.creator);
+//                                record.status = Acm.goodValue(childObject.status);
+//                                rc.Records.push(record);
+//                            }
+//                        }
+                        return rc;
+
+//for test
+//                        return {
+//                            "Result": "OK"
+//                            ,"Records": [
+//                                {"id": 11, "title": "Nick Name", "created": "01-02-03", "creator": "123 do re mi", "status": "JJ"}
+//                                ,{"id": 12, "title": "Some Name", "created": "14-05-15", "creator": "xyz abc", "status": "Ice Man"}
+//                            ]
+//                            ,"TotalRecordCount": 2
+//                        };
+                    }
+//                    ,createAction: function(postData, jtParams) {
+//                        //custom web form creation takes over; this action should never be called
+//                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:"", status:""}};
+//                        return rc;
+//                    }
+                    ,updateAction: function(postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.JTable.getEmptyRecord();
+                        //id,created,creator is readonly
+                        //rc.Record.id = record.id;
+                        //rc.Record.created = record.created;
+                        //rc.Record.creator = record.creator;
+                        rc.Record.title = record.title;
+                        rc.Record.status = record.status;
+                        return rc;
+                    }
+                }
+                ,fields: {
+                    id: {
+                        title: 'ID'
+                        ,key: true
+                        ,list: false
+                        ,create: false
+                        ,edit: false
+                    }
+                    ,xxxxxxxx: {
+                        title: 'Name'
+                        ,width: '10%'
+//                        ,display: function (commData) {
+//                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
+//                                + ((0 >= commData.record.id)? "#" : commData.record.id)
+//                                + "'>" + commData.record.title + "</a>";
+//                            return $(a);
+//                        }
+                    }
+//                    ,created: {
+//                        title: 'Created'
+//                        ,width: '15%'
+//                        ,edit: false
+//                    }
+//                    ,creator: {
+//                        title: 'Creator'
+//                        ,width: '15%'
+//                        ,edit: false
+//                    }
+//                    ,status: {
+//                        title: 'Status'
+//                        ,width: '30%'
+//                    }
+                }
+                ,recordUpdated : function (event, data) {
+//                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+//                    var record = data.record;
+//                    var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+//                    var c = CaseFile.Model.getCaseFile(caseFileId);
+//                    if (c && Acm.isArray(c.participants)) {
+//                        if (0 < c.participants.length && whichRow < c.participants.length) {
+////                                var participant = c.participants[whichRow];
+////                                //id,created,creator is readonly
+////                                //childObject.Record.id = record.id;
+////                                //childObject.Record.created = record.created;
+////                                //childObject.Record.creator = record.creator;
+//
+//                            var participants = {Record:{}};
+//                            participants.Record.title = record.title;
+//                            participants.Record.status = record.status;
+//
+//                            CaseFile.Controller.viewChangedParticipant(caseFileId, whichRow, participants);
+//                        }
+//                    }
+                }
+            });
+        }
+    }
+
     ,Documents: {
         create: function() {
             this.$divDocuments    = $("#divDocs");
@@ -790,7 +929,7 @@ CaseFile.View = {
         }
 
         ,createJTableDocuments: function($s) {
-            $s.jtable({
+            AcmEx.Object.JTable.useBasic($s, {
                 title: 'Documents'
                 ,paging: false
                 ,messages: {
@@ -901,8 +1040,197 @@ CaseFile.View = {
                     }
                 }
             });
+        }
+    }
 
-            $s.jtable('load');
+    ,Notes: {
+        create: function() {
+            this.$divNotes          = $("#divNotes");
+            this.createJTableNotes(this.$divNotes);
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+        }
+        ,initialize: function() {
+        }
+
+        ,onCaseFileRetrieved: function(caseFile) {
+            if (caseFile.hasError) {
+                //empty table?
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Notes.$divNotes);
+            }
+        }
+        ,onCaseFileSelected: function(caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Notes.$divNotes);
+        }
+
+        ,_makeJtData: function(noteList) {
+            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            if (noteList) {
+                for (var i = 0; i < noteList.length; i++) {
+                    var Record = {};
+                    Record.id         = Acm.goodValue(noteList[i].id, 0);
+                    Record.note       = Acm.goodValue(noteList[i].note);
+                    Record.created    = Acm.getDateFromDatetime(noteList[i].created);
+                    Record.creator    = Acm.goodValue(noteList[i].creator);
+                    //Record.parentId   = Acm.goodValue(noteList[i].parentId);
+                    //Record.parentType = Acm.goodValue(noteList[i].parentType);
+                    jtData.Records.push(Record);
+                }
+                jtData.TotalRecordCount = noteList.length;
+            }
+            return jtData;
+        }
+        ,createJTableNotes: function($jt) {
+            var sortMap = {};
+            sortMap["created"] = "created";
+
+            AcmEx.Object.JTable.usePaging($jt
+                ,{
+                    title: 'Notes'
+                    ,selecting: true
+                    ,multiselect: false
+                    ,selectingCheckboxes: false
+                    ,messages: {
+                        addNewRecord: 'Add Note'
+                    }
+                    ,actions: {
+                        pagingListAction: function (postData, jtParams, sortMap) {
+                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                            if (0 >= caseFileId) {
+                                return AcmEx.Object.JTable.getEmptyRecords();
+                            }
+
+                            var noteList = CaseFile.Model.Notes.cacheNoteList.get(caseFileId);
+                            if (noteList) {
+                                return CaseFile.View.Notes._makeJtData(noteList);
+
+                            } else {
+                                return CaseFile.Service.Notes.retrieveNoteListDeferred(caseFileId
+                                    ,postData
+                                    ,jtParams
+                                    ,sortMap
+                                    ,function(data) {
+                                        var noteList = data;
+                                        return CaseFile.View.Notes._makeJtData(noteList);
+                                    }
+                                    ,function(error) {
+                                    }
+                                );
+                            }  //end else
+                        }
+                        ,createAction: function(postData, jtParams) {
+                            var record = Acm.urlToJson(postData);
+                            var rc = AcmEx.Object.JTable.getEmptyRecord();
+                            var caseFileId = CaseFile.Model.getCaseFileId();
+                            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+                            if (caseFile) {
+                                rc.Record.parentId = Acm.goodValue(caseFileId, 0);
+                                rc.Record.parentType = CaseFile.Model.getObjectType();
+                                rc.Record.note = record.note;
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                            return rc;
+                        }
+                        ,updateAction: function(postData, jtParams) {
+                            var record = Acm.urlToJson(postData);
+                            var rc = AcmEx.Object.jTableGetEmptyRecord();
+                            var caseFileId = CaseFile.Model.getCaseFileId();
+                            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+                            if (caseFile) {
+                                rc.Record.parentId = Acm.goodValue(caseFileId, 0);
+                                rc.Record.parentType = CaseFile.Model.getObjectType();
+                                rc.Record.note = record.note;
+                                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                                rc.Record.creator = App.getUserName();   //record.creator;
+                            }
+                            return rc;
+                        }
+                        ,deleteAction: function(postData, jtParams) {
+                            return {
+                                "Result": "OK"
+                            };
+                        }
+                    }
+
+                    ,fields: {
+                        id: {
+                            title: 'ID'
+                            ,key: true
+                            ,list: false
+                            ,create: false
+                            ,edit: false
+                            ,defaultvalue : 0
+                        }
+                        ,note: {
+                            title: 'Note'
+                            ,type: 'textarea'
+                            ,width: '50%'
+                            ,edit: true
+                        }
+                        ,created: {
+                            title: 'Created'
+                            ,width: '15%'
+                            ,edit: false
+                            ,create: false
+                        }
+                        ,creator: {
+                            title: 'Author'
+                            ,width: '15%'
+                            ,edit: false
+                            ,create: false
+                        }
+                    } //end field
+                    ,recordAdded : function (event, data) {
+                        var record = data.record;
+                        alert("add");
+//                        var complaint = Complaint.getComplaint();
+//                        if (complaint) {
+//                            var noteToSave = {};
+//                            //noteToSave.id = record.id;
+//                            noteToSave.note = record.note;
+//                            noteToSave.created = Acm.getCurrentDayInternal(); //record.created;
+//                            noteToSave.creator = record.creator;   //record.creator;
+//                            noteToSave.parentId = complaint.complaintId;
+//                            noteToSave.parentType = App.OBJTYPE_COMPLAINT;
+//                            Complaint.Service.saveNote(noteToSave);
+//                        }
+                    }
+                    ,recordUpdated: function(event,data){
+                        var whichRow = data.row.prevAll("tr").length;
+                        var record = data.record;
+                        alert("update");
+//                        var complaint = Complaint.getComplaint();
+//                        if(complaint){
+//                            var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
+//                            if (notes) {
+//                                if(notes[whichRow]){
+//                                    var noteToSave;
+//                                    noteToSave = notes[whichRow];
+//                                    noteToSave.note = record.note;
+//                                    Complaint.Service.saveNote(noteToSave);
+//                                }
+//                            }
+//                        }
+                    }
+                    ,recordDeleted : function (event, data) {
+                        var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                        alert("delete");
+//                        var complaint = Complaint.getComplaint();
+//                        if (complaint) {
+//                            var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
+//                            if (notes) {
+//                                var noteToDelete = notes[whichRow];
+//                                var noteId = noteToDelete.id;
+//                                Complaint.Service.deleteNoteById(noteId);
+//                            }
+//                        }
+                    }
+                } //end arg
+                ,sortMap
+            );
         }
     }
 

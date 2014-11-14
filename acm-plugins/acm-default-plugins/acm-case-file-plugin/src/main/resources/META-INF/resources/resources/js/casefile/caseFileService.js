@@ -365,9 +365,6 @@ CaseFile.Service = {
             }
         }
         ,saveDueDate: function(caseFileId, dueDate) {
-            alert("need dueDate property to save");
-            return;
-
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
                 caseFile.dueDate = dueDate;
@@ -422,6 +419,59 @@ CaseFile.Service = {
         }
 
         ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
+    }
+
+    ,Notes: {
+        create: function() {
+        }
+        ,initialize: function() {
+        }
+        ,API_SAVE_NOTE               : "/api/latest/plugin/note"
+        ,API_DELETE_NOTE_            : "/api/latest/plugin/note/"
+        ,API_LIST_NOTES_             : "/api/latest/plugin/note/CASE/"
+
+        ,_validateNotes: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,retrieveNoteListDeferred : function(caseFileId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + CaseFile.Service.Notes.API_LIST_NOTES_;
+                    url += caseFileId;
+
+                    //for test
+                    //url = App.getContextPath() + "/api/latest/plugin/search/CASE_FILE";
+
+                    return url;
+                }
+                ,function(data) {
+                    //test
+                    data = [];
+                    var note1 = {id:101, note:"hello1", created:"2014-04-21T16:51:33.914+0000", creator:"ann-acm", parentId:100, parentType:"CASE"};
+                    var note2 = {id:102, note:"hello2", created:"2014-04-22T16:51:33.914+0000", creator:"ann-acm", parentId:100, parentType:"CASE"};
+                    data.push(note1);
+                    data.push(note2);
+                    ////////////////////
+
+                    var jtData = null
+                    if (CaseFile.Service.Notes._validateNotes(data)) {
+                        var noteList = data;
+
+
+                        CaseFile.Model.Notes.cacheNoteList.put(caseFileId, noteList);
+                        jtData = callbackSuccess(noteList);
+                    }
+                    return jtData;
+                }
+            );
+        }
     }
 
     ,Tasks: {
@@ -483,92 +533,17 @@ CaseFile.Service = {
         }
     }
 
-    ,Notes: {
-        create: function() {
-        }
-        ,initialize: function() {
-        }
-
-        ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
-
-        ,_validate: function(data) {
-            if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start) || Acm.isEmpty(data.response.docs)) {
-                return false;
-            }
-            return true;
-        }
-
-        ,downloadDocument : function(caseFileId, callbackSuccess) {
-            return Acm.Service.deferredGet(
-                function(response) {
-                    if (!response.hasError) {
-                        if (CaseFile.Service.Detail._validate(response)) {
-                            var caseFile = response;
-                            CaseFile.Model.cacheCaseFile.put(caseFile.id, caseFile);
-                            return callbackSuccess(response);
-                        }
-                    }
-                }
-                ,App.getContextPath() + CaseFile.Service.TaskList.API_RETRIEVE_TASKS_ + caseFileId
-            );
-        }
-    }
 
 
+//    ,API_LIST_CASE_FILE         : "/api/latest/plugin/search/CASE_FILE"
+//    ,API_RETRIEVE_PERSON_       : "/api/latest/plugin/person/find?assocId="
+//    ,API_RETRIEVE_DETAIL        : "/api/latest/plugin/casefile/byId/"
+//    ,API_SAVE_CASE_FILE         : "/api/latest/plugin/casefile/"
+//    ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
+//    ,API_UPLOAD_CASE_FILE_FILE  : "/api/latest/plugin/casefile/file"
+//    ,API_RETRIEVE_TASKS         : "/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId="
+//    ,API_CLOSE_CASE_FILE_       : "/api/latest/plugin/casefile/closeCase/"
 
-    ,API_LIST_CASE_FILE         : "/api/latest/plugin/search/CASE_FILE"
-    ,API_RETRIEVE_PERSON_       : "/api/latest/plugin/person/find?assocId="
-    ,API_RETRIEVE_DETAIL        : "/api/latest/plugin/casefile/byId/"
-    ,API_SAVE_CASE_FILE         : "/api/latest/plugin/casefile/"
-    ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
-    ,API_UPLOAD_CASE_FILE_FILE  : "/api/latest/plugin/casefile/file"
-    ,API_RETRIEVE_TASKS         : "/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId="
-    ,API_CLOSE_CASE_FILE_       : "/api/latest/plugin/casefile/closeCase/"
-
-
-    ,listCaseFile : function(treeInfo) {
-        var caseFileId = treeInfo.caseFileId;
-        var initKey = treeInfo.initKey;
-        var start = treeInfo.start;
-        var n = treeInfo.n;
-        var s = treeInfo.s;
-        var q = treeInfo.q;
-
-        s = s ? s : "name desc";
-
-        var url = App.getContextPath() + this.API_LIST_CASE_FILE;
-        url += "?start=" + treeInfo.start;
-        url += "&n=" + treeInfo.n;
-        url += "&s=" + s;
-        Acm.Ajax.asyncGet(url
-            ,CaseFile.Callback.EVENT_LIST_RETRIEVED
-        );
-    }
-    ,retrieveDetail : function(caseFileId) {
-        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_DETAIL + caseFileId
-            ,CaseFile.Callback.EVENT_DETAIL_RETRIEVED
-        );
-    }
-    ,saveCaseFile : function(data) {
-        var updatedCaseFile = data;
-        var key = "objectType";
-
-        Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_CASE_FILE
-            ,JSON.stringify(updatedCaseFile)
-            ,CaseFile.Callback.EVENT_CASEFILE_SAVED
-        );
-    }
-
-    ,closeCaseFile : function(data) {
-        var caseFileId = CaseFile.getCaseFileId();
-        Acm.Ajax.asyncPost(App.getContextPath() + this.API_CLOSE_CASE_FILE_ + caseFileId
-            ,JSON.stringify(data)
-            ,CaseFile.Callback.EVENT_CASEFILE_CLOSED
-        );
-    }
 
 
 
