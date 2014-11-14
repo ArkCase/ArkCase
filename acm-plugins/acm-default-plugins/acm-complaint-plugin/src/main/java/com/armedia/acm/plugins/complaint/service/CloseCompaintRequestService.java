@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
@@ -25,6 +26,7 @@ public class CloseCompaintRequestService
     private CloseComplaintRequestDao closeComplaintRequestDao;
     private ComplaintEventPublisher complaintEventPublisher;
     private SaveCaseService saveCaseService;
+    private CaseFileDao caseFileDao;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -48,7 +50,60 @@ public class CloseCompaintRequestService
             log.debug("Opened a full investigation: " + fullInvestigation.getCaseNumber());
         }
 
+        boolean shouldComplaintBeAddedToExistingCase = shallWeAddComplaintToExistingCase(updatedRequest);
+        log.debug("Add to existing case file? " + shouldComplaintBeAddedToExistingCase);
 
+        if ( shouldComplaintBeAddedToExistingCase )
+        {
+            CaseFile updatedCaseFile = addToExistingCaseFile(updatedRequest, updatedComplaint, user);
+            if ( updatedCaseFile != null )
+            {
+                log.debug("Added complaint to existing case file: " + updatedCaseFile.getCaseNumber());
+            }
+        }
+
+
+    }
+
+    private CaseFile addToExistingCaseFile(CloseComplaintRequest updatedRequest, Complaint updatedComplaint, String userId)
+            throws MuleException
+    {
+        String caseNumber = updatedRequest.getDisposition().getExistingCaseNumber();
+
+        if ( caseNumber == null )
+        {
+            log.error("Can not add complaint to existing case file since there is no case number!");
+            return null;
+        }
+
+        CaseFile existingCaseFile = getCaseFileDao().findByCaseNumber(caseNumber);
+        if ( existingCaseFile == null )
+        {
+            log.error("Can not add complaint to existing case file since there is no case file with number '" +
+                    caseNumber + "'!");
+            return null;
+        }
+
+        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint);
+        existingCaseFile.addChildObject(originalComplaint);
+
+        // here we need a full Authentication object
+        Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
+        existingCaseFile = getSaveCaseService().saveCase(existingCaseFile, auth, null);
+
+        return existingCaseFile;
+
+    }
+
+    private boolean shallWeAddComplaintToExistingCase(CloseComplaintRequest updatedRequest)
+    {
+        if ( updatedRequest.getDisposition() == null )
+        {
+            log.debug("No disposition for request ID '" + updatedRequest.getId() + "'");
+            return false;
+        }
+
+        return "add_exising_case".equals(updatedRequest.getDisposition().getDispositionType());
     }
 
     private CaseFile openFullInvestigation(Complaint updatedComplaint, String userId) throws MuleException
@@ -63,10 +118,7 @@ public class CloseCompaintRequestService
         caseFile.setPriority(updatedComplaint.getPriority());
         caseFile.setTitle(updatedComplaint.getComplaintTitle());
 
-        ObjectAssociation originalComplaint = new ObjectAssociation();
-        originalComplaint.setTargetId(updatedComplaint.getComplaintId());
-        originalComplaint.setTargetName(updatedComplaint.getComplaintNumber());
-        originalComplaint.setTargetType("COMPLAINT");
+        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint);
 
         caseFile.addChildObject(originalComplaint);
 
@@ -77,6 +129,15 @@ public class CloseCompaintRequestService
         CaseFile fullInvestigation = getSaveCaseService().saveCase(caseFile, auth, null);
 
         return fullInvestigation;
+    }
+
+    private ObjectAssociation makeObjectAssociation(Complaint updatedComplaint)
+    {
+        ObjectAssociation originalComplaint = new ObjectAssociation();
+        originalComplaint.setTargetId(updatedComplaint.getComplaintId());
+        originalComplaint.setTargetName(updatedComplaint.getComplaintNumber());
+        originalComplaint.setTargetType("COMPLAINT");
+        return originalComplaint;
     }
 
     private boolean shallWeOpenAFullInvestigation(CloseComplaintRequest updatedRequest)
@@ -148,5 +209,15 @@ public class CloseCompaintRequestService
     public void setSaveCaseService(SaveCaseService saveCaseService)
     {
         this.saveCaseService = saveCaseService;
+    }
+
+    public CaseFileDao getCaseFileDao()
+    {
+        return caseFileDao;
+    }
+
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
+        this.caseFileDao = caseFileDao;
     }
 }
