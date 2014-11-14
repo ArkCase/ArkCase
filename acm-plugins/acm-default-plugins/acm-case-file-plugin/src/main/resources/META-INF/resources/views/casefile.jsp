@@ -266,16 +266,14 @@
                                 </div>
 
                                 <div class="col-md-12" id="tabRefs" style="display:none;">
-                                    <p class="dev">tabRefs</p>
                                     <section class="panel b-a ">
                                         <div id="divRefs" style="width:100%"></div>
                                     </section>
                                 </div>
 
                                 <div class="col-md-12" id="tabHistory" style="display:none;">
-                                    <p class="dev">tabHistory</p>
                                     <section class="panel b-a ">
-                                        <div id="divHistory" style="width:100%"></div>
+                                        <div id="divEvents" style="width:100%"></div>
                                     </section>
                                 </div>
 
