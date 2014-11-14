@@ -30,9 +30,13 @@ CaseFile.View = {
             var items = $(document).items();
             this.caseFileId = items.properties("caseFileId").itemValue();
             this.token = items.properties("token").itemValue();
-            this.urlRoiForm = items.properties("urlRoiForm").itemValue();
-            this.urlCloseCaseForm = items.properties("urlCloseCaseForm").itemValue();
-            this.urlEditCloseCaseForm = items.properties("urlEditCloseCaseForm").itemValue();
+            
+            
+            this.formUrls = new Object();
+            
+            this.formUrls["roi"] = items.properties("urlRoiForm").itemValue();
+            this.formUrls["close_case"] = items.properties("urlCloseCaseForm").itemValue();
+            this.formUrls["edit_close_case"] = items.properties("urlEditCloseCaseForm").itemValue();
         }
         ,initialize: function() {
         }
@@ -43,14 +47,8 @@ CaseFile.View = {
         ,getToken: function() {
             return this.token;
         }
-        ,getUrlRoiFormUrl: function() {
-            return this.urlRoiForm;
-        }
-        ,getUrlCloseCaseForm: function() {
-            return this.urlCloseCaseForm;
-        }
-        ,getUrlEditCloseCaseForm: function() {
-            return this.urlEditCloseCaseForm;
+        ,getFormUrls: function(){
+        	return this.formUrls;
         }
     }
 
@@ -386,12 +384,12 @@ CaseFile.View = {
 
         ,onClickBtnCloseCase: function() {
             CaseFile.View.Action.showDlgCloseCase(function(event, ctrl){
-                var urlCloseCaseForm = CaseFile.View.MicroData.getUrlCloseCaseForm();
+                var urlCloseCaseForm = CaseFile.View.MicroData.getFormUrls()['close_case'];
                 var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                 var c = CaseFile.Model.getCaseFile(caseFileId);
                 if (Acm.isNotEmpty(urlCloseCaseForm) && Acm.isNotEmpty(c)) {
                     if (Acm.isNotEmpty(c.caseNumber)) {
-                        urlCloseCaseForm = urlCloseCaseForm.replace("_data=(", "_data=(caseFileId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',");
+                        urlCloseCaseForm = urlCloseCaseForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',");
 
                         //CaseFile.View.Action._showPopup(urlCloseCaseForm, "", 860, 700);
                         Acm.Dialog.openWindow(urlCloseCaseForm, "", 860, 700
@@ -897,12 +895,11 @@ CaseFile.View = {
             var caseFileId = CaseFile.Model.getCaseFileId();
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             if (caseFile) {
-                var url = CaseFile.View.MicroData.getUrlRoiFormUrl(); //find solution to select url based on report value; hard coded for now  xxxxxxxxxxxxxx
+                var url = CaseFile.View.MicroData.getFormUrls()[report];
                 if (Acm.isNotEmpty(url)) {
-                    url = url.replace("_data=(", "_data=(type:'case', caseFileId:'" + caseFileId
+                    url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
                         + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
                         + "',caseTitle:'" + Acm.goodValue(caseFile.title)
-                        + "',casePriority:'" + Acm.goodValue(caseFile.priority)
                         + "',");
 
                     Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30

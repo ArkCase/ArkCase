@@ -15,6 +15,8 @@ import com.armedia.acm.forms.roi.model.ROIForm;
 import com.armedia.acm.forms.roi.model.ReportInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.google.gson.Gson;
@@ -28,6 +30,7 @@ public class ROIService extends FrevvoFormAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(ROIService.class);
 	private ComplaintDao complaintDao;
+	private CaseFileDao caseFileDao;
 	
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#init()
@@ -93,10 +96,16 @@ public class ROIService extends FrevvoFormAbstractService {
 			parentObjectId = complaint.getComplaintId();
 			parentObjectName = complaint.getComplaintNumber();			
 		}else if ("case".equals(type)){	
-			ecmFolderId = roiForm.getReportDetails().getCaseFolderId();
-			parentObjectType = "CASE";
-			parentObjectId = roiForm.getReportDetails().getCaseId();
-			parentObjectName = roiForm.getReportDetails().getCaseNumber();
+			CaseFile caseFile = caseFileDao.find(roiForm.getReportDetails().getCaseId());
+			
+			if (caseFile == null) {
+				LOG.warn("Cannot find case by given caseId=" + roiForm.getReportDetails().getCaseId());
+				return false;
+			}
+			ecmFolderId = caseFile.getEcmFolderId();
+			parentObjectType = FrevvoFormName.CASE.toUpperCase();
+			parentObjectId = caseFile.getId();
+			parentObjectName = caseFile.getCaseNumber();
 		}
 			
 		saveAttachments(attachments, ecmFolderId, parentObjectType, parentObjectId, parentObjectName);
@@ -144,6 +153,20 @@ public class ROIService extends FrevvoFormAbstractService {
 	 */
 	public void setComplaintDao(ComplaintDao complaintDao) {
 		this.complaintDao = complaintDao;
+	}
+
+	/**
+	 * @return the caseFileDao
+	 */
+	public CaseFileDao getCaseFileDao() {
+		return caseFileDao;
+	}
+
+	/**
+	 * @param caseFileDao the caseFileDao to set
+	 */
+	public void setCaseFileDao(CaseFileDao caseFileDao) {
+		this.caseFileDao = caseFileDao;
 	}
 
 }
