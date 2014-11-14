@@ -30,11 +30,18 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
+@ContextConfiguration(locations = {
+        "/spring/spring-library-data-source.xml",
         "/spring/spring-library-mule-context-manager.xml",
         "/spring/spring-library-ecm-file.xml",
         "/spring/spring-library-cmis-configuration.xml",
-        "/spring/spring-library-activemq.xml"})
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-activiti-actions.xml",
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-event.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileTransactionIT
 {
@@ -74,6 +81,7 @@ public class EcmFileTransactionIT
     public void muleAddAndRetrieveFile() throws Exception
     {
         assertNotNull(testFolderId);
+        assertNotNull(entityManager);
 
         log.debug("Found folder id '" + testFolderId + "'");
 
@@ -97,6 +105,8 @@ public class EcmFileTransactionIT
         messageProperties.put("auditAdapter", auditAdapter);
 
         MuleMessage message = muleClient.send("vm://addFile.in", ecmFile, messageProperties);
+
+        assertNotNull(message);
 
         EcmFile found = message.getPayload(EcmFile.class);
 
