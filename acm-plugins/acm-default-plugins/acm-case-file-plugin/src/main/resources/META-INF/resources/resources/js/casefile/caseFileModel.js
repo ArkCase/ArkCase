@@ -441,6 +441,11 @@ CaseFile.Model = {
                 CaseFile.Controller.modelFoundPriorities(priorities);
             }
         }
+        
+        ,PERSON_SUBTABLE_TITLE_DEVICES:       "Communication Devices"
+        ,PERSON_SUBTABLE_TITLE_ORGANIZATIONS: "Organizations"
+        ,PERSON_SUBTABLE_TITLE_LOCATIONS:     "Locations"
+        ,PERSON_SUBTABLE_TITLE_ALIASES:       "Aliases"
 
         ,getAssignees: function() {
             return this._assignees.get();
