@@ -39,6 +39,7 @@ CaseFile.Controller = {
     ,VE_DETAIL_CHANGED                  : "case-file-detail-changed"               //param: caseFileId, details
 
     ,VE_CASE_FILE_CLOSED                : "case-file-case-file-closed"             //param: caseFileId
+    ,VE_DOCUMENT_ADDED                  : "case-file-document-added"               //param: caseFileId
     ,VE_CHILD_OBJECT_CHANGED            : "case-file-child-object-changed"         //param: caseFileId, idx, childObject; childObject format: {Record: {title:"xxx", status="xxx"}}
 
 
@@ -116,13 +117,16 @@ CaseFile.Controller = {
     ,viewChangedDetail: function(caseFileId, details) {
         Acm.Dispatcher.fireEvent(this.VE_DETAIL_CHANGED, caseFileId, details);
     }
-    ,viewCaseFileClosed: function(caseFileId) {
+    ,viewClosedCaseFile: function(caseFileId) {
         Acm.Dispatcher.fireEvent(this.VE_CASE_FILE_CLOSED, caseFileId);
+    }
+    ,viewAddedDocument: function(caseFileId) {
+        Acm.Dispatcher.fireEvent(this.VE_DOCUMENT_ADDED, caseFileId);
     }
     ,viewChangedChildObject: function(caseFileId, idx, childObject) {
         Acm.Dispatcher.fireEvent(this.VE_CHILD_OBJECT_CHANGED, caseFileId, idx, childObject);
     }
 
-    ()
+
 };
 

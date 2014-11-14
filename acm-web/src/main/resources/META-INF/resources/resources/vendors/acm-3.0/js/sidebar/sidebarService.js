@@ -49,9 +49,9 @@ Sidebar.Service = {
                         Sidebar.Controller.modelRetrievedProfile(response);
 
                     } else {
-                        if (Sidebar.Service.Info._validateProfile(response)) {
+                        if (Sidebar.Service.Profile._validateProfile(response)) {
                             var profileInfo = response;
-                            Sidebar.Model.Info.setProfileInfo(profileInfo);
+                            Sidebar.Model.Profile.setProfileInfo(profileInfo);
                             Sidebar.Controller.modelRetrievedProfile(profileInfo);
                         }
                     }

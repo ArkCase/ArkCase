@@ -160,6 +160,10 @@ AcmEx.Object = {
         ,load: function($jt) {
             $jt.jtable('load');
         }
+        ,useBasic: function($jt, jtArg) {
+            $jt.jtable(jtArg);
+            $jt.jtable('load');
+        }
         ,usePaging: function($jt, jtArg, sortMap) {
             jtArg.paging = true;
             if (!jtArg.pageSize) {
@@ -189,8 +193,11 @@ AcmEx.Object = {
             }
 
             $jt.jtable(jtArg);
-
             $jt.jtable('load');
+        }
+        ,clickAddRecordHandler: function($jt, handler) {
+            var $spanAddRecord = $jt.find(".jtable-toolbar-item-add-record");
+            $spanAddRecord.unbind("click").on("click", function(e){handler(e, this);});
         }
     }
 
