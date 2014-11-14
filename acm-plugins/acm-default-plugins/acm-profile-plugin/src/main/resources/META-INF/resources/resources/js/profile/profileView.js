@@ -448,17 +448,17 @@ Profile.View = {
                         var rc = AcmEx.Object.jTableGetEmptyRecords();
                         var sub = {};
                         rc.Records.push({
-                            id: 123
-                            ,type: "type1"
-                            ,title: "title1"
-                            ,date: "m1/dd/yyyy"
+                            id: 1
+                            ,type: "Complaint"
+                            ,title: "Spending Co-worker"
+                            ,date: "11/2/2014"
                         });
-                        rc.Records.push({
+                        /*rc.Records.push({
                             id: 124
                             ,type: "type2"
                             ,title: "title2"
                             ,date: "m2/dd/yyyy"
-                        });
+                        });*/
                         return rc;
                     }
                     ,deleteAction: function (postData, jtParams) {
