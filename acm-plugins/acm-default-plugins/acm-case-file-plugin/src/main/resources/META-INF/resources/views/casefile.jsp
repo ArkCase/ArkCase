@@ -211,7 +211,6 @@
                                 </div>
 
                                 <div class="col-md-12" id="tabDetail" style="display:none;">
-                                    <p class="dev">tabDetail</p>
                                     <section class="panel b-a ">
                                         <div class="panel-heading b-b bg-info">
                                             <ul class="nav nav-pills pull-right">
@@ -236,51 +235,44 @@
                                 </div>
 
                                 <div class="col-md-12" id="tabPeople" style="display:none;">
-                                    <p class="dev">tabPeople</p>
                                     <section class="panel b-a ">
                                         <div id="divPeople" style="width:100%"></div>
                                     </section>
                                 </div>
 
                                 <div class="col-md-12" id="tabDocs" style="display:none;">
-                                    <p class="dev">tabDocs</p>
                                     <section class="panel b-a ">
                                         <div id="divDocs" style="width:100%"></div>
                                     </section>
                                 </div>
 
                                 <div class="col-md-12" id="tabParticipants" style="display:none;">
-                                    <p class="dev">tabParticipants</p>
                                     <section class="panel b-a ">
                                         <div id="divParticipants" style="width:100%"></div>
                                     </section>
                                 </div>
 
                                 <div class="col-md-12" id="tabNotes" style="display:none;">
-                                    <p class="dev">tabNotes</p>
                                     <section class="panel b-a ">
                                         <div id="divNotes" style="width:100%"></div>
                                     </section>
                                 </div>
 
                                 <div class="col-md-12" id="tabTasks" style="display:none;">
-                                    <p class="dev">tabTasks</p>
                                     <section class="panel b-a ">
                                         <div id="divTasks" style="width:100%"></div>
                                     </section>
                                 </div>
 
                                 <div class="col-md-12" id="tabRefs" style="display:none;">
-                                    <p class="dev">tabRefs</p>
                                     <section class="panel b-a ">
                                         <div id="divRefs" style="width:100%"></div>
                                     </section>
                                 </div>
 
                                 <div class="col-md-12" id="tabHistory" style="display:none;">
-                                    <p class="dev">tabHistory</p>
                                     <section class="panel b-a ">
-                                        <div id="divHistory" style="width:100%"></div>
+                                        <div id="divEvents" style="width:100%"></div>
                                     </section>
                                 </div>
 

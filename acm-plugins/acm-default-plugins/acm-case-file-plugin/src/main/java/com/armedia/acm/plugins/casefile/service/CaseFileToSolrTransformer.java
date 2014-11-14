@@ -36,9 +36,9 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     {
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
-        solr.setId(in.getId() + "-CASE");
+        solr.setId(in.getId() + "-CASE_FILE");
         solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s("CASE");
+        solr.setObject_type_s("CASE_FILE");
         solr.setTitle_parseable(in.getTitle());
         solr.setName(in.getCaseNumber());
 
@@ -71,8 +71,8 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         SolrDocument solr = new SolrDocument();
         solr.setName(in.getCaseNumber());
         solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s("CASE");
-        solr.setId(in.getId() + "-CASE");
+        solr.setObject_type_s("CASE_FILE");
+        solr.setId(in.getId() + "-CASE_FILE");
 
         solr.setAuthor(in.getCreator());
         solr.setCreate_dt(in.getCreated());

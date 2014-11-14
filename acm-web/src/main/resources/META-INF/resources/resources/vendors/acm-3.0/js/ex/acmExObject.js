@@ -199,6 +199,23 @@ AcmEx.Object = {
             var $spanAddRecord = $jt.find(".jtable-toolbar-item-add-record");
             $spanAddRecord.unbind("click").on("click", function(e){handler(e, this);});
         }
+        ,toggleSubJTable: function($t, $row, fnOpen, fnClose, title) {
+            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
+            var curTitle = $childRow.find("div.jtable-title-text").text();
+
+            var toClose;
+            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
+                toClose = (curTitle === title);
+            } else {
+                toClose = false;
+            }
+
+            if (toClose) {
+                fnClose($t, $row);
+            } else {
+                fnOpen($t, $row);
+            }
+        }
     }
 
 
