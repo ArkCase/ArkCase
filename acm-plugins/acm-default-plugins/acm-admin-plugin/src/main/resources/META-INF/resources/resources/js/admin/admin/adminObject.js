@@ -177,8 +177,8 @@ Admin.Object = {
         if (Acm.isEmpty(key)) {
             return null;
         }
-        if (key == "acp") {
-            return "acp";
+        if (key == "dac") {
+            return "dac";
         } else if (key == "dc") {
             return "dc";
         } else if (key == "rc") {
@@ -197,7 +197,7 @@ Admin.Object = {
         acc: ["tabACP"],
         dsh: ["tabDashboard"],
         rpt: ["tabReports"],
-        acp: ["tabACP"],
+        dac: ["tabACP"],
         dc: ["tabDashboard"],
         rc: ["tabReports"]
     }
@@ -271,37 +271,102 @@ Admin.Object = {
     ,treeSource: function() {
         var builder = AcmEx.FancyTreeBuilder.reset();
 
-        builder.addBranch({key: "acc"                                               //level 1: /Access Control
+    builder.addBranch({key: "acc"                                                   //level 1: /Access Control
             ,title: "Access Controls"
             ,tooltip: "Access Controls"
             ,folder : true
             ,expanded: true
         })
-            .addLeafLast({key: "acp"                                                //level 2: /Access Control/Access Control Policy
-                ,title: "Access Control Policy"
+            .addLeaf({key: "dac"                                                        //level 1.1: /Access Control/Data Access Control
+                ,title: "Data Access Control"
+                ,tooltip: "Data Access Control"
                 ,href: "/plugin/admin/access"
             })
+            .addLeaf({key: "fac"                                                        //level 1.2: /Access Control/Functional Access Control
+                ,title: "Functional Access Control"
+                ,tooltip: "Functional Access Control"
+            })
+            .addLeafLast({key: "ldap"                                                   //level 1.3: /Access Control/LDAP Configuration
+                ,title: "LDAP Configuration"
+                ,tooltip: "LDAP Configuration"
+            })
 
-        builder.addBranch({key: "dsh"                                               //level 1: /Dashboard
+        builder.addBranch({key: "dsh"                                               //level 2: /Dashboard
             ,title: "Dashboard"
             ,tooltip: "Dashboard"
             ,folder : true
             ,expanded: true
         })
-            .addLeafLast({key: "dc"                                                 //level 2: /Dashboard/Dashboard Configuration
+            .addLeafLast({key: "dc"                                                 //level 2.1: /Dashboard/Dashboard Configuration
                 ,title: "Dashboard Configuration"
+                ,tooltip: "Dashboard Configuration"
                 ,href: "/plugin/admin/dashboard"
             })
 
-        builder.addBranch({key: "rpt"                                               //level 1: /Reports
+        builder.addBranch({key: "rpt"                                               //level 3: /Reports
             ,title: "Reports"
             ,tooltip: "Reports"
             ,folder : true
             ,expanded: true
         })
-            .addLeafLast({key: "rc"                                                 //level 2: /Reports/Reports Configuration
+            .addLeafLast({key: "rc"                                                     //level 3.1: /Reports/Reports Configuration
                 ,title: "Reports Configuration"
+                ,tooltip: "Reports Configuration"
             })
+
+
+        //for demo purposes
+        builder.addBranch({key: "forms"                                               //level 4: /Forms
+            ,title: "Forms"
+            ,tooltip: "Forms"
+            ,folder : true
+            ,expanded: true
+        })
+            .addBranch({key: "fc"                                                           //level 4.1: /Forms/Form Configuration
+                ,title: "Form Configuration"
+                ,tooltip: "Form Configuration"
+                ,expanded: true
+            })
+                .addBranch({key: "wf"                                                               //level 4.1.1: /Forms/Form Configuration/Workflows
+                    ,title: "Workflows"
+                    ,tooltip: "Workflows"
+                    ,folder : true
+                })
+                    .addLeafLast({key: "wfc"                                                                //level 4.1.1.1: /Forms/Form Configuration/Workflows/Workflow Configuration
+                        ,title: "Workflow Configuration"
+                        ,tooltip: "Workflow Configuration"
+                    })
+
+                .addBranch({key: "wfl"                                                              //level 4.2.1: /Forms/Form Configuration/Form/Workflow Link
+                    ,title: "Form/Workflow Link"
+                    ,tooltip: "Form/Workflow Link"
+                    ,folder : true
+                })
+                    .addLeafLast({key: "wfc"                                                                //level 4.2.1.1: /Forms/Form Configuration/Form/Workflow Link/Link Forms/Workflows
+                        ,title: "Link Forms/Workflows"
+                        ,tooltip: "Link Forms/Workflows"
+                    })
+
+                .addBranch({key: "bo"                                                               //level 4.3.1: /Forms/Form Configuration/Form/Business Objects
+                    ,title: "Business Objects"
+                    ,tooltip: "Business Objects"
+                    ,folder : true
+                })
+                .addLeafLast({key: "wfc"                                                                    //level 4.3.1.1: /Forms/Form Configuration/Form/Business Objects/Business Object Configuration
+                    ,title: "Business Object Configuration"
+                    ,tooltip: "Business Object Configuration"
+                })
+
+                .addBranchLast({key: "al"                                                           //level 4.4.1: /Forms/Form Configuration/Form/Application Labels
+                    ,title: "Application Labels"
+                    ,tooltip: "Application Labels"
+                    ,folder : true
+                })
+                .addLeafLast({key: "lc"                                                                 //level 4.4.1.1: /Forms/Form Configuration/Form/Application Labels/Label Configuration
+                    ,title: "Label Configuration"
+                    ,tooltip: "Label Configuration"
+                })
+
         return builder.getTree();
     }
 
