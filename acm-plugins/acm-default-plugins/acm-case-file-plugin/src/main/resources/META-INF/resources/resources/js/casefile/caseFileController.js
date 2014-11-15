@@ -24,6 +24,7 @@ CaseFile.Controller = {
     ,ME_PRIORITY_SAVED                  : "case-file-priority-saved"               //param: caseFileId, priority
     ,ME_DUE_DATE_SAVED                  : "case-file-due-date-saved"               //param: caseFileId, dueDate
     ,ME_DETAIL_SAVED                    : "case-file-detail-saved"                 //param: caseFileId, details
+    ,ME_CHILD_OBJECT_SAVED              : "case-file-childObject-saved"            //param: caseFileId, childObject
 
     ,ME_NOTE_SAVED                      : "case-file-note-saved"                   //param: note
     ,ME_NOTE_DELETED                    : "case-file-note-deleted"                 //param: noteId
@@ -43,7 +44,7 @@ CaseFile.Controller = {
 
     ,VE_CASE_FILE_CLOSED                : "case-file-case-file-closed"             //param: caseFileId
     ,VE_DOCUMENT_ADDED                  : "case-file-document-added"               //param: caseFileId
-    ,VE_CHILD_OBJECT_CHANGED            : "case-file-child-object-changed"         //param: caseFileId, idx, childObject; childObject format: {Record: {title:"xxx", status="xxx"}}
+    ,VE_CHILD_OBJECT_CHANGED            : "case-file-child-object-changed"         //param: caseFileId, childObject
 
 
     ,modelFoundAssignees: function(assignees) {
@@ -84,6 +85,9 @@ CaseFile.Controller = {
     }
     ,modelSavedDetail : function(caseFileId, details) {
         Acm.Dispatcher.fireEvent(this.ME_DETAIL_SAVED, caseFileId, details);
+    }
+    ,modelSavedChildObject : function(caseFileId, childObject) {
+        Acm.Dispatcher.fireEvent(this.ME_CHILD_OBJECT_SAVED, caseFileId, childObject);
     }
 
     ,modelSavedNote : function(note) {
@@ -134,8 +138,8 @@ CaseFile.Controller = {
     ,viewAddedDocument: function(caseFileId) {
         Acm.Dispatcher.fireEvent(this.VE_DOCUMENT_ADDED, caseFileId);
     }
-    ,viewChangedChildObject: function(caseFileId, idx, childObject) {
-        Acm.Dispatcher.fireEvent(this.VE_CHILD_OBJECT_CHANGED, caseFileId, idx, childObject);
+    ,viewChangedChildObject: function(caseFileId, childObject) {
+        Acm.Dispatcher.fireEvent(this.VE_CHILD_OBJECT_CHANGED, caseFileId, childObject);
     }
 
 

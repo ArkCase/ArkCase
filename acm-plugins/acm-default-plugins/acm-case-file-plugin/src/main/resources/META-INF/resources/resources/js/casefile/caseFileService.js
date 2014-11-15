@@ -389,18 +389,46 @@ CaseFile.Service = {
         ,saveChildObject: function(caseFileId, idx, childObject) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
-                if (caseFile.childObjects.length > idx && 0 <= idx) {
-                    caseFile.childObjects[idx].title  = childObject.title;
-                    caseFile.childObjects[idx].status = childObject.status;
-                    this.saveCaseFile(caseFile
-                        ,function(data) {
-                            CaseFile.Controller.modelSavedxxxxxxxxxx(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.childObjects));
-                        }
-                    );
+                for (var i = 0; i < caseFile.childObjects.length; i++) {
+                    if (Acm.equals(caseFile.childObjects[i].targetId, childObject.targetid)) {
+                        caseFile.childObjects[i].title  = childObject.title;
+                        caseFile.childObjects[i].status = childObject.status;
+                        this.saveCaseFile(caseFile
+                            ,function(data) {
+                                var savedChildObject = null;
+                                if (CaseFile.Service.Detail._validateCaseFile(data)) {
+                                    for (var i = 0; i < data.childObjects.length; i++) {
+                                        if (Acm.equals(data.childObjects[i].targetId, childObject.targetid)) {
+                                            savedChildObject = data.childObjects[i];
+                                            break;
+                                        }
+                                    }
+                                }
+                                CaseFile.Controller.modelSavedChildObject(caseFileId, CaseFile.Service.Detail._dataWrapper(data, savedChildObject));
+                            }
+                        );
+                    }
                 }
             }
         }
 
+        ,a: function() {
+            var targetId = record.id;
+            var whichChildObject = -1;
+            var docCnt = 0;
+            for (var i = 0; i < c.childObjects.length; i++) {
+                var childObject = c.childObjects[i];
+                if (Acm.equals(targetId, childObject.targetid)) {
+                    which
+                }
+                if (Acm.equals("FILE", childObject.targetType)) {
+                    if (whichRow == docCnt++) {
+                        whichChildObject = i;
+                        break;
+                    }
+                }
+            }
+        }
 //        ,closeCaseFile : function(data) {
 //            var caseFileId = CaseFile.getCaseFileId();
 //            Acm.Ajax.asyncPost(App.getContextPath() + this.API_CLOSE_CASE_FILE_ + caseFileId
