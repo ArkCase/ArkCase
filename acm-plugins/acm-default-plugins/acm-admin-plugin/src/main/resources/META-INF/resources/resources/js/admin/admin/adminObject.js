@@ -322,46 +322,49 @@ Admin.Object = {
             ,folder : true
             ,expanded: true
         })
-            .addBranch({key: "fc"                                                           //level 4.1: /Forms/Form Configuration
+            .addLeafLast({key: "fc"                                                           //level 4.1: /Forms/Form Configuration
                 ,title: "Form Configuration"
                 ,tooltip: "Form Configuration"
-                ,expanded: true
             })
-                .addBranch({key: "wf"                                                               //level 4.1.1: /Forms/Form Configuration/Workflows
+            .addBranch({key: "wf"                                                               //level 4.1.1: /Forms/Form Configuration/Workflows
                     ,title: "Workflows"
                     ,tooltip: "Workflows"
                     ,folder : true
+                    ,expanded: true
                 })
-                    .addLeafLast({key: "wfc"                                                                //level 4.1.1.1: /Forms/Form Configuration/Workflows/Workflow Configuration
+                .addLeafLast({key: "wfc"                                                                //level 4.1.1.1: /Forms/Form Configuration/Workflows/Workflow Configuration
                         ,title: "Workflow Configuration"
                         ,tooltip: "Workflow Configuration"
-                    })
+                })
 
-                .addBranch({key: "wfl"                                                              //level 4.2.1: /Forms/Form Configuration/Form/Workflow Link
+            .addBranch({key: "wfl"                                                              //level 4.2.1: /Forms/Form Configuration/Form/Workflow Link
                     ,title: "Form/Workflow Link"
                     ,tooltip: "Form/Workflow Link"
                     ,folder : true
+                    ,expanded: true
                 })
-                    .addLeafLast({key: "wfc"                                                                //level 4.2.1.1: /Forms/Form Configuration/Form/Workflow Link/Link Forms/Workflows
+                .addLeafLast({key: "wfc"                                                                //level 4.2.1.1: /Forms/Form Configuration/Form/Workflow Link/Link Forms/Workflows
                         ,title: "Link Forms/Workflows"
                         ,tooltip: "Link Forms/Workflows"
-                    })
+                })
 
-                .addBranch({key: "bo"                                                               //level 4.3.1: /Forms/Form Configuration/Form/Business Objects
+            .addBranch({key: "bo"                                                               //level 4.3.1: /Forms/Form Configuration/Form/Business Objects
                     ,title: "Business Objects"
                     ,tooltip: "Business Objects"
                     ,folder : true
-                })
+                    ,expanded: true
+            })
                 .addLeafLast({key: "wfc"                                                                    //level 4.3.1.1: /Forms/Form Configuration/Form/Business Objects/Business Object Configuration
                     ,title: "Business Object Configuration"
                     ,tooltip: "Business Object Configuration"
                 })
 
-                .addBranchLast({key: "al"                                                           //level 4.4.1: /Forms/Form Configuration/Form/Application Labels
+            .addBranchLast({key: "al"                                                           //level 4.4.1: /Forms/Form Configuration/Form/Application Labels
                     ,title: "Application Labels"
                     ,tooltip: "Application Labels"
                     ,folder : true
-                })
+                    ,expanded: true
+            })
                 .addLeafLast({key: "lc"                                                                 //level 4.4.1.1: /Forms/Form Configuration/Form/Application Labels/Label Configuration
                     ,title: "Label Configuration"
                     ,tooltip: "Label Configuration"
