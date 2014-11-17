@@ -37,7 +37,7 @@ public class SearchObjectByTypeAPIController {
     private MuleClient muleClient;
     private SearchEventPublisher searchEventPublisher;
 
-    @RequestMapping(value = "/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{objectType}", method  = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String searchObjectByType(
     		@PathVariable("objectType") String objectType,
@@ -95,16 +95,22 @@ public class SearchObjectByTypeAPIController {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         SolrResponse solrResponse = gson.fromJson(jsonPayload, SolrResponse.class);
         
-        if (solrResponse.getResponse() != null) {
+        if ( solrResponse.getResponse() != null ) {
             List<SolrDocument> solrDocs = solrResponse.getResponse().getDocs();
             String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-            for (SolrDocument doc : solrDocs) {
-                ApplicationSearchEvent event = new ApplicationSearchEvent(Long.parseLong(doc.getObject_id_s()), doc.getObject_type_s(), 
+            Long objectId = null;
+            for ( SolrDocument doc : solrDocs ) {
+                // in case when objectID is not Long like in USER case
+                try {
+                    objectId = Long.parseLong(doc.getObject_id_s());
+                } catch (NumberFormatException e) {
+                    objectId = new Long(-1);
+                }
+                ApplicationSearchEvent event = new ApplicationSearchEvent(objectId, doc.getObject_type_s(),
                         authentication.getName(), succeeded, ipAddress);
                 getSearchEventPublisher().publishSearchEvent(event);
             }
         }
-
     }
     
     public MuleClient getMuleClient()
