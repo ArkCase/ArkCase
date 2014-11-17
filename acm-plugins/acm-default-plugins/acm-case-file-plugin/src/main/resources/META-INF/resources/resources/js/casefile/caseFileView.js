@@ -307,7 +307,7 @@ CaseFile.View = {
                         .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/Tasks
                             ,title: "Tasks"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/References
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES      //level 2: /CaseFile/References
                             ,title: "References"
                         })
                         .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY         //level 2: /CaseFile/History
@@ -2052,17 +2052,22 @@ CaseFile.View = {
 //                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:"", status:""}};
 //                        return rc;
 //                    }
-//                    ,updateAction: function(postData, jtParams) {
-//                        var record = Acm.urlToJson(postData);
-//                        var rc = AcmEx.Object.JTable.getEmptyRecord();
-//                        //id,created,creator is readonly
-//                        //rc.Record.id = record.id;
-//                        //rc.Record.created = record.created;
-//                        //rc.Record.creator = record.creator;
-//                        rc.Record.title = record.title;
-//                        rc.Record.status = record.status;
-//                        return rc;
-//                    }
+                    ,updateAction: function(postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.JTable.getEmptyRecord();
+                        //id,created,creator is readonly
+                        //rc.Record.id = record.id;
+                        //rc.Record.created = record.created;
+                        //rc.Record.creator = record.creator;
+                        rc.Record.title = record.title;
+                        rc.Record.type = record.type;
+                        return rc;
+                    }
+                    ,deleteAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
                 }
                 ,fields: {
                     id: {
@@ -2682,8 +2687,8 @@ CaseFile.View = {
         }
 
         ,createJTableReferences: function($jt) {
-            var sortMap = {};
-            sortMap["created"] = "created";
+            //var sortMap = {};
+            //sortMap["modified"] = "modified";
 
             AcmEx.Object.JTable.useBasic($jt, {
                     title: 'References'
@@ -2706,10 +2711,7 @@ CaseFile.View = {
                                     var record = {};
                                     record.id = Acm.goodValue(childObject.targetId, 0);
                                     record.title = Acm.goodValue(childObject.targetName);
-                                    record.incidentDate = Acm.getDateFromDatetime(childObject.created);
-                                    record.assignee = "";
-                                    record.priority = "";
-                                    record.type = Acm.goodValue(childObject.targetType);
+                                    record.modified = Acm.getDateFromDatetime(childObject.modified);
                                     record.type = Acm.goodValue(childObject.targetType);
                                     record.status = Acm.goodValue(childObject.status);
                                     rc.Records.push(record);
@@ -2747,26 +2749,14 @@ CaseFile.View = {
                             ,edit: true
                             ,create: false
                         }
-                        ,incidentDate: {
-                            title: 'Incident Date'
-                            ,width: '14%'
-                            ,edit: false
-                            ,create: false
-                        }
-                        ,priority: {
-                            title: 'Priority'
-                            ,width: '14%'
-                            ,edit: false
-                            ,create: false
-                        }
-                        ,assignee: {
-                            title: 'Assigned To'
+                        ,modified: {
+                            title: 'Modified'
                             ,width: '14%'
                             ,edit: false
                             ,create: false
                         }
                         ,type: {
-                            title: 'Subject Type'
+                            title: 'Reference Type'
                             ,width: '14%'
                             ,edit: false
                             ,create: false
@@ -2821,7 +2811,7 @@ CaseFile.View = {
 //                        }
                     }
                 } //end arg
-                ,sortMap
+//                ,sortMap
             );
         }
     }

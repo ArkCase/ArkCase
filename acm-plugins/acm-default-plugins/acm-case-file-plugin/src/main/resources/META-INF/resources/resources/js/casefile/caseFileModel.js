@@ -289,7 +289,7 @@ CaseFile.Model = {
             ,NODE_TYPE_PART_PARTICIPANTS: "a"
             ,NODE_TYPE_PART_NOTES:        "n"
             ,NODE_TYPE_PART_TASKS:        "t"
-            ,NODE_TYPE_PART_TASKS:   "r"
+            ,NODE_TYPE_PART_REFERENCES:   "r"
             ,NODE_TYPE_PART_HISTORY:      "h"
 
             ,_mapNodeType: [
