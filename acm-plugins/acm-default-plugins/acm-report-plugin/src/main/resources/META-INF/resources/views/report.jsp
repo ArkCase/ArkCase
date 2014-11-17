@@ -46,15 +46,15 @@
 
 						<section id="caseStatusSection">
 	                        <div class="line line-dashed b-b line-lg pull-in"></div>
-	                        <label for="Case Status"  class="label" id="caseStatuslbl">Case Status</label>
+	                        <label for="State"  class="label" id="caseStatuslbl">State</label>
 	                        <select name="cStatus" class="form-control" id ="selectCaseStatus">
-	                            <option value="Choose Case Status">Choose Case Status</option>
-	                            <option value="ACTIVE">Active</option>
-	                            <option value="APPROVED">Approved</option>
-	                            <option value="CLOSE">Close</option>
-	                            <option value="DRAFT">Draft</option>
-	                            <option value="IN APPROVAL">In Approval</option>                                                
-	                            <option value="OPEN">Open</option>                                                
+	                            <option value="Choose State">Choose State</option>
+	                            <%--<option value="ACTIVE">Active</option>
+	                            <option value="APPROVED">Approved</option>--%>
+                                <option value="OPEN">OPEN</option>
+                                <option value="CLOSE">CLOSED</option>
+	                            <%--<option value="DRAFT">Draft</option>
+	                            <option value="IN APPROVAL">In Approval</option>   --%>
 		<%--                                                 <c:forEach items="${caseStatusMap}" var="entry">
 		                            						<option title="${entry.key}" value="${entry.value}">${entry.key}</option>
 		                                            	</c:forEach>

@@ -13,6 +13,7 @@ public interface EcmFileTransaction
 {
     EcmFile addFileTransaction(
             Authentication authentication,
+            String fileType,
             InputStream fileInputStream,
             String mimeType,
             String fileName,
@@ -20,5 +21,11 @@ public interface EcmFileTransaction
             String parentObjectType,
             Long parentObjectId,
             String parentObjectName)
+            throws MuleException;
+    
+    EcmFile updateFileTransaction(
+            Authentication authentication,
+            EcmFile ecmFile,
+            InputStream fileInputStream)
             throws MuleException;
 }

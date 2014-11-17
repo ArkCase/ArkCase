@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-plugins</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.0.16</version>
+        <version>3.0.17</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,6 +23,8 @@
         <module>acm-admin-plugin</module>
         <module>acm-report-plugin</module>
         <module>acm-profile-plugin</module>
+        <module>acm-audit-plugin</module>
+
     </modules>
 
 

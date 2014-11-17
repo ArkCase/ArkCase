@@ -87,4 +87,48 @@ Acm.Dialog = {
         bootbox.prompt(msg, callback);
     }
 
+    ,bootstrapModal: function($s, onClickBtnPrimary, onClickBtnDefault) {
+        if (onClickBtnPrimary) {
+            $s.find("button.btn-primary").unbind("click").on("click", function(e){
+                onClickBtnPrimary(e, this);
+                $s.modal("hide");
+            });
+        }
+        if (onClickBtnDefault) {
+            $s.find("button.btn-default").unbind("click").on("click", function(e){onClickBtnDefault(e, this);});
+        }
+
+        $s.modal("show");
+    }
+
+
+    ,openWindow: function(url, title, w, h, onDone) {
+
+        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+        var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+        var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+        var top = ((height / 2) - (h / 2)) + dualScreenTop;
+        var newWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+        if (window.focus) {
+            newWindow.focus();
+        }
+
+        this._checkClosePopup(newWindow, onDone);
+    }
+
+    ,_checkClosePopup: function(newWindow, onDone){
+        var timer = setInterval(function() {
+            if(newWindow.closed) {
+                clearInterval(timer);
+                if (onDone) {
+                    onDone();
+                }
+            }
+        }, 1000);
+    }
 }

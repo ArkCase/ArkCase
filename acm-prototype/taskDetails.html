@@ -264,19 +264,28 @@ $(function() {
 					}
 				},
 	source: [{
-		title: "Subject, Priority",
+		title: "Due Date, Priority, Subject",
 		href: "tasks.html",
 		tooltip: "2014-03-12321",
 		expanded: "fancytree-expanded",
 		children: [{
 				title: "Details", 
 				href: "taskDetails.html"
+			},{
+				title: "Rework Instructions", 
+				href: "taskRework.html"
 			}, {
-			title: "Documents",
+			title: "Documents Under Review",
 			href: "taskDocuments.html"
-		}, {
+			}, {
+				title: "Attachments",
+				href: "tasksAttach.html"
+			}, {
 				title: "Notes", 
 				href: "taskNotes.html"
+			}, {
+				title: "Workflow Overview", 
+				href: "taskWorkflow.html"
 			}, {
 			title: "History",
 			folder: false,
@@ -287,7 +296,6 @@ $(function() {
 });
 //]]>
 </script> 
-
 
 <!-- Summernote WYSIWYG -->
 <link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>

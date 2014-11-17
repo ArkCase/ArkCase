@@ -21,7 +21,8 @@ Acm.Service = {
             arg.dataType = 'json';
         }
         if (arg.data) {
-            if (!arg.contentType) {
+            if (Acm.isEmpty(arg.contentType)) {
+            //if (!arg.contentType) {
                 arg.contentType = "application/json; charset=utf-8";
             }
             if (!arg.beforeSend) {
@@ -75,14 +76,54 @@ Acm.Service = {
         });
     }
 
-	,asyncPut : function(callback, url, param) {
-	    jQuery.ajax({type: 'PUT'
-	        ,url: url
-	        ,data: param
-	        ,success: function(response) {
+    ,asyncPut : function(callback, url, param) {
+        jQuery.ajax({type: 'PUT'
+            ,url: url
+            ,data: param
+            ,success: function(response) {
                 callback(response);
-	        }
-	    });
-	}
+            }
+        });
+    }
+
+    ,asyncDelete : function(callback, url) {
+        jQuery.ajax({type: 'DELETE'
+            ,url: url
+            ,success: function(response) {
+                callback(response);
+            }
+        });
+    }
+
+
+    ,deferredGet: function(callbackSuccess, url, param) {
+        return $.Deferred(function ($dfd) {
+            var arg = {
+                url: url
+                ,type: 'GET'
+                ,dataType: 'json'
+                ,success: function (data) {
+                    var rc = null;
+                    if (data) {
+                        rc = callbackSuccess(data);
+                    }
+
+                    if (rc) {
+                        $dfd.resolve(rc);
+                    } else {
+                        $dfd.reject();
+                    }
+                }
+                ,error: function () {
+                    $dfd.reject();
+                }
+            };
+            if (param) {
+                arg.data = param;
+            }
+            $.ajax(arg);
+        });
+    }
+
 
 };

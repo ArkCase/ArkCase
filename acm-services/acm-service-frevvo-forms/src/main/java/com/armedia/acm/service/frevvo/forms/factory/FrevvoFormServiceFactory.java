@@ -59,6 +59,7 @@ public class FrevvoFormServiceFactory {
             service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
             service.setUserDao(frevvoFormController.getUserDao());
             service.setComplaintDao(frevvoFormController.getComplaintDao());
+            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             
             return service;
 		}
@@ -96,6 +97,9 @@ public class FrevvoFormServiceFactory {
             service.setComplaintDao(frevvoFormController.getComplaintDao());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             service.setCloseComplaintRequestDao(frevvoFormController.getCloseComplaintRequestDao());
+            service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
+            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
+            service.setMuleClient(frevvoFormController.getMuleClient());
             
             return service;
 		}

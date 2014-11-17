@@ -75,4 +75,40 @@
         </createTable>
     </changeSet>
 
+  <changeSet id="04-add-new-columns-to-acm-case-file-table" author="marst">
+      <addColumn tableName="acm_case_file">
+          <column name="cm_case_incident_date" type="TIMESTAMP WITH TIME ZONE">
+              <constraints nullable="true"/>
+          </column>
+          <column name="cm_case_details" type="CLOB">
+              <constraints nullable="true"/>
+          </column>
+      </addColumn>
+  </changeSet>
+
+    <changeSet id="05-add-due-date-column-to-acm-case-file-table" author="marst">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_due_date" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="06-add-originator-to-acm-case-file-table" author="marst">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_originator_id" type="RAW(16)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="case-file-07-drop-raw-originator-id" author="dmiller">
+        <dropColumn tableName="acm_case_file" columnName="cm_originator_id"/>
+    </changeSet>
+
+    <changeSet id="case-file-08-add-number-originator-id" author="dmiller">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_originator_id" type="NUMBER(32,0)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

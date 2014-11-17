@@ -5,6 +5,14 @@
  */
 var TaskList = TaskList || {
     create: function() {
+        TaskList.cachePage = new Acm.Model.CacheFifo(2);
+        TaskList.cacheTask = new Acm.Model.CacheFifo(3);
+        TaskList.cacheParentObject = new Acm.Model.CacheFifo(3);
+        TaskList.cacheNoteList = new Acm.Model.CacheFifo(3);
+        TaskList.cacheWorkflowHistory = new Acm.Model.CacheFifo(3);
+
+
+
         TaskList.Object.create();
         TaskList.Event.create();
         TaskList.Page.create();
@@ -21,6 +29,48 @@ var TaskList = TaskList || {
     ,Rule: {}
     ,Service: {}
     ,Callback: {}
+
+    ,cacheNoteList: null
+    ,cachePage: null
+    ,cacheTask: null
+    ,cacheParentObject: null
+    ,cacheWorkflowHistory: null
+
+    ,_parentObjId: 0
+    ,getParentObjId: function(){
+        return this._parentObjId;
+    }
+    ,setParentObjId : function(id) {
+        this._parentObjId = id;
+    }
+    ,getParentObj: function() {
+        if (0 >= this._parentObjId) {
+            return null;
+        }
+        return this.cacheParentObject.get(this._parentObjId);
+    }
+
+
+
+    ,_taskId: 0
+    ,getTaskId : function() {
+        return this._taskId;
+    }
+    ,setTaskId : function(id) {
+        this._taskId = id;
+    }
+    ,getTask: function() {
+        if (0 >= this._taskId) {
+            return null;
+        }
+        return this.cacheTask.get(this._taskId);
+    }
+    ,getWorkflowHistory: function() {
+    if (0 >= this._taskId) {
+        return null;
+    }
+    return this.cacheWorkflowHistory.get(this._taskId);
+}
 
     ,_taskList: []
     ,getTaskList: function() {

@@ -38,7 +38,7 @@
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
 
-
+    <!-- Fancy Tree -->
     <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
     <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree}"></script>
     <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree_table}"></script>
@@ -87,13 +87,13 @@
                                 <div class="btn-group select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
                                     <ul class="dropdown-menu text-left text-sm">
-                                        <li><a href="#">All Open Complaint</a></li>
-                                        <li><a href="#">Complaint I've Opened</a></li>
-                                        <li><a href="#">Unapproved Complaint</a></li>
-                                        <li><a href="#">Approved Complaint</a></li>
-                                        <li><a href="#">Complaint From Group</a></li>
-                                        <li><a href="#">Closed or Expired Complaint</a></li>
-                                        <li><a href="<c:url value='/'/>plugin/complaint/wizard">New Complaint</a></li>
+                                        <li><a href="#">All Open Complaints</a></li>
+                                        <li><a href="#">All Complaints I've Created</a></li>
+                                        <li><a href="#">All Closed No Further Action</a></li>
+                                        <li><a href="#">All Closed Refer External</a></li>
+                                        <li><a href="#">All Closed Added to Existing Case</a></li>
+                                        <li><a href="#">All Closed Open Investigation </a></li>
+                                        <%--<li><a href="<c:url value='/'/>plugin/complaint/wizard">New Complaint</a></li>--%>
                                     </ul>
                                 </div>
                             </header>
@@ -142,7 +142,7 @@
                                                     <small class="text-muted">Incident Category</small></div>
                                                 <div class="col-xs-1">
                                                     <div class="h4 font-bold"><a href="#" id="status" ></a></div>
-                                                    <small class="text-muted">Status</small></div>
+                                                    <small class="text-muted">State</small></div>
                                             </div>
                                         </div>
 
@@ -154,13 +154,12 @@
                                     <div class="row" id="tabBlank" style="display:none;">
                                         <p></p>
                                     </div>
-                                    
+
                                     <div class="row" id="tabCloseComplaintButton" style="display:none;">
                                     	<div class="col-md-12">
 	                                        <div class="pull-right inline">
 	                                            <div class="btn-group">
 	                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> Close Complaint</button>
-	                                            	<button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
 	                                            	<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />
 	                                            </div>
 	                                        </div>

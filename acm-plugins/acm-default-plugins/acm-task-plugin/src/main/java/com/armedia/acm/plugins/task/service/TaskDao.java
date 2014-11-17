@@ -1,9 +1,10 @@
 package com.armedia.acm.plugins.task.service;
 
-import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
+import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
@@ -27,6 +28,17 @@ public interface TaskDao
      * @throws AcmTaskException
      */
     AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId) throws AcmTaskException;
+
+    /**
+     * Complete a task on behalf of the given user.  Returns an AcmTask including historical information
+     * (task start date, task duration in milliseconds, etc).
+     *
+     * @param userThatDeletedTheTask
+     * @param taskId
+     * @return
+     * @throws AcmTaskException
+     */
+    AcmTask deleteTask(Principal userThatDeletedTheTask, Long taskId) throws AcmTaskException;
 
     /**
      * List of open tasks assigned to a user, sorted by descending due date.
@@ -56,4 +68,9 @@ public interface TaskDao
     AcmTask findById(Long taskId) throws AcmTaskException;
 
     AcmTask save(AcmTask in) throws AcmTaskException;
+
+    AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId, String outcomePropertyName, String outcomeId)
+        throws AcmTaskException;
+    
+    List<WorkflowHistoryInstance> getWorkflowHistory(String id, boolean adhoc);
 }

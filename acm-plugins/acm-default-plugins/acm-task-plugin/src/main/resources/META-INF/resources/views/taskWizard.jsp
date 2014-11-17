@@ -172,7 +172,7 @@
                     <div class="col-sm-6">
                         <label  class="label">Associate with Complaint or Case</label>
                         <input type="text" class="input-sm form-control" placeholder="Complaint or Case #" id="complaintId">
-                        <input type="hidden" class="span1" title="refCtrId" id="refCtrId" value="" />
+                        <%--<input type="hidden" class="span1" title="refCtrId" id="refCtrId" value="" />--%>
                     </div>
                 </div>
 
@@ -194,8 +194,8 @@
                     <div class="col-sm-8">
                         <label class="label">Status</label>
                         <select class="input-sm form-control inline v-middle" id="statusSel">
-                            <option value="0">Select Status</option>
-                            <option value="1">Pending</option>
+                            <option value="null">Select Status</option>
+                            <option value="Pending">Pending</option>
                         </select>
                     </div>
 
@@ -212,11 +212,11 @@
                         <label class="label">Priority</label>
                         <select class="input-sm form-control inline v-middle" id="prioritySel">
 
-                            <option value="0">Select Priority</option>
-                            <option value="1">Low</option>
-                            <option value="2">Medium</option>
-                            <option value="3">High</option>
-                            <option value="4">Expedited</option>
+                            <option value="null">Select Priority</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Expedited">Expedited</option>
                         </select>
                     </div>
                     <div class="col-sm-4">

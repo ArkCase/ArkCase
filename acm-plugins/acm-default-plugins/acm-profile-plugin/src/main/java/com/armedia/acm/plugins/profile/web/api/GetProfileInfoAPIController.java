@@ -1,15 +1,18 @@
 package com.armedia.acm.plugins.profile.web.api;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.exception.AcmProfileException;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.service.ProfileEventPublisher;
+import com.armedia.acm.plugins.profile.service.SaveUserOrgTransaction;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.RoleType;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -32,8 +35,10 @@ import java.util.List;
 @RequestMapping({"/api/v1/plugin/profile", "/api/latest/plugin/profile"})
 public class GetProfileInfoAPIController {
 
+    private final String URL="/api/latest/ecm/download/";
     private UserDao userDao;
     private UserOrgDao userOrgDao;
+    private SaveUserOrgTransaction saveUserOrgTransaction;
 
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -45,7 +50,7 @@ public class GetProfileInfoAPIController {
             @PathVariable("userId") String userId,
             Authentication authentication,
             HttpSession session
-    ) throws AcmProfileException, AcmObjectNotFoundException {
+    ) throws AcmProfileException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
         //String userId = (String) authentication.getName().toLowerCase();
         if (log.isInfoEnabled()) {
             log.info("Finding Profile info for user '" + userId + "'");
@@ -59,13 +64,21 @@ public class GetProfileInfoAPIController {
         List<AcmRole> groups = null;
         try {
              userOrg = getUserOrgDao().getUserOrgForUser(user);
-        } catch (AcmObjectNotFoundException e){
+        } catch ( AcmObjectNotFoundException e ){
             if(log.isInfoEnabled()){
-                log.info("Profile info for the user: " + userId + "is not found",e);
+                log.info("Profile info for the user: " + userId + "is not found");
             }
             //add only user data like full name, email, userId , groups
             userOrg = new UserOrg();
             userOrg.setUser(user);
+            try {
+                    userOrg = getSaveUserOrgTransaction().saveUserOrg(userOrg,authentication);
+            } catch ( MuleException e1 ) {
+                if( log.isErrorEnabled() ) {
+                    log.error("Saving the info for user and organization throw an exception",e);
+                }
+                throw new AcmCreateObjectFailedException("user organization info",e.getMessage(),e.getCause());
+            }
         }
         groups = getUserDao().findAllRolesByUserAndRoleType(userId, RoleType.LDAP_GROUP);
         profileDTO = prepareProfileDto(userOrg, groups);
@@ -87,11 +100,15 @@ public class GetProfileInfoAPIController {
         profileDTO.setFullName(userOrgInfo.getUser().getFullName());
 
         profileDTO.setCity(userOrgInfo.getCity());
-        profileDTO.setCompanyName(userOrgInfo.getCompanyName());
         profileDTO.setFax(userOrgInfo.getFax());
         profileDTO.setFirstAddress(userOrgInfo.getFirstAddress());
         profileDTO.setImAccount(userOrgInfo.getImAccount());
         profileDTO.setImSystem(userOrgInfo.getImSystem());
+        if(userOrgInfo.getOrganization()!=null) {
+            profileDTO.setCompanyName(userOrgInfo.getOrganization().getOrganizationValue());
+        } else {
+            profileDTO.setCompanyName(null);
+        }
         profileDTO.setLocation(userOrgInfo.getLocation());
         profileDTO.setMainOfficePhone(userOrgInfo.getMainOfficePhone());
         profileDTO.setMobilePhoneNumber(userOrgInfo.getMobilePhoneNumber());
@@ -101,8 +118,12 @@ public class GetProfileInfoAPIController {
         profileDTO.setWebsite(userOrgInfo.getWebsite());
         profileDTO.setZip(userOrgInfo.getZip());
         profileDTO.setUserId(userOrgInfo.getUser().getUserId());
-        profileDTO.setPictureUrl("");
-
+        profileDTO.setEcmFileId(userOrgInfo.getEcmFileId());
+        if(userOrgInfo.getEcmFileId()!=null) {
+            profileDTO.setPictureUrl(URL + userOrgInfo.getEcmFileId() + "?inline=true");
+        } else {
+            profileDTO.setPictureUrl("");
+        }
         return profileDTO;
     }
 
@@ -128,5 +149,13 @@ public class GetProfileInfoAPIController {
 
     public void setEventPublisher(ProfileEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
+    }
+
+    public SaveUserOrgTransaction getSaveUserOrgTransaction() {
+        return saveUserOrgTransaction;
+    }
+
+    public void setSaveUserOrgTransaction(SaveUserOrgTransaction saveUserOrgTransaction) {
+        this.saveUserOrgTransaction = saveUserOrgTransaction;
     }
 }

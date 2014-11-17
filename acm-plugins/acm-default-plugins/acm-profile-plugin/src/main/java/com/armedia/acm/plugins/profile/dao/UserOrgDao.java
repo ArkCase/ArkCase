@@ -47,6 +47,20 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
         getEm().remove(userOrgToBeDeleted);
     }
 
+    public UserOrg getUserByOrganization(Organization org) throws AcmObjectNotFoundException {
+        CriteriaBuilder builder = getEm().getCriteriaBuilder();
+        CriteriaQuery<UserOrg> query = builder.createQuery(UserOrg.class);
+        Root<UserOrg> d = query.from(UserOrg.class);
+        query.select(d).where(builder.equal(d.get("organization"), org));
+        TypedQuery<UserOrg> dbQuery = getEm().createQuery(query);
+        List<UserOrg> results = null;
+        results = dbQuery.getResultList();
+        if( results.isEmpty()){
+            throw new AcmObjectNotFoundException("profile",null, "Object not found",null);
+        }
+        return results.get(0);
+    }
+
     @Transactional
     public UserOrg updateUserInfo(UserOrg userOrgInfo){
         userOrgInfo = getEm().merge(userOrgInfo);

@@ -87,14 +87,23 @@ Complaint.Object = {
         
         this.$lnkComplaintClose = $("#closeComplaint");
         this.$lnkComplaintClose.click(function(e){Complaint.Event.onCloseComplaint(e)});
-        
+
         var formUrls = new Object();
         formUrls["roi"] = $('#roiFormUrl').val();
         formUrls["close_complaint"] = $('#closeComplaintFormUrl').val();
+        formUrls["edit_close_complaint"] = $('#editCloseComplaintFormUrl').val();
         this.setFormUrls(formUrls);
     }
 
 
+
+    ,_formUrls: null
+    ,getFormUrls: function() {
+        return this._formUrls;
+    }
+    ,setFormUrls: function(formUrls) {
+        this._formUrls = formUrls;
+    }
 
     ,_token: ""
     ,getToken: function() {
@@ -104,13 +113,7 @@ Complaint.Object = {
         this._token = token;
     }
     
-    ,_formUrls: null
-    ,getFormUrls: function() {
-    	return this._formUrls;
-    }
-    ,setFormUrls: function(formUrls) {
-    	this._formUrls = formUrls;
-    }
+
 
     ,beforeSpanAddDocument: function(html) {
         this.$spanAddDocument.before(html);
@@ -229,7 +232,7 @@ Complaint.Object = {
     }
     ,getHtmlDivDetails: function() {
         //return AcmEx.Object.getSummernote(this.$divDetails);
-        return Acm.Object.getHtml(this.$divDetails);
+        return Acm.Object.getHtml(this.pictureUrl);
     }
     ,setHtmlDivDetails: function(html) {
         //AcmEx.Object.setSummerNote(this.$divDetails, html);
@@ -290,7 +293,7 @@ Complaint.Object = {
     //
     ,_treeInfo: {
         start           : 0
-        ,n              : 10
+        ,n              : 50
         ,total          : -1
         ,s              : null
         ,q              : null

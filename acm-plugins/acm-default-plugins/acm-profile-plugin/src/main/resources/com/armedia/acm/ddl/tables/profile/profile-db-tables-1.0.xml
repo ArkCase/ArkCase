@@ -1,16 +1,18 @@
-<databaseChangeLog
+    <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-create-user-info-and_organization-details-tables" author="marst">
+   <!-- NOTE, changesets 1 and 2 removed on purpose -->
 
-        <createTable tableName="acm_organization_details">
-            <column name="cm_organization_details_id" type="NUMBER(32,0)">
+    <changeSet id="03-profile-tables" author="marst" failOnError="false">
+
+        <createTable tableName="acm_user_org">
+                <column name="cm_user_org_id" type="NUMBER(32,0)">
                 <constraints
                         primaryKey="true"
-                        primaryKeyName="pk_organization_details_id"/>
+                        primaryKeyName="pk_user_org"/>
             </column>
             <column name="cm_company_name" type="VARCHAR(512)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -36,19 +38,11 @@
             <column name="cm_zip" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_website" type="VARCHAR(128)" defaultValue="ACTIVE">
+                <column name="cm_website" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="true"/>
             </column>
             <column name="cm_organization" type="NUMBER(32,0)">
                 <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <createTable tableName="acm_user_info">
-            <column name="cm_user_info_id" type="NUMBER(32,0)"  >
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_user_info_id"/>
             </column>
             <column name="cm_location" type="VARCHAR(512)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -68,66 +62,7 @@
             <column name="cm_user" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_organization_details" type="NUMBER(32,0)">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
-
-
-        <createIndex tableName="acm_user_info" indexName="idx_user">
-            <column name="cm_user"/>
-        </createIndex>
-
-        <createIndex tableName="acm_organization_details" indexName="idx_organization">
-            <column name="cm_organization"/>
-        </createIndex>
-
-    </changeSet>
-
-    <changeSet id="02-drop-user-info-and_rename_organization-details-tables" author="marst">
-
-        <dropForeignKeyConstraint baseTableName="acm_user_info"
-                                  constraintName="fk_user"/>
-        <dropForeignKeyConstraint baseTableName="acm_user_info"
-                                  constraintName="fk_organization_details"/>
-        <dropForeignKeyConstraint baseTableName="acm_organization_details"
-                                  constraintName="fk_organization"/>
-
-            <dropIndex tableName="acm_organization_details"
-                       indexName="idx_organization"/>
-
-            <renameTable oldTableName="acm_organization_details"
-                         newTableName="acm_user_org"/>
-
-            <renameColumn tableName="acm_user_org"
-                          oldColumnName="cm_organization_details_id"
-                          newColumnName="cm_user_org_id"/>
-
-            <dropIndex tableName="acm_user_info"
-                       indexName="idx_user"/>
-
-            <dropTable tableName="acm_user_info"/>
-
-            <addColumn tableName="acm_user_org">
-                <column name="cm_location" type="VARCHAR(512)" defaultValue="ACTIVE">
-                    <constraints nullable="false"/>
-                </column>
-                <column name="cm_im_account" type="VARCHAR(128)" defaultValue="ACTIVE">
-                    <constraints nullable="true"/>
-                </column>
-                <column name="cm_im_system" type="VARCHAR(128)" defaultValue="ACTIVE">
-                    <constraints nullable="true"/>
-                </column>
-                <column name="cm_office_phone" type="VARCHAR(128)" defaultValue="ACTIVE">
-                    <constraints nullable="true"/>
-                </column>
-                <column name="cm_mobile_phone" type="VARCHAR(128)" defaultValue="ACTIVE">
-                    <constraints nullable="true"/>
-                </column>
-                <column name="cm_user" type="VARCHAR(1024)">
-                    <constraints nullable="false"/>
-                </column>
-            </addColumn>
 
         <createIndex tableName="acm_user_org" indexName="idx_user">
             <column name="cm_user"/>
@@ -137,6 +72,29 @@
             <column name="cm_organization"/>
         </createIndex>
 
+    </changeSet>
+
+    <changeSet id="03-drop-companyName-column-add-profile_ecm_folder_id-column" author="marst">
+        <dropColumn tableName="acm_user_org" columnName="cm_company_name"/>
+        <addColumn tableName="acm_user_org">
+            <column name="cm_profile_ecm_folder_id" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <createIndex tableName="acm_user_org" indexName="idx_profile_folder_id">
+            <column name="cm_profile_ecm_folder_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="04-edit-cm-location-and-cm-organization-column" author="marst">
+        <dropNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>
+        <dropNotNullConstraint tableName="acm_user_org" columnName="cm_organization"/>
+    </changeSet>
+
+    <changeSet id="05-add-fileId-creator-modifier-and-date-fields" author="marst">
+        <addColumn tableName="acm_user_org">
+            <column name="cm_ecm_fileId"  type="NUMBER(32,0)" defaultValue="-1"></column>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

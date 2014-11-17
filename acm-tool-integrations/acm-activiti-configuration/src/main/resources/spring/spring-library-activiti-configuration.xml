@@ -29,6 +29,12 @@
         <property name="implementation" value="eventRaisingActivitiTaskListener.handleTaskEvent(task.eventName, task)"/>
     </bean>
 
+    <bean id="acmActivitiListener_taskSave" class="com.armedia.acm.activiti.AcmActivitiListener">
+        <property name="event" value="save"/>
+        <property name="implementationType" value="expression"/>
+        <property name="implementation" value="eventRaisingActivitiTaskListener.handleTaskEvent(task.eventName, task)"/>
+    </bean>
+
     <bean id="acmActivitiListener_taskAssignment" class="com.armedia.acm.activiti.AcmActivitiListener">
         <property name="event" value="assignment"/>
         <property name="implementationType" value="expression"/>
@@ -63,12 +69,13 @@
                 <ref bean="acmActivitiListener_taskAssignment"/>
                 <ref bean="acmActivitiListener_taskComplete"/>
                 <ref bean="acmActivitiListener_taskDelete"/>
+                <ref bean="acmActivitiListener_taskSave"/>
             </list>
         </property>
     </bean>
 
     <bean id="activitiProcessEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration"
-            depends-on="liquibase">
+          depends-on="liquibase">
         <property name="dataSource" ref="acmDataSource" />
         <property name="transactionManager" ref="transactionManager" />
         <property name="databaseSchemaUpdate" value="true" />

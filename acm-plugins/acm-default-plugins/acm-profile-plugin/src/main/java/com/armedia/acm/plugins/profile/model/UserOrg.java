@@ -2,11 +2,14 @@ package com.armedia.acm.plugins.profile.model;
 
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.services.users.model.AcmUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Generated;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,14 +20,12 @@ import java.util.List;
 public class UserOrg implements Serializable{
 
     private static final long serialVersionUID = 4488531757561621833L;
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
     @Column(name="cm_user_org_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userOrgId;
-
-    @Column(name = "cm_company_name")
-    private String companyName;
 
     @Column(name = "cm_first_address")
     private String firstAddress;
@@ -65,6 +66,22 @@ public class UserOrg implements Serializable{
     @Column(name="cm_mobile_phone")
     private String mobilePhoneNumber;
 
+    /**
+     * This field is only used when the profile is created. Usually it will be null.  Use the ecmFolderId
+     * to get the CMIS object ID of the complaint folder.
+     */
+    @Transient
+    private String ecmFolderPath;
+
+    /**
+     * CMIS object ID of the folder where the complaint's attachments/content files are stored.
+     */
+    @Column(name = "cm_profile_ecm_folder_id")
+    private String ecmFolderId;
+
+    @Column(name = "cm_ecm_fileId")
+    private Long ecmFileId;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cm_user")
     private AcmUser user;
@@ -72,6 +89,25 @@ public class UserOrg implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cm_organization")
     private Organization organization;
+
+    public String getEcmFolderPath() {
+        return ecmFolderPath;
+    }
+
+    public void setEcmFolderPath(String ecmFolderPath) {
+        this.ecmFolderPath = ecmFolderPath;
+    }
+
+    public String getEcmFolderId() {
+        return ecmFolderId;
+    }
+
+    public void setEcmFolderId(String ecmFolderId) {
+        if ( log.isDebugEnabled() ) {
+            log.debug("Set folder ID to '" + ecmFolderId + "'");
+        }
+        this.ecmFolderId = ecmFolderId;
+    }
 
     public Organization getOrganization() {
         return organization;
@@ -135,14 +171,6 @@ public class UserOrg implements Serializable{
 
     public void setUser(AcmUser user) {
         this.user = user;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     public String getFirstAddress() {
@@ -209,4 +237,11 @@ public class UserOrg implements Serializable{
         this.website = website;
     }
 
+    public Long getEcmFileId() {
+        return ecmFileId;
+    }
+
+    public void setEcmFileId(Long ecmFileId) {
+        this.ecmFileId = ecmFileId;
+    }
 }
