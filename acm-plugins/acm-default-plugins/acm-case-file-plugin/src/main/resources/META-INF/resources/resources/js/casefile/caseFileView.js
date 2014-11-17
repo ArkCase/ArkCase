@@ -2043,6 +2043,7 @@ CaseFile.View = {
                                 record.type = Acm.goodValue(participant.participantType);
                                 rc.Records.push(record);
                             }
+                            rc.TotalRecordCount = rc.Records.length;
                         }
                         return rc;
                     }
@@ -2713,7 +2714,7 @@ CaseFile.View = {
                                     record.status = Acm.goodValue(childObject.status);
                                     rc.Records.push(record);
                                 }
-                                rc.TotalRecordCount = childObjects.length;
+                                rc.TotalRecordCount = rc.Records.length;
                             }
                             return rc;
                         }
