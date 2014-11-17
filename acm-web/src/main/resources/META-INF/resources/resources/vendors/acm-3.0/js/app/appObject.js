@@ -13,19 +13,40 @@ App.Object = {
         this._userName = items.properties("userName").itemValue();
 
 
-        $(window).bind("beforeunload", function(event) {
-            if (App.Object.isDirty()) {
-                return "Warning: There unsaved data. Leaving this page may cause data lost.";
-            }
-        });
+        if (App.Object.Dirty.create) {App.Object.Dirty.create();}
     }
 
-    ,_dirty: false
-    ,isDirty: function() {
-        return this._dirty;
-    }
-    ,setDirty: function(dirty) {
-        this._dirty = dirty;
+    ,Dirty: {
+        create : function() {
+            $(window).bind("beforeunload", function(event) {
+                if (App.Object.Dirty.isDirty()) {
+                    return "Warning: There unsaved data. Leaving this page may cause data lost.";
+                }
+            });
+        }
+
+        ,_items: []
+        ,isDirty: function() {
+            return 0 < this._items.length;
+        }
+        ,getFirst: function() {
+            if (0 < this._items.length) {
+                return this._items[0];
+            } else {
+                return null;
+            }
+
+        }
+        ,declare: function(item) {
+            this._items.push(item);
+        }
+        ,clear: function(item) {
+            for (var i = this._items.length - 1; 0 <= i; i--) {
+                if (this._items[i] == item) {
+                    this._items.splice(i, 1);
+                }
+            }
+        }
     }
 
     ,_contextPath: ""

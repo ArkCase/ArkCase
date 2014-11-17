@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.task.web;
 
+import com.armedia.acm.form.config.FormUrl;
+import com.armedia.acm.frevvo.config.FrevvoFormName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,11 +15,19 @@ public class TaskUiController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
+
+
+    private FormUrl formUrl;
+
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openTaskList()
     {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("taskList");
+
+        //frevvo form URLs
+        retval.addObject("editCloseComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
+
         return retval;
     }
 
@@ -27,6 +37,10 @@ public class TaskUiController
         ModelAndView retval = new ModelAndView();
         retval.setViewName("taskList");
         retval.addObject("taskId",  taskId);
+
+        //frevvo form URLs
+        retval.addObject("editCloseComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
+
         return retval;
     }
 
@@ -41,6 +55,14 @@ public class TaskUiController
         retval.addObject("reference",  reference);
         return retval;
 
+    }
+
+    public FormUrl getFormUrl() {
+        return formUrl;
+    }
+
+    public void setFormUrl(FormUrl formUrl) {
+        this.formUrl = formUrl;
     }
 
 }

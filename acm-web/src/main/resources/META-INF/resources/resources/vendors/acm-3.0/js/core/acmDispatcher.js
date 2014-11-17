@@ -51,6 +51,24 @@ Acm.Dispatcher = {
         }
     },
 
+    //gradually phase out triggerEvent
+    fireEvent:function(event) {
+        if (!event) {
+            return;
+        }
+
+        var args = [];
+        Array.prototype.push.apply(args, arguments);
+        args.shift();
+
+        if ( this.events[event] ) {
+            var listeners = this.events[event], len = listeners.length;
+            while ( len-- ) {
+                listeners[len].apply(this, args);
+            }
+        }
+    },
+
     numOfListeners: function(event) {
         if ( this.events[event] ) {
             return this.events[event].length;

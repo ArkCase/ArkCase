@@ -11,17 +11,20 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
+import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -57,9 +60,11 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
     private PersonDao personDao;
+    private EcmFileDao ecmFileDao;
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
+    private MuleClient muleClient;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -122,12 +127,16 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	@RequestMapping(value = "/{formName}/save")
     public void doSave(Authentication authentication, 
     		    		@PathVariable("formName") String formName,
-    		    		HttpServletRequest request, HttpServletResponse response){
+    		    		HttpServletRequest request,
+						HttpServletResponse response,
+						HttpSession session)
+	{
 		
 		LOG.info("Save form \"" + formName + "\"");
 
 		// Create and initialize appropriate service for given form name
 		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request, authentication);
+		frevvoFormService.setUserIpAddress((String) session.getAttribute("acm_ip_address"));
 		
 		try{
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -271,5 +280,21 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setPersonDao(PersonDao personDao) {
 		this.personDao = personDao;
+	}
+
+	public EcmFileDao getEcmFileDao() {
+		return ecmFileDao;
+	}
+	
+	public void setEcmFileDao(EcmFileDao ecmFileDao) {
+		this.ecmFileDao = ecmFileDao;
+	}
+
+	public MuleClient getMuleClient() {
+		return muleClient;
+	}
+
+	public void setMuleClient(MuleClient muleClient) {
+		this.muleClient = muleClient;
 	}
 }

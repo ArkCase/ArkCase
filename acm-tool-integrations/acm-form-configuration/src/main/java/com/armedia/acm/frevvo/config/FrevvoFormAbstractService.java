@@ -19,6 +19,10 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -48,6 +52,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	private UserDao userDao;
 	private EcmFileService ecmFileService;
     private String servletContextPath;
+    private String userIpAddress;
+    private EcmFileDao ecmFileDao;
 
 
 	@Override
@@ -144,46 +150,169 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		return obj;
 	}
 	
-	public void saveAttachments(MultiValueMap<String, MultipartFile> attachments, String targetCmisFolderId, String parentObjectType, Long parentObjectId, String parentObjectName)
+	public FrevvoUploadedFiles saveAttachments(
+            MultiValueMap<String, MultipartFile> attachments,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            String parentObjectName) throws AcmCreateObjectFailedException
 	{
+        FrevvoUploadedFiles retval = new FrevvoUploadedFiles();
+
 		if ( attachments != null )
 		{
 			for ( Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet() )
 			{
-				final List<MultipartFile> attachmentsList = entry.getValue();
-		            	
-				if (attachmentsList != null && attachmentsList.size() > 0) {
-					for (final MultipartFile attachment : attachmentsList) {
-						try
-						{
-							AcmMultipartFile file = new AcmMultipartFile(attachment.getName(), attachment.getOriginalFilename(), attachment.getContentType(), attachment.isEmpty(), attachment.getSize(), attachment.getBytes(), attachment.getInputStream(), true);
-		                   
-							getEcmFileService().upload(
-		                    		file,
-		                            "application/json",
-		                            getServletContextPath(),
-		                            getAuthentication(),
-		                            targetCmisFolderId,
-		                            parentObjectType,
-		                            parentObjectId,
-		                            parentObjectName
-                    		);
-						}
-			            catch (AcmCreateObjectFailedException e)
-			            {
-			                LOG.error("Could not upload file: " + e.getMessage(), e);
-				        }
-						catch(IOException e1)
-						{
-							LOG.error("Could not create AcmMultipartFile object: " + e1.getMessage(), e1);
-						}
-					}
-				}
+				String mode = getRequest().getParameter("mode");
+				String xmlId = getRequest().getParameter("xmlId");
+				String pdfId = getRequest().getParameter("pdfId");
+				
+                if ( entry.getKey().startsWith("form_"))
+                {
+                    // form xml...
+                    List<MultipartFile> xml = entry.getValue();
+                    if ( xml != null && xml.size() == 1 )
+                    {
+                        MultipartFile xmlAttachment = xml.get(0);
+                        
+                        EcmFile formXml = null;
+                        
+                        // Update XML form if the mode is "edit", otherwise create new
+                        if ("edit".equals(mode) && null != xmlId && !"".equals(xmlId))
+                        {
+                        	EcmFile file = null;
+                        	try{
+                        		Long id = Long.parseLong(xmlId);
+                        		file = getEcmFileDao().find(id);
+                        	}
+                        	catch(Exception e)
+                        	{
+                        		LOG.warn("The file with id=" + xmlId + " is not found. The update will not proceed.");
+                        	}
+                        	
+                        	formXml = getEcmFileService().update(
+                        			file,
+                        			xmlAttachment,
+                        			getAuthentication());
+                        }
+                        else
+                        {
+                        	formXml = uploadFile(
+                                getFormName() + "_xml",
+                                targetCmisFolderId,
+                                parentObjectType,
+                                parentObjectId,
+                                parentObjectName,
+                                xmlAttachment);
+                        }
+                        retval.setFormXml(formXml);
+                    }
+                }
+                else if ( !entry.getKey().equals("UploadFiles" ) )
+                {
+                    // form pdf
+                    List<MultipartFile> pdf = entry.getValue();
+                    if ( pdf != null && pdf.size() == 1 )
+                    {
+                        MultipartFile pdfAttachment = pdf.get(0);
+                        EcmFile pdfRendition = null;
+                        
+                        // Update PDF form if the mode is "edit", otherwise create new
+                        if ("edit".equals(mode) && null != pdfId && !"".equals(pdfId))
+                        {
+                        	EcmFile file = null;
+                        	try{
+                        		Long id = Long.parseLong(pdfId);
+                        		file = getEcmFileDao().find(id);
+                        	}
+                        	catch(Exception e)
+                        	{
+                        		LOG.warn("The file with id=" + pdfId + " is not found. The update will not proceed.");
+                        	}
+                        	pdfRendition = getEcmFileService().update(
+                        			file,
+                        			pdfAttachment,
+                        			getAuthentication());
+                        }
+                        else
+                        {
+                        	pdfRendition = uploadFile(
+	                                getFormName(),
+	                                targetCmisFolderId,
+	                                parentObjectType,
+	                                parentObjectId,
+	                                parentObjectName,
+	                                pdfAttachment);
+                        }
+                        retval.setPdfRendition(pdfRendition);
+                    }
+                }
+                else
+                {
+                    // this must be the other uploaded files
+                    final List<MultipartFile> attachmentsList = entry.getValue();
+
+                    if (attachmentsList != null && !attachmentsList.isEmpty() )
+                    {
+                        for (final MultipartFile attachment : attachmentsList)
+                        {
+                            EcmFile uploaded = uploadFile(
+                                    "attachment",
+                                    targetCmisFolderId,
+                                    parentObjectType,
+                                    parentObjectId,
+                                    parentObjectName,
+                                    attachment);
+                            retval.getUploadedFiles().add(uploaded);
+                        }
+                    }
+                }
+
 			}
 		}
+
+        return retval;
 	}
-	
-	public String cleanXML(String xml)
+
+    private EcmFile uploadFile(String fileType,
+                            String targetCmisFolderId,
+                            String parentObjectType,
+                            Long parentObjectId,
+                            String parentObjectName,
+                            MultipartFile attachment)
+            throws AcmCreateObjectFailedException
+    {
+        try
+        {
+            AcmMultipartFile file = new AcmMultipartFile(
+                attachment.getName(),
+                attachment.getOriginalFilename(),
+                attachment.getContentType(),
+                attachment.isEmpty(),
+                attachment.getSize(),
+                attachment.getBytes(),
+                attachment.getInputStream(),
+                true);
+
+            EcmFile uploaded = getEcmFileService().upload(
+                fileType,
+                file,
+                getAuthentication(),
+                targetCmisFolderId,
+                parentObjectType,
+                parentObjectId,
+                parentObjectName);
+
+            return uploaded;
+        }
+        catch (IOException e)
+        {
+            LOG.error("Could not upload file: " + e.getMessage(), e);
+            throw new AcmCreateObjectFailedException("file", e.getMessage(), e);
+        }
+    }
+
+    public String cleanXML(String xml)
 	{
 		if (xml != null){
 			String changedXML = xml.replaceAll("(?s)<rta_label.*?<\\/rta_label>", "");
@@ -206,4 +335,29 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		return null;
 	}
 
+    @Override
+    public String getUserIpAddress()
+    {
+        return userIpAddress;
+    }
+
+    @Override
+    public void setUserIpAddress(String userIpAddress)
+    {
+        this.userIpAddress = userIpAddress;
+    }
+
+	/**
+	 * @return the ecmFileDao
+	 */
+	public EcmFileDao getEcmFileDao() {
+		return ecmFileDao;
+	}
+
+	/**
+	 * @param ecmFileDao the ecmFileDao to set
+	 */
+	public void setEcmFileDao(EcmFileDao ecmFileDao) {
+		this.ecmFileDao = ecmFileDao;
+	}
 }

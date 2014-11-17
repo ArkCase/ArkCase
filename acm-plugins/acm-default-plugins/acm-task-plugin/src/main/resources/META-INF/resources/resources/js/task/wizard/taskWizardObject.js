@@ -68,7 +68,9 @@ TaskWizard.Object = {
 	 * Get the complaint id or case id field value
 	 */
     ,getValueEdtComplaint: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtComplaint);
+        //return Acm.Object.getPlaceHolderInput(this.$edtComplaint);
+        return Acm.Object.getValue(this.$edtComplaint);
+
     }
 
     /**
@@ -82,7 +84,9 @@ TaskWizard.Object = {
 	 * Get the subject/title field value
 	 */
     ,getValueEdtSubject: function() {
-        return Acm.Object.getPlaceHolderInput(this.$edtSubject);
+        //return Acm.Object.getPlaceHolderInput(this.$edtSubject);
+        return Acm.Object.getValue(this.$edtSubject);
+
     }
 
 	/**
@@ -136,14 +140,14 @@ TaskWizard.Object = {
 	 * Get the status select option field value
 	 */
     ,getSelectedTextSelStatus: function() {
-        return Acm.Object.getSelectTextIgnoreFirst(this.$selStatus);
+        return Acm.Object.getSelectValueIgnoreFirst(this.$selStatus);
     }
     
     /**
      * get the priority selected option text/label
      */
     ,getSelectedTextSelPriority: function() {
-        return Acm.Object.getSelectTextIgnoreFirst(this.$prioritySel);
+        return Acm.Object.getSelectValueIgnoreFirst(this.$prioritySel);
     }
     
 	/**
@@ -151,13 +155,6 @@ TaskWizard.Object = {
 	 */
     ,getValueEdtCompletedStatus: function() {
         return Acm.Object.getPlaceHolderInput(this.$completedStatus);
-    }
-
-    /**
-     * get the priority selected option value
-     */
-    ,getSelectedValueSelPriority: function() {
-        return Acm.Object.getSelectValueIgnoreFirst(this.$prioritySel);
     }
 
 

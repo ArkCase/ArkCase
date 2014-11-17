@@ -91,7 +91,7 @@
                   <li class="active"> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
                   <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
-<li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
+                  <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
                   <li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
@@ -139,7 +139,7 @@
                       <div class="input-group">
                         <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
                         <span class="input-group-btn">
-                          <button class="btn btn-sm btn-default" type="button">Go!</button>
+                        <button class="btn btn-sm btn-default" type="button">Go!</button>
                         </span></div>
                     </div>
                     <div class="row m-b">
@@ -480,18 +480,27 @@
                       </div>
                     </div>
                     <div class="col-md-12">
-                      <section class="panel b-a">
+                      <section class="panel b-a ">
                         <div class="panel-heading b-b bg-info">
                           <ul class="nav nav-pills pull-right">
-                            <li style="margin-right:5px"></li>
                             <li>
                               <div class="btn-group padder-v2">
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
+                                <ul class="dropdown-menu pull-right">
+                                  <li><a href="#">Other menu items</a></li>
+                                </ul>
                               </div>
                             </li>
                             <li> </li>
                           </ul>
-                          <a href="#" class="font-bold">Documents</a></div>
+                          </span> <a href="#" class="font-bold">Rework Instructions</a></div>
+                        <div class="panel-body">
+                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
+                        </div>
+                      </section>
+                    </div>
+                    <div class="col-md-12">
+                      <section class="panel b-a">
+                        <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Document Under Review</a></div>
                         <div class="panel-body max-200 no-padder">
                           <table class="table table-striped th-sortable table-hover">
                             <thead>
@@ -501,10 +510,7 @@
                                 <th>Type</th>
                                 <th>Created</th>
                                 <th>Author</th>
-                                <th>Priority</th>
-                                <th>Due</th>
                                 <th>Status</th>
-                                <th width="10%">Action</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -514,15 +520,44 @@
                                 <td>[Type]</td>
                                 <td>[Created]</td>
                                 <td>[Author]</td>
-                                <td>[Priority]</td>
-                                <td>[Due]</td>
                                 <td>[Status]</td>
-                                <td><select name="select2" class="input-sm form-control input-s-sm inline v-middle">
-                                  <option value="0">Choose Action</option>
-                                  <option value="1">Delete</option>
-                                  <option value="1">Approve</option>
-                                  <option value="1">Reject</option>
-                                </select></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </section>
+                    </div>
+                    <div class="col-md-12">
+                      <section class="panel b-a">
+                        <div class="panel-heading b-b bg-info">
+                          <ul class="nav nav-pills pull-right">
+                            <li style="margin-right:5px"></li>
+                            <li>
+                              <div class="btn-group padder-v2">
+                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Attachment"><i class="fa fa-file"></i> New</button>
+                              </div>
+                            </li>
+                            <li> </li>
+                          </ul>
+                          <a href="#" class="font-bold">Attachments</a></div>
+                        <div class="panel-body max-200 no-padder">
+                          <table class="table table-striped th-sortable table-hover">
+                            <thead>
+                              <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Created</th>
+                                <th>Author</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="odd gradeA">
+                                <td>[ID]</td>
+                                <td>[Title]</td>
+                                <td>[Type]</td>
+                                <td>[Created]</td>
+                                <td>[Author]</td>
                               </tr>
                             </tbody>
                           </table>
@@ -580,9 +615,29 @@
                           </table>
                         </div>
                       </section>
-                      
-                      
-                      
+                      <section class="panel b-a">
+                        <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Workflow Overview</a></div>
+                        <div class="panel-body max-200 no-padder">
+                          <table class="table table-striped th-sortable table-hover">
+                            <thead>
+                              <tr>
+                                <th>Participant</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Date/Time</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="odd gradeA">
+                                <td>[Participant]</td>
+                                <td>[Role]</td>
+                                <td>[Status]</td>
+                                <td>[Date/Time]</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </section>
                       <div class="row">
                         <div class="wrapper">
                           <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Event Log</a></div>
@@ -592,8 +647,8 @@
                                 <thead>
                                   <tr>
                                     <th width="20"><label class="checkbox m-n i-checks">
-                                      <input type="checkbox">
-                                      <i></i></label></th>
+                                        <input type="checkbox">
+                                        <i></i></label></th>
                                     <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
                                     <th>Date/Time</th>
                                     <th>User</th>
@@ -602,8 +657,8 @@
                                 <tbody>
                                   <tr>
                                     <td><label class="checkbox m-n i-checks">
-                                      <input type="checkbox" name="post[]2">
-                                      <i></i></label></td>
+                                        <input type="checkbox" name="post[]2">
+                                        <i></i></label></td>
                                     <td>[Event]</td>
                                     <td>MM/DD/YYYY HH:MM:SS</td>
                                     <td>[User]</td>
@@ -633,12 +688,6 @@
                         </div>
                       </div>
                     </div>
-                    
-                    
-                    
-                    
-                    
-                    
                     </div>
                   </section>
                 </section>
@@ -675,7 +724,6 @@
 </section>
 <!-- Bootstrap --> 
 <script src="resources/js/bootstrap.js"></script> 
-
 <script type='text/javascript'>//<![CDATA[ 
 
 $(function() {
@@ -692,19 +740,28 @@ $(function() {
 					}
 				},
 	source: [{
-		title: "Subject, Priority",
+		title: "Due Date, Priority, Subject",
 		href: "tasks.html",
 		tooltip: "2014-03-12321",
 		expanded: "fancytree-expanded",
 		children: [{
 				title: "Details", 
 				href: "taskDetails.html"
+			},{
+				title: "Rework Instructions", 
+				href: "taskRework.html"
 			}, {
-			title: "Documents",
+			title: "Documents Under Review",
 			href: "taskDocuments.html"
-		}, {
+			}, {
+				title: "Attachments",
+				href: "tasksAttach.html"
+			}, {
 				title: "Notes", 
 				href: "taskNotes.html"
+			}, {
+				title: "Workflow Overview", 
+				href: "taskWorkflow.html"
 			}, {
 			title: "History",
 			folder: false,
@@ -715,7 +772,6 @@ $(function() {
 });
 //]]>
 </script> 
-
 
 <!-- Summernote WYSIWYG -->
 <link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>

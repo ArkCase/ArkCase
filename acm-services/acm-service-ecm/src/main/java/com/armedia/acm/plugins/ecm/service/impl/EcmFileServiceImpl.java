@@ -2,10 +2,11 @@ package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.FileUpload;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -36,9 +37,47 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private ApplicationEventPublisher applicationEventPublisher;
 
+    @Override
+    public EcmFile upload(
+            String fileType,
+            MultipartFile file,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            String parentObjectName) throws AcmCreateObjectFailedException
+    {
+        if ( log.isInfoEnabled() )
+        {
+            log.info("The user '" + authentication.getName() + "' uploaded file: '" + file.getOriginalFilename() + "'");
+            log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
+        }
+
+        try
+        {
+            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
+                    authentication,
+                    fileType,
+                    file.getInputStream(),
+                    file.getContentType(),
+                    file.getOriginalFilename(),
+                    targetCmisFolderId,
+                    parentObjectType,
+                    parentObjectId,
+                    parentObjectName);
+
+            return uploaded;
+        } catch (IOException | MuleException e)
+        {
+            log.error("Could not upload file: " + e.getMessage(), e);
+            throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
+        }
+    }
+
 
     @Override
     public ResponseEntity<? extends Object> upload(
+            String fileType,
             MultipartFile file,
             String acceptHeader,
             String contextPath,
@@ -48,42 +87,23 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Long parentObjectId,
             String parentObjectName) throws AcmCreateObjectFailedException
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Single files");
-            log.debug("Accept header: '" + acceptHeader + "'");
-        }
-
-        if ( log.isInfoEnabled() )
-        {
-            log.info("The user '" + authentication.getName() + "' uploaded file: '" + file.getOriginalFilename() + "'");
-            log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
-        }
 
         HttpHeaders responseHeaders = contentTypeFromAcceptHeader(acceptHeader);
 
-
-        log.debug("context path: '" + contextPath + "'");
-
-        EcmFileAddedEvent event = null;
-
         try
         {
-            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
+            EcmFile uploaded = upload(
+                    fileType,
+                    file,
                     authentication,
-                    file.getInputStream(),
-                    file.getContentType(),
-                    file.getOriginalFilename(),
                     targetCmisFolderId,
                     parentObjectType,
                     parentObjectId,
                     parentObjectName);
 
-            event = new EcmFileAddedEvent(uploaded, authentication);
-
             FileUpload fileUpload = fileUploadFromEcmFile(file, contextPath, uploaded);
 
-            Object retval = null;
+            Object retval;
 
             if ( responseHeaders.getContentType().equals(MediaType.TEXT_PLAIN) )
             {
@@ -98,12 +118,38 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 retval = jsonMap;
             }
 
+            return new ResponseEntity<>(retval, responseHeaders, HttpStatus.OK);
+        } catch (IOException  e)
+        {
+            log.error("Could not upload file: " + e.getMessage(), e);
+            throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
+        }
+    }
+    
+    @Override
+	public EcmFile update(EcmFile ecmFile, MultipartFile file,
+			Authentication authentication) throws AcmCreateObjectFailedException 
+    {
+    	if ( log.isInfoEnabled() )
+        {
+            log.info("The user '" + authentication.getName() + "' updating file: '" + file.getOriginalFilename() + "'");
+        }
 
+        EcmFileUpdatedEvent event = null;
+
+        try
+        {
+            EcmFile updated = getEcmFileTransaction().updateFileTransaction(
+                    authentication,
+                    ecmFile,
+                    file.getInputStream());
+
+            event = new EcmFileUpdatedEvent(updated, authentication);
 
             event.setSucceeded(true);
             applicationEventPublisher.publishEvent(event);
 
-            return new ResponseEntity<>(retval, responseHeaders, HttpStatus.OK);
+            return updated;
         } catch (IOException | MuleException e)
         {
             if ( event != null )
@@ -111,10 +157,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 event.setSucceeded(false);
                 applicationEventPublisher.publishEvent(event);
             }
-            log.error("Could not upload file: " + e.getMessage(), e);
+            log.error("Could not update file: " + e.getMessage(), e);
             throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
         }
-    }
+	}
 
     public String constructJqueryFileUploadJson(FileUpload fileUpload) throws IOException
     {
@@ -185,4 +231,5 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         this.applicationEventPublisher = applicationEventPublisher;
     }
+    
 }

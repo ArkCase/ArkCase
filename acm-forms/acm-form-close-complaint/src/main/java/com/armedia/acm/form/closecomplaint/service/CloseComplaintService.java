@@ -3,23 +3,33 @@
  */
 package com.armedia.acm.form.closecomplaint.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.armedia.acm.form.closecomplaint.model.CloseComplaintFormEvent;
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
+import org.mule.api.MuleMessage;
+import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
-import com.armedia.acm.form.closecomplaint.model.CloseComplaintInformation;
 import com.armedia.acm.form.closecomplaint.model.ExistingCase;
 import com.armedia.acm.form.closecomplaint.model.ReferExternal;
+import com.armedia.acm.form.config.CloseInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
@@ -27,6 +37,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,6 +52,8 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	private ComplaintDao complaintDao;
 	private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
+	private ApplicationEventPublisher applicationEventPublisher;
+	private MuleClient muleClient;
 			
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#init()
@@ -51,10 +64,26 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		Object result = "";
 		
 		String mode = getRequest().getParameter("mode");
+		String xmlId = getRequest().getParameter("xmlId");
 		
-		if ("edit".equals(mode))
+		if ("edit".equals(mode) && null != xmlId && !"".equals(xmlId))
 		{
-			// TODO: Call service to get the XML form for editing
+			try{
+				Long id = Long.parseLong(xmlId);
+				EcmFile file = getEcmFileDao().find(id);
+				
+				MuleMessage message = getMuleClient().send("vm://downloadFileFlow.in", file.getEcmFileId(), null);
+				
+				if (null != message && message.getPayload() instanceof ContentStream)
+				{
+					result = getContent((ContentStream) message.getPayload());
+				}
+				
+			}
+			catch(Exception e)
+			{
+				LOG.warn("EcmFile with id=" + xmlId + " is not found while edit mode. Empty Frevvo form will be shown.");
+			}
 		}
 		
 		return result;
@@ -105,10 +134,10 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		}
 		
 		// Get Complaint depends on the complaint ID
-		Complaint complaint = getComplaintDao().find(form.getInformation().getComplaintId());
+		Complaint complaint = getComplaintDao().find(form.getInformation().getId());
 		
 		if (complaint == null) {
-			LOG.warn("Cannot find complaint by given complaintId=" + form.getInformation().getComplaintId());
+			LOG.warn("Cannot find complaint by given complaintId=" + form.getInformation().getId());
 			return false;
 		}
 		
@@ -121,23 +150,42 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
         CloseComplaintRequest closeComplaintRequest = factory.fromFormXml(form, getAuthentication());
         
         if ("edit".equals(mode)){
-        	CloseComplaintRequest closeComplaintRequestFromDatabase = closeComplaintRequestDao.findByComplaintId(closeComplaintRequest.getComplaintId());
+        	String requestId = getRequest().getParameter("requestId");
+        	CloseComplaintRequest closeComplaintRequestFromDatabase = null;
+        	try{
+	        	Long closeComplaintRequestId = Long.parseLong(requestId);
+	        	closeComplaintRequestFromDatabase = getCloseComplaintRequestDao().find(closeComplaintRequestId);
+        	}
+        	catch(Exception e)
+        	{
+        		LOG.warn("Close Complaint Request with id=" + requestId + " is not found. The new request will be recorded in the database.");
+        	}
         	
         	if (null != closeComplaintRequestFromDatabase){
         		closeComplaintRequest.setId(closeComplaintRequestFromDatabase.getId());
+        		getCloseComplaintRequestDao().delete(closeComplaintRequestFromDatabase.getParticipants());
         	}
         }
         
-        getCloseComplaintRequestDao().save(closeComplaintRequest);
+        CloseComplaintRequest savedRequest = getCloseComplaintRequestDao().save(closeComplaintRequest);
 		
 		// Update Status to "IN APPROVAL"
 		if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
 			getComplaintDao().updateComplaintStatus(complaint.getComplaintId(), "IN APPROVAL", getAuthentication().getName(), form.getInformation().getCloseDate());
 		}
 		
-		// TODO: Support versioning for "edit" mode
-		// Save attachments
-		saveAttachments(attachments, complaint.getEcmFolderId(), FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), complaint.getComplaintNumber());
+		// Save attachments (or update XML form and PDF form if the mode is "edit")
+		FrevvoUploadedFiles uploadedFiles = saveAttachments(
+                attachments,
+                complaint.getEcmFolderId(),
+                FrevvoFormName.COMPLAINT.toUpperCase(),
+                complaint.getComplaintId(),
+                complaint.getComplaintNumber());
+
+		CloseComplaintFormEvent event = new CloseComplaintFormEvent(
+				complaint.getComplaintNumber(), complaint.getComplaintId(), savedRequest, uploadedFiles, mode,
+				getAuthentication().getName(), getUserIpAddress(), true);
+				getApplicationEventPublisher().publishEvent(event);
 		
 		return true;
 	}
@@ -147,7 +195,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		String mode = getRequest().getParameter("mode");
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
-		CloseComplaintInformation information = new CloseComplaintInformation();
+		CloseInformation information = new CloseInformation();
 		if (!"edit".equals(mode))
 		{
 			information.setCloseDate(new Date());
@@ -247,6 +295,48 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		
 		return json;
 	}
+	
+	
+	private String getContent(ContentStream contentStream)
+	{
+		String content = "";
+		InputStream inputStream = null;
+		
+		try
+        {
+			inputStream = contentStream.getStream();
+			StringWriter writer = new StringWriter();
+			IOUtils.copy(inputStream, writer);
+			content = writer.toString();
+        } 
+		catch (IOException e) 
+		{
+        	LOG.error("Could not copy input stream to the writer: " + e.getMessage(), e);
+		}
+		finally
+        {
+            if ( inputStream != null )
+            {
+                try
+                {
+                	inputStream.close();
+                }
+                catch (IOException e)
+                {
+                    LOG.error("Could not close CMIS content stream: " + e.getMessage(), e);
+                }
+            }
+        }
+		
+		return content;
+	}
+
+
+    @Override
+    public String getFormName()
+    {
+        return FrevvoFormName.CLOSE_COMPLAINT;
+    }
 
 	/**
 	 * @return the complaintDao
@@ -285,4 +375,22 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
     {
         this.closeComplaintRequestDao = closeComplaintRequestDao;
     }
+
+	public ApplicationEventPublisher getApplicationEventPublisher()
+	{
+		return applicationEventPublisher;
+	}
+
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+	{
+		this.applicationEventPublisher = applicationEventPublisher;
+	}
+
+	public MuleClient getMuleClient() {
+		return muleClient;
+	}
+
+	public void setMuleClient(MuleClient muleClient) {
+		this.muleClient = muleClient;
+	}
 }

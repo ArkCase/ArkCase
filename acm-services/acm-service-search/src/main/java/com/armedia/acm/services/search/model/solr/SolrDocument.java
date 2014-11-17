@@ -12,6 +12,7 @@ public class SolrDocument implements SolrBaseDocument {
     private String modifier_s;
     private Date last_modified;
     private Date create_dt;
+    private Date due_dt;
     private String title_t;
     private String name;
     private String object_id_s;
@@ -19,6 +20,7 @@ public class SolrDocument implements SolrBaseDocument {
     private String object_type_s;
     private String assignee_s;
     private Long priority_i;
+    //private boolean adhocTask; + ", adhocTask=" + adhocTask
     
     private List<String> deny_acl_ss;
     private List<String> allow_acl_ss;
@@ -68,6 +70,8 @@ public class SolrDocument implements SolrBaseDocument {
     public void setCreate_dt(Date create_dt) {
         this.create_dt = create_dt;
     }
+    public Date getDue_dt() {return due_dt;}
+    public void setDue_dt(Date due_dt) {this.due_dt = due_dt;}
     public String getTitle_t() {
         return title_t;
     }
@@ -122,14 +126,15 @@ public class SolrDocument implements SolrBaseDocument {
     public void setAllow_acl_ss(List<String> allow_acl_ss) {
         this.allow_acl_ss = allow_acl_ss;
     }
-
+    /*public boolean isAdhocTask() {return adhocTask;}
+    public void setAdhocTask(boolean adhocTask) {this.adhocTask = adhocTask;}*/
     @Override
     public String toString() {
         return "SolrDocument [id=" + id + ", status_s=" + status_s
                 + ", author=" + author + ", author_s=" + author_s
                 + ", modifier_s=" + modifier_s + ", last_modified="
-                + last_modified + ", create_dt=" + create_dt + ", title_t="
-                + title_t + ", name=" + name + ", object_id_s=" + object_id_s
+                + last_modified + ", create_dt=" + create_dt + ", due_dt=" + due_dt +
+                ", title_t=" + title_t + ", name=" + name + ", object_id_s=" + object_id_s
                 + ", owner_s=" + owner_s + ", object_type_s=" + object_type_s
                 + ", assignee_s=" + assignee_s + ", priority_i=" + priority_i
                 + ", deny_acl_ss=" + deny_acl_ss + ", allow_acl_ss="

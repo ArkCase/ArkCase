@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.0.16</version>
+        <version>3.0.17</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -55,6 +55,16 @@
             <artifactId>acm-activiti-spring-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-drools-rule-monitor</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-activiti-actions</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>
@@ -67,6 +77,12 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- business rules -->
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-decisiontables</artifactId>
         </dependency>
 
         <!-- activiti -->

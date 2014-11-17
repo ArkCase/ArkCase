@@ -17,4 +17,11 @@ public class UserOrgPersistentEvent extends AcmEvent {
         setUserId(source.getUser().getUserId());
         setObjectId(source.getUserOrgId());
     }
+
+    @Override
+    public String getObjectType()
+    {
+        return OBJECT_TYPE;
+    }
+
 }

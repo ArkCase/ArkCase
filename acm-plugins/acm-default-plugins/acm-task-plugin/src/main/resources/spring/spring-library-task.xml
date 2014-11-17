@@ -40,6 +40,7 @@
                 <ref bean="acmTaskSavePrivilege"/>
                 <ref bean="acmTaskListPrivilege"/>
                 <ref bean="acmTaskCompletePrivilege"/>
+                <ref bean="acmTaskDeletePrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
@@ -86,12 +87,27 @@
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/task/completeTask"/>
+                    <property name="requiredPrivilege" ref="acmTaskCompletePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/task/deleteTask/{taskId}"/>
+                    <property name="requiredPrivilege" ref="acmTaskDeletePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/task/adHocTask"/>
                     <property name="requiredPrivilege" ref="acmTaskCreatePrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/task/byId/{taskId}"/>
+                    <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/task/history/{id}/{adhoc}"/>
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
                 </bean>
             </list>
@@ -148,17 +164,49 @@
             </list>
         </property>
     </bean>
+
+    <bean id="acmTaskDeletePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-task-delete"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_ANALYST</value>
+                <value>ROLE_INVESTIGATOR</value>
+            </list>
+        </property>
+    </bean>
     
     <bean id="acmTaskDao" class="com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
         <property name="activitiHistoryService" ref="activitiHistoryService"/>
+        <property name="userDao" ref="userJpaDao" />
         <property name="priorityLevelToNumberMap">
             <map>
                 <entry key="Low" value="10"/>
                 <entry key="Medium" value="50"/>
                 <entry key="High" value="70"/>
                 <entry key="Expedite" value="90"/>
+            </map>
+        </property>
+        <property name="requiredFieldsPerOutcomeMap">
+            <map>
+                <entry key="APPROVE">
+                    <list/>
+                </entry>
+                <entry key="SEND_FOR_REWORK">
+                    <list>
+                        <value>reworkInstructions</value>
+                    </list>
+                </entry>
+                <entry key="RESUBMIT">
+                    <list/>
+                </entry>
+                <entry key="CANCEL_DOCUMENT">
+                    <list/>
+                </entry>
             </map>
         </property>
     </bean>

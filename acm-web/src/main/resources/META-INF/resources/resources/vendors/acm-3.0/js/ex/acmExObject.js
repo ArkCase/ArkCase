@@ -7,6 +7,8 @@ AcmEx.Object = {
     create : function() {
     }
 
+    //This set of functions are to be retired in future.
+    //Please use AcmEx.Object.SummerNote.xxxx()
     ,getSummerNote : function($s) {
         return $s.code();
     }
@@ -25,9 +27,35 @@ AcmEx.Object = {
         $s.summernote({focus: false});
         $s.destroy();
     }
+    ,SummerNote: {
+        use: function($s) {
+            $s.summernote();
+        }
+        ,get: function($s) {
+            return $s.code();
+        }
+        ,set: function($s, value) {
+            $s.summernote();
+            $s.code(value);
+            $s.destroy();
+        }
+        ,edit: function($s) {
+            $s.summernote({focus: true});
+        }
+        ,save: function($s) {
+            var aHtml = $s.code(); //save HTML If you need(aHTML: array).
+            $s.destroy();
+            return aHtml;
+        }
+        ,cancel: function($s) {
+            $s.summernote({focus: false});
+            $s.destroy();
+        }
+    }
 
     //
-    // JTable functions
+    //JTable functions are to be retired in future.
+    //Please use AcmEx.Object.JTable.xxxx()
     //
     ,JTABLE_DEFAULT_PAGE_SIZE: 8
     ,jTableGetEmptyRecords: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
@@ -121,6 +149,76 @@ AcmEx.Object = {
         $jt.jtable('load');
     }
 
+    ,JTable: {
+        JTABLE_DEFAULT_PAGE_SIZE: 8
+        ,getEmptyRecords: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
+        ,getEmptyRecord: function() { return {"Result": "OK","Record": {}};}
+        ,setTitle: function($jt, title) {
+            //todo: passing $jt
+            Acm.Object.setText($(".jtable-title-text"), title);
+        }
+        ,load: function($jt) {
+            $jt.jtable('load');
+        }
+        ,useBasic: function($jt, jtArg) {
+            $jt.jtable(jtArg);
+            $jt.jtable('load');
+        }
+        ,usePaging: function($jt, jtArg, sortMap) {
+            jtArg.paging = true;
+            if (!jtArg.pageSize) {
+                jtArg.pageSize = AcmEx.Object.JTable.JTABLE_DEFAULT_PAGE_SIZE;
+            }
+            if (!jtArg.recordAdded) {
+                jtArg.recordAdded = function(event, data){
+                    $jt.jtable('load');
+                }
+            }
+            if (!jtArg.recordUpdated) {
+                jtArg.recordUpdated = function(event, data){
+                    $jt.jtable('load');
+                }
+            }
+
+            if (sortMap) {
+                jtArg.sorting = true;
+            } else if (!jtArg.sorting) {
+                jtArg.sorting = false;
+            }
+
+            if (jtArg.actions.pagingListAction){
+                jtArg.actions.listAction = function(postData, jtParams) {
+                    return jtArg.actions.pagingListAction(postData, jtParams, sortMap);
+                }
+            }
+
+            $jt.jtable(jtArg);
+            $jt.jtable('load');
+        }
+        ,clickAddRecordHandler: function($jt, handler) {
+            var $spanAddRecord = $jt.find(".jtable-toolbar-item-add-record");
+            $spanAddRecord.unbind("click").on("click", function(e){handler(e, this);});
+        }
+        ,toggleSubJTable: function($t, $row, fnOpen, fnClose, title) {
+            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
+            var curTitle = $childRow.find("div.jtable-title-text").text();
+
+            var toClose;
+            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
+                toClose = (curTitle === title);
+            } else {
+                toClose = false;
+            }
+
+            if (toClose) {
+                fnClose($t, $row);
+            } else {
+                fnOpen($t, $row);
+            }
+        }
+    }
+
+
     //
     // x-editable
     //
@@ -149,7 +247,11 @@ AcmEx.Object = {
             $s.editable("setValue", txt);
         }
         ,setDate: function($s, txt) {
-            $s.editable("setValue", txt, true);  //true = use internal format
+            if (txt) {
+                $s.editable("setValue", txt, true);  //true = use internal format
+            } else {
+                Acm.Object.setText($s, "Unknown");
+            }
         }
 
         ,xDateToDatetime: function(d) {

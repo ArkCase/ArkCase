@@ -78,8 +78,4 @@
         <property name="accessControlEntryDao" ref="acmAccessControlEntryDao"/>
     </bean>
 
-    <bean id="dataAccessDefaultLauncher" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessDefaultLauncher">
-        <property name="dataAccessDefaultService" ref="dataAccessDefaultService"/>
-    </bean>
-
 </beans>
