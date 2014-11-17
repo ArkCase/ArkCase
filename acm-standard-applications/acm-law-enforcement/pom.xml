@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-standard-applications</artifactId>
-        <version>3.0.18-SNAPSHOT</version>
+        <version>3.0.17</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
