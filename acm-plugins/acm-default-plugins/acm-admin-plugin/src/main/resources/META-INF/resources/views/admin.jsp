@@ -149,7 +149,7 @@
                                                     <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection" onclick="save()"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
                                                     <div class="col-xs-3 b-r"><label>Not Authorized</label>
                                                         <select name="" size="10" multiple class="form-control">
-                                                            <option> ROLE_ADMINISTRATOR</option>
+                                                            <%--<option> ROLE_ADMINISTRATOR</option>
                                                             <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
                                                             <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
                                                             <option>ROLE_ANALYST</option>
@@ -157,13 +157,13 @@
                                                             <option>ACM_ADMINISTRATOR_DEV</option>
                                                             <option>ACM_SUPERVISOR_DEV</option>
                                                             <option>ACM_SUPERVISOR_DEV</option>
-                                                            <option>ACM_INVESTIGATOR_DEV</option>
+                                                            <option>ACM_INVESTIGATOR_DEV</option>--%>
                                                         </select></div>
                                                     <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right" onclick="save()"> <i class="fa fa-angle-double-right"></i></button> <br/>
                                                         <button class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left" onclick="save()"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/></div>
                                                     <div class="col-xs-4 b-r"><label>Authorized</label>
                                                         <select name=""  size="10" multiple  class="form-control">
-                                                            <option>ROLE_INVESTIGATOR</option>
+                                                            <%--<option>ROLE_INVESTIGATOR</option>--%>
                                                         </select>
                                                     </div>
                                                 </div>

@@ -58,7 +58,7 @@ public class CreateAdHocTaskAPIController
             if(in.getAttachedToObjectName() != ""){
                 objectNumber = in.getAttachedToObjectName();
                 in.setAttachedToObjectName(objectNumber);
-                objectId  = findObjectIdByName(in.getAttachedToObjectName(), authentication);
+                objectId  = findObjectIdByName(in.getAttachedToObjectType(),in.getAttachedToObjectName(), authentication);
             }
             else{
                 objectId = null;
@@ -113,12 +113,12 @@ public class CreateAdHocTaskAPIController
      * @return
      * @throws MuleException
      */
-    private String findObjectIdByName(String name, Authentication authentication) throws MuleException {
+    private String findObjectIdByName(String type, String name, Authentication authentication) throws MuleException {
         if(name != null){
             String query = "name:" + name;
 
-            //for now use both COMPLAINT and Complaint. But in the future only COMPLAINT is valid
-            query += " AND (object_type_s: COMPLAINT OR object_type_s: Complaint)";
+            query += " AND (object_type_s:" + type + ")";
+
 
             if ( log.isDebugEnabled() )
             {

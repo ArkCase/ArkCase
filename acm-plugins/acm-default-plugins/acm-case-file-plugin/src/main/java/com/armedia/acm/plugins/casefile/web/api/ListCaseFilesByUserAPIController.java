@@ -47,7 +47,7 @@ public class ListCaseFilesByUserAPIController {
         try {
             List<CaseFile> retval = getCaseFileDao().getCaseFilesByUser(user);
             for (CaseFile cf : retval) {
-                getCaseFileEventUtility().raiseEvent(cf, "", new Date(), ipAddress, user, authentication);
+                getCaseFileEventUtility().raiseEvent(cf, "search", new Date(), ipAddress, user, authentication);
             }
             return retval;
         } catch (Exception e) {

@@ -38,7 +38,7 @@ Admin.Object = {
 
         AcmEx.Object.jTableCreatePaging($jt
             , {
-                title: 'Access Control Policy'
+                title: 'Data Access Control'
                 ,selecting: true
                 ,multiselect: false
                 ,selectingCheckboxes: false
@@ -152,8 +152,8 @@ Admin.Object = {
 
                         // ,options: ['GRANT' , 'DENY', 'MANDATORY_DENY']
                     }, allowDiscretionaryUpdate: {
-                        title: 'Allow Discretionary Update',
-                        width: '5%'
+                        title: 'Allow Discretionary',
+                        width: '10%'
                         ,options: [{ Value: 'true', DisplayText: 'True' } , { Value: 'false', DisplayText: 'False' }]
                     }
 
@@ -272,8 +272,8 @@ Admin.Object = {
         var builder = AcmEx.FancyTreeBuilder.reset();
 
     builder.addBranch({key: "acc"                                                   //level 1: /Access Control
-            ,title: "Access Controls"
-            ,tooltip: "Access Controls"
+            ,title: "Security"
+            ,tooltip: "Security"
             ,folder : true
             ,expanded: true
         })
