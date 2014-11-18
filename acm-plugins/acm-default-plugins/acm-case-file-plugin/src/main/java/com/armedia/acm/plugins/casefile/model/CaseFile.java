@@ -368,6 +368,16 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
         this.dueDate = dueDate;
     }
 
+    public List<PersonAssociation> getPersonAssociations()
+    {
+        return personAssociations;
+    }
+
+    public void setPersonAssociations(List<PersonAssociation> personAssociations)
+    {
+        this.personAssociations = personAssociations;
+    }
+
     @Override
     @JsonIgnore
     public String getObjectType()

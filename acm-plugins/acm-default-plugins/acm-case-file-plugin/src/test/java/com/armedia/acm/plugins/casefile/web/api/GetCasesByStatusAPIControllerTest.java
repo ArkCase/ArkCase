@@ -1,4 +1,4 @@
-package com.armedia.acm.ecms.casefile.web.api;
+package com.armedia.acm.plugins.casefile.web.api;
 
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseByStatusDto;

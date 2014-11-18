@@ -1,4 +1,4 @@
-package com.armedia.acm.ecms.casefile.dao;
+package com.armedia.acm.plugins.casefile.dao;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
