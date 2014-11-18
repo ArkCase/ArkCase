@@ -58,7 +58,7 @@ public class SearchObjectByTypeAPIController {
 
         if ( activeOnly )
         {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE";
+            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
         }
         
         if ( log.isDebugEnabled() )

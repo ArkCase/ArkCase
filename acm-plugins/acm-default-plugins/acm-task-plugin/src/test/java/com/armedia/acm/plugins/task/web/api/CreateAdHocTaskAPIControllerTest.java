@@ -80,11 +80,12 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
     @Test
     public void createAdHocTask() throws Exception
     {
-        String name = "20140827_202";        
+        String name = "20140827_202";
+        String type = "COMPLAINT";
         String query = "name:" + name;
-        query += " AND (object_type_s: COMPLAINT OR object_type_s: Complaint)";
+        query += " AND (object_type_s:" + type + ")";
 
-        String solrResponse = "{ \"responseHeader\": { \"status\": 0, \"QTime\": 5, \"params\": { \"indent\": \"true\", \"q\": \"name: 20140827_202,\", \"_\": \"1411491195199\", \"wt\": \"json\" } }, \"response\": { \"numFound\": 1, \"start\": 0, \"docs\": [ { \"status_s\": \"DRAFT\", \"create_dt\": \"2014-08-27T16:04:25Z\", \"title_t\": \"Test complaint for report\", \"object_id_s\": \"202\", \"owner_s\": \"ann-acm\", \"deny_acl_ss\": [ \"TEST-DENY-ACL\" ], \"object_type_s\": \"Complaint\", \"allow_acl_ss\": [ \"TEST-ALLOW-ACL\" ], \"id\": \"202-Complaint\", \"modifier_s\": \"ann-acm\", \"author\": \"ann-acm\", \"author_s\": \"ann-acm\", \"last_modified\": \"2014-08-27T16:04:25Z\", \"name\": \"20140827_202\", \"_version_\": 1477621708197200000 } ] } }  ";
+        String solrResponse = "{ \"responseHeader\": { \"status\": 0, \"QTime\": 5, \"params\": { \"indent\": \"true\", \"q\": \"name: 20140827_202,\", \"_\": \"1411491195199\", \"wt\": \"json\" } }, \"response\": { \"numFound\": 1, \"start\": 0, \"docs\": [ { \"status_s\": \"DRAFT\", \"create_dt\": \"2014-08-27T16:04:25Z\", \"title_t\": \"Test complaint for report\", \"object_id_s\": \"202\", \"owner_s\": \"ann-acm\", \"deny_acl_ss\": [ \"TEST-DENY-ACL\" ], \"object_type_s\": \"COMPLAINT\", \"allow_acl_ss\": [ \"TEST-ALLOW-ACL\" ], \"id\": \"202-Complaint\", \"modifier_s\": \"ann-acm\", \"author\": \"ann-acm\", \"author_s\": \"ann-acm\", \"last_modified\": \"2014-08-27T16:04:25Z\", \"name\": \"20140827_202\", \"_version_\": 1477621708197200000 } ] } }  ";
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
@@ -97,7 +98,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
 
         AcmTask adHoc = new AcmTask();
         adHoc.setAssignee("assignee");
-        adHoc.setAttachedToObjectType("COMPLAINT");
+        adHoc.setAttachedToObjectType(type);
         adHoc.setDetails("details");
         adHoc.setPercentComplete(23);
         adHoc.setStatus("ASSIGNED");
@@ -163,11 +164,12 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
     @Test
     public void createAdHocTask_exception() throws Exception
     {
-        String name = "20140827_202";        
+        String name = "20140827_202";
+        String type = "COMPLAINT";
         String query = "name:" + name;
-        query += " AND (object_type_s: COMPLAINT OR object_type_s: Complaint)";
+        query += " AND (object_type_s:" + type + ")";
 
-        String solrResponse = "{ \"responseHeader\": { \"status\": 0, \"QTime\": 5, \"params\": { \"indent\": \"true\", \"q\": \"name: 20140827_202,\", \"_\": \"1411491195199\", \"wt\": \"json\" } }, \"response\": { \"numFound\": 1, \"start\": 0, \"docs\": [ { \"status_s\": \"DRAFT\", \"create_dt\": \"2014-08-27T16:04:25Z\", \"title_t\": \"Test complaint for report\", \"object_id_s\": \"202\", \"owner_s\": \"ann-acm\", \"deny_acl_ss\": [ \"TEST-DENY-ACL\" ], \"object_type_s\": \"Complaint\", \"allow_acl_ss\": [ \"TEST-ALLOW-ACL\" ], \"id\": \"202-Complaint\", \"modifier_s\": \"ann-acm\", \"author\": \"ann-acm\", \"author_s\": \"ann-acm\", \"last_modified\": \"2014-08-27T16:04:25Z\", \"name\": \"20140827_202\", \"_version_\": 1477621708197200000 } ] } }  ";
+        String solrResponse = "{ \"responseHeader\": { \"status\": 0, \"QTime\": 5, \"params\": { \"indent\": \"true\", \"q\": \"name: 20140827_202,\", \"_\": \"1411491195199\", \"wt\": \"json\" } }, \"response\": { \"numFound\": 1, \"start\": 0, \"docs\": [ { \"status_s\": \"DRAFT\", \"create_dt\": \"2014-08-27T16:04:25Z\", \"title_t\": \"Test complaint for report\", \"object_id_s\": \"202\", \"owner_s\": \"ann-acm\", \"deny_acl_ss\": [ \"TEST-DENY-ACL\" ], \"object_type_s\": \"COMPLAINT\", \"allow_acl_ss\": [ \"TEST-ALLOW-ACL\" ], \"id\": \"202-Complaint\", \"modifier_s\": \"ann-acm\", \"author\": \"ann-acm\", \"author_s\": \"ann-acm\", \"last_modified\": \"2014-08-27T16:04:25Z\", \"name\": \"20140827_202\", \"_version_\": 1477621708197200000 } ] } }  ";
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
@@ -180,6 +182,8 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         AcmTask adHoc = new AcmTask();
         adHoc.setAssignee("assignee");
         adHoc.setAttachedToObjectName(name);
+        adHoc.setAttachedToObjectType(type);
+
 
         Capture<AcmTask> taskSentToDao = new Capture<>();
         Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
