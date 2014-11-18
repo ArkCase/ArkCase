@@ -79,6 +79,12 @@ public class PersonAssociation implements Serializable, AcmEntity
     @Column(name = "cm_tag")
     private List<String> tags = new ArrayList<>();
 
+
+    public PersonAssociation copy()
+    {
+        return null;
+    }
+
     public Long getId()
     {
         return id;
@@ -184,6 +190,7 @@ public class PersonAssociation implements Serializable, AcmEntity
         return modifier;
     }
 
+
     @Override
     public void setModifier(String modifier) 
     {
@@ -209,4 +216,6 @@ public class PersonAssociation implements Serializable, AcmEntity
     {
         this.tags = tags;
     }
+
+
 }

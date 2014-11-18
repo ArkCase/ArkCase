@@ -24,6 +24,7 @@
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
+        <property name="closeCaseRequestDao" ref="closeCaseRequestDao"/>
         <property name="personDao" ref="acmPersonDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="muleClient" ref="muleClient"/>

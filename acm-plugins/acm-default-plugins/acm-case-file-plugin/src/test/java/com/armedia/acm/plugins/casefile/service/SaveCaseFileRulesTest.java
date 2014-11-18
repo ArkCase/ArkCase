@@ -1,4 +1,4 @@
-package com.armedia.acm.ecms.casefile.service;
+package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.person.model.Person;
