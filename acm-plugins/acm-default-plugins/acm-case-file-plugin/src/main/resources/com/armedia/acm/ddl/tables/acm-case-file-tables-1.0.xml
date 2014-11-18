@@ -146,4 +146,9 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
     </changeSet>
+
+    <changeSet id="case-file-10-drop-not-null-constraints" author="dmiller">
+        <dropNotNullConstraint tableName="acm_case_file" columnName="cm_case_type"/>
+        <dropNotNullConstraint tableName="acm_case_file" columnName="cm_case_title"/>
+    </changeSet>
 </databaseChangeLog>
