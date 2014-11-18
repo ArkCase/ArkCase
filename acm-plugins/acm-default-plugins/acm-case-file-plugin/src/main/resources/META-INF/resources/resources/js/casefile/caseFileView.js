@@ -764,28 +764,26 @@ CaseFile.View = {
 
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
                         var c = CaseFile.Model.getCaseFile(caseFileId);
-                        if(c && c.originator){
+                        if(c ){
                             if(c.personAssociations){
                                 var personAssociations = c.personAssociations;
                                 var cnt = personAssociations.length;
                                 for (var i = 0; i < cnt; i++) {
-                                    if(personAssociations[i].id != c.originator.id){
-                                        var person = personAssociations[i].person;
-                                        rc.Records.push({
-                                            personId: person.id
-                                            ,title: person.title
-                                            ,givenName: person.givenName
-                                            ,familyName: person.familyName
-                                            ,personType: personAssociations[i].personType
-                                        });
-                                    }
+                                    var person = personAssociations[i].person;
+                                    rc.Records.push({
+                                        personId: person.id
+                                        ,title: person.title
+                                        ,givenName: person.givenName
+                                        ,familyName: person.familyName
+                                        ,personType: personAssociations[i].personType
+                                    });
                                 }
                                 rc.TotalRecordCount = rc.Records.length;
                             }
                         }
                         return rc;
 //                        return {
-//	                          "Result": "OK"
+//	                          "Result": "OK"&& c.originator
 //	                          ,"Records": [
 //	                              {"id": 11, "title": "Mr", "givenName": "Some Name 1", "familyName": "Some Second Name 1", "personType": "Initiator"}
 //	                              ,{"id": 12, "title": "Mrs", "givenName": "Some Name 2", "familyName": "Some Second Name 2", "personType": "Complaintant"}
@@ -797,10 +795,10 @@ CaseFile.View = {
                         var record = Acm.urlToJson(postData);
                         var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                         if (0 >= caseFileId) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
+                            return AcmEx.Object.JTable.getEmptyRecord();
                         }
 
-                        var rc = AcmEx.Object.JTable.getEmptyRecords();
+                        var rc = AcmEx.Object.JTable.getEmptyRecord();
                         var c = CaseFile.Model.getCaseFile(caseFileId);
                         if (c) {
                             if (c.personAssociations){
@@ -816,10 +814,10 @@ CaseFile.View = {
                         var record = Acm.urlToJson(postData);
                         var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                         if (0 >= caseFileId) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
+                            return AcmEx.Object.JTable.getEmptyRecord();
                         }
 
-                        var rc = AcmEx.Object.JTable.getEmptyRecords();
+                        var rc = AcmEx.Object.JTable.getEmptyRecord();
                         var c = CaseFile.Model.getCaseFile(caseFileId);
                         if (c) {
                             if (c.personAssociations) {
@@ -868,21 +866,28 @@ CaseFile.View = {
                     var record = data.record;
                     var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                     if (0 >= caseFileId) {
-                        return AcmEx.Object.JTable.getEmptyRecords();
+                        return AcmEx.Object.JTable.getEmptyRecord();
                     }
                     var c = CaseFile.Model.getCaseFile(caseFileId);
                     if (c) {
                         if (c.personAssociations) {
                         	// TODO: Perform add
-                            /*var newPersonAssociationRecord = Complaint.JTable._getNewPersonAssociationRecord();
-                            newPersonAssociationRecord.parentType = App.OBJTYPE_COMPLAINT;
-                            newPersonAssociationRecord.parentId = complaint.complaintId;
+                            /*if(c.personAssociations.person == null){
+                                c.personAssociations.person= {};
+                            }
+                            c.personAssociations.person.title = record.title;
+                            c.personAssociations.person.givenName = record.givenName;
+                            c.personAssociations.person.familyName = record.familyName;
+                            c.personAssociations.person.personType = record.personType;*/
+                            /*var newPersonAssociationRecord = CaseFile.View.People._getNewPersonAssociationRecord();
+                            newPersonAssociationRecord.parentType = "CASE";
+                            newPersonAssociationRecord.parentId = c.id;
                             newPersonAssociationRecord.personType = record.personType;
-                            newPersonAssociationRecord.personDescription = record.personDescription;
                             newPersonAssociationRecord.person.title = record.title;
                             newPersonAssociationRecord.person.givenName = record.givenName;
                             newPersonAssociationRecord.person.familyName = record.familyName;
-                            Complaint.Service.savePersonAssociation(newPersonAssociationRecord);*/
+                            c.personAssociations.push(newPersonAssociationRecord);
+                            CaseFile.Service.saveCaseFile(c);*/
                         }
                     }
                  }
@@ -892,7 +897,7 @@ CaseFile.View = {
                     var record = data.record;
                     var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                     if (0 >= caseFileId) {
-                        return AcmEx.Object.JTable.getEmptyRecords();
+                        return AcmEx.Object.JTable.getEmptyRecord();
                     }
                     var c = CaseFile.Model.getCaseFile(caseFileId);
                     if (c) {
@@ -914,7 +919,7 @@ CaseFile.View = {
                     var record = data.record;
                     var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                     if (0 >= caseFileId) {
-                        return AcmEx.Object.JTable.getEmptyRecords();
+                        return AcmEx.Object.JTable.getEmptyRecord();
                     }
                     var c = CaseFile.Model.getCaseFile(caseFileId);
                     if (c) {
@@ -941,6 +946,34 @@ CaseFile.View = {
             }
             return personAssoc;
         }
+        ,_getNewPersonAssociationRecord: function() {
+        return {
+            id: null
+            ,personType: ""
+            ,parentId:null
+            ,parentType:""
+            ,personDescription: ""
+            ,notes:""
+            ,person:{
+                id: null
+                ,title: ""
+                ,givenName: ""
+                ,familyName: ""
+                ,company: ""
+                /*,hairColor:""
+                 ,eyeColor:""
+                 ,heightInInches:null*/
+                ,weightInPounds:null
+                /*,dateOfBirth:null
+                 ,dateMarried:null*/
+                ,addresses: []
+                ,contactMethods: []
+                ,securityTags: []
+                ,personAliases: []
+                ,organizations: []
+            }
+        };
+    }
         
         ,_createJTable4SubTablePeople: function($s, arg) {
             var argNew = {fields:{}};
@@ -1042,7 +1075,7 @@ CaseFile.View = {
                                 if (c) {
                                     if (c.personAssociations) {
                                         var personAssociations = c.personAssociations;
-                                        var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                        var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                         if (currentPersonAssoc.person) {
                                             var person = currentPersonAssoc.person;
                                             if (person.contactMethods) {
@@ -1071,13 +1104,13 @@ CaseFile.View = {
                                 var record = Acm.urlToJson(postData);
                                 var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                                 if (0 >= caseFileId) {
-                                    return AcmEx.Object.JTable.getEmptyRecords();
+                                    return AcmEx.Object.JTable.getEmptyRecord();
                                 }
                                 var c = CaseFile.Model.getCaseFile(caseFileId);
                                 if (c) {
                                     if (c.personAssociations) {
                                         var personAssociations = c.personAssociations;
-                                        var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                        var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                         if (currentPersonAssoc.person) {
                                             var person = currentPersonAssoc.person;
                                             rc.Record.personId = person.id;
@@ -1098,13 +1131,13 @@ CaseFile.View = {
                                 var record = Acm.urlToJson(postData);
                                 var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                                 if (0 >= caseFileId) {
-                                    return AcmEx.Object.JTable.getEmptyRecords();
+                                    return AcmEx.Object.JTable.getEmptyRecord();
                                 }
                                 var c = CaseFile.Model.getCaseFile(caseFileId);
                                 if (c) {
                                     if (c.personAssociations) {
                                         var personAssociations = c.personAssociations;
-                                        var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                        var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                         if (currentPersonAssoc.person) {
                                             var person = currentPersonAssoc.person;
                                             rc.Record.personId = person.id;
@@ -1145,13 +1178,13 @@ CaseFile.View = {
                             var record = data.record;
                             var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                             if (0 >= caseFileId) {
-                                return AcmEx.Object.JTable.getEmptyRecords();
+                                return AcmEx.Object.JTable.getEmptyRecord();
                             }
                             var c = CaseFile.Model.getCaseFile(caseFileId);
                             if (c) {
                                 if (c.personAssociations) {
                                     var personAssociations = c.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         if (person.contactMethods) {
@@ -1182,7 +1215,7 @@ CaseFile.View = {
                             if (c) {
                                 if (c.personAssociations) {
                                     var personAssociations = c.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         if (person.contactMethods) {
@@ -1211,7 +1244,7 @@ CaseFile.View = {
                             if (c) {
                                 if (c.personAssociations) {
                                     var personAssociations = c.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         if (person.contactMethods) {
@@ -1261,7 +1294,7 @@ CaseFile.View = {
                             if (c) {
                                 if (c.personAssociations) {
                                     var personAssociations = c.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         if (person.organizations) {
@@ -1297,7 +1330,7 @@ CaseFile.View = {
                             if (c) {
                                 if (c.personAssociations) {
                                     var personAssociations = complaint.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         rc.Record.personId = person.id;
@@ -1325,7 +1358,7 @@ CaseFile.View = {
                             if (c) {
                                 if (c.personAssociations) {
                                     var personAssociations = c.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         rc.Record.personId = person.id;
@@ -1390,7 +1423,7 @@ CaseFile.View = {
                         var c = CaseFile.Model.getCaseFile(caseFileId);
                         if (c) {
                             if (c.personAssociations) {
-                                var personAssociations = this._findPersonAssoc(personId, personAssociations);
+                                var personAssociations = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                 if (currentPersonAssoc.person) {
                                     var person = currentPersonAssoc.person;
                                     if (person.organizations) {
@@ -1422,7 +1455,7 @@ CaseFile.View = {
                         if (c) {
                             if (c.personAssociations) {
                                 var personAssociations = c.personAssociations;
-                                var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                 if (currentPersonAssoc.person) {
                                     var person = currentPersonAssoc.person;
                                     if (person.organizations) {
@@ -1452,7 +1485,7 @@ CaseFile.View = {
                         if (c) {
                             if (c.personAssociations) {
                                 var personAssociations = c.personAssociations;
-                                var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                 if (currentPersonAssoc.person) {
                                     var person = currentPersonAssoc.person;
                                     if (person.organizations) {
@@ -1503,7 +1536,7 @@ CaseFile.View = {
                             if (c) {
                                 if (c.personAssociations) {
                                     var personAssociations = c.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         if (person.addresses) {
@@ -1544,7 +1577,7 @@ CaseFile.View = {
                             if (c) {
                                 if (c.personAssociations) {
                                     var personAssociations = c.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         rc.Record.personId = person.id;
@@ -1575,7 +1608,7 @@ CaseFile.View = {
                             if (c) {
                                 if (c.personAssociations) {
                                     var personAssociations = c.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         rc.Record.personId = person.id;
@@ -1661,7 +1694,7 @@ CaseFile.View = {
                         if (c) {
                             if (c.personAssociations) {
                                 var personAssociations = c.personAssociations;
-                                var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                 if (currentPersonAssoc.person) {
                                     var person = currentPersonAssoc.person;
                                     if (person.addresses) {
@@ -1696,7 +1729,7 @@ CaseFile.View = {
                         if (c) {
                             if (c.personAssociations) {
                                 var personAssociations = c.personAssociations;
-                                var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                 if (currentPersonAssoc.person) {
                                     var person = currentPersonAssoc.person;
                                     if (person.addresses) {
@@ -1729,7 +1762,7 @@ CaseFile.View = {
                         if (c) {
                             if (c.personAssociations) {
                                 var personAssociations = c.personAssociations;
-                                var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                 if (currentPersonAssoc.person) {
                                     var person = currentPersonAssoc.person;
                                     if (person.addresses) {
@@ -1780,7 +1813,7 @@ CaseFile.View = {
                             if (c) {
                                 if (c.personAssociations) {
                                     var personAssociations = c.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         if (person.personAliases) {
@@ -1820,7 +1853,7 @@ CaseFile.View = {
                                 //var assocId = complaint.originator.id;
                                 if (c.personAssociations) {
                                     var personAssociations = c.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         rc.Record.personId = person.id;
@@ -1848,7 +1881,7 @@ CaseFile.View = {
                             if (c) {
                                 if (c.personAssociations) {
                                     var personAssociations = c.personAssociations;
-                                    var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                    var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                     if (currentPersonAssoc.person) {
                                         var person = currentPersonAssoc.person;
                                         rc.Record.personId = person.id;
@@ -1914,7 +1947,7 @@ CaseFile.View = {
                         if (c) {
                             if (c.personAssociations) {
                                 var personAssociations = c.personAssociations;
-                                var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                 if (currentPersonAssoc.person) {
                                     var person = currentPersonAssoc.person;
                                     if (person.personAliases) {
@@ -1946,7 +1979,7 @@ CaseFile.View = {
                         if (c) {
                             if (c.personAssociations) {
                                 var personAssociations = c.personAssociations;
-                                var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                 if (currentPersonAssoc.person) {
                                     var person = currentPersonAssoc.person;
                                     if (person.personAliases) {
@@ -1976,7 +2009,7 @@ CaseFile.View = {
                         if (c) {
                             if (c.personAssociations) {
                                 var personAssociations = c.personAssociations;
-                                var currentPersonAssoc = this._findPersonAssoc(personId, personAssociations);
+                                var currentPersonAssoc = CaseFile.View.People._findPersonAssoc(personId, personAssociations);
                                 if (currentPersonAssoc.person) {
                                     var person = currentPersonAssoc.person;
                                     if (person.personAliases) {
