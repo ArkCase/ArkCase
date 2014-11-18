@@ -54,7 +54,7 @@ var Acm = Acm || {
         }
         return false;
     }
-    ,equals: function(left, right) {
+    ,compare: function(left, right) {  //equals() name is taken, so use compare()
         if (Acm.isEmpty(left)) {
             return Acm.isEmpty(right);
         }

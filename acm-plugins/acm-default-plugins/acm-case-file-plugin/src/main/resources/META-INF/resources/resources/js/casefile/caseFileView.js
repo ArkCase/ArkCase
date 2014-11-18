@@ -508,6 +508,10 @@ CaseFile.View = {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PRIORITY_SAVED         ,this.onPrioritySaved);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_DUE_DATE_SAVED         ,this.onDueDateSaved);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_DETAIL_SAVED           ,this.onDetailSaved);
+            //ME_PARTICIPANT_ADDED
+            //ME_PARTICIPANT_UPDATED
+            //ME_PARTICIPANT_DELETED
+            //ME_CHILD_OBJECT_SAVED
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_TREE_NODE_SELECTED     ,this.onTreeNodeSelected);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
@@ -1996,121 +2000,6 @@ CaseFile.View = {
         // ============================= Open/Close People Alias Sub-Table ===================================
     }
 
-    ,Participants: {
-        create: function() {
-            this.$divParticipants    = $("#divParticipants");
-            this.createJTableParticipants(this.$divParticipants);
-
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
-        }
-        ,initialize: function() {
-        }
-
-        ,onCaseFileRetrieved: function(caseFile) {
-            if (caseFile.hasError) {
-                //empty table?
-            } else {
-                AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
-            }
-        }
-        ,onCaseFileSelected: function(caseFileId) {
-            AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
-        }
-
-        ,createJTableParticipants: function($s) {
-            AcmEx.Object.JTable.useBasic($s, {
-                title: 'Participants'
-                ,paging: false
-                ,messages: {
-                    addNewRecord: 'Add Participants'
-                }
-                ,actions: {
-                    listAction: function(postData, jtParams) {
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
-                        if (0 >= caseFileId) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
-                        }
-
-                        var rc = AcmEx.Object.JTable.getEmptyRecords();
-                        var c = CaseFile.Model.getCaseFile(caseFileId);
-                        if (c && Acm.isArray(c.participants)) {
-                            for (var i = 0; i < c.participants.length; i++) {
-                                var participant = c.participants[i];
-                                var record = {};
-                                record.id = Acm.goodValue(participant.id, 0);
-                                record.title = Acm.goodValue(participant.participantLdapId);
-                                record.type = Acm.goodValue(participant.participantType);
-                                rc.Records.push(record);
-                            }
-                            rc.TotalRecordCount = rc.Records.length;
-                        }
-                        return rc;
-                    }
-//                    ,createAction: function(postData, jtParams) {
-//                        //custom web form creation takes over; this action should never be called
-//                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:"", status:""}};
-//                        return rc;
-//                    }
-                    ,updateAction: function(postData, jtParams) {
-                        var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.JTable.getEmptyRecord();
-                        //id,created,creator is readonly
-                        //rc.Record.id = record.id;
-                        //rc.Record.created = record.created;
-                        //rc.Record.creator = record.creator;
-                        rc.Record.title = record.title;
-                        rc.Record.type = record.type;
-                        return rc;
-                    }
-                    ,deleteAction: function(postData, jtParams) {
-                        return {
-                            "Result": "OK"
-                        };
-                    }
-                }
-                ,fields: {
-                    id: {
-                        title: 'ID'
-                        ,key: true
-                        ,list: false
-                        ,create: false
-                        ,edit: false
-                    }
-                    ,title: {
-                        title: 'Name'
-                        ,width: '70%'
-                    }
-                    ,type: {
-                        title: 'Type'
-                        ,width: '30%'
-                    }
-                }
-                ,recordUpdated : function (event, data) {
-//                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-//                    var record = data.record;
-//                    var caseFileId = CaseFile.View.Tree.getActiveCaseId();
-//                    var c = CaseFile.Model.getCaseFile(caseFileId);
-//                    if (c && Acm.isArray(c.participants)) {
-//                        if (0 < c.participants.length && whichRow < c.participants.length) {
-////                                var participant = c.participants[whichRow];
-////                                //id,created,creator is readonly
-////                                //childObject.Record.id = record.id;
-////                                //childObject.Record.created = record.created;
-////                                //childObject.Record.creator = record.creator;
-//
-//                            var participants = {Record:{}};
-//                            participants.Record.title = record.title;
-//                            participants.Record.status = record.status;
-//
-//                            CaseFile.Controller.viewChangedParticipant(caseFileId, whichRow, participants);
-//                        }
-//                    }
-                }
-            });
-        }
-    }
-
     ,Documents: {
         create: function() {
             this.$divDocuments    = $("#divDocs");
@@ -2120,7 +2009,6 @@ CaseFile.View = {
             CaseFile.View.Documents.fillReportSelection();
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
-            //ME_CHILD_OBJECT_SAVED
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_CLOSED       ,this.onCaseFileClosed);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DOCUMENT_ADDED         ,this.onDocumentAdded);
@@ -2203,7 +2091,7 @@ CaseFile.View = {
                         if (c && Acm.isArray(c.childObjects)) {
                             for (var i = 0; i < c.childObjects.length; i++) {
                                 var childObject = c.childObjects[i];
-                                if (Acm.equals("FILE", childObject.targetType)) {
+                                if (Acm.compare("FILE", childObject.targetType)) {
                                     var record = {};
                                     record.id = Acm.goodValue(childObject.targetId, 0);
                                     record.title = Acm.goodValue(childObject.targetName);
@@ -2296,13 +2184,156 @@ CaseFile.View = {
         }
     }
 
+    ,Participants: {
+        create: function() {
+            this.$divParticipants    = $("#divParticipants");
+            this.createJTableParticipants(this.$divParticipants);
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ASSIGNEE_SAVED         ,this.onAssigneeSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+        }
+        ,initialize: function() {
+        }
+
+        ,onCaseFileRetrieved: function(caseFile) {
+            if (caseFile.hasError) {
+                //empty table?
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+            }
+        }
+        ,onAssigneeSaved: function(caseFileId, assginee) {
+            if (!assginee.hasError) {
+                AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+            }
+        }
+        ,onCaseFileSelected: function(caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+        }
+
+        ,createJTableParticipants: function($s) {
+            AcmEx.Object.JTable.useBasic($s, {
+                title: 'Participants'
+                ,paging: false
+                ,messages: {
+                    addNewRecord: 'Add Participant'
+                }
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        if (0 >= caseFileId) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+                        }
+
+                        var rc = AcmEx.Object.JTable.getEmptyRecords();
+                        var c = CaseFile.Model.getCaseFile(caseFileId);
+                        if (c && Acm.isArray(c.participants)) {
+                            for (var i = 0; i < c.participants.length; i++) {
+                                var participant = c.participants[i];
+                                var record = {};
+                                record.id = Acm.goodValue(participant.id, 0);
+                                record.title = Acm.goodValue(participant.participantLdapId);
+                                record.type = Acm.goodValue(participant.participantType);
+                                rc.Records.push(record);
+                            }
+                            rc.TotalRecordCount = rc.Records.length;
+                        }
+                        return rc;
+                    }
+                    ,createAction: function(postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.JTable.getEmptyRecord();
+                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+                        if (caseFile) {
+                            rc.Record.title = record.title;
+                            rc.Record.type = record.type;
+                        }
+                        return rc;
+                    }
+                    ,updateAction: function(postData, jtParams) {
+                        var record = Acm.urlToJson(postData);
+                        var rc = AcmEx.Object.JTable.getEmptyRecord();
+                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+                        if (caseFile) {
+                            rc.Record.title = record.title;
+                            rc.Record.type = record.type;
+                        }
+                        return rc;
+                    }
+                    ,deleteAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
+                }
+                ,fields: {
+                    id: {
+                        title: 'ID'
+                        ,key: true
+                        ,list: false
+                        ,create: false
+                        ,edit: false
+                    }
+                    ,title: {
+                        title: 'Name'
+                        ,width: '70%'
+                    }
+                    ,type: {
+                        title: 'Type'
+                        ,width: '30%'
+                    }
+                }
+                ,recordAdded : function (event, data) {
+                    var record = data.record;
+                    var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                    if (0 < caseFileId) {
+                        var participant = {};
+                        participant.participantLdapId = record.title;
+                        participant.participantType = record.type;
+                        CaseFile.Controller.viewAddedParticipant(caseFileId, participant);
+                    }
+                }
+                ,recordUpdated : function (event, data) {
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                    var c = CaseFile.Model.getCaseFile(caseFileId);
+                    if (c && Acm.isArray(c.participants)) {
+                        if (0 < c.participants.length && whichRow < c.participants.length) {
+                            var participant = c.participants[whichRow];
+                            participant.participantLdapId = record.title;
+                            participant.participantType = record.type;
+                            CaseFile.Controller.viewUpdatedParticipant(caseFileId, participant);
+                        }
+                    }
+                }
+                ,recordDeleted : function (event, data) {
+                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var record = data.record;
+                    var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                    var c = CaseFile.Model.getCaseFile(caseFileId);
+                    if (c && Acm.isArray(c.participants)) {
+                        if (0 < c.participants.length && whichRow < c.participants.length) {
+                            var participant = c.participants[whichRow];
+                            CaseFile.Controller.viewDeletedParticipant(caseFileId, participant.id);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     ,Notes: {
         create: function() {
             this.$divNotes          = $("#divNotes");
             this.createJTableNotes(this.$divNotes);
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_NOTE_SAVED             ,this.onNoteSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_NOTE_ADDED             ,this.onNoteSaved);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_NOTE_UPDATED           ,this.onNoteSaved);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_NOTE_DELETED           ,this.onNoteDeleted);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
         }
@@ -2459,12 +2490,14 @@ CaseFile.View = {
                         if (0 < caseFileId) {
                             var noteToSave = {};
                             //noteToSave.id = record.id;
+                            noteToSave.id = 0;
                             noteToSave.note = record.note;
                             noteToSave.created = Acm.getCurrentDayInternal(); //record.created;
                             noteToSave.creator = record.creator;   //record.creator;
                             noteToSave.parentId = caseFileId;
                             noteToSave.parentType = CaseFile.Model.getObjectType();
-                            CaseFile.Service.Notes.saveNote(noteToSave);
+                            //CaseFile.Service.Notes.saveNote(noteToSave);
+                            CaseFile.Controller.viewAddedNote(noteToSave);
                         }
                     }
                     ,recordUpdated: function(event,data){
@@ -2476,7 +2509,8 @@ CaseFile.View = {
                             if (notes) {
                                 if(notes[whichRow]){
                                     notes[whichRow].note = record.note;
-                                    CaseFile.Service.Notes.saveNote(notes[whichRow]);
+                                    //CaseFile.Service.Notes.saveNote(notes[whichRow]);
+                                    CaseFile.Controller.viewUpdatedNote(notes[whichRow]);
                                 }
                             }
                         }
@@ -2488,7 +2522,8 @@ CaseFile.View = {
                             var notes = CaseFile.Model.Notes.cacheNoteList.get(caseFileId);
                             if (notes) {
                                 if(notes[whichRow]){
-                                    CaseFile.Service.Notes.deleteNote(notes[whichRow].id);
+                                    //CaseFile.Service.Notes.deleteNote(notes[whichRow].id);
+                                    CaseFile.Controller.viewDeletedNote(notes[whichRow].id);
                                 }
                             }
                         }

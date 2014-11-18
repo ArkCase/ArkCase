@@ -302,20 +302,13 @@ CaseFile.Service = {
                 ,JSON.stringify(caseFile)
             )
         }
-        ,_dataWrapper: function(data, value) {
-            if (data.hasError) {
-                return data;
-            } else {
-                return value;
-            }
-        }
         ,saveCaseTitle: function(caseFileId, title) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
                 caseFile.title = title;
                 this.saveCaseFile(caseFile
                     ,function(data) {
-                        CaseFile.Controller.modelSavedCaseTitle(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.title));
+                        CaseFile.Controller.modelSavedCaseTitle(caseFileId, Acm.Service.responseWrapper(data, data.title));
                     }
                 );
             }
@@ -326,7 +319,7 @@ CaseFile.Service = {
                 caseFile.incidentDate = incidentDate;
                 this.saveCaseFile(caseFile
                     ,function(data) {
-                        CaseFile.Controller.modelSavedIncidentDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.incidentDate));
+                        CaseFile.Controller.modelSavedIncidentDate(caseFileId, Acm.Service.responseWrapper(data, data.incidentDate));
                     }
                 );
             }
@@ -337,7 +330,7 @@ CaseFile.Service = {
                 CaseFile.Model.setAssignee(caseFile, assignee);
                 this.saveCaseFile(caseFile
                     ,function(data) {
-                        CaseFile.Controller.modelSavedAssignee(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.assignee));
+                        CaseFile.Controller.modelSavedAssignee(caseFileId, Acm.Service.responseWrapper(data, assignee));
                     }
                 );
             }
@@ -348,7 +341,7 @@ CaseFile.Service = {
                 caseFile.caseType = caseType;
                 this.saveCaseFile(caseFile
                     ,function(data) {
-                        CaseFile.Controller.modelSavedSubjectType(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.caseType));
+                        CaseFile.Controller.modelSavedSubjectType(caseFileId, Acm.Service.responseWrapper(data, data.caseType));
                     }
                 );
             }
@@ -359,7 +352,7 @@ CaseFile.Service = {
                 caseFile.priority = priority;
                 this.saveCaseFile(caseFile
                     ,function(data) {
-                        CaseFile.Controller.modelSavedPriority(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.priority));
+                        CaseFile.Controller.modelSavedPriority(caseFileId, Acm.Service.responseWrapper(data, data.priority));
                     }
                 );
             }
@@ -370,7 +363,7 @@ CaseFile.Service = {
                 caseFile.dueDate = dueDate;
                 this.saveCaseFile(caseFile
                     ,function(data) {
-                        CaseFile.Controller.modelSavedDueDate(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.dueDate));
+                        CaseFile.Controller.modelSavedDueDate(caseFileId, Acm.Service.responseWrapper(data, data.dueDate));
                     }
                 );
             }
@@ -381,16 +374,16 @@ CaseFile.Service = {
                 caseFile.details = details;
                 this.saveCaseFile(caseFile
                     ,function(data) {
-                        CaseFile.Controller.modelSavedDetail(caseFileId, CaseFile.Service.Detail._dataWrapper(data, data.details));
+                        CaseFile.Controller.modelSavedDetail(caseFileId, Acm.Service.responseWrapper(data, data.details));
                     }
                 );
             }
         }
-        ,saveChildObject: function(caseFileId, idx, childObject) {
+        ,saveChildObject: function(caseFileId, childObject) {
             var caseFile = CaseFile.Model.getCaseFile(caseFileId);
             if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
                 for (var i = 0; i < caseFile.childObjects.length; i++) {
-                    if (Acm.equals(caseFile.childObjects[i].targetId, childObject.targetid)) {
+                    if (Acm.compare(caseFile.childObjects[i].targetId, childObject.targetid)) {
                         caseFile.childObjects[i].title  = childObject.title;
                         caseFile.childObjects[i].status = childObject.status;
                         this.saveCaseFile(caseFile
@@ -398,37 +391,96 @@ CaseFile.Service = {
                                 var savedChildObject = null;
                                 if (CaseFile.Service.Detail._validateCaseFile(data)) {
                                     for (var i = 0; i < data.childObjects.length; i++) {
-                                        if (Acm.equals(data.childObjects[i].targetId, childObject.targetid)) {
+                                        if (Acm.compare(data.childObjects[i].targetId, childObject.targetid)) {
                                             savedChildObject = data.childObjects[i];
                                             break;
                                         }
                                     }
                                 }
-                                CaseFile.Controller.modelSavedChildObject(caseFileId, CaseFile.Service.Detail._dataWrapper(data, savedChildObject));
+                                CaseFile.Controller.modelSavedChildObject(caseFileId, Acm.Service.responseWrapper(data, savedChildObject));
                             }
                         );
                     }
                 }
             }
         }
+        ,addParticipant: function(caseFileId, participant) {
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
+                caseFile.participants.push(participant);
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        var addedParticipant = null;
+                        if (CaseFile.Service.Detail._validateCaseFile(data)) {
+                            for (var i = 0; i < data.participants.length; i++) {
+                                if (Acm.compare(data.participants[i].participantLdapId, participant.participantLdapId)
+                                    && Acm.compare(data.participants[i].participantType, participant.participantType)) {
+                                    addedParticipant = data.participants[i];
+                                    break;
+                                }
+                            }
+                        }
+                        if (addedParticipant) {
+                            CaseFile.Controller.modelAddedParticipant(caseFileId, Acm.Service.responseWrapper(data, addedParticipant));
+                        }
+                    }
+                );
+            }
+        }
+        ,updateParticipant: function(caseFileId, participant) {
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
+                for (var i = 0; i < caseFile.participants.length; i++) {
+                    if (Acm.compare(caseFile.participants[i].id, participant.id)) {
+                        caseFile.participants[i].participantLdapId  = participant.participantLdapId;
+                        caseFile.participants[i].participantType = participant.participantType;
+                        break;
+                    }
+                } //end for
 
-        ,a: function() {
-            var targetId = record.id;
-            var whichChildObject = -1;
-            var docCnt = 0;
-            for (var i = 0; i < c.childObjects.length; i++) {
-                var childObject = c.childObjects[i];
-                if (Acm.equals(targetId, childObject.targetid)) {
-                    which
-                }
-                if (Acm.equals("FILE", childObject.targetType)) {
-                    if (whichRow == docCnt++) {
-                        whichChildObject = i;
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        var savedParticipant = null;
+                        if (CaseFile.Service.Detail._validateCaseFile(data)) {
+                            for (var i = 0; i < data.participants.length; i++) {
+                                if (Acm.compare(data.participants[i].id, participant.id)) {
+                                    savedParticipant = data.participants[i];
+                                    break;
+                                }
+                            }
+                        }
+                        if (savedParticipant) {
+                            CaseFile.Controller.modelUpdatedParticipant(caseFileId, Acm.Service.responseWrapper(data, savedParticipant));
+                        }
+                    }
+                );
+            }
+        }
+        ,deleteParticipant: function(caseFileId, participantId) {
+            var caseFile = CaseFile.Model.getCaseFile(caseFileId);
+            if (CaseFile.Service.Detail._validateCaseFile(caseFile)) {
+                var toDelete = -1;
+                for (var i = 0; i < caseFile.participants.length; i++) {
+                    if (Acm.compare(caseFile.participants[i].id, participantId)) {
+                        toDelete = i;
                         break;
                     }
                 }
+
+                if (0 <= toDelete) {
+                    caseFile.participants.splice(toDelete, 1);
+                    this.saveCaseFile(caseFile
+                        ,function(data) {
+                            if (CaseFile.Service.Detail._validateCaseFile(data)) {
+                                CaseFile.Controller.modelDeletedParticipant(caseFileId, Acm.Service.responseWrapper(data, participantId));
+                            }
+                        }
+                    );
+                }
             }
         }
+
+
 //        ,closeCaseFile : function(data) {
 //            var caseFileId = CaseFile.getCaseFileId();
 //            Acm.Ajax.asyncPost(App.getContextPath() + this.API_CLOSE_CASE_FILE_ + caseFileId
@@ -502,11 +554,15 @@ CaseFile.Service = {
         }
 
 
-        ,saveNote : function(data) {
+        ,saveNote : function(data, handler) {
             Acm.Service.asyncPost(
                 function(response) {
                     if (response.hasError) {
-                        CaseFile.Controller.modelSavedNote(response);
+                        if (handler) {
+                            handler(response);
+                        } else {
+                            CaseFile.Controller.modelSavedNote(response);
+                        }
 
                     } else {
                         if (CaseFile.Service.Notes._validateNote(response)) {
@@ -527,8 +583,11 @@ CaseFile.Service = {
                                     noteList[found] = note;
                                 }
 
-                                //CaseFile.Model.cacheNoteList.put(caseFileId, noteList);
-                                CaseFile.Controller.modelSavedNote(note);
+                                if (handler) {
+                                    handler(note);
+                                } else {
+                                    CaseFile.Controller.modelSavedNote(note);
+                                }
                             }
                         }
                     }
@@ -537,7 +596,24 @@ CaseFile.Service = {
                 ,JSON.stringify(data)
             )
         }
-
+        ,addNote: function(data) {
+            if (CaseFile.Service.Notes._validateNote(data)) {
+                this.saveNote(data
+                    ,function(data) {
+                        CaseFile.Controller.modelAddedNote(data);
+                    }
+                );
+            }
+        }
+        ,updateNote: function(data) {
+            if (CaseFile.Service.Notes._validateNote(data)) {
+                this.saveNote(data
+                    ,function(data) {
+                        CaseFile.Controller.modelUpdatedNote(data);
+                    }
+                );
+            }
+        }
 
         ,_validateDeletedNote: function(data) {
             if (Acm.isEmpty(data)) {
@@ -564,7 +640,7 @@ CaseFile.Service = {
                                 for (var i = 0; i < noteList.length; i++) {
                                     if (noteId == noteList[i].id) {
                                         noteList.splice(i, 1);
-                                        CaseFile.Controller.modelDeletedNote(noteId);
+                                        CaseFile.Controller.modelDeletedNote(Acm.Service.responseWrapper(response, noteId));
                                         return;
                                     }
                                 } //end for
@@ -613,8 +689,8 @@ CaseFile.Service = {
                                 task.id = doc.object_id_s;
                                 task.title = Acm.goodValue(response.docs[i].name); //title_t ?
                                 task.created = Acm.getDateFromDatetime(doc.create_dt);
-                                task.priority = "[priority]";
-                                task.dueDate = "[due]";
+                                task.priority = Acm.goodValue(doc.priority_i);
+                                task.dueDate = Acm.getDateFromDatetime(doc.due_dt);
                                 task.status = Acm.goodValue(doc.status_s);
                                 task.assignee = Acm.goodValue(doc.assignee_s);
                                 taskList.push(task);
