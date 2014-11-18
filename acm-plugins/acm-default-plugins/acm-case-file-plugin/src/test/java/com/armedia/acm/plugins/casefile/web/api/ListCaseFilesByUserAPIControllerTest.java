@@ -1,4 +1,4 @@
-package com.armedia.acm.ecms.casefile.web.api;
+package com.armedia.acm.plugins.casefile.web.api;
 
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -95,7 +95,7 @@ public class ListCaseFilesByUserAPIControllerTest extends EasyMockSupport {
 
         Capture<CaseFile> capturedCase = new Capture<CaseFile>();
 
-        mockCaseFileEventUtility.raiseEvent(capture(capturedCase), eq(""), anyObject(Date.class), eq(ipAddress), eq(user), eq(mockAuthentication));
+        mockCaseFileEventUtility.raiseEvent(capture(capturedCase), eq("search"), anyObject(Date.class), eq(ipAddress), eq(user), eq(mockAuthentication));
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 

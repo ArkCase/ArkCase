@@ -21,6 +21,18 @@
             <artifactId>acm-form-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-case-file-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-users</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>
