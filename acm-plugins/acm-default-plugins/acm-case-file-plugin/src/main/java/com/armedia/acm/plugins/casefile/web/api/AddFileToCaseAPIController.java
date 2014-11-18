@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * Created by marjan.stefanoski on 08.11.2014.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/case", "/api/latest/plugin/case"} )
+@RequestMapping( { "/api/v1/plugin/casefile", "/api/latest/plugin/casefile"} )
 public class AddFileToCaseAPIController {
     private Logger log = LoggerFactory.getLogger(getClass());
 
