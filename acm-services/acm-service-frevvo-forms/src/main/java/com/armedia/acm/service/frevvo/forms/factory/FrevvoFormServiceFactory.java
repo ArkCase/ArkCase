@@ -77,6 +77,8 @@ public class FrevvoFormServiceFactory {
             service.setAuthentication(authentication);
             service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
             service.setUserDao(frevvoFormController.getUserDao());
+            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
+            service.setCloseCaseRequestDao(frevvoFormController.getCloseCaseRequestDao());
             
             return service;
 		}
