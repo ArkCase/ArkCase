@@ -20,6 +20,9 @@ CaseFile.Model = {
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DUE_DATE_CHANGED       ,this.onDueDateChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DETAIL_CHANGED         ,this.onDetailChanged);
         Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CHILD_OBJECT_CHANGED   ,this.onChildObjectChanged);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_ADDED      ,this.onParticipantAdded);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_UPDATED    ,this.onParticipantUpdated);
+        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_DELETED    ,this.onParticipantDeleted);
 
         if (CaseFile.Model.Lookup.create)        {CaseFile.Model.Lookup.create();}
         if (CaseFile.Model.Tree.create)          {CaseFile.Model.Tree.create();}
@@ -112,10 +115,18 @@ CaseFile.Model = {
     ,onDetailChanged: function(caseFileId, details) {
         CaseFile.Service.Detail.saveDetail(caseFileId, details);
     }
-    ,onChildObjectChanged: function(caseFileId, idx, childObject) {
-        CaseFile.Service.Detail.saveChildObject(caseFileId, idx, childObject);
+    ,onChildObjectChanged: function(caseFileId, childObject) {
+        CaseFile.Service.Detail.saveChildObject(caseFileId, childObject);
     }
-
+    ,onParticipantAdded: function(caseFileId, participant) {
+        CaseFile.Service.Detail.addParticipant(caseFileId, participant);
+    }
+    ,onParticipantUpdated: function(caseFileId, participant) {
+        CaseFile.Service.Detail.updateParticipant(caseFileId, participant);
+    }
+    ,onParticipantDeleted: function(caseFileId, participantId) {
+        CaseFile.Service.Detail.deleteParticipant(caseFileId, participantId);
+    }
 
     ,_objectType: "CASE_FILE"
     ,getObjectType: function() {
@@ -178,8 +189,23 @@ CaseFile.Model = {
     ,Notes: {
         create : function() {
             this.cacheNoteList = new Acm.Model.CacheFifo(4);
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_ADDED     ,this.onNoteAdded);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_UPDATED   ,this.onNoteUpdated);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_DELETED   ,this.onNoteDeleted);
         }
         ,initialize: function() {
+        }
+
+
+        ,onNoteAdded: function(note) {
+            CaseFile.Service.Notes.addNote(note);
+        }
+        ,onNoteUpdated: function(note) {
+            CaseFile.Service.Notes.updateNote(note);
+        }
+        ,onNoteDeleted: function(noteId) {
+            CaseFile.Service.Notes.deleteNote(noteId);
         }
     }
 

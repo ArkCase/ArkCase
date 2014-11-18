@@ -9,42 +9,54 @@ CaseFile.Controller = {
     ,initialize: function() {
     }
 
-    ,ME_ASSIGNEES_FOUND                 : "case-file-assignees"                    //param: assignees
-    ,ME_SUBJECT_TYPES_FOUND             : "case-file-subject-types"                //param: subjectTypes
-    ,ME_PRIORITIES_FOUND                : "case-file-priorities"                   //param: priorities
+    ,ME_ASSIGNEES_FOUND                 : "case-model-assignees"                    //param: assignees
+    ,ME_SUBJECT_TYPES_FOUND             : "case-model-subject-types"                //param: subjectTypes
+    ,ME_PRIORITIES_FOUND                : "case-model-priorities"                   //param: priorities
 
-    ,ME_CASE_FILE_LIST_RETRIEVED        : "case-file-case-file-list-retrieved"     //param: key
-    ,ME_CASE_FILE_RETRIEVED             : "case-file-detail-retrieved"             //param: caseFile
-    ,ME_CASE_FILE_SAVED                 : "case-file-detail-saved"                 //param: caseFile
+    ,ME_CASE_FILE_LIST_RETRIEVED        : "case-model-case-file-list-retrieved"     //param: key
+    ,ME_CASE_FILE_RETRIEVED             : "case-model-detail-retrieved"             //param: caseFile
+    ,ME_CASE_FILE_SAVED                 : "case-model-detail-saved"                 //param: caseFile
 
-    ,ME_CASE_TITLE_SAVED                : "case-file-case-title-saved"             //param: caseFileId, caseTitle
-    ,ME_INCIDENT_DATE_SAVED             : "case-file-incident-date-saved"          //param: caseFileId, incidentDate
-    ,ME_ASSIGNEE_SAVED                  : "case-file-assignee-saved"               //param: caseFileId, assignee
-    ,ME_SUBJECT_TYPE_SAVED              : "case-file-subject-type-saved"           //param: caseFileId, caseType
-    ,ME_PRIORITY_SAVED                  : "case-file-priority-saved"               //param: caseFileId, priority
-    ,ME_DUE_DATE_SAVED                  : "case-file-due-date-saved"               //param: caseFileId, dueDate
-    ,ME_DETAIL_SAVED                    : "case-file-detail-saved"                 //param: caseFileId, details
-    ,ME_CHILD_OBJECT_SAVED              : "case-file-childObject-saved"            //param: caseFileId, childObject
+    ,ME_CASE_TITLE_SAVED                : "case-model-case-title-saved"             //param: caseFileId, caseTitle
+    ,ME_INCIDENT_DATE_SAVED             : "case-model-incident-date-saved"          //param: caseFileId, incidentDate
+    ,ME_ASSIGNEE_SAVED                  : "case-model-assignee-saved"               //param: caseFileId, assignee
+    ,ME_SUBJECT_TYPE_SAVED              : "case-model-subject-type-saved"           //param: caseFileId, caseType
+    ,ME_PRIORITY_SAVED                  : "case-model-priority-saved"               //param: caseFileId, priority
+    ,ME_DUE_DATE_SAVED                  : "case-model-due-date-saved"               //param: caseFileId, dueDate
+    ,ME_DETAIL_SAVED                    : "case-model-detail-saved"                 //param: caseFileId, details
+    ,ME_CHILD_OBJECT_SAVED              : "case-model-childObject-saved"            //param: caseFileId, childObject
+    ,ME_PARTICIPANT_ADDED               : "case-model-participant-added"            //param: caseFileId, participant
+    ,ME_PARTICIPANT_UPDATED             : "case-model-participant-updated"          //param: caseFileId, participant
+    ,ME_PARTICIPANT_DELETED             : "case-model-participant-deleted"          //param: caseFileId, participantId
 
-    ,ME_NOTE_SAVED                      : "case-file-note-saved"                   //param: note
-    ,ME_NOTE_DELETED                    : "case-file-note-deleted"                 //param: noteId
+    ,ME_NOTE_SAVED                      : "case-model-note-saved"                   //param: note
+    ,ME_NOTE_ADDED                      : "case-model-note-added"                   //param: note
+    ,ME_NOTE_UPDATED                    : "case-model-note-updated"                 //param: note
+    ,ME_NOTE_DELETED                    : "case-model-note-deleted"                 //param: noteId
 
-    ,VE_PREV_PAGE_CLICKED               : "case-file-prev-page-clicked"            //param: none
-    ,VE_NEXT_PAGE_CLICKED		        : "case-file-next-page-clicked"            //param: none
-    ,VE_CASE_FILE_SELECTED		        : "case-file-case-file-selected"           //param: caseFileId
-    ,VE_TREE_NODE_SELECTED		        : "case-file-tree-node-selected"           //param: node key
+    ,VE_PREV_PAGE_CLICKED               : "case-view-prev-page-clicked"             //param: none
+    ,VE_NEXT_PAGE_CLICKED		        : "case-view-next-page-clicked"             //param: none
+    ,VE_CASE_FILE_SELECTED		        : "case-view-case-selected"                 //param: caseFileId
+    ,VE_TREE_NODE_SELECTED		        : "case-view-tree-node-selected"            //param: node key
 
-    ,VE_CASE_TITLE_CHANGED              : "case-file-case-title-changed"           //param: caseFileId, title
-    ,VE_INCIDENT_DATE_CHANGED           : "case-file-incident-date-changed"        //param: caseFileId, incidentDate
-    ,VE_ASSIGNEE_CHANGED                : "case-file-assignee-changed"             //param: caseFileId, assignee
-    ,VE_SUBJECT_TYPE_CHANGED            : "case-file-subject-type-changed"         //param: caseFileId, caseType
-    ,VE_PRIORITY_CHANGED                : "case-file-priority-changed"             //param: caseFileId, priority
-    ,VE_DUE_DATE_CHANGED                : "case-file-due-date-changed"             //param: caseFileId, dueDate
-    ,VE_DETAIL_CHANGED                  : "case-file-detail-changed"               //param: caseFileId, details
+    ,VE_CASE_TITLE_CHANGED              : "case-view-case-title-changed"            //param: caseFileId, title
+    ,VE_INCIDENT_DATE_CHANGED           : "case-view-incident-date-changed"         //param: caseFileId, incidentDate
+    ,VE_ASSIGNEE_CHANGED                : "case-view-assignee-changed"              //param: caseFileId, assignee
+    ,VE_SUBJECT_TYPE_CHANGED            : "case-view-subject-type-changed"          //param: caseFileId, caseType
+    ,VE_PRIORITY_CHANGED                : "case-view-priority-changed"              //param: caseFileId, priority
+    ,VE_DUE_DATE_CHANGED                : "case-view-due-date-changed"              //param: caseFileId, dueDate
+    ,VE_DETAIL_CHANGED                  : "case-view-detail-changed"                //param: caseFileId, details
 
-    ,VE_CASE_FILE_CLOSED                : "case-file-case-file-closed"             //param: caseFileId
-    ,VE_DOCUMENT_ADDED                  : "case-file-document-added"               //param: caseFileId
-    ,VE_CHILD_OBJECT_CHANGED            : "case-file-child-object-changed"         //param: caseFileId, childObject
+    ,VE_CASE_FILE_CLOSED                : "case-view-case-closed"                   //param: caseFileId
+    ,VE_DOCUMENT_ADDED                  : "case-view-document-added"                //param: caseFileId
+    ,VE_CHILD_OBJECT_CHANGED            : "case-view-child-object-changed"          //param: caseFileId, childObject
+    ,VE_PARTICIPANT_ADDED               : "case-view-participant-added"             //param: caseFileId, participant
+    ,VE_PARTICIPANT_UPDATED             : "case-view-participant-updated"           //param: caseFileId, participant
+    ,VE_PARTICIPANT_DELETED             : "case-view-participant-deleted"           //param: caseFileId, participantId
+
+    ,VE_NOTE_ADDED                      : "case-view-note-added"                    //param: note
+    ,VE_NOTE_UPDATED                    : "case-view-note-updated"                  //param: note
+    ,VE_NOTE_DELETED                    : "case-view-note-deleted"                  //param: noteId
 
 
     ,modelFoundAssignees: function(assignees) {
@@ -89,14 +101,28 @@ CaseFile.Controller = {
     ,modelSavedChildObject : function(caseFileId, childObject) {
         Acm.Dispatcher.fireEvent(this.ME_CHILD_OBJECT_SAVED, caseFileId, childObject);
     }
+    ,modelAddedParticipant : function(caseFileId, participant) {
+        Acm.Dispatcher.fireEvent(this.ME_PARTICIPANT_ADDED, caseFileId, participant);
+    }
+    ,modelUpdatedParticipant : function(caseFileId, participant) {
+        Acm.Dispatcher.fireEvent(this.ME_PARTICIPANT_UPDATED, caseFileId, participant);
+    }
+    ,modelDeletedParticipant : function(caseFileId, participantId) {
+        Acm.Dispatcher.fireEvent(this.ME_PARTICIPANT_DELETED, caseFileId, participantId);
+    }
 
     ,modelSavedNote : function(note) {
         Acm.Dispatcher.fireEvent(this.ME_NOTE_SAVED, note);
     }
+    ,modelAddedNote : function(note) {
+        Acm.Dispatcher.fireEvent(this.ME_NOTE_ADDED, note);
+    }
+    ,modelUpdatedNote : function(note) {
+        Acm.Dispatcher.fireEvent(this.ME_NOTE_UPDATED, note);
+    }
     ,modelDeletedNote : function(noteId) {
         Acm.Dispatcher.fireEvent(this.ME_NOTE_DELETED, noteId);
     }
-
 
     ,viewClickedPrevPage: function() {
         Acm.Dispatcher.fireEvent(this.VE_PREV_PAGE_CLICKED);
@@ -140,6 +166,25 @@ CaseFile.Controller = {
     }
     ,viewChangedChildObject: function(caseFileId, childObject) {
         Acm.Dispatcher.fireEvent(this.VE_CHILD_OBJECT_CHANGED, caseFileId, childObject);
+    }
+    ,viewAddedParticipant: function(caseFileId, participant) {
+        Acm.Dispatcher.fireEvent(this.VE_PARTICIPANT_ADDED, caseFileId, participant);
+    }
+    ,viewUpdatedParticipant: function(caseFileId, participant) {
+        Acm.Dispatcher.fireEvent(this.VE_PARTICIPANT_UPDATED, caseFileId, participant);
+    }
+    ,viewDeletedParticipant: function(caseFileId, participantId) {
+        Acm.Dispatcher.fireEvent(this.VE_PARTICIPANT_DELETED, caseFileId, participantId);
+    }
+
+    ,viewAddedNote: function(note) {
+        Acm.Dispatcher.fireEvent(this.VE_NOTE_ADDED, note);
+    }
+    ,viewUpdatedNote: function(note) {
+        Acm.Dispatcher.fireEvent(this.VE_NOTE_UPDATED, note);
+    }
+    ,viewDeletedNote: function(noteId) {
+        Acm.Dispatcher.fireEvent(this.VE_NOTE_DELETED, noteId);
     }
 
 

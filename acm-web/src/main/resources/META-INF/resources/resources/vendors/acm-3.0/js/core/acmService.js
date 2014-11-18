@@ -126,4 +126,13 @@ Acm.Service = {
     }
 
 
+    ,responseWrapper: function(response, data) {
+        if (response.hasError) {
+            return response;
+        } else if (data) {
+            return data;
+        } else {
+            return {hasError:true, errorMsg:"Null data"};
+        }
+    }
 };
