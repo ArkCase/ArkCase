@@ -307,7 +307,7 @@ CaseFile.View = {
                         .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/Tasks
                             ,title: "Tasks"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/References
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES      //level 2: /CaseFile/References
                             ,title: "References"
                         })
                         .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY         //level 2: /CaseFile/History
@@ -760,7 +760,7 @@ CaseFile.View = {
 
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
                         var c = CaseFile.Model.getCaseFile(caseFileId);
-                        /*if(c && c.originator){
+                        if(c && c.originator){
                             if(c.personAssociations){
                                 var personAssociations = c.personAssociations;
                                 var cnt = personAssociations.length;
@@ -776,17 +776,18 @@ CaseFile.View = {
                                         });
                                     }
                                 }
+                                rc.TotalRecordCount = rc.Records.length;
                             }
-                        }*/
-                        //return rc;
-                        return {
-	                          "Result": "OK"
-	                          ,"Records": [
-	                              {"id": 11, "title": "Mr", "givenName": "Some Name 1", "familyName": "Some Second Name 1", "personType": "Initiator"}
-	                              ,{"id": 12, "title": "Mrs", "givenName": "Some Name 2", "familyName": "Some Second Name 2", "personType": "Complaintant"}
-	                          ]
-	                          ,"TotalRecordCount": 2
-	                      };
+                        }
+                        return rc;
+//                        return {
+//	                          "Result": "OK"
+//	                          ,"Records": [
+//	                              {"id": 11, "title": "Mr", "givenName": "Some Name 1", "familyName": "Some Second Name 1", "personType": "Initiator"}
+//	                              ,{"id": 12, "title": "Mrs", "givenName": "Some Name 2", "familyName": "Some Second Name 2", "personType": "Complaintant"}
+//	                          ]
+//	                          ,"TotalRecordCount": 2
+//	                      };
                     }
                     ,createAction: function(postData, jtParams) {
                         var record = Acm.urlToJson(postData);
@@ -891,17 +892,17 @@ CaseFile.View = {
                     }
                     var c = CaseFile.Model.getCaseFile(caseFileId);
                     if (c) {
-                        if (c.personAssociations) {
-                            var personAssociations = c.personAssociations;
-                            if(personAssociations[whichRow].person){
-                                var person = personAssociations[whichRow].person;
-                                personAssociations[whichRow].personType = record.personType;
-                                person.title = record.title;
-                                person.givenName = record.givenName;
-                                person.familyName = record.familyName;
-                                CaseFile.Service.Detail.saveComplaint(c);
-                            }
-                        }
+//                        if (c.personAssociations) {
+//                            var personAssociations = c.personAssociations;
+//                            if(personAssociations[whichRow].person){
+//                                var person = personAssociations[whichRow].person;
+//                                personAssociations[whichRow].personType = record.personType;
+//                                person.title = record.title;
+//                                person.givenName = record.givenName;
+//                                person.familyName = record.familyName;
+//                                CaseFile.Service.Detail.saveComplaint(c);
+//                            }
+//                        }
                     }
                 }
                 ,recordDeleted: function(event,data) {
@@ -913,14 +914,14 @@ CaseFile.View = {
                     }
                     var c = CaseFile.Model.getCaseFile(caseFileId);
                     if (c) {
-                        if (c.personAssociations) {
-                            var personAssociations = c.personAssociations;
-                            if (personAssociations[whichRow]) {
-                                var personAssocId = personAssociations[whichRow].id;
-                                // TODO: Perform delete
-                                //CaseFile.Service.deletePersonAssociationById(personAssocId);
-                            }
-                        }
+//                        if (c.personAssociations) {
+//                            var personAssociations = c.personAssociations;
+//                            if (personAssociations[whichRow]) {
+//                                var personAssocId = personAssociations[whichRow].id;
+//                                // TODO: Perform delete
+//                                //CaseFile.Service.deletePersonAssociationById(personAssocId);
+//                            }
+//                        }
                     }
                 }   
             });
@@ -938,8 +939,6 @@ CaseFile.View = {
         }
         
         ,_createJTable4SubTablePeople: function($s, arg) {
-            //return;
-
             var argNew = {fields:{}};
             argNew.fields.subTables = {
                 title: 'Entities'
@@ -2035,29 +2034,18 @@ CaseFile.View = {
 
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
                         var c = CaseFile.Model.getCaseFile(caseFileId);
-//                        if (c && Acm.isArray(c.participants)) {
-//                            for (var i = 0; i < c.participants.length; i++) {
-//                                var participant = c.participants[i];
-//                                var record = {};
-//                                record.id = Acm.goodValue(childObject.targetId, 0);
-//                                record.title = Acm.goodValue(childObject.targetName);
-//                                record.created = Acm.getDateFromDatetime(childObject.created);
-//                                record.creator = Acm.goodValue(childObject.creator);
-//                                record.status = Acm.goodValue(childObject.status);
-//                                rc.Records.push(record);
-//                            }
-//                        }
+                        if (c && Acm.isArray(c.participants)) {
+                            for (var i = 0; i < c.participants.length; i++) {
+                                var participant = c.participants[i];
+                                var record = {};
+                                record.id = Acm.goodValue(participant.id, 0);
+                                record.title = Acm.goodValue(participant.participantLdapId);
+                                record.type = Acm.goodValue(participant.participantType);
+                                rc.Records.push(record);
+                            }
+                            rc.TotalRecordCount = rc.Records.length;
+                        }
                         return rc;
-
-//for test
-//                        return {
-//                            "Result": "OK"
-//                            ,"Records": [
-//                                {"id": 11, "title": "Nick Name", "created": "01-02-03", "creator": "123 do re mi", "status": "JJ"}
-//                                ,{"id": 12, "title": "Some Name", "created": "14-05-15", "creator": "xyz abc", "status": "Ice Man"}
-//                            ]
-//                            ,"TotalRecordCount": 2
-//                        };
                     }
 //                    ,createAction: function(postData, jtParams) {
 //                        //custom web form creation takes over; this action should never be called
@@ -2072,8 +2060,13 @@ CaseFile.View = {
                         //rc.Record.created = record.created;
                         //rc.Record.creator = record.creator;
                         rc.Record.title = record.title;
-                        rc.Record.status = record.status;
+                        rc.Record.type = record.type;
                         return rc;
+                    }
+                    ,deleteAction: function(postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
                     }
                 }
                 ,fields: {
@@ -2084,7 +2077,7 @@ CaseFile.View = {
                         ,create: false
                         ,edit: false
                     }
-                    ,name: {
+                    ,title: {
                         title: 'Name'
                         ,width: '70%'
                     }
@@ -2220,6 +2213,7 @@ CaseFile.View = {
                                     rc.Records.push(record);
                                 }
                             }
+                            rc.TotalRecordCount = rc.Records.length;
                         }
                         return rc;
 
@@ -2693,8 +2687,8 @@ CaseFile.View = {
         }
 
         ,createJTableReferences: function($jt) {
-            var sortMap = {};
-            sortMap["created"] = "created";
+            //var sortMap = {};
+            //sortMap["modified"] = "modified";
 
             AcmEx.Object.JTable.useBasic($jt, {
                     title: 'References'
@@ -2717,14 +2711,12 @@ CaseFile.View = {
                                     var record = {};
                                     record.id = Acm.goodValue(childObject.targetId, 0);
                                     record.title = Acm.goodValue(childObject.targetName);
-                                    record.incidentDate = Acm.getDateFromDatetime(childObject.created);
-                                    record.assignee = "";
-                                    record.priority = "";
-                                    record.type = Acm.goodValue(childObject.targetType);
+                                    record.modified = Acm.getDateFromDatetime(childObject.modified);
                                     record.type = Acm.goodValue(childObject.targetType);
                                     record.status = Acm.goodValue(childObject.status);
                                     rc.Records.push(record);
                                 }
+                                rc.TotalRecordCount = rc.Records.length;
                             }
                             return rc;
                         }
@@ -2757,26 +2749,14 @@ CaseFile.View = {
                             ,edit: true
                             ,create: false
                         }
-                        ,incidentDate: {
-                            title: 'Incident Date'
-                            ,width: '14%'
-                            ,edit: false
-                            ,create: false
-                        }
-                        ,priority: {
-                            title: 'Priority'
-                            ,width: '14%'
-                            ,edit: false
-                            ,create: false
-                        }
-                        ,assignee: {
-                            title: 'Assigned To'
+                        ,modified: {
+                            title: 'Modified'
                             ,width: '14%'
                             ,edit: false
                             ,create: false
                         }
                         ,type: {
-                            title: 'Subject Type'
+                            title: 'Reference Type'
                             ,width: '14%'
                             ,edit: false
                             ,create: false
@@ -2831,7 +2811,7 @@ CaseFile.View = {
 //                        }
                     }
                 } //end arg
-                ,sortMap
+//                ,sortMap
             );
         }
     }

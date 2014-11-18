@@ -25,6 +25,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.dao.CloseCaseRequestDao;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CloseCaseRequest;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.gson.Gson;
@@ -37,6 +42,8 @@ import com.google.gson.GsonBuilder;
 public class CloseCaseService extends FrevvoFormAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
+	private CaseFileDao caseFileDao;
+	private CloseCaseRequestDao closeCaseRequestDao;
 	private MuleClient muleClient;
 	
 	/* (non-Javadoc)
@@ -94,7 +101,71 @@ public class CloseCaseService extends FrevvoFormAbstractService {
 	@Override
 	public boolean save(String xml,
 			MultiValueMap<String, MultipartFile> attachments) throws Exception {
-		// TODO Auto-generated method stub
+
+		String mode = getRequest().getParameter("mode");
+		
+		// Convert XML data to Object
+		CloseCaseForm form = (CloseCaseForm) convertFromXMLToObject(cleanXML(xml), CloseCaseForm.class);
+		
+		if (form == null)
+		{
+			LOG.warn("Cannot unmarshall Close Case Form.");
+			return false;
+		}
+		
+		// Get CaseFile depends on the CaseFile ID
+		CaseFile caseFile = getCaseFileDao().find(form.getInformation().getId());
+		
+		if (caseFile == null) 
+		{
+			LOG.warn("Cannot find case file by given caseId=" + form.getInformation().getId());
+			return false;
+		}
+		
+		// Skip if the case is already closed and if it's not edit mode 
+		if ("CLOSED".equals(caseFile.getStatus()) && !"edit".equals(mode))
+		{
+			LOG.info("The case file is already in '" + caseFile.getStatus() + "' mode. No further action will be taken.");
+			return true;
+		}
+		
+		CloseCaseRequestFactory factory = new CloseCaseRequestFactory();
+		CloseCaseRequest closeCaseRequest = factory.formFromXml(form, getAuthentication());
+		
+		if ("edit".equals(mode))
+		{
+			String requestId = getRequest().getParameter("requestId");
+			CloseCaseRequest closeCaseRequestFromDatabase = null;
+			
+			try{
+	        	Long closeCaseRequestId = Long.parseLong(requestId);
+	        	closeCaseRequestFromDatabase = getCloseCaseRequestDao().find(closeCaseRequestId);
+        	}
+        	catch(Exception e)
+        	{
+        		LOG.warn("Close Case Request with id=" + requestId + " is not found. The new request will be recorded in the database.");
+        	}
+			
+			if (null != closeCaseRequestFromDatabase){
+        		closeCaseRequest.setId(closeCaseRequestFromDatabase.getId());
+        		getCloseCaseRequestDao().delete(closeCaseRequestFromDatabase.getParticipants());
+        	}
+		}
+		
+		CloseCaseRequest savedRequest = getCloseCaseRequestDao().save(closeCaseRequest);
+		
+		if (!caseFile.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
+			getCaseFileDao().updateComplaintStatus(caseFile.getId(), "IN APPROVAL", getAuthentication().getName(), form.getInformation().getCloseDate());
+		}
+		
+		// Save attachments (or update XML form and PDF form if the mode is "edit")
+		FrevvoUploadedFiles uploadedFiles = saveAttachments(
+                attachments,
+                caseFile.getEcmFolderId(),
+                FrevvoFormName.CASE.toUpperCase(),
+                caseFile.getId(),
+                caseFile.getCaseNumber());
+		
 		return false;
 	}
 
@@ -172,6 +243,34 @@ public class CloseCaseService extends FrevvoFormAbstractService {
         }
 		
 		return content;
+	}
+
+	/**
+	 * @return the caseFileDao
+	 */
+	public CaseFileDao getCaseFileDao() {
+		return caseFileDao;
+	}
+
+	/**
+	 * @param caseFileDao the caseFileDao to set
+	 */
+	public void setCaseFileDao(CaseFileDao caseFileDao) {
+		this.caseFileDao = caseFileDao;
+	}
+
+	/**
+	 * @return the closeCaseRequestDao
+	 */
+	public CloseCaseRequestDao getCloseCaseRequestDao() {
+		return closeCaseRequestDao;
+	}
+
+	/**
+	 * @param closeCaseRequestDao the closeCaseRequestDao to set
+	 */
+	public void setCloseCaseRequestDao(CloseCaseRequestDao closeCaseRequestDao) {
+		this.closeCaseRequestDao = closeCaseRequestDao;
 	}
 
 	/**

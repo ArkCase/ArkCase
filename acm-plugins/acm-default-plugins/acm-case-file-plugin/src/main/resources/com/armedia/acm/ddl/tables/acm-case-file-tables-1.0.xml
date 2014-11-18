@@ -111,4 +111,39 @@
             <column name="cm_originator_id" type="NUMBER(32,0)"/>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="case-file-09-add-close-case-request-table" author="riste.tutureski">
+        <createTable tableName="acm_close_case_request">
+            <column name="cm_close_case_id" type="NUMBER(32,0)">
+                <constraints primaryKeyName="pk_close_case_request" primaryKey="true"/>
+            </column>
+            <column name="cm_case_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_case_status" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_case_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_case_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_case_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_case_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_close_case_request" baseColumnNames="cm_case_id"
+                                 constraintName="fk_close_case_cmplnt_id"
+                                 referencedTableName="acm_case_file"
+                                 referencedColumnNames="cm_case_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
 </databaseChangeLog>
