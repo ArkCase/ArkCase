@@ -11339,19 +11339,22 @@ Showdown.converter = function(converter_options) {
                 type: "spline"
             },
             title: {
-                text: "Complaints creation history"
+                text: " "
             },
             xAxis: {
-                type: "datetime"
+                type: "datetime",
+                title: {
+                    text: "Date"
+                }
             },
             yAxis: {
                 title: {
-                    text: "complaints"
+                    text: "Complaints"
                 },
                 min: 0
             },
             series: [{
-                name: "test name",//config.due,
+                name: "# of Complaints",//config.due,
                 data: seriesData
             }]
         })
