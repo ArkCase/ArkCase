@@ -112,7 +112,7 @@
         </addColumn>
     </changeSet>
     
-    <changeSet id="complaint-09-add-close-case-request-table" author="riste.tutureski">
+    <changeSet id="case-file-09-add-close-case-request-table" author="riste.tutureski">
         <createTable tableName="acm_close_case_request">
             <column name="cm_close_case_id" type="NUMBER(32,0)">
                 <constraints primaryKeyName="pk_close_case_request" primaryKey="true"/>
