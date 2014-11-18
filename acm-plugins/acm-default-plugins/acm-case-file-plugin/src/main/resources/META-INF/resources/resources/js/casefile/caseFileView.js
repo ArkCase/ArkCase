@@ -484,11 +484,11 @@ CaseFile.View = {
                     CaseFile.Controller.viewChangedCaseTitle(CaseFile.View.Tree.getActiveCaseId(), newValue);
                 }
             });
-            AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
-                success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedIncidentDate(CaseFile.View.Tree.getActiveCaseId(), newValue);
-                }
-            });
+//            AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
+//                success: function(response, newValue) {
+//                    CaseFile.Controller.viewChangedIncidentDate(CaseFile.View.Tree.getActiveCaseId(), newValue);
+//                }
+//            });
             AcmEx.Object.XEditable.useEditableDate(this.$lnkDueDate, {
                 success: function(response, newValue) {
                     CaseFile.Controller.viewChangedDueDate(CaseFile.View.Tree.getActiveCaseId(), newValue);
@@ -661,7 +661,7 @@ CaseFile.View = {
             if (c) {
                 this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
                 this.setTextLnkCaseTitle(Acm.goodValue(c.title));
-                this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
+                this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));//c.incidentDate
                 this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
                 this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
@@ -678,10 +678,10 @@ CaseFile.View = {
         }
         ,setTextLnkCaseTitle: function(txt) {
             AcmEx.Object.XEditable.setValue(this.$lnkCaseTitle, txt);
-            //this.$lnkCaseTitle.editable("setValue",txt);
         }
         ,setTextLnkIncidentDate: function(txt) {
-            AcmEx.Object.XEditable.setDate(this.$lnkIncidentDate, txt);
+            //AcmEx.Object.XEditable.setDate(this.$lnkIncidentDate, txt);
+            Acm.Object.setText(this.$lnkIncidentDate, txt);
         }
         ,setTextLnkAssignee: function(txt) {
             AcmEx.Object.XEditable.setValue(this.$lnkAssignee, txt);

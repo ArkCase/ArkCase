@@ -137,7 +137,7 @@
                                                     <small class="text-muted">Assigned To</small></div>
                                                 <div class="col-xs-2 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
-                                                    <small class="text-muted">Subject Type</small></div>
+                                                    <small class="text-muted">Case Type</small></div>
                                                 <div class="col-xs-2 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
                                                     <small class="text-muted">Due Date</small></div>
