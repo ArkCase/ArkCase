@@ -219,8 +219,10 @@ TaskList.Callback = {
         if (response.hasError) {
             Acm.Dialog.error("Failed to complete task with outcome:"  +response.errorMsg);
         } else {
+            TaskList.Object.hideAllWorkflowButtons();
             var taskId = TaskList.getTaskId();
             TaskList.cacheTask.put(taskId,response);
+
             /*var workflowHistory = TaskList.getWorkflowHistory();
             workflowHistory.push(response.status);
             TaskList.cacheWorkflowHistory.put(taskId,workflowHistory);
