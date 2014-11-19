@@ -22,6 +22,7 @@ public class FrevvoFormUrl implements FormUrl {
 	private Logger LOG = LoggerFactory.getLogger(FrevvoFormUrl.class);
 	
 	public static final String SERVICE = "frevvo.service.baseUrl";
+	public static final String REDIRECT = "frevvo.browser.redirect.baseUrl";
 	public static final String HOST = "frevvo.host";
 	public static final String PORT = "frevvo.port";
 	public static final String URI = "frevvo.uri";
@@ -93,6 +94,7 @@ public class FrevvoFormUrl implements FormUrl {
 		String mode = (String) properties.get(formName + ".mode");
 		String token = this.authenticationTokenService.getTokenForAuthentication(authentication);
 		String service = (String) properties.get(SERVICE);
+		String redirect = (String) properties.get(REDIRECT);
 		
 		if (tenant != null) {
 			uri = uri.replace("{tenant}", tenant);			
@@ -124,6 +126,10 @@ public class FrevvoFormUrl implements FormUrl {
 		
 		if (service != null) {
 			uri = uri.replace("{frevvo_service_baseUrl}", service);
+		}
+		
+		if (redirect != null) {
+			uri = uri.replace("{frevvo_browser_redirect_baseUrl}", redirect);
 		}
 		
 		String url = getBaseUrl() + uri; 

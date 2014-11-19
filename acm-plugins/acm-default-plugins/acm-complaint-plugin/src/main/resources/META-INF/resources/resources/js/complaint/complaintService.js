@@ -33,9 +33,12 @@ Complaint.Service = {
         var s = treeInfo.s;
         var q = treeInfo.q;
 
+        s = s ? s : "name desc";
+
         var url = App.getContextPath() + this.API_LIST_COMPLAINT;
         url += "?start=" + treeInfo.start;
         url += "&n=" + treeInfo.n;
+        url += "&s=" + s;
         Acm.Ajax.asyncGet(url
             ,Complaint.Callback.EVENT_LIST_RETRIEVED
         );

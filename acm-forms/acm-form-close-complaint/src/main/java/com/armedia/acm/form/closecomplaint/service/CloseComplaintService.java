@@ -39,6 +39,7 @@ import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserActionName;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -168,10 +169,22 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
         }
         
         CloseComplaintRequest savedRequest = getCloseComplaintRequestDao().save(closeComplaintRequest);
+        
+        if (!"edit".equals(mode))
+        {
+        	// Record user action
+        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_COMPLAINT_CREATED, getAuthentication().getName());
+        }
+        else
+        {
+        	// Record user action
+        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_COMPLAINT_MODIFIED, getAuthentication().getName());
+        }
 		
 		// Update Status to "IN APPROVAL"
 		if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
-			getComplaintDao().updateComplaintStatus(complaint.getComplaintId(), "IN APPROVAL", getAuthentication().getName(), form.getInformation().getCloseDate());
+			complaint.setStatus("IN APPROVAL");
+			getComplaintDao().save(complaint);
 		}
 		
 		// Save attachments (or update XML form and PDF form if the mode is "edit")
