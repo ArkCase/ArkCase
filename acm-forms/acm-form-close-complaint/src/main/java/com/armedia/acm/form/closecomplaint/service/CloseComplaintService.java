@@ -183,7 +183,8 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		
 		// Update Status to "IN APPROVAL"
 		if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
-			getComplaintDao().updateComplaintStatus(complaint.getComplaintId(), "IN APPROVAL", getAuthentication().getName(), form.getInformation().getCloseDate());
+			complaint.setStatus("IN APPROVAL");
+			getComplaintDao().save(complaint);
 		}
 		
 		// Save attachments (or update XML form and PDF form if the mode is "edit")

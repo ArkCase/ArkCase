@@ -167,7 +167,8 @@ public class CloseCaseService extends FrevvoFormAbstractService {
         }
 		
 		if (!caseFile.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
-			getCaseFileDao().updateComplaintStatus(caseFile.getId(), "IN APPROVAL", getAuthentication().getName(), form.getInformation().getCloseDate());
+			caseFile.setStatus("IN APPROVAL");
+			getCaseFileDao().save(caseFile);
 		}
 		
 		// Save attachments (or update XML form and PDF form if the mode is "edit")
