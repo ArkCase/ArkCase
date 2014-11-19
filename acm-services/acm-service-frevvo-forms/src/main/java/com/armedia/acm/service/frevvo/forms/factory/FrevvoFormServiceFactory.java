@@ -39,6 +39,8 @@ public class FrevvoFormServiceFactory {
             service.setAuthentication(authentication);
             service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
             service.setUserDao(frevvoFormController.getUserDao());
+            service.setUserActionDao(frevvoFormController.getUserActionDao());
+            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
             service.setPersonDao(frevvoFormController.getPersonDao());
             
@@ -58,6 +60,8 @@ public class FrevvoFormServiceFactory {
             service.setAuthentication(authentication);
             service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
             service.setUserDao(frevvoFormController.getUserDao());
+            service.setUserActionDao(frevvoFormController.getUserActionDao());
+            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setComplaintDao(frevvoFormController.getComplaintDao());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             
@@ -77,6 +81,8 @@ public class FrevvoFormServiceFactory {
             service.setAuthentication(authentication);
             service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
             service.setUserDao(frevvoFormController.getUserDao());
+            service.setUserActionDao(frevvoFormController.getUserActionDao());
+            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             service.setCloseCaseRequestDao(frevvoFormController.getCloseCaseRequestDao());
             
@@ -96,6 +102,8 @@ public class FrevvoFormServiceFactory {
             service.setAuthentication(authentication);
             service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
             service.setUserDao(frevvoFormController.getUserDao());
+            service.setUserActionDao(frevvoFormController.getUserActionDao());
+            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setComplaintDao(frevvoFormController.getComplaintDao());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             service.setCloseComplaintRequestDao(frevvoFormController.getCloseComplaintRequestDao());

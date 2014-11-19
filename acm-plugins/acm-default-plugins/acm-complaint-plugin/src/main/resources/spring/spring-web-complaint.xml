@@ -29,7 +29,8 @@
        
     <bean id="complaintUiController" class="com.armedia.acm.plugins.complaint.web.ComplaintUiController">
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
-		<property name="formUrl" ref="formResource" />		
+		<property name="formUrl" ref="formResource" />
+		<property name="userActionDao" ref="userActionDao" />		
     </bean>
         
 </beans>

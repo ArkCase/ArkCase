@@ -32,6 +32,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CloseCaseRequest;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserActionName;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -153,6 +154,17 @@ public class CloseCaseService extends FrevvoFormAbstractService {
 		}
 		
 		CloseCaseRequest savedRequest = getCloseCaseRequestDao().save(closeCaseRequest);
+		
+		if (!"edit".equals(mode))
+        {
+        	// Record user action
+        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_CASE_CREATED, getAuthentication().getName());
+        }
+        else
+        {
+        	// Record user action
+        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_CASE_MODIFIED, getAuthentication().getName());
+        }
 		
 		if (!caseFile.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
 			getCaseFileDao().updateComplaintStatus(caseFile.getId(), "IN APPROVAL", getAuthentication().getName(), form.getInformation().getCloseDate());
