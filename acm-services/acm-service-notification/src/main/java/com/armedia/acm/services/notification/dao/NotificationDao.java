@@ -25,31 +25,35 @@ public class NotificationDao extends AcmAbstractDao<Notification>
         return Notification.class;
     }
 
-//    public Notification findNotificationsById(Long id)
-//    {
-//        Preconditions.checkNotNull(id, "Id cannot be null");
-//        Query notifications = getEntityManager().createQuery(
-//                "SELECT notification " + "FROM Notification notification "+
-//                "WHERE notification.id = :notificationId "
-//        );
-//
-//        notifications.setParameter("notificationId", id);
-//        Notification notificationFound = (Notification) notifications.getSingleResult();
-//
-//        return notificationFound;
-//    }
-
-    public List<Notification> listNotifications()
+    /*public Notification findNotificationsById(Long id)
     {
-        Query notification = getEntityManager().createQuery(
-                "SELECT notification " + "FROM Notification notification"
+        Query notifications = getEntityManager().createQuery(
+                "SELECT notification " + "FROM Notification notification "+
+                "WHERE notification.id = :notificationId "
         );
+
+        notifications.setParameter("notificationId", id);
+        Notification notificationFound = (Notification) notifications.getSingleResult();
+
+        return notificationFound;
+    }*/
+
+    public List<Notification> listNotifications(String user)
+    {
+        String everyone="EVERYONE";
+        Query notification = getEntityManager().createQuery(
+                "SELECT notification " +
+                        "FROM Notification notification " +
+                        "WHERE notification.user = :user " +
+                        "OR notification.user = :everyone"
+        );
+        notification.setParameter("user", user);
+        notification.setParameter("everyone", everyone);
 
         List<Notification> notifications = ( List<Notification> ) notification.getResultList();
         if (null == notifications) {
             notifications = new ArrayList();
         }
-
         return notifications;
     }
 

@@ -11,28 +11,32 @@
     <artifactId>acm-service-notification</artifactId>
     <packaging>jar</packaging>
     <name>ACM Service: Notification</name>
-    <description>Asynchronous Notification.</description>
+    <description>This plugin adds the ability to add and remove notifications for an object</description>
 
     <dependencies>
-        <!-- acm -->
+        <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-data-source</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-data</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
-            <artifactId>acm-object-association-plugin</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
+
+
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-users</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-spring-context-holder</artifactId>
+            <artifactId>acm-service-plugin-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -40,9 +44,27 @@
             <artifactId>acm-service-event</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-cmis-configuration</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-object-association-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-plugin-manager</artifactId>
+            <artifactId>acm-service-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ecm</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -51,100 +73,91 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-authentication-token</artifactId>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-web</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
+
+        <!-- bean validation -->
         <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-activiti-actions</artifactId>
-            <version>${acm.version}</version>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax-validation.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-activemq-configuration</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-drools-rule-monitor</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-cmis-configuration</artifactId>
-            <version>${acm.version}</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-form-configuration</artifactId>
-            <version>${acm.version}</version>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>${javax-el.version}</version>
+            <scope>provided</scope>
         </dependency>
+
         <!-- preconditions -->
         <dependency>
             <groupId>com.google.collections</groupId>
             <artifactId>google-collections</artifactId>
+            <version>${google-collections.version}</version>
         </dependency>
 
-        <!-- spring -->
+
+        <!-- logging -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
-        <!-- spring security -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-ldap</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-        </dependency>
+
 
         <!-- json -->
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${org.json.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson-mapper-asl.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>${fasterxml-jackson-core.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${fasterxml-jackson-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
         </dependency>
 
         <!-- servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
 
-        <dependency>
-            <!-- need jstl here so IDEA can syntax highlight JSP pages -->
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-        </dependency>
-        <dependency>
-            <!-- idea syntax highlighting for Spring taglibs -->
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
-
-        <!-- apache libraries -->
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-        </dependency>
 
         <!-- testing -->
         <dependency>
@@ -187,7 +200,7 @@
             <artifactId>spring-oxm</artifactId>
             <scope>test</scope>
         </dependency>
-    </dependencies>
 
+    </dependencies>
 
 </project>
