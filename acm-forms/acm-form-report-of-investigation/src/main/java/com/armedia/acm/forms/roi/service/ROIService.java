@@ -19,6 +19,9 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.services.users.dao.ldap.UserActionDao;
+import com.armedia.acm.services.users.model.AcmUserAction;
+import com.armedia.acm.services.users.model.AcmUserActionName;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -31,6 +34,7 @@ public class ROIService extends FrevvoFormAbstractService {
 	private Logger LOG = LoggerFactory.getLogger(ROIService.class);
 	private ComplaintDao complaintDao;
 	private CaseFileDao caseFileDao;
+	private UserActionDao userActionDao;
 	
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#init()
@@ -94,7 +98,11 @@ public class ROIService extends FrevvoFormAbstractService {
 			ecmFolderId = complaint.getEcmFolderId();
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
-			parentObjectName = complaint.getComplaintNumber();			
+			parentObjectName = complaint.getComplaintNumber();		
+
+			// Record user action
+			getUserActionExecutor().execute(complaint.getComplaintId(), AcmUserActionName.LAST_COMPLAINT_MODIFIED, getAuthentication().getName());
+
 		}else if ("case".equals(type)){	
 			CaseFile caseFile = caseFileDao.find(roiForm.getReportDetails().getCaseId());
 			
@@ -106,6 +114,9 @@ public class ROIService extends FrevvoFormAbstractService {
 			parentObjectType = FrevvoFormName.CASE.toUpperCase();
 			parentObjectId = caseFile.getId();
 			parentObjectName = caseFile.getCaseNumber();
+			
+			// Record user action
+			getUserActionExecutor().execute(caseFile.getId(), AcmUserActionName.LAST_CASE_MODIFIED, getAuthentication().getName());
 		}
 			
 		saveAttachments(attachments, ecmFolderId, parentObjectType, parentObjectId, parentObjectName);
@@ -168,5 +179,19 @@ public class ROIService extends FrevvoFormAbstractService {
 	public void setCaseFileDao(CaseFileDao caseFileDao) {
 		this.caseFileDao = caseFileDao;
 	}
+
+	/**
+	 * @return the userActionDao
+	 */
+	public UserActionDao getUserActionDao() {
+		return userActionDao;
+	}
+
+	/**
+	 * @param userActionDao the userActionDao to set
+	 */
+	public void setUserActionDao(UserActionDao userActionDao) {
+		this.userActionDao = userActionDao;
+	}	
 
 }
