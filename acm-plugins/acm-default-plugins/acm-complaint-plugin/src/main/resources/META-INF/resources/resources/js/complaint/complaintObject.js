@@ -386,6 +386,7 @@ Complaint.Object = {
         ,pcin: ["tabNotes"]
         ,pcd: ["tabDocuments"]
         ,pct: ["tabTasks"]
+        ,pch: ["tabHistory"]
         ,pcr: ["tabRefComplaints"
             ,"tabRefCases"
             ,"tabRefTasks"
@@ -513,9 +514,9 @@ Complaint.Object = {
                 if ("pc" == nodeType) {
                     acmIcon = "<i class='i i-notice'></i>"; //"i-notice icon"
                 } else if ("pcd" == nodeType) {
-                    acmIcon = "<i class='i i-file'></i>";
+                    //acmIcon = "<i class='i i-file'></i>";
                 } else if ("pct" == nodeType) {
-                    acmIcon = "<i class='i i-checkmark'></i>";
+                    //acmIcon = "<i class='i i-checkmark'></i>";
                 } else if ("prevPage" == nodeType) {
                     acmIcon = "<i class='i i-arrow-up'></i>";
                 } else if ("nextPage" == nodeType) {
@@ -577,65 +578,33 @@ Complaint.Object = {
                         ,expanded: false
                         ,acmIcon: "<i class='i i-notice'></i>" //"i-notice icon";
                     })
-
-                        .addBranch({key: pageId + "." + complaintId + ".i"                   //level 2: /Complaint/Incident
-                            ,title: "Incident"
-                            ,folder: true
+                        .addLeaf({key: pageId + "." + complaintId + ".ii"                //level 3: /Complaint/Incident/Initiator
+                            ,title: "Initiator"
                         })
-                            .addLeaf({key: pageId + "." + complaintId + ".id"                //level 3: /Complaint/Incident/Detail
-                                ,title: "Detail"
-                            })
-                            .addLeaf({key: pageId + "." + complaintId + ".ii"                //level 3: /Complaint/Incident/Initiator
-                                ,title: "Initiator"
-                            })
-                            .addLeaf({key: pageId + "." + complaintId + ".ip"                //level 3: /Complaint/Incident/People
-                                ,title: "People"
-                            })
-                            .addLeafLast({key: pageId + "." + complaintId + ".in"            //level 3: /Complaint/Incident/Notes
-                                ,title: "Notes"
-                            })
-
-
+                        .addLeaf({key: pageId + "." + complaintId + ".id"                //level 3: /Complaint/Incident/Detail
+                            ,title: "Details"
+                        })
+                        .addLeaf({key: pageId + "." + complaintId + ".ip"                //level 3: /Complaint/Incident/People
+                            ,title: "People"
+                        })
                         .addLeaf({key: pageId + "." + complaintId + ".d"                   //level 2: /Complaint/Documents
                             ,title: "Documents"
                         })
-
+                        .addLeaf({key: pageId + "." + complaintId + ".in"            //level 3: /Complaint/Incident/Notes
+                            ,title: "Notes"
+                        })
                         .addLeaf({key: pageId + "." + complaintId + ".t"                   //level 2: /Complaint/Tasks
                                 ,title: "Tasks"
                         })
-
-
-                        .addBranch({key: pageId + "." + complaintId + ".r"                   //level 2: /Complaint/References
-                            ,title: "References"
-                            ,folder: true
-                        })
-                            .addLeaf({key: pageId + "." + complaintId + ".rc"                //level 3: /Complaint/References/Complaints
-                                ,title: "Other Complaints"
-                            })
-                            .addLeaf({key: pageId + "." + complaintId + ".rs"                //level 3: /Complaint/References/Cases
-                                ,title: "Other Cases"
-                            })
-                            .addLeaf({key: pageId + "." + complaintId + ".rt"                //level 3: /Complaint/References/Tasks
-                                ,title: "Other Tasks"
-                            })
-                            .addLeafLast({key: pageId + "." + complaintId + ".rd"            //level 3: /Complaint/References/Documents
-                                ,title: "Other Documents"
-                            })
-
-
-                        .addBranchLast({key: pageId + "." + complaintId + ".p"               //level 2: /Complaint/Participants
+                        .addLeaf({key: pageId + "." + complaintId + ".p"               //level 2: /Complaint/Participants
                             ,title: "Participants"
-                            ,folder: true
                         })
-                            .addLeaf({key: pageId + "." + complaintId + ".pa"                //level 3: /Complaint/Participants/Approvers
-                                ,title: "Approvers"
-                            })
-                            .addLeaf({key: pageId + "." + complaintId + ".pc"                //level 3: /Complaint/Participants/Collaborators
-                                ,title: "Collaborators"
-                            })
-                            .addLeafLast({key: pageId + "." + complaintId + ".pw"            //level 3: /Complaint/Participants/Watchers
-                                ,title: "Watchers"
-                            });
+                        .addLeaf({key: pageId + "." + complaintId + ".r"                   //level 2: /Complaint/References
+                            ,title: "References"
+                        })
+                        .addLeafLast({key: pageId + "." + complaintId + ".h"                   //level 2: /Complaint/References
+                            ,title: "History"
+                        })
                 } //end for i
 
                 if ((0 > treeInfo.total)                                    //unknown size
