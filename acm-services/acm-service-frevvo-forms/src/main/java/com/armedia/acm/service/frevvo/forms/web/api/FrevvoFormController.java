@@ -40,7 +40,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 
 /**
  * @author riste.tutureski
@@ -57,12 +59,14 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private AuthenticationTokenService authenticationTokenService;
 	private AcmPluginManager acmPluginManager;
 	private UserDao userDao;
+	private UserActionDao userActionDao;
 	private ComplaintDao complaintDao;
 	private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
     private CloseCaseRequestDao closeCaseRequestDao;
     private PersonDao personDao;
     private EcmFileDao ecmFileDao;
+    private AcmUserActionExecutor userActionExecutor;
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
@@ -219,6 +223,20 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	}
 
     /**
+	 * @return the userActionDao
+	 */
+	public UserActionDao getUserActionDao() {
+		return userActionDao;
+	}
+
+	/**
+	 * @param userActionDao the userActionDao to set
+	 */
+	public void setUserActionDao(UserActionDao userActionDao) {
+		this.userActionDao = userActionDao;
+	}
+
+	/**
 	 * @return the complaintDao
 	 */
 	public ComplaintDao getComplaintDao() {
@@ -307,4 +325,13 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setMuleClient(MuleClient muleClient) {
 		this.muleClient = muleClient;
 	}
+
+	public AcmUserActionExecutor getUserActionExecutor() {
+		return userActionExecutor;
+	}
+
+	public void setUserActionExecutor(AcmUserActionExecutor userActionExecutor) {
+		this.userActionExecutor = userActionExecutor;
+	}
+	
 }

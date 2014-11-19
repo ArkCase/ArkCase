@@ -480,6 +480,13 @@ CaseFile.Service = {
             }
         }
 
+//        ,addPersonAssociation(personAssociation)
+//        ,updatePersonAssociation(personAssociation)
+//        ,deletePersonAssociationById(personAssocId)
+//        ,addContactMethod(contactMethod)
+//        ,updateContactMethod(contactMethod)
+//        ,deleteContactMethod(contactMethodId)
+
 
 //        ,closeCaseFile : function(data) {
 //            var caseFileId = CaseFile.getCaseFileId();

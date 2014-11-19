@@ -35,7 +35,9 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.file.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 
 /**
  * @author riste.tutureski
@@ -50,10 +52,12 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	private Authentication authentication;
 	private AuthenticationTokenService authenticationTokenService;
 	private UserDao userDao;
+	private UserActionDao userActionDao;
 	private EcmFileService ecmFileService;
     private String servletContextPath;
     private String userIpAddress;
     private EcmFileDao ecmFileDao;
+    private AcmUserActionExecutor userActionExecutor;
 
 
 	@Override
@@ -105,6 +109,16 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	@Override
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
+	}
+	
+	@Override
+	public UserActionDao getUserActionDao() {
+		return userActionDao;
+	}
+
+	@Override
+	public void setUserActionDao(UserActionDao userActionDao) {
+		this.userActionDao = userActionDao;
 	}
 	
 	@Override
@@ -359,5 +373,19 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	 */
 	public void setEcmFileDao(EcmFileDao ecmFileDao) {
 		this.ecmFileDao = ecmFileDao;
+	}
+
+	/**
+	 * @return the userActionExecutor
+	 */
+	public AcmUserActionExecutor getUserActionExecutor() {
+		return userActionExecutor;
+	}
+
+	/**
+	 * @param userActionExecutor the userActionExecutor to set
+	 */
+	public void setUserActionExecutor(AcmUserActionExecutor userActionExecutor) {
+		this.userActionExecutor = userActionExecutor;
 	}
 }
