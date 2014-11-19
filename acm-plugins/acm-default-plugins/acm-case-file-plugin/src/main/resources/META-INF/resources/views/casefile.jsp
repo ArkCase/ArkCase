@@ -127,7 +127,7 @@
                                                     <small class="text-muted"><a href="#" id="caseNumber" ></a></small></div>
                                                 <div class="col-xs-2 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                                    <small class="text-muted">Start Date</small></div>
+                                                    <small class="text-muted">Create Date</small></div>
 
                                                 <div class="col-xs-1 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority">High</a></div>
