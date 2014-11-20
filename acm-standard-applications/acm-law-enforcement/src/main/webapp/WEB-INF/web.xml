@@ -84,5 +84,21 @@
         <filter-name>characterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    
+    <!-- 
+    	ETag Filter - .js and .css files
+     -->
+    <filter>
+	   <filter-name>etagFilter</filter-name>
+	   <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	   <filter-name>etagFilter</filter-name>
+	   <url-pattern>*.js</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+	   <filter-name>etagFilter</filter-name>
+	   <url-pattern>*.css</url-pattern>
+	</filter-mapping>
 
 </web-app>
