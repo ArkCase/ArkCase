@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml"
 })
-public class SpringEntityListenerConfigurerTest
+public class SpringEntityListenerConfigurerIT
 {
     @Autowired
     private TestInsertListener testInsertListener;
