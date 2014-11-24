@@ -29,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
 import com.armedia.acm.form.closecomplaint.model.ExistingCase;
 import com.armedia.acm.form.closecomplaint.model.ReferExternal;
-import com.armedia.acm.form.config.CloseInformation;
+import com.armedia.acm.form.config.ResolveInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
@@ -208,12 +208,12 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		String mode = getRequest().getParameter("mode");
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
-		CloseInformation information = new CloseInformation();
+		ResolveInformation information = new ResolveInformation();
 		if (!"edit".equals(mode))
 		{
-			information.setCloseDate(new Date());
+			information.setDate(new Date());
 		}
-		information.setDispositions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
+		information.setResolveOptions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
 
 		// Get Approvers
 		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");

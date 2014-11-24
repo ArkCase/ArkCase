@@ -14,7 +14,7 @@
     <description>Core form services used by all ACM implementations.</description>
     <modules>
         <module>acm-form-report-of-investigation</module>
-    	<module>acm-form-close-case</module>
+    	<module>acm-form-change-case-status</module>
     	<module>acm-form-close-complaint</module>
   </modules>
 
