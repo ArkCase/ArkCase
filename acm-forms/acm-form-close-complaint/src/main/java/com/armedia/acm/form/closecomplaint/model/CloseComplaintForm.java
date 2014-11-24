@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 
-import com.armedia.acm.form.config.CloseInformation;
+import com.armedia.acm.form.config.ResolveInformation;
 import com.armedia.acm.form.config.Item;
 
 
@@ -21,7 +21,7 @@ import com.armedia.acm.form.config.Item;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CloseComplaintForm {
 
-	private CloseInformation information;
+	private ResolveInformation information;
 	private ReferExternal referExternal;
 	private ExistingCase existingCase;
 	@XmlElements({
@@ -37,14 +37,14 @@ public class CloseComplaintForm {
 	/**
 	 * @return the information
 	 */
-	public CloseInformation getInformation() {
+	public ResolveInformation getInformation() {
 		return information;
 	}
 
 	/**
 	 * @param information the information to set
 	 */
-	public void setInformation(CloseInformation information) {
+	public void setInformation(ResolveInformation information) {
 		this.information = information;
 	}
 

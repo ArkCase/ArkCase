@@ -16,21 +16,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.plugins.casefile.model.CloseCaseRequest;
+import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.services.users.model.AcmParticipant;
 
 /**
  * @author riste.tutureski
  *
  */
-public class CloseCaseRequestDao extends AcmAbstractDao<CloseCaseRequest>
+public class ChangeCaseStatusDao extends AcmAbstractDao<ChangeCaseStatus>
 {
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 
 	@Override
-	protected Class<CloseCaseRequest> getPersistenceClass() 
+	protected Class<ChangeCaseStatus> getPersistenceClass() 
 	{
-		return CloseCaseRequest.class;
+		return ChangeCaseStatus.class;
 	}
 	
 	@Transactional

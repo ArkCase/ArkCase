@@ -11,8 +11,8 @@ public class FrevvoFormName {
 
 	public static final String COMPLAINT = "complaint";
 	public static final String ROI = "roi";
-	public static final String CASE = "case";
-	public static final String CLOSE_CASE = "close_case";
+	public static final String CASE_FILE = "case_file";
+	public static final String CHANGE_CASE_STATUS = "change_case_status";
 	public static final String CLOSE_COMPLAINT = "close_complaint";
 	
 }

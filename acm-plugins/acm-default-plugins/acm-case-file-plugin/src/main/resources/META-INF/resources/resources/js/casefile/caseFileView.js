@@ -41,8 +41,8 @@ CaseFile.View = {
             this.formUrls = new Object();
             
             this.formUrls["roi"] = items.properties("urlRoiForm").itemValue();
-            this.formUrls["close_case"] = items.properties("urlCloseCaseForm").itemValue();
-            this.formUrls["edit_close_case"] = items.properties("urlEditCloseCaseForm").itemValue();
+            this.formUrls["change_case_status"] = items.properties("urlChangeCaseStatusForm").itemValue();
+            this.formUrls["edit_change_case_status"] = items.properties("urlEditChangeCaseStatusForm").itemValue();
         }
         ,initialize: function() {
         }
@@ -377,28 +377,28 @@ CaseFile.View = {
 
     ,Action: {
         create: function() {
-            this.$dlgCloseCase          = $("#closeCase");
+            this.$dlgChangeCaseStatus   = $("#changeCaseStatus");
             this.$dlgConsolidateCase    = $("#consolidateCase");
             this.$edtConsolidateCase    = $("#edtConsolidateCase");
-            this.$btnCloseCase          = $("#tabTitle button[data-title='Close Case']");
+            this.$btnChangeCaseStatus   = $("#tabTitle button[data-title='Change Case Status']");
             this.$btnConsolidateCase    = $("#tabTitle button[data-title='Consolidate Case']");
-            this.$btnCloseCase          .on("click", function(e) {CaseFile.View.Action.onClickBtnCloseCase      (e, this);});
+            this.$btnChangeCaseStatus   .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
             this.$btnConsolidateCase    .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
         }
         ,initialize: function() {
         }
 
-        ,onClickBtnCloseCase: function() {
-            CaseFile.View.Action.showDlgCloseCase(function(event, ctrl){
-                var urlCloseCaseForm = CaseFile.View.MicroData.getFormUrls()['close_case'];
+        ,onClickBtnChangeCaseStatus: function() {
+            CaseFile.View.Action.showDlgChangeCaseStatus(function(event, ctrl){
+                var urlChangeCaseStatusForm = CaseFile.View.MicroData.getFormUrls()['change_case_status'];
                 var caseFileId = CaseFile.View.Tree.getActiveCaseId();
                 var c = CaseFile.Model.getCaseFile(caseFileId);
-                if (Acm.isNotEmpty(urlCloseCaseForm) && Acm.isNotEmpty(c)) {
+                if (Acm.isNotEmpty(urlChangeCaseStatusForm) && Acm.isNotEmpty(c)) {
                     if (Acm.isNotEmpty(c.caseNumber)) {
-                        urlCloseCaseForm = urlCloseCaseForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',");
+                        urlChangeCaseStatusForm = urlChangeCaseStatusForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',");
 
                         //CaseFile.View.Action._showPopup(urlCloseCaseForm, "", 860, 700);
-                        Acm.Dialog.openWindow(urlCloseCaseForm, "", 860, 700
+                        Acm.Dialog.openWindow(urlChangeCaseStatusForm, "", 860, 700
                             ,function() {
                                 CaseFile.Controller.viewClosedCaseFile(caseFileId);
                             }
@@ -416,8 +416,8 @@ CaseFile.View = {
                 alert("Consolidate case:" + caseNumber);
             });
         }
-        ,showDlgCloseCase: function(onClickBtnPrimary) {
-            Acm.Dialog.bootstrapModal(this.$dlgCloseCase, onClickBtnPrimary);
+        ,showDlgChangeCaseStatus: function(onClickBtnPrimary) {
+            Acm.Dialog.bootstrapModal(this.$dlgChangeCaseStatus, onClickBtnPrimary);
         }
         ,showDlgConsolidateCase: function(onClickBtnPrimary) {
             Acm.Dialog.bootstrapModal(this.$dlgConsolidateCase, onClickBtnPrimary);
@@ -453,7 +453,7 @@ CaseFile.View = {
 //            var timer = setInterval(function() {
 //                if(newWindow.closed) {
 //                    clearInterval(timer);
-//                    CaseFile.Controller.viewClosedCaseFile();
+//                    CaseFile.Controller.viewChangeCaseStatusFile();
 //                }
 //            }, 1000);
 //        }

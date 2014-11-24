@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlElements;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CloseInformation {
+public class ResolveInformation {
 
 	@XmlElements({
 		@XmlElement(name="id"),
@@ -33,9 +33,23 @@ public class CloseInformation {
 		
 	})
 	private String number;
-	private Date closeDate;
-	private String disposition;
-	private List<String> dispositions;
+	
+	@XmlElements({
+		@XmlElement(name="date"),
+		@XmlElement(name="closeDate"),
+		@XmlElement(name="changeDate")
+		
+	})
+	private Date date;
+	
+	@XmlElements({
+		@XmlElement(name="option"),
+		@XmlElement(name="disposition"),
+		@XmlElement(name="status")
+		
+	})
+	private String option;
+	private List<String> resolveOptions;
 	
 	/**
 	 * @return the id
@@ -65,46 +79,28 @@ public class CloseInformation {
 		this.number = number;
 	}
 
-	/**
-	 * @return the closeDate
-	 */
-	public Date getCloseDate() {
-		return closeDate;
+	public Date getDate() {
+		return date;
 	}
-	
-	/**
-	 * @param closeDate the closeDate to set
-	 */
-	public void setCloseDate(Date closeDate) {
-		this.closeDate = closeDate;
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
-	
-	/**
-	 * @return the disposition
-	 */
-	public String getDisposition() {
-		return disposition;
+
+	public String getOption() {
+		return option;
 	}
-	
-	/**
-	 * @param disposition the disposition to set
-	 */
-	public void setDisposition(String disposition) {
-		this.disposition = disposition;
+
+	public void setOption(String option) {
+		this.option = option;
 	}
-	
-	/**
-	 * @return the dispositions
-	 */
-	public List<String> getDispositions() {
-		return dispositions;
+
+	public List<String> getResolveOptions() {
+		return resolveOptions;
 	}
-	
-	/**
-	 * @param dispositions the dispositions to set
-	 */
-	public void setDispositions(List<String> dispositions) {
-		this.dispositions = dispositions;
+
+	public void setResolveOptions(List<String> resolveOptions) {
+		this.resolveOptions = resolveOptions;
 	}
 	
 }

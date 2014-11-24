@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.form.closecase.service;
+package com.armedia.acm.form.changecasestatus.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
-import com.armedia.acm.form.closecase.model.CloseCaseForm;
+import com.armedia.acm.form.changecasestatus.model.ChangeCaseStatusForm;
 import com.armedia.acm.form.config.Item;
-import com.armedia.acm.plugins.casefile.model.CloseCaseRequest;
+import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.services.users.model.AcmParticipant;
 
@@ -20,33 +20,20 @@ import com.armedia.acm.services.users.model.AcmParticipant;
  * @author riste.tutureski
  *
  */
-public class CloseCaseRequestFactory 
+public class ChangeCaseStatusRequestFactory 
 {
 
-	public CloseCaseRequest formFromXml(CloseCaseForm form, Authentication auth)
+	public ChangeCaseStatus formFromXml(ChangeCaseStatusForm form, Authentication auth)
 	{
-		CloseCaseRequest req = new CloseCaseRequest();
+		ChangeCaseStatus req = new ChangeCaseStatus();
 		
 		List<AcmParticipant> participants = convertItemsToParticipants(form.getApprovers());
 		req.setParticipants(participants);
 		req.setCaseId(form.getInformation().getId());
-		
-		populateDisposition(form, auth, req);
-		
+		req.setStatus(form.getInformation().getOption());
+
 		return req;
 	}
-	
-	private void populateDisposition(CloseCaseForm form, Authentication auth, CloseCaseRequest req)
-    {
-        Disposition disposition = new Disposition();
-        req.setDisposition(disposition);
-
-        if ( form.getInformation() != null )
-        {
-            disposition.setCloseDate(form.getInformation().getCloseDate());
-            disposition.setDispositionType(form.getInformation().getDisposition());
-        }
-    }
 	
 	private List<AcmParticipant> convertItemsToParticipants(List<Item> items)
     {
