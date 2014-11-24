@@ -22,7 +22,7 @@ Topbar.View = {
             this.$btnSearch = this.$formSearch.find("button[type='submit']");
 
             this.$formSearch.on("submit", function() {Topbar.View.QuickSearch.onSubmitFormSearch(this);});
-            this.$btnSearch.on("click", function(e) {Topbar.View.QuickSearch.onClickBtnSearch(e, this);});
+            this.$btnSearch .on("click", function(e) {Topbar.View.QuickSearch.onClickBtnSearch(e, this);});
 
             this.$formSearch.attr("method", "get");
             var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
@@ -39,7 +39,7 @@ Topbar.View = {
 
         ,onSubmitFormSearch : function(ctrl) {
             var term = this.getValueEdtSearch();
-            Topbar.Model.QuickSearch.setQuickSearchTerm(term);
+            Topbar.Controller.QuickSearch.viewChangedQuickSearchTerm(term);
             return false;
         }
 
@@ -56,12 +56,6 @@ Topbar.View = {
         ,setValueEdtSearch: function(val) {
             return Acm.Object.setPlaceHolderInput(this.$edtSearch, val);
         }
-//        ,getValueHidSearch: function() {
-//            return Acm.Object.getPlaceHolderInput(this.$hidSearch);
-//        }
-//        ,setValueHidSearch: function(val) {
-//            return Acm.Object.setPlaceHolderInput(this.$hidSearch, val);
-//        }
     }
 
     ,Suggestion: {
@@ -69,11 +63,13 @@ Topbar.View = {
             this.$formSearch = $("form[role='search']");
             this.$edtSearch = this.$formSearch.find("input.typeahead");
             this.useTypeAhead(this.$edtSearch);
+
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Suggestion.MODEL_CHANGED_SUGGESTION, this.onModelChangedSuggestion);
         }
         ,initialize: function() {
         }
 
-        ,ctrlUpdateSuggestion: function(process) {
+        ,onModelChangedSuggestion: function(process) {
             process(Topbar.Model.Suggestion.getKeys());
         }
 
@@ -130,6 +126,9 @@ Topbar.View = {
             this.$lnkAsn = $("ul.nav-user a[data-toggle='dropdown']");
             this.$lnkAsn.on("click", function(e) {Topbar.View.Asn.onClickLnkAsn(e, this);});
             this.$sectionAsn = this.$divAsnList.closest("section.dropdown-menu");
+
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_RETRIEVED_ASN_LIST        ,this.onModelRetrievedAsnList);
+
         }
         ,initialize: function() {
         }
@@ -162,7 +161,7 @@ Topbar.View = {
                         ,8
                         ,function(asnId) {
                             Topbar.View.Asn._removeAsnFromPopup(asnId);
-                            Topbar.Controller.Asn.onViewChangedAsnAction(asnId, Topbar.Model.Asn.ACTION_EXPIRED);
+                            Topbar.Controller.Asn.viewChangedAsnAction(asnId, Topbar.Model.Asn.ACTION_EXPIRED);
                             return false;
                         }
                     );
@@ -241,7 +240,7 @@ Topbar.View = {
             var asnId = $hidAsnId.val();
 
             Topbar.View.Asn._removeAsnFromPopup(asnId);
-            Topbar.Controller.Asn.onViewChangedAsnAction(asnId, Topbar.Model.Asn.ACTION_ACK);
+            Topbar.Controller.Asn.viewChangedAsnAction(asnId, Topbar.Model.Asn.ACTION_ACK);
         }
         ,_buildAsnListUiDropdown: function(asnList) {
             this._buildAsnListUi(asnList, "dropdown");
@@ -257,17 +256,17 @@ Topbar.View = {
             for (var i = 0; i < countTotal; i++) {
                 var asn = asnList[i];
                 var msg = "<div class='media list-group-item "
-                    + asn.status
-                    + "><a href=''#'><span class='pull-left thumb-sm text-center'>"
-                    + "<i class='fa fa-file fa-2x text-success'></i></span>"
-                    + "<span class='media-body block m-b-none'>"
-                    + Acm.goodValue(asn.note)
-                    + "<br><small class='text-muted'>"
-                    + Acm.goodValue(asn.created)
-                    + "</small></span></a><input type='hidden' name='asnId' value='"
-                    + Acm.goodValue(asn.id)
-                    + "' /><input type='button' name='markAsRead' value='MarkAsRead'/>"
-                    + "<input type='button' name='seeResult' value='See Result'/>"
+                        + asn.status
+                        + "><a href=''#'><span class='pull-left thumb-sm text-center'>"
+                        + "<i class='fa fa-file fa-2x text-success'></i></span>"
+                        + "<span class='media-body block m-b-none'>"
+                        + Acm.goodValue(asn.note)
+                        + "<br><small class='text-muted'>"
+                        + Acm.goodValue(asn.created)
+                        + "</small></span></a><input type='hidden' name='asnId' value='"
+                        + Acm.goodValue(asn.id)
+                        + "' /><input type='button' name='markAsRead' value='MarkAsRead'/>"
+                        + "<input type='button' name='seeResult' value='See Result'/>"
                     ;
 
                 if ("New" == Acm.goodValue(asn.action)) {
@@ -321,13 +320,17 @@ Topbar.View = {
         }
 
 
-        ,ctrlUpdateAsnList: function(asnList) {
-            Topbar.View.Asn.updateAsnCount(asnList);
-            Topbar.View.Asn.showAsnList(asnList);
+        ,onModelRetrievedAsnList: function(asnList) {
+            if (asnList.hasError) {
+                Acm.Dialog.error("Failed to retrieve notifications:" + asnList.errorMsg);
+            } else {
+                Topbar.View.Asn.updateAsnCount(asnList);
+                Topbar.View.Asn.showAsnList(asnList);
+            }
         }
-        ,ctrlNotifyAsnListError: function(errorMsg) {
-            Acm.Dialog.error("Failed to retrieve notifications:" + errorMsg);
-        }
+//        ,ctrlNotifyAsnListError: function(errorMsg) {
+//            Acm.Dialog.error("Failed to retrieve notifications:" + errorMsg);
+//        }
         ,ctrlNotifyAsnListUpdateError: function(errorMsg) {
             Acm.Dialog.error("Failed to update notifications:" + errorMsg);
         }
