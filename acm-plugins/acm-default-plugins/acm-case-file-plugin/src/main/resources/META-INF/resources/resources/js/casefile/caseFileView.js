@@ -392,17 +392,10 @@ CaseFile.View = {
             CaseFile.View.Action.showDlgChangeCaseStatus(function(event, ctrl){
                 var urlChangeCaseStatusForm = CaseFile.View.MicroData.getFormUrls()['change_case_status'];
                 var caseFileId = CaseFile.View.Tree.getActiveCaseId();
-<<<<<<< HEAD
                 var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
-                if (Acm.isNotEmpty(urlCloseCaseForm) && Acm.isNotEmpty(c)) {
-=======
-                var c = CaseFile.Model.getCaseFile(caseFileId);
                 if (Acm.isNotEmpty(urlChangeCaseStatusForm) && Acm.isNotEmpty(c)) {
->>>>>>> 06359b3d85807603f0c8ce979e486274aa602f0f
                     if (Acm.isNotEmpty(c.caseNumber)) {
                         urlChangeCaseStatusForm = urlChangeCaseStatusForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',");
-
-                        //CaseFile.View.Action._showPopup(urlCloseCaseForm, "", 860, 700);
                         Acm.Dialog.openWindow(urlChangeCaseStatusForm, "", 860, 700
                             ,function() {
                                 CaseFile.Controller.viewClosedCaseFile(caseFileId);
@@ -433,35 +426,6 @@ CaseFile.View = {
         ,setValueEdtConsolidateCase: function(val) {
             Acm.Object.setValue(this.$edtConsolidateCase, val);
         }
-
-//        ,_showPopup: function(url, title, w, h) {
-//
-//            var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-//            var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
-//
-//            width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-//            height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-//
-//            var left = ((width / 2) - (w / 2)) + dualScreenLeft;
-//            var top = ((height / 2) - (h / 2)) + dualScreenTop;
-//            var newWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
-//
-//
-//            if (window.focus) {
-//                newWindow.focus();
-//            }
-//
-//            this._checkClosePopup(newWindow);
-//        }
-//
-//        ,_checkClosePopup: function(newWindow){
-//            var timer = setInterval(function() {
-//                if(newWindow.closed) {
-//                    clearInterval(timer);
-//                    CaseFile.Controller.viewChangeCaseStatusFile();
-//                }
-//            }, 1000);
-//        }
     }
 
     ,Detail: {
