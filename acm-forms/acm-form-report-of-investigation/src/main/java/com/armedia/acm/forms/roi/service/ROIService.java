@@ -111,7 +111,7 @@ public class ROIService extends FrevvoFormAbstractService {
 				return false;
 			}
 			ecmFolderId = caseFile.getEcmFolderId();
-			parentObjectType = FrevvoFormName.CASE.toUpperCase();
+			parentObjectType = FrevvoFormName.CASE_FILE.toUpperCase();
 			parentObjectId = caseFile.getId();
 			parentObjectName = caseFile.getCaseNumber();
 			

@@ -45,8 +45,8 @@ public class CloseComplaintRequestFactory
 
         if ( form.getInformation() != null )
         {
-            disposition.setCloseDate(form.getInformation().getCloseDate());
-            disposition.setDispositionType(form.getInformation().getDisposition());
+            disposition.setCloseDate(form.getInformation().getDate());
+            disposition.setDispositionType(form.getInformation().getOption());
         }
 
         if ( form.getExistingCase() != null )

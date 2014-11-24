@@ -10,9 +10,9 @@
 	</parent>
 
 	<groupId>com.armedia.acm.acm-form</groupId>
-	<artifactId>acm-form-close-case</artifactId>
-	<name>ACM Forms: Close Case</name>
-  	<description>Close Case form.</description>
+	<artifactId>acm-form-change-case-status</artifactId>
+	<name>ACM Forms: Change Case Status</name>
+  	<description>Change Case Status Form.</description>
   	
   	<dependencies>
     	<!-- acm -->

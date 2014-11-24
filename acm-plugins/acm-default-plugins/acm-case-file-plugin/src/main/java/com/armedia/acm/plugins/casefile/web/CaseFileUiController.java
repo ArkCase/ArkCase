@@ -27,7 +27,7 @@ public class CaseFileUiController
         retval.setViewName("casefile");
         
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
-        retval.addObject("closeCaseFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_CASE));
+        retval.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS));
         
         return retval;
     }
@@ -40,7 +40,7 @@ public class CaseFileUiController
         retval.addObject("caseId", caseId);
         
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
-        retval.addObject("closeCaseFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_CASE));
+        retval.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS));
         
         return retval;
     }
