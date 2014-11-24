@@ -303,7 +303,9 @@
                         <div class="pull-right inline">
                             <div class="btn-group">
                                 <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
+                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "changeCaseStatus" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Change Case Status</button>
                                 <input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />
+                                <input id="changeCaseStatusFormUrl" type="hidden" value="${changeCaseStatusFormUrl}" />
                             </div>
                         </div>
                     </div>

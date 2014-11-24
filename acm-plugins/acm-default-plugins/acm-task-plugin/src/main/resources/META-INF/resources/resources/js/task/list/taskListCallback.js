@@ -16,6 +16,7 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_SIGNED, this.onTaskSigned);
         Acm.Dispatcher.addEventListener(this.EVENT_LIST_BYTYPEBYID_RETRIEVED, this.onFindByTypeByIdRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_COMPLAINT_DETAIL_RETRIEVED, this.onComplaintDetailRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_CASE_DETAIL_RETRIEVED, this.onCaseDetailRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_SAVED, this.onNoteSaved);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_DELETED, this.onNoteDeleted);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_LIST_RETRIEVED, this.onNotesListRetrieved);
@@ -32,6 +33,7 @@ TaskList.Callback = {
     ,EVENT_LIST_BYTYPEBYID_RETRIEVED : "task-list-signature-byTypeById-retrieved"
     ,EVENT_DETAIL_SAVED               : "event-detail-saved"
     ,EVENT_COMPLAINT_DETAIL_RETRIEVED : "complaint-detail-retrieved"
+    ,EVENT_CASE_DETAIL_RETRIEVED : "case-detail-retrieved"
     ,EVENT_NOTE_SAVED           : "object-note-saved"
     ,EVENT_NOTE_DELETED         : "object-note-deleted"
     ,EVENT_NOTE_LIST_RETRIEVED  : "object-note-listed"
@@ -121,8 +123,11 @@ TaskList.Callback = {
                 if(response.attachedToObjectId != null){
                     var parentObjId = response.attachedToObjectId;
                     TaskList.setParentObjId(parentObjId);
-                    //if(response.attachedToObjectType.ignoreCase == "complaint")
-                    TaskList.Service.retrieveComplaintDetail(parentObjId);
+                    if(response.attachedToObjectType.toLowerCase() == "complaint") {
+                    	TaskList.Service.retrieveComplaintDetail(parentObjId);	
+                    }else if(response.attachedToObjectType.toLowerCase() == "case_file") {
+                    	TaskList.Service.retrieveCaseDetail(parentObjId);
+                    }
                 }
                 else{
                     var parentObj = {};
@@ -186,6 +191,32 @@ TaskList.Callback = {
                 parentObj.status = complaint.status;
                 parentObj.subjectType = complaint.complaintType;
                 parentObj.number = complaint.complaintNumber;
+                TaskList.Object.updateParentObjDetail(parentObj);
+            }
+        }
+    }
+    
+    ,onCaseDetailRetrieved : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to retrieve case detail:" + response.errorMsg);
+        } else {
+            if (Acm.isNotEmpty(response.id)) {
+                var c = response;
+                var id = TaskList.getParentObjId();
+                if (id != c.id) {
+                    return;         //user clicks another case before callback, do nothing
+                }
+                TaskList.cacheParentObject.put(id+"_case_file", c);
+
+                //pack data into parent object
+                var parentObj = {}
+                parentObj.title = c.title;
+                parentObj.incidentDate = c.created;
+                parentObj.priority =  c.priority;
+                parentObj.assignee = c.creator;
+                parentObj.status = c.status;
+                parentObj.subjectType = c.caseType;
+                parentObj.number = c.caseNumber;
                 TaskList.Object.updateParentObjDetail(parentObj);
             }
         }

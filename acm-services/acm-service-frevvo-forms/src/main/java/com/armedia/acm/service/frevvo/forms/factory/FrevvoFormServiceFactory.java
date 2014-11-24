@@ -86,6 +86,8 @@ public class FrevvoFormServiceFactory {
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             service.setChangeCaseStatusDao(frevvoFormController.getChangeCaseStatusDao());
             service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
+            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
+            service.setMuleClient(frevvoFormController.getMuleClient());
             
             return service;
 		}

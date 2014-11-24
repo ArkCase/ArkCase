@@ -50,9 +50,18 @@ TaskList.JTable = {
             ,toolbar: {
                 items: [{
                     //icon: 'jtable-edit-command-button',
+                	cssClass: 'editCloseComplaint',
                     text: 'Edit Close Complaint Request',
                     click: function () {
                         TaskList.Event.onEditCloseComplaint();
+                    }
+                },
+                {
+                    //icon: 'jtable-edit-command-button',
+                	cssClass: 'changeCaseStatus',
+                    text: 'Change Case Status',
+                    click: function () {
+                        TaskList.Event.onChangeCaseStatus();
                     }
                 }]
             }
