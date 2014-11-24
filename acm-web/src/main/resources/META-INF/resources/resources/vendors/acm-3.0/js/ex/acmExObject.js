@@ -195,10 +195,72 @@ AcmEx.Object = {
             $jt.jtable(jtArg);
             $jt.jtable('load');
         }
+        ,useChildTable: function($jt, childLinks, arg) {
+            var argNew = {fields:{}};
+            argNew.fields.subTables = {
+                title: 'Entities'
+                ,width: '10%'
+                ,sorting: false
+                ,edit: false
+                ,create: false
+                ,openChildAsAccordion: true
+                ,display: function (commData) {
+                    var $links = null;
+                    for (var i = 0; i < childLinks.length; i++) {
+                        if (0 == i) {
+                            $links = childLinks[i]($jt);
+                        } else {
+                            $links = $links.add(childLinks[i]($jt));
+                        }
+                    }
+                    return $links;
+                }
+            }
+            for (var key in arg) {
+                if ("fields" == key) {
+                    for (var FieldKey in arg.fields) {
+                        argNew.fields[FieldKey] = arg.fields[FieldKey];
+                    }
+                } else {
+                    argNew[key] = arg[key];
+                }
+            }
+            $jt.jtable(argNew);
+            $jt.jtable('load');
+        }
+        ,useAsChild: function($jt, $row, arg) {
+            $jt.jtable('openChildTable'
+                ,$row.closest('tr')
+                ,arg
+                ,function (data) { //opened handler
+                    data.childTable.jtable('load');
+                }
+            );
+        }
         ,clickAddRecordHandler: function($jt, handler) {
             var $spanAddRecord = $jt.find(".jtable-toolbar-item-add-record");
             $spanAddRecord.unbind("click").on("click", function(e){handler(e, this);});
         }
+        ,toggleChildTable: function($t, $row, fnOpen, title) {
+            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
+            var curTitle = $childRow.find("div.jtable-title-text").text();
+
+            var toClose;
+            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
+                toClose = (curTitle === title);
+            } else {
+                toClose = false;
+            }
+
+            if (toClose) {
+                //fnClose($t, $row);
+                $t.jtable('closeChildTable', $row.closest('tr'));
+            } else {
+                fnOpen($t, $row);
+            }
+        }
+
+        //toggleSubJTable is to be retired; use toggleChildTable
         ,toggleSubJTable: function($t, $row, fnOpen, fnClose, title) {
             var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
             var curTitle = $childRow.find("div.jtable-title-text").text();

@@ -28,6 +28,12 @@ CaseFile.Controller = {
     ,ME_PARTICIPANT_ADDED               : "case-model-participant-added"            //param: caseFileId, participant
     ,ME_PARTICIPANT_UPDATED             : "case-model-participant-updated"          //param: caseFileId, participant
     ,ME_PARTICIPANT_DELETED             : "case-model-participant-deleted"          //param: caseFileId, participantId
+    ,ME_PERSON_ASSOCIATION_ADDED        : "case-model-person-association-added"     //param: caseFileId, personAssociation
+    ,ME_PERSON_ASSOCIATION_UPDATED      : "case-model-person-association-updated"   //param: caseFileId, personAssociation
+    ,ME_PERSON_ASSOCIATION_DELETED      : "case-model-person-association-deleted"   //param: caseFileId, personAssociationId
+    ,ME_CONTACT_METHOD_ADDED        : "case-model-contact-method-added"     //param: caseFileId, personAssociationId, contactMethod
+    ,ME_CONTACT_METHOD_UPDATED      : "case-model-contact-method-updated"   //param: caseFileId, personAssociationId, contactMethod
+    ,ME_CONTACT_METHOD_DELETED      : "case-model-contact-method-deleted"   //param: caseFileId, personAssociationId, contactMethodId
 
     ,ME_NOTE_SAVED                      : "case-model-note-saved"                   //param: note
     ,ME_NOTE_ADDED                      : "case-model-note-added"                   //param: note
@@ -53,6 +59,12 @@ CaseFile.Controller = {
     ,VE_PARTICIPANT_ADDED               : "case-view-participant-added"             //param: caseFileId, participant
     ,VE_PARTICIPANT_UPDATED             : "case-view-participant-updated"           //param: caseFileId, participant
     ,VE_PARTICIPANT_DELETED             : "case-view-participant-deleted"           //param: caseFileId, participantId
+    ,VE_PERSON_ASSOCIATION_ADDED        : "case-view-person-association-added"      //param: caseFileId, personAssociation
+    ,VE_PERSON_ASSOCIATION_UPDATED      : "case-view-person-association-updated"    //param: caseFileId, personAssociation
+    ,VE_PERSON_ASSOCIATION_DELETED      : "case-view-person-association-deleted"    //param: caseFileId, personAssociationId
+    ,VE_CONTACT_METHOD_ADDED        : "case-view-contact-method-added"      //param: caseFileId, personAssociationId, contactMethod
+    ,VE_CONTACT_METHOD_UPDATED      : "case-view-contact-method-updated"    //param: caseFileId, personAssociationId, contactMethod
+    ,VE_CONTACT_METHOD_DELETED      : "case-view-contact-method-deleted"    //param: caseFileId, personAssociationId, contactMethodId
 
     ,VE_NOTE_ADDED                      : "case-view-note-added"                    //param: note
     ,VE_NOTE_UPDATED                    : "case-view-note-updated"                  //param: note
@@ -109,6 +121,24 @@ CaseFile.Controller = {
     }
     ,modelDeletedParticipant : function(caseFileId, participantId) {
         Acm.Dispatcher.fireEvent(this.ME_PARTICIPANT_DELETED, caseFileId, participantId);
+    }
+    ,modelAddedPersonAssociation : function(caseFileId, personAssociation) {
+        Acm.Dispatcher.fireEvent(this.ME_PERSON_ASSOCIATION_ADDED, caseFileId, personAssociation);
+    }
+    ,modelUpdatedPersonAssociation : function(caseFileId, personAssociation) {
+        Acm.Dispatcher.fireEvent(this.ME_PERSON_ASSOCIATION_UPDATED, caseFileId, personAssociation);
+    }
+    ,modelDeletedPersonAssociation : function(caseFileId, personAssociationId) {
+        Acm.Dispatcher.fireEvent(this.ME_PERSON_ASSOCIATION_DELETED, caseFileId, personAssociationId);
+    }
+    ,modelAddedContactMethod : function(caseFileId, personAssociationId, contactMethod) {
+        Acm.Dispatcher.fireEvent(this.ME_CONTACT_METHOD_ADDED, caseFileId, personAssociationId, contactMethod);
+    }
+    ,modelUpdatedContactMethod : function(caseFileId, personAssociationId, contactMethod) {
+        Acm.Dispatcher.fireEvent(this.ME_CONTACT_METHOD_UPDATED, caseFileId, personAssociationId, contactMethod);
+    }
+    ,modelDeletedContactMethod : function(caseFileId, personAssociationId, contactMethodId) {
+        Acm.Dispatcher.fireEvent(this.ME_CONTACT_METHOD_DELETED, caseFileId, personAssociationId, contactMethodId);
     }
 
     ,modelSavedNote : function(note) {
@@ -175,6 +205,24 @@ CaseFile.Controller = {
     }
     ,viewDeletedParticipant: function(caseFileId, participantId) {
         Acm.Dispatcher.fireEvent(this.VE_PARTICIPANT_DELETED, caseFileId, participantId);
+    }
+    ,viewAddedPersonAssociation : function(caseFileId, personAssociation) {
+        Acm.Dispatcher.fireEvent(this.VE_PERSON_ASSOCIATION_ADDED, caseFileId, personAssociation);
+    }
+    ,viewUpdatedPersonAssociation : function(caseFileId, personAssociation) {
+        Acm.Dispatcher.fireEvent(this.VE_PERSON_ASSOCIATION_UPDATED, caseFileId, personAssociation);
+    }
+    ,viewDeletedPersonAssociation : function(caseFileId, personAssociationId) {
+        Acm.Dispatcher.fireEvent(this.VE_PERSON_ASSOCIATION_DELETED, caseFileId, personAssociationId);
+    }
+    ,viewAddedContactMethod : function(caseFileId, personAssociationId, contactMethod) {
+        Acm.Dispatcher.fireEvent(this.VE_CONTACT_METHOD_ADDED, caseFileId, personAssociationId, contactMethod);
+    }
+    ,viewUpdatedContactMethod : function(caseFileId, personAssociationId, contactMethod) {
+        Acm.Dispatcher.fireEvent(this.VE_CONTACT_METHOD_UPDATED, caseFileId, personAssociationId, contactMethod);
+    }
+    ,viewDeletedContactMethod : function(caseFileId, personAssociationId, contactMethodId) {
+        Acm.Dispatcher.fireEvent(this.VE_CONTACT_METHOD_DELETED, caseFileId, personAssociationId, contactMethodId);
     }
 
     ,viewAddedNote: function(note) {

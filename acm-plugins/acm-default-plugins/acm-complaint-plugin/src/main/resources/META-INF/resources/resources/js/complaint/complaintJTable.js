@@ -60,8 +60,6 @@ Complaint.JTable = {
 
 
     ,_createJTable4SubTable: function($s, arg) {
-        //return;
-
         var argNew = {fields:{}};
         argNew.fields.subTables = {
             title: 'Entities'
