@@ -32,8 +32,8 @@ import com.armedia.acm.services.users.model.AcmParticipant;
  *
  */
 @Entity
-@Table(name="acm_close_case_request")
-public class CloseCaseRequest implements Serializable, AcmObject, AcmEntity{
+@Table(name="acm_change_case_status")
+public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
 
 	/**
 	 * 
@@ -41,36 +41,32 @@ public class CloseCaseRequest implements Serializable, AcmObject, AcmEntity{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-    @Column(name = "cm_close_case_id")
+    @Column(name = "cm_change_case_status_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
 	@Column(name = "cm_case_id")
     private Long caseId;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_disposition_id")
-    private Disposition disposition;
-	
-	@Column(name = "cm_close_case_status")
-    private String status = "IN APPROVAL";
+	@Column(name = "cm_change_case_status_status")
+    private String status = "ACTIVE";
 	
 	@OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_object_id")
     private List<AcmParticipant> participants = new ArrayList<>();
 	
-	@Column(name = "cm_close_case_created", nullable = false, insertable = true, updatable = false)
+	@Column(name = "cm_change_case_status_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @Column(name = "cm_close_case_creator", insertable = true, updatable = false)
+    @Column(name = "cm_change_case_status_creator", insertable = true, updatable = false)
     private String creator;
 
-    @Column(name = "cm_close_case_modified", nullable = false)
+    @Column(name = "cm_change_case_status_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Column(name = "cm_close_case_modifier")
+    @Column(name = "cm_change_case_status_modifier")
     private String modifier;
     
     @PrePersist
@@ -84,7 +80,7 @@ public class CloseCaseRequest implements Serializable, AcmObject, AcmEntity{
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getId());
-            ap.setObjectType("CLOSE_CASE_REQUEST");
+            ap.setObjectType("CHANGE_CASE_STATUS");
         }
     }
     
@@ -111,16 +107,6 @@ public class CloseCaseRequest implements Serializable, AcmObject, AcmEntity{
 	public void setCaseId(Long caseId) {
 		this.caseId = caseId;
 	}
-
-	public Disposition getDisposition()
-    {
-        return disposition;
-    }
-
-    public void setDisposition(Disposition disposition)
-    {
-        this.disposition = disposition;
-    }
     
     public String getStatus()
     {
@@ -193,7 +179,7 @@ public class CloseCaseRequest implements Serializable, AcmObject, AcmEntity{
 	@Override
 	public String getObjectType() 
 	{
-		return "CloseCaseRequest";
+		return "ChangeCaseStatus";
 	}
 
 }
