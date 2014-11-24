@@ -23,7 +23,8 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-library-activiti-configuration.xml",
         "classpath:/spring/spring-library-data-source.xml",
-        "classpath:/spring/spring-library-test-activiti-configuration.xml"
+        "classpath:/spring/spring-library-test-activiti-configuration.xml",
+        "classpath:/spring/spring-library-context-holder.xml"
 })
 public class AcmActivitiSpringIT
 {
