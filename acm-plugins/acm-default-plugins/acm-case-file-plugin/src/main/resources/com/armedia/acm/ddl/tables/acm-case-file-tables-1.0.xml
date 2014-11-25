@@ -151,4 +151,50 @@
         <dropNotNullConstraint tableName="acm_case_file" columnName="cm_case_type"/>
         <dropNotNullConstraint tableName="acm_case_file" columnName="cm_case_title"/>
     </changeSet>
+    
+    <changeSet id="case-file-11-drop-close-case-request-table" author="riste.tutureski">
+    	<dropPrimaryKey tableName="acm_close_case_request" constraintName="pk_close_case_request"/>
+    	<dropForeignKeyConstraint baseTableName="acm_close_case_request" constraintName="fk_close_case_cmplnt_id" />
+    	<dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_case_id"/>
+    	<dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_disposition_id"/>
+    	<dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_status"/>
+    	<dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_created"/>
+    	<dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_creator"/>
+    	<dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_modified"/>
+    	<dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_modifier"/>
+    	<dropTable tableName="acm_close_case_request"/>
+    </changeSet>
+    
+    <changeSet id="case-file-12-add-change-case-status-table" author="riste.tutureski">
+        <createTable tableName="acm_change_case_status">
+            <column name="cm_change_case_status_id" type="NUMBER(32,0)">
+                <constraints primaryKeyName="pk_change_case_status" primaryKey="true"/>
+            </column>
+            <column name="cm_case_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_change_case_status_status" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_change_case_status_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_change_case_status_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_change_case_status_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_change_case_status_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_change_case_status" baseColumnNames="cm_case_id"
+                                 constraintName="fk_change_case_status_case_id"
+                                 referencedTableName="acm_case_file"
+                                 referencedColumnNames="cm_case_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
+    
 </databaseChangeLog>

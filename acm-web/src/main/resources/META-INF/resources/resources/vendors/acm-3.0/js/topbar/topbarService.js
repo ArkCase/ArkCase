@@ -7,10 +7,12 @@
  */
 Topbar.Service = {
     create : function() {
-        if (this.Asn.create) {Topbar.Service.Asn.create();}
+        if (this.Suggestion.create) {Topbar.Service.Suggestion.create();}
+        if (this.Asn.create)        {Topbar.Service.Asn.create();}
     }
     ,initialize: function() {
-        if (this.Asn.initialize) {Topbar.Service.Asn.initialize();}
+        if (this.Suggestion.initialize) {Topbar.Service.Suggestion.initialize();}
+        if (this.Asn.initialize)        {Topbar.Service.Asn.initialize();}
     }
 
     ,Suggestion: {
@@ -21,15 +23,6 @@ Topbar.Service = {
         ,API_TYPEAHEAD_SUGGESTION_BEGIN_      : "/api/latest/plugin/search/quickSearch?q=*"
         ,API_TYPEAHEAD_SUGGESTION_END         : "*&start=0&n=16"
 
-        ,_validateSuggestionData: function(data) {
-            if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start) || Acm.isEmpty(data.response.docs)) {
-                return false;
-            }
-            return true;
-        }
         ,retrieveSuggestion: function(query, process){
             var url = App.getContextPath() + this.API_TYPEAHEAD_SUGGESTION_BEGIN_
                 + query
@@ -39,10 +32,10 @@ Topbar.Service = {
                 url: url
                 ,cache: false
                 ,success: function(data){
-                    if (Topbar.Service.Suggestion._validateSuggestionData(data)) {
+                    if (Acm.Validator.validateSolrData(data)) {
                         var docs = data.response.docs;
                         Topbar.Model.Suggestion.buildSuggestion(query, docs);
-                        Topbar.Controller.Suggestion.onModelChangeSuggestion(process);
+                        Topbar.Controller.Suggestion.modelChangedSuggestion(process);
                     }
                 }
             });
@@ -63,11 +56,11 @@ Topbar.Service = {
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                        Topbar.Controller.Asn.onModelChangedAsnListError(response.errorMsg);
+                        Topbar.Controller.Asn.modelRetrievedAsnList(response);
                     } else {
                         var asnList = response;
                         Topbar.Model.Asn.setAsnList(asnList);
-                        Topbar.Controller.Asn.onModelChangedAsnList(asnList);
+                        Topbar.Controller.Asn.modelRetrievedAsnList(asnList);
                     }
                 }
                 ,App.getContextPath() + this.API_RETRIEVE_ASN_LIST_
@@ -78,9 +71,9 @@ Topbar.Service = {
             Acm.Service.asyncPost(
                 function(response) {
                     if (response.hasError) {
-                        Topbar.Controller.Asn.onModelChangedAsnListUpdateError(response.errorMsg);
+                        Topbar.Controller.Asn.modelUpdatedAsnList(response);
                     } else {
-                        Topbar.Controller.Asn.onModelChangedAsnListUpdateSuccess();
+                        Topbar.Controller.Asn.modelUpdatedAsnList();
                     }
                 }
                 ,App.getContextPath() + this.API_UPDATE_ASN_LIST
@@ -88,12 +81,22 @@ Topbar.Service = {
             )
         }
 
+        ,updateAsnAction: function(asnId, action) {
+            var asnList = this.getAsnList();
+            var asn = this.findAsn(asnId, asnList);
+            if (asn) {
+                asn.action = action;
+                this.setAsnList(asnList);
+            }
+            Topbar.Service.Asn.updateAsnList(asnList);
+        }
+
 
     } //Asn
 
 
 
-    ,API_TYPEAHEAD_SUGGESTION       : "/resources/ctrs.json"
+//    ,API_TYPEAHEAD_SUGGESTION       : "/resources/ctrs.json"
 //    ,API_GET_TYPEAHEAD_TERMS       : "/api/latest/plugin/complaint/types"
 //
 //
@@ -110,4 +113,3 @@ Topbar.Service = {
 //    }
 
 };
-

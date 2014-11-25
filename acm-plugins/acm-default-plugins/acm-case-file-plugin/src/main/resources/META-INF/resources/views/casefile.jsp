@@ -10,8 +10,8 @@
         <span itemprop="caseFileId">${caseId}</span>
         <span itemprop="token">${token}</span>
         <span itemprop="urlRoiForm">${roiFormUrl}</span>
-        <span itemprop="urlCloseCaseForm">${closeCaseFormUrl}</span>
-        <span itemprop="urlEditCloseCaseForm">${editCloseCaseFormUrl}</span>
+        <span itemprop="urlChangeCaseStatusForm">${changeCaseStatusFormUrl}</span>
+        <span itemprop="urlEditChangeCaseStatusForm">${editChangeCaseStatusFormUrl}</span>
     </div>
 </jsp:attribute>
 
@@ -162,22 +162,22 @@
                                 <div class="wrapper" id="tabTitle" style="display:none;">
                                     <div class="pull-right inline">
                                         <div class="btn-group">
-                                            <%--<button class="btn btn-default btn-sm" data-title="Close Case"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
-                                            <button class="btn btn-default btn-sm" data-title="Close Case" ><i class="fa fa-archive"></i> Close</button>
+                                            <%--<button class="btn btn-default btn-sm" data-title="Change Case Status"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
+                                            <button class="btn btn-default btn-sm" data-title="Change Case Status" ><i class="fa fa-archive"></i> Change Case Status</button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Consolidate Case"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>--%>
                                             <button class="btn btn-default btn-sm" data-title="Consolidate Case"><i class="fa fa-random"></i> Consolidate</button>
                                             <!-- Modal -->
-                                            <div class="modal fade" id="closeCase" tabindex="-1" role="dialog" aria-labelledby="labCloseCase" aria-hidden="true">
+                                            <div class="modal fade" id="changeCaseStatus" tabindex="-1" role="dialog" aria-labelledby="labChangeCaseStatus" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                            <h4 class="modal-title" id="labCloseCase">Close Case</h4>
+                                                            <h4 class="modal-title" id="labChangeCaseStatus">Change Case Status</h4>
                                                         </div>
-                                                        <div class="modal-body"> Are you sure you want to close this case? </div>
+                                                        <div class="modal-body"> Are you sure you want to change the status for this case? </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                            <button type="button" class="btn btn-primary">Close Case</button>
+                                                            <button type="button" class="btn btn-primary">Change Case Status</button>
                                                         </div>
                                                     </div>
                                                 </div>

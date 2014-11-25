@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.form.closecase.service;
+package com.armedia.acm.form.changecasestatus.service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.armedia.acm.form.closecase.model.CloseCaseForm;
-import com.armedia.acm.form.config.CloseInformation;
+import com.armedia.acm.form.changecasestatus.model.ChangeCaseStatusForm;
+import com.armedia.acm.form.changecasestatus.model.ChangeCaseStatusFormEvent;
+import com.armedia.acm.form.config.ResolveInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -21,15 +22,16 @@ import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
-import com.armedia.acm.plugins.casefile.dao.CloseCaseRequestDao;
+import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.casefile.model.CloseCaseRequest;
+import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
@@ -40,11 +42,12 @@ import com.google.gson.GsonBuilder;
  * @author riste.tutureski
  *
  */
-public class CloseCaseService extends FrevvoFormAbstractService {
+public class ChangeCaseStatusService extends FrevvoFormAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	private CaseFileDao caseFileDao;
-	private CloseCaseRequestDao closeCaseRequestDao;
+	private ChangeCaseStatusDao changeCaseStatusDao;
+	private ApplicationEventPublisher applicationEventPublisher;
 	private MuleClient muleClient;
 	
 	/* (non-Javadoc)
@@ -106,7 +109,7 @@ public class CloseCaseService extends FrevvoFormAbstractService {
 		String mode = getRequest().getParameter("mode");
 		
 		// Convert XML data to Object
-		CloseCaseForm form = (CloseCaseForm) convertFromXMLToObject(cleanXML(xml), CloseCaseForm.class);
+		ChangeCaseStatusForm form = (ChangeCaseStatusForm) convertFromXMLToObject(cleanXML(xml), ChangeCaseStatusForm.class);
 		
 		if (form == null)
 		{
@@ -130,75 +133,73 @@ public class CloseCaseService extends FrevvoFormAbstractService {
 			return true;
 		}
 		
-		CloseCaseRequestFactory factory = new CloseCaseRequestFactory();
-		CloseCaseRequest closeCaseRequest = factory.formFromXml(form, getAuthentication());
+		ChangeCaseStatusRequestFactory factory = new ChangeCaseStatusRequestFactory();
+		ChangeCaseStatus changeCaseStatus = factory.formFromXml(form, getAuthentication());
 		
 		if ("edit".equals(mode))
 		{
 			String requestId = getRequest().getParameter("requestId");
-			CloseCaseRequest closeCaseRequestFromDatabase = null;
+			ChangeCaseStatus changeCaseStatusFromDatabase = null;
 			
 			try{
-	        	Long closeCaseRequestId = Long.parseLong(requestId);
-	        	closeCaseRequestFromDatabase = getCloseCaseRequestDao().find(closeCaseRequestId);
+	        	Long changeCaseStatusId = Long.parseLong(requestId);
+	        	changeCaseStatusFromDatabase = getChangeCaseStatusDao().find(changeCaseStatusId);
         	}
         	catch(Exception e)
         	{
         		LOG.warn("Close Case Request with id=" + requestId + " is not found. The new request will be recorded in the database.");
         	}
 			
-			if (null != closeCaseRequestFromDatabase){
-        		closeCaseRequest.setId(closeCaseRequestFromDatabase.getId());
-        		getCloseCaseRequestDao().delete(closeCaseRequestFromDatabase.getParticipants());
+			if (null != changeCaseStatusFromDatabase){
+				changeCaseStatus.setId(changeCaseStatusFromDatabase.getId());
+        		getChangeCaseStatusDao().delete(changeCaseStatusFromDatabase.getParticipants());
         	}
 		}
 		
-		CloseCaseRequest savedRequest = getCloseCaseRequestDao().save(closeCaseRequest);
+		ChangeCaseStatus savedRequest = getChangeCaseStatusDao().save(changeCaseStatus);
 		
 		if (!"edit".equals(mode))
         {
         	// Record user action
-        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_CASE_CREATED, getAuthentication().getName());
+        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CHANGE_CASE_STATUS_CREATED, getAuthentication().getName());
         }
         else
         {
         	// Record user action
-        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_CASE_MODIFIED, getAuthentication().getName());
+        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CHANGE_CASE_STATUS_MODIFIED, getAuthentication().getName());
         }
-		
-		if (!caseFile.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
-			caseFile.setStatus("IN APPROVAL");
-			getCaseFileDao().save(caseFile);
-		}
 		
 		// Save attachments (or update XML form and PDF form if the mode is "edit")
 		FrevvoUploadedFiles uploadedFiles = saveAttachments(
                 attachments,
                 caseFile.getEcmFolderId(),
-                FrevvoFormName.CASE.toUpperCase(),
+                FrevvoFormName.CASE_FILE.toUpperCase(),
                 caseFile.getId(),
                 caseFile.getCaseNumber());
 		
-		return false;
+		ChangeCaseStatusFormEvent event = new ChangeCaseStatusFormEvent(caseFile.getCaseNumber(), caseFile.getId(), savedRequest, uploadedFiles, mode, getAuthentication().getName(), getUserIpAddress(), true);
+		getApplicationEventPublisher().publishEvent(event);
+		
+		return true;
 	}
 
     @Override
     public String getFormName()
     {
-        return FrevvoFormName.CLOSE_CASE;
+        return FrevvoFormName.CHANGE_CASE_STATUS;
     }
     
     private Object initFormData()
     {
     	String mode = getRequest().getParameter("mode");
-    	CloseCaseForm closeCase = new CloseCaseForm();
+    	ChangeCaseStatusForm changeCaseStatus = new ChangeCaseStatusForm();
     	
-    	CloseInformation information = new CloseInformation();
+    	ResolveInformation information = new ResolveInformation();
 		if (!"edit".equals(mode))
 		{
-			information.setCloseDate(new Date());
+			information.setDate(new Date());
 		}
-		information.setDispositions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_CASE + ".dispositions"), ","));
+		information.setResolveOptions(convertToList((String) getProperties().get(FrevvoFormName.CHANGE_CASE_STATUS + ".statuses"), ","));
 		
 		// Get Approvers
 		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
@@ -213,11 +214,11 @@ public class CloseCaseService extends FrevvoFormAbstractService {
 			}
 		}
 		
-		closeCase.setInformation(information);
-		closeCase.setApproverOptions(approverOptions);
+		changeCaseStatus.setInformation(information);
+		changeCaseStatus.setApproverOptions(approverOptions);
     	
 		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
-		String jsonString = gson.toJson(closeCase);
+		String jsonString = gson.toJson(changeCaseStatus);
 		
 		JSONObject json = new JSONObject(jsonString);
 
@@ -272,18 +273,12 @@ public class CloseCaseService extends FrevvoFormAbstractService {
 		this.caseFileDao = caseFileDao;
 	}
 
-	/**
-	 * @return the closeCaseRequestDao
-	 */
-	public CloseCaseRequestDao getCloseCaseRequestDao() {
-		return closeCaseRequestDao;
+	public ChangeCaseStatusDao getChangeCaseStatusDao() {
+		return changeCaseStatusDao;
 	}
 
-	/**
-	 * @param closeCaseRequestDao the closeCaseRequestDao to set
-	 */
-	public void setCloseCaseRequestDao(CloseCaseRequestDao closeCaseRequestDao) {
-		this.closeCaseRequestDao = closeCaseRequestDao;
+	public void setChangeCaseStatusDao(ChangeCaseStatusDao changeCaseStatusDao) {
+		this.changeCaseStatusDao = changeCaseStatusDao;
 	}
 
 	/**
@@ -298,6 +293,15 @@ public class CloseCaseService extends FrevvoFormAbstractService {
 	 */
 	public void setMuleClient(MuleClient muleClient) {
 		this.muleClient = muleClient;
+	}
+
+	public ApplicationEventPublisher getApplicationEventPublisher() {
+		return applicationEventPublisher;
+	}
+
+	public void setApplicationEventPublisher(
+			ApplicationEventPublisher applicationEventPublisher) {
+		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
 }

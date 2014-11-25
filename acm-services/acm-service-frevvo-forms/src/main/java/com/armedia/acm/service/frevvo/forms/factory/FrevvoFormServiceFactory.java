@@ -3,7 +3,7 @@
  */
 package com.armedia.acm.service.frevvo.forms.factory;
 
-import com.armedia.acm.form.closecase.service.CloseCaseService;
+import com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusService;
 import com.armedia.acm.form.closecomplaint.service.CloseComplaintService;
 import com.armedia.acm.forms.roi.service.ROIService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
@@ -68,11 +68,11 @@ public class FrevvoFormServiceFactory {
             return service;
 		}
 		
-		if (FrevvoFormName.CLOSE_CASE.equals(name))
+		if (FrevvoFormName.CHANGE_CASE_STATUS.equals(name))
 		{
 			String contextPath = request.getServletContext().getContextPath();
 			
-			CloseCaseService service = new CloseCaseService();
+			ChangeCaseStatusService service = new ChangeCaseStatusService();
 			
 			service.setEcmFileService(frevvoFormController.getEcmFileService());
             service.setServletContextPath(contextPath);
@@ -84,7 +84,10 @@ public class FrevvoFormServiceFactory {
             service.setUserActionDao(frevvoFormController.getUserActionDao());
             service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
-            service.setCloseCaseRequestDao(frevvoFormController.getCloseCaseRequestDao());
+            service.setChangeCaseStatusDao(frevvoFormController.getChangeCaseStatusDao());
+            service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
+            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
+            service.setMuleClient(frevvoFormController.getMuleClient());
             
             return service;
 		}

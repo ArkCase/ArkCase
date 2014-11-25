@@ -18,6 +18,8 @@ Topbar.Model = {
     ,QuickSearch: {
         create: function() {
             this._quickSearchTerm = new Acm.Model.SessionData("AcmQuickSearchTerm");
+
+            Acm.Dispatcher.addEventListener(Topbar.Controller.QuickSearch.VIEW_CHANGED_QUICK_SEARCH_TERM, this.onViewChangedQuickSearchTerm);
         }
         ,initialize: function() {
         }
@@ -26,6 +28,10 @@ Topbar.Model = {
         }
         ,setQuickSearchTerm: function(term) {
             this._quickSearchTerm.set(term);
+        }
+
+        ,onViewChangedQuickSearchTerm: function(term) {
+            Topbar.Model.QuickSearch.setQuickSearchTerm(term);
         }
     }
 
@@ -62,6 +68,9 @@ Topbar.Model = {
     ,Asn: {
         create : function() {
             this._asnListData = new Acm.Model.SessionData("AcmAsnList");
+
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_ACTION,this.onViewChangedAsnAction);
+
         }
         ,initialize: function() {
         }
@@ -173,15 +182,11 @@ Topbar.Model = {
         ,ctrlRetrieveAsnList: function(user) {
             Topbar.Service.Asn.retrieveAsnList(user);
         }
-        ,ctrlUpdateAsnAction: function(asnId, action) {
-            var asnList = this.getAsnList();
-            var asn = this.findAsn(asnId, asnList);
-            if (asn) {
-                asn.action = action;
-                this.setAsnList(asnList);
-            }
-            Topbar.Service.Asn.updateAsnList(asnList);
+
+        ,onViewChangedAsnAction: function(asnId, action) {
+            Topbar.Service.Asn.updateAsnAction(asnId, action);
         }
+
     } //Asn
 
 };

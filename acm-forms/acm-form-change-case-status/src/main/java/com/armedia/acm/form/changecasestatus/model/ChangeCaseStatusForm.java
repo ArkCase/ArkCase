@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.form.closecase.model;
+package com.armedia.acm.form.changecasestatus.model;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 
-import com.armedia.acm.form.config.CloseInformation;
+import com.armedia.acm.form.config.ResolveInformation;
 import com.armedia.acm.form.config.Item;
 
 /**
@@ -18,9 +18,9 @@ import com.armedia.acm.form.config.Item;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CloseCaseForm {
+public class ChangeCaseStatusForm {
 
-	private CloseInformation information;
+	private ResolveInformation information;
 	@XmlElements({
 		@XmlElement(name="approvers"),
 		@XmlElement(name="approverItem")
@@ -28,19 +28,18 @@ public class CloseCaseForm {
 	})
 	private List<Item> approvers;
 	private List<String> approverOptions;
-	private String description;
 	
 	/**
 	 * @return the information
 	 */
-	public CloseInformation getInformation() {
+	public ResolveInformation getInformation() {
 		return information;
 	}
 	
 	/**
 	 * @param information the information to set
 	 */
-	public void setInformation(CloseInformation information) {
+	public void setInformation(ResolveInformation information) {
 		this.information = information;
 	}
 	
@@ -70,20 +69,6 @@ public class CloseCaseForm {
 	 */
 	public void setApproverOptions(List<String> approverOptions) {
 		this.approverOptions = approverOptions;
-	}
-	
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
-	
-	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
 	}
 	
 }

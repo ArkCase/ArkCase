@@ -1,4 +1,4 @@
-Acm.Rule = {
+Acm.Validator = {
     create: function() {
     }
 
@@ -17,6 +17,24 @@ Acm.Rule = {
     ,isNumeric: function (value) {
         return /^([0-9])+$/i.test(value);
     }
+
+
+    ,validateSolrData: function(data) {
+        if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.responseHeader.status)) {
+            return false;
+        }
+//            if (0 != responseHeader.status) {
+//                return false;
+//            }
+        if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start) || Acm.isEmpty(data.response.docs)) {
+            return false;
+        }
+        return true;
+    }
+
 /*
     validateCase: function (caseNumber, errors) {
         if(undefined !== caseNumber && caseNumber.length > 0) {

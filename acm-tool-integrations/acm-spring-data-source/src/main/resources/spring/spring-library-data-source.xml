@@ -147,7 +147,8 @@
 
     <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
 
-    <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer" init-method="initBean">
+    <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer">
+        <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="entityManagerFactory" ref="acmEntityManager"/>
         <property name="sessionListener" ref="sessionCommitListener"/>
         <property name="defaultListeners">

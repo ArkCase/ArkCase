@@ -4,13 +4,14 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="caseFileDao" class="com.armedia.acm.plugins.casefile.dao.CaseFileDao"/>  
-    <bean id="closeCaseRequestDao" class="com.armedia.acm.plugins.casefile.dao.CloseCaseRequestDao"/>
+    <bean id="changeCaseStatusDao" class="com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao"/>
 
     <bean id="caseFileEventUtility" class="com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility"/>
 
     <bean id="changeCaseFileStateService" class="com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService">
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="dao" ref="caseFileDao"/>
+        <property name="changeCaseStatusDao" ref="changeCaseStatusDao" />
     </bean>
     <bean id="caseFileToSolrTransformer" class="com.armedia.acm.plugins.casefile.service.CaseFileToSolrTransformer">
         <property name="userDao" ref="userJpaDao"/>
@@ -52,7 +53,7 @@
                     <property name="url" value="/plugin/casebystatus"/>
                     <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
                 </bean>
-                <bean id="closeCaseUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="changeCaseStatusUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/casefile/closeCase/{caseId}"/>
                     <property name="requiredPrivilege" ref="saveCasePrivilege"/>
@@ -135,4 +136,9 @@
         <property name="muleClient" ref="muleClient"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
+    
+    <bean id="changeCaseStatusProcessEndListener" class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusProcessEndListener">
+    	<property name="changeCaseFileStateService" ref="changeCaseFileStateService" />
+    </bean>
+    
 </beans>

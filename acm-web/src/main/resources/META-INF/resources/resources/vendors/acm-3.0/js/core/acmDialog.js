@@ -12,6 +12,7 @@ Acm.Dialog = {
     ,DEFAULT_NO_TITLE:    undefined
     ,DEFAULT_NO_CALLBACK: undefined
 
+    ,popupWindow: null
     //
     // callback example:
     // function() {
@@ -103,22 +104,41 @@ Acm.Dialog = {
 
 
     ,openWindow: function(url, title, w, h, onDone) {
+    	try {
+    		if (window.focus) {
+    			this.popupWindow.focus();
+	        }
+    	}catch(e) {
+    		// Do nothing, normal behavior
+    	}
 
-        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
-
-        var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-        var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-
-        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
-        var top = ((height / 2) - (h / 2)) + dualScreenTop;
-        var newWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
-
-        if (window.focus) {
-            newWindow.focus();
-        }
-
-        this._checkClosePopup(newWindow, onDone);
+    	try {
+	    	if (this.popupWindow == null || this.popupWindow == 'undefined' || this.popupWindow.closed) {
+	    	
+		        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+		        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+		
+		        var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+		        var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+		
+		        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+		        var top = ((height / 2) - (h / 2)) + dualScreenTop;
+		        
+		        this.popupWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+		
+		        if (window.focus) {
+		        	this.popupWindow.focus();
+		        }
+		
+		        this._checkClosePopup(this.popupWindow, onDone);
+	    	} else {
+	    		if (window.focus) {
+	    			this.popupWindow.focus();
+		        }
+	    	}
+    	} catch (e) {
+    		// Do nothing, normal behavior
+    	}
     }
 
     ,_checkClosePopup: function(newWindow, onDone){
