@@ -20,6 +20,8 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_DELETED, this.onNoteDeleted);
         Acm.Dispatcher.addEventListener(this.EVENT_NOTE_LIST_RETRIEVED, this.onNotesListRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_WORKFLOW_HISTORY_RETRIEVED, this.onWorkflowHistoryRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_TASK_EVENTS_RETRIEVED, this.onTaskEventsRetrieved);
+
     }
 
     ,EVENT_LIST_RETRIEVED			 : "task-list-retrieved"
@@ -36,6 +38,7 @@ TaskList.Callback = {
     ,EVENT_NOTE_DELETED         : "object-note-deleted"
     ,EVENT_NOTE_LIST_RETRIEVED  : "object-note-listed"
     ,EVENT_WORKFLOW_HISTORY_RETRIEVED: "workflow-history-retrieved"
+    ,EVENT_TASK_EVENTS_RETRIEVED: "task-events-retrieved"
 
     ,onDetailSaved : function(Callback, response) {
         if (response.hasError) {

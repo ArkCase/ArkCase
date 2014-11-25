@@ -24,8 +24,8 @@ public class AuditIT
     {
         AuditActivity.Parameter one = new AuditActivity.Parameter("ipAddress", "testAddress");
         AuditActivity.Parameter two = new AuditActivity.Parameter("someParam", "someValue");
-        AuditActivity.audit("com.armedia.acm.TestEvent", "trackId", "actor", "success", one, two);
-        AuditActivity.audit("com.armedia.acm.LogEvent", "track2", "actor", "failed", one, two);
+        AuditActivity.audit("trackId", "actor", "success", one, two);
+        AuditActivity.audit("track2", "actor", "failed", one, two);
 
         // wait for the auditor to see and process the audit events.
         Thread.sleep(10000);

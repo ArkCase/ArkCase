@@ -23,6 +23,7 @@ TaskList.Service = {
     ,API_LIST_NOTES              : "/api/latest/plugin/note/"
     ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
     ,API_RETRIEVE_WORKFLOW_HISTORY       : "/api/latest/plugin/task/history/"
+    ,API_TASK_EVENTS : "/api/latest/plugin/task/events/"
 
 
     ,listTaskSaveDetail : function(taskId, data) {

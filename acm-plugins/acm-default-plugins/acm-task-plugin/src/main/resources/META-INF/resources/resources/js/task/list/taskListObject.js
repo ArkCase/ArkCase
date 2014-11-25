@@ -778,6 +778,7 @@ TaskList.Object = {
             this.refreshJTableNotes();
             this.refreshJTableWorkflowOverview();
             this.refreshJTableHistory();
+            this.refreshJTableHistory();
         }
         else{
             this.hideAllWorkflowButtons();
@@ -817,6 +818,7 @@ TaskList.Object = {
             this.refreshJTableWorkflowOverview();
             this.refreshJTableHistory();
             this.refreshJTableDocuments();
+            this.refreshJTableHistory();
         }
 
     }
