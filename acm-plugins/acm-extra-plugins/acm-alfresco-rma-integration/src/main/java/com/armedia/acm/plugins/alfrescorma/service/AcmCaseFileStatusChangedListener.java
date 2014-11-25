@@ -23,11 +23,9 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
 	
 	@Override
 	public void onApplicationEvent(CaseEvent event) {
-		if ("com.armedia.acm.casefile.event.statuschanged".equals(event.getEventType()))
+		if ("com.armedia.acm.casefile.event.closed".equals(event.getEventType().toLowerCase()))
 		{
-			// TODO: Record Management Strategy for Case File
-			
-			/*CaseFile caseFile = event.getCaseFile();
+			CaseFile caseFile = event.getCaseFile();
 			
 			 if (null != caseFile)
 		     {
@@ -81,7 +79,7 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
 	        			}
 	        		}
 	        	}
-		     }*/
+		     }
 		}
 	}
 	

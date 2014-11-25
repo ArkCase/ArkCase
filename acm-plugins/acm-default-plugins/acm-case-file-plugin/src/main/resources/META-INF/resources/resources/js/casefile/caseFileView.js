@@ -645,6 +645,12 @@ CaseFile.View = {
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
+                
+                if (c.changeCaseStatus) {
+                	this.hideChangeCaseStatusButton();
+                }else {
+                	this.showChangeCaseStatusButton();
+                }
             }
         }
 
@@ -684,6 +690,16 @@ CaseFile.View = {
         }
         ,saveDivDetail: function() {
             return AcmEx.Object.SummerNote.save(this.$divDetail);
+        }
+        ,showChangeCaseStatusButton: function() {
+        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
+        		CaseFile.View.Action.$btnChangeCaseStatus.show();        		
+        	}
+        }
+        ,hideChangeCaseStatusButton: function() {
+        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
+        		CaseFile.View.Action.$btnChangeCaseStatus.hide();        		
+        	}
         }
 
         ,populateCaseFile_old: function(c) {

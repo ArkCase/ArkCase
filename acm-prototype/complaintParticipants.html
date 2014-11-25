@@ -190,9 +190,41 @@
                           <div class="col-md-12">
                             <section class="panel b-a">
                               <div class="panel-heading b-b bg-info">
-                               
-                              <a href="#" class="font-bold">Participants</a></div>
-                              <div class="panel-body max-200 no-padder"></div>
+                                <ul class="nav nav-pills pull-right">
+                                  <li style="margin-right:5px"></li>
+                                  <li>
+                                    <div class="btn-group padder-v2">
+                                      <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
+                                    </div>
+                                  </li>
+                                  <li> </li>
+                                </ul>
+                                <a href="#" class="font-bold">Participants </a></div>
+                              <div class="panel-body max-200 no-padder">
+                                <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                      <th>First Name</th>
+                                      <th>Last Name</th>
+                                      <th>Title</th>
+                                      <th>Role</th>
+                                      <th width="10%">Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                      <td>[First Name]</td>
+                                      <td>[First Name]</td>
+                                      <td>[Title]</td>
+                                      <td>[Role]</td>
+                                      <td><select name="select2" class="input-sm form-control input-s-sm inline v-middle">
+                                        <option value="0">Choose Action</option>
+                                        <option value="1">Remove</option>
+                                      </select></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
                             </section>
                           </div>
                         </div>

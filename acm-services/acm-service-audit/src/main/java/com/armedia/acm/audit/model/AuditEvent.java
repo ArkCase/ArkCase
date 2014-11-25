@@ -116,7 +116,6 @@ public class AuditEvent
         {
             return getFullEventType().substring(lastDot + 1, getFullEventType().length());
         }
-
         return getFullEventType();
     }
 }

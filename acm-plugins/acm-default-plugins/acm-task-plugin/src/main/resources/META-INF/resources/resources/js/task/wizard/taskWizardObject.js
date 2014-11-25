@@ -277,7 +277,6 @@ TaskWizard.Object = {
         t.priority = data.priority;
         t.dueDate = data.dueDate;
         t.assignee = data.assignee;
-
         t.taskId = data.taskId;
         t.attachedToObjectType = data.attachedToObjectType;
         t.attachedToObjectId = data.attachedToObjectId;

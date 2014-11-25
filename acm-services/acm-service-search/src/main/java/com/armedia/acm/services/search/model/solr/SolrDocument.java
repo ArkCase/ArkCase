@@ -20,7 +20,9 @@ public class SolrDocument implements SolrBaseDocument {
     private String object_type_s;
     private String assignee_s;
     private Long priority_i;
-    //private boolean adhocTask; + ", adhocTask=" + adhocTask
+    private String priority_s;
+    private String parent_object_type_s;
+    private boolean adhocTask;
     
     private List<String> deny_acl_ss;
     private List<String> allow_acl_ss;
@@ -126,8 +128,13 @@ public class SolrDocument implements SolrBaseDocument {
     public void setAllow_acl_ss(List<String> allow_acl_ss) {
         this.allow_acl_ss = allow_acl_ss;
     }
-    /*public boolean isAdhocTask() {return adhocTask;}
-    public void setAdhocTask(boolean adhocTask) {this.adhocTask = adhocTask;}*/
+    public boolean isAdhocTask() {return adhocTask;}
+    public void setAdhocTask(boolean adhocTask) {this.adhocTask = adhocTask;}
+    public String getParent_object_type_s() {return parent_object_type_s;}
+    public void setParent_object_type_s(String parent_object_type_s) {this.parent_object_type_s = parent_object_type_s;}
+    public String getPriority_s() {return priority_s;}
+    public void setPriority_s(String priority_s) {this.priority_s = priority_s;}
+
     @Override
     public String toString() {
         return "SolrDocument [id=" + id + ", status_s=" + status_s
@@ -138,7 +145,7 @@ public class SolrDocument implements SolrBaseDocument {
                 + ", owner_s=" + owner_s + ", object_type_s=" + object_type_s
                 + ", assignee_s=" + assignee_s + ", priority_i=" + priority_i
                 + ", deny_acl_ss=" + deny_acl_ss + ", allow_acl_ss="
-                + allow_acl_ss + "]";
+                + allow_acl_ss + ", parent_object_type_s=" + parent_object_type_s + ", adhocTask_b=" + adhocTask + "]";
     }
     
     

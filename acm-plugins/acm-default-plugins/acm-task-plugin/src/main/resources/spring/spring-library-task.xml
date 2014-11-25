@@ -110,6 +110,11 @@
                     <property name="url" value="/api/{version}/plugin/task/history/{id}/{adhoc}"/>
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
                 </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/task/events/{taskId}"/>
+                    <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
@@ -177,7 +182,8 @@
             </list>
         </property>
     </bean>
-    
+
+
     <bean id="acmTaskDao" class="com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiRepositoryService" ref="activitiRepositoryService"/>

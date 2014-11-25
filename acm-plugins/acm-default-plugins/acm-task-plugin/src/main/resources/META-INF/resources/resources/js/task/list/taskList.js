@@ -10,6 +10,8 @@ var TaskList = TaskList || {
         TaskList.cacheParentObject = new Acm.Model.CacheFifo(3);
         TaskList.cacheNoteList = new Acm.Model.CacheFifo(3);
         TaskList.cacheWorkflowHistory = new Acm.Model.CacheFifo(3);
+        TaskList.cacheTaskEvents = new Acm.Model.CacheFifo(3);
+
 
 
 
@@ -35,6 +37,7 @@ var TaskList = TaskList || {
     ,cacheTask: null
     ,cacheParentObject: null
     ,cacheWorkflowHistory: null
+    ,cacheTaskEvents: null
 
     ,_parentObjId: 0
     ,getParentObjId: function(){
