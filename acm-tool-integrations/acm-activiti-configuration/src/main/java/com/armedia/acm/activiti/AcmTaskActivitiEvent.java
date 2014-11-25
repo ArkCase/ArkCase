@@ -18,6 +18,7 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
     private String parentObjectType;
     private String parentObjectName;
     private boolean adhocTask;
+    private String owner;
 
 
     public AcmTaskActivitiEvent(Task source, String taskEvent, Long parentObjectId, String parentObjectType, String parentObjectName) {
@@ -32,6 +33,7 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
         setAssignee(source.getAssignee());
         setTaskName(source.getName());
         setTaskCreated(source.getCreateTime());
+        setOwner(source.getOwner());
         setDescription(source.getDescription());
         setDueDate(source.getDueDate());
         setTaskEvent(taskEvent);
@@ -153,4 +155,13 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
     public boolean isAdhocTask() {return adhocTask;}
 
     public void setAdhocTask(boolean adhocTask) {this.adhocTask = adhocTask;}
+
+    @Override
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 }
