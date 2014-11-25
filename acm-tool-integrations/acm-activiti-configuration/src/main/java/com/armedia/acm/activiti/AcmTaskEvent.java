@@ -31,4 +31,6 @@ public interface AcmTaskEvent extends Serializable
     String getParentObjectName();
 
     boolean isAdhocTask();
+
+    String getOwner();
 }
