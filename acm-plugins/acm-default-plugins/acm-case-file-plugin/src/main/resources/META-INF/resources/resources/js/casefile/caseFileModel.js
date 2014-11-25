@@ -5,27 +5,10 @@
  */
 CaseFile.Model = {
     create : function() {
-        this.cachePage = new Acm.Model.CacheFifo(2);
-        this.cacheCaseFile = new Acm.Model.CacheFifo(3);
-
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PREV_PAGE_CLICKED      ,this.onPrevPageClicked);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NEXT_PAGE_CLICKED      ,this.onNextPageClicked);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
-
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_TITLE_CHANGED     ,this.onCaseTitleChanged);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_INCIDENT_DATE_CHANGED  ,this.onIncidentDateChanged);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ASSIGNEE_CHANGED       ,this.onAssigneeChanged);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SUBJECT_TYPE_CHANGED   ,this.onSubjectTypeChanged);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PRIORITY_CHANGED       ,this.onPriorityChanged);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DUE_DATE_CHANGED       ,this.onDueDateChanged);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DETAIL_CHANGED         ,this.onDetailChanged);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CHILD_OBJECT_CHANGED   ,this.onChildObjectChanged);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_ADDED      ,this.onParticipantAdded);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_UPDATED    ,this.onParticipantUpdated);
-        Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_DELETED    ,this.onParticipantDeleted);
-
         if (CaseFile.Model.Lookup.create)        {CaseFile.Model.Lookup.create();}
         if (CaseFile.Model.Tree.create)          {CaseFile.Model.Tree.create();}
+        if (CaseFile.Model.List.create)          {CaseFile.Model.List.create();}
+        if (CaseFile.Model.Detail.create)        {CaseFile.Model.Detail.create();}
         if (CaseFile.Model.Notes.create)         {CaseFile.Model.Notes.create();}
         if (CaseFile.Model.Tasks.create)         {CaseFile.Model.Tasks.create();}
         if (CaseFile.Model.References.create)    {CaseFile.Model.References.create();}
@@ -42,90 +25,12 @@ CaseFile.Model = {
 
         if (CaseFile.Model.Lookup.initialize)     {CaseFile.Model.Lookup.initialize();}
         if (CaseFile.Model.Tree.initialize)       {CaseFile.Model.Tree.initialize();}
+        if (CaseFile.Model.List.initialize)       {CaseFile.Model.List.initialize();}
+        if (CaseFile.Model.Detail.initialize)     {CaseFile.Model.Detail.initialize();}
         if (CaseFile.Model.Notes.initialize)      {CaseFile.Model.Notes.initialize();}
         if (CaseFile.Model.Tasks.initialize)      {CaseFile.Model.Tasks.initialize();}
         if (CaseFile.Model.References.initialize) {CaseFile.Model.References.initialize();}
         if (CaseFile.Model.Events.initialize)     {CaseFile.Model.Events.initialize();}
-    }
-
-    ,onPrevPageClicked: function() {
-        CaseFile.Model.setCaseFileId(0);
-
-        var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
-        if (0 < treeInfo.start) {
-            treeInfo.start -= treeInfo.n;
-            if (0 > treeInfo.start) {
-                treeInfo.start = 0;
-            }
-        }
-        CaseFile.Service.List.retrieveCaseFileList(treeInfo);
-    }
-    ,onNextPageClicked: function() {
-        CaseFile.Model.setCaseFileId(0);
-
-        var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
-        if (0 > treeInfo.total) {       //should never get to this condition
-            treeInfo.start = 0;
-        } else if ((treeInfo.total - treeInfo.n) > treeInfo.start) {
-            treeInfo.start += treeInfo.n;
-        }
-        CaseFile.Service.List.retrieveCaseFileList(treeInfo);
-    }
-    ,onCaseFileSelected: function(caseFileId) {
-        CaseFile.Model.setCaseFileId(caseFileId);
-        var caseFile = CaseFile.Model.cacheCaseFile.get(caseFileId);
-        if (!caseFile) {
-            CaseFile.Service.Detail.retrieveCaseFile(caseFileId);
-        }
-    }
-    ,onCaseTitleChanged: function(caseFileId, title) {
-        CaseFile.Service.Detail.saveCaseTitle(caseFileId, title);
-
-        var pageId = CaseFile.Model.Tree.Config.getPageId();
-        var caseFiles = CaseFile.Model.cachePage.get(pageId);
-        if (caseFiles) {
-            for (var i = 0; i < caseFiles.length; i++) {
-                var c = caseFiles[i];
-                if (c) {
-                    var cid = parseInt(Acm.goodValue(c.object_id_s, 0));
-                    if (cid == caseFileId) {
-                        c.title_t = title;
-                        CaseFile.Model.cachePage.put(pageId, caseFiles);
-                        break;
-                    }
-                }
-            } //end for i
-        }
-    }
-    ,onIncidentDateChanged: function(caseFileId, incidentDate) {
-        CaseFile.Service.Detail.saveIncidentDate(caseFileId, incidentDate);
-    }
-    ,onAssigneeChanged: function(caseFileId, assignee) {
-        CaseFile.Service.Detail.saveAssignee(caseFileId, assignee);
-    }
-    ,onSubjectTypeChanged: function(caseFileId, caseType) {
-        CaseFile.Service.Detail.saveSubjectType(caseFileId, caseType);
-    }
-    ,onPriorityChanged: function(caseFileId, priority) {
-        CaseFile.Service.Detail.savePriority(caseFileId, priority);
-    }
-    ,onDueDateChanged: function(caseFileId, dueDate) {
-        CaseFile.Service.Detail.saveDueDate(caseFileId, dueDate);
-    }
-    ,onDetailChanged: function(caseFileId, details) {
-        CaseFile.Service.Detail.saveDetail(caseFileId, details);
-    }
-    ,onChildObjectChanged: function(caseFileId, childObject) {
-        CaseFile.Service.Detail.saveChildObject(caseFileId, childObject);
-    }
-    ,onParticipantAdded: function(caseFileId, participant) {
-        CaseFile.Service.Detail.addParticipant(caseFileId, participant);
-    }
-    ,onParticipantUpdated: function(caseFileId, participant) {
-        CaseFile.Service.Detail.updateParticipant(caseFileId, participant);
-    }
-    ,onParticipantDeleted: function(caseFileId, participantId) {
-        CaseFile.Service.Detail.deleteParticipant(caseFileId, participantId);
     }
 
     ,_objectType: "CASE_FILE"
@@ -140,97 +45,288 @@ CaseFile.Model = {
     ,setCaseFileId : function(id) {
         this._caseFileId = id;
     }
-    ,getCaseFile: function(caseFileId) {
-        if (0 >= caseFileId) {
-            return null;
-        }
-        return this.cacheCaseFile.get(caseFileId);
-    }
-    ,getCaseFileCurrent: function() {
-        return this.getCaseFile(this._caseFileId);
-    }
 
-    ,getAssignee: function(caseFile) {
-        var assignee = null;
-        if (caseFile) {
-            if (Acm.isArray(caseFile.participants)) {
-                for (var i = 0; i < caseFile.participants.length; i++) {
-                    var participant =  caseFile.participants[i];
-                    if ("assignee" == participant.participantType) {
-                        assignee = participant.participantLdapId;
-                        break;
+
+    ,Detail: {
+        create : function() {
+            this.cacheCaseFile = new Acm.Model.CacheFifo(3);
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED          ,this.onCaseFileSelected);
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_TITLE_CHANGED          ,this.onCaseTitleChanged);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_INCIDENT_DATE_CHANGED       ,this.onIncidentDateChanged);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ASSIGNEE_CHANGED            ,this.onAssigneeChanged);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SUBJECT_TYPE_CHANGED        ,this.onSubjectTypeChanged);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PRIORITY_CHANGED            ,this.onPriorityChanged);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DUE_DATE_CHANGED            ,this.onDueDateChanged);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DETAIL_CHANGED              ,this.onDetailChanged);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CHILD_OBJECT_CHANGED        ,this.onChildObjectChanged);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_ADDED           ,this.onParticipantAdded);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_UPDATED         ,this.onParticipantUpdated);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_DELETED         ,this.onParticipantDeleted);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ASSOCIATION_ADDED    ,this.onPersonAssociationAdded);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ASSOCIATION_UPDATED  ,this.onPersonAssociationUpdated);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ASSOCIATION_DELETED  ,this.onPersonAssociationDeleted);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CONTACT_METHOD_ADDED        ,this.onContactMethodAdded);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CONTACT_METHOD_UPDATED      ,this.onContactMethodUpdated);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CONTACT_METHOD_DELETED      ,this.onContactMethodDeleted);
+
+        }
+        ,initialize: function() {
+        }
+
+        ,onCaseFileSelected: function(caseFileId) {
+            CaseFile.Model.setCaseFileId(caseFileId);
+            var caseFile = CaseFile.Model.Detail.cacheCaseFile.get(caseFileId);
+            if (!caseFile) {
+                CaseFile.Service.Detail.retrieveCaseFile(caseFileId);
+            }
+        }
+        ,onCaseTitleChanged: function(caseFileId, title) {
+            CaseFile.Service.Detail.saveCaseTitle(caseFileId, title);
+        }
+
+        ,onIncidentDateChanged: function(caseFileId, incidentDate) {
+            CaseFile.Service.Detail.saveIncidentDate(caseFileId, incidentDate);
+        }
+        ,onAssigneeChanged: function(caseFileId, assignee) {
+            CaseFile.Service.Detail.saveAssignee(caseFileId, assignee);
+        }
+        ,onSubjectTypeChanged: function(caseFileId, caseType) {
+            CaseFile.Service.Detail.saveSubjectType(caseFileId, caseType);
+        }
+        ,onPriorityChanged: function(caseFileId, priority) {
+            CaseFile.Service.Detail.savePriority(caseFileId, priority);
+        }
+        ,onDueDateChanged: function(caseFileId, dueDate) {
+            CaseFile.Service.Detail.saveDueDate(caseFileId, dueDate);
+        }
+        ,onDetailChanged: function(caseFileId, details) {
+            CaseFile.Service.Detail.saveDetail(caseFileId, details);
+        }
+        ,onChildObjectChanged: function(caseFileId, childObject) {
+            CaseFile.Service.Detail.saveChildObject(caseFileId, childObject);
+        }
+        ,onParticipantAdded: function(caseFileId, participant) {
+            CaseFile.Service.Detail.addParticipant(caseFileId, participant);
+        }
+        ,onParticipantUpdated: function(caseFileId, participant) {
+            CaseFile.Service.Detail.updateParticipant(caseFileId, participant);
+        }
+        ,onParticipantDeleted: function(caseFileId, participantId) {
+            CaseFile.Service.Detail.deleteParticipant(caseFileId, participantId);
+        }
+        ,onPersonAssociationAdded: function(caseFileId, personAssociation) {
+            var pa = CaseFile.Model.Detail.newPersonAssociation();
+            pa.parentType = CaseFile.Model.getObjectType();
+            pa.parentId = caseFileId;
+            pa.personType = personAssociation.personType;
+            //pa.personDescription = personAssociation.personDescription;
+            pa.person.title = personAssociation.person.title;
+            pa.person.givenName = personAssociation.person.givenName;
+            pa.person.familyName = personAssociation.person.familyName;
+            CaseFile.Service.Detail.addPersonAssociation(caseFileId, pa);
+        }
+        ,onPersonAssociationUpdated: function(caseFileId, personAssociation) {
+            CaseFile.Service.Detail.updatePersonAssociation(caseFileId, personAssociation);
+        }
+        ,onPersonAssociationDeleted: function(caseFileId, personAssociationId) {
+            CaseFile.Service.Detail.deletePersonAssociation(caseFileId, personAssociationId);
+        }
+        ,onContactMethodAdded: function(caseFileId, personAssociationId, contactMethod) {
+            CaseFile.Service.Detail.addContactMethod(caseFileId, personAssociationId, contactMethod);
+        }
+        ,onContactMethodUpdated: function(caseFileId, personAssociationId, contactMethod) {
+            CaseFile.Service.Detail.updateContactMethod(caseFileId, personAssociationId, contactMethod);
+        }
+        ,onContactMethodDeleted: function(caseFileId, personAssociationId, contactMethodId) {
+            CaseFile.Service.Detail.deleteContactMethod(caseFileId, personAssociationId, contactMethodId);
+        }
+
+        ,getCaseFile: function(caseFileId) {
+            if (0 >= caseFileId) {
+                return null;
+            }
+            return this.cacheCaseFile.get(caseFileId);
+        }
+//        ,getCaseFileCurrent: function() {
+//            return this.getCaseFile(this._caseFileId);
+//        }
+
+        ,getAssignee: function(caseFile) {
+            var assignee = null;
+            if (caseFile) {
+                if (Acm.isArray(caseFile.participants)) {
+                    for (var i = 0; i < caseFile.participants.length; i++) {
+                        var participant =  caseFile.participants[i];
+                        if ("assignee" == participant.participantType) {
+                            assignee = participant.participantLdapId;
+                            break;
+                        }
                     }
                 }
             }
+            return assignee;
         }
-        return assignee;
-    }
-    ,setAssignee: function(caseFile, assignee) {
-        if (caseFile) {
-            if (!Acm.isArray(caseFile.participants)) {
-                caseFile.participants = [];
-            }
+        ,setAssignee: function(caseFile, assignee) {
+            if (caseFile) {
+                if (!Acm.isArray(caseFile.participants)) {
+                    caseFile.participants = [];
+                }
 
-            for (var i = 0; i < caseFile.participants.length; i++) {
-                if ("assignee" == caseFile.participants[i].participantType) {
-                    caseFile.participants[i].participantLdapId = assignee;
-                    return;
+                for (var i = 0; i < caseFile.participants.length; i++) {
+                    if ("assignee" == caseFile.participants[i].participantType) {
+                        caseFile.participants[i].participantLdapId = assignee;
+                        return;
+                    }
+                }
+
+
+                participant = {};
+                participant.participantType = "assignee";
+                participant.participantLdapId = assignee;
+                caseFile.participants.push(participant);
+            }
+        }
+
+        ,newPersonAssociation: function() {
+            return {
+                id: null
+                ,personType: ""
+                ,parentId:null
+                ,parentType:""
+                ,personDescription: ""
+                ,notes:""
+                ,person:{
+                    id: null
+                    ,title: ""
+                    ,givenName: ""
+                    ,familyName: ""
+                    ,company: ""
+                    /*,hairColor:""
+                     ,eyeColor:""
+                     ,heightInInches:null*/
+                    ,weightInPounds:null
+                    /*,dateOfBirth:null
+                     ,dateMarried:null*/
+                    ,addresses: []
+                    ,contactMethods: []
+                    ,securityTags: []
+                    ,personAliases: []
+                    ,organizations: []
+                }
+            };
+        }
+        ,findPersonAssociation: function(personAssociationId, personAssociations) {
+            var personAssociation = null;
+            for (var i = 0; i < personAssociations.length; i++) {
+                if (personAssociationId == personAssociations[i].id) {
+                    personAssociation = personAssociations[i];
+                    break;
                 }
             }
+            return personAssociation;
+        }
 
-
-            participant = {};
-            participant.participantType = "assignee";
-            participant.participantLdapId = assignee;
-            caseFile.participants.push(participant);
+        ,validateData: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id) || Acm.isEmpty(data.caseNumber)) {
+                return false;
+            }
+            if (!Acm.isArray(data.childObjects)) {
+                return false;
+            }
+            if (!Acm.isArray(data.participants)) {
+                return false;
+            }
+            if (!Acm.isArray(data.personAssociations)) {
+                return false;
+            }
+            return true;
+        }
+        ,validatePersonAssociation: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.person)) {
+                return false;
+            }
+            if (!Acm.isArray(data.person.contactMethods)) {
+                return false;
+            }
+            if (!Acm.isArray(data.person.addresses)) {
+                return false;
+            }
+            if (!Acm.isArray(data.person.securityTags)) {
+                return false;
+            }
+            if (!Acm.isArray(data.person.personAliases)) {
+                return false;
+            }
+            if (!Acm.isArray(data.person.organizations)) {
+                return false;
+            }
+            return true;
         }
     }
 
-    ,Notes: {
+    ,List: {
         create : function() {
-            this.cacheNoteList = new Acm.Model.CacheFifo(4);
+            this.cachePage = new Acm.Model.CacheFifo(2);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_ADDED     ,this.onNoteAdded);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_UPDATED   ,this.onNoteUpdated);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_DELETED   ,this.onNoteDeleted);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PREV_PAGE_CLICKED      ,this.onPrevPageClicked);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NEXT_PAGE_CLICKED      ,this.onNextPageClicked);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_TITLE_CHANGED     ,this.onCaseTitleChanged);
         }
         ,initialize: function() {
         }
 
+        ,onPrevPageClicked: function() {
+            CaseFile.Model.setCaseFileId(0);
 
-        ,onNoteAdded: function(note) {
-            CaseFile.Service.Notes.addNote(note);
+            var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
+            if (0 < treeInfo.start) {
+                treeInfo.start -= treeInfo.n;
+                if (0 > treeInfo.start) {
+                    treeInfo.start = 0;
+                }
+            }
+            CaseFile.Service.List.retrieveCaseFileList(treeInfo);
         }
-        ,onNoteUpdated: function(note) {
-            CaseFile.Service.Notes.updateNote(note);
-        }
-        ,onNoteDeleted: function(noteId) {
-            CaseFile.Service.Notes.deleteNote(noteId);
-        }
-    }
+        ,onNextPageClicked: function() {
+            CaseFile.Model.setCaseFileId(0);
 
-    ,Tasks: {
-        create : function() {
-            this.cacheTaskList = new Acm.Model.CacheFifo(4);
+            var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
+            if (0 > treeInfo.total) {       //should never get to this condition
+                treeInfo.start = 0;
+            } else if ((treeInfo.total - treeInfo.n) > treeInfo.start) {
+                treeInfo.start += treeInfo.n;
+            }
+            CaseFile.Service.List.retrieveCaseFileList(treeInfo);
         }
-        ,initialize: function() {
+        ,onCaseTitleChanged: function(caseFileId, title) {
+            var pageId = CaseFile.Model.Tree.Config.getPageId();
+            var caseFiles = CaseFile.Model.List.cachePage.get(pageId);
+            if (caseFiles) {
+                for (var i = 0; i < caseFiles.length; i++) {
+                    var c = caseFiles[i];
+                    if (c) {
+                        var cid = parseInt(Acm.goodValue(c.object_id_s, 0));
+                        if (cid == caseFileId) {
+                            c.title_t = title;
+                            CaseFile.Model.List.cachePage.put(pageId, caseFiles);
+                            break;
+                        }
+                    }
+                } //end for i
+            }
         }
-    }
 
-    ,References: {
-        create : function() {
-            this.cacheReferenceList = new Acm.Model.CacheFifo(4);
-        }
-        ,initialize: function() {
-        }
-    }
-
-    ,Events: {
-        create : function() {
-            this.cacheEventList = new Acm.Model.CacheFifo(4);
-        }
-        ,initialize: function() {
-        }
     }
 
     ,Tree: {
@@ -439,6 +535,75 @@ CaseFile.Model = {
         }
     }
 
+    ,Notes: {
+        create : function() {
+            this.cacheNoteList = new Acm.Model.CacheFifo(4);
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_ADDED     ,this.onNoteAdded);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_UPDATED   ,this.onNoteUpdated);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_DELETED   ,this.onNoteDeleted);
+        }
+        ,initialize: function() {
+        }
+
+
+        ,onNoteAdded: function(note) {
+            CaseFile.Service.Notes.addNote(note);
+        }
+        ,onNoteUpdated: function(note) {
+            CaseFile.Service.Notes.updateNote(note);
+        }
+        ,onNoteDeleted: function(noteId) {
+            CaseFile.Service.Notes.deleteNote(noteId);
+        }
+
+        ,validateNotes: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateNote: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentId)) {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    ,Tasks: {
+        create : function() {
+            this.cacheTaskList = new Acm.Model.CacheFifo(4);
+        }
+        ,initialize: function() {
+        }
+    }
+
+    ,References: {
+        create : function() {
+            this.cacheReferenceList = new Acm.Model.CacheFifo(4);
+        }
+        ,initialize: function() {
+        }
+    }
+
+    ,Events: {
+        create : function() {
+            this.cacheEventList = new Acm.Model.CacheFifo(4);
+        }
+        ,initialize: function() {
+        }
+    }
+
     ,Lookup: {
         create: function() {
             this._assignees    = new Acm.Model.SessionData("AcmCaseAssignees");
@@ -493,6 +658,7 @@ CaseFile.Model = {
         }
 
 
+        //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
         ,_personTypes : ['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator']
         ,getPersonTypes : function() {
             return this._personTypes;

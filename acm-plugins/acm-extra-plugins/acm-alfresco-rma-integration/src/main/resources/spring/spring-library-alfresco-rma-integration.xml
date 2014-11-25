@@ -16,5 +16,10 @@
         <lookup-method name="getMuleClient" bean="muleClient"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
+    
+    <bean id="acmCaseFileStatusChangedListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmCaseFileStatusChangedListener">
+        <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
 
 </beans>

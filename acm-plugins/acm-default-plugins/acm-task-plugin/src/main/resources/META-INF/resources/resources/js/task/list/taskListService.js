@@ -18,6 +18,7 @@ TaskList.Service = {
     ,API_FIND_BYTASKBYID_TASK_SIGNATURE : "/api/latest/plugin/signature/find/"
     ,API_SAVE_DETAIL       				: "/api/latest/plugin/task/save/"
     ,API_RETRIEVE_COMPLAINT_DETAIL        : "/api/latest/plugin/complaint/byId/"
+    ,API_RETRIEVE_CASE_DETAIL        : "/api/latest/plugin/casefile/byId/"
     ,API_SAVE_NOTE               : "/api/latest/plugin/note"
     ,API_DELETE_NOTE             : "/api/latest/plugin/note/"
     ,API_LIST_NOTES              : "/api/latest/plugin/note/"
@@ -65,6 +66,11 @@ TaskList.Service = {
     ,retrieveComplaintDetail : function(complaintId) {
         Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_COMPLAINT_DETAIL + complaintId
             ,TaskList.Callback.EVENT_COMPLAINT_DETAIL_RETRIEVED
+        );
+    }
+    ,retrieveCaseDetail : function(caseId) {
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_CASE_DETAIL + caseId
+            ,TaskList.Callback.EVENT_CASE_DETAIL_RETRIEVED
         );
     }
     ,completeTask : function(taskId) {
