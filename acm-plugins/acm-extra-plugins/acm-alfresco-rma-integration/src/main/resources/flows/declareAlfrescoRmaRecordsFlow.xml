@@ -81,7 +81,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <timer-interceptor/>
 
         <set-variable variableName="record-folder-name" value="#[message.payload.folderName]" doc:name="Rec Folder"/>
-        <set-variable variableName="category-folder-name" value="Complaints" doc:name="Category Folder"/>
+        <set-variable variableName="category-folder-name" value="#[message.payload.categoryFolder]" doc:name="Category Folder"/>
         <set-variable variableName="record-folder-rma-id" value="#[flowVars['record-folder-name']]_#[flowVars['category-folder-name']]" doc:name="Rec Folder RMA ID"/>
 
         <flow-ref name="get-alfresco-ticket" doc:name="Get Ticket"/>

@@ -77,6 +77,9 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_due_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
+    
+    @Transient
+    private ChangeCaseStatus changeCaseStatus;
 
     /**
      * These approvers are added by the web application and they become the assignees of the Activiti business process.
@@ -351,8 +354,15 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     public void setParticipants(List<AcmParticipant> participants) {
         this.participants = participants;
     }
+    public ChangeCaseStatus getChangeCaseStatus() {
+		return changeCaseStatus;
+	}
 
-    public List<String> getApprovers() {
+	public void setChangeCaseStatus(ChangeCaseStatus changeCaseStatus) {
+		this.changeCaseStatus = changeCaseStatus;
+	}
+
+	public List<String> getApprovers() {
         return approvers;
     }
 
