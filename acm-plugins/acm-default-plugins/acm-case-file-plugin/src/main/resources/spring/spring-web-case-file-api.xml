@@ -9,6 +9,7 @@
 
     <bean id="findCaseByIdAPIController" class="com.armedia.acm.plugins.casefile.web.api.FindCaseByIdAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="changeCaseStatusDao" ref="changeCaseStatusDao" />
     </bean>
 
     <bean id="getCasesByStatusAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController">

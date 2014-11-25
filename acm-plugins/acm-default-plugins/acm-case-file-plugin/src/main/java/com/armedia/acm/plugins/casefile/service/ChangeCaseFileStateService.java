@@ -64,7 +64,7 @@ public class ChangeCaseFileStateService
     	
     	updateCaseStatusRequestToApproved(requestId);
     	
-    	getCaseFileEventUtility().raiseCaseStatusChangedEvent(updatedCase, approvalDate, ipAddress, userId, null);
+    	getCaseFileEventUtility().raiseEvent(updatedCase, updatedCase.getStatus(), approvalDate, ipAddress, userId, null);
     }
     
     private CaseFile updateCaseStatus(Long caseId, Long requestId)
