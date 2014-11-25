@@ -11,6 +11,7 @@
     <bean id="changeCaseFileStateService" class="com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService">
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="dao" ref="caseFileDao"/>
+        <property name="changeCaseStatusDao" ref="changeCaseStatusDao" />
     </bean>
     <bean id="caseFileToSolrTransformer" class="com.armedia.acm.plugins.casefile.service.CaseFileToSolrTransformer">
         <property name="userDao" ref="userJpaDao"/>
@@ -135,4 +136,9 @@
         <property name="muleClient" ref="muleClient"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
+    
+    <bean id="changeCaseStatusProcessEndListener" class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusProcessEndListener">
+    	<property name="changeCaseFileStateService" ref="changeCaseFileStateService" />
+    </bean>
+    
 </beans>
