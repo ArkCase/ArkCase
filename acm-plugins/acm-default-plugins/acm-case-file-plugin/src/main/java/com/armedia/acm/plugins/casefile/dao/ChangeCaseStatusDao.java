@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
@@ -60,4 +62,38 @@ public class ChangeCaseStatusDao extends AcmAbstractDao<ChangeCaseStatus>
     	
     	return query.executeUpdate();
     }
+	
+	public ChangeCaseStatus findByCaseId(Long caseId)
+	{
+		ChangeCaseStatus result = null;
+		
+		CriteriaBuilder builder = getEm().getCriteriaBuilder();
+		
+		CriteriaQuery<ChangeCaseStatus> query = builder.createQuery(ChangeCaseStatus.class);
+		Root<ChangeCaseStatus> changeCaseStatus = query.from(ChangeCaseStatus.class);
+		
+		query.select(changeCaseStatus);
+		
+		query.where(
+				builder.and(
+    					builder.equal(changeCaseStatus.<Long>get("caseId"), caseId)
+    			),
+    			builder.and(
+    					builder.notEqual(changeCaseStatus.<String>get("status"), "APPROVED")
+    			)
+		);
+		
+		TypedQuery<ChangeCaseStatus> dbQuery = getEm().createQuery(query);
+		
+		try
+    	{
+    		result = dbQuery.getSingleResult();
+    	}
+    	catch(Exception e)
+    	{
+    		LOG.info("There is no any results.");
+    	}
+    	
+    	return result;
+	}
 }

@@ -23,15 +23,6 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
 
         applicationEventPublisher.publishEvent(event);
     }
-    
-    public void raiseCaseStatusChangedEvent(CaseFile caseFile, Date eventDate, String ipAddress, String userId, Authentication auth)
-    {
-    	String eventType = "com.armedia.acm.casefile.event.statuschanged";
-        eventDate = eventDate == null ? new Date() : eventDate;
-        CaseEvent event = new CaseEvent(caseFile, ipAddress, userId, eventType, eventDate, true, auth);
-        
-        applicationEventPublisher.publishEvent(event);
-    }
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
