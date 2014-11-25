@@ -68,7 +68,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 		 String author = event.getUserId();
 	     List<String> reviewers = findReviewers(event);
 	     
-	     String taskName = "Request to Close Case '" + event.getCaseNumber() + "'";
+	     String taskName = "Request to Change Case Status '" + event.getCaseNumber() + "'";
 	     
 	     Map<String, Object> pvars = new HashMap<>();
 	     
@@ -82,7 +82,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 	     pvars.put("OBJECT_ID", event.getCaseId());
 	     pvars.put("OBJECT_NAME", event.getCaseNumber());
 	     pvars.put("CASE_FILE", event.getCaseId());
-	     pvars.put("REQUEST_TYPE", "CLOSE_CASE_REQUEST");
+	     pvars.put("REQUEST_TYPE", "CHANGE_CASE_STATUS");
 	     pvars.put("REQUEST_ID", event.getRequest().getId());
 	     
 	     LOG.debug("Starting process: " + processName);
