@@ -777,10 +777,10 @@ TaskList.Object = {
         });
     }
     ,updateDetail: function(task) {
-    	if (task.attachedToObjectType.toLowerCase() == "complaint"){
+    	if (task && task.attachedToObjectType && attachedToObjectType.toLowerCase() == "complaint"){
     		this.$lnkEditComplaintClose.show();
     		this.$lnkChangeCaseStatus.hide();
-    	}else if(task.attachedToObjectType.toLowerCase() == "case_file"){
+    	}else if(task && task.attachedToObjectType && task.attachedToObjectType.toLowerCase() == "case_file"){
     		this.$lnkEditComplaintClose.hide();
     		this.$lnkChangeCaseStatus.show();
     	}
