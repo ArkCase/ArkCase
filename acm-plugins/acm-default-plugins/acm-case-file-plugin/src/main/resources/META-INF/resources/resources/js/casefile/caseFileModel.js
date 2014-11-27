@@ -51,84 +51,84 @@ CaseFile.Model = CaseFile.Model || {
         create : function() {
             this.cacheCaseFile = new Acm.Model.CacheFifo(3);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED          ,this.onCaseFileSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE          ,this.onViewSelectedCaseFile);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_TITLE_CHANGED          ,this.onCaseTitleChanged);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_INCIDENT_DATE_CHANGED       ,this.onIncidentDateChanged);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ASSIGNEE_CHANGED            ,this.onAssigneeChanged);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SUBJECT_TYPE_CHANGED        ,this.onSubjectTypeChanged);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PRIORITY_CHANGED            ,this.onPriorityChanged);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DUE_DATE_CHANGED            ,this.onDueDateChanged);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DETAIL_CHANGED              ,this.onDetailChanged);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CHILD_OBJECT_CHANGED        ,this.onChildObjectChanged);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_ADDED           ,this.onParticipantAdded);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_UPDATED         ,this.onParticipantUpdated);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PARTICIPANT_DELETED         ,this.onParticipantDeleted);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ASSOCIATION_ADDED    ,this.onPersonAssociationAdded);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ASSOCIATION_UPDATED  ,this.onPersonAssociationUpdated);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ASSOCIATION_DELETED  ,this.onPersonAssociationDeleted);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ADDRESS_ADDED               ,this.onAddressAdded);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ADDRESS_UPDATED             ,this.onAddressUpdated);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ADDRESS_DELETED             ,this.onAddressDeleted);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CONTACT_METHOD_ADDED        ,this.onContactMethodAdded);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CONTACT_METHOD_UPDATED      ,this.onContactMethodUpdated);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CONTACT_METHOD_DELETED      ,this.onContactMethodDeleted);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SECURITY_TAG_ADDED          ,this.onSecurityTagAdded);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SECURITY_TAG_UPDATED        ,this.onSecurityTagUpdated);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SECURITY_TAG_DELETED        ,this.onSecurityTagDeleted);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ALIAS_ADDED          ,this.onPersonAliasAdded);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ALIAS_UPDATED        ,this.onPersonAliasUpdated);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ALIAS_DELETED        ,this.onPersonAliasDeleted);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ORGANIZATION_ADDED          ,this.onOrganizationAdded);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ORGANIZATION_UPDATED        ,this.onOrganizationUpdated);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ORGANIZATION_DELETED        ,this.onOrganizationDeleted);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE          , this.onViewChangedCaseTitle);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_INCIDENT_DATE       , this.onViewChangedIncidentDate);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_ASSIGNEE            , this.onViewChangedAssignee);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_SUBJECT_TYPE        , this.onViewChangedSubjectType);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_PRIORITY            , this.onViewChangedPriority);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_DUE_DATE            , this.onViewChangedDueDate);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_DETAIL              , this.onViewChangedDetail);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CHILD_OBJECT        , this.onViewChangedChildObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_PARTICIPANT           , this.onViewAddedParticipant);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_PARTICIPANT         , this.onViewUpdatedParticipant);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_PARTICIPANT         , this.onViewDeletedParticipant);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_PERSON_ASSOCIATION    , this.onViewAddedPersonAssociation);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_PERSON_ASSOCIATION  , this.onViewUpdatedPersonAssociation);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_PERSON_ASSOCIATION  , this.onViewDeletedPersonAssociation);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_ADDRESS               , this.onViewAddedAddress);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_ADDRESS             , this.onViewUpdatedAddress);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_ADDRESS             , this.onViewDeletedAddress);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_CONTACT_METHOD        , this.onViewAddedContactMethod);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_CONTACT_METHOD      , this.onViewUpdatedContactMethod);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_CONTACT_METHOD      , this.onViewDeletedContactMethod);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_SECURITY_TAG          , this.onViewAddedSecurityTag);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_SECURITY_TAG        , this.onViewUpdatedSecurityTag);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_SECURITY_TAG        , this.onViewDeletedSecurityTag);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_PERSON_ALIAS          , this.onViewAddedPersonAlias);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_PERSON_ALIAS        , this.onViewUpdatedPersonAlias);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_PERSON_ALIAS        , this.onViewDeletedPersonAlias);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_ORGANIZATION          , this.onViewAddedOrganization);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_ORGANIZATION        , this.onViewUpdatedOrganization);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_ORGANIZATION        , this.onViewDeletedOrganization);
 
         }
         ,initialize: function() {
         }
 
-        ,onCaseFileSelected: function(caseFileId) {
+        ,onViewSelectedCaseFile: function(caseFileId) {
             CaseFile.Model.setCaseFileId(caseFileId);
             var caseFile = CaseFile.Model.Detail.cacheCaseFile.get(caseFileId);
             if (!caseFile) {
                 CaseFile.Service.Detail.retrieveCaseFile(caseFileId);
             }
         }
-        ,onCaseTitleChanged: function(caseFileId, title) {
+        ,onViewChangedCaseTitle: function(caseFileId, title) {
             CaseFile.Service.Detail.saveCaseTitle(caseFileId, title);
         }
 
-        ,onIncidentDateChanged: function(caseFileId, incidentDate) {
+        ,onViewChangedIncidentDate: function(caseFileId, incidentDate) {
             CaseFile.Service.Detail.saveIncidentDate(caseFileId, incidentDate);
         }
-        ,onAssigneeChanged: function(caseFileId, assignee) {
+        ,onViewChangedAssignee: function(caseFileId, assignee) {
             CaseFile.Service.Detail.saveAssignee(caseFileId, assignee);
         }
-        ,onSubjectTypeChanged: function(caseFileId, caseType) {
+        ,onViewChangedSubjectType: function(caseFileId, caseType) {
             CaseFile.Service.Detail.saveSubjectType(caseFileId, caseType);
         }
-        ,onPriorityChanged: function(caseFileId, priority) {
+        ,onViewChangedPriority: function(caseFileId, priority) {
             CaseFile.Service.Detail.savePriority(caseFileId, priority);
         }
-        ,onDueDateChanged: function(caseFileId, dueDate) {
+        ,onViewChangedDueDate: function(caseFileId, dueDate) {
             CaseFile.Service.Detail.saveDueDate(caseFileId, dueDate);
         }
-        ,onDetailChanged: function(caseFileId, details) {
+        ,onViewChangedDetail: function(caseFileId, details) {
             CaseFile.Service.Detail.saveDetail(caseFileId, details);
         }
-        ,onChildObjectChanged: function(caseFileId, childObject) {
+        ,onViewChangedChildObject: function(caseFileId, childObject) {
             CaseFile.Service.Detail.saveChildObject(caseFileId, childObject);
         }
-        ,onParticipantAdded: function(caseFileId, participant) {
+        ,onViewAddedParticipant: function(caseFileId, participant) {
             CaseFile.Service.Detail.addParticipant(caseFileId, participant);
         }
-        ,onParticipantUpdated: function(caseFileId, participant) {
+        ,onViewUpdatedParticipant: function(caseFileId, participant) {
             CaseFile.Service.Detail.updateParticipant(caseFileId, participant);
         }
-        ,onParticipantDeleted: function(caseFileId, participantId) {
+        ,onViewDeletedParticipant: function(caseFileId, participantId) {
             CaseFile.Service.Detail.deleteParticipant(caseFileId, participantId);
         }
-        ,onPersonAssociationAdded: function(caseFileId, personAssociation) {
+        ,onViewAddedPersonAssociation: function(caseFileId, personAssociation) {
             var pa = CaseFile.Model.Detail.newPersonAssociation();
             pa.parentType = CaseFile.Model.getObjectType();
             pa.parentId = caseFileId;
@@ -139,55 +139,55 @@ CaseFile.Model = CaseFile.Model || {
             pa.person.familyName = personAssociation.person.familyName;
             CaseFile.Service.Detail.addPersonAssociation(caseFileId, pa);
         }
-        ,onPersonAssociationUpdated: function(caseFileId, personAssociation) {
+        ,onViewUpdatedPersonAssociation: function(caseFileId, personAssociation) {
             CaseFile.Service.Detail.updatePersonAssociation(caseFileId, personAssociation);
         }
-        ,onPersonAssociationDeleted: function(caseFileId, personAssociationId) {
+        ,onViewDeletedPersonAssociation: function(caseFileId, personAssociationId) {
             CaseFile.Service.Detail.deletePersonAssociation(caseFileId, personAssociationId);
         }
-        ,onAddressAdded: function(caseFileId, personAssociationId, address) {
+        ,onViewAddedAddress: function(caseFileId, personAssociationId, address) {
             CaseFile.Service.Detail.addAddress(caseFileId, personAssociationId, address);
         }
-        ,onAddressUpdated: function(caseFileId, personAssociationId, address) {
+        ,onViewUpdatedAddress: function(caseFileId, personAssociationId, address) {
             CaseFile.Service.Detail.updateAddress(caseFileId, personAssociationId, address);
         }
-        ,onAddressDeleted: function(caseFileId, personAssociationId, addressId) {
+        ,onViewDeletedAddress: function(caseFileId, personAssociationId, addressId) {
             CaseFile.Service.Detail.deleteAddress(caseFileId, personAssociationId, addressId);
         }
-        ,onContactMethodAdded: function(caseFileId, personAssociationId, contactMethod) {
+        ,onViewAddedContactMethod: function(caseFileId, personAssociationId, contactMethod) {
             CaseFile.Service.Detail.addContactMethod(caseFileId, personAssociationId, contactMethod);
         }
-        ,onContactMethodUpdated: function(caseFileId, personAssociationId, contactMethod) {
+        ,onViewUpdatedContactMethod: function(caseFileId, personAssociationId, contactMethod) {
             CaseFile.Service.Detail.updateContactMethod(caseFileId, personAssociationId, contactMethod);
         }
-        ,onContactMethodDeleted: function(caseFileId, personAssociationId, contactMethodId) {
+        ,onViewDeletedContactMethod: function(caseFileId, personAssociationId, contactMethodId) {
             CaseFile.Service.Detail.deleteContactMethod(caseFileId, personAssociationId, contactMethodId);
         }
-        ,onSecurityTagAdded: function(caseFileId, personAssociationId, securityTag) {
+        ,onViewAddedSecurityTag: function(caseFileId, personAssociationId, securityTag) {
             CaseFile.Service.Detail.addSecurityTag(caseFileId, personAssociationId, securityTag);
         }
-        ,onSecurityTagUpdated: function(caseFileId, personAssociationId, securityTag) {
+        ,onViewUpdatedSecurityTag: function(caseFileId, personAssociationId, securityTag) {
             CaseFile.Service.Detail.updateSecurityTag(caseFileId, personAssociationId, securityTag);
         }
-        ,onSecurityTagDeleted: function(caseFileId, personAssociationId, securityTagId) {
+        ,onViewDeletedSecurityTag: function(caseFileId, personAssociationId, securityTagId) {
             CaseFile.Service.Detail.deleteSecurityTag(caseFileId, personAssociationId, securityTagId);
         }
-        ,onPersonAliasAdded: function(caseFileId, personAssociationId, personAlias) {
+        ,onViewAddedPersonAlias: function(caseFileId, personAssociationId, personAlias) {
             CaseFile.Service.Detail.addPersonAlias(caseFileId, personAssociationId, personAlias);
         }
-        ,onPersonAliasUpdated: function(caseFileId, personAssociationId, personAlias) {
+        ,onViewUpdatedPersonAlias: function(caseFileId, personAssociationId, personAlias) {
             CaseFile.Service.Detail.updatePersonAlias(caseFileId, personAssociationId, personAlias);
         }
-        ,onPersonAliasDeleted: function(caseFileId, personAssociationId, personAliasId) {
+        ,onViewDeletedPersonAlias: function(caseFileId, personAssociationId, personAliasId) {
             CaseFile.Service.Detail.deletePersonAlias(caseFileId, personAssociationId, personAliasId);
         }
-        ,onOrganizationAdded: function(caseFileId, personAssociationId, organization) {
+        ,onViewAddedOrganization: function(caseFileId, personAssociationId, organization) {
             CaseFile.Service.Detail.addOrganization(caseFileId, personAssociationId, organization);
         }
-        ,onOrganizationUpdated: function(caseFileId, personAssociationId, organization) {
+        ,onViewUpdatedOrganization: function(caseFileId, personAssociationId, organization) {
             CaseFile.Service.Detail.updateOrganization(caseFileId, personAssociationId, organization);
         }
-        ,onOrganizationDeleted: function(caseFileId, personAssociationId, organizationId) {
+        ,onViewDeletedOrganization: function(caseFileId, personAssociationId, organizationId) {
             CaseFile.Service.Detail.deleteOrganization(caseFileId, personAssociationId, organizationId);
         }
 
@@ -327,14 +327,14 @@ CaseFile.Model = CaseFile.Model || {
         create : function() {
             this.cachePage = new Acm.Model.CacheFifo(2);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PREV_PAGE_CLICKED      ,this.onPrevPageClicked);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NEXT_PAGE_CLICKED      ,this.onNextPageClicked);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_TITLE_CHANGED     ,this.onCaseTitleChanged);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_PREV_PAGE      ,this.onViewPrevPageClicked);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_NEXT_PAGE      ,this.onViewNextPageClicked);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE     ,this.onViewChangedCaseTitle);
         }
         ,initialize: function() {
         }
 
-        ,onPrevPageClicked: function() {
+        ,onViewPrevPageClicked: function() {
             CaseFile.Model.setCaseFileId(0);
 
             var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
@@ -346,7 +346,7 @@ CaseFile.Model = CaseFile.Model || {
             }
             CaseFile.Service.List.retrieveCaseFileList(treeInfo);
         }
-        ,onNextPageClicked: function() {
+        ,onViewNextPageClicked: function() {
             CaseFile.Model.setCaseFileId(0);
 
             var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
@@ -357,7 +357,7 @@ CaseFile.Model = CaseFile.Model || {
             }
             CaseFile.Service.List.retrieveCaseFileList(treeInfo);
         }
-        ,onCaseTitleChanged: function(caseFileId, title) {
+        ,onViewChangedCaseTitle: function(caseFileId, title) {
             var pageId = CaseFile.Model.Tree.Config.getPageId();
             var caseFiles = CaseFile.Model.List.cachePage.get(pageId);
             if (caseFiles) {
@@ -587,21 +587,21 @@ CaseFile.Model = CaseFile.Model || {
         create : function() {
             this.cacheNoteList = new Acm.Model.CacheFifo(4);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_ADDED     ,this.onNoteAdded);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_UPDATED   ,this.onNoteUpdated);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_NOTE_DELETED   ,this.onNoteDeleted);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_NOTE     , this.onViewAddedNote);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_NOTE   , this.onViewUpdatedNote);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_NOTE   , this.onViewDeletedNote);
         }
         ,initialize: function() {
         }
 
 
-        ,onNoteAdded: function(note) {
+        ,onViewAddedNote: function(note) {
             CaseFile.Service.Notes.addNote(note);
         }
-        ,onNoteUpdated: function(note) {
+        ,onViewUpdatedNote: function(note) {
             CaseFile.Service.Notes.updateNote(note);
         }
-        ,onNoteDeleted: function(noteId) {
+        ,onViewDeletedNote: function(noteId) {
             CaseFile.Service.Notes.deleteNote(noteId);
         }
 
