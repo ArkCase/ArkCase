@@ -21,6 +21,7 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     private String parentObjectType;
     private String parentObjectName;
     private boolean adhocTask;
+    private String owner;
 
 
 
@@ -48,6 +49,7 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
         setParentObjectType(source.getAttachedToObjectType());
         setParentObjectName(source.getAttachedToObjectName());
         setAdhocTask(source.isAdhocTask());
+        setOwner(source.getOwner());
 
     }
 
@@ -158,6 +160,13 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
 
     public void setAdhocTask(boolean adhocTask) {this.adhocTask = adhocTask;}
 
+    @Override
+    public String getOwner() {
+        return owner;
+    }
 
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
 }

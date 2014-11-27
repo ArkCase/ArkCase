@@ -34,11 +34,11 @@ public class ChangeCaseStatusFormEvent extends AcmEvent {
 		setEventDate(new Date());
 		
 		String event = "edit".equals(mode) ? "updated" : "created";
-		setEventType("com.armedia.acm.closeCaseRequest." + event);
+		setEventType("com.armedia.acm.changeCaseStatus." + event);
 		
 		setIpAddress(ipAddress);
         setObjectId(source.getId());
-        setObjectType("CLOSE_CASE_REQUEST");
+        setObjectType("CHANGE_CASE_STATUS");
         
         setSucceeded(succeeded);
 
