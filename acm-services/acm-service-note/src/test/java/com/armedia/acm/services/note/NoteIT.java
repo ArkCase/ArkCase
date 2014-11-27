@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(locations = {
                                    "/spring/spring-library-note.xml",
                                    "/spring/spring-library-data-source.xml",
+                                   "/spring/spring-library-context-holder.xml"
                                   })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NoteIT

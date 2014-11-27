@@ -50,9 +50,18 @@ TaskList.JTable = {
             ,toolbar: {
                 items: [{
                     //icon: 'jtable-edit-command-button',
+                	cssClass: 'editCloseComplaint',
                     text: 'Edit Close Complaint Request',
                     click: function () {
                         TaskList.Event.onEditCloseComplaint();
+                    }
+                },
+                {
+                    //icon: 'jtable-edit-command-button',
+                	cssClass: 'changeCaseStatus',
+                    text: 'Change Case Status',
+                    click: function () {
+                        TaskList.Event.onChangeCaseStatus();
                     }
                 }]
             }
@@ -460,45 +469,62 @@ TaskList.JTable = {
         AcmEx.Object.jTableCreatePaging($s
             , {
                 title: 'Event Log'
+                ,sorting: "true"
                 ,actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
-                        /*var c = CaseFile.getCaseFile();
-                        if(c){
-                            var jtData=null;
-                            jtData = AcmEx.Object.jTableGetEmptyRecords();
-                            var caseEvents = CaseFile.cacheCaseEvents.get(c.id);
-                            if (caseEvents) {
-                                jtData = CaseFile.JTable._makeEventRecords(caseEvents);
-                                jtData.TotalRecordCount = caseEvents.length;
-                                return jtData;
+                        var taskId = TaskList.getTaskId();
+                        var taskEvents = TaskList.cacheTaskEvents.get(taskId);
+                        //var err = "";
+                        var jtData = AcmEx.Object.jTableGetEmptyRecords();
+                        if (taskEvents && taskEvents.resultPage) {
+                            var resultPage = taskEvents.resultPage;
+                            for (var i = 0; i < resultPage.length; i++) {
+                                var Record = {};
+                                Record.eventType = resultPage[i].eventType;
+                                Record.eventDate = Acm.getDateFromDatetime(resultPage[i].eventDate);
+                                Record.userId = resultPage[i].userId;
+                                jtData.Records.push(Record);
                             }
-                            var caseId = c.id;
-                            return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
-                                , function () {
-                                    var url;
-                                    url = App.getContextPath() + CaseFile.Service.API_EVENTS_CASE_+ caseId;
-                                    return url;
-                                }
-                                , function (caseEvents) {
-                                    var err = "Error";
-                                    if (caseEvents) {
-                                        jtData = CaseFile.JTable._makeEventRecords(caseEvents);
-                                        CaseFile.cacheCaseEvents.put(caseId, caseEvents);
-                                        jtData.TotalRecordCount = caseEvents.length;
-                                    }
-                                    else {
-                                        if (Acm.isNotEmpty(caseEvents.error)) {
-                                            err = caseEvents.error.msg + "(" + caseEvents.error.code + ")";
-                                        }
-                                    }
-                                    return {jtData: jtData, jtError: err};
-                                }
-                            );
+                            jtData.TotalRecordCount = taskEvents.totalCount;
+                            //return {jtData: jtData, jtError: err};
+                            return jtData;
                         }
-                        else{*/
-                            var rc = AcmEx.Object.jTableGetEmptyRecords();
-                            return rc;
-                        //}
+                        return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
+                            , function () {
+                                var taskId = TaskList.getTaskId();
+                                var url;
+                                url = App.getContextPath() + TaskList.Service.API_TASK_EVENTS + taskId;
+                                return url;
+                            }
+                            , function (data) {
+                                var jtData = null;
+                                var err = "Error";
+                                jtData = AcmEx.Object.jTableGetEmptyRecords();
+                                if (data) {
+                                    var resultPage = data.resultPage;
+                                    for (var i = 0; i < resultPage.length; i++) {
+                                        var Record = {};
+                                        /*if(!(resultPage[i].eventType == ('searchResult') || resultPage[i].eventType == ('result') ||
+                                            resultPage[i].eventType == ('findById'))){*/
+                                            Record.eventType = resultPage[i].eventType;
+                                            Record.eventDate = Acm.getDateFromDatetime(resultPage[i].eventDate);
+                                            Record.userId = resultPage[i].userId;
+                                            jtData.Records.push(Record);
+                                        //}
+                                    }
+                                    TaskList.cacheTaskEvents.put(taskId, taskEvents);
+                                    //jtData.TotalRecordCount = data.totalCount;
+                                    jtData.TotalRecordCount = jtData.Records.length;
+                                }
+                                else {
+                                    if (Acm.isNotEmpty(data.hasError)) {
+                                        err = data.errorMsg;
+                                    }
+                                }
+                                return {jtData: jtData, jtError: err};
+                            }
+                        );
+
                     }
                 }
                 , fields: {
@@ -513,6 +539,7 @@ TaskList.JTable = {
                     }
                 }//end field
             }
+
             //end arg
             //,sortMap
         );

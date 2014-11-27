@@ -188,13 +188,16 @@ TaskList.Object = {
         TaskList.JTable.createJTableAttachments(this.$divAttachments);
 
         //frevvo edit close complaint
-        this.$lnkEditComplaintClose = $("#editCloseComplaint");
-        this.$lnkEditComplaintClose.click(function(e){TaskList.Event.onEditCloseComplaint(e)});
+        this.$lnkEditComplaintClose = $(".editCloseComplaint");
+        
+        //frevvo change case status
+        this.$lnkChangeCaseStatus = $(".changeCaseStatus");
 
         var formUrls = new Object();
         formUrls["roi"] = $('#roiFormUrl').val();
         formUrls["close_complaint"] = $('#closeComplaintFormUrl').val();
         formUrls["edit_close_complaint"] = $('#editCloseComplaintFormUrl').val();
+        formUrls["change_case_status"] = $('#changeCaseStatusFormUrl').val();
         this.setFormUrls(formUrls);
 
     }
@@ -208,6 +211,14 @@ TaskList.Object = {
     }
     ,setFormUrls: function(formUrls) {
         this._formUrls = formUrls;
+    }
+    
+    ,_popupWindow: null
+    ,getPopUpWindow: function() {
+    	return this._popupWindow;
+    }
+    ,setPopUpWindow: function(popupWindow) {
+    	this._popupWindow = popupWindow;
     }
 
     //  Use this to build the Admin tree structure
@@ -766,6 +777,13 @@ TaskList.Object = {
         });
     }
     ,updateDetail: function(task) {
+    	if (task && task.attachedToObjectType && attachedToObjectType.toLowerCase() == "complaint"){
+    		this.$lnkEditComplaintClose.show();
+    		this.$lnkChangeCaseStatus.hide();
+    	}else if(task && task.attachedToObjectType && task.attachedToObjectType.toLowerCase() == "case_file"){
+    		this.$lnkEditComplaintClose.hide();
+    		this.$lnkChangeCaseStatus.show();
+    	}
         if(task.adhocTask){
             this.hideAllWorkflowButtons();
             if(task.completed != true){
@@ -777,6 +795,7 @@ TaskList.Object = {
             this.refreshJTableAttachments();
             this.refreshJTableNotes();
             this.refreshJTableWorkflowOverview();
+            this.refreshJTableHistory();
             this.refreshJTableHistory();
         }
         else{
@@ -817,6 +836,7 @@ TaskList.Object = {
             this.refreshJTableWorkflowOverview();
             this.refreshJTableHistory();
             this.refreshJTableDocuments();
+            this.refreshJTableHistory();
         }
 
     }

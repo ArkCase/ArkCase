@@ -16,7 +16,8 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-audit.xml",
-        "/spring/spring-library-data-source.xml"
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-context-holder.xml"
 })
 public class AuditDaoIT
 {
@@ -28,15 +29,31 @@ public class AuditDaoIT
     @Test
     public void findEvents() throws Exception
     {
-        String eventType = "com.armedia.acm.dashboard";
         String objectType = "DASHBOARD";
         Long dashboardId = 500L;   // just want to make sure the query executes, doesn't have to return data
 
-        List<AuditEvent> events = dao.findAuditsByEventPatternAndObjectId(eventType, objectType, dashboardId);
+        List<AuditEvent> events = dao.findAuditsByEventPatternAndObjectId(objectType, dashboardId);
 
         assertNotNull(events);
 
         log.info("# of dashboard events: " + events.size());
+
+
+    }
+
+    @Test
+    public void findPagedEvents() throws Exception
+    {
+        int maxRows = 10;
+        int startRow = 0;
+        String objectType = "TASK";
+        Long objectId = 100L;   // just want to make sure the query executes, doesn't have to return data
+
+        List<AuditEvent> events = dao.findPagedResults(objectId,objectType,startRow,maxRows);
+
+        assertNotNull(events);
+
+        log.info("# of task events: " + events.size());
 
 
     }

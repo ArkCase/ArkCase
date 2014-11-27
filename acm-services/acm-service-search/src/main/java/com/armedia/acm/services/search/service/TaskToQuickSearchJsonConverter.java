@@ -40,7 +40,7 @@ public class TaskToQuickSearchJsonConverter
         quickSearchMap.put("name", event.getTaskName());
         quickSearchMap.put("status_s", event.getTaskEvent() == null ? null : event.getTaskEvent().toUpperCase());
         quickSearchMap.put("assignee_s", event.getAssignee());
-        quickSearchMap.put("owner_s", event.getAssignee());
+        quickSearchMap.put("owner_s", event.getOwner());
         quickSearchMap.put("id", event.getObjectId() + "-" + TASK_TYPE);
         quickSearchMap.put("priority_s", event.getPriority());
         quickSearchMap.put("parent_object_id_i", event.getParentObjectId());
@@ -64,7 +64,6 @@ public class TaskToQuickSearchJsonConverter
             log.debug("Returning JSON: " + json);
         }
         return json;
-
     }
 
     public DataAccessEntryService getDataAccessEntryService() {
