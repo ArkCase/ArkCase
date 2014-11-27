@@ -63,20 +63,20 @@ CaseFile.View = CaseFile.View || {
             this.$tree = $("#tree");
             this._useFancyTree(this.$tree);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_LIST_RETRIEVED, this.onCaseFileListRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_TITLE_CHANGED,       this.onCaseTitleChanged);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE_LIST, this.onModelRetrievedCaseFileList);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE       , this.onViewChangedCaseTitle);
         }
         ,initialize: function() {
         }
 
-        ,onCaseFileListRetrieved: function(key) {
+        ,onModelRetrievedCaseFileList: function(key) {
             if (key.hasError) {
                 alert(key.errorMsg);
             } else {
                 CaseFile.View.Tree.refreshTree(key);
             }
         }
-        ,onCaseTitleChanged: function(caseFileId, title) {
+        ,onViewChangedCaseTitle: function(caseFileId, title) {
             CaseFile.View.Tree.updateTitle(caseFileId, title);
         }
 
@@ -465,49 +465,49 @@ CaseFile.View = CaseFile.View || {
             });
 
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ASSIGNEES_FOUND        ,this.onAssigneesFound);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_SUBJECT_TYPES_FOUND    ,this.onSubjectTypesFound);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PRIORITIES_FOUND       ,this.onPrioritiesFound);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
-            //Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_SAVED        ,this.onCaseFileSaved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_TITLE_SAVED       ,this.onCaseTitleSaved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_INCIDENT_DATE_SAVED    ,this.onIncidentDateSaved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ASSIGNEE_SAVED         ,this.onAssigneeSaved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_SUBJECT_TYPE_SAVED     ,this.onSubjectTypeSaved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PRIORITY_SAVED         ,this.onPrioritySaved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_DUE_DATE_SAVED         ,this.onDueDateSaved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_DETAIL_SAVED           ,this.onDetailSaved);
-            //ME_PARTICIPANT_ADDED
-            //ME_PARTICIPANT_UPDATED
-            //ME_PARTICIPANT_DELETED
-            //ME_CHILD_OBJECT_SAVED
-            //ME_PERSON_ASSOCIATION_ADDED
-            //ME_PERSON_ASSOCIATION_UPDATED
-            //ME_PERSON_ASSOCIATION_DELETED
-            //ME_ADDRESS_ADDED
-            //ME_ADDRESS_UPDATED
-            //ME_ADDRESS_DELETED
-            //ME_CONTACT_METHOD_ADDED
-            //ME_CONTACT_METHOD_UPDATED
-            //ME_CONTACT_METHOD_DELETED
-            //ME_CONTACT_METHOD_ADDED
-            //ME_CONTACT_METHOD_UPDATED
-            //ME_CONTACT_METHOD_DELETED
-            //ME_CONTACT_METHOD_ADDED
-            //ME_CONTACT_METHOD_UPDATED
-            //ME_CONTACT_METHOD_DELETED
-            //ME_CONTACT_METHOD_ADDED
-            //ME_CONTACT_METHOD_UPDATED
-            //ME_CONTACT_METHOD_DELETED
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_ASSIGNEES        ,this.onModelFoundAssignees);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES    ,this.onModelFoundSubjectTypes);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PRIORITIES       ,this.onModelFoundPriorities);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE        ,this.onModelSavedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE       ,this.onModelSavedCaseTitle);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_INCIDENT_DATE    ,this.onModelSavedIncidentDate);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE         ,this.onModelSavedAssignee);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_SUBJECT_TYPE     ,this.onModelSavedSubjectType);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_PRIORITY         ,this.onModelSavedPriority);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE         ,this.onModelSavedDueDate);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DETAIL           ,this.onModelSavedDetail);
+            //MODEL_ADDED_PARTICIPANT
+            //MODEL_UPDATED_PARTICIPANT
+            //MODEL_DELETED_PARTICIPANT
+            //MODEL_SAVED_CHILD_OBJECT
+            //MODEL_ADDED_PERSON_ASSOCIATION
+            //MODEL_UPDATED_PERSON_ASSOCIATION
+            //MODEL_DELETED_PERSON_ASSOCIATION
+            //MODEL_ADDED_ADDRESS
+            //MODEL_UPDATED_ADDRESS
+            //MODEL_DELETED_ADDRESS
+            //MODEL_ADDED_CONTACT_METHOD
+            //MODEL_UPDATED_CONTACT_METHOD
+            //MODEL_DELETED_CONTACT_METHOD
+            //MODEL_ADDED_CONTACT_METHOD
+            //MODEL_UPDATED_CONTACT_METHOD
+            //MODEL_DELETED_CONTACT_METHOD
+            //MODEL_ADDED_CONTACT_METHOD
+            //MODEL_ADDED_CONTACT_METHOD
+            //MODEL_ADDED_CONTACT_METHOD
+            //MODEL_ADDED_CONTACT_METHOD
+            //MODEL_UPDATED_CONTACT_METHOD
+            //MODEL_DELETED_CONTACT_METHOD
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_TREE_NODE_SELECTED     ,this.onTreeNodeSelected);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_TREE_NODE     ,this.onViewSelectedTreeNode);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE     ,this.onViewSelectedCaseFile);
         }
         ,initialize: function() {
         }
 
 
-        ,onAssigneesFound: function(assignees) {
+        ,onModelFoundAssignees: function(assignees) {
             var choices = [];
             $.each(assignees, function(idx, val) {
                 var opt = {};
@@ -523,7 +523,7 @@ CaseFile.View = CaseFile.View || {
                 }
             });
         }
-        ,onSubjectTypesFound: function(subjectTypes) {
+        ,onModelFoundSubjectTypes: function(subjectTypes) {
             var choices = [];
             $.each(subjectTypes, function(idx, val) {
                 var opt = {};
@@ -539,7 +539,7 @@ CaseFile.View = CaseFile.View || {
                 }
             });
         }
-        ,onPrioritiesFound: function(priorities) {
+        ,onModelFoundPriorities: function(priorities) {
             var choices = []; //[{value: "", text: "Choose Priority"}];
             $.each(priorities, function(idx, val) {
                 var opt = {};
@@ -555,7 +555,7 @@ CaseFile.View = CaseFile.View || {
                 }
             });
         }
-        ,onCaseFileRetrieved: function(caseFile) {
+        ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
                 alert("View: onCaseFileRetrieved, hasError");
             } else {
@@ -571,48 +571,48 @@ CaseFile.View = CaseFile.View || {
 //            }
 //
 //        }
-        ,onCaseTitleSaved: function(caseFileId, title) {
+        ,onModelSavedCaseTitle: function(caseFileId, title) {
             if (title.hasError) {
                 //alert("View: onCaseTitleSaved, hasError, errorMsg:" + title.errorMsg);
                 CaseFile.View.Detail.setTextLnkCaseTitle("(Error)");
             }
         }
-        ,onIncidentDateSaved: function(caseFileId, incidentDate) {
+        ,onModelSavedIncidentDate: function(caseFileId, incidentDate) {
             if (incidentDate.hasError) {
                 CaseFile.View.Detail.setTextLnkIncidentDate("(Error)");
             }
         }
-        ,onAssigneeSaved: function(caseFileId, assginee) {
+        ,onModelSavedAssignee: function(caseFileId, assginee) {
             if (assginee.hasError) {
                 CaseFile.View.Detail.setTextLnkAssignee("(Error)");
             }
         }
-        ,onSubjectTypeSaved: function(caseFileId, subjectType) {
+        ,onModelSavedSubjectType: function(caseFileId, subjectType) {
             if (subjectType.hasError) {
                 CaseFile.View.Detail.setTextLnkSubjectType("(Error)");
             }
         }
-        ,onPrioritySaved: function(caseFileId, priority) {
+        ,onModelSavedPriority: function(caseFileId, priority) {
             if (priority.hasError) {
                 CaseFile.View.Detail.setTextLnkPriority("(Error)");
             }
         }
-        ,onDueDateSaved: function(caseFileId, created) {
+        ,onModelSavedDueDate: function(caseFileId, created) {
             if (created.hasError) {
                 CaseFile.View.Detail.setTextLnkDueDate("(Error)");
             }
         }
-        ,onDetailSaved: function(caseFileId, details) {
+        ,onModelSavedDetail: function(caseFileId, details) {
             if (details.hasError) {
                 CaseFile.View.Detail.setHtmlDivDetail("(Error)");
             }
         }
 
 
-        ,onTreeNodeSelected: function(key) {
+        ,onViewSelectedTreeNode: function(key) {
             CaseFile.View.Detail.showPanel(key);
         }
-        ,onCaseFileSelected: function(caseFileId) {
+        ,onViewSelectedCaseFile: function(caseFileId) {
             CaseFile.View.Detail.showTopPanel(0 < caseFileId);
 
             var caseFile = CaseFile.Model.Detail.cacheCaseFile.get(caseFileId);
@@ -734,11 +734,11 @@ CaseFile.View = CaseFile.View || {
             this.$divPeople = $("#divPeople");
             this.createJTable(this.$divPeople);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED         ,this.onCaseFileRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED          ,this.onCaseFileSelected);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PERSON_ASSOCIATION_ADDED    ,this.onPersonAssociationAdded);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PERSON_ASSOCIATION_UPDATED  ,this.onPersonAssociationUpdated);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PERSON_ASSOCIATION_DELETED  ,this.onPersonAssociationDeleted);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE         ,this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE           ,this.onViewSelectedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_PERSON_ASSOCIATION    ,this.onModelAddedPersonAssociation);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_PERSON_ASSOCIATION  ,this.onModelUpdatedPersonAssociation);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_PERSON_ASSOCIATION  ,this.onModelDeletedPersonAssociation);
 
             if (this.ContactMethods.create)     {this.ContactMethods.create();}
             if (this.SecurityTags.create)       {this.SecurityTags.create();}
@@ -754,27 +754,27 @@ CaseFile.View = CaseFile.View || {
             if (CaseFile.View.People.Aliases.initialize)            {CaseFile.View.People.Aliases.initialize();}
         }
 
-        ,onCaseFileRetrieved: function(caseFile) {
+        ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
                 //empty table?
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
             }
         }
-        ,onCaseFileSelected: function(caseFileId) {
+        ,onViewSelectedCaseFile: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
         }
-        ,onPersonAssociationAdded: function(personAssociation) {
+        ,onModelAddedPersonAssociation: function(personAssociation) {
             if (personAssociation.hasError) {
                 AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
             }
         }
-        ,onPersonAssociationUpdated: function(personAssociation) {
+        ,onModelUpdatedPersonAssociation: function(personAssociation) {
             if (personAssociation.hasError) {
                 AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
             }
         }
-        ,onPersonAssociationDeleted: function(personAssociationId) {
+        ,onModelDeletedPersonAssociation: function(personAssociationId) {
             if (personAssociationId.hasError) {
                 AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
             }
@@ -939,24 +939,24 @@ CaseFile.View = CaseFile.View || {
 
         ,ContactMethods: {
             create: function() {
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CONTACT_METHOD_ADDED        ,this.onContactMethodAdded);
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CONTACT_METHOD_UPDATED      ,this.onContactMethodUpdated);
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CONTACT_METHOD_DELETED      ,this.onContactMethodDeleted);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_CONTACT_METHOD        ,this.onModelAddedContactMethod);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_CONTACT_METHOD      ,this.onModelUpdatedContactMethod);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_CONTACT_METHOD      ,this.onModelDeletedContactMethod);
             }
             ,initialize: function() {
             }
 
-            ,onContactMethodAdded: function(contactMethod) {
+            ,onModelAddedContactMethod: function(contactMethod) {
                 if (contactMethod.hasError) {
                     //refresh child table??;
                 }
             }
-            ,onContactMethodUpdated: function(contactMethod) {
+            ,onModelUpdatedContactMethod: function(contactMethod) {
                 if (contactMethod.hasError) {
                     //refresh child table??;
                 }
             }
-            ,onContactMethodDeleted: function(contactMethodId) {
+            ,onModelDeletedContactMethod: function(contactMethodId) {
                 if (contactMethodId.hasError) {
                     //refresh child table??;
                 }
@@ -1097,24 +1097,24 @@ CaseFile.View = CaseFile.View || {
 
         ,SecurityTags: {
             create: function() {
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_SECURITY_TAG_ADDED        ,this.onSecurityTagAdded);
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_SECURITY_TAG_UPDATED      ,this.onSecurityTagUpdated);
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_SECURITY_TAG_DELETED      ,this.onSecurityTagDeleted);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_SECURITY_TAG        ,this.onModelAddedSecurityTag);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_SECURITY_TAG      ,this.onModelUpdatedSecurityTag);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_SECURITY_TAG      ,this.onModelDeletedSecurityTag);
             }
             ,initialize: function() {
             }
 
-            ,onSecurityTagAdded: function(securityTag) {
+            ,onModelAddedSecurityTag: function(securityTag) {
                 if (securityTag.hasError) {
                     //refresh child table??;
                 }
             }
-            ,onSecurityTagUpdated: function(securityTag) {
+            ,onModelUpdatedSecurityTag: function(securityTag) {
                 if (securityTag.hasError) {
                     //refresh child table??;
                 }
             }
-            ,onSecurityTagDeleted: function(securityTagId) {
+            ,onModelDeletedSecurityTag: function(securityTagId) {
                 if (securityTagId.hasError) {
                     //refresh child table??;
                 }
@@ -1247,24 +1247,24 @@ CaseFile.View = CaseFile.View || {
 
         ,Organizations: {
             create: function() {
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ORGANIZATION_ADDED        ,this.onOrganizationAdded);
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ORGANIZATION_UPDATED      ,this.onOrganizationUpdated);
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ORGANIZATION_DELETED      ,this.onOrganizationDeleted);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_ORGANIZATION        ,this.onModelAddedOrganization);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_ORGANIZATION      ,this.onModelUpdatedOrganization);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_ORGANIZATION      ,this.onModelDeletedOrganization);
             }
             ,initialize: function() {
             }
 
-            ,onOrganizationAdded: function(organization) {
+            ,onModelAddedOrganization: function(organization) {
                 if (organization.hasError) {
                     //refresh child table??;
                 }
             }
-            ,onOrganizationUpdated: function(organization) {
+            ,onModelUpdatedOrganization: function(organization) {
                 if (organization.hasError) {
                     //refresh child table??;
                 }
             }
-            ,onOrganizationDeleted: function(organizationId) {
+            ,onModelDeletedOrganization: function(organizationId) {
                 if (organizationId.hasError) {
                     //refresh child table??;
                 }
@@ -1395,24 +1395,24 @@ CaseFile.View = CaseFile.View || {
 
         ,Addresses: {
             create: function() {
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ADDRESS_ADDED        ,this.onAddressAdded);
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ADDRESS_UPDATED      ,this.onAddressUpdated);
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ADDRESS_DELETED      ,this.onAddressDeleted);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_ADDRESS        ,this.onModelAddedAddress);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_ADDRESS      ,this.onModelUpdatedAddress);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_ADDRESS      ,this.onModelDeletedAddress);
             }
             ,initialize: function() {
             }
 
-            ,onAddressAdded: function(address) {
+            ,onModelAddedAddress: function(address) {
                 if (address.hasError) {
                     //refresh child table??;
                 }
             }
-            ,onAddressUpdated: function(address) {
+            ,onModelUpdatedAddress: function(address) {
                 if (address.hasError) {
                     //refresh child table??;
                 }
             }
-            ,onAddressDeleted: function(addressId) {
+            ,onModelDeletedAddress: function(addressId) {
                 if (addressId.hasError) {
                     //refresh child table??;
                 }
@@ -1602,24 +1602,24 @@ CaseFile.View = CaseFile.View || {
 
         ,Aliases: {
             create: function() {
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PERSON_ALIAS_ADDED        ,this.onPersonAliasAdded);
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PERSON_ALIAS_UPDATED      ,this.onPersonAliasUpdated);
-                Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_PERSON_ALIAS_DELETED      ,this.onPersonAliasDeleted);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_PERSON_ALIAS        ,this.onModelAddedPersonAlias);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_PERSON_ALIAS      ,this.onModelUpdatedPersonAlias);
+                Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_PERSON_ALIAS      ,this.onModelDeletedPersonAlias);
             }
             ,initialize: function() {
             }
 
-            ,onPersonAliasAdded: function(personAlias) {
+            ,onModelAddedPersonAlias: function(personAlias) {
                 if (personAlias.hasError) {
                     //refresh child table??;
                 }
             }
-            ,onPersonAliasUpdated: function(personAlias) {
+            ,onModelUpdatedPersonAlias: function(personAlias) {
                 if (personAlias.hasError) {
                     //refresh child table??;
                 }
             }
-            ,onPersonAliasDeleted: function(personAliasId) {
+            ,onModelDeletedPersonAlias: function(personAliasId) {
                 if (personAliasId.hasError) {
                     //refresh child table??;
                 }
@@ -1759,30 +1759,28 @@ CaseFile.View = CaseFile.View || {
             this.$spanAddDocument = this.$divDocuments.find(".jtable-toolbar-item-add-record");
             CaseFile.View.Documents.fillReportSelection();
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_CLOSED       ,this.onCaseFileClosed);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_DOCUMENT_ADDED         ,this.onDocumentAdded);
-
-
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLOSED_CASE_FILE        ,this.onViewClosedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
         }
         ,initialize: function() {
         }
 
-        ,onCaseFileRetrieved: function(caseFile) {
+        ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
                 //empty table?
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
             }
         }
-        ,onCaseFileSelected: function(caseFileId) {
+        ,onViewSelectedCaseFile: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
         }
-        ,onCaseFileClosed: function(caseFileId) {
+        ,onViewClosedCaseFile: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
         }
-        ,onDocumentAdded: function(caseFileId) {
+        ,onViewAddedDocument: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
         }
 
@@ -1940,26 +1938,26 @@ CaseFile.View = CaseFile.View || {
             this.$divParticipants    = $("#divParticipants");
             this.createJTableParticipants(this.$divParticipants);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_ASSIGNEE_SAVED         ,this.onAssigneeSaved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE         ,this.onModelSavedAssignee);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
         }
         ,initialize: function() {
         }
 
-        ,onCaseFileRetrieved: function(caseFile) {
+        ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
                 //empty table?
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
             }
         }
-        ,onAssigneeSaved: function(caseFileId, assginee) {
+        ,onModelSavedAssignee: function(caseFileId, assginee) {
             if (!assginee.hasError) {
                 AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
             }
         }
-        ,onCaseFileSelected: function(caseFileId) {
+        ,onViewSelectedCaseFile: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
         }
 
@@ -2082,38 +2080,45 @@ CaseFile.View = CaseFile.View || {
             this.$divNotes          = $("#divNotes");
             this.createJTableNotes(this.$divNotes);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_NOTE_ADDED             ,this.onNoteSaved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_NOTE_UPDATED           ,this.onNoteSaved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_NOTE_DELETED           ,this.onNoteDeleted);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_NOTE             ,this.onModelAdddNote);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_NOTE           ,this.onModelUpdatedNote);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_NOTE           ,this.onModelDeletedNote);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
         }
         ,initialize: function() {
         }
 
 //
-        ,onCaseFileRetrieved: function(caseFile) {
+        ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
                 //empty table?
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.Notes.$divNotes);
             }
         }
-        ,onNoteSaved: function(caseFile) {
+        ,onModelAdddNote: function(caseFile) {
             if (caseFile.hasError) {
                 //show error
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.Notes.$divNotes);
             }
         }
-        ,onNoteDeleted: function(noteId) {
+        ,onModelUpdatedNote: function(caseFile) {
+            if (caseFile.hasError) {
+                //show error
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Notes.$divNotes);
+            }
+        }
+        ,onModelDeletedNote: function(noteId) {
             if (noteId.hasError) {
                 //show error
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.Notes.$divNotes);
             }
         }
-        ,onCaseFileSelected: function(caseFileId) {
+        ,onViewSelectedCaseFile: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Notes.$divNotes);
         }
 
@@ -2291,8 +2296,8 @@ CaseFile.View = CaseFile.View || {
             this.createJTableTasks(this.$divTasks);
             AcmEx.Object.JTable.clickAddRecordHandler(this.$divTasks, CaseFile.View.Tasks.onClickSpanAddTask);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
         }
         ,initialize: function() {
         }
@@ -2300,14 +2305,14 @@ CaseFile.View = CaseFile.View || {
         ,URL_TASK_DETAIL:  "/plugin/task/"
         ,URL_NEW_TASK_:    "/plugin/task/wizard?parentType=CASE_FILE&reference="
 
-        ,onCaseFileRetrieved: function(caseFile) {
+        ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
                 //empty table?
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
             }
         }
-        ,onCaseFileSelected: function(caseFileId) {
+        ,onViewSelectedCaseFile: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
         }
         ,onClickSpanAddTask: function(event, ctrl) {
@@ -2455,20 +2460,20 @@ CaseFile.View = CaseFile.View || {
             this.$divReferences          = $("#divRefs");
             this.createJTableReferences(this.$divReferences);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewCaseFileSelected);
         }
         ,initialize: function() {
         }
 
-        ,onCaseFileRetrieved: function(caseFile) {
+        ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
                 //empty table?
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.References.$divReferences);
             }
         }
-        ,onCaseFileSelected: function(caseFileId) {
+        ,onViewCaseFileSelected: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.References.$divReferences);
         }
 
@@ -2607,20 +2612,20 @@ CaseFile.View = CaseFile.View || {
             this.$divEvents          = $("#divEvents");
             this.createJTableEvents(this.$divEvents);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.ME_CASE_FILE_RETRIEVED    ,this.onCaseFileRetrieved);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CASE_FILE_SELECTED     ,this.onCaseFileSelected);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
         }
         ,initialize: function() {
         }
 
-        ,onCaseFileRetrieved: function(caseFile) {
+        ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
                 //empty table?
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.Events.$divEvents);
             }
         }
-        ,onCaseFileSelected: function(caseFileId) {
+        ,onViewSelectedCaseFile: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Events.$divEvents);
         }
 
