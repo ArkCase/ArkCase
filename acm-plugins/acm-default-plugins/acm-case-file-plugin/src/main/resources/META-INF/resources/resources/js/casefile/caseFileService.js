@@ -481,7 +481,7 @@ CaseFile.Service = {
                         caseFile.personAssociations[i].person.title  =  personAssociation.person.title;
                         caseFile.personAssociations[i].person.givenName = personAssociation.person.givenName;
                         caseFile.personAssociations[i].person.familyName = personAssociation.person.familyName;
-                        caseFile.personAssociations[i].personType = pa.personType;
+                        caseFile.personAssociations[i].personType = personAssociation.personType;
                         break;
                     }
                 } //end for
@@ -491,7 +491,7 @@ CaseFile.Service = {
                         var savedPersonAssociation = null;
                         if (CaseFile.Model.Detail.validateData(data)) {
                             for (var i = 0; i < data.personAssociations.length; i++) {
-                                if (Acm.compare(data.personAssociations[i].id, pa.id)) {
+                                if (Acm.compare(data.personAssociations[i].id, personAssociation.id)) {
                                     savedPersonAssociation = data.personAssociations[i];
                                     break;
                                 }
@@ -531,7 +531,7 @@ CaseFile.Service = {
                                         if (CaseFile.Model.Detail.validatePersonAssociation(pa)) {
                                             if (pa.id == response.deletedPersonAssociationId) {
                                                 caseFile.personAssociations.splice(i, 1);
-                                                CaseFile.Model.Detail.cacheCaseFile.put(caaeFileId, caseFile);
+                                                CaseFile.Model.Detail.cacheCaseFile.put(caseFileId, caseFile);
                                                 CaseFile.Controller.modelDeletedPersonAssociation(Acm.Service.responseWrapper(response, personAssociationId));
                                                 break;
                                             }
@@ -648,6 +648,422 @@ CaseFile.Service = {
             }
         }
 
+        ,addSecurityTag: function(caseFileId, personAssociationId, securityTag) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var securityTags = personAssociation.person.securityTags;
+                    //ensure securityTag.id undefined?
+                    securityTags.push(securityTag);
+                }
+
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        var addedSecurityTag = null;
+                        if (CaseFile.Model.Detail.validateData(data)) {
+                            var personAssociations = data.personAssociations;
+                            var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                            if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var securityTags = personAssociation.person.securityTags;
+                                for (var i = 0; i < securityTags.length; i++) {
+                                    if (Acm.compare(securityTags[i].type, securityTags.type)
+                                        && Acm.compare(securityTags[i].value, securityTag.value)) {
+                                        addedSecurityTag = securityTags[i];
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (addedSecurityTag) {
+                            CaseFile.Controller.modelAddedSecurityTag(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, addedSecurityTag));
+                        }
+                    }
+                );
+            }
+        }
+        ,updateSecurityTag: function(caseFileId, personAssociationId, securityTag) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var securityTags = personAssociation.person.securityTags;
+                    for (var i = 0; i < securityTags.length; i++) {
+                        if (Acm.compare(securityTags[i].id, securityTag.id)) {
+                            securityTags[i].type = securityTags.type;
+                            securityTags[i].value = securityTag.value;
+                            break;
+                        }
+                    }
+
+                    this.saveCaseFile(caseFile
+                        ,function(data) {
+                            var savedSecurityTag = null;
+                            if (CaseFile.Model.Detail.validateData(data)) {
+                                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    var securityTags = personAssociation.person.securityTags;
+                                    for (var i = 0; i < securityTags.length; i++) {
+                                        if (Acm.compare(securityTags[i].id, securityTag.id)) {
+                                            savedSecurityTag = securityTags[i];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (savedSecurityTag) {
+                                CaseFile.Controller.modelUpdatedSecurityTag(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, savedSecurityTag));
+                            }
+                        }
+                    );
+                }
+            }
+        }
+        ,deleteSecurityTag: function(caseFileId, personAssociationId, securityTagId) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var toDelete = -1;
+                    var securityTags = personAssociation.person.securityTags;
+                    for (var i = 0; i < securityTags.length; i++) {
+                        if (Acm.compare(securityTags[i].id, securityTagId)) {
+                            toDelete = i;
+                            break;
+                        }
+                    }
+
+                    if (0 <= toDelete) {
+                        securityTags.splice(toDelete, 1);
+                        this.saveCaseFile(caseFile
+                            ,function(data) {
+                                if (CaseFile.Model.Detail.validateData(data)) {
+                                    CaseFile.Controller.modelDeletedSecurityTag(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, securityTagId));
+                                }
+                            }
+                        );
+                    }
+                }
+            }
+        }
+
+        ,addPersonAlias: function(caseFileId, personAssociationId, personAlias) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var personAliases = personAssociation.person.personAliases;
+                    //ensure personAlias.id undefined?
+                    personAliases.push(personAlias);
+                }
+
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        var addedPersonAlias = null;
+                        if (CaseFile.Model.Detail.validateData(data)) {
+                            var personAssociations = data.personAssociations;
+                            var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                            if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var personAliases = personAssociation.person.personAliases;
+                                for (var i = 0; i < personAliases.length; i++) {
+                                    if (Acm.compare(personAliases[i].aliasType, personAlias.aliasType)
+                                        && Acm.compare(personAliases[i].aliasValue, personAlias.aliasValue)) {
+                                        addedPersonAlias = personAliases[i];
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (addedPersonAlias) {
+                            CaseFile.Controller.modelAddedPersonAlias(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, addedPersonAlias));
+                        }
+                    }
+                );
+            }
+        }
+        ,updatePersonAlias: function(caseFileId, personAssociationId, personAlias) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var personAliases = personAssociation.person.personAliases;
+                    for (var i = 0; i < personAliases.length; i++) {
+                        if (Acm.compare(personAliases[i].id, personAlias.id)) {
+                            personAliases[i].aliasType = personAlias.aliasType;
+                            personAliases[i].aliasValue = personAlias.aliasValue;
+                            break;
+                        }
+                    }
+
+                    this.saveCaseFile(caseFile
+                        ,function(data) {
+                            var savedPersonAlias = null;
+                            if (CaseFile.Model.Detail.validateData(data)) {
+                                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    var personAliases = personAssociation.person.personAliases;
+                                    for (var i = 0; i < personAliases.length; i++) {
+                                        if (Acm.compare(personAliases[i].id, personAlias.id)) {
+                                            savedPersonAlias = personAliases[i];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (savedPersonAlias) {
+                                CaseFile.Controller.modelUpdatedPersonAlias(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, savedPersonAlias));
+                            }
+                        }
+                    );
+                }
+            }
+        }
+        ,deletePersonAlias: function(caseFileId, personAssociationId, personAliasId) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var toDelete = -1;
+                    var personAliases = personAssociation.person.personAliases;
+                    for (var i = 0; i < personAliases.length; i++) {
+                        if (Acm.compare(personAliases[i].id, personAliasId)) {
+                            toDelete = i;
+                            break;
+                        }
+                    }
+
+                    if (0 <= toDelete) {
+                        personAliases.splice(toDelete, 1);
+                        this.saveCaseFile(caseFile
+                            ,function(data) {
+                                if (CaseFile.Model.Detail.validateData(data)) {
+                                    CaseFile.Controller.modelDeletedPersonAlias(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, personAliasId));
+                                }
+                            }
+                        );
+                    }
+                }
+            }
+        }
+
+        ,addAddress: function(caseFileId, personAssociationId, address) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var addresses = personAssociation.person.addresses;
+                    //ensure address.id undefined?
+                    addresses.push(address);
+                }
+
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        var addedAddress = null;
+                        if (CaseFile.Model.Detail.validateData(data)) {
+                            var personAssociations = data.personAssociations;
+                            var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                            if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var addresses = personAssociation.person.addresses;
+                                for (var i = 0; i < addresses.length; i++) {
+                                    if (Acm.compare(addresses[i].type, address.type)
+                                        && Acm.compare(addresses[i].streetAddress, address.streetAddress)
+                                        && Acm.compare(addresses[i].city         , address.city)
+                                        && Acm.compare(addresses[i].state        , address.state)
+                                        && Acm.compare(addresses[i].zip          , address.zip)
+                                        && Acm.compare(addresses[i].country      , address.country)
+                                        ) {
+                                        addedAddress = addresses[i];
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (addedAddress) {
+                            CaseFile.Controller.modelAddedAddress(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, addedAddress));
+                        }
+                    }
+                );
+            }
+        }
+        ,updateAddress: function(caseFileId, personAssociationId, address) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var addresses = personAssociation.person.addresses;
+                    for (var i = 0; i < addresses.length; i++) {
+                        if (Acm.compare(addresses[i].id, address.id)) {
+                            addresses[i].type = address.type;
+                            addresses[i].streetAddress = address.streetAddress;
+                            addresses[i].city = address.city;
+                            addresses[i].state = address.state;
+                            addresses[i].zip = address.zip;
+                            addresses[i].country = address.country;
+                            break;
+                        }
+                    }
+
+                    this.saveCaseFile(caseFile
+                        ,function(data) {
+                            var savedAddress = null;
+                            if (CaseFile.Model.Detail.validateData(data)) {
+                                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    var addresses = personAssociation.person.addresses;
+                                    for (var i = 0; i < addresses.length; i++) {
+                                        if (Acm.compare(addresses[i].id, address.id)) {
+                                            savedAddress = addresses[i];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (savedAddress) {
+                                CaseFile.Controller.modelUpdatedAddress(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, savedAddress));
+                            }
+                        }
+                    );
+                }
+            }
+        }
+        ,deleteAddress: function(caseFileId, personAssociationId, addressId) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var toDelete = -1;
+                    var addresses = personAssociation.person.addresses;
+                    for (var i = 0; i < addresses.length; i++) {
+                        if (Acm.compare(addresses[i].id, addressId)) {
+                            toDelete = i;
+                            break;
+                        }
+                    }
+
+                    if (0 <= toDelete) {
+                        addresses.splice(toDelete, 1);
+                        this.saveCaseFile(caseFile
+                            ,function(data) {
+                                if (CaseFile.Model.Detail.validateData(data)) {
+                                    CaseFile.Controller.modelDeletedAddress(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, addressId));
+                                }
+                            }
+                        );
+                    }
+                }
+            }
+        }
+
+        ,addOrganization: function(caseFileId, personAssociationId, organization) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var organizations = personAssociation.person.organizations;
+                    //ensure organization.id undefined?
+                    organizations.push(organization);
+                }
+
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        var addedOrganization = null;
+                        if (CaseFile.Model.Detail.validateData(data)) {
+                            var personAssociations = data.personAssociations;
+                            var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                            if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var organizations = personAssociation.person.organizations;
+                                for (var i = 0; i < organizations.length; i++) {
+                                    if (Acm.compare(organizations[i].organizationType, organization.organizationType)
+                                        && Acm.compare(organizations[i].organizationValue, organization.organizationValue)) {
+                                        addedOrganization = organizations[i];
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (addedOrganization) {
+                            CaseFile.Controller.modelAddedOrganization(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, addedOrganization));
+                        }
+                    }
+                );
+            }
+        }
+        ,updateOrganization: function(caseFileId, personAssociationId, organization) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var organizations = personAssociation.person.organizations;
+                    for (var i = 0; i < organizations.length; i++) {
+                        if (Acm.compare(organizations[i].organizationId, organization.organizationId)) {
+                            organizations[i].organizationType = organization.organizationType;
+                            organizations[i].organizationValue = organization.organizationValue;
+                            break;
+                        }
+                    }
+
+                    this.saveCaseFile(caseFile
+                        ,function(data) {
+                            var savedOrganization = null;
+                            if (CaseFile.Model.Detail.validateData(data)) {
+                                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    var organizations = personAssociation.person.organizations;
+                                    for (var i = 0; i < organizations.length; i++) {
+                                        if (Acm.compare(organizations[i].organizationId, organization.organizationId)) {
+                                            savedOrganization = organizations[i];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (savedOrganization) {
+                                CaseFile.Controller.modelUpdatedOrganization(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, savedOrganization));
+                            }
+                        }
+                    );
+                }
+            }
+        }
+        ,deleteOrganization: function(caseFileId, personAssociationId, organizationId) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                var personAssociations = caseFile.personAssociations;
+                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                    var toDelete = -1;
+                    var organizations = personAssociation.person.organizations;
+                    for (var i = 0; i < organizations.length; i++) {
+                        if (Acm.compare(organizations[i].organizationId, organizationId)) {
+                            toDelete = i;
+                            break;
+                        }
+                    }
+
+                    if (0 <= toDelete) {
+                        organizations.splice(toDelete, 1);
+                        this.saveCaseFile(caseFile
+                            ,function(data) {
+                                if (CaseFile.Model.Detail.validateData(data)) {
+                                    CaseFile.Controller.modelDeletedOrganization(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, organizationId));
+                                }
+                            }
+                        );
+                    }
+                }
+            }
+        }
 
 
 //        ,closeCaseFile : function(data) {

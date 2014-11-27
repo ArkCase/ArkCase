@@ -3,7 +3,7 @@
  *
  * @author jwu
  */
-CaseFile.Controller = {
+CaseFile.Controller = CaseFile.Controller || {
     create : function() {
     }
     ,initialize: function() {
@@ -31,9 +31,21 @@ CaseFile.Controller = {
     ,ME_PERSON_ASSOCIATION_ADDED        : "case-model-person-association-added"     //param: caseFileId, personAssociation
     ,ME_PERSON_ASSOCIATION_UPDATED      : "case-model-person-association-updated"   //param: caseFileId, personAssociation
     ,ME_PERSON_ASSOCIATION_DELETED      : "case-model-person-association-deleted"   //param: caseFileId, personAssociationId
-    ,ME_CONTACT_METHOD_ADDED        : "case-model-contact-method-added"     //param: caseFileId, personAssociationId, contactMethod
-    ,ME_CONTACT_METHOD_UPDATED      : "case-model-contact-method-updated"   //param: caseFileId, personAssociationId, contactMethod
-    ,ME_CONTACT_METHOD_DELETED      : "case-model-contact-method-deleted"   //param: caseFileId, personAssociationId, contactMethodId
+    ,ME_ADDRESS_ADDED                   : "case-model-address-added"                //param: caseFileId, personAssociationId, address
+    ,ME_ADDRESS_UPDATED                 : "case-model-address-updated"              //param: caseFileId, personAssociationId, address
+    ,ME_ADDRESS_DELETED                 : "case-model-address-deleted"              //param: caseFileId, personAssociationId, addressId
+    ,ME_CONTACT_METHOD_ADDED            : "case-model-contact-method-added"         //param: caseFileId, personAssociationId, contactMethod
+    ,ME_CONTACT_METHOD_UPDATED          : "case-model-contact-method-updated"       //param: caseFileId, personAssociationId, contactMethod
+    ,ME_CONTACT_METHOD_DELETED          : "case-model-contact-method-deleted"       //param: caseFileId, personAssociationId, contactMethodId
+    ,ME_SECURITY_TAG_ADDED              : "case-model-security-tag-added"           //param: caseFileId, personAssociationId, securityTag
+    ,ME_SECURITY_TAG_UPDATED            : "case-model-security-tag-updated"         //param: caseFileId, personAssociationId, securityTag
+    ,ME_SECURITY_TAG_DELETED            : "case-model-security-tag-deleted"         //param: caseFileId, personAssociationId, securityTagId
+    ,ME_PERSON_ALIAS_ADDED              : "case-model-person-alias-added"           //param: caseFileId, personAssociationId, personAlias
+    ,ME_PERSON_ALIAS_UPDATED            : "case-model-person-alias-updated"         //param: caseFileId, personAssociationId, personAlias
+    ,ME_PERSON_ALIAS_DELETED            : "case-model-person-alias-deleted"         //param: caseFileId, personAssociationId, personAliasId
+    ,ME_ORGANIZATION_ADDED              : "case-model-organization-added"           //param: caseFileId, personAssociationId, organization
+    ,ME_ORGANIZATION_UPDATED            : "case-model-organization-updated"         //param: caseFileId, personAssociationId, organization
+    ,ME_ORGANIZATION_DELETED            : "case-model-organization-deleted"         //param: caseFileId, personAssociationId, organizationId
 
     ,ME_NOTE_SAVED                      : "case-model-note-saved"                   //param: note
     ,ME_NOTE_ADDED                      : "case-model-note-added"                   //param: note
@@ -62,9 +74,21 @@ CaseFile.Controller = {
     ,VE_PERSON_ASSOCIATION_ADDED        : "case-view-person-association-added"      //param: caseFileId, personAssociation
     ,VE_PERSON_ASSOCIATION_UPDATED      : "case-view-person-association-updated"    //param: caseFileId, personAssociation
     ,VE_PERSON_ASSOCIATION_DELETED      : "case-view-person-association-deleted"    //param: caseFileId, personAssociationId
-    ,VE_CONTACT_METHOD_ADDED        : "case-view-contact-method-added"      //param: caseFileId, personAssociationId, contactMethod
-    ,VE_CONTACT_METHOD_UPDATED      : "case-view-contact-method-updated"    //param: caseFileId, personAssociationId, contactMethod
-    ,VE_CONTACT_METHOD_DELETED      : "case-view-contact-method-deleted"    //param: caseFileId, personAssociationId, contactMethodId
+    ,VE_ADDRESS_ADDED                   : "case-view-address-added"                 //param: caseFileId, personAssociationId, address
+    ,VE_ADDRESS_UPDATED                 : "case-view-address-updated"               //param: caseFileId, personAssociationId, address
+    ,VE_ADDRESS_DELETED                 : "case-view-address-deleted"               //param: caseFileId, personAssociationId, addressId
+    ,VE_CONTACT_METHOD_ADDED            : "case-view-contact-method-added"          //param: caseFileId, personAssociationId, contactMethod
+    ,VE_CONTACT_METHOD_UPDATED          : "case-view-contact-method-updated"        //param: caseFileId, personAssociationId, contactMethod
+    ,VE_CONTACT_METHOD_DELETED          : "case-view-contact-method-deleted"        //param: caseFileId, personAssociationId, contactMethodId
+    ,VE_SECURITY_TAG_ADDED              : "case-view-security-tag-added"            //param: caseFileId, personAssociationId, securityTag
+    ,VE_SECURITY_TAG_UPDATED            : "case-view-security-tag-updated"          //param: caseFileId, personAssociationId, securityTag
+    ,VE_SECURITY_TAG_DELETED            : "case-view-security-tag-deleted"          //param: caseFileId, personAssociationId, securityTagId
+    ,VE_PERSON_ALIAS_ADDED              : "case-view-person-alias-added"            //param: caseFileId, personAssociationId, personAlias
+    ,VE_PERSON_ALIAS_UPDATED            : "case-view-person-alias-updated"          //param: caseFileId, personAssociationId, personAlias
+    ,VE_PERSON_ALIAS_DELETED            : "case-view-person-alias-deleted"          //param: caseFileId, personAssociationId, personAliasId
+    ,VE_ORGANIZATION_ADDED              : "case-view-organization-added"            //param: caseFileId, personAssociationId, organization
+    ,VE_ORGANIZATION_UPDATED            : "case-view-organization-updated"          //param: caseFileId, personAssociationId, organization
+    ,VE_ORGANIZATION_DELETED            : "case-view-organization-deleted"          //param: caseFileId, personAssociationId, organizationId
 
     ,VE_NOTE_ADDED                      : "case-view-note-added"                    //param: note
     ,VE_NOTE_UPDATED                    : "case-view-note-updated"                  //param: note
@@ -131,6 +155,15 @@ CaseFile.Controller = {
     ,modelDeletedPersonAssociation : function(caseFileId, personAssociationId) {
         Acm.Dispatcher.fireEvent(this.ME_PERSON_ASSOCIATION_DELETED, caseFileId, personAssociationId);
     }
+    ,modelAddedAddress : function(caseFileId, personAssociationId, address) {
+        Acm.Dispatcher.fireEvent(this.ME_ADDRESS_ADDED, caseFileId, personAssociationId, address);
+    }
+    ,modelUpdatedAddress : function(caseFileId, personAssociationId, address) {
+        Acm.Dispatcher.fireEvent(this.ME_ADDRESS_UPDATED, caseFileId, personAssociationId, address);
+    }
+    ,modelDeletedAddress : function(caseFileId, personAssociationId, addressId) {
+        Acm.Dispatcher.fireEvent(this.ME_ADDRESS_DELETED, caseFileId, personAssociationId, addressId);
+    }
     ,modelAddedContactMethod : function(caseFileId, personAssociationId, contactMethod) {
         Acm.Dispatcher.fireEvent(this.ME_CONTACT_METHOD_ADDED, caseFileId, personAssociationId, contactMethod);
     }
@@ -139,6 +172,33 @@ CaseFile.Controller = {
     }
     ,modelDeletedContactMethod : function(caseFileId, personAssociationId, contactMethodId) {
         Acm.Dispatcher.fireEvent(this.ME_CONTACT_METHOD_DELETED, caseFileId, personAssociationId, contactMethodId);
+    }
+    ,modelAddedSecurityTag : function(caseFileId, personAssociationId, securityTag) {
+        Acm.Dispatcher.fireEvent(this.ME_SECURITY_TAG_ADDED, caseFileId, personAssociationId, securityTag);
+    }
+    ,modelUpdatedSecurityTag : function(caseFileId, personAssociationId, securityTag) {
+        Acm.Dispatcher.fireEvent(this.ME_SECURITY_TAG_UPDATED, caseFileId, personAssociationId, securityTag);
+    }
+    ,modelDeletedSecurityTag : function(caseFileId, personAssociationId, securityTagId) {
+        Acm.Dispatcher.fireEvent(this.ME_SECURITY_TAG_DELETED, caseFileId, personAssociationId, securityTagId);
+    }
+    ,modelAddedPersonAlias : function(caseFileId, personAssociationId, personAlias) {
+        Acm.Dispatcher.fireEvent(this.ME_PERSON_ALIAS_ADDED, caseFileId, personAssociationId, personAlias);
+    }
+    ,modelUpdatedPersonAlias : function(caseFileId, personAssociationId, personAlias) {
+        Acm.Dispatcher.fireEvent(this.ME_PERSON_ALIAS_UPDATED, caseFileId, personAssociationId, personAlias);
+    }
+    ,modelDeletedPersonAlias : function(caseFileId, personAssociationId, personAliasId) {
+        Acm.Dispatcher.fireEvent(this.ME_PERSON_ALIAS_DELETED, caseFileId, personAssociationId, personAliasId);
+    }
+    ,modelAddedOrganization : function(caseFileId, personAssociationId, organization) {
+        Acm.Dispatcher.fireEvent(this.ME_ORGANIZATION_ADDED, caseFileId, personAssociationId, organization);
+    }
+    ,modelUpdatedOrganization : function(caseFileId, personAssociationId, organization) {
+        Acm.Dispatcher.fireEvent(this.ME_ORGANIZATION_UPDATED, caseFileId, personAssociationId, organization);
+    }
+    ,modelDeletedOrganization : function(caseFileId, personAssociationId, organizationId) {
+        Acm.Dispatcher.fireEvent(this.ME_ORGANIZATION_DELETED, caseFileId, personAssociationId, organizationId);
     }
 
     ,modelSavedNote : function(note) {
@@ -215,6 +275,15 @@ CaseFile.Controller = {
     ,viewDeletedPersonAssociation : function(caseFileId, personAssociationId) {
         Acm.Dispatcher.fireEvent(this.VE_PERSON_ASSOCIATION_DELETED, caseFileId, personAssociationId);
     }
+    ,viewAddedAddress : function(caseFileId, personAssociationId, address) {
+        Acm.Dispatcher.fireEvent(this.VE_ADDRESS_ADDED, caseFileId, personAssociationId, address);
+    }
+    ,viewUpdatedAddress : function(caseFileId, personAssociationId, address) {
+        Acm.Dispatcher.fireEvent(this.VE_ADDRESS_UPDATED, caseFileId, personAssociationId, address);
+    }
+    ,viewDeletedAddress : function(caseFileId, personAssociationId, addressId) {
+        Acm.Dispatcher.fireEvent(this.VE_ADDRESS_DELETED, caseFileId, personAssociationId, addressId);
+    }
     ,viewAddedContactMethod : function(caseFileId, personAssociationId, contactMethod) {
         Acm.Dispatcher.fireEvent(this.VE_CONTACT_METHOD_ADDED, caseFileId, personAssociationId, contactMethod);
     }
@@ -223,6 +292,33 @@ CaseFile.Controller = {
     }
     ,viewDeletedContactMethod : function(caseFileId, personAssociationId, contactMethodId) {
         Acm.Dispatcher.fireEvent(this.VE_CONTACT_METHOD_DELETED, caseFileId, personAssociationId, contactMethodId);
+    }
+    ,viewAddedSecurityTag : function(caseFileId, personAssociationId, securityTag) {
+        Acm.Dispatcher.fireEvent(this.VE_SECURITY_TAG_ADDED, caseFileId, personAssociationId, securityTag);
+    }
+    ,viewUpdatedSecurityTag : function(caseFileId, personAssociationId, securityTag) {
+        Acm.Dispatcher.fireEvent(this.VE_SECURITY_TAG_UPDATED, caseFileId, personAssociationId, securityTag);
+    }
+    ,viewDeletedSecurityTag : function(caseFileId, personAssociationId, securityTagId) {
+        Acm.Dispatcher.fireEvent(this.VE_SECURITY_TAG_DELETED, caseFileId, personAssociationId, securityTagId);
+    }
+    ,viewAddedPersonAlias : function(caseFileId, personAssociationId, personAlias) {
+        Acm.Dispatcher.fireEvent(this.VE_PERSON_ALIAS_ADDED, caseFileId, personAssociationId, personAlias);
+    }
+    ,viewUpdatedPersonAlias : function(caseFileId, personAssociationId, personAlias) {
+        Acm.Dispatcher.fireEvent(this.VE_PERSON_ALIAS_UPDATED, caseFileId, personAssociationId, personAlias);
+    }
+    ,viewDeletedPersonAlias : function(caseFileId, personAssociationId, personAliasId) {
+        Acm.Dispatcher.fireEvent(this.VE_PERSON_ALIAS_DELETED, caseFileId, personAssociationId, personAliasId);
+    }
+    ,viewAddedOrganization : function(caseFileId, personAssociationId, organization) {
+        Acm.Dispatcher.fireEvent(this.VE_ORGANIZATION_ADDED, caseFileId, personAssociationId, organization);
+    }
+    ,viewUpdatedOrganization : function(caseFileId, personAssociationId, organization) {
+        Acm.Dispatcher.fireEvent(this.VE_ORGANIZATION_UPDATED, caseFileId, personAssociationId, organization);
+    }
+    ,viewDeletedOrganization : function(caseFileId, personAssociationId, organizationId) {
+        Acm.Dispatcher.fireEvent(this.VE_ORGANIZATION_DELETED, caseFileId, personAssociationId, organizationId);
     }
 
     ,viewAddedNote: function(note) {

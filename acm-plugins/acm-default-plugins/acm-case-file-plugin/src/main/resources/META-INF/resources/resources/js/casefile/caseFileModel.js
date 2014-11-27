@@ -3,7 +3,7 @@
  *
  * @author jwu
  */
-CaseFile.Model = {
+CaseFile.Model = CaseFile.Model || {
     create : function() {
         if (CaseFile.Model.Lookup.create)        {CaseFile.Model.Lookup.create();}
         if (CaseFile.Model.Tree.create)          {CaseFile.Model.Tree.create();}
@@ -67,9 +67,21 @@ CaseFile.Model = {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ASSOCIATION_ADDED    ,this.onPersonAssociationAdded);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ASSOCIATION_UPDATED  ,this.onPersonAssociationUpdated);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ASSOCIATION_DELETED  ,this.onPersonAssociationDeleted);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ADDRESS_ADDED               ,this.onAddressAdded);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ADDRESS_UPDATED             ,this.onAddressUpdated);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ADDRESS_DELETED             ,this.onAddressDeleted);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CONTACT_METHOD_ADDED        ,this.onContactMethodAdded);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CONTACT_METHOD_UPDATED      ,this.onContactMethodUpdated);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_CONTACT_METHOD_DELETED      ,this.onContactMethodDeleted);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SECURITY_TAG_ADDED          ,this.onSecurityTagAdded);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SECURITY_TAG_UPDATED        ,this.onSecurityTagUpdated);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_SECURITY_TAG_DELETED        ,this.onSecurityTagDeleted);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ALIAS_ADDED          ,this.onPersonAliasAdded);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ALIAS_UPDATED        ,this.onPersonAliasUpdated);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_PERSON_ALIAS_DELETED        ,this.onPersonAliasDeleted);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ORGANIZATION_ADDED          ,this.onOrganizationAdded);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ORGANIZATION_UPDATED        ,this.onOrganizationUpdated);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VE_ORGANIZATION_DELETED        ,this.onOrganizationDeleted);
 
         }
         ,initialize: function() {
@@ -133,6 +145,15 @@ CaseFile.Model = {
         ,onPersonAssociationDeleted: function(caseFileId, personAssociationId) {
             CaseFile.Service.Detail.deletePersonAssociation(caseFileId, personAssociationId);
         }
+        ,onAddressAdded: function(caseFileId, personAssociationId, address) {
+            CaseFile.Service.Detail.addAddress(caseFileId, personAssociationId, address);
+        }
+        ,onAddressUpdated: function(caseFileId, personAssociationId, address) {
+            CaseFile.Service.Detail.updateAddress(caseFileId, personAssociationId, address);
+        }
+        ,onAddressDeleted: function(caseFileId, personAssociationId, addressId) {
+            CaseFile.Service.Detail.deleteAddress(caseFileId, personAssociationId, addressId);
+        }
         ,onContactMethodAdded: function(caseFileId, personAssociationId, contactMethod) {
             CaseFile.Service.Detail.addContactMethod(caseFileId, personAssociationId, contactMethod);
         }
@@ -141,6 +162,33 @@ CaseFile.Model = {
         }
         ,onContactMethodDeleted: function(caseFileId, personAssociationId, contactMethodId) {
             CaseFile.Service.Detail.deleteContactMethod(caseFileId, personAssociationId, contactMethodId);
+        }
+        ,onSecurityTagAdded: function(caseFileId, personAssociationId, securityTag) {
+            CaseFile.Service.Detail.addSecurityTag(caseFileId, personAssociationId, securityTag);
+        }
+        ,onSecurityTagUpdated: function(caseFileId, personAssociationId, securityTag) {
+            CaseFile.Service.Detail.updateSecurityTag(caseFileId, personAssociationId, securityTag);
+        }
+        ,onSecurityTagDeleted: function(caseFileId, personAssociationId, securityTagId) {
+            CaseFile.Service.Detail.deleteSecurityTag(caseFileId, personAssociationId, securityTagId);
+        }
+        ,onPersonAliasAdded: function(caseFileId, personAssociationId, personAlias) {
+            CaseFile.Service.Detail.addPersonAlias(caseFileId, personAssociationId, personAlias);
+        }
+        ,onPersonAliasUpdated: function(caseFileId, personAssociationId, personAlias) {
+            CaseFile.Service.Detail.updatePersonAlias(caseFileId, personAssociationId, personAlias);
+        }
+        ,onPersonAliasDeleted: function(caseFileId, personAssociationId, personAliasId) {
+            CaseFile.Service.Detail.deletePersonAlias(caseFileId, personAssociationId, personAliasId);
+        }
+        ,onOrganizationAdded: function(caseFileId, personAssociationId, organization) {
+            CaseFile.Service.Detail.addOrganization(caseFileId, personAssociationId, organization);
+        }
+        ,onOrganizationUpdated: function(caseFileId, personAssociationId, organization) {
+            CaseFile.Service.Detail.updateOrganization(caseFileId, personAssociationId, organization);
+        }
+        ,onOrganizationDeleted: function(caseFileId, personAssociationId, organizationId) {
+            CaseFile.Service.Detail.deleteOrganization(caseFileId, personAssociationId, organizationId);
         }
 
         ,getCaseFile: function(caseFileId) {
@@ -633,10 +681,11 @@ CaseFile.Model = {
             }
         }
         
-        ,PERSON_SUBTABLE_TITLE_DEVICES:       "Communication Devices"
-        ,PERSON_SUBTABLE_TITLE_ORGANIZATIONS: "Organizations"
-        ,PERSON_SUBTABLE_TITLE_LOCATIONS:     "Locations"
-        ,PERSON_SUBTABLE_TITLE_ALIASES:       "Aliases"
+        ,PERSON_SUBTABLE_TITLE_CONTACT_METHODS:   "Communication Devices"
+        ,PERSON_SUBTABLE_TITLE_ORGANIZATIONS:     "Organizations"
+        ,PERSON_SUBTABLE_TITLE_ADDRESSES:         "Locations"
+        ,PERSON_SUBTABLE_TITLE_ALIASES:           "Aliases"
+        ,PERSON_SUBTABLE_TITLE_SECURITY_TAGS:     "Security Tags"
 
         ,getAssignees: function() {
             return this._assignees.get();
@@ -669,10 +718,16 @@ CaseFile.Model = {
             return this._personTitles;
         }
 
-        ,_deviceTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
+        ,_contactMethodTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
             'Email','Instant messenger', 'Social media','Website','Blog']
-        ,getDeviceTypes : function() {
-            return this._deviceTypes;
+        ,getContactMethodTypes : function() {
+            return this._contactMethodTypes;
+        }
+
+        ,_securityTagTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
+            'Email','Instant messenger', 'Social media','Website','Blog']
+        ,getSecurityTagTypes : function() {
+            return this._securityTagTypes;
         }
 
         ,_organizationTypes : ['Non-profit','Government','Corporation']
@@ -680,9 +735,9 @@ CaseFile.Model = {
             return this._organizationTypes;
         }
 
-        ,_locationTypes : ['Business' , 'Home']
-        ,getLocationTypes : function() {
-            return this._locationTypes;
+        ,_addressTypes : ['Business' , 'Home']
+        ,getAddressTypes : function() {
+            return this._addressTypes;
         }
 
         ,_aliasTypes : ['FKA' , 'Married']
