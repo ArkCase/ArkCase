@@ -9,10 +9,10 @@ Topbar.View = {
         if (Topbar.View.Suggestion.create)  {Topbar.View.Suggestion.create();}
         if (Topbar.View.Asn.create)         {Topbar.View.Asn.create();}
     }
-    ,initialize: function() {
-        if (Topbar.View.QuickSearch.initialize) {Topbar.View.QuickSearch.initialize();}
-        if (Topbar.View.Suggestion.initialize)  {Topbar.View.Suggestion.initialize();}
-        if (Topbar.View.Asn.initialize)         {Topbar.View.Asn.initialize();}
+    ,onInitialized: function() {
+        if (Topbar.View.QuickSearch.onInitialized) {Topbar.View.QuickSearch.onInitialized();}
+        if (Topbar.View.Suggestion.onInitialized)  {Topbar.View.Suggestion.onInitialized();}
+        if (Topbar.View.Asn.onInitialized)         {Topbar.View.Asn.onInitialized();}
     }
 
     ,QuickSearch: {
@@ -28,7 +28,7 @@ Topbar.View = {
             var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
             this.setActionFormSearch(term);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onClickBtnSearch : function(event, ctrl) {
@@ -66,7 +66,7 @@ Topbar.View = {
 
             Acm.Dispatcher.addEventListener(Topbar.Controller.Suggestion.MODEL_CHANGED_SUGGESTION, this.onModelChangedSuggestion);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onModelChangedSuggestion: function(process) {
@@ -130,7 +130,7 @@ Topbar.View = {
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_RETRIEVED_ASN_LIST        ,this.onModelRetrievedAsnList);
 
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
 

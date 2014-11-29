@@ -7,8 +7,8 @@ Sidebar.View = {
     create : function() {
         if (Sidebar.View.Profile.create)             {Sidebar.View.Profile.create();}
     }
-    ,initialize: function() {
-        if (Sidebar.View.Profile.initialize)         {Sidebar.View.Profile.initialize();}
+    ,onInitialized: function() {
+        if (Sidebar.View.Profile.onInitialized)         {Sidebar.View.Profile.onInitialized();}
     }
 
 
@@ -19,7 +19,7 @@ Sidebar.View = {
             Acm.Dispatcher.addEventListener(Sidebar.Controller.ME_PROFILE_INFO_RETRIEVED  ,this.onProfileInfoRetrieved);
 
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onProfileInfoRetrieved: function(profileInfo) {

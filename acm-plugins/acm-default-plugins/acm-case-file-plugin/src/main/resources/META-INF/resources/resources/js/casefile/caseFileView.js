@@ -17,18 +17,18 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
         if (CaseFile.View.Events.create)          {CaseFile.View.Events.create();}
     }
-    ,initialize: function() {
-        if (CaseFile.View.MicroData.initialize)   {CaseFile.View.MicroData.initialize();}
-        if (CaseFile.View.Tree.initialize)        {CaseFile.View.Tree.initialize();}
-        if (CaseFile.View.Action.initialize)      {CaseFile.View.Action.initialize();}
-        if (CaseFile.View.Detail.initialize)      {CaseFile.View.Detail.initialize();}
-        if (CaseFile.View.People.initialize)	  {CaseFile.View.People.initialize();}
-        if (CaseFile.View.Documents.initialize)   {CaseFile.View.Documents.initialize();}
-        if (CaseFile.View.Participants.initialize){CaseFile.View.Participants.initialize();}
-        if (CaseFile.View.Notes.initialize)       {CaseFile.View.Notes.initialize();}
-        if (CaseFile.View.Tasks.initialize)       {CaseFile.View.Tasks.initialize();}
-        if (CaseFile.View.References.initialize)  {CaseFile.View.References.initialize();}
-        if (CaseFile.View.Events.initialize)      {CaseFile.View.Events.initialize();}
+    ,onInitialized: function() {
+        if (CaseFile.View.MicroData.onInitialized)   {CaseFile.View.MicroData.onInitialized();}
+        if (CaseFile.View.Tree.onInitialized)        {CaseFile.View.Tree.onInitialized();}
+        if (CaseFile.View.Action.onInitialized)      {CaseFile.View.Action.onInitialized();}
+        if (CaseFile.View.Detail.onInitialized)      {CaseFile.View.Detail.onInitialized();}
+        if (CaseFile.View.People.onInitialized)	  {CaseFile.View.People.onInitialized();}
+        if (CaseFile.View.Documents.onInitialized)   {CaseFile.View.Documents.onInitialized();}
+        if (CaseFile.View.Participants.onInitialized){CaseFile.View.Participants.onInitialized();}
+        if (CaseFile.View.Notes.onInitialized)       {CaseFile.View.Notes.onInitialized();}
+        if (CaseFile.View.Tasks.onInitialized)       {CaseFile.View.Tasks.onInitialized();}
+        if (CaseFile.View.References.onInitialized)  {CaseFile.View.References.onInitialized();}
+        if (CaseFile.View.Events.onInitialized)      {CaseFile.View.Events.onInitialized();}
     }
 
     ,MicroData: {
@@ -44,7 +44,7 @@ CaseFile.View = CaseFile.View || {
             this.formUrls["change_case_status"] = items.properties("urlChangeCaseStatusForm").itemValue();
             this.formUrls["edit_change_case_status"] = items.properties("urlEditChangeCaseStatusForm").itemValue();
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,getCaseFileId: function() {
@@ -66,7 +66,7 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE_LIST, this.onModelRetrievedCaseFileList);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE       , this.onViewChangedCaseTitle);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onModelRetrievedCaseFileList: function(key) {
@@ -385,7 +385,7 @@ CaseFile.View = CaseFile.View || {
             this.$btnChangeCaseStatus   .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
             this.$btnConsolidateCase    .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onClickBtnChangeCaseStatus: function() {
@@ -503,7 +503,7 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_TREE_NODE     ,this.onViewSelectedTreeNode);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE     ,this.onViewSelectedCaseFile);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
 
@@ -746,12 +746,12 @@ CaseFile.View = CaseFile.View || {
             if (this.Addresses.create)          {this.Addresses.create();}
             if (this.Aliases.create)            {this.Aliases.create();}
         }
-        ,initialize: function() {
-            if (CaseFile.View.People.ContactMethods.initialize)     {CaseFile.View.People.ContactMethods.initialize();}
-            if (CaseFile.View.People.SecurityTags.initialize)       {CaseFile.View.People.SecurityTags.initialize();}
-            if (CaseFile.View.People.Organizations.initialize)      {CaseFile.View.People.Organizations.initialize();}
-            if (CaseFile.View.People.Addresses.initialize)          {CaseFile.View.People.Addresses.initialize();}
-            if (CaseFile.View.People.Aliases.initialize)            {CaseFile.View.People.Aliases.initialize();}
+        ,onInitialized: function() {
+            if (CaseFile.View.People.ContactMethods.onInitialized)     {CaseFile.View.People.ContactMethods.onInitialized();}
+            if (CaseFile.View.People.SecurityTags.onInitialized)       {CaseFile.View.People.SecurityTags.onInitialized();}
+            if (CaseFile.View.People.Organizations.onInitialized)      {CaseFile.View.People.Organizations.onInitialized();}
+            if (CaseFile.View.People.Addresses.onInitialized)          {CaseFile.View.People.Addresses.onInitialized();}
+            if (CaseFile.View.People.Aliases.onInitialized)            {CaseFile.View.People.Aliases.onInitialized();}
         }
 
         ,onModelRetrievedCaseFile: function(caseFile) {
@@ -943,7 +943,7 @@ CaseFile.View = CaseFile.View || {
                 Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_CONTACT_METHOD      ,this.onModelUpdatedContactMethod);
                 Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_CONTACT_METHOD      ,this.onModelDeletedContactMethod);
             }
-            ,initialize: function() {
+            ,onInitialized: function() {
             }
 
             ,onModelAddedContactMethod: function(contactMethod) {
@@ -1101,7 +1101,7 @@ CaseFile.View = CaseFile.View || {
                 Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_SECURITY_TAG      ,this.onModelUpdatedSecurityTag);
                 Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_SECURITY_TAG      ,this.onModelDeletedSecurityTag);
             }
-            ,initialize: function() {
+            ,onInitialized: function() {
             }
 
             ,onModelAddedSecurityTag: function(securityTag) {
@@ -1251,7 +1251,7 @@ CaseFile.View = CaseFile.View || {
                 Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_ORGANIZATION      ,this.onModelUpdatedOrganization);
                 Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_ORGANIZATION      ,this.onModelDeletedOrganization);
             }
-            ,initialize: function() {
+            ,onInitialized: function() {
             }
 
             ,onModelAddedOrganization: function(organization) {
@@ -1399,7 +1399,7 @@ CaseFile.View = CaseFile.View || {
                 Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_ADDRESS      ,this.onModelUpdatedAddress);
                 Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_ADDRESS      ,this.onModelDeletedAddress);
             }
-            ,initialize: function() {
+            ,onInitialized: function() {
             }
 
             ,onModelAddedAddress: function(address) {
@@ -1606,7 +1606,7 @@ CaseFile.View = CaseFile.View || {
                 Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_PERSON_ALIAS      ,this.onModelUpdatedPersonAlias);
                 Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_PERSON_ALIAS      ,this.onModelDeletedPersonAlias);
             }
-            ,initialize: function() {
+            ,onInitialized: function() {
             }
 
             ,onModelAddedPersonAlias: function(personAlias) {
@@ -1764,7 +1764,7 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLOSED_CASE_FILE        ,this.onViewClosedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onModelRetrievedCaseFile: function(caseFile) {
@@ -1942,7 +1942,7 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE         ,this.onModelSavedAssignee);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onModelRetrievedCaseFile: function(caseFile) {
@@ -2086,7 +2086,7 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_NOTE           ,this.onModelDeletedNote);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
 //
@@ -2299,7 +2299,7 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,URL_TASK_DETAIL:  "/plugin/task/"
@@ -2463,7 +2463,7 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewCaseFileSelected);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onModelRetrievedCaseFile: function(caseFile) {
@@ -2615,7 +2615,7 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onModelRetrievedCaseFile: function(caseFile) {

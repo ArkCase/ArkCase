@@ -8,13 +8,13 @@
 CaseFile.Service = {
     create : function() {
     }
-    ,initialize: function() {
+    ,onInitialized: function() {
     }
 
     ,Lookup: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
@@ -106,7 +106,7 @@ CaseFile.Service = {
     ,List: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,API_RETRIEVE_CASE_FILE_LIST         : "/api/latest/plugin/search/CASE_FILE"
@@ -168,7 +168,7 @@ CaseFile.Service = {
     ,Detail: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,API_RETRIEVE_CASE_FILE_           : "/api/latest/plugin/casefile/byId/"
@@ -1080,7 +1080,7 @@ CaseFile.Service = {
     ,Documents: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
@@ -1089,7 +1089,7 @@ CaseFile.Service = {
     ,Notes: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
         ,API_SAVE_NOTE               : "/api/latest/plugin/note"
         ,API_DELETE_NOTE_            : "/api/latest/plugin/note/"
@@ -1220,7 +1220,7 @@ CaseFile.Service = {
     ,Tasks: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,API_RETRIEVE_TASKS_         : "/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId="

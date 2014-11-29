@@ -9,11 +9,8 @@ var Acm = Acm || {
         Acm.Dispatcher.create();
         Acm.Ajax.create();
         Acm.Object.create();
-        Acm.Event.create();
         Acm.Validator.create();
         Acm.Model.create();
-
-        Acm.deferred(Acm.Event.onPostInit);
     }
 
 	,isEmpty: function (val) {

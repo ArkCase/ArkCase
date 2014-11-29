@@ -9,14 +9,14 @@ Sidebar.Service = {
     create : function() {
         if (this.Profile.create) {this.Profile.create();}
     }
-    ,initialize: function() {
-        if (Sidebar.Service.Profile.initialize) {Sidebar.Service.Profile.initialize();}
+    ,onInitialized: function() {
+        if (Sidebar.Service.Profile.onInitialized) {Sidebar.Service.Profile.onInitialized();}
     }
 
     ,Profile: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,API_RETRIEVE_PROFILE_INFO_          : "/api/latest/plugin/profile/get/"

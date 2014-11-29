@@ -9,10 +9,10 @@ Topbar.Model = {
         if (Topbar.Model.Suggestion.create)  {Topbar.Model.Suggestion.create();}
         if (Topbar.Model.Asn.create)         {Topbar.Model.Asn.create();}
     }
-    ,initialize: function() {
-        if (Topbar.Model.QuickSearch.initialize) {Topbar.Model.QuickSearch.initialize();}
-        if (Topbar.Model.Suggestion.initialize)  {Topbar.Model.Suggestion.initialize();}
-        if (Topbar.Model.Asn.initialize)         {Topbar.Model.Asn.initialize();}
+    ,onInitialized: function() {
+        if (Topbar.Model.QuickSearch.onInitialized) {Topbar.Model.QuickSearch.onInitialized();}
+        if (Topbar.Model.Suggestion.onInitialized)  {Topbar.Model.Suggestion.onInitialized();}
+        if (Topbar.Model.Asn.onInitialized)         {Topbar.Model.Asn.onInitialized();}
     }
 
     ,QuickSearch: {
@@ -21,7 +21,7 @@ Topbar.Model = {
 
             Acm.Dispatcher.addEventListener(Topbar.Controller.QuickSearch.VIEW_CHANGED_QUICK_SEARCH_TERM, this.onViewChangedQuickSearchTerm);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
         ,getQuickSearchTerm: function() {
             return this._quickSearchTerm.get();
@@ -38,7 +38,7 @@ Topbar.Model = {
     ,Suggestion: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,_ctrObjs: {}
@@ -72,7 +72,7 @@ Topbar.Model = {
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_ACTION,this.onViewChangedAsnAction);
 
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,STATUS_READ    : "Read"

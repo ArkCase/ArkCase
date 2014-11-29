@@ -6,7 +6,7 @@
 Sidebar.Controller = {
     create : function() {
     }
-    ,initialize: function() {
+    ,onInitialized: function() {
     }
 
     ,ME_PROFILE_INFO_RETRIEVED        : "sidebar-profile-retrieved"             //param: profileInfo

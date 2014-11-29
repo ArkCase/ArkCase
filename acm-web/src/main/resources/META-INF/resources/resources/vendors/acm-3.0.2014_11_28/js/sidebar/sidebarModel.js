@@ -7,15 +7,15 @@ Sidebar.Model = {
     create : function() {
         if (Sidebar.Model.Profile.create)        {Sidebar.Model.Profile.create();}
     }
-    ,initialize: function() {
-        if (Sidebar.Model.Profile.initialize)    {Sidebar.Model.Profile.initialize();}
+    ,onInitialized: function() {
+        if (Sidebar.Model.Profile.onInitialized)    {Sidebar.Model.Profile.onInitialized();}
     }
 
     ,Profile: {
         create: function() {
             this._profileInfo    = new Acm.Model.SessionData("AcmProfile");
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
             var profileInfo = Sidebar.Model.Profile.getProfileInfo();
             if (profileInfo) {
                 Sidebar.Controller.modelRetrievedProfile(profileInfo);

@@ -10,15 +10,15 @@ Topbar.Service = {
         if (this.Suggestion.create) {Topbar.Service.Suggestion.create();}
         if (this.Asn.create)        {Topbar.Service.Asn.create();}
     }
-    ,initialize: function() {
-        if (this.Suggestion.initialize) {Topbar.Service.Suggestion.initialize();}
-        if (this.Asn.initialize)        {Topbar.Service.Asn.initialize();}
+    ,onInitialized: function() {
+        if (this.Suggestion.onInitialized) {Topbar.Service.Suggestion.onInitialized();}
+        if (this.Asn.onInitialized)        {Topbar.Service.Asn.onInitialized();}
     }
 
     ,Suggestion: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
         ,API_TYPEAHEAD_SUGGESTION_BEGIN_      : "/api/latest/plugin/search/quickSearch?q=*"
         ,API_TYPEAHEAD_SUGGESTION_END         : "*&start=0&n=16"
@@ -45,7 +45,7 @@ Topbar.Service = {
     ,Asn: {
         create : function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,API_RETRIEVE_ASN_LIST_       : "/resources/asn.json"
