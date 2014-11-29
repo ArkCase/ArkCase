@@ -50,8 +50,7 @@
     <footer id="footer">
         <div class="text-center padder">
             <p>
-                <%--<small>Armedia Case Management 3.0 <br>&copy; 2014</small>--%>
-                <small><small><spring:message code="login.footer" text="Armedia Case Management 3.0 <br>&copy; 2014" /></small>
+                <small><spring:message code="login.footer" text="Armedia Case Management 3.0 <br>&copy; 2014" /></small>
             </p>
         </div>
     </footer>

@@ -9,10 +9,10 @@ Profile.View = {
         if (Profile.View.Info.create)             {Profile.View.Info.create();}
         if (Profile.View.Subscription.create)     {Profile.View.Subscription.create();}
     }
-    ,initialize: function() {
-        if (Profile.View.Picture.initialize)      {Profile.View.Picture.initialize();}
-        if (Profile.View.Info.initialize)         {Profile.View.Info.initialize();}
-        if (Profile.View.Subscription.initialize) {Profile.View.Subscription.initialize();}
+    ,onInitialized: function() {
+        if (Profile.View.Picture.onInitialized)      {Profile.View.Picture.onInitialized();}
+        if (Profile.View.Info.onInitialized)         {Profile.View.Info.onInitialized();}
+        if (Profile.View.Subscription.onInitialized) {Profile.View.Subscription.onInitialized();}
     }
 
     ,Picture: {
@@ -31,7 +31,7 @@ Profile.View = {
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_PROFILE_INFO_RETRIEVED  ,this.onProfileInfoRetrieved);
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_PICTURE_UPLOADED        ,this.onPictureUploaded);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onClickLnkChangePicture: function(event, ctrl) {
@@ -174,7 +174,7 @@ Profile.View = {
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_ECM_FILE_ID_SAVED       ,this.onEcmFileIdSaved);
 
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,populateProfileInfo: function(profileInfo) {
@@ -437,7 +437,7 @@ Profile.View = {
             this.$divSubscriptions = $("#divSubscriptions");
             this.useJTable(this.$divSubscriptions);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
         ,useJTable: function($s) {
             $s.jtable({

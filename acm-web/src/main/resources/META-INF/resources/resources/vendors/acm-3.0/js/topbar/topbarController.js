@@ -9,16 +9,16 @@ Topbar.Controller = {
         if (Topbar.Controller.Suggestion.create)  {Topbar.Controller.Suggestion.create();}
         if (Topbar.Controller.Asn.create)         {Topbar.Controller.Asn.create();}
     }
-    ,initialize: function() {
-        if (Topbar.Controller.QuickSearch.initialize) {Topbar.Controller.QuickSearch.initialize();}
-        if (Topbar.Controller.Suggestion.initialize)  {Topbar.Controller.Suggestion.initialize();}
-        if (Topbar.Controller.Asn.initialize)         {Topbar.Controller.Asn.initialize();}
+    ,onInitialized: function() {
+        if (Topbar.Controller.QuickSearch.onInitialized) {Topbar.Controller.QuickSearch.onInitialized();}
+        if (Topbar.Controller.Suggestion.onInitialized)  {Topbar.Controller.Suggestion.onInitialized();}
+        if (Topbar.Controller.Asn.onInitialized)         {Topbar.Controller.Asn.onInitialized();}
     }
 
     ,QuickSearch: {
         create : function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,VIEW_CHANGED_QUICK_SEARCH_TERM        : "topbar-view-changed-quick-serach-term"       //param: term
@@ -30,7 +30,7 @@ Topbar.Controller = {
     ,Suggestion: {
         create : function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
         ,MODEL_CHANGED_SUGGESTION               : "topbar-model-changed-suggestion"             //param: process
         ,modelChangedSuggestion: function(process) {
@@ -41,7 +41,7 @@ Topbar.Controller = {
     ,Asn: {
         create : function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
             Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
             Acm.Timer.registerListener("AsnWatch"
                 ,16
