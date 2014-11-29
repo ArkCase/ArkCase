@@ -14,7 +14,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.References.create)    {CaseFile.Model.References.create();}
         if (CaseFile.Model.Events.create)        {CaseFile.Model.Events.create();}
     }
-    ,initialize: function() {
+    ,onInitialized: function() {
         var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
         if (0 < treeInfo.caseFileId) { //single caseFile
             CaseFile.Model.setCaseFileId(treeInfo.caseFileId);
@@ -23,14 +23,14 @@ CaseFile.Model = CaseFile.Model || {
             CaseFile.Service.List.retrieveCaseFileList(treeInfo);
         }
 
-        if (CaseFile.Model.Lookup.initialize)     {CaseFile.Model.Lookup.initialize();}
-        if (CaseFile.Model.Tree.initialize)       {CaseFile.Model.Tree.initialize();}
-        if (CaseFile.Model.List.initialize)       {CaseFile.Model.List.initialize();}
-        if (CaseFile.Model.Detail.initialize)     {CaseFile.Model.Detail.initialize();}
-        if (CaseFile.Model.Notes.initialize)      {CaseFile.Model.Notes.initialize();}
-        if (CaseFile.Model.Tasks.initialize)      {CaseFile.Model.Tasks.initialize();}
-        if (CaseFile.Model.References.initialize) {CaseFile.Model.References.initialize();}
-        if (CaseFile.Model.Events.initialize)     {CaseFile.Model.Events.initialize();}
+        if (CaseFile.Model.Lookup.onInitialized)     {CaseFile.Model.Lookup.onInitialized();}
+        if (CaseFile.Model.Tree.onInitialized)       {CaseFile.Model.Tree.onInitialized();}
+        if (CaseFile.Model.List.onInitialized)       {CaseFile.Model.List.onInitialized();}
+        if (CaseFile.Model.Detail.onInitialized)     {CaseFile.Model.Detail.onInitialized();}
+        if (CaseFile.Model.Notes.onInitialized)      {CaseFile.Model.Notes.onInitialized();}
+        if (CaseFile.Model.Tasks.onInitialized)      {CaseFile.Model.Tasks.onInitialized();}
+        if (CaseFile.Model.References.onInitialized) {CaseFile.Model.References.onInitialized();}
+        if (CaseFile.Model.Events.onInitialized)     {CaseFile.Model.Events.onInitialized();}
     }
 
     ,_objectType: "CASE_FILE"
@@ -84,7 +84,7 @@ CaseFile.Model = CaseFile.Model || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_ORGANIZATION        , this.onViewDeletedOrganization);
 
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onViewSelectedCaseFile: function(caseFileId) {
@@ -331,7 +331,7 @@ CaseFile.Model = CaseFile.Model || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_NEXT_PAGE      ,this.onViewNextPageClicked);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE     ,this.onViewChangedCaseTitle);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onViewPrevPageClicked: function() {
@@ -382,9 +382,9 @@ CaseFile.Model = CaseFile.Model || {
             if (CaseFile.Model.Tree.Config.create)    {CaseFile.Model.Tree.Config.create();}
             if (CaseFile.Model.Tree.Key.create)       {CaseFile.Model.Tree.Key.create();}
         }
-        ,initialize: function() {
-            if (CaseFile.Model.Tree.Config.initialize)    {CaseFile.Model.Tree.Config.initialize();}
-            if (CaseFile.Model.Tree.Key.initialize)       {CaseFile.Model.Tree.Key.initialize();}
+        ,onInitialized: function() {
+            if (CaseFile.Model.Tree.Config.onInitialized)    {CaseFile.Model.Tree.Config.onInitialized();}
+            if (CaseFile.Model.Tree.Key.onInitialized)       {CaseFile.Model.Tree.Key.onInitialized();}
         }
 
         ,Config: {
@@ -408,7 +408,7 @@ CaseFile.Model = CaseFile.Model || {
                     ti.caseFileId = caseFileId;
                 }
             }
-            ,initialize: function() {
+            ,onInitialized: function() {
             }
 
             ,_treeInfo: {
@@ -443,7 +443,7 @@ CaseFile.Model = CaseFile.Model || {
         ,Key: {
             create: function() {
             }
-            ,initialize: function() {
+            ,onInitialized: function() {
             }
 
 
@@ -591,7 +591,7 @@ CaseFile.Model = CaseFile.Model || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_NOTE   , this.onViewUpdatedNote);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_NOTE   , this.onViewDeletedNote);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
 
@@ -632,7 +632,7 @@ CaseFile.Model = CaseFile.Model || {
         create : function() {
             this.cacheTaskList = new Acm.Model.CacheFifo(4);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
     }
 
@@ -640,7 +640,7 @@ CaseFile.Model = CaseFile.Model || {
         create : function() {
             this.cacheReferenceList = new Acm.Model.CacheFifo(4);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
     }
 
@@ -648,7 +648,7 @@ CaseFile.Model = CaseFile.Model || {
         create : function() {
             this.cacheEventList = new Acm.Model.CacheFifo(4);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
     }
 
@@ -658,7 +658,7 @@ CaseFile.Model = CaseFile.Model || {
             this._subjectTypes = new Acm.Model.SessionData("AcmCaseTypes");
             this._priorities   = new Acm.Model.SessionData("AcmCasePriorities");
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
             var assignees = CaseFile.Model.Lookup.getAssignees();
             if (Acm.isEmpty(assignees)) {
                 CaseFile.Service.Lookup.retrieveAssignees();

@@ -10,11 +10,11 @@ var CaseFile = CaseFile || {
         if (CaseFile.View.create)       {CaseFile.View.create();}
         if (CaseFile.Controller.create) {CaseFile.Controller.create();}
     }
-    ,initialize: function() {
-        if (CaseFile.Model.initialize)      {CaseFile.Model.initialize();}
-        if (CaseFile.Service.initialize)    {CaseFile.Service.initialize();}
-        if (CaseFile.View.initialize)       {CaseFile.View.initialize();}
-        if (CaseFile.Controller.initialize) {CaseFile.Controller.initialize();}
+    ,onInitialized: function() {
+        if (CaseFile.Model.onInitialized)      {CaseFile.Model.onInitialized();}
+        if (CaseFile.Service.onInitialized)    {CaseFile.Service.onInitialized();}
+        if (CaseFile.View.onInitialized)       {CaseFile.View.onInitialized();}
+        if (CaseFile.Controller.onInitialized) {CaseFile.Controller.onInitialized();}
     }
 };
 
