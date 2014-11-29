@@ -6,7 +6,7 @@
 CaseFile.Controller = CaseFile.Controller || {
     create : function() {
     }
-    ,initialize: function() {
+    ,onInitialized: function() {
     }
 
     ,MODEL_FOUND_ASSIGNEES                 : "case-model-found-assignees"              //param: assignees
