@@ -75,8 +75,8 @@ jQuery(document).ready(function() {
     for (var i = 0; i < acmModules.length; i++) {
         var module = acmModules[i];
         if ("undefined" != typeof module) {
-            if (module.initialize){
-                Acm.deferred(module.initialize);
+            if (module.onInitialized){
+                Acm.deferred(module.onInitialized);
             }
         }
     }
