@@ -154,8 +154,6 @@
                         <button class="btn btn-default btn-sm" id="btnUnassign" data-toggle="modal" data-target="#unassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>
                         <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" data-title="Reject Task"><i class="fa fa-reply"></i> Reject</button>
 
-						<button class="btn btn-default btn-sm" id="btnReturn" data-toggle="modal" data-target="#return" data-title="Return Task"><i class="fa fa-share"></i> Return</button>
-
                         <%--task approval workflow buttons--%>
                         <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" data-title="Delete Task"><i class="fa fa-times"></i> Delete</button>
                         <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" data-title="Complete Task"><i class="fa fa-check-square-o"></i> Complete</button>
@@ -168,80 +166,6 @@
 
 
                     </div>
-                    
-                    <div class="modal fade" id="return" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	                    <div class="modal-dialog">
-	                      <div class="modal-content">
-	                        <div class="modal-header">
-	                          <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-	                          <h4 class="modal-title" id="myModalLabel">Return Task</h4>
-	                        </div>
-	                        <div class="modal-body">
-	                          <p>This task will be returned to the owner:</p>
-	                          <section class="panel panel-default">
-								<div class="table-responsive">
-								    <table class="table table-striped b-t b-light" id="ownerTableReturnTask">
-									    <thead>
-									      <tr>
-									        <th width="20"></th>
-									        <th>First Name</th>
-									        <th>Last Name</th>
-									        <th>Username</th>
-									        <th>Organization</th>
-									      </tr>
-									    </thead>
-									    <tbody>
-									    	<!-- This area is filled dynamically depending of the result of the service -->
-									    </tbody>
-								  </table>
-								</div>
-	                          </section>
-	                          <p>Or select some other people from below:</p>
-	                          <section class="panel panel-default">
-	                            <div class="row wrapper">
-	                              <div class="col-sm-12">
-	                                <div class="input-group">
-	                                  <input type="text" class="input-sm form-control" name="searchKeywordReturnTask" placeholder="Search people..">
-	                                  <span class="input-group-btn">
-	                                  <button class="btn btn-sm btn-default" type="button" name="searchUsersReturnTask">Go!</button>
-	                                  </span> </div>
-	                              </div>
-	                            </div>
-	                            <div class="table-responsive">
-	                              <table class="table table-striped b-t b-light" id="usersTableReturnTask">
-	                                <thead>
-	                                  <tr>
-	                                    <th width="20"></th>
-	                                    <th class="th-sortable" data-toggle="class">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-	                                    <th>Last Name</th>
-	                                    <th>Username</th>
-	                                    <th>Organization</th>
-	                                  </tr>
-	                                </thead>
-	                                <tbody>
-	                                	<!-- This area is filled dynamically depending of the result of the service -->
-	                                </tbody>
-	                              </table>
-	                            </div>
-	                            <footer class="panel-footer">
-	                              <div class="row">
-	                                <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 0-0 of 0 items</small> </div>
-	                                <div class="col-sm-6 text-right text-center-xs">
-	                                  <ul class="pagination pagination-sm m-t-none m-b-none">
-	                                  	<!-- This area is filled dinamically depending of the result of the service -->
-	                                  </ul>
-	                                </div>
-	                              </div>
-	                            </footer>
-	                          </section>
-	                        </div>
-	                        <div class="modal-footer">
-	                          <button type="button" class="btn btn-default" data-dismiss="modal" name="cancelReturnTask">Cancel</button>
-	                          <button type="button" class="btn btn-primary" name="submitReturnTask">Return Task</button>
-	                        </div>
-	                      </div>
-	                    </div>
-	                  </div>
                     
                 </div>
                     <%--
@@ -660,23 +584,81 @@
     </div>
 </div>
 <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
+	<div class="modal-dialog">
+		<div class="modal-content">
+  			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="rejectModalLabel">Reject Task</h4>
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to reject this task?</p>
-                <label>Reason</label>
-                <textarea class="form-control"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Reject Task</button>
-            </div>
-        </div>
-    </div>
+  			<div class="modal-body">
+  				<p>Are you sure you want to reject this task?</p>
+    			<p>This task will be returned to the owner:</p>
+    			<section class="panel panel-default">
+					<div class="table-responsive">
+    					<table class="table table-striped b-t b-light" id="ownerTableRejectTask">
+							<thead>
+								<tr>
+									<th width="20"></th>
+									<th>First Name</th>
+									<th>Last Name</th>
+									<th>Username</th>
+									<th>Organization</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- This area is filled dynamically depending of the result of the service -->
+							</tbody>
+						</table>
+					</div>
+				</section>
+				<p>Or select some other people from below:</p>
+				<section class="panel panel-default">
+					<div class="row wrapper">
+						<div class="col-sm-12">
+							<div class="input-group">
+								<input type="text" class="input-sm form-control" name="searchKeywordRejectTask" placeholder="Search people..">
+								<span class="input-group-btn">
+									<button class="btn btn-sm btn-default" type="button" name="searchUsersRejectTask">Go!</button>
+								</span> 
+							</div>
+                       	</div>
+                     </div>
+                     <div class="table-responsive">
+                       <table class="table table-striped b-t b-light" id="usersTableRejectTask">
+			               <thead>
+			                 	<tr>
+			                   		<th width="20"></th>
+			                   		<th class="th-sortable" data-toggle="class">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+			                   		<th>Last Name</th>
+			                   		<th>Username</th>
+			                   		<th>Organization</th>
+			                 	</tr>
+			               	</thead>
+	               			<tbody>
+	               				<!-- This area is filled dynamically depending of the result of the service -->
+	               			</tbody>
+             			</table>
+           			</div>
+					<footer class="panel-footer">
+					  <div class="row">
+					    <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 0-0 of 0 items</small> </div>
+					    <div class="col-sm-6 text-right text-center-xs">
+					      <ul class="pagination pagination-sm m-t-none m-b-none">
+					      	<!-- This area is filled dinamically depending of the result of the service -->
+					      </ul>
+					    </div>
+					  </div>
+					</footer>
+         		</section>
+       			<label>Reason</label>
+            	<textarea class="form-control"></textarea>
+       		</div>
+       		<div class="modal-footer">
+         		<button type="button" class="btn btn-default" data-dismiss="modal" name="cancelRejectTask">Cancel</button>
+         		<button type="button" class="btn btn-primary" name="submitRejectTask">Reject Task</button>
+       		</div>
+     	</div>
+   	</div>
 </div>
 <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">

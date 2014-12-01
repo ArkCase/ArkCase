@@ -404,7 +404,7 @@ TaskList.Callback = {
         if (response.hasError) {
             Acm.Dialog.error("Failed to retrieve users." + response.errorMsg);
         } else {
-        	TaskList.Object.refreshDlgReturnTaskUsers(response);
+        	TaskList.Object.refreshDlgRejectTaskUsers(response);
         }
     }
 };

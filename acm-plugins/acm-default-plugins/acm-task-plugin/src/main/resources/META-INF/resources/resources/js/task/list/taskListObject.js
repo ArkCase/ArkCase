@@ -69,19 +69,19 @@ TaskList.Object = {
         this.$btnCompleteTask = $("#btnComplete");
         this.$btnCompleteTask.click(function(e) {TaskList.Event.onClickBtnAdHocTaskComplete(e);});
         
-        // Return Task
-        this.$dlgReturnTask = $('#return');
-        this.$btnReturnTask = $("#btnReturn");
-        this.$btnReturnTask.click(function(e) {TaskList.Event.onClickBtnReturnTask(e);});
-        this.$btnSubmitReturnTask = this.$dlgReturnTask.find("button[name=submitReturnTask]");
-        this.$btnSearchReturnTask = this.$dlgReturnTask.find("button[name=searchUsersReturnTask]");
-        this.$btnSearchReturnTask.click(function(e) {TaskList.Event.onClickSearchReturnTask(e);});
-        this.$inputSearchReturnTask = this.$dlgReturnTask.find("input[name=searchKeywordReturnTask]");
-        this.$inputSearchReturnTask.keyup(function(e) {TaskList.Event.onKeyUpSearchReturnTask(e);});
-        this.initDlgReturnTask();
-        this.$dlgReturnTaskSortableColumns = this.$dlgReturnTask.find('thead th.th-sortable');
-        this.$dlgReturnTaskSortableColumns.each(function(index) {
-        	$(this).click(function(e) {TaskList.Event.onClickDlgReturnTaskSortableColumn(e);});
+        // Reject Task
+        this.$dlgRejectTask = $('#reject');
+        this.$btnRejectTask = $("#btnReject");
+        this.$btnRejectTask.click(function(e) {TaskList.Event.onClickBtnRejectTask(e);});
+        this.$btnSubmitRejectTask = this.$dlgRejectTask.find("button[name=submitRejectTask]");
+        this.$btnSearchRejectTask = this.$dlgRejectTask.find("button[name=searchUsersRejectTask]");
+        this.$btnSearchRejectTask.click(function(e) {TaskList.Event.onClickSearchRejectTask(e);});
+        this.$inputSearchRejectTask = this.$dlgRejectTask.find("input[name=searchKeywordRejectTask]");
+        this.$inputSearchRejectTask.keyup(function(e) {TaskList.Event.onKeyUpSearchRejectTask(e);});
+        this.initDlgRejectTask();
+        this.$dlgRejectTaskSortableColumns = this.$dlgRejectTask.find('thead th.th-sortable');
+        this.$dlgRejectTaskSortableColumns.each(function(index) {
+        	$(this).click(function(e) {TaskList.Event.onClickDlgRejectTaskSortableColumn(e);});
         });
 
         this.$btnRejectTask = $("#btnReject");
@@ -236,48 +236,48 @@ TaskList.Object = {
     	this._popupWindow = popupWindow;
     }
     
-    // Return Task
-    ,setDlgReturnTaskStart: function(start) {
-    	this._dlgReturnTaskStart = start;
+    // Reject Task
+    ,setDlgRejectTaskStart: function(start) {
+    	this._dlgRejectTaskStart = start;
     }
-    ,getDlgReturnTaskStart: function() {
-    	return this._dlgReturnTaskStart;
+    ,getDlgRejectTaskStart: function() {
+    	return this._dlgRejectTaskStart;
     }
-    ,setDlgReturnTaskN: function(n) {
-    	this._dlgReturnTaskN = n;
+    ,setDlgRejectTaskN: function(n) {
+    	this._dlgRejectTaskN = n;
     }
-    ,getDlgReturnTaskN: function() {
-    	return this._dlgReturnTaskN;
+    ,getDlgRejectTaskN: function() {
+    	return this._dlgRejectTaskN;
     }
-    ,setDlgReturnTaskSortDirection: function(sortDirection) {
-    	this._dlgReturnTaskSortDirection = sortDirection;
+    ,setDlgRejectTaskSortDirection: function(sortDirection) {
+    	this._dlgRejectTaskSortDirection = sortDirection;
     }
-    ,getDlgReturnTaskSortDirection: function() {
-    	return this._dlgReturnTaskSortDirection;
+    ,getDlgRejectTaskSortDirection: function() {
+    	return this._dlgRejectTaskSortDirection;
     }
-    ,setDlgReturnTaskPage: function(page) {
-    	this._dlgReturnTaskPage = page;
+    ,setDlgRejectTaskPage: function(page) {
+    	this._dlgRejectTaskPage = page;
     }
-    ,getDlgReturnTaskPage: function() {
-    	return this._dlgReturnTaskPage;
+    ,getDlgRejectTaskPage: function() {
+    	return this._dlgRejectTaskPage;
     }
-    ,setDlgReturnTaskPages: function(pages) {
-    	this._dlgReturnTaskPages = pages;
+    ,setDlgRejectTaskPages: function(pages) {
+    	this._dlgRejectTaskPages = pages;
     }
-    ,getDlgReturnTaskPages: function() {
-    	return this._dlgReturnTaskPages;
+    ,getDlgRejectTaskPages: function() {
+    	return this._dlgRejectTaskPages;
     }
-    ,setDlgReturnTaskSelected: function(selected) {
-    	this._dlgReturnTaskSelected = selected;
+    ,setDlgRejectTaskSelected: function(selected) {
+    	this._dlgRejectTaskSelected = selected;
     }
-    ,getDlgReturnTaskSelected: function() {
-    	return this._dlgReturnTaskSelected;
+    ,getDlgRejectTaskSelected: function() {
+    	return this._dlgRejectTaskSelected;
     }
-    ,setDlgReturnTaskSearchKeyword: function(keyword) {
-    	this._dlgReturnTaskSearchKeyword = keyword;
+    ,setDlgRejectTaskSearchKeyword: function(keyword) {
+    	this._dlgRejectTaskSearchKeyword = keyword;
     }
-    ,getDlgReturnTaskSearchKeyword: function() {
-    	return this._dlgReturnTaskSearchKeyword;
+    ,getDlgRejectTaskSearchKeyword: function() {
+    	return this._dlgRejectTaskSearchKeyword;
     }
 
     //  Use this to build the Admin tree structure
@@ -851,7 +851,7 @@ TaskList.Object = {
             }
             
             if (task.owner != task.assignee) {
-            	this.$btnReturnTask.show();
+            	this.$btnRejectTask.show();
             }
             
             this.setTaskDetails(task);
@@ -962,7 +962,7 @@ TaskList.Object = {
         this.$btnResubmit.hide();
         this.$btnCancelRequest.hide();
         this.$btnReassignTask.hide();
-        this.$btnReturnTask.hide();
+        this.$btnRejectTask.hide();
         this.$btnUnassignTask.hide();
         this.$btnCompleteTask.hide();
         this.$btnRejectTask.hide();
@@ -981,56 +981,56 @@ TaskList.Object = {
         this.setValueDetails(task.details);
     }
     
-    // Return Task
-    ,initDlgReturnTask: function() {
-    	TaskList.Page.cleanDlgReturnTaskOwner(this.$dlgReturnTask);
-    	TaskList.Page.cleanDlgReturnTaskUsers(this.$dlgReturnTask);
+    // Reject Task
+    ,initDlgRejectTask: function() {
+    	TaskList.Page.cleanDlgRejectTaskOwner(this.$dlgRejectTask);
+    	TaskList.Page.cleanDlgRejectTaskUsers(this.$dlgRejectTask);
     	
-    	this.setDlgReturnTaskStart(TaskList.DLG_RETURN_TASK_START);
-    	this.setDlgReturnTaskN(TaskList.DLG_RETURN_TASK_N);
-    	this.setDlgReturnTaskSortDirection(TaskList.DLG_RETURN_TASK_SORT_DIRECTION);
-    	this.setDlgReturnTaskPage(0);
-    	this.setDlgReturnTaskPages(0);
-    	this.setDlgReturnTaskSelected(null);
-    	this.setDlgReturnTaskSearchKeyword('');
-    	this.$btnSubmitReturnTask.addClass('disabled');
+    	this.setDlgRejectTaskStart(TaskList.DLG_REJECT_TASK_START);
+    	this.setDlgRejectTaskN(TaskList.DLG_REJECT_TASK_N);
+    	this.setDlgRejectTaskSortDirection(TaskList.DLG_REJECT_TASK_SORT_DIRECTION);
+    	this.setDlgRejectTaskPage(0);
+    	this.setDlgRejectTaskPages(0);
+    	this.setDlgRejectTaskSelected(null);
+    	this.setDlgRejectTaskSearchKeyword('');
+    	this.$btnSubmitRejectTask.addClass('disabled');
     }
-    ,showDlgReturnTask: function(onClickBtnPrimary) {    	
-        Acm.Dialog.bootstrapModal(this.$dlgReturnTask, onClickBtnPrimary);
+    ,showDlgRejectTask: function(onClickBtnPrimary) {    	
+        Acm.Dialog.bootstrapModal(this.$dlgRejectTask, onClickBtnPrimary);
     }
-    ,refreshDlgReturnTaskUsers: function(data) {
-    	var tbodyOwner = this.$dlgReturnTask.find('table#ownerTableReturnTask tbody');
-    	var tbodyUsers = this.$dlgReturnTask.find('table#usersTableReturnTask tbody');
+    ,refreshDlgRejectTaskUsers: function(data) {
+    	var tbodyOwner = this.$dlgRejectTask.find('table#ownerTableRejectTask tbody');
+    	var tbodyUsers = this.$dlgRejectTask.find('table#usersTableRejectTask tbody');
     	
-    	TaskList.Page.cleanDlgReturnTaskOwner(this.$dlgReturnTask);
-    	TaskList.Page.cleanDlgReturnTaskUsers(this.$dlgReturnTask);
+    	TaskList.Page.cleanDlgRejectTaskOwner(this.$dlgRejectTask);
+    	TaskList.Page.cleanDlgRejectTaskUsers(this.$dlgRejectTask);
     	
-    	this._refreshDlgReturnTaskOwner(tbodyOwner, data);
-    	this._refreshDlgReturnTaskUsers(tbodyUsers, data);
-    	this._refreshDlgReturnTaskPaging(data);
+    	this._refreshDlgRejectTaskOwner(tbodyOwner, data);
+    	this._refreshDlgRejectTaskUsers(tbodyUsers, data);
+    	this._refreshDlgRejectTaskPaging(data);
     	
-    	if (this.getDlgReturnTaskSelected() == null) {
-    		this.$btnSubmitReturnTask.addClass('disabled');
+    	if (this.getDlgRejectTaskSelected() == null) {
+    		this.$btnSubmitRejectTask.addClass('disabled');
     	} else {
-    		this.$btnSubmitReturnTask.removeClass('disabled');
+    		this.$btnSubmitRejectTask.removeClass('disabled');
     	}
     }
-    ,_refreshDlgReturnTaskOwner: function(tbody, data) {
+    ,_refreshDlgRejectTaskOwner: function(tbody, data) {
     	if (data && data.response && data.response.owner) {
     		data = data.response.owner;
     	}else {
     		data = null;
     	}
     	if (tbody && data && data.response && data.response.docs && data.response.docs.length > 0) {  
-    		TaskList.Page.buildDlgReturnTaskOwner(tbody, data.response.docs);
+    		TaskList.Page.buildDlgRejectTaskOwner(tbody, data.response.docs);
     	}
     }
-    ,_refreshDlgReturnTaskUsers: function(tbody, data) {   
+    ,_refreshDlgRejectTaskUsers: function(tbody, data) {   
     	if (tbody && data && data.response && data.response.docs && data.response.docs.length > 0) {    		   		
-    		TaskList.Page.buildDlgReturnTaskUsers(tbody, data.response.docs);
+    		TaskList.Page.buildDlgRejectTaskUsers(tbody, data.response.docs);
     	}
     }
-    ,_refreshDlgReturnTaskPaging: function(data) {
+    ,_refreshDlgRejectTaskPaging: function(data) {
     	var total = 0;
     	var from = 0;
     	var to = 0;
@@ -1050,24 +1050,24 @@ TaskList.Object = {
     	}
     	
     	if (data.response.start != -1) {
-    		page = Math.floor(data.response.start/this.getDlgReturnTaskN()) + 1;
-    		this.setDlgReturnTaskPage(page);
+    		page = Math.floor(data.response.start/this.getDlgRejectTaskN()) + 1;
+    		this.setDlgRejectTaskPage(page);
     	}
     	
     	if (total > 0) {
-    		pages = Math.ceil(total/this.getDlgReturnTaskN());
-    		this.setDlgReturnTaskPages(pages);
+    		pages = Math.ceil(total/this.getDlgRejectTaskN());
+    		this.setDlgRejectTaskPages(pages);
     	}
     	
     	// Build Muted Text
-    	var $textMuted = this.$dlgReturnTask.find('footer.panel-footer small.text-muted');
-    	TaskList.Page.buildDlgReturnTaskMutedText($textMuted, from, to, total);
+    	var $textMuted = this.$dlgRejectTask.find('footer.panel-footer small.text-muted');
+    	TaskList.Page.buildDlgRejectTaskMutedText($textMuted, from, to, total);
     	
     	// Build Pagintion
-    	$ulPagination = this.$dlgReturnTask.find('footer.panel-footer ul.pagination');
-    	TaskList.Page.buildDlgReturnTaskPagination($ulPagination, page, pages);
+    	$ulPagination = this.$dlgRejectTask.find('footer.panel-footer ul.pagination');
+    	TaskList.Page.buildDlgRejectTaskPagination($ulPagination, page, pages);
     	
-    	this.setDlgReturnTaskStart(data.response.start);
+    	this.setDlgRejectTaskStart(data.response.start);
     }
 };
 
