@@ -68,6 +68,21 @@ TaskList.Object = {
         this.$btnUnassignTask = $("#btnUnassign");
         this.$btnCompleteTask = $("#btnComplete");
         this.$btnCompleteTask.click(function(e) {TaskList.Event.onClickBtnAdHocTaskComplete(e);});
+        
+        // Return Task
+        this.$dlgReturnTask = $('#return');
+        this.$btnReturnTask = $("#btnReturn");
+        this.$btnReturnTask.click(function(e) {TaskList.Event.onClickBtnReturnTask(e);});
+        this.$btnSubmitReturnTask = this.$dlgReturnTask.find("button[name=submitReturnTask]");
+        this.$btnSearchReturnTask = this.$dlgReturnTask.find("button[name=searchUsersReturnTask]");
+        this.$btnSearchReturnTask.click(function(e) {TaskList.Event.onClickSearchReturnTask(e);});
+        this.$inputSearchReturnTask = this.$dlgReturnTask.find("input[name=searchKeywordReturnTask]");
+        this.$inputSearchReturnTask.keyup(function(e) {TaskList.Event.onKeyUpSearchReturnTask(e);});
+        this.initDlgReturnTask();
+        this.$dlgReturnTaskSortableColumns = this.$dlgReturnTask.find('thead th.th-sortable');
+        this.$dlgReturnTaskSortableColumns.each(function(index) {
+        	$(this).click(function(e) {TaskList.Event.onClickDlgReturnTaskSortableColumn(e);});
+        });
 
         this.$btnRejectTask = $("#btnReject");
         this.$btnDeleteTask = $("#btnDelete");
@@ -219,6 +234,50 @@ TaskList.Object = {
     }
     ,setPopUpWindow: function(popupWindow) {
     	this._popupWindow = popupWindow;
+    }
+    
+    // Return Task
+    ,setDlgReturnTaskStart: function(start) {
+    	this._dlgReturnTaskStart = start;
+    }
+    ,getDlgReturnTaskStart: function() {
+    	return this._dlgReturnTaskStart;
+    }
+    ,setDlgReturnTaskN: function(n) {
+    	this._dlgReturnTaskN = n;
+    }
+    ,getDlgReturnTaskN: function() {
+    	return this._dlgReturnTaskN;
+    }
+    ,setDlgReturnTaskSortDirection: function(sortDirection) {
+    	this._dlgReturnTaskSortDirection = sortDirection;
+    }
+    ,getDlgReturnTaskSortDirection: function() {
+    	return this._dlgReturnTaskSortDirection;
+    }
+    ,setDlgReturnTaskPage: function(page) {
+    	this._dlgReturnTaskPage = page;
+    }
+    ,getDlgReturnTaskPage: function() {
+    	return this._dlgReturnTaskPage;
+    }
+    ,setDlgReturnTaskPages: function(pages) {
+    	this._dlgReturnTaskPages = pages;
+    }
+    ,getDlgReturnTaskPages: function() {
+    	return this._dlgReturnTaskPages;
+    }
+    ,setDlgReturnTaskSelected: function(selected) {
+    	this._dlgReturnTaskSelected = selected;
+    }
+    ,getDlgReturnTaskSelected: function() {
+    	return this._dlgReturnTaskSelected;
+    }
+    ,setDlgReturnTaskSearchKeyword: function(keyword) {
+    	this._dlgReturnTaskSearchKeyword = keyword;
+    }
+    ,getDlgReturnTaskSearchKeyword: function() {
+    	return this._dlgReturnTaskSearchKeyword;
     }
 
     //  Use this to build the Admin tree structure
@@ -790,6 +849,11 @@ TaskList.Object = {
                 this.$btnCompleteTask.show();
                 this.$btnDeleteTask.show();
             }
+            
+            if (task.owner != task.assignee) {
+            	this.$btnReturnTask.show();
+            }
+            
             this.setTaskDetails(task);
 
             this.refreshJTableAttachments();
@@ -898,6 +962,7 @@ TaskList.Object = {
         this.$btnResubmit.hide();
         this.$btnCancelRequest.hide();
         this.$btnReassignTask.hide();
+        this.$btnReturnTask.hide();
         this.$btnUnassignTask.hide();
         this.$btnCompleteTask.hide();
         this.$btnRejectTask.hide();
@@ -914,6 +979,95 @@ TaskList.Object = {
         this.setValueTaskOwner(task.owner);
         this.setValueAssignedStatus(task.status);
         this.setValueDetails(task.details);
+    }
+    
+    // Return Task
+    ,initDlgReturnTask: function() {
+    	TaskList.Page.cleanDlgReturnTaskOwner(this.$dlgReturnTask);
+    	TaskList.Page.cleanDlgReturnTaskUsers(this.$dlgReturnTask);
+    	
+    	this.setDlgReturnTaskStart(TaskList.DLG_RETURN_TASK_START);
+    	this.setDlgReturnTaskN(TaskList.DLG_RETURN_TASK_N);
+    	this.setDlgReturnTaskSortDirection(TaskList.DLG_RETURN_TASK_SORT_DIRECTION);
+    	this.setDlgReturnTaskPage(0);
+    	this.setDlgReturnTaskPages(0);
+    	this.setDlgReturnTaskSelected(null);
+    	this.setDlgReturnTaskSearchKeyword('');
+    	this.$btnSubmitReturnTask.addClass('disabled');
+    }
+    ,showDlgReturnTask: function(onClickBtnPrimary) {    	
+        Acm.Dialog.bootstrapModal(this.$dlgReturnTask, onClickBtnPrimary);
+    }
+    ,refreshDlgReturnTaskUsers: function(data) {
+    	var tbodyOwner = this.$dlgReturnTask.find('table#ownerTableReturnTask tbody');
+    	var tbodyUsers = this.$dlgReturnTask.find('table#usersTableReturnTask tbody');
+    	
+    	TaskList.Page.cleanDlgReturnTaskOwner(this.$dlgReturnTask);
+    	TaskList.Page.cleanDlgReturnTaskUsers(this.$dlgReturnTask);
+    	
+    	this._refreshDlgReturnTaskOwner(tbodyOwner, data);
+    	this._refreshDlgReturnTaskUsers(tbodyUsers, data);
+    	this._refreshDlgReturnTaskPaging(data);
+    	
+    	if (this.getDlgReturnTaskSelected() == null) {
+    		this.$btnSubmitReturnTask.addClass('disabled');
+    	} else {
+    		this.$btnSubmitReturnTask.removeClass('disabled');
+    	}
+    }
+    ,_refreshDlgReturnTaskOwner: function(tbody, data) {
+    	if (data && data.response && data.response.owner) {
+    		data = data.response.owner;
+    	}else {
+    		data = null;
+    	}
+    	if (tbody && data && data.response && data.response.docs && data.response.docs.length > 0) {  
+    		TaskList.Page.buildDlgReturnTaskOwner(tbody, data.response.docs);
+    	}
+    }
+    ,_refreshDlgReturnTaskUsers: function(tbody, data) {   
+    	if (tbody && data && data.response && data.response.docs && data.response.docs.length > 0) {    		   		
+    		TaskList.Page.buildDlgReturnTaskUsers(tbody, data.response.docs);
+    	}
+    }
+    ,_refreshDlgReturnTaskPaging: function(data) {
+    	var total = 0;
+    	var from = 0;
+    	var to = 0;
+    	var page = 0;
+    	var pages = 0;
+    	
+    	if (data && data.response && data.response.numFound != -1) {
+    		total = data.response.numFound;
+    	}
+    	
+    	if (data && data.response && data.response.start != -1 && total > 0) {
+    		from = data.response.start + 1;
+    	}
+    	
+    	if (data && data.response && data.response.start != -1 && data.response.docs) {
+    		to = data.response.start + data.response.docs.length;
+    	}
+    	
+    	if (data.response.start != -1) {
+    		page = Math.floor(data.response.start/this.getDlgReturnTaskN()) + 1;
+    		this.setDlgReturnTaskPage(page);
+    	}
+    	
+    	if (total > 0) {
+    		pages = Math.ceil(total/this.getDlgReturnTaskN());
+    		this.setDlgReturnTaskPages(pages);
+    	}
+    	
+    	// Build Muted Text
+    	var $textMuted = this.$dlgReturnTask.find('footer.panel-footer small.text-muted');
+    	TaskList.Page.buildDlgReturnTaskMutedText($textMuted, from, to, total);
+    	
+    	// Build Pagintion
+    	$ulPagination = this.$dlgReturnTask.find('footer.panel-footer ul.pagination');
+    	TaskList.Page.buildDlgReturnTaskPagination($ulPagination, page, pages);
+    	
+    	this.setDlgReturnTaskStart(data.response.start);
     }
 };
 
