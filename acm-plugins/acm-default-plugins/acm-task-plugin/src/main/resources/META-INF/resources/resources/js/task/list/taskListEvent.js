@@ -66,100 +66,100 @@ TaskList.Event = {
 
     }
     
-    // Return Task Events
+    // Reject Task Events
     ,_onRetrieveUsers: function() {
     	var task = TaskList.getTask();
-    	var start = TaskList.Object.getDlgReturnTaskStart();
-    	var n = TaskList.Object.getDlgReturnTaskN();
-    	var sortDirection = TaskList.Object.getDlgReturnTaskSortDirection();
-    	var searchKeyword = TaskList.Object.getDlgReturnTaskSearchKeyword();
+    	var start = TaskList.Object.getDlgRejectTaskStart();
+    	var n = TaskList.Object.getDlgRejectTaskN();
+    	var sortDirection = TaskList.Object.getDlgRejectTaskSortDirection();
+    	var searchKeyword = TaskList.Object.getDlgRejectTaskSearchKeyword();
     	var exclude = task.owner;
     	
     	TaskList.Service.retrieveUsers(start, n, sortDirection, searchKeyword, exclude);
     }
-    ,onClickBtnReturnTask: function(e) {
-    	TaskList.Object.initDlgReturnTask();
+    ,onClickBtnRejectTask: function(e) {
+    	TaskList.Object.initDlgRejectTask();
     	this._onRetrieveUsers();
-    	TaskList.Object.showDlgReturnTask(function(event, ctrl) {
-    		var returnTo = TaskList.Object.getDlgReturnTaskSelected();
+    	TaskList.Object.showDlgRejectTask(function(event, ctrl) {
+    		var returnTo = TaskList.Object.getDlgRejectTaskSelected();
     		if (returnTo != null) {
     			TaskList.Event.onSaveAssignee(returnTo);
     		}
     	});
     }
-    ,onClickDlgReturnTaskSortableColumn: function(e) {
-    	var sortDirection = TaskList.Object.getDlgReturnTaskSortDirection();
+    ,onClickDlgRejectTaskSortableColumn: function(e) {
+    	var sortDirection = TaskList.Object.getDlgRejectTaskSortDirection();
     	
     	if (sortDirection && sortDirection == 'ASC') {
-    		TaskList.Object.setDlgReturnTaskSortDirection('DESC');
+    		TaskList.Object.setDlgRejectTaskSortDirection('DESC');
     	} else {
-    		TaskList.Object.setDlgReturnTaskSortDirection('ASC');
+    		TaskList.Object.setDlgRejectTaskSortDirection('ASC');
     	}
     	
     	this._onRetrieveUsers();
     }
-    ,onClickDlgReturnTaskLeftBtn: function(e) {
-    	var start = TaskList.Object.getDlgReturnTaskStart();
-    	var page = TaskList.Object.getDlgReturnTaskPage();
+    ,onClickDlgRejectTaskLeftBtn: function(e) {
+    	var start = TaskList.Object.getDlgRejectTaskStart();
+    	var page = TaskList.Object.getDlgRejectTaskPage();
     	
     	if (page > 0) {
-    		TaskList.Object.setDlgReturnTaskStart(start - TaskList.Object.getDlgReturnTaskN());
-    		TaskList.Object.setDlgReturnTaskPage(page - 1);
+    		TaskList.Object.setDlgRejectTaskStart(start - TaskList.Object.getDlgRejectTaskN());
+    		TaskList.Object.setDlgRejectTaskPage(page - 1);
     	}
     	
     	this._onRetrieveUsers();
     }
-    ,onClickDlgReturnTaskRightBtn: function(e) {
-    	var start = TaskList.Object.getDlgReturnTaskStart();
-    	var page = TaskList.Object.getDlgReturnTaskPage();
-    	var pages = TaskList.Object.getDlgReturnTaskPages();
+    ,onClickDlgRejectTaskRightBtn: function(e) {
+    	var start = TaskList.Object.getDlgRejectTaskStart();
+    	var page = TaskList.Object.getDlgRejectTaskPage();
+    	var pages = TaskList.Object.getDlgRejectTaskPages();
     	
     	if (page < pages) {
-    		TaskList.Object.setDlgReturnTaskStart(start + TaskList.Object.getDlgReturnTaskN());
-    		TaskList.Object.setDlgReturnTaskPage(page + 1);
+    		TaskList.Object.setDlgRejectTaskStart(start + TaskList.Object.getDlgRejectTaskN());
+    		TaskList.Object.setDlgRejectTaskPage(page + 1);
     	}
     	
     	this._onRetrieveUsers();
     }
-    ,onClickDlgReturnTaskPageBtn: function(e) {
+    ,onClickDlgRejectTaskPageBtn: function(e) {
     	var $page = $(e.target);
     	var page = $page.html();
     	
     	if (page) {
-    		TaskList.Object.setDlgReturnTaskStart((page - 1) * TaskList.Object.getDlgReturnTaskN());
-    		TaskList.Object.setDlgReturnTaskPage(page);
+    		TaskList.Object.setDlgRejectTaskStart((page - 1) * TaskList.Object.getDlgRejectTaskN());
+    		TaskList.Object.setDlgRejectTaskPage(page);
     	}
     	
     	this._onRetrieveUsers();
     }
-    ,onClickSearchReturnTask: function(e) {
-    	var keyword = TaskList.Object.$inputSearchReturnTask.val();
-    	TaskList.Object.setDlgReturnTaskSearchKeyword(keyword);
+    ,onClickSearchRejectTask: function(e) {
+    	var keyword = TaskList.Object.$inputSearchRejectTask.val();
+    	TaskList.Object.setDlgRejectTaskSearchKeyword(keyword);
     	
-    	TaskList.Object.setDlgReturnTaskStart(TaskList.DLG_RETURN_TASK_START);
-    	TaskList.Object.setDlgReturnTaskN(TaskList.DLG_RETURN_TASK_N);
-    	TaskList.Object.setDlgReturnTaskSortDirection(TaskList.DLG_RETURN_TASK_SORT_DIRECTION);
-    	TaskList.Object.setDlgReturnTaskPage(0);
-    	TaskList.Object.setDlgReturnTaskPages(0);
+    	TaskList.Object.setDlgRejectTaskStart(TaskList.DLG_RETURN_TASK_START);
+    	TaskList.Object.setDlgRejectTaskN(TaskList.DLG_REJECT_TASK_N);
+    	TaskList.Object.setDlgRejectTaskSortDirection(TaskList.DLG_REJECT_TASK_SORT_DIRECTION);
+    	TaskList.Object.setDlgRejectTaskPage(0);
+    	TaskList.Object.setDlgRejectTaskPages(0);
     	
     	this._onRetrieveUsers();
     }
-    ,onKeyUpSearchReturnTask: function(e) {
+    ,onKeyUpSearchRejectTask: function(e) {
     	if (e.keyCode == 13) {
-    		var keyword = TaskList.Object.$inputSearchReturnTask.val();
-        	TaskList.Object.setDlgReturnTaskSearchKeyword(keyword);
+    		var keyword = TaskList.Object.$inputSearchRejectTask.val();
+        	TaskList.Object.setDlgRejectTaskSearchKeyword(keyword);
         	
-        	TaskList.Object.setDlgReturnTaskStart(TaskList.DLG_RETURN_TASK_START);
-        	TaskList.Object.setDlgReturnTaskN(TaskList.DLG_RETURN_TASK_N);
-        	TaskList.Object.setDlgReturnTaskSortDirection(TaskList.DLG_RETURN_TASK_SORT_DIRECTION);
-        	TaskList.Object.setDlgReturnTaskPage(0);
-        	TaskList.Object.setDlgReturnTaskPages(0);
+        	TaskList.Object.setDlgRejectTaskStart(TaskList.DLG_REJECT_TASK_START);
+        	TaskList.Object.setDlgRejectTaskN(TaskList.DLG_REJECT_TASK_N);
+        	TaskList.Object.setDlgRejectTaskSortDirection(TaskList.DLG_REJECT_TASK_SORT_DIRECTION);
+        	TaskList.Object.setDlgRejectTaskPage(0);
+        	TaskList.Object.setDlgRejectTaskPages(0);
         	
     		this._onRetrieveUsers();
     	}
     }
-    ,onChangeDlgReturnTaskSelected: function(e) {
-    	TaskList.Object.setDlgReturnTaskSelected($(e.target).val());
+    ,onChangeDlgRejectTaskSelected: function(e) {
+    	TaskList.Object.setDlgRejectTaskSelected($(e.target).val());
     }
 
     ,onClickBtnTaskOutcomeApprove : function(e) {
