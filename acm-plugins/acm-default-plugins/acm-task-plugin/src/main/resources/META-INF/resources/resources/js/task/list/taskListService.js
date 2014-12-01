@@ -25,7 +25,7 @@ TaskList.Service = {
     ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
     ,API_RETRIEVE_WORKFLOW_HISTORY       : "/api/latest/plugin/task/history/"
     ,API_TASK_EVENTS : "/api/latest/plugin/task/events/"
-
+    ,API_RETRIEVE_USERS : "/api/latest/plugin/search/usersSearch"
 
     ,listTaskSaveDetail : function(taskId, data) {
         Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_DETAIL + taskId
@@ -121,5 +121,12 @@ TaskList.Service = {
     ,retrieveWorkflowHistory : function(id, adhoc) {
     	var url = App.getContextPath() + this.API_RETRIEVE_WORKFLOW_HISTORY + id + '/' + adhoc;
         Acm.Ajax.asyncGet(url, TaskList.Callback.EVENT_WORKFLOW_HISTORY_RETRIEVED);
+    }
+    ,retrieveUsers : function(start, n, sortDirection, searchKeyword, exclude) {
+    	var params = {'start': start, 'n': n, 'sortDirection': sortDirection, 'searchKeyword': searchKeyword, 'exclude': exclude}
+    	var query = $.param(params);
+    	
+        var url = App.getContextPath() + this.API_RETRIEVE_USERS + '?' + query;
+        Acm.Ajax.asyncGet(url, TaskList.Callback.EVENT_USERS_RETRIEVED);
     }
 }

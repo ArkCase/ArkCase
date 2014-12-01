@@ -38,6 +38,10 @@ var TaskList = TaskList || {
     ,cacheParentObject: null
     ,cacheWorkflowHistory: null
     ,cacheTaskEvents: null
+    
+    ,DLG_RETURN_TASK_START: 0
+    ,DLG_RETURN_TASK_N: 2
+    ,DLG_RETURN_TASK_SORT_DIRECTION: 'ASC'
 
     ,_parentObjId: 0
     ,getParentObjId: function(){
