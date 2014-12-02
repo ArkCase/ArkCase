@@ -136,34 +136,37 @@ TaskList.JTable = {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var task = TaskList.getTask();
-                    if (task && task.documentUnderReview != null) {
-                        var documentUnderReview = task.documentUnderReview;
-                        var record = {};
-                        record.id = Acm.goodValue(documentUnderReview.fileId, 0);
-                        record.title = Acm.goodValue(documentUnderReview.fileName);
-                        record.created = Acm.getDateFromDatetime(documentUnderReview.created);
-                        record.creator = Acm.goodValue(documentUnderReview.creator);
-                        record.status = Acm.goodValue(documentUnderReview.parentObjects[0].status);
-                        rc.Records.push(record);
+                    if (task && task.childObjects) {
+                        for (var i = 0; i < task.childObjects.length; i++) {
+                            var childObject = task.childObjects[i];
+                            var record = {};
+                            record.id = Acm.goodValue(childObject.targetId, 0);
+                            record.title = Acm.goodValue(childObject.targetName);
+                            record.created = Acm.getDateFromDatetime(childObject.created);
+                            record.creator = Acm.goodValue(childObject.creator);
+                            record.status = Acm.goodValue(childObject.status);
+                            rc.Records.push(record);
+                        }
                     }
                     return rc;
                 }
-                ,createAction: function(postData, jtParams) {
-                    //custom web form creation takes over; this action should never be called
-                    var rc = {"Result": "OK", "Record": {id:0, title:"", type:"", created:"", author:"", status:""}};
-                    return rc;
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
                 }
-                /*,updateAction: function(postData, jtParams) {
-                 var record = Acm.urlToJson(postData);
-                 var rc = AcmEx.Object.jTableGetEmptyRecord();
-                 //id,created,creator is readonly
-                 //rc.Record.id = record.id;
-                 //rc.Record.created = record.created;
-                 //rc.Record.creator = record.creator;
-                 rc.Record.title = record.title;
-                 rc.Record.status = record.status;
-                 return rc;
-                 }*/
+            }
+            ,toolbar: {
+                items: [{
+                    //icon: 'jtable-edit-command-button',
+
+                    cssClass: 'newAttachment',
+                    text: 'New Attachment',
+                    click: function () {
+                        TaskList.Object.$btnNewAttachment.click();
+                        //TaskList.Object.$formAttachment.submit(function(e) {TaskList.Event.onAddNewAttachment(e, this);});
+                    }
+                }]
             }
             ,fields: {
                 id: {
@@ -175,7 +178,7 @@ TaskList.JTable = {
                 }
                 ,title: {
                     title: 'Title'
-                    ,width: '10%'
+                    ,width: '30%'
                     ,display: function (commData) {
                         var a = "<a href='" + App.getContextPath() + TaskList.Service.API_DOWNLOAD_DOCUMENT
                             + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -188,33 +191,24 @@ TaskList.JTable = {
                     ,width: '15%'
                     ,edit: false
                 }
-                ,author: {
+                ,creator: {
                     title: 'Author'
                     ,width: '15%'
                     ,edit: false
                 }
                 ,status: {
                     title: 'Status'
-                    ,width: '30%'
+                    ,width: '10%'
                 }
             }
-            /*,recordUpdated : function (event, data) {
+            /*,recordDeleted : function (event, data) {
              var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-             var record = data.record;
-             var task = TaskList.getTask();
-             if (task) {
-             if (task.childObjeccts) {
-             if (0 < task.childObjects.length && whichRow < task.childObjects.length) {
-             var childObject = task.childObjects[whichRow];
-             //id,created,creator is readonly
-             //childObject.Record.id = record.id;
-             //childObject.Record.created = record.created;
-             //childObject.Record.creator = record.creator;
-             childObject.Record.title = record.title;
-             childObject.Record.status = record.status;
-
-             TaskList.Service.listTaskSaveDetail(task.taskId,task);
-             }
+             var taskId = TaskList.getTaskId();
+             if (taskId) {
+             var attachments = TaskList.cacheAttachments.get(taskId);
+             if (attachments) {
+             attachments.splice(whichRow, 1);
+             TaskList.Object.refreshJTableAttachments();
              }
              }
              }*/
