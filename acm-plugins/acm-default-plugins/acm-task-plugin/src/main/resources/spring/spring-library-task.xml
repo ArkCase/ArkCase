@@ -115,6 +115,11 @@
                     <property name="url" value="/api/{version}/plugin/task/events/{taskId}"/>
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
                 </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/task/file"/>
+                    <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>

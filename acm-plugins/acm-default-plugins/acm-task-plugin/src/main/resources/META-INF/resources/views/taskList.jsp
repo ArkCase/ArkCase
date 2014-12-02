@@ -307,6 +307,12 @@
                                 <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "changeCaseStatus" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Change Case Status</button>
                                 <input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />
                                 <input id="changeCaseStatusFormUrl" type="hidden" value="${changeCaseStatusFormUrl}" />
+                                <form id="formFiles" style="display:none;">
+                                            <%--<input type="file" id="file" name="file">--%>
+                                        <input id="newAttachment" type="file" name="files[]" multiple/>
+
+                                        <%--<input type="submit">--%>
+                                </form>
                             </div>
                         </div>
                     </div>

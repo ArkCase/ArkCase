@@ -26,6 +26,8 @@ TaskList.Service = {
     ,API_RETRIEVE_WORKFLOW_HISTORY       : "/api/latest/plugin/task/history/"
     ,API_TASK_EVENTS : "/api/latest/plugin/task/events/"
     ,API_RETRIEVE_USERS : "/api/latest/plugin/search/usersSearch"
+    ,API_UPLOAD_FILE: "/api/latest/plugin/task/file"
+
 
     ,listTaskSaveDetail : function(taskId, data) {
         Acm.Ajax.asyncPost(App.getContextPath() + this.API_SAVE_DETAIL + taskId
@@ -128,5 +130,24 @@ TaskList.Service = {
     	
         var url = App.getContextPath() + this.API_RETRIEVE_USERS + '?' + query;
         Acm.Ajax.asyncGet(url, TaskList.Callback.EVENT_USERS_RETRIEVED);
+    }
+
+    ,uploadFile: function(formData) {
+        var url = App.getContextPath() + this.API_UPLOAD_FILE;
+        Acm.Service.ajax({
+            url: url
+            ,data: formData
+            ,processData: false
+            ,contentType: false
+            ,type: 'POST'
+            ,success: function(response){
+                if (response.hasError) {
+                    //Profile.Controller.modelUploadedPicture(response);
+                    Acm.Dialog.info(response.errorMsg);
+                } else {
+                    TaskList.Object.refreshJTableAttachments();
+                }
+            }
+        });
     }
 }
