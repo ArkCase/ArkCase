@@ -18,7 +18,7 @@ Sidebar.View = {
             this.$spanTitle     = $("#sidebarTitle");
 
             Acm.Dispatcher.addEventListener(Sidebar.Controller.ME_PROFILE_INFO_RETRIEVED  ,this.onProfileInfoRetrieved);
-            if (Profile) {
+            if ("undefined" != typeof Profile) {
                 Acm.Dispatcher.addEventListener(Profile.Controller.ME_TITLE_SAVED         ,this.onTitleSavedByProfile);
                 Acm.Dispatcher.addEventListener(Profile.Controller.ME_ECM_FILE_ID_SAVED   ,this.onEcmFileIdSavedByProfile);
             }
