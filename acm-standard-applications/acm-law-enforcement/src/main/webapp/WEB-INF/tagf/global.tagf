@@ -4,6 +4,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 
+<c:set var="vd_app"                scope="session" value="acm-law-1.0"/>
 <c:set var="vd_acm"                scope="session" value="acm-3.0"/>
 <c:set var="acm_theme"             scope="session" value="acm-3.0/themes/basic"/>
 
@@ -183,4 +184,6 @@
 
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.js" ></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.plugin.js" ></script>
+
+<script type="text/javascript" src="<c:url value='/'/>resources/${vd_app}/js/application.js" ></script>
 

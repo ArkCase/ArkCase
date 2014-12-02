@@ -65,7 +65,13 @@
         App.create();
     }
 </script>
+
 <jsp:invoke fragment="endOfBody"/>
-<%@include file="/WEB-INF/tagf/ready.tagf"%>
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        Application.run();
+    });
+</script>
 </body>
 </html>
