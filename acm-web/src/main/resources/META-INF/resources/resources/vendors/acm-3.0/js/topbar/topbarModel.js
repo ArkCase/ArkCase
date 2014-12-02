@@ -70,9 +70,23 @@ Topbar.Model = {
             this._asnListData = new Acm.Model.SessionData("AcmAsnList");
 
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_ACTION,this.onViewChangedAsnAction);
-
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_STATUS,this.onViewChangedAsnStatus);
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_DELETED_ASN       ,this.onViewDeletedAsn);
         }
         ,onInitialized: function() {
+            var asnList = Topbar.Model.Asn.getAsnList();
+            if (Topbar.Model.Asn.validateAsnList(asnList)) {
+                Topbar.Controller.Asn.modelRetrievedAsnList(asnList);
+            }
+
+            Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
+//            Acm.Timer.registerListener("AsnWatch"
+//                ,16
+//                ,function() {
+//                    Topbar.Service.Asn.retrieveAsnList(App.getUserName());
+//                    return true;
+//                }
+//            );
         }
 
         ,STATUS_READ    : "Read"
@@ -90,6 +104,32 @@ Topbar.Model = {
         ,setAsnList: function(asnList) {
             this._asnListData.set(asnList);
         }
+        ,getAsnCount: function(asnList) {
+            return (Acm.isArray(asnList))? asnList.length : 0;
+        }
+        ,setAsn: function(asn) {
+            if (this.validateAsn(asn)) {
+                var asnList = this.getAsnList();
+                if (!asnList) {
+                    asnList = [];
+                }
+
+                var found = -1;
+                for (var i = 0; i < asnList.length; i++) {
+                    if (asn.id == asnList[i].id) {
+                        found = i;
+                        break;
+                    }
+                }
+                if (0 <= found) {
+                    asnList[found] = asn;
+                } else {
+                    asnList.push(asn);
+                }
+
+                this.setAsnList(asnList);
+            }
+        }
         ,findAsn: function(asnId, asnList) {
             var found = null;
             if (asnList) {
@@ -106,86 +146,37 @@ Topbar.Model = {
             return found;
         }
 
-        ,_asnListNew: []
-        ,getAsnListNew: function() {
-            return this._asnListNew;
-        }
-//    ,setAsnListNew: function(asnListNew) {
-//        this._asnListNew = asnListNew;
-//    }
-        ,buildAsnListNew: function(asnList) {
-            this._asnListNew = [];
-            if (asnList) {
-                for (var i = 0; i < asnList.length; i++) {
-                    var asn = asnList[i];
-                    if (asn.action && "New" == asn.action) {
-                        this._asnListNew.push(asn);
-                    }
-                }
+        ,validateAsnList: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
             }
-            return this._asnListNew;
-        }
-        ,getAsnListNewMore: function(asnList) {
-            var asnListNewMore = [];
-            if (!asnList  || !(asnList instanceof Array)) {
-                return asnListNewMore;
+            if (!Acm.isArray(data)) {
+                return false;
             }
-
-            var asnListNew = this.getAsnListNew();
-            for (var i = 0; i < asnList.length; i++) {
-                var asn = asnList[i];
-                if (asn.action && "New" == asn.action) {
-                    var found = null;
-                    for (var j = 0; j < asnListNew.length; j++) {
-                        var asnNew = asnListNew[j];
-                        if (asn.id == asnNew.id) {
-                            found =asn;
-                            break;
-                        }
-                    }
-                    if (null == found) {
-                        asnListNewMore.push(asn);
-                    }
-                }
-            }
-
-            return asnListNewMore;
-        }
-        ,getAsnListNewNoLonger: function(asnList) {
-            var asnListNewNoLonger = [];
-            if (!asnList  || !(asnList instanceof Array)) {
-                return asnListNewNoLonger;
-            }
-
-            var asnListNew = this.getAsnListNew();
-            for (var i = 0; i < asnListNew.length; i++) {
-                var asnNew = asnListNew[i];
-                var found = null;
-                for (var j = 0; j < asnList.length; j++) {
-                    var asn = asnList[j];
-                    if (asn.action && "New" == asn.action) {
-                        if (asn.id == asnNew.id) {
-                            found =asn;
-                            break;
-                        }
-                    }
-                }
-                if (null == found) {
-                    asnListNewNoLonger.push(asnNew);
-                }
-            }
-
-            return asnListNewNoLonger;
+            return true;
         }
 
-
-        ,ctrlRetrieveAsnList: function(user) {
-            Topbar.Service.Asn.retrieveAsnList(user);
+        ,validateAsn: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id) || Acm.isEmpty(data.note)) {
+                return false;
+            }
+            return true;
         }
+
 
         ,onViewChangedAsnAction: function(asnId, action) {
             Topbar.Service.Asn.updateAsnAction(asnId, action);
         }
+        ,onViewChangedAsnStatus: function(asnId, status) {
+            Topbar.Service.Asn.updateAsnStatus(asnId, status);
+        }
+        ,onViewDeletedAsn: function(asnId) {
+            Topbar.Service.Asn.deleteAsn(asnId);
+        }
+
 
     } //Asn
 

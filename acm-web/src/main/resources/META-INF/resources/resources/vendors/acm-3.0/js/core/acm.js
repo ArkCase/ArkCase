@@ -392,6 +392,8 @@ var Acm = Acm || {
             return -1;
         }
         ,triggerEvent: function() {
+            //console.log("triggerEvent, this._listenerCount=" + this._listenerCount);
+
             //need to loop backwards because of possible item removed while looping
             for (var i = this._listenerCount - 1; 0 <= i; i--) {
                 var listener = this._listeners[i];

@@ -48,47 +48,128 @@ Topbar.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_RETRIEVE_ASN_LIST_       : "/resources/asn.json"
-        ,API_UPDATE_ASN_LIST          : "to be determined"
+        //,API_RETRIEVE_ASN_LIST_       : "/resources/asn.json"
+        ,API_RETRIEVE_ASN_LIST_       : "/api/latest/plugin/notification/"
+        ,API_SAVE_ASN                 : "/api/latest/plugin/notification"
+        ,API_DELETE_ASN_              : "/api/latest/plugin/notification/"
 
         ,retrieveAsnList: function(user) {
-            return; //wait for back end implementation
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
                         Topbar.Controller.Asn.modelRetrievedAsnList(response);
                     } else {
-                        var asnList = response;
-                        Topbar.Model.Asn.setAsnList(asnList);
-                        Topbar.Controller.Asn.modelRetrievedAsnList(asnList);
+                        if (Topbar.Model.Asn.validateAsnList(response)) {
+                            var asnList = response;
+                            Topbar.Model.Asn.setAsnList(asnList);
+                            Topbar.Controller.Asn.modelRetrievedAsnList(asnList);
+                        }
                     }
                 }
-                ,App.getContextPath() + this.API_RETRIEVE_ASN_LIST_
-            )
-        }
-        ,updateAsnList: function(asnList) {
-            return; //wait for back end implementation
-            Acm.Service.asyncPost(
-                function(response) {
-                    if (response.hasError) {
-                        Topbar.Controller.Asn.modelUpdatedAsnList(response);
-                    } else {
-                        Topbar.Controller.Asn.modelUpdatedAsnList();
-                    }
-                }
-                ,App.getContextPath() + this.API_UPDATE_ASN_LIST
-                ,asnList
+                ,App.getContextPath() + this.API_RETRIEVE_ASN_LIST_ + user
             )
         }
 
+        ,saveAsn: function(asn, handler) {
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response.hasError) {
+                        if (handler) {
+                            handler(response);
+                        } else {
+                            Topbar.Controller.Asn.modelSavedAsn(response);
+                        }
+
+                    } else {
+                        if (Topbar.Model.Asn.validateAsn(response)) {
+                            var asn = response;
+                            Topbar.Model.Asn.setAsn(asn);
+                            if (handler) {
+                                handler(asn);
+                            } else {
+                                Topbar.Controller.Asn.modelSavedAsn(asn);
+                            }
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_SAVE_ASN
+                ,JSON.stringify(asn)
+            )
+        }
         ,updateAsnAction: function(asnId, action) {
-            var asnList = this.getAsnList();
-            var asn = this.findAsn(asnId, asnList);
+            var asnList = Topbar.Model.Asn.getAsnList();
+            var asn = Topbar.Model.Asn.findAsn(asnId, asnList);
             if (asn) {
                 asn.action = action;
-                this.setAsnList(asnList);
+                Topbar.Service.Asn.saveAsn(asn
+                    ,function(data) {
+                        Topbar.Controller.Asn.modelUpdatedAsnAction(asnId, Acm.Service.responseWrapper(data, data.action));
+                    }
+                );
             }
-            Topbar.Service.Asn.updateAsnList(asnList);
+        }
+        ,updateAsnStatus: function(asnId, status) {
+            var asnList = Topbar.Model.Asn.getAsnList();
+            var asn = Topbar.Model.Asn.findAsn(asnId, asnList);
+            if (asn) {
+                asn.status = status;
+                Topbar.Service.Asn.saveAsn(asn
+                    ,function(data) {
+                        Topbar.Controller.Asn.modelUpdatedAsnAction(asnId, Acm.Service.responseWrapper(data, data.status));
+                    }
+                );
+            }
+        }
+        ,_validateDeletedAsn: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.deletedNotificationId)) {
+                return false;
+            }
+            return true;
+        }
+        ,deleteAsn: function(asnId) {
+            Acm.Service.asyncDelete(
+                function(response) {
+                    if (response.hasError) {
+                            Topbar.Controller.Asn.modelDeleteAsn(response);
+
+                    } else {
+                        if (Topbar.Service.Asn._validateDeletedAsn(response)) {
+                            if (response.deletedNotificationId == asnId) {
+                                var asnList = Topbar.Model.Asn.getAsnList();
+                                if (Topbar.Model.Asn.validateAsnList(asnList)) {
+                                    for (var i = 0; i < asnList.length; i++) {
+                                        if (asnId == asnList[i].id) {
+                                            asnList.splice(i, 1);
+                                            Topbar.Controller.Asn.modelDeletedAsn(Acm.Service.responseWrapper(response, asnId));
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+//                        if (Topbar.Model.Asn.validateAsn(response)) {
+//                            var asn = response;
+//                            Topbar.Model.Asn.setAsn(asn);
+//                            if (handler) {
+//                                handler(asn);
+//                            } else {
+//                                Topbar.Controller.Asn.modelSavedAsn(asn);
+//                            }
+//                        }
+//
+//
+//                        Topbar.Controller.Asn.modelDeletedAsn(asnId, Acm.Service.responseWrapper(data, data.status));
+                        var a = response;
+                        deletedNotificationId
+                        var z = 1;
+
+                    }
+                }
+                ,App.getContextPath() + this.API_DELETE_ASN_ + asnId
+            )
         }
 
 

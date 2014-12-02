@@ -42,48 +42,45 @@ Topbar.Controller = {
         create : function() {
         }
         ,onInitialized: function() {
-            Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
-            Acm.Timer.registerListener("AsnWatch"
-                ,16
-                ,function() {
-                    Topbar.Model.Asn.ctrlRetrieveAsnList(App.getUserName());
-                    return true;
-                }
-            );
         }
 
         ,MODEL_RETRIEVED_ASN_LIST                 : "topbar-model-retrieved-asn-list"                    //param: asnList
-        ,MODEL_UPDATED_ASN_LIST                   : "topbar-model-updated-asn-list"                      //param: asnList
+        ,MODEL_SAVED_ASN                          : "topbar-model-saved-asn"                             //param: asn
+        ,MODEL_UPDATED_ASN_ACTION                 : "topbar-model-updated-asn-action"                    //param: asnId, action
+        ,MODEL_UPDATED_ASN_STATUS                 : "topbar-model-updated-asn-status"                    //param: asnId, status
+        ,MODEL_DELETED_ASN                        : "topbar-model-deleted-asn"                           //param: asnId
         ,VIEW_CHANGED_ASN_ACTION                  : "topbar-view-changed-asn-action"                     //param: asnId, action
+        ,VIEW_CHANGED_ASN_STATUS                  : "topbar-view-changed-asn-status"                     //param: asnId, status
+        ,VIEW_DELETED_ASN                         : "topbar-view-deleted-asn"                            //param: asnId
 
         ,modelRetrievedAsnList: function(asnList) {
             Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_ASN_LIST, asnList);
         }
-        ,modelUpdatedAsnList: function(asnList) {
-            Acm.Dispatcher.fireEvent(this.MODEL_UPDATED_ASN_LIST, asnList);
+        ,modelSavedAsn: function(asn) {
+            Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ASN, asn);
         }
+        ,modelUpdatedAsnAction: function(asnId, action) {
+            Acm.Dispatcher.fireEvent(this.MODEL_UPDATED_ASN_ACTION, asnId, action);
+        }
+        ,modelUpdatedAsnStatus: function(asnId, action) {
+            Acm.Dispatcher.fireEvent(this.MODEL_UPDATED_ASN_STATUS, asnId, action);
+        }
+        ,modelDeletedAsn: function(asnId) {
+            Acm.Dispatcher.fireEvent(this.MODEL_DELETED_ASN, asnId);
+        }
+
+
         ,viewChangedAsnAction: function(asnId, action) {
-            Acm.Dispatcher.fireEvent(this.MODEL_UPDATED_ASN_LIST, asnId, action);
+            Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ASN_ACTION, asnId, action);
+        }
+        ,viewChangedAsnStatus: function(asnId, status) {
+            Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ASN_STATUS, asnId, status);
+        }
+        ,viewDeletedAsn: function(asnId) {
+            Acm.Dispatcher.fireEvent(this.VIEW_DELETED_ASN, asnId);
         }
 
 
-
-//        ,onModelChangedAsnList: function(asnList) {
-//            Topbar.View.Asn.ctrlUpdateAsnList(asnList);
-//        }
-//        ,onModelChangedAsnListError: function(errorMsg) {
-//            Topbar.View.Asn.ctrlNotifyAsnListError(errorMsg);
-//        }
-        ,onModelChangedAsnListUpdateError: function(errorMsg) {
-            Topbar.View.Asn.ctrlNotifyAsnListUpdateError(errorMsg);
-        }
-        ,onModelChangedAsnListUpdateSuccess: function() {
-            Topbar.View.Asn.ctrlNotifyAsnListUpdateSuccess();
-        }
-
-        ,onViewChangedAsnAction: function(asnId, action) {
-            Topbar.Model.Asn.ctrlUpdateAsnAction(asnId, action);
-        }
     }
 };
 

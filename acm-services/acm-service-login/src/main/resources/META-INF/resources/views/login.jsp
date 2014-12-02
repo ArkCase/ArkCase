@@ -56,9 +56,11 @@
     </footer>
 
     <script src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
-
     <script type="text/javascript" src="<c:url value='/resources/js/login/login.js'/>"></script>
-
-    <%@include file="/WEB-INF/tagf/ready.tagf"%>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            Application.run();
+        });
+    </script>
 </body>
 </html>
