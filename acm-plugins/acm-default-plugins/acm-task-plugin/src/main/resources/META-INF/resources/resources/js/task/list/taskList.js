@@ -11,6 +11,8 @@ var TaskList = TaskList || {
         TaskList.cacheNoteList = new Acm.Model.CacheFifo(3);
         TaskList.cacheWorkflowHistory = new Acm.Model.CacheFifo(3);
         TaskList.cacheTaskEvents = new Acm.Model.CacheFifo(3);
+        TaskList.cacheAttachments = new Acm.Model.CacheFifo(3);
+
 
 
 
@@ -38,7 +40,8 @@ var TaskList = TaskList || {
     ,cacheParentObject: null
     ,cacheWorkflowHistory: null
     ,cacheTaskEvents: null
-    
+    ,cacheAttachments: null
+
     ,DLG_REJECT_TASK_START: 0
     ,DLG_REJECT_TASK_N: 2
     ,DLG_REJECT_TASK_SORT_DIRECTION: 'ASC'
