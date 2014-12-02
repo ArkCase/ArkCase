@@ -65,6 +65,102 @@ TaskList.Event = {
         TaskList.Service.deleteTask(taskId);
 
     }
+    
+    // Reject Task Events
+    ,_onRetrieveUsers: function() {
+    	var task = TaskList.getTask();
+    	var start = TaskList.Object.getDlgRejectTaskStart();
+    	var n = TaskList.Object.getDlgRejectTaskN();
+    	var sortDirection = TaskList.Object.getDlgRejectTaskSortDirection();
+    	var searchKeyword = TaskList.Object.getDlgRejectTaskSearchKeyword();
+    	var exclude = task.owner;
+    	
+    	TaskList.Service.retrieveUsers(start, n, sortDirection, searchKeyword, exclude);
+    }
+    ,onClickBtnRejectTask: function(e) {
+    	TaskList.Object.initDlgRejectTask();
+    	this._onRetrieveUsers();
+    	TaskList.Object.showDlgRejectTask(function(event, ctrl) {
+    		var returnTo = TaskList.Object.getDlgRejectTaskSelected();
+    		if (returnTo != null) {
+    			TaskList.Event.onSaveAssignee(returnTo);
+    		}
+    	});
+    }
+    ,onClickDlgRejectTaskSortableColumn: function(e) {
+    	var sortDirection = TaskList.Object.getDlgRejectTaskSortDirection();
+    	
+    	if (sortDirection && sortDirection == 'ASC') {
+    		TaskList.Object.setDlgRejectTaskSortDirection('DESC');
+    	} else {
+    		TaskList.Object.setDlgRejectTaskSortDirection('ASC');
+    	}
+    	
+    	this._onRetrieveUsers();
+    }
+    ,onClickDlgRejectTaskLeftBtn: function(e) {
+    	var start = TaskList.Object.getDlgRejectTaskStart();
+    	var page = TaskList.Object.getDlgRejectTaskPage();
+    	
+    	if (page > 0) {
+    		TaskList.Object.setDlgRejectTaskStart(start - TaskList.Object.getDlgRejectTaskN());
+    		TaskList.Object.setDlgRejectTaskPage(page - 1);
+    	}
+    	
+    	this._onRetrieveUsers();
+    }
+    ,onClickDlgRejectTaskRightBtn: function(e) {
+    	var start = TaskList.Object.getDlgRejectTaskStart();
+    	var page = TaskList.Object.getDlgRejectTaskPage();
+    	var pages = TaskList.Object.getDlgRejectTaskPages();
+    	
+    	if (page < pages) {
+    		TaskList.Object.setDlgRejectTaskStart(start + TaskList.Object.getDlgRejectTaskN());
+    		TaskList.Object.setDlgRejectTaskPage(page + 1);
+    	}
+    	
+    	this._onRetrieveUsers();
+    }
+    ,onClickDlgRejectTaskPageBtn: function(e) {
+    	var $page = $(e.target);
+    	var page = $page.html();
+    	
+    	if (page) {
+    		TaskList.Object.setDlgRejectTaskStart((page - 1) * TaskList.Object.getDlgRejectTaskN());
+    		TaskList.Object.setDlgRejectTaskPage(page);
+    	}
+    	
+    	this._onRetrieveUsers();
+    }
+    ,onClickSearchRejectTask: function(e) {
+    	var keyword = TaskList.Object.$inputSearchRejectTask.val();
+    	TaskList.Object.setDlgRejectTaskSearchKeyword(keyword);
+    	
+    	TaskList.Object.setDlgRejectTaskStart(TaskList.DLG_RETURN_TASK_START);
+    	TaskList.Object.setDlgRejectTaskN(TaskList.DLG_REJECT_TASK_N);
+    	TaskList.Object.setDlgRejectTaskSortDirection(TaskList.DLG_REJECT_TASK_SORT_DIRECTION);
+    	TaskList.Object.setDlgRejectTaskPage(0);
+    	TaskList.Object.setDlgRejectTaskPages(0);
+    	
+    	this._onRetrieveUsers();
+    }
+    ,onKeyUpSearchRejectTask: function(e) {
+    	if (e.keyCode == 13) {
+    		var keyword = TaskList.Object.$inputSearchRejectTask.val();
+        	TaskList.Object.setDlgRejectTaskSearchKeyword(keyword);
+        	
+        	TaskList.Object.setDlgRejectTaskStart(TaskList.DLG_REJECT_TASK_START);
+        	TaskList.Object.setDlgRejectTaskN(TaskList.DLG_REJECT_TASK_N);
+        	TaskList.Object.setDlgRejectTaskSortDirection(TaskList.DLG_REJECT_TASK_SORT_DIRECTION);
+        	TaskList.Object.setDlgRejectTaskPage(0);
+        	TaskList.Object.setDlgRejectTaskPages(0);
+        	
+    		this._onRetrieveUsers();
+    	}
+    }
+    ,onChangeDlgRejectTaskSelected: function(e) {
+    	TaskList.Object.setDlgRejectTaskSelected($(e.target).val());
+    }
 
     ,onClickBtnTaskOutcomeApprove : function(e) {
         var task = TaskList.getTask();
@@ -222,6 +318,15 @@ TaskList.Event = {
     ,onSaveDueDate : function(value) {
         var task = TaskList.getTask();
         task.dueDate = Acm.xDateToDatetime(value);
+        TaskList.Service.listTaskSaveDetail(task.taskId, task);
+    }
+    
+    /**
+     * Save assignee value changed
+     */
+    ,onSaveAssignee : function(value) {
+        var task = TaskList.getTask();
+        task.assignee = value;
         TaskList.Service.listTaskSaveDetail(task.taskId, task);
     }
 
