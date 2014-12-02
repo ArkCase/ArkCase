@@ -1,0 +1,186 @@
+<meta name="Author" content="Armedia LLC" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+
+<c:set var="vd_acm"                scope="session" value="acm-3.0"/>
+<c:set var="acm_theme"             scope="session" value="acm-3.0/themes/basic"/>
+
+<c:set var="vd_angular"            scope="session" value="angular-1.2.18"/>
+<c:set var="js_angular_min"        scope="session" value="angular.min.7931140c.js"/>
+<c:set var="js_angular_route_min"  scope="session" value="angular-route.min.7d4fa7e4.js"/>
+<c:set var="js_angular_moment"     scope="session" value="moment.min.js"/>
+<c:set var="js_angular_table"      scope="session" value="ng-table.js"/>
+
+<c:set var="vd_bootbox"            scope="session" value="bootbox-2.4.0"/>
+<c:set var="js_bootbox"            scope="session" value="bootbox.js"/>
+
+<c:set var="vd_bootstrap"          scope="session" value="bootstrap-3.1.1"/>
+<c:set var="js_bootstrap"          scope="session" value="bootstrap.js"/>
+
+<c:set var="vd_calendar"           scope="session" value="calendar"/>
+<c:set var="js_calendar"           scope="session" value="bootstrap_calendar.js"/>
+
+<c:set var="vd_charts"             scope="session" value="charts"/>
+<c:set var="js_easypiechart"       scope="session" value="jquery.easy-pie-chart.js"/>
+<c:set var="js_sparkline"          scope="session" value="jquery.sparkline.min.js"/>
+<c:set var="js_flot"               scope="session" value="jquery.flot.pie.min.js"/>
+<c:set var="js_flot_tooltip"       scope="session" value="jquery.flot.tooltip.min.js"/>
+<c:set var="js_flot_spline"        scope="session" value="jquery.flot.spline.js"/>
+<c:set var="js_flot_resize"        scope="session" value="jquery.flot.resize.js"/>
+<c:set var="js_flot_grow"          scope="session" value="jquery.flot.grow.js"/>
+<c:set var="js_flot_demo"          scope="session" value="demo.js"/>
+
+<c:set var="vd_chosen"             scope="session" value="chosen-1.1.0"/>
+<c:set var="js_chosen"             scope="session" value="chosen.js"/>
+
+<c:set var="vd_datatables"         scope="session" value="datatables"/>
+<c:set var="js_datatables"         scope="session" value="jquery.dataTables.min.js"/>
+
+<c:set var="vd_datepicker"         scope="session" value="datepicker"/>
+<c:set var="js_datepicker"         scope="session" value="bootstrap-datepicker.js"/>
+
+<c:set var="vd_file-input"         scope="session" value="file-input"/>
+<c:set var="js_file-input"         scope="session" value="bootstrap.file-input.js"/>
+
+<c:set var="vd_fullcalendar"       scope="session" value="fullcalendar"/>
+<c:set var="js_fullcalendar"       scope="session" value="fullcalendar.min.js"/>
+
+<c:set var="vd_ie"                 scope="session" value="ie"/>
+<c:set var="js_ie"                 scope="session" value="ie"/>
+
+<c:set var="vd_intro"              scope="session" value="intro"/>
+
+<c:set var="vd_issueCollector"     scope="session" value="issueCollector"/>
+<c:set var="js_issueCollector"     scope="session" value="jiraIssueCollector.js"/>
+
+<c:set var="vd_jasmine"            scope="session" value="jasmine-2.0"/>
+
+<c:set var="vd_jquery"             scope="session" value="jquery-1.11.0"/>
+<c:set var="js_jquery"             scope="session" value="jquery-1.11.0.js"/>
+
+<c:set var="vd_jquery_ui"          scope="session" value="jquery-ui-1.10.3"/>
+<c:set var="js_jquery_ui"          scope="session" value="jquery.ui-1.10.3.custom.js"/>
+
+<c:set var="vd_jtable"             scope="session" value="jtable-2.4.0"/>
+<c:set var="js_jtable"             scope="session" value="jquery.jtable.js"/>
+
+<c:set var="vd_jvectormap"         scope="session" value="jvectormap"/>
+<c:set var="js_jvectormap"         scope="session" value="jquery-jvectormap-1.2.2.min.js"/>
+
+<c:set var="vd_knob"               scope="session" value="knob-1.2.8"/>
+<c:set var="js_knob"               scope="session" value="jquery.knob.js"/>
+
+<c:set var="vd_maps"               scope="session" value="maps"/>
+<c:set var="js_gmaps"               scope="session" value="gmaps.js"/>
+
+<c:set var="vd_markdown"           scope="session" value="markdown"/>
+<c:set var="js_epiceditor"          scope="session" value="epiceditor.min.js"/>
+
+<c:set var="vd_microdata"          scope="session" value="microdata"/>
+<c:set var="js_microdata"          scope="session" value="jquery.microdata.js"/>
+
+<c:set var="vd_nestable"           scope="session" value="nestable"/>
+<c:set var="js_nestable"           scope="session" value="jquery.nestable.js"/>
+
+<c:set var="vd_opm_css"            scope="session" value="opm_css"/>
+<c:set var="vd_opm_oldies"         scope="session" value="opm_oldies"/>
+
+<c:set var="vd_parsley"            scope="session" value="parsley"/>
+<c:set var="js_parsley"            scope="session" value="parsley.extend.js"/>
+
+<c:set var="vd_slider"             scope="session" value="slider"/>
+<c:set var="js_slider"             scope="session" value="bootstrap-slider.js"/>
+
+<c:set var="vd_slimscroll"         scope="session" value="slimscroll-1.3.0"/>
+<c:set var="js_slimscroll"         scope="session" value="jquery.slimscroll.min.js"/>
+
+<c:set var="vd_sortable"           scope="session" value="sortable"/>
+<c:set var="js_sortable"           scope="session" value="jquery.sortable.js"/>
+
+<c:set var="vd_summernote"         scope="session" value="summernote-0.5.1"/>
+<c:set var="js_summernote"         scope="session" value="summernote.js"/>
+
+<c:set var="vd_typeahead"          scope="session" value="typeahead-3.0.3"/>
+<c:set var="js_typeahead"          scope="session" value="typeahead.js"/>
+
+<c:set var="vd_upload"             scope="session" value="upload-5.40.1"/>
+<c:set var="js_upload_fileupload"  scope="session" value="jquery.fileupload.js"/>
+<c:set var="js_upload_iframe"      scope="session" value="jquery.iframe-transport.js"/>
+
+<c:set var="vd_wizard"             scope="session" value="wizard"/>
+<c:set var="js_wizard_bootstrap"   scope="session" value="jquery.bootstrap.wizard.js"/>
+<c:set var="js_wizard_demo"        scope="session" value="demo.js"/>
+
+<c:set var="vd_wysiwyg"            scope="session" value="wysiwyg"/>
+<c:set var="js_wysiwyg_bootstrap"  scope="session" value="bootstrap-wysiwyg.js"/>
+<c:set var="js_wysiwyg_hotkeys"    scope="session" value="jquery.hotkeys.js"/>
+
+<c:set var="vd_x_editable"         scope="session" value="x-editable-1.5.1"/>
+<c:set var="js_x_editable"         scope="session" value="bootstrap-editable.min.js"/>
+
+<c:set var="vd_font_awesome"       scope="session" value="font-awesome-4.1.0"/>
+
+<c:set var="vd_underscore"         scope="session" value="underscore-1.6.0"/>
+<c:set var="js_underscore"         scope="session" value="underscore.js"/>
+
+<c:set var="vd_fancytree"          scope="session" value="fancytree-2.2.0"/>
+<c:set var="js_fancytree"          scope="session" value="jquery.fancytree.js"/>
+<c:set var="js_fancytree_table"    scope="session" value="jquery.fancytree.table.js"/>
+
+<c:set var="vd_contextmenu"        scope="session" value="ui-contextmenu-1.5.1-0"/>
+<c:set var="js_contextmenu"        scope="session" value="jquery.ui-contextmenu.js"/>
+
+
+
+<!-- Bootstrap http://getbootstrap.com -->
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_jquery_ui}/css/ui-lightness/jquery-ui-1.10.3.custom.min.css" type="text/css"/>
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_bootstrap}/css/bootstrap.css" />
+
+
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_font_awesome}/css/font-awesome.min.css" />
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/animate.css" />
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/icon.css" />
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/font.css" />
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/app.css" />
+
+<!--[if lt IE 8]>
+<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_ie}/css/ie.css" />
+<![endif]-->
+
+<!-- from http://getbootstrap.com/getting-started:  -->
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_ie}/js/html5shiv.js" ></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_ie}/js/respond.min.js" ></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_ie}/js/excanvas.js" ></script>
+<![endif]-->
+
+
+<!-- jquery must be first -->
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jquery}/jquery-1.11.0.js" ></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jquery_ui}/js/jquery-ui-1.10.3.custom.min.js" ></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_microdata}/jquery.microdata.js" ></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_bootstrap}/js/bootstrap.js" ></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_issueCollector}/jiraIssueCollector.js" ></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_bootbox}/bootbox.min.js" ></script>
+
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acm.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDialog.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmAjax.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDispatcher.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmObject.js"></script>
+<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmEvent.js"></script>--%>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmValidator.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmModel.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmService.js"></script>
+
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmEx.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmExObject.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmExService.js"></script>
+
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.js" ></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.plugin.js" ></script>
+
