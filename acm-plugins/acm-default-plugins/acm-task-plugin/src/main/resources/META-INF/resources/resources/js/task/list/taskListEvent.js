@@ -397,6 +397,22 @@ TaskList.Event = {
         return data;
     }
 
+    ,onAddNewAttachment: function(event, ctrl) {
+        event.preventDefault();
+        /*this.$formAttachment = TaskList.Object.$formAttachment;
+         this.$btnNewAttachment = TaskList.Object.$btnNewAttachment;*/
+        var count = TaskList.Object.$btnNewAttachment[0].files.length;
+        var fd = new FormData();
+        fd.append("taskId", TaskList.getTaskId());
+        for(var i = 0; i < count; i++ ){
+            fd.append("files[]", TaskList.Object.$btnNewAttachment[0].files[i]);
+        }
+        TaskList.Service.uploadFile(fd);
+    }
+    ,onChangeFileInput: function(event, ctrl) {
+        TaskList.Object.$formAttachment.submit();
+    }
+
     //frevvo edit close complaint
     ,onEditCloseComplaint: function(e) {
         /*var doc = {

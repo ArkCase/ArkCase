@@ -202,6 +202,15 @@ TaskList.Object = {
         this.$divAttachments = $("#divAttachments");
         TaskList.JTable.createJTableAttachments(this.$divAttachments);
 
+        //attachments
+
+        this.$btnNewAttachment = $("#newAttachment");
+        this.$btnNewAttachment.on("change", function(e) {TaskList.Event.onChangeFileInput(e, this);});
+
+        this.$formAttachment = $("#formFiles");
+        this.$formAttachment.submit(function(e) {TaskList.Event.onAddNewAttachment(e, this);});
+
+
         //frevvo edit close complaint
         this.$lnkEditComplaintClose = $(".editCloseComplaint");
         
@@ -836,7 +845,7 @@ TaskList.Object = {
         });
     }
     ,updateDetail: function(task) {
-    	if (task && task.attachedToObjectType && attachedToObjectType.toLowerCase() == "complaint"){
+    	if (task && task.attachedToObjectType && task.attachedToObjectType.toLowerCase() == "complaint"){
     		this.$lnkEditComplaintClose.show();
     		this.$lnkChangeCaseStatus.hide();
     	}else if(task && task.attachedToObjectType && task.attachedToObjectType.toLowerCase() == "case_file"){
