@@ -20,10 +20,10 @@ var Sidebar = Sidebar || {
     ,create_old: function() {
         Sidebar.Object.create();
         Sidebar.Event.create();
-        Sidebar.Page.create();
-        Sidebar.Rule.create();
+        //Sidebar.Page.create();
+        //Sidebar.Rule.create();
         //Sidebar.Service.create();
-        Sidebar.Callback.create();
+        //Sidebar.Callback.create();
 
         Acm.deferred(Sidebar.Event.onPostInit);
     }

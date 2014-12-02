@@ -77,6 +77,7 @@ Profile.View = {
             this.$imgPicture     = $("#picture");
             this.$h4FullName     = $("#fullName");
             this.$h4Email        = $("#email");
+            this.$lnkTitle        = $("#title");
 
             this.$divGroups      = $("#groups");
 
@@ -110,6 +111,9 @@ Profile.View = {
             this.$h4Website      = this.$lnkWebsite.parent();
 
             if (!Profile.Model.Info.isReadOnly()) {
+                AcmEx.Object.XEditable.useEditable(this.$lnkTitle, {success: function(response, newValue) {
+                    Profile.Controller.viewChangedTitle(newValue);
+                }});
                 AcmEx.Object.XEditable.useEditable(this.$lnkLocation, {success: function(response, newValue) {
                     Profile.Controller.viewChangedLocation(newValue);
                 }});
@@ -157,6 +161,7 @@ Profile.View = {
 
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_PROFILE_INFO_RETRIEVED  ,this.onProfileInfoRetrieved);
             //Acm.Dispatcher.addEventListener(Profile.Controller.ME_PROFILE_INFO_SAVED      ,this.onProfileInfoSaved);
+            Acm.Dispatcher.addEventListener(Profile.Controller.ME_TITLE_SAVED             ,this.onTitleSaved);
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_LOCATION_SAVED          ,this.onLocationSaved);
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_IM_ACCOUNT_SAVED        ,this.onImAccountSaved);
             Acm.Dispatcher.addEventListener(Profile.Controller.ME_IM_SYSTEM_SAVED         ,this.onImSystemSaved);
@@ -178,14 +183,15 @@ Profile.View = {
         }
 
         ,populateProfileInfo: function(profileInfo) {
-            this._displayPicture(Acm.goodValue(profileInfo.ecmFileId, -1));
+            this.displayPicture(Acm.goodValue(profileInfo.ecmFileId, -1));
 
             this.setTextH4FullName     (Acm.goodValue(profileInfo.fullName));
             this.setTextH4Email        (Acm.goodValue(profileInfo.email));
 
-            this._displayGroups(profileInfo.groups);
+            this.displayGroups(profileInfo.groups);
 
             if (Profile.Model.Info.isReadOnly()) {
+                this.setTextH4Title        (Acm.goodValue(profileInfo.location));
                 this.setTextH4Location     (Acm.goodValue(profileInfo.location));
                 this.setTextH4Im           (Acm.goodValue(profileInfo.imAccount) + " (" + Acm.goodValue(profileInfo.imAccount) + ")");
                 this.setTextH4OfficePhone  (Acm.goodValue(profileInfo.officePhoneNumber));
@@ -200,6 +206,7 @@ Profile.View = {
                 this.setTextH4Fax          (Acm.goodValue(profileInfo.fax));
                 this.setTextH4Website      (Acm.goodValue(profileInfo.website));
             } else {
+                this.setTextLnkTitle       (Acm.goodValue(profileInfo.location));
                 this.setTextLnkLocation    (Acm.goodValue(profileInfo.location));
                 this.setTextLnkImAccount   (Acm.goodValue(profileInfo.imAccount));
                 this.setTextLnkImSystem    (Acm.goodValue(profileInfo.imSystem));
@@ -217,16 +224,13 @@ Profile.View = {
             }
 
         }
-        ,_displayPicture: function(ecmFileId) {
+        ,displayPicture: function(ecmFileId) {
             var pictureUrl = (0 < ecmFileId)? Profile.Service.Info.getPictureUrl(ecmFileId)
                 : this.getDefaultImgPicture();
 
             this.setSrcImgPicture(pictureUrl);
-
-            $("#sidebarPic").attr("src", pictureUrl);
-
         }
-        ,_displayGroups: function(groups) {
+        ,displayGroups: function(groups) {
             if (Acm.isArray(groups)) {
                 var html = "";
                 for (var i = 0; i < groups.length; i++) {
@@ -247,6 +251,12 @@ Profile.View = {
         }
         ,setTextH4FullName: function(txt) {
             Acm.Object.setText(this.$h4FullName, txt);
+        }
+        ,setTextH4Title: function(txt) {
+            Acm.Object.setText(this.$lnkTitle, txt);
+        }
+        ,setTextLnkTitle: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkTitle, txt);
         }
         ,setTextH4Email: function(txt) {
             Acm.Object.setText(this.$h4Email, txt);
@@ -349,6 +359,11 @@ Profile.View = {
 //            }
 //
 //        }
+        ,onTitleSaved: function(title) {
+            if (title.hasError) {
+                Profile.View.Info.setTextLnkTitle("(Error)");
+            }
+        }
         ,onLocationSaved: function(location) {
             if (location.hasError) {
                 //alert("View: onLocationSaved, hasError, errorMsg:" + location.errorMsg);
@@ -424,7 +439,7 @@ Profile.View = {
             if (ecmFileId.hasError) {
                 alert("Save FildId: " + ecmFileId.errorMsg);
             } else {
-                Profile.View.Info._displayPicture(ecmFileId)
+                Profile.View.Info.displayPicture(ecmFileId)
             }
         }
 
@@ -454,11 +469,11 @@ Profile.View = {
                             ,date: "11/2/2014"
                         });
                         /*rc.Records.push({
-                            id: 124
-                            ,type: "type2"
-                            ,title: "title2"
-                            ,date: "m2/dd/yyyy"
-                        });*/
+                         id: 124
+                         ,type: "type2"
+                         ,title: "title2"
+                         ,date: "m2/dd/yyyy"
+                         });*/
                         return rc;
                     }
                     ,deleteAction: function (postData, jtParams) {
