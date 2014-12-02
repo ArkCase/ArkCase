@@ -6,11 +6,12 @@
 Profile.Controller = {
     create : function() {
     }
-    ,initialize: function() {
+    ,onInitialized: function() {
     }
 
     ,ME_PROFILE_INFO_RETRIEVED        : "profile-info-retrieved"             //param: profileInfo
     ,ME_PROFILE_INFO_SAVED            : "profile-info-saved"                 //param: profileInfo
+    ,ME_TITLE_SAVED                   : "profile-title-saved"                //param: title
     ,ME_LOCATION_SAVED                : "profile-location-saved"             //param: location
     ,ME_IM_ACCOUNT_SAVED              : "profile-im-account-saved"           //param: imAccount
     ,ME_IM_SYSTEM_SAVED               : "profile-im-system-saved"            //param: imSystem
@@ -29,6 +30,7 @@ Profile.Controller = {
 
     ,ME_PICTURE_UPLOADED              : "profile-picture-uploaded"           //param: uploadInfo
 
+    ,VE_TITLE_CHANGED                 : "profile-title-changed"              //param: title
     ,VE_LOCATION_CHANGED              : "profile-location-changed"           //param: location
     ,VE_IM_ACCOUNT_CHANGED            : "profile-im-account-changed"         //param: imAccount
     ,VE_IM_SYSTEM_CHANGED             : "profile-im-system-changed"          //param: imSystem
@@ -52,6 +54,9 @@ Profile.Controller = {
     }
     ,modelSavedProfileInfo: function(profileInfo) {
         Acm.Dispatcher.fireEvent(this.ME_PROFILE_INFO_SAVED, profileInfo);
+    }
+    ,modelSavedTitle: function(title) {
+        Acm.Dispatcher.fireEvent(this.ME_TITLE_SAVED, title);
     }
     ,modelSavedLocation: function(location) {
         Acm.Dispatcher.fireEvent(this.ME_LOCATION_SAVED, location);
@@ -102,6 +107,9 @@ Profile.Controller = {
         Acm.Dispatcher.fireEvent(this.ME_PICTURE_UPLOADED, uploadInfo);
     }
 
+    ,viewChangedTitle: function(title) {
+        Acm.Dispatcher.fireEvent(this.VE_TITLE_CHANGED, title);
+    }
     ,viewChangedLocation: function(location) {
         Acm.Dispatcher.fireEvent(this.VE_LOCATION_CHANGED, location);
     }
