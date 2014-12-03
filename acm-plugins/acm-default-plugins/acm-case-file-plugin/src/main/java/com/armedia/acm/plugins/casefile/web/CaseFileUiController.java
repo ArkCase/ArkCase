@@ -44,6 +44,19 @@ public class CaseFileUiController
         
         return retval;
     }
+    
+    @RequestMapping(value = "/wizard", method = RequestMethod.GET)
+    public ModelAndView openCaseFileWizard()
+    {
+        ModelAndView retval = new ModelAndView();
+        retval.setViewName("casefileWizard");
+
+        // Frevvo form URLs
+        retval.addObject("newCaseFileFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE));
+
+        return retval;
+
+    }
 
 	public FormUrl getFormUrl() {
 		return formUrl;
