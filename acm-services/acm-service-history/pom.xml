@@ -1,21 +1,22 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
 	<parent>
-	  <groupId>com.armedia.acm</groupId>
-	  <artifactId>acm-services</artifactId>
-	  <version>3.0.18-SNAPSHOT</version>
+		<groupId>com.armedia.acm</groupId>
+		<artifactId>acm-services</artifactId>
+		<version>3.0.18-SNAPSHOT</version>
 	</parent>
-	
+  
 	<modelVersion>4.0.0</modelVersion>
   
-  	<groupId>com.armedia.acm.acm-services</groupId>
-  	<artifactId>acm-service-frevvo-forms</artifactId>
-  	<name>ACM Service: Frevvo Forms Service</name>
-  	<description>Process Frevvo Forms</description>
-  	
-  	<dependencies>
-  		<!-- acm -->
+	<groupId>com.armedia.acm.acm-services</groupId>
+	<artifactId>acm-service-history</artifactId>
+	<name>ACM Service: History Service</name>
+	<description>Process History</description>
+	
+	<dependencies>
+		<!-- acm -->
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-authentication-token</artifactId>
@@ -26,33 +27,8 @@
             <artifactId>acm-form-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
-            <artifactId>acm-complaint-plugin</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-forms</groupId>
-            <artifactId>acm-forms-roi</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-form</groupId>
-            <artifactId>acm-form-change-case-status</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-form</groupId>
-            <artifactId>acm-form-close-complaint</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-form</groupId>
-            <artifactId>acm-form-case-file</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-  	
-		 <!-- spring -->
+        
+         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
@@ -101,5 +77,4 @@
 			<version>20080701</version>
 		</dependency>
 	</dependencies>
-
 </project>

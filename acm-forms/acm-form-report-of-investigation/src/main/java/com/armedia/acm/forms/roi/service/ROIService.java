@@ -20,7 +20,6 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
-import com.armedia.acm.services.users.model.AcmUserAction;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,15 +34,6 @@ public class ROIService extends FrevvoFormAbstractService {
 	private ComplaintDao complaintDao;
 	private CaseFileDao caseFileDao;
 	private UserActionDao userActionDao;
-	
-	/* (non-Javadoc)
-	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#init()
-	 */
-	@Override
-	public Object init() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)

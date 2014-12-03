@@ -48,40 +48,6 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
 	private CaseFileDao caseFileDao;
 	private ChangeCaseStatusDao changeCaseStatusDao;
 	private ApplicationEventPublisher applicationEventPublisher;
-	private MuleClient muleClient;
-	
-	/* (non-Javadoc)
-	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#init()
-	 */
-	@Override
-	public Object init() {
-		Object result = "";
-		
-		String mode = getRequest().getParameter("mode");
-		String xmlId = getRequest().getParameter("xmlId");
-		
-		if ("edit".equals(mode) && null != xmlId && !"".equals(xmlId))
-		{
-			try{
-				Long id = Long.parseLong(xmlId);
-				EcmFile file = getEcmFileDao().find(id);
-				
-				MuleMessage message = getMuleClient().send("vm://downloadFileFlow.in", file.getEcmFileId(), null);
-				
-				if (null != message && message.getPayload() instanceof ContentStream)
-				{
-					result = getContent((ContentStream) message.getPayload());
-				}
-				
-			}
-			catch(Exception e)
-			{
-				LOG.warn("EcmFile with id=" + xmlId + " is not found while edit mode. Empty Frevvo form will be shown.");
-			}
-		}
-		
-		return result;
-	}
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -224,40 +190,6 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
 
 		return json;
     }
-    
-    private String getContent(ContentStream contentStream)
-	{
-		String content = "";
-		InputStream inputStream = null;
-		
-		try
-        {
-			inputStream = contentStream.getStream();
-			StringWriter writer = new StringWriter();
-			IOUtils.copy(inputStream, writer);
-			content = writer.toString();
-        } 
-		catch (IOException e) 
-		{
-        	LOG.error("Could not copy input stream to the writer: " + e.getMessage(), e);
-		}
-		finally
-        {
-            if ( inputStream != null )
-            {
-                try
-                {
-                	inputStream.close();
-                }
-                catch (IOException e)
-                {
-                    LOG.error("Could not close CMIS content stream: " + e.getMessage(), e);
-                }
-            }
-        }
-		
-		return content;
-	}
 
 	/**
 	 * @return the caseFileDao
@@ -279,20 +211,6 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
 
 	public void setChangeCaseStatusDao(ChangeCaseStatusDao changeCaseStatusDao) {
 		this.changeCaseStatusDao = changeCaseStatusDao;
-	}
-
-	/**
-	 * @return the muleClient
-	 */
-	public MuleClient getMuleClient() {
-		return muleClient;
-	}
-
-	/**
-	 * @param muleClient the muleClient to set
-	 */
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
 	}
 
 	public ApplicationEventPublisher getApplicationEventPublisher() {

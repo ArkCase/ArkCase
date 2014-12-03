@@ -29,6 +29,7 @@
     	<module>acm-service-frevvo-forms</module>
         <module>acm-service-notification</module>
         <module>acm-service-note</module>
+    <module>acm-service-history</module>
   </modules>
 
 

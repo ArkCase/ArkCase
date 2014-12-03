@@ -30,6 +30,8 @@
         <property name="personDao" ref="acmPersonDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="muleClient" ref="muleClient"/>
+        <property name="saveCaseService" ref="saveCaseService"/>
+        <property name="acmHistoryDao" ref="acmHistoryDao"/>
 	</bean>
 
 </beans>
