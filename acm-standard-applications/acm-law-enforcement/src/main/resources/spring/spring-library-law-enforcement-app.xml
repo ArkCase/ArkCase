@@ -33,6 +33,7 @@
                 <prop key="complaint.wizard.page.title">Complaint | ACM | Armedia Case Management</prop>
                 <prop key="complaint.wizard.page.short.text">New Complaint</prop>
                 <prop key="complaint.wizard.page.long.text">New Complaint</prop>
+                <prop key="create.casefile.button.text">Case File</prop>
             </props>
         </property>
     </bean>
@@ -42,6 +43,7 @@
         <property name="topbarActions">
             <list>
                 <ref bean="createComplaintAction"/>
+                <ref bean="createCaseFileAction"/>
                 <ref bean="createTaskAction"/>
             </list>
         </property>
@@ -336,6 +338,12 @@
         <property name="iconName" value="i-pencil"/>
         <property name="url" value="/plugin/sample/armediaBlog"/>
         <property name="requiredPrivilege" value="acm-blog"/>
+    </bean>
+    <bean id="createCaseFileAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="${create.casefile.button.text}"/>
+        <property name="iconName" value="i-file2"/>
+        <property name="url" value="/plugin/casefile/wizard"/>
+        <property name="requiredPrivilege" value="case-file-create"/>
     </bean>
     <!-- end of actions -->
 
