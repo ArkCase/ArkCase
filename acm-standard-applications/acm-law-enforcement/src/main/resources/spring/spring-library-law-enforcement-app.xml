@@ -33,6 +33,7 @@
                 <prop key="complaint.wizard.page.title">Complaint | ACM | Armedia Case Management</prop>
                 <prop key="complaint.wizard.page.short.text">New Complaint</prop>
                 <prop key="complaint.wizard.page.long.text">New Complaint</prop>
+                <prop key="create.casefile.button.text">Case File</prop>
             </props>
         </property>
     </bean>
