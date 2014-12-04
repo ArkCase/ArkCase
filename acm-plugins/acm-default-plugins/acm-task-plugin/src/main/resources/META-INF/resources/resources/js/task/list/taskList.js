@@ -59,9 +59,6 @@ var TaskList = TaskList || {
         }
         return this.cacheParentObject.get(this._parentObjId);
     }
-
-
-
     ,_taskId: 0
     ,getTaskId : function() {
         return this._taskId;
@@ -80,8 +77,13 @@ var TaskList = TaskList || {
         return null;
     }
     return this.cacheWorkflowHistory.get(this._taskId);
-}
-
+    }
+    ,getAttachmentsList: function() {
+        if (0 >= this._taskId) {
+            return null;
+        }
+        return this.cacheAttachments.get(this._taskId);
+    }
     ,_taskList: []
     ,getTaskList: function() {
         return this._taskList;

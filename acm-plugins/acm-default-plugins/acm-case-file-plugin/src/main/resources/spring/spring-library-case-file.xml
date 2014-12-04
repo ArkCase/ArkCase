@@ -85,7 +85,7 @@
                 </bean>
                 <bean id="addFileToCase" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/case/file"/>
+                    <property name="url" value="/api/{version}/plugin/casefile/file"/>
                     <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
                 </bean>
             </list>

@@ -167,6 +167,23 @@ TaskList.Callback = {
                 	TaskList.Service.retrieveWorkflowHistory(task.taskId, "true");
                 }
 
+
+                //attachments list
+                if(task && task.childObjects){
+                    var attachmentsList = [];
+                    for(var i = 0; i < task.childObjects.length; i++){
+                        var childObject = task.childObjects[i];
+                        var attachment = {};
+                        attachment.id = childObject.targetId;
+                        attachment.name= childObject.targetName;
+                        attachment.created = childObject.created;
+                        attachment.creator=childObject.creator;
+                        attachment.status=childObject.status;
+                        attachmentsList.push(attachment);
+                    }
+                    TaskList.cacheAttachments.put(task.taskId, attachmentsList);
+                }
+
                 //load all the details
                 TaskList.Object.updateDetail(task);
 
