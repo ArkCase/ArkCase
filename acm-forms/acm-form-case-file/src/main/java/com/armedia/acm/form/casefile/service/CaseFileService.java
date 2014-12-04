@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.form.casefile.model.AddressHistory;
 import com.armedia.acm.form.casefile.model.CaseFileForm;
+import com.armedia.acm.form.casefile.model.EmploymentHistory;
 import com.armedia.acm.form.casefile.model.Subject;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
@@ -27,6 +28,7 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
+import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.service.history.model.AcmHistory;
 import com.armedia.acm.services.users.model.AcmUserActionName;
@@ -80,7 +82,8 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		// Save Address History
 		form = saveAddressHistory(form);
 		
-		// TODO: Save Employment History
+		// Save Employment History
+		form = saveEmploymentHistory(form);
 		
 		// Cave Attachments
 		saveAttachments(attachments, form.getCmisFolderId(), FrevvoFormName.CASE_FILE.toUpperCase(), form.getId(), form.getNumber());
@@ -100,6 +103,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		HttpSession session = getRequest().getSession();
 		String ipAddress = (String) session.getAttribute("acm_ip_address");
 		
+		// Save Case file
 		try
         {
 			caseFile = getSaveCaseService().saveCase(caseFile, getAuthentication(), ipAddress);
@@ -109,19 +113,42 @@ public class CaseFileService extends FrevvoFormAbstractService {
             throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
         }
 		
+		// Add id's and other information to the Frevvo form
 		form.setId(caseFile.getId());
 		form.setCmisFolderId(caseFile.getEcmFolderId());
 		form.setNumber(caseFile.getCaseNumber());
 		
-		List<AddressHistory> addressHistory = form.getAddressHistory();
-		if (addressHistory != null && addressHistory.size() > 0 && 
+		// Add Address History id's to the Frevvo form
+		List<AddressHistory> addressHistoryArray = form.getAddressHistory();
+		if (addressHistoryArray != null && addressHistoryArray.size() > 0 && 
 				caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null  &&
 				caseFile.getOriginator().getPerson().getAddresses() != null && 
 				caseFile.getOriginator().getPerson().getAddresses().size() > 0)
 		{
-			for (int i = 0; i < addressHistory.size(); i++)
+			for (int i = 0; i < addressHistoryArray.size(); i++)
 			{
-				addressHistory.get(i).setLocation(caseFile.getOriginator().getPerson().getAddresses().get(i));
+				if (i < caseFile.getOriginator().getPerson().getAddresses().size()) 
+				{
+					addressHistoryArray.get(i).setLocation(caseFile.getOriginator().getPerson().getAddresses().get(i));
+				}
+			}
+		}
+		
+		// Add Employment History id's to the Frevvo form
+		List<EmploymentHistory> employmentHistoryArray = form.getEmploymentHistory();
+		if (employmentHistoryArray != null && employmentHistoryArray.size() > 0 && 
+				caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null  &&
+				caseFile.getOriginator().getPerson().getOrganizations() != null && 
+				caseFile.getOriginator().getPerson().getOrganizations().size() > 0)
+		{
+			int organizationIndex = 0;
+			for (int i = 0; i < employmentHistoryArray.size(); i++)
+			{
+				if (employmentHistoryArray.get(i).getOrganization() != null && organizationIndex < caseFile.getOriginator().getPerson().getOrganizations().size())
+				{
+					employmentHistoryArray.get(i).setOrganization(caseFile.getOriginator().getPerson().getOrganizations().get(organizationIndex));
+					organizationIndex++;
+				}
 			}
 		}
 		
@@ -145,9 +172,41 @@ public class CaseFileService extends FrevvoFormAbstractService {
 				AcmHistory acmHistory = new AcmHistory();
 				acmHistory.setPersonId(personId);
 				acmHistory.setObjectId(addressHistory.getLocation().getId());
-				acmHistory.setObjectType("ADDRESS");
+				acmHistory.setObjectType("POSTAL_ADDRESS");
 				acmHistory.setStartDate(addressHistory.getStartDate());
 				acmHistory.setEndDate(addressHistory.getEndDate());
+				
+				getAcmHistoryDao().save(acmHistory);
+			}
+		}
+		
+		return form;
+	}
+	
+	private CaseFileForm saveEmploymentHistory(CaseFileForm form)
+	{
+		Long personId = form.getSubject().getPersonId();
+		List<EmploymentHistory> employmentHistoryArray = form.getEmploymentHistory();
+		
+		if (personId != null && employmentHistoryArray != null && employmentHistoryArray.size() > 0)
+		{
+			for (EmploymentHistory employmentHistory : employmentHistoryArray)
+			{
+				AcmHistory acmHistory = new AcmHistory();
+				acmHistory.setPersonId(personId);
+				
+				if (employmentHistory.getOrganization() != null)
+				{
+					acmHistory.setObjectId(employmentHistory.getOrganization().getOrganizationId());
+				}
+				else if (employmentHistory.getType() != null)
+				{
+					acmHistory.setPersonType(employmentHistory.getType());
+				}
+				
+				acmHistory.setObjectType("ORGANIZATION");
+				acmHistory.setStartDate(employmentHistory.getStartDate());
+				acmHistory.setEndDate(employmentHistory.getEndDate());
 				
 				getAcmHistoryDao().save(acmHistory);
 			}
@@ -169,19 +228,31 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	{
 		CaseFileForm caseFileForm = new CaseFileForm();
 		Subject subject = new Subject();
+		
 		AddressHistory addressHistory = new AddressHistory();
 		PostalAddress postalAddress = new PostalAddress();
 		List<AddressHistory> addressHistoryList = new ArrayList<AddressHistory>();
 		
+		EmploymentHistory employmentHistory = new EmploymentHistory();
+		Organization organization = new Organization();
+		List<EmploymentHistory> employmentHistoryList = new ArrayList<EmploymentHistory>();
+		
 		caseFileForm.setType("Background Investigation");
 		caseFileForm.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".types"), ","));
+		
 		subject.setTitles(convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".titles"), ","));
+		
 		postalAddress.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".locationTypes"), ","));
 		addressHistory.setLocation(postalAddress);
 		addressHistoryList.add(addressHistory);
 		
+		organization.setOrganizationTypes(convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".organizationTypes"), ","));
+		employmentHistory.setOrganization(organization);
+		employmentHistoryList.add(employmentHistory);
+		
 		caseFileForm.setSubject(subject);
 		caseFileForm.setAddressHistory(addressHistoryList);
+		caseFileForm.setEmploymentHistory(employmentHistoryList);
 		
 		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
 		String jsonString = gson.toJson(caseFileForm);

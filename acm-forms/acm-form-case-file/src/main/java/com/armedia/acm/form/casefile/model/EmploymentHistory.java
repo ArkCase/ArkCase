@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 
+import com.armedia.acm.plugins.person.model.Organization;
+
 /**
  * @author riste.tutureski
  *
@@ -30,10 +32,16 @@ public class EmploymentHistory {
 	private Date endDate;
 	
 	@XmlElements({
-		@XmlElement(name="employer"),
-		@XmlElement(name="employmentEmployerSection")
+		@XmlElement(name="type"),
+		@XmlElement(name="employerType")
 	})
-	private Subject employer;
+	private String type;
+	
+	@XmlElements({
+		@XmlElement(name="organization"),
+		@XmlElement(name="employmentOrganization")
+	})
+    private Organization organization;
 	
 	@XmlElements({
 		@XmlElement(name="supervisor"),
@@ -64,17 +72,23 @@ public class EmploymentHistory {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+	
+	public String getType() {
+		return type;
+	}
 
-	public Subject getEmployer() 
-	{
-		return employer;
+	public void setType(String type) {
+		this.type = type;
 	}
-	
-	public void setEmployer(Subject employer) 
-	{
-		this.employer = employer;
+
+	public Organization getOrganization() {
+		return organization;
 	}
-	
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+
 	public Subject getSupervisor() 
 	{
 		return supervisor;

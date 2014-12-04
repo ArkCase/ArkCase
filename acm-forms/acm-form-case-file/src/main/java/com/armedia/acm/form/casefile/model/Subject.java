@@ -73,12 +73,6 @@ public class Subject {
 	})
 	private String phoneNumber;
 	
-	@XmlElements({
-		@XmlElement(name="type"),
-		@XmlElement(name="employerType")
-	})
-	private String type;
-	
 	public String getId() {
 		return id;
 	}
@@ -163,14 +157,6 @@ public class Subject {
 	public void setPhoneNumber(String phoneNumber) 
 	{
 		this.phoneNumber = phoneNumber;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 	
 }
