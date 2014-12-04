@@ -28,6 +28,9 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     /////////////////// for docs with an incident date ////////////
     private Date incident_date_tdt;
 
+    /////////////////// for docs with a due date////////////////////
+    private Date dueDate_tdt;
+
     /////////////////// for docs with a priority ////////////
     private String priority_lcs;
 
@@ -414,5 +417,13 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
 
     public void setEmail_lcs(String email_lcs) {
         this.email_lcs = email_lcs;
+    }
+
+    public Date getDueDate_tdt() {
+        return dueDate_tdt;
+    }
+
+    public void setDueDate_tdt(Date dueDate_tdt) {
+        this.dueDate_tdt = dueDate_tdt;
     }
 }
