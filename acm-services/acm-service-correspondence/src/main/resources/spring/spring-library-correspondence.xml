@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <!--<bean id="auditWriter" class="com.armedia.acm.audit.AuditWriter"/>-->
+
+    <!--<bean id="auditConfigurer" class="com.armedia.acm.audit.AuditConfigurer"-->
+            <!--destroy-method="closeBean">-->
+        <!--<property name="auditConfigFilename" value="/audit.xml"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="auditSpringDataSourceHelper" class="com.armedia.commons.audit.sink.jdbc.SpringDataSourceHelper">-->
+        <!--<property name="sinks">-->
+            <!--<set>-->
+                <!--<value>jdbcSink</value>-->
+            <!--</set>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--<bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>-->
+
+</beans>
