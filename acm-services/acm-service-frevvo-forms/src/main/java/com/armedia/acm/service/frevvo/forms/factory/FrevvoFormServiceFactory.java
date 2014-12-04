@@ -135,6 +135,9 @@ public class FrevvoFormServiceFactory {
             service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setSaveCaseService(frevvoFormController.getSaveCaseService());
             service.setAcmHistoryDao(frevvoFormController.getAcmHistoryDao());
+            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
+            service.setMuleClient(frevvoFormController.getMuleClient());
+            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             
             return service;
 		}

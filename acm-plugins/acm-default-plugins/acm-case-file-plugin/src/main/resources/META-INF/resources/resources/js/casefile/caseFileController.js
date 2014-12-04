@@ -58,6 +58,7 @@ CaseFile.Controller = CaseFile.Controller || {
     ,VIEW_SELECTED_CASE_FILE 		       : "case-view-selected-case"                 //param: caseFileId
     ,VIEW_SELECTED_TREE_NODE 		       : "case-view-selected-tree-node"            //param: node key
 
+    ,VIEW_CHANGED_CASE_FILE               : "case-view-changed-case-file"              //param: caseFileId
     ,VIEW_CHANGED_CASE_TITLE               : "case-view-changed-case-title"            //param: caseFileId, title
     ,VIEW_CHANGED_INCIDENT_DATE            : "case-view-changed-incident-date"         //param: caseFileId, incidentDate
     ,VIEW_CHANGED_ASSIGNEE                 : "case-view-changed-assignee"              //param: caseFileId, assignee
@@ -227,6 +228,9 @@ CaseFile.Controller = CaseFile.Controller || {
     }
     ,viewSelectedTreeNode: function(nodeKey) {
         Acm.Dispatcher.fireEvent(this.VIEW_SELECTED_TREE_NODE, nodeKey);
+    }
+    ,viewChangedCaseFile: function(caseFileId) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_CASE_FILE, caseFileId);
     }
     ,viewChangedCaseTitle: function(caseFileId, title) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_CASE_TITLE, caseFileId, title);

@@ -39,7 +39,7 @@ public class EmploymentHistory {
 	
 	@XmlElements({
 		@XmlElement(name="organization"),
-		@XmlElement(name="employmentOrganization")
+		@XmlElement(name="employmentOrganizationSection")
 	})
     private Organization organization;
 	

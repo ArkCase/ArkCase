@@ -45,6 +45,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	private CaseFileFactory caseFileFactory = new CaseFileFactory();
 	private SaveCaseService saveCaseService;
 	private AcmHistoryDao acmHistoryDao;
+	private CaseFileDao caseFileDao;
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -72,9 +73,15 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	public boolean save(String xml,
 			MultiValueMap<String, MultipartFile> attachments) throws Exception 
 	{
-
+		
 		// Convert XML to Object
 		CaseFileForm form = (CaseFileForm) convertFromXMLToObject(cleanXML(xml), CaseFileForm.class);
+		
+		if (form == null)
+		{
+			LOG.warn("Cannot unmarshall Close Case Form.");
+			return false;
+		}
 		
 		// Save Case File to the database
 		form = saveCaseFile(form);
@@ -99,7 +106,29 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	
 	private CaseFileForm saveCaseFile(CaseFileForm form) throws AcmCreateObjectFailedException 
 	{
-		CaseFile caseFile = getCaseFileFactory().asAcmCaseFile(form);
+		CaseFile caseFile = null;
+		
+		String mode = getRequest().getParameter("mode");
+		if (mode != null && "edit".equals(mode))
+		{
+			String caseIdAsString = getRequest().getParameter("caseId");
+			Long caseId = null;
+			try
+			{
+				caseId = Long.parseLong(caseIdAsString);
+			}
+			catch(Exception e)
+			{
+				LOG.error("Cannot parse String caseId=" + caseIdAsString + " to Long.", e);
+			}
+			
+			if (caseId != null)
+			{
+				caseFile = getCaseFileDao().find(caseId);
+			}
+		}
+		
+		caseFile = getCaseFileFactory().asAcmCaseFile(form, caseFile);
 		HttpSession session = getRequest().getSession();
 		String ipAddress = (String) session.getAttribute("acm_ip_address");
 		
@@ -162,17 +191,24 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	
 	private CaseFileForm saveAddressHistory(CaseFileForm form)
 	{
+		String objectType = "POSTAL_ADDRESS";
 		Long personId = form.getSubject().getPersonId();
 		List<AddressHistory> addressHistoryArray = form.getAddressHistory();
 		
 		if (personId != null && addressHistoryArray != null && addressHistoryArray.size() > 0)
 		{
+			String mode = getRequest().getParameter("mode");
+			if (mode != null && "edit".equals(mode))
+			{
+				getAcmHistoryDao().deleteByPersonIdAndObjectType(personId, objectType);
+			}
+			
 			for (AddressHistory addressHistory : addressHistoryArray)
 			{
 				AcmHistory acmHistory = new AcmHistory();
 				acmHistory.setPersonId(personId);
 				acmHistory.setObjectId(addressHistory.getLocation().getId());
-				acmHistory.setObjectType("POSTAL_ADDRESS");
+				acmHistory.setObjectType(objectType);
 				acmHistory.setStartDate(addressHistory.getStartDate());
 				acmHistory.setEndDate(addressHistory.getEndDate());
 				
@@ -185,11 +221,18 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	
 	private CaseFileForm saveEmploymentHistory(CaseFileForm form)
 	{
+		String objectType = "ORGANIZATION";
 		Long personId = form.getSubject().getPersonId();
 		List<EmploymentHistory> employmentHistoryArray = form.getEmploymentHistory();
 		
 		if (personId != null && employmentHistoryArray != null && employmentHistoryArray.size() > 0)
 		{
+			String mode = getRequest().getParameter("mode");
+			if (mode != null && "edit".equals(mode))
+			{
+				getAcmHistoryDao().deleteByPersonIdAndObjectType(personId, objectType);
+			}
+			
 			for (EmploymentHistory employmentHistory : employmentHistoryArray)
 			{
 				AcmHistory acmHistory = new AcmHistory();
@@ -204,7 +247,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 					acmHistory.setPersonType(employmentHistory.getType());
 				}
 				
-				acmHistory.setObjectType("ORGANIZATION");
+				acmHistory.setObjectType(objectType);
 				acmHistory.setStartDate(employmentHistory.getStartDate());
 				acmHistory.setEndDate(employmentHistory.getEndDate());
 				
@@ -290,6 +333,14 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	public void setAcmHistoryDao(AcmHistoryDao acmHistoryDao) 
 	{
 		this.acmHistoryDao = acmHistoryDao;
+	}
+
+	public CaseFileDao getCaseFileDao() {
+		return caseFileDao;
+	}
+
+	public void setCaseFileDao(CaseFileDao caseFileDao) {
+		this.caseFileDao = caseFileDao;
 	}
 
 }
