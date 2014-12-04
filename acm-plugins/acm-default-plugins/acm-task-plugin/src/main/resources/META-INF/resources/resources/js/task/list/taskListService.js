@@ -142,9 +142,22 @@ TaskList.Service = {
             ,type: 'POST'
             ,success: function(response){
                 if (response.hasError) {
-                    //Profile.Controller.modelUploadedPicture(response);
                     Acm.Dialog.info(response.errorMsg);
                 } else {
+                    if(response!= null){
+                        var taskId = TaskList.getTaskId();
+                        var prevAttachmentsList = TaskList.cacheAttachments.get(taskId);
+                        for(var i = 0; i < response[0].files.length; i++){
+                            var attachment = {};
+                            attachment.id = response[0].files[i].id;
+                            attachment.name = response[0].files[i].name;
+                            attachment.status = response[0].files[i].status;
+                            attachment.creator = response[0].files[i].creator;
+                            attachment.created = response[0].files[i].created;
+                            prevAttachmentsList.push(attachment);
+                        }
+                        TaskList.cacheAttachments.put(taskId, prevAttachmentsList);
+                    }
                     TaskList.Object.refreshJTableAttachments();
                 }
             }

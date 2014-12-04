@@ -136,12 +136,14 @@ TaskList.JTable = {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var task = TaskList.getTask();
-                    if (task && task.childObjects) {
-                        for (var i = 0; i < task.childObjects.length; i++) {
-                            var childObject = task.childObjects[i];
+                    var taskId = TaskList.getTaskId();
+                    var attachmentsList = TaskList.cacheAttachments.get(taskId);
+                    if(attachmentsList){
+                        for (var i = 0; i < attachmentsList.length; i++) {
+                            var childObject = attachmentsList[i];
                             var record = {};
-                            record.id = Acm.goodValue(childObject.targetId, 0);
-                            record.title = Acm.goodValue(childObject.targetName);
+                            record.id = Acm.goodValue(childObject.id, 0);
+                            record.title = Acm.goodValue(childObject.name);
                             record.created = Acm.getDateFromDatetime(childObject.created);
                             record.creator = Acm.goodValue(childObject.creator);
                             record.status = Acm.goodValue(childObject.status);

@@ -8,6 +8,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Lookup.create)        {CaseFile.Model.Lookup.create();}
         if (CaseFile.Model.Tree.create)          {CaseFile.Model.Tree.create();}
         if (CaseFile.Model.List.create)          {CaseFile.Model.List.create();}
+        if (CaseFile.Model.Documents.create)     {CaseFile.Model.Documents.create();}
         if (CaseFile.Model.Detail.create)        {CaseFile.Model.Detail.create();}
         if (CaseFile.Model.Notes.create)         {CaseFile.Model.Notes.create();}
         if (CaseFile.Model.Tasks.create)         {CaseFile.Model.Tasks.create();}
@@ -26,6 +27,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Lookup.onInitialized)     {CaseFile.Model.Lookup.onInitialized();}
         if (CaseFile.Model.Tree.onInitialized)       {CaseFile.Model.Tree.onInitialized();}
         if (CaseFile.Model.List.onInitialized)       {CaseFile.Model.List.onInitialized();}
+        if (CaseFile.Model.Documents.onInitialized)  {CaseFile.Model.Documents.onInitialized();}
         if (CaseFile.Model.Detail.onInitialized)     {CaseFile.Model.Detail.onInitialized();}
         if (CaseFile.Model.Notes.onInitialized)      {CaseFile.Model.Notes.onInitialized();}
         if (CaseFile.Model.Tasks.onInitialized)      {CaseFile.Model.Tasks.onInitialized();}
@@ -230,7 +232,7 @@ CaseFile.Model = CaseFile.Model || {
                 }
 
 
-                participant = {};
+                var participant = {};
                 participant.participantType = "assignee";
                 participant.participantLdapId = assignee;
                 caseFile.participants.push(participant);
@@ -631,6 +633,13 @@ CaseFile.Model = CaseFile.Model || {
     ,Tasks: {
         create : function() {
             this.cacheTaskList = new Acm.Model.CacheFifo(4);
+        }
+        ,onInitialized: function() {
+        }
+    }
+    ,Documents: {
+        create : function() {
+            this.cacheDocuments = new Acm.Model.CacheFifo(4);
         }
         ,onInitialized: function() {
         }
