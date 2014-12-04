@@ -211,19 +211,6 @@ activate: function(event, data) {
 			},
 
         source: [{
-                title: "Access Controls",
-                folder: true,
-				expanded: "fancytree-expanded",
-                children: [{
-                    title: "Access Control Policy", 
-					href: "access.html"
-                }, {
-                    title: "Object locks",
-					href: "locks.html", 
-                    description1: "John Doe",
-                    description2: "Victim"
-                }]
-            }, {
                 title: "Dashboard",
                 folder: true,
 expanded: "fancytree-expanded",
@@ -238,6 +225,25 @@ expanded: "fancytree-expanded",
                  children: [{
                     title: "Reports Configuration", 
 					href: "reportsconfig.html"
+                }]
+            }, {
+                title: "Security",
+                folder: true,
+				expanded: "fancytree-expanded",
+                 children: [{
+                    title: "Access Control Policy", 
+					href: "access.html"
+                }, {
+                    title: "Functional Access Controls", 
+					href: "facconfig.html"
+                }, {
+                    title: "Role/Group Mapping", 
+					href: "roleconfig.html"
+                }, {
+                    title: "Object locks",
+					href: "locks.html", 
+                    description1: "John Doe",
+                    description2: "Victim"
                 }]
             }]
     });
