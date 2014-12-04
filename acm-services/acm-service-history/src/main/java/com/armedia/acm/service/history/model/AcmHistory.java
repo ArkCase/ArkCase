@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,6 +35,9 @@ public class AcmHistory implements Serializable, AcmEntity{
 	
 	@Column(name = "cm_history_person_id")
 	private Long personId;
+	
+	@Column(name = "cm_history_person_type")
+	private String personType;
 	
 	@Column(name = "cm_history_object_id")
 	private Long objectId;
@@ -73,6 +77,14 @@ public class AcmHistory implements Serializable, AcmEntity{
 
 	public Long getPersonId() {
 		return personId;
+	}
+
+	public String getPersonType() {
+		return personType;
+	}
+
+	public void setPersonType(String personType) {
+		this.personType = personType;
 	}
 
 	public void setPersonId(Long personId) {

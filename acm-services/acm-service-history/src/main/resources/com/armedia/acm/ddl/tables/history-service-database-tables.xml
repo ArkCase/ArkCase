@@ -44,4 +44,16 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
     </changeSet>
+    
+    <changeSet id="02-history-service-change-nullable-value-object-id" author="riste.tutureski">
+    	<dropNotNullConstraint tableName="acm_history" columnName="cm_history_object_id"/>
+    </changeSet>
+    
+    <changeSet id="03-history-service-add-person-type" author="riste.tutureski">
+    	<addColumn tableName="acm_history">
+    		<column name="cm_history_person_type" type="VARCHAR(1024)" afterColumn="cm_history_person_id" beforeColumn="cm_history_object_id">
+    			<constraints nullable="true"/>
+    		</column>
+    	</addColumn>
+    </changeSet>
 </databaseChangeLog>
