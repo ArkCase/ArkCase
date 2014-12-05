@@ -13,7 +13,12 @@
 
         <userTask id="approvalTasks" name="Approve Task"/>
 
-        <sequenceFlow id="approvalTasksToEnd" sourceRef="approvalTasks" targetRef="done" />
+        <sequenceFlow id="callSpringBean" sourceRef="approvalTasks" targetRef="springBean" />
+
+        <serviceTask id="springBean"
+                     activiti:expression="#{acmActivitiTaskEventListener.logMessage('Hello from Business Process', key)}"/>
+
+        <sequenceFlow id="toEnd" sourceRef="springBean" targetRef="done" />
 
         <endEvent id="done" />
 
