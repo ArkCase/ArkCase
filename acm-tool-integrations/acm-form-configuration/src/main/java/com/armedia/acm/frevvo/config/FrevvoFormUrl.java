@@ -144,6 +144,12 @@ public class FrevvoFormUrl implements FormUrl {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    @Override
+    public String enableFrevvoFormEngine(String formName) {
+        String enableFrevvoFormEngine = (String) properties.get(formName + ".enable.frevvo.form.engine");
+        return enableFrevvoFormEngine;
+    }
 	
 	
 

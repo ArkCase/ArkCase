@@ -9,9 +9,11 @@
     <div id="detailData" itemscope="true" style="display: none">
         <span itemprop="caseFileId">${caseId}</span>
         <span itemprop="token">${token}</span>
+        <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
         <span itemprop="urlRoiForm">${roiFormUrl}</span>
         <span itemprop="urlChangeCaseStatusForm">${changeCaseStatusFormUrl}</span>
         <span itemprop="urlEditChangeCaseStatusForm">${editChangeCaseStatusFormUrl}</span>
+        <span itemprop="enableFrevvoFormEngine">${enableFrevvoFormEngine}</span>
     </div>
 </jsp:attribute>
 
@@ -86,6 +88,7 @@
                                 <h3 class="m-b-xs text-black pull-left"><spring:message code="caseFile.page.descShort" text="Cases" /></h3>
                                 <div class="btn-group inline select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
+
                                     <ul class="dropdown-menu text-left text-sm">
                                         <li><a href="#">Sort Date Ascending</a></li>
                                         <li><a href="#">Sort Date Descending</a></li>
@@ -93,6 +96,7 @@
                                         <li><a href="#">Sort Case ID Ascending</a></li>
                                     </ul>
                                 </div>
+
                                 <div class="btn-group select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
                                     <ul class="dropdown-menu text-left text-sm">
@@ -173,6 +177,7 @@
                                 <div class="wrapper" id="tabTitle" style="display:none;">
                                     <div class="pull-right inline">
                                         <div class="btn-group">
+                                        	<button class="btn btn-default btn-sm" data-title="Edit Case File"><i class="fa fa-archive"></i> Edit</button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Change Case Status"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
                                             <button class="btn btn-default btn-sm" data-title="Change Case Status" style="display: none" ><i class="fa fa-archive"></i> Change Case Status</button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Consolidate Case"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>--%>
@@ -258,6 +263,11 @@
                                 <div class="col-md-12" id="tabDocs" style="display:none;">
                                     <section class="panel b-a ">
                                         <div id="divDocs" style="width:100%"></div>
+                                        <form id="formAddDocument" style="display:none;">
+                                                <%--<input type="file" id="file" name="file">--%>
+                                            <input id="addDocument" type="file" name="files[]" multiple/>
+                                                <%--<input type="submit">--%>
+                                        </form>
                                     </section>
                                 </div>
 

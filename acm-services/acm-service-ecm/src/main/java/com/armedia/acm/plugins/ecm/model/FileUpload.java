@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.ecm.model;
 
 
+import java.util.Date;
+
 public class FileUpload
 {
     private String name;
@@ -10,6 +12,44 @@ public class FileUpload
     private String deleteUrl;
     private String deleteType = "DELETE";
     private String error;
+
+    private String creator;
+    private Date created;
+    private String status;
+    private long id;
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
 
     public String getName()
     {

@@ -74,6 +74,35 @@ public class AuditDao
 
         return count.intValue();
     }
+    
+    public List<AuditEvent> findPage(int startRow, int maxRows, String sortBy, String sort)
+    {
+        String queryText =
+                "SELECT ae " +
+                        "FROM   AuditEvent ae " +
+                        "ORDER BY ae." + sortBy + " " + sort;
+        Query query = getEm().createQuery(queryText);
+        query.setFirstResult(startRow);
+        query.setMaxResults(maxRows);
+        
+        List<AuditEvent> results = query.getResultList();
+        
+        return results;
+
+    }
+    
+    public int count()
+    {
+        String queryText =
+                "SELECT COUNT(ae.fullEventType) " +
+                        "FROM   AuditEvent ae ";
+        Query query = getEm().createQuery(queryText);
+
+
+        Long count = (Long) query.getSingleResult();
+
+        return count.intValue();
+    }
 
     public EntityManager getEm() {
         return em;

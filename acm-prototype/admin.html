@@ -15,7 +15,6 @@
     <script src="js/ie/respond.min.js"></script>
     <script src="js/ie/excanvas.js"></script>
   <![endif]-->
-
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="resources/js/fancytree/jquery.fancytree.js"></script>
@@ -134,24 +133,7 @@
                       <h3><i class="fa fa-long-arrow-left"></i> Configure settings in the application.</h3>
                     </section>
                   </section>
-                  <footer class="footer bg-white b-t">
-                    <div class="row text-center-xs">
-                      <div class="col-md-6 hidden-sm">
-                        <p class="text-muted m-t">Showing 20-30 of 50</p>
-                      </div>
-                      <div class="col-md-6 col-sm-12 text-right text-center-xs">
-                        <ul class="pagination pagination-sm m-t-sm m-b-none">
-                          <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                          <li class="active"><a href="#">1</a></li>
-                          <li><a href="#">2</a></li>
-                          <li><a href="#">3</a></li>
-                          <li><a href="#">4</a></li>
-                          <li><a href="#">5</a></li>
-                          <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </footer>
+                  <footer class="footer bg-white b-t"></footer>
                 </section>
               </aside>
             </section>
@@ -178,19 +160,6 @@ activate: function(event, data) {
 			},
 
         source: [{
-                title: "Access Controls",
-                folder: true,
-				expanded: "fancytree-expanded",
-                children: [{
-                    title: "Access Control Policy", 
-					href: "access.html"
-                }, {
-                    title: "Object locks",
-					href: "locks.html", 
-                    description1: "John Doe",
-                    description2: "Victim"
-                }]
-            }, {
                 title: "Dashboard",
                 folder: true,
 expanded: "fancytree-expanded",
@@ -205,6 +174,25 @@ expanded: "fancytree-expanded",
                  children: [{
                     title: "Reports Configuration", 
 					href: "reportsconfig.html"
+                }]
+            }, {
+                title: "Security",
+                folder: true,
+				expanded: "fancytree-expanded",
+                 children: [{
+                    title: "Access Control Policy", 
+					href: "access.html"
+                }, {
+                    title: "Functional Access Controls", 
+					href: "facconfig.html"
+                }, {
+                    title: "Role/Group Mapping", 
+					href: "roleconfig.html"
+                }, {
+                    title: "Object locks",
+					href: "locks.html", 
+                    description1: "John Doe",
+                    description2: "Victim"
                 }]
             }]
     });

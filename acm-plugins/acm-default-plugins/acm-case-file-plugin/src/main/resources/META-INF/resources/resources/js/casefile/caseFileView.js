@@ -40,7 +40,9 @@ CaseFile.View = CaseFile.View || {
             
             this.formUrls = new Object();
             
+            this.formUrls["edit_case_file"] = items.properties("urlEditCaseFileForm").itemValue();
             this.formUrls["roi"] = items.properties("urlRoiForm").itemValue();
+            this.formUrls["enable_frevvo_form_engine"] = items.properties("enableFrevvoFormEngine").itemValue();
             this.formUrls["change_case_status"] = items.properties("urlChangeCaseStatusForm").itemValue();
             this.formUrls["edit_change_case_status"] = items.properties("urlEditChangeCaseStatusForm").itemValue();
         }
@@ -380,8 +382,10 @@ CaseFile.View = CaseFile.View || {
             this.$dlgChangeCaseStatus   = $("#changeCaseStatus");
             this.$dlgConsolidateCase    = $("#consolidateCase");
             this.$edtConsolidateCase    = $("#edtConsolidateCase");
+            this.$btnEditCaseFile    	= $("#tabTitle button[data-title='Edit Case File']");
             this.$btnChangeCaseStatus   = $("#tabTitle button[data-title='Change Case Status']");
             this.$btnConsolidateCase    = $("#tabTitle button[data-title='Consolidate Case']");
+            this.$btnEditCaseFile   	.on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
             this.$btnChangeCaseStatus   .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
             this.$btnConsolidateCase    .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
 
@@ -391,6 +395,43 @@ CaseFile.View = CaseFile.View || {
         ,onInitialized: function() {
         }
 
+        ,onClickBtnEditCaseFile: function() {
+        	var urlEditCaseFileForm = CaseFile.View.MicroData.getFormUrls()['edit_case_file'];
+        	var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+            var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (Acm.isNotEmpty(urlEditCaseFileForm) && Acm.isNotEmpty(c)) {
+            	var xmlId = '';
+            	var pdfId = '';
+            	if (Acm.isNotEmpty(c.childObjects) && c.childObjects.length > 0) {
+            		for (var i = 0; i < c.childObjects.length; i++) {
+            			var child = c.childObjects[i];
+            			
+            			if (child.targetType != null && child.targetType == 'FILE' && 
+            			    child.targetName != null && child.targetName.indexOf('form_case_file_') == 0 &&
+            			    child.targetName.substr(-4) == '.xml') 
+            			{
+            				xmlId = child.targetId;
+            			}
+            			
+            			if (child.targetType != null && child.targetType == 'FILE' && 
+            				child.targetName != null && child.targetName.indexOf('Case_File_') == 0&&
+            			    child.targetName.substr(-4) == '.pdf') 
+            			{
+            				pdfId = child.targetId;
+            			}
+            		}
+            	}
+            	
+            	urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
+            	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',xmlId:'" + xmlId + "',pdfId:'" + pdfId + "',");
+            	Acm.Dialog.openWindow(urlEditCaseFileForm, "", 860, 700
+                    ,function() {
+                        CaseFile.Controller.viewChangedCaseFile(caseFileId);
+                    }
+                );
+            }
+        }
+        
         ,onClickBtnChangeCaseStatus: function() {
             CaseFile.View.Action.showDlgChangeCaseStatus(function(event, ctrl){
                 var urlChangeCaseStatusForm = CaseFile.View.MicroData.getFormUrls()['change_case_status'];
@@ -1930,24 +1971,51 @@ CaseFile.View = CaseFile.View || {
 
     ,Documents: {
         create: function() {
+            //for cases frevvo form is disabled in the properties file
+            this.$formAddDocument = $("#formAddDocument");
+            this.$btnAddDocument = $("#addDocument")
+            this.$btnAddDocument.on("change", function(e) {CaseFile.View.Documents.onChangeFileInput(e, this);});
+            this.$formAddDocument.submit(function(e) {CaseFile.View.Documents.onSubmitAddDocument(e, this);});
+
             this.$divDocuments    = $("#divDocs");
             this.createJTableDocuments(this.$divDocuments);
             AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments, CaseFile.View.Documents.onClickSpanAddDocument);
             this.$spanAddDocument = this.$divDocuments.find(".jtable-toolbar-item-add-record");
             CaseFile.View.Documents.fillReportSelection();
 
+
+
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLOSED_CASE_FILE        ,this.onViewClosedCaseFile);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
+
+
         }
         ,onInitialized: function() {
         }
 
+        ,onChangeFileInput: function(event, ctrl) {
+            CaseFile.View.Documents.$formAddDocument.submit();
+        }
+        ,onSubmitAddDocument: function(event, ctrl) {
+            event.preventDefault();
+            var count = CaseFile.View.Documents.$btnAddDocument[0].files.length;
+            var fd = new FormData();
+            fd.append("caseFileId", CaseFile.Model.getCaseFileId());
+            for(var i = 0; i < count; i++ ){
+                fd.append("files[]", CaseFile.View.Documents.$btnAddDocument[0].files[i]);
+            }
+            CaseFile.Service.Documents.uploadDocument(fd);
+        }
+        ,onModelAddedDocument: function(caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+        }
         ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
                 //empty table?
             } else {
+
                 AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
             }
         }
@@ -1961,36 +2029,48 @@ CaseFile.View = CaseFile.View || {
             AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
         }
 
+
         ,onClickSpanAddDocument: function(event, ctrl) {
-            var report = CaseFile.View.Documents.getSelectReport();
-            var token = CaseFile.View.MicroData.getToken();
+            var enableFrevvoFormEngine = CaseFile.View.MicroData.getFormUrls()['enable_frevvo_form_engine'];
+            if(enableFrevvoFormEngine == "true"){
+                var report = CaseFile.View.Documents.getSelectReport();
+                var token = CaseFile.View.MicroData.getToken();
 
-            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
-            if (caseFile) {
-                var url = CaseFile.View.MicroData.getFormUrls()[report];
-                if (Acm.isNotEmpty(url)) {
-                    url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
-                        + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
-                        + "',caseTitle:'" + Acm.goodValue(caseFile.title)
-                        + "',");
+                var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+                if (caseFile) {
+                    var url = CaseFile.View.MicroData.getFormUrls()[report];
+                    if (Acm.isNotEmpty(url)) {
+                        url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
+                            + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
+                            + "',caseTitle:'" + Acm.goodValue(caseFile.title)
+                            + "',");
 
-                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30
-                        ,function() {
-                            CaseFile.Controller.viewAddedDocument(caseFileId);
-                        }
-                    );
+                        Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30
+                            ,function() {
+                                CaseFile.Controller.viewAddedDocument(caseFileId);
+                            }
+                        );
+                    }
                 }
             }
-
+            else{
+                CaseFile.View.Documents.$btnAddDocument.click();
+            }
         }
+/*html+= "<form id='formFiles' style='display:none;'>"
+    + "<input id='newAttachment' type='file' name='files[]' multiple/>"
+    + "</form>"*/
 
         ,fillReportSelection: function() {
             var html = "<span>"
-                + "<select class='input-sm form-control input-s-sm inline v-middle'>"
+                + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
                 + "<option value='roi'>Report of Investigation</option>"
+                + "<option value='roi'>Medical Release</option>"
+                + "<option value='roi'>General Release</option>"
                 + "</select>"
                 + "</span>";
+
 
             this.$spanAddDocument.before(html);
         }
@@ -2013,8 +2093,24 @@ CaseFile.View = CaseFile.View || {
                         }
 
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
-                        var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
-                        if (c && Acm.isArray(c.childObjects)) {
+                        //var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
+                        var documents = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
+
+                        if(Acm.isArray(documents)){
+                            for (var i = 0; i < documents.length; i++) {
+                                var childObject = documents[i];
+                                if (Acm.compare("FILE", childObject.targetType)) {
+                                    var record = {};
+                                    record.id = Acm.goodValue(childObject.id, 0);
+                                    record.title = Acm.goodValue(childObject.name);
+                                    record.created = Acm.getDateFromDatetime(childObject.created);
+                                    record.creator = Acm.goodValue(childObject.creator);
+                                    record.status = Acm.goodValue(childObject.status);
+                                    rc.Records.push(record);
+                                }
+                            }
+                        }
+                        /*if (c && Acm.isArray(c.childObjects)) {
                             for (var i = 0; i < c.childObjects.length; i++) {
                                 var childObject = c.childObjects[i];
                                 if (Acm.compare("FILE", childObject.targetType)) {
@@ -2028,7 +2124,7 @@ CaseFile.View = CaseFile.View || {
                                 }
                             }
                             rc.TotalRecordCount = rc.Records.length;
-                        }
+                        }*/
                         return rc;
 
 //for test
@@ -2069,7 +2165,7 @@ CaseFile.View = CaseFile.View || {
                     }
                     ,title: {
                         title: 'Title'
-                        ,width: '10%'
+                        ,width: '30%'
                         ,display: function (commData) {
                             var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
                                 + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -2089,7 +2185,7 @@ CaseFile.View = CaseFile.View || {
                     }
                     ,status: {
                         title: 'Status'
-                        ,width: '30%'
+                        ,width: '10%'
                     }
                 }
                 ,recordUpdated : function (event, data) {

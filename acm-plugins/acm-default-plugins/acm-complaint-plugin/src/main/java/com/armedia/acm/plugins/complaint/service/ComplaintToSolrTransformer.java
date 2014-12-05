@@ -47,6 +47,8 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
 
+        solr.setDueDate_tdt(in.getDueDate());
+
         solr.setIncident_date_tdt(in.getIncidentDate());
         solr.setPriority_lcs(in.getPriority());
         solr.setIncident_type_lcs(in.getComplaintType());

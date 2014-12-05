@@ -193,6 +193,24 @@ CaseFile.Service = {
                             }
                             CaseFile.Model.Detail.cacheCaseFile.put(caseFileId, caseFile);
 
+                            // save list of childObjects also in the cache for easier handling
+                            if(caseFile.childObjects){
+                                var caseFileId = CaseFile.Model.getCaseFileId();
+                                var documents = [];
+                                for (var i = 0; i < caseFile.childObjects.length; i++) {
+                                    var childObject = caseFile.childObjects[i];
+                                    var document = {};
+                                    document.id = childObject.targetId;
+                                    document.name = childObject.targetName;
+                                    document.created = childObject.created;
+                                    document.creator = childObject.creator;
+                                    document.status = childObject.status;
+                                    document.targetType = childObject.targetType;
+                                    documents.push(document);
+                                }
+                                CaseFile.Model.Documents.cacheDocuments.put(caseFileId, documents);
+                            }
+
                             var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
                             if (0 < treeInfo.caseFileId) {      //handle single caseFil situation
                                 treeInfo.total = 1;
@@ -1084,6 +1102,59 @@ CaseFile.Service = {
         }
 
         ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
+        ,API_UPLOAD_DOCUMENT: "/api/latest/plugin/casefile/file"
+
+        ,_validateUploadInfo: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.files)) {
+                return false;
+            }
+            if (!Acm.isArray(data.files)) {
+                return false;
+            }
+            if (0 >= data.files.length) {
+                return false;
+            }
+            return true;
+        }
+        ,uploadDocument: function(formData) {
+            var url = App.getContextPath() + this.API_UPLOAD_DOCUMENT;
+            Acm.Service.ajax({
+                url: url
+                ,data: formData
+                ,processData: false
+                ,contentType: false
+                ,type: 'POST'
+                ,success: function(response){
+                    if (response.hasError) {
+                        CaseFile.Controller.modelAddedDocument(response);
+                    } else {
+                        if (CaseFile.Service.Documents._validateUploadInfo(response)) {
+                            if(response!= null){
+                                var uploadInfo = response;
+                                var caseFileId = CaseFile.Model.getCaseFileId();
+                                var prevAttachmentsList = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
+                                for(var i = 0; i < response.files.length; i++){
+                                    var attachment = {};
+                                    attachment.id = response.files[i].id;
+                                    attachment.name = response.files[i].name;
+                                    attachment.status = response.files[i].status;
+                                    attachment.creator = response.files[i].creator;
+                                    attachment.created = response.files[i].created;
+                                    attachment.targetType = "FILE";
+                                    prevAttachmentsList.push(attachment);
+                                }
+                                CaseFile.Model.Documents.cacheDocuments.put(caseFileId, prevAttachmentsList);
+                                CaseFile.Controller.modelAddedDocument(uploadInfo);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
     }
 
     ,Notes: {

@@ -79,6 +79,7 @@ public class AddFileToTaskAPIController
             //for multiple files
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
             MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
+            getUploadedFilesJSON().clear();
 
             if ( attachments != null )
             {
@@ -92,12 +93,9 @@ public class AddFileToTaskAPIController
                         {
                             ResponseEntity<? extends Object> temp = getEcmFileService().upload(uploadFileType, attachment, acceptType, contextPath, authentication, folderId,
                                     objectType, objectId, objectName);
-                            getUploadedFiles().add(temp);
+                            getUploadedFilesJSON().add(temp.getBody());
                         }
                     }
-                }
-                for(ResponseEntity<? extends Object> uploadedFiles : getUploadedFiles()){
-                    getUploadedFilesJSON().add(uploadedFiles.getBody());
                 }
             }
             return new ResponseEntity<Object>(getUploadedFilesJSON(), HttpStatus.OK);

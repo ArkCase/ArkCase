@@ -14,7 +14,6 @@
     <description>Collection of war files (law enforcement, inspector general...)</description>
     <modules>
         <module>acm-law-enforcement</module>
-        <module>acm-personnel-security</module>
     </modules>
 
 
