@@ -29,6 +29,7 @@ public class ProfileDTO {
     private String email;
     private String pictureUrl;
     private Long ecmFileId;
+    private String title;
 
     private List<String> groups;
 
@@ -190,5 +191,13 @@ public class ProfileDTO {
 
     public void setGroups(List<String> groups) {
         this.groups = groups;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

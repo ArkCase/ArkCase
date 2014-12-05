@@ -98,5 +98,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="06-add-title-field" author="marst">
+        <addColumn tableName="acm_user_org">
+            <column name="cm_title"  type="VARCHAR(1024)"></column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
