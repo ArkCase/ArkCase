@@ -22,6 +22,11 @@
           class="com.armedia.acm.services.search.web.api.PersonSearchByNameAndContactMethodAPIController">
         <property name="muleClient" ref="muleClient"/>
     </bean>
+    
+    <bean id="searchUsersAPIController"
+          class="com.armedia.acm.services.search.web.api.SearchUsersAPIController">
+        <property name="muleClient" ref="muleClient"/>
+    </bean>
 
     <bean id="complaintsSearchByAssignedUserAPIController" class="com.armedia.acm.services.search.web.api.ComplaintsSearchByAssignedUserAPIController">
         <property name="muleClient" ref="muleClient"/>

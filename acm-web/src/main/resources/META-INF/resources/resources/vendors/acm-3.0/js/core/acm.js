@@ -9,11 +9,8 @@ var Acm = Acm || {
         Acm.Dispatcher.create();
         Acm.Ajax.create();
         Acm.Object.create();
-        Acm.Event.create();
-        Acm.Rule.create();
+        Acm.Validator.create();
         Acm.Model.create();
-
-        Acm.deferred(Acm.Event.onPostInit);
     }
 
 	,isEmpty: function (val) {
@@ -54,7 +51,7 @@ var Acm = Acm || {
         }
         return false;
     }
-    ,equals: function(left, right) {
+    ,compare: function(left, right) {  //equals() name is taken, so use compare()
         if (Acm.isEmpty(left)) {
             return Acm.isEmpty(right);
         }
@@ -395,6 +392,8 @@ var Acm = Acm || {
             return -1;
         }
         ,triggerEvent: function() {
+            //console.log("triggerEvent, this._listenerCount=" + this._listenerCount);
+
             //need to loop backwards because of possible item removed while looping
             for (var i = this._listenerCount - 1; 0 <= i; i--) {
                 var listener = this._listeners[i];

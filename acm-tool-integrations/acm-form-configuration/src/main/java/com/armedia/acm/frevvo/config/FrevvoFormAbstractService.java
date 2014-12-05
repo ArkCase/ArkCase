@@ -7,6 +7,7 @@ package com.armedia.acm.frevvo.config;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +24,10 @@ import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.commons.io.IOUtils;
+import org.mule.api.MuleMessage;
+import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -35,7 +40,9 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.file.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 
 /**
  * @author riste.tutureski
@@ -50,11 +57,43 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	private Authentication authentication;
 	private AuthenticationTokenService authenticationTokenService;
 	private UserDao userDao;
+	private UserActionDao userActionDao;
 	private EcmFileService ecmFileService;
     private String servletContextPath;
     private String userIpAddress;
     private EcmFileDao ecmFileDao;
+    private AcmUserActionExecutor userActionExecutor;
+    private MuleClient muleClient;
 
+    @Override
+	public Object init() {
+		Object result = "";
+		
+		String mode = getRequest().getParameter("mode");
+		String xmlId = getRequest().getParameter("xmlId");
+		
+		if ("edit".equals(mode) && null != xmlId && !"".equals(xmlId))
+		{
+			try{
+				Long id = Long.parseLong(xmlId);
+				EcmFile file = getEcmFileDao().find(id);
+				
+				MuleMessage message = getMuleClient().send("vm://downloadFileFlow.in", file.getEcmFileId(), null);
+				
+				if (null != message && message.getPayload() instanceof ContentStream)
+				{
+					result = getContent((ContentStream) message.getPayload());
+				}
+				
+			}
+			catch(Exception e)
+			{
+				LOG.warn("EcmFile with id=" + xmlId + " is not found while edit mode. Empty Frevvo form will be shown.");
+			}
+		}
+		
+		return result;
+	}
 
 	@Override
 	public Map<String, Object> getProperties() {
@@ -105,6 +144,16 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	@Override
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
+	}
+	
+	@Override
+	public UserActionDao getUserActionDao() {
+		return userActionDao;
+	}
+
+	@Override
+	public void setUserActionDao(UserActionDao userActionDao) {
+		this.userActionDao = userActionDao;
 	}
 	
 	@Override
@@ -334,6 +383,40 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		
 		return null;
 	}
+	
+	private String getContent(ContentStream contentStream)
+	{
+		String content = "";
+		InputStream inputStream = null;
+		
+		try
+        {
+			inputStream = contentStream.getStream();
+			StringWriter writer = new StringWriter();
+			IOUtils.copy(inputStream, writer);
+			content = writer.toString();
+        } 
+		catch (IOException e) 
+		{
+        	LOG.error("Could not copy input stream to the writer: " + e.getMessage(), e);
+		}
+		finally
+        {
+            if ( inputStream != null )
+            {
+                try
+                {
+                	inputStream.close();
+                }
+                catch (IOException e)
+                {
+                    LOG.error("Could not close CMIS content stream: " + e.getMessage(), e);
+                }
+            }
+        }
+		
+		return content;
+	}
 
     @Override
     public String getUserIpAddress()
@@ -360,4 +443,27 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	public void setEcmFileDao(EcmFileDao ecmFileDao) {
 		this.ecmFileDao = ecmFileDao;
 	}
+
+	/**
+	 * @return the userActionExecutor
+	 */
+	public AcmUserActionExecutor getUserActionExecutor() {
+		return userActionExecutor;
+	}
+
+	/**
+	 * @param userActionExecutor the userActionExecutor to set
+	 */
+	public void setUserActionExecutor(AcmUserActionExecutor userActionExecutor) {
+		this.userActionExecutor = userActionExecutor;
+	}
+
+	public MuleClient getMuleClient() {
+		return muleClient;
+	}
+
+	public void setMuleClient(MuleClient muleClient) {
+		this.muleClient = muleClient;
+	}	
+	
 }

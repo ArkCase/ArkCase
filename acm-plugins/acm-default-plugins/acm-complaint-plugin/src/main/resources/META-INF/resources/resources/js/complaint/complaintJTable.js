@@ -60,8 +60,6 @@ Complaint.JTable = {
 
 
     ,_createJTable4SubTable: function($s, arg) {
-        //return;
-
         var argNew = {fields:{}};
         argNew.fields.subTables = {
             title: 'Entities'
@@ -2143,8 +2141,8 @@ Complaint.JTable = {
                                             Record.id = response.docs[i].object_id_s;
                                             Record.title = Acm.goodValue(response.docs[i].name); //title_t ?
                                             Record.created = Acm.getDateFromDatetime(response.docs[i].create_dt);
-                                            Record.priority = "[priority]";
-                                            Record.dueDate = "[due]";
+                                            Record.priority = response.docs[i].priority_s;
+                                            Record.dueDate = Acm.getDateFromDatetime(response.docs[i].due_dt);
                                             Record.status = Acm.goodValue(response.docs[i].status_s);
                                             Record.assignee = response.docs[i].assignee_s;
                                             rc.jtData.Records.push(Record);
@@ -2178,15 +2176,22 @@ Complaint.JTable = {
                         ,create: false
                         ,edit: false
                         ,sorting: false
+                        ,width: '5%'
                     }
                     ,title: {
                         title: 'Title'
                         ,width: '30%'
                         ,sorting: false
+                        ,display: function (commData) {
+                            var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
+                                + ((0 >= commData.record.id)? "#" : commData.record.id)
+                                + "'>" + commData.record.title + "</a>";
+                            return $(a);
+                        }
                     }
                     ,created: {
                         title: 'Created'
-                        ,width: '15%'
+                        ,width: '10%'
                         ,sorting: false
                     }
                     ,priority: {
@@ -2196,7 +2201,12 @@ Complaint.JTable = {
                     }
                     ,dueDate: {
                         title: 'Due'
-                        ,width: '15%'
+                        ,width: '10%'
+                        ,sorting: true
+                    }
+                    ,assignee: {
+                        title: 'Assignee'
+                        ,width: '10%'
                         ,sorting: true
                     }
                     ,status: {
@@ -2206,7 +2216,7 @@ Complaint.JTable = {
                     }
                     ,description: {
                         title: 'Action'
-                        ,width: '10%'
+                        ,width: '5%'
                         ,sorting: false
                         ,edit: false
                         ,create: false

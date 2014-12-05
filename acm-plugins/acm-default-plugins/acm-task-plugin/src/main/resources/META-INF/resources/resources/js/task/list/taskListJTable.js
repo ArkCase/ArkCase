@@ -50,9 +50,18 @@ TaskList.JTable = {
             ,toolbar: {
                 items: [{
                     //icon: 'jtable-edit-command-button',
+                	cssClass: 'editCloseComplaint',
                     text: 'Edit Close Complaint Request',
                     click: function () {
                         TaskList.Event.onEditCloseComplaint();
+                    }
+                },
+                {
+                    //icon: 'jtable-edit-command-button',
+                	cssClass: 'changeCaseStatus',
+                    text: 'Change Case Status',
+                    click: function () {
+                        TaskList.Event.onChangeCaseStatus();
                     }
                 }]
             }
@@ -127,34 +136,39 @@ TaskList.JTable = {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var task = TaskList.getTask();
-                    if (task && task.documentUnderReview != null) {
-                        var documentUnderReview = task.documentUnderReview;
-                        var record = {};
-                        record.id = Acm.goodValue(documentUnderReview.fileId, 0);
-                        record.title = Acm.goodValue(documentUnderReview.fileName);
-                        record.created = Acm.getDateFromDatetime(documentUnderReview.created);
-                        record.creator = Acm.goodValue(documentUnderReview.creator);
-                        record.status = Acm.goodValue(documentUnderReview.parentObjects[0].status);
-                        rc.Records.push(record);
+                    var taskId = TaskList.getTaskId();
+                    var attachmentsList = TaskList.cacheAttachments.get(taskId);
+                    if(attachmentsList){
+                        for (var i = 0; i < attachmentsList.length; i++) {
+                            var childObject = attachmentsList[i];
+                            var record = {};
+                            record.id = Acm.goodValue(childObject.id, 0);
+                            record.title = Acm.goodValue(childObject.name);
+                            record.created = Acm.getDateFromDatetime(childObject.created);
+                            record.creator = Acm.goodValue(childObject.creator);
+                            record.status = Acm.goodValue(childObject.status);
+                            rc.Records.push(record);
+                        }
                     }
                     return rc;
                 }
-                ,createAction: function(postData, jtParams) {
-                    //custom web form creation takes over; this action should never be called
-                    var rc = {"Result": "OK", "Record": {id:0, title:"", type:"", created:"", author:"", status:""}};
-                    return rc;
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
                 }
-                /*,updateAction: function(postData, jtParams) {
-                 var record = Acm.urlToJson(postData);
-                 var rc = AcmEx.Object.jTableGetEmptyRecord();
-                 //id,created,creator is readonly
-                 //rc.Record.id = record.id;
-                 //rc.Record.created = record.created;
-                 //rc.Record.creator = record.creator;
-                 rc.Record.title = record.title;
-                 rc.Record.status = record.status;
-                 return rc;
-                 }*/
+            }
+            ,toolbar: {
+                items: [{
+                    //icon: 'jtable-edit-command-button',
+
+                    cssClass: 'newAttachment',
+                    text: 'New Attachment',
+                    click: function () {
+                        TaskList.Object.$btnNewAttachment.click();
+                        //TaskList.Object.$formAttachment.submit(function(e) {TaskList.Event.onAddNewAttachment(e, this);});
+                    }
+                }]
             }
             ,fields: {
                 id: {
@@ -166,7 +180,7 @@ TaskList.JTable = {
                 }
                 ,title: {
                     title: 'Title'
-                    ,width: '10%'
+                    ,width: '30%'
                     ,display: function (commData) {
                         var a = "<a href='" + App.getContextPath() + TaskList.Service.API_DOWNLOAD_DOCUMENT
                             + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -179,33 +193,24 @@ TaskList.JTable = {
                     ,width: '15%'
                     ,edit: false
                 }
-                ,author: {
+                ,creator: {
                     title: 'Author'
                     ,width: '15%'
                     ,edit: false
                 }
                 ,status: {
                     title: 'Status'
-                    ,width: '30%'
+                    ,width: '10%'
                 }
             }
-            /*,recordUpdated : function (event, data) {
+            /*,recordDeleted : function (event, data) {
              var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-             var record = data.record;
-             var task = TaskList.getTask();
-             if (task) {
-             if (task.childObjeccts) {
-             if (0 < task.childObjects.length && whichRow < task.childObjects.length) {
-             var childObject = task.childObjects[whichRow];
-             //id,created,creator is readonly
-             //childObject.Record.id = record.id;
-             //childObject.Record.created = record.created;
-             //childObject.Record.creator = record.creator;
-             childObject.Record.title = record.title;
-             childObject.Record.status = record.status;
-
-             TaskList.Service.listTaskSaveDetail(task.taskId,task);
-             }
+             var taskId = TaskList.getTaskId();
+             if (taskId) {
+             var attachments = TaskList.cacheAttachments.get(taskId);
+             if (attachments) {
+             attachments.splice(whichRow, 1);
+             TaskList.Object.refreshJTableAttachments();
              }
              }
              }*/
@@ -460,45 +465,62 @@ TaskList.JTable = {
         AcmEx.Object.jTableCreatePaging($s
             , {
                 title: 'Event Log'
+                ,sorting: "true"
                 ,actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
-                        /*var c = CaseFile.getCaseFile();
-                        if(c){
-                            var jtData=null;
-                            jtData = AcmEx.Object.jTableGetEmptyRecords();
-                            var caseEvents = CaseFile.cacheCaseEvents.get(c.id);
-                            if (caseEvents) {
-                                jtData = CaseFile.JTable._makeEventRecords(caseEvents);
-                                jtData.TotalRecordCount = caseEvents.length;
-                                return jtData;
+                        var taskId = TaskList.getTaskId();
+                        var taskEvents = TaskList.cacheTaskEvents.get(taskId);
+                        //var err = "";
+                        var jtData = AcmEx.Object.jTableGetEmptyRecords();
+                        if (taskEvents && taskEvents.resultPage) {
+                            var resultPage = taskEvents.resultPage;
+                            for (var i = 0; i < resultPage.length; i++) {
+                                var Record = {};
+                                Record.eventType = resultPage[i].eventType;
+                                Record.eventDate = Acm.getDateFromDatetime(resultPage[i].eventDate);
+                                Record.userId = resultPage[i].userId;
+                                jtData.Records.push(Record);
                             }
-                            var caseId = c.id;
-                            return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
-                                , function () {
-                                    var url;
-                                    url = App.getContextPath() + CaseFile.Service.API_EVENTS_CASE_+ caseId;
-                                    return url;
-                                }
-                                , function (caseEvents) {
-                                    var err = "Error";
-                                    if (caseEvents) {
-                                        jtData = CaseFile.JTable._makeEventRecords(caseEvents);
-                                        CaseFile.cacheCaseEvents.put(caseId, caseEvents);
-                                        jtData.TotalRecordCount = caseEvents.length;
-                                    }
-                                    else {
-                                        if (Acm.isNotEmpty(caseEvents.error)) {
-                                            err = caseEvents.error.msg + "(" + caseEvents.error.code + ")";
-                                        }
-                                    }
-                                    return {jtData: jtData, jtError: err};
-                                }
-                            );
+                            jtData.TotalRecordCount = taskEvents.totalCount;
+                            //return {jtData: jtData, jtError: err};
+                            return jtData;
                         }
-                        else{*/
-                            var rc = AcmEx.Object.jTableGetEmptyRecords();
-                            return rc;
-                        //}
+                        return AcmEx.Object.jTableDefaultPagingListAction(postData, jtParams, sortMap
+                            , function () {
+                                var taskId = TaskList.getTaskId();
+                                var url;
+                                url = App.getContextPath() + TaskList.Service.API_TASK_EVENTS + taskId;
+                                return url;
+                            }
+                            , function (data) {
+                                var jtData = null;
+                                var err = "Error";
+                                jtData = AcmEx.Object.jTableGetEmptyRecords();
+                                if (data) {
+                                    var resultPage = data.resultPage;
+                                    for (var i = 0; i < resultPage.length; i++) {
+                                        var Record = {};
+                                        /*if(!(resultPage[i].eventType == ('searchResult') || resultPage[i].eventType == ('result') ||
+                                            resultPage[i].eventType == ('findById'))){*/
+                                            Record.eventType = resultPage[i].eventType;
+                                            Record.eventDate = Acm.getDateFromDatetime(resultPage[i].eventDate);
+                                            Record.userId = resultPage[i].userId;
+                                            jtData.Records.push(Record);
+                                        //}
+                                    }
+                                    TaskList.cacheTaskEvents.put(taskId, taskEvents);
+                                    //jtData.TotalRecordCount = data.totalCount;
+                                    jtData.TotalRecordCount = jtData.Records.length;
+                                }
+                                else {
+                                    if (Acm.isNotEmpty(data.hasError)) {
+                                        err = data.errorMsg;
+                                    }
+                                }
+                                return {jtData: jtData, jtError: err};
+                            }
+                        );
+
                     }
                 }
                 , fields: {
@@ -513,6 +535,7 @@ TaskList.JTable = {
                     }
                 }//end field
             }
+
             //end arg
             //,sortMap
         );

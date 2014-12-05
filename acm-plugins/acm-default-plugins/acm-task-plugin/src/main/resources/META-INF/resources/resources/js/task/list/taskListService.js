@@ -18,11 +18,15 @@ TaskList.Service = {
     ,API_FIND_BYTASKBYID_TASK_SIGNATURE : "/api/latest/plugin/signature/find/"
     ,API_SAVE_DETAIL       				: "/api/latest/plugin/task/save/"
     ,API_RETRIEVE_COMPLAINT_DETAIL        : "/api/latest/plugin/complaint/byId/"
+    ,API_RETRIEVE_CASE_DETAIL        : "/api/latest/plugin/casefile/byId/"
     ,API_SAVE_NOTE               : "/api/latest/plugin/note"
     ,API_DELETE_NOTE             : "/api/latest/plugin/note/"
     ,API_LIST_NOTES              : "/api/latest/plugin/note/"
     ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
     ,API_RETRIEVE_WORKFLOW_HISTORY       : "/api/latest/plugin/task/history/"
+    ,API_TASK_EVENTS : "/api/latest/plugin/task/events/"
+    ,API_RETRIEVE_USERS : "/api/latest/plugin/search/usersSearch"
+    ,API_UPLOAD_FILE: "/api/latest/plugin/task/file"
 
 
     ,listTaskSaveDetail : function(taskId, data) {
@@ -64,6 +68,11 @@ TaskList.Service = {
     ,retrieveComplaintDetail : function(complaintId) {
         Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_COMPLAINT_DETAIL + complaintId
             ,TaskList.Callback.EVENT_COMPLAINT_DETAIL_RETRIEVED
+        );
+    }
+    ,retrieveCaseDetail : function(caseId) {
+        Acm.Ajax.asyncGet(App.getContextPath() + this.API_RETRIEVE_CASE_DETAIL + caseId
+            ,TaskList.Callback.EVENT_CASE_DETAIL_RETRIEVED
         );
     }
     ,completeTask : function(taskId) {
@@ -114,5 +123,44 @@ TaskList.Service = {
     ,retrieveWorkflowHistory : function(id, adhoc) {
     	var url = App.getContextPath() + this.API_RETRIEVE_WORKFLOW_HISTORY + id + '/' + adhoc;
         Acm.Ajax.asyncGet(url, TaskList.Callback.EVENT_WORKFLOW_HISTORY_RETRIEVED);
+    }
+    ,retrieveUsers : function(start, n, sortDirection, searchKeyword, exclude) {
+    	var params = {'start': start, 'n': n, 'sortDirection': sortDirection, 'searchKeyword': searchKeyword, 'exclude': exclude}
+    	var query = $.param(params);
+    	
+        var url = App.getContextPath() + this.API_RETRIEVE_USERS + '?' + query;
+        Acm.Ajax.asyncGet(url, TaskList.Callback.EVENT_USERS_RETRIEVED);
+    }
+
+    ,uploadFile: function(formData) {
+        var url = App.getContextPath() + this.API_UPLOAD_FILE;
+        Acm.Service.ajax({
+            url: url
+            ,data: formData
+            ,processData: false
+            ,contentType: false
+            ,type: 'POST'
+            ,success: function(response){
+                if (response.hasError) {
+                    Acm.Dialog.info(response.errorMsg);
+                } else {
+                    if(response!= null){
+                        var taskId = TaskList.getTaskId();
+                        var prevAttachmentsList = TaskList.cacheAttachments.get(taskId);
+                        for(var i = 0; i < response[0].files.length; i++){
+                            var attachment = {};
+                            attachment.id = response[0].files[i].id;
+                            attachment.name = response[0].files[i].name;
+                            attachment.status = response[0].files[i].status;
+                            attachment.creator = response[0].files[i].creator;
+                            attachment.created = response[0].files[i].created;
+                            prevAttachmentsList.push(attachment);
+                        }
+                        TaskList.cacheAttachments.put(taskId, prevAttachmentsList);
+                    }
+                    TaskList.Object.refreshJTableAttachments();
+                }
+            }
+        });
     }
 }

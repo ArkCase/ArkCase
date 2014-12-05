@@ -17,9 +17,7 @@
             <column name="cm_notification_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <!--<column name="cm_notification_auto" type="VARCHAR2(1)">
-                <constraints nullable="false"/>
-            </column>-->
+
             <column name="cm_notification_status" type="VARCHAR(1024)">
                 <constraints nullable="true"/>
             </column>
@@ -34,6 +32,7 @@
             </column>
         </createTable>
     </changeSet>
+
     <changeSet id="02-change-ID-type" author="manojd">
         <dropDefaultValue tableName="acm_notification" columnName="cm_notification_id"/>
         <modifyDataType tableName="acm_notification" columnName="cm_notification_id" newDataType="NUMBER(32,0)"/>
@@ -50,8 +49,34 @@
         </addColumn>
     </changeSet>
 
-<!--    <changeSet id="03-delete" author="manojd">
-        <dropTable tableName="acm_notification"/>
-    </changeSet>-->
+    <changeSet id="04-add-data-and-auto-params" author="manojd">
+        <addColumn tableName="acm_notification">
+            <column name="cm_notification_data" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_notification_auto" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="05-add-user-param" author="manojd">
+        <addColumn tableName="acm_notification">
+            <column name="cm_notification_user" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="06-notification-drop-not-null-constraints" author="manojd">
+        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_note"/>
+        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_data"/>
+        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_auto"/>
+        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_user"/>
+    </changeSet>
+
+    <changeSet id="07-notification-drop-comment-column" author="manojd">
+        <dropColumn tableName="acm_notification" columnName="cm_notification_comment"/>
+    </changeSet>
 
 </databaseChangeLog>

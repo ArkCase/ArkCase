@@ -43,16 +43,461 @@ securitySchemes:
                   "caseType":"Better Business Bureau",
                   "title":"Dupree's Diamond Blues",
                   "status":"DRAFT",
+                  "details":null,
                   "created":"2014-10-06T20:28:42.080+0000",
                   "creator":"ebmillar",
                   "modified":"2014-10-06T20:28:42.080+0000",
                   "modifier":"ebmillar",
                   "closed":null,
                   "disposition":null,
+                  "priority" : "High",
+                  "participants" : [],
+                  "dueDate" : null,
+                  "approvers" : null,
                   "ecmFolderPath":"/Sites/acm/documentLibrary/Case Files/20141006_508",
                   "ecmFolderId":"workspace://SpacesStore/7c4c7c0c-b4dd-4e3d-aa8c-e6e4a9ea2e52",
-                  "childObjects":[]
+                  "childObjects":[],
+                  "personAssociations":[]
                 }
+    /byId/{id}:
+      description: Lookup a case file by ID.
+      uriParameters:
+        id:
+          description: Numeric ID of the case file.  Usually obtained by a previous list case files request.
+          example: 500
+          required: true
+          type: integer
+      get:
+        responses:
+          200:
+            description: Case file found.
+            body:
+              application/json:
+                example: |
+                  {
+                    "id" : 4893,
+                    "caseNumber" : "20141118_4893",
+                    "caseType" : "Agricultural",
+                    "title" : "August 1914",
+                    "status" : "ACTIVE",
+                    "details" : "This case file is based on Complaint '20141024_2892'.<p/>Complaint '20141024_2892' had these details: <p/><strong>A book by Aleksandr Solzhenitsyn</strong>",
+                    "incidentDate" : null,
+                    "created" : "2014-11-18T13:09:29.250+0000",
+                    "creator" : "ebmillar",
+                    "modified" : "2014-11-18T13:09:29.928+0000",
+                    "modifier" : "ebmillar",
+                    "closed" : null,
+                    "disposition" : null,
+                    "priority" : "High",
+                    "participants" : [],
+                    "dueDate" : null,
+                    "approvers" : null,
+                    "ecmFolderPath" : null,
+                    "personAssociations" : [{
+                        "id" : 4900,
+                        "person" : {
+                          "id" : 2901,
+                          "title" : "mr.",
+                          "company" : null,
+                          "status" : "ACTIVE",
+                          "givenName" : "Witness first",
+                          "familyName" : "Witness last",
+                          "hairColor" : null,
+                          "eyeColor" : null,
+                          "heightInInches" : null,
+                          "weightInPounds" : null,
+                          "dateOfBirth" : null,
+                          "dateMarried" : null,
+                          "created" : "2014-10-24T23:14:24.342+0000",
+                          "creator" : "anotherUser",
+                          "modified" : "2014-11-18T13:09:29.929+0000",
+                          "modifier" : "ebmillar",
+                          "addresses" : [{
+                              "id" : 2902,
+                              "created" : "2014-10-24T23:14:24.345+0000",
+                              "creator" : "anotherUser",
+                              "modified" : "2014-11-18T13:03:13.882+0000",
+                              "modifier" : "ecmillar",
+                              "status" : "ACTIVE",
+                              "type" : "type",
+                              "types" : null,
+                              "streetAddress" : "street address",
+                              "streetAddress2" : "street address 2",
+                              "city" : "city",
+                              "state" : "state",
+                              "zip" : "zip",
+                              "country" : "country"
+                            }
+                          ],
+                          "contactMethods" : [{
+                              "id" : 2903,
+                              "created" : "2014-10-24T23:14:24.347+0000",
+                              "creator" : "anotherUser",
+                              "modified" : "2014-11-18T13:03:13.882+0000",
+                              "modifier" : "ecmillar",
+                              "status" : "ACTIVE",
+                              "type" : "contact type",
+                              "types" : null,
+                              "value" : "contact value"
+                            }
+                          ],
+                          "securityTags" : [],
+                          "personAliases" : [{
+                              "id" : 2905,
+                              "aliasType" : "Nick Name",
+                              "aliasTypes" : null,
+                              "aliasValue" : "Witness alias",
+                              "created" : "2014-10-24T23:14:24.350+0000",
+                              "creator" : "anotherUser",
+                              "modified" : "2014-11-18T13:09:29.930+0000",
+                              "modifier" : "ebmillar"
+                            }
+                          ],
+                          "organizations" : [{
+                              "organizationId" : 2904,
+                              "organizationType" : "org type",
+                              "organizationTypes" : null,
+                              "organizationValue" : "org value",
+                              "created" : "2014-10-24T23:14:24.349+0000",
+                              "creator" : "anotherUser",
+                              "modified" : "2014-11-18T13:03:13.876+0000",
+                              "modifier" : "ecmillar"
+                            }
+                          ]
+                        },
+                        "parentId" : 4893,
+                        "personType" : "Witness",
+                        "parentType" : "CASE",
+                        "personDescription" : "Witness Desc",
+                        "created" : "2014-11-18T13:09:29.249+0000",
+                        "creator" : "ebmillar",
+                        "modified" : "2014-11-18T13:09:29.930+0000",
+                        "modifier" : "ebmillar",
+                        "notes" : null,
+                        "tags" : ["Anonymous"]
+                      }, {
+                        "id" : 4899,
+                        "person" : {
+                          "id" : 2894,
+                          "title" : "mr.",
+                          "company" : null,
+                          "status" : "ACTIVE",
+                          "givenName" : "Complaintant first",
+                          "familyName" : "Complaintant last",
+                          "hairColor" : null,
+                          "eyeColor" : null,
+                          "heightInInches" : null,
+                          "weightInPounds" : null,
+                          "dateOfBirth" : null,
+                          "dateMarried" : null,
+                          "created" : "2014-10-24T23:14:24.266+0000",
+                          "creator" : "anotherUser",
+                          "modified" : "2014-11-18T13:09:29.928+0000",
+                          "modifier" : "ebmillar",
+                          "addresses" : [{
+                              "id" : 2895,
+                              "created" : "2014-10-24T23:14:24.291+0000",
+                              "creator" : "anotherUser",
+                              "modified" : "2014-11-18T13:03:13.876+0000",
+                              "modifier" : "ecmillar",
+                              "status" : "ACTIVE",
+                              "type" : "type",
+                              "types" : null,
+                              "streetAddress" : "street address",
+                              "streetAddress2" : "street address 2",
+                              "city" : "city",
+                              "state" : "state",
+                              "zip" : "zip",
+                              "country" : "country"
+                            }
+                          ],
+                          "contactMethods" : [{
+                              "id" : 2896,
+                              "created" : "2014-10-24T23:14:24.308+0000",
+                              "creator" : "anotherUser",
+                              "modified" : "2014-11-18T13:03:13.877+0000",
+                              "modifier" : "ecmillar",
+                              "status" : "ACTIVE",
+                              "type" : "contact type",
+                              "types" : null,
+                              "value" : "contact value"
+                            }
+                          ],
+                          "securityTags" : [],
+                          "personAliases" : [{
+                              "id" : 2898,
+                              "aliasType" : "Nick Name",
+                              "aliasTypes" : null,
+                              "aliasValue" : "Complaintant alias",
+                              "created" : "2014-10-24T23:14:24.326+0000",
+                              "creator" : "anotherUser",
+                              "modified" : "2014-11-18T13:09:29.931+0000",
+                              "modifier" : "ebmillar"
+                            }
+                          ],
+                          "organizations" : [{
+                              "organizationId" : 2897,
+                              "organizationType" : "org type",
+                              "organizationTypes" : null,
+                              "organizationValue" : "org value",
+                              "created" : "2014-10-24T23:14:24.318+0000",
+                              "creator" : "anotherUser",
+                              "modified" : "2014-11-18T13:03:13.879+0000",
+                              "modifier" : "ecmillar"
+                            }
+                          ]
+                        },
+                        "parentId" : 4893,
+                        "personType" : "Complaintant",
+                        "parentType" : "CASE",
+                        "personDescription" : "Complaintant Desc",
+                        "created" : "2014-11-18T13:09:29.249+0000",
+                        "creator" : "ebmillar",
+                        "modified" : "2014-11-18T13:09:29.928+0000",
+                        "modifier" : "ebmillar",
+                        "notes" : null,
+                        "tags" : ["Anonymous"]
+                      }
+                    ],
+                    "originator" : null,
+                    "ecmFolderId" : "workspace://SpacesStore/d261b278-54ae-444a-88c3-5665f0c4e8c1",
+                    "childObjects" : [{
+                        "associationId" : 4894,
+                        "status" : "ACTIVE",
+                        "parentName" : "20141118_4893",
+                        "parentType" : "CASE",
+                        "parentId" : 4893,
+                        "targetName" : "20141024_2892",
+                        "targetType" : "COMPLAINT",
+                        "targetId" : 2892,
+                        "created" : "2014-11-18T13:09:29.249+0000",
+                        "creator" : "ebmillar",
+                        "modified" : "2014-11-18T13:09:30.088+0000",
+                        "modifier" : "ebmillar"
+                      }, {
+                        "associationId" : 4897,
+                        "status" : "ACTIVE",
+                        "parentName" : "20141118_4893",
+                        "parentType" : "CASE",
+                        "parentId" : 4893,
+                        "targetName" : "form_close_complaint_18112014080842251.xml",
+                        "targetType" : "FILE",
+                        "targetId" : 4889,
+                        "created" : "2014-11-18T13:09:29.243+0000",
+                        "creator" : "ebmillar",
+                        "modified" : "2014-11-18T13:09:30.116+0000",
+                        "modifier" : "ebmillar"
+                      }, {
+                        "associationId" : 4895,
+                        "status" : "ACTIVE",
+                        "parentName" : "20141118_4893",
+                        "parentType" : "CASE",
+                        "parentId" : 4893,
+                        "targetName" : "form_roi_18112014080731682.xml",
+                        "targetType" : "FILE",
+                        "targetId" : 4882,
+                        "created" : "2014-11-18T13:09:29.248+0000",
+                        "creator" : "ebmillar",
+                        "modified" : "2014-11-18T13:09:30.099+0000",
+                        "modifier" : "ebmillar"
+                      }, {
+                        "associationId" : 4896,
+                        "status" : "ACTIVE",
+                        "parentName" : "20141118_4893",
+                        "parentType" : "CASE",
+                        "parentId" : 4893,
+                        "targetName" : "Report_of_Investigation_18112014080734502.pdf",
+                        "targetType" : "FILE",
+                        "targetId" : 4884,
+                        "created" : "2014-11-18T13:09:29.249+0000",
+                        "creator" : "ebmillar",
+                        "modified" : "2014-11-18T13:09:30.105+0000",
+                        "modifier" : "ebmillar"
+                      }, {
+                        "associationId" : 4898,
+                        "status" : "ACTIVE",
+                        "parentName" : "20141118_4893",
+                        "parentType" : "CASE",
+                        "parentId" : 4893,
+                        "targetName" : "Close_Complaint_18112014080842880.pdf",
+                        "targetType" : "FILE",
+                        "targetId" : 4891,
+                        "created" : "2014-11-18T13:09:29.248+0000",
+                        "creator" : "ebmillar",
+                        "modified" : "2014-11-18T13:09:30.118+0000",
+                        "modifier" : "ebmillar"
+                      }
+                    ]
+                  }
+          
+    /file:
+      description: Manage case files.
+      post:
+        description: Add a file to the case.  Submitted form must include a caseId element, and a files[] element with the files to be uploaded.  Returns JSON suitable for consumption by the jQuery File Upload plugin.          
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth, acm_token_authentication ]
+        body:
+          multipart/form-data:
+            example: |
+              # send a standard multipart form request.
+        responses:
+          200:
+            description: File(s) were successfully added.
+            body:
+              application/json:
+                example: |
+                  {
+                    // NOTE: application/json is sent to all browsers EXCEPT Internet Explorer
+                    "files":[
+                      {
+                        "name":"filename.txt",
+                        "size":500,
+                        "url":"/acm/link/to/download/filename.txt",
+                        "thumbnailUrl":null,
+                        "deleteUrl":"/acm/link/to/delete/filename.txt",
+                        "deleteType":"DELETE",
+                        "error":null                        
+                      }
+                    ]                    
+                  }                          
+              text/plain:
+                example: |
+                  {
+                    // NOTE: text/plain is sent ONLY to Internet Explorer.  Same format as application/json.
+                    "files":[
+                      {
+                        "name":"filename.txt",
+                        "size":500,
+                        "url":"/acm/link/to/download/filename.txt",
+                        "thumbnailUrl":null,
+                        "deleteUrl":"/acm/link/to/delete/filename.txt",
+                        "deleteType":"DELETE",
+                        "error":null                        
+                      }
+                    ]                    
+                  }        
+                
+            
+    /forUser/{user}:
+      uriParameters:
+        user:
+          description: Case files created by this user will be included in the returned case file list.
+          required: true
+          example: ann-acm
+          type: string
+      get:
+        description: Get the list of case files created by the given user.
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  [
+                    {
+                      "id" : 4491,
+                      "caseNumber" : "20141114_4491",
+                      "caseType" : "Agricultural",
+                      "title" : "complaint title",
+                      "status" : "ACTIVE",
+                      "details" : "This case file is based on Complaint '20141007_531'.",
+                      "incidentDate" : null,
+                      "created" : "2014-11-14T19:39:19.088+0000",
+                      "creator" : "ebmillar",
+                      "modified" : "2014-11-14T19:39:19.088+0000",
+                      "modifier" : "ebmillar",
+                      "closed" : null,
+                      "disposition" : null,
+                      "priority" : "High",
+                      "participants" : [],
+                      "dueDate" : null,
+                      "approvers" : null,
+                      "ecmFolderPath" : null,
+                      "personAssociations" : [],
+                      "originator" : null,
+                      "ecmFolderId" : "workspace://SpacesStore/88286a52-f8e9-4c62-b894-98481733d44f",
+                      "childObjects" : [{
+                          "associationId" : 4492,
+                          "status" : "ACTIVE",
+                          "parentName" : "20141114_4491",
+                          "parentType" : "CASE",
+                          "parentId" : 4491,
+                          "targetName" : "20141007_531",
+                          "targetType" : "COMPLAINT",
+                          "targetId" : 531,
+                          "created" : "2014-11-14T19:39:19.088+0000",
+                          "creator" : "ebmillar",
+                          "modified" : "2014-11-14T19:39:19.088+0000",
+                          "modifier" : "ebmillar"
+                        }
+                      ]
+                    }
+                  ]
+  /casebystatus:
+    /summary:
+      get:
+        description: Return a report of case file status counts for the last week, the last month, and the last year.
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  [
+                    {
+                      "timePeriod" : "one year",
+                      "caseByStatusDtoList" : [{
+                          "status" : "CLOSED",
+                          "count" : 1
+                        }, {
+                          "status" : "DRAFT",
+                          "count" : 2
+                        }, {
+                          "status" : "ACTIVE",
+                          "count" : 5
+                        }
+                      ]
+                    }, 
+                    {
+                      "timePeriod" : "seven days",
+                      "caseByStatusDtoList" : [{
+                          "status" : "ACTIVE",
+                          "count" : 5
+                        }
+                      ]
+                    }, 
+                    {
+                      "timePeriod" : "thirty days",
+                      "caseByStatusDtoList" : [{
+                          "status" : "ACTIVE",
+                          "count" : 5
+                        }
+                      ]
+                    }
+                  ]
+
+    /{timePeriod}:
+      description: Get a list of case file status counts for a specific time period
+      uriParameters:
+        timePeriod:
+          description: all, lastWeek, lastMonth, or lastYear.
+          required: true
+          example: lastYear
+          type: string
+      get:
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  [{
+                      "status" : "CLOSED",
+                      "count" : 1
+                    }, {
+                      "status" : "DRAFT",
+                      "count" : 2
+                    }, {
+                      "status" : "ACTIVE",
+                      "count" : 5
+                    }
+                  ]
   /complaint:
     post:
       description: Create a complaint based on the complaint originator's contact information
@@ -1478,6 +1923,165 @@ securitySchemes:
               text/plain:
                 example: Task with ID '92838' does not exist.
   /search:
+    /{objectType}:
+      uriParameters:
+        objectType:
+          description: The object type you are searching for.  Must be a value from the object_type_s field in the SOLR quick search index.  CASE_FILE, TASK, COMPLAINT, FILE...
+          example: CASE_FILE
+          required: true
+          type: string      
+      get:
+        description: Get a list of objects by object type.  Used to populate object lists in the user interface.
+        queryParameters:
+          s:
+            description: Sort column.  Must be a field from the SOLR quick search index.  Must be followed by "desc" for descending sort, or "asc" for ascending sort.
+            example: name desc
+            required: false
+            default: ""
+            type: string
+          start:
+            description: Index of the first row to be returned.  0 is the first row of the first page. Used for pagination.  If you use start, also supply an "s" paramter for consistent sorting.  
+            required: false
+            example: 11
+            default: 0
+            type: integer
+          n:
+            description: Number of rows to be returned.  This is the page size for pagination.
+            required: false
+            default: 10
+            example: 50
+            type: integer
+          assignee:
+            description: User ID of the assignee whose rows you want to see.  If supplied, only rows with assignee_s field equal to this value will be returned.
+            required: false
+            example: ann-acm
+            default: ""
+            type: string
+          activeOnly:
+            description: If true, rows with status_s field equal to COMPLETE or DELETE will not be included in the results.  Used to display only active rows. 
+            required: false
+            default: true
+            example: true
+            type: boolean            
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  {
+                    "responseHeader":{
+                      "status":0,
+                      "QTime":1,
+                      "params":{
+                        "sort":"name desc",
+                        "indent":"true",
+                        "start":"0",
+                        "q":"object_type_s:CASE_FILE AND -status_s:COMPLETE AND -status_s:DELETE",
+                        "wt":"json",
+                        "rows":"50"}},
+                    "response":{"numFound":7,"start":0,"docs":[
+                        {
+                          "id":"4893-CASE_FILE",
+                          "status_s":"ACTIVE",
+                          "author":"ebmillar",
+                          "author_s":"ebmillar",
+                          "modifier_s":"ebmillar",
+                          "last_modified":"2014-11-18T08:09:29Z",
+                          "create_dt":"2014-11-18T08:09:29Z",
+                          "title_t":"August 1914",
+                          "name":"20141118_4893",
+                          "object_id_s":"4893",
+                          "object_type_s":"CASE_FILE",
+                          "_version_":1485115144778285056},
+                        {
+                          "id":"4822-CASE_FILE",
+                          "status_s":"ACTIVE",
+                          "author":"ebmillar",
+                          "author_s":"ebmillar",
+                          "modifier_s":"ebmillar",
+                          "last_modified":"2014-11-17T16:16:09Z",
+                          "create_dt":"2014-11-17T16:16:09Z",
+                          "title_t":"complaint title",
+                          "name":"20141117_4822",
+                          "object_id_s":"4822",
+                          "object_type_s":"CASE_FILE",
+                          "_version_":1485055166024515584},
+                        {
+                          "id":"4491-CASE_FILE",
+                          "status_s":"ACTIVE",
+                          "author":"ebmillar",
+                          "author_s":"ebmillar",
+                          "modifier_s":"ebmillar",
+                          "last_modified":"2014-11-14T14:39:19Z",
+                          "create_dt":"2014-11-14T14:39:19Z",
+                          "title_t":"complaint title",
+                          "name":"20141114_4491",
+                          "object_id_s":"4491",
+                          "object_type_s":"CASE_FILE",
+                          "_version_":1484777281865908224},
+                        {
+                          "id":"4473-CASE_FILE",
+                          "status_s":"ACTIVE",
+                          "author":"ebmillar",
+                          "author_s":"ebmillar",
+                          "modifier_s":"ebmillar",
+                          "last_modified":"2014-11-14T16:06:11Z",
+                          "create_dt":"2014-11-14T14:04:00Z",
+                          "title_t":"complaint title",
+                          "name":"20141114_4473",
+                          "object_id_s":"4473",
+                          "object_type_s":"CASE_FILE",
+                          "_version_":1484782747253735424},
+                        {
+                          "status_s":"DRAFT",
+                          "create_dt":"2014-10-06T16:28:42Z",
+                          "title_t":"Dupree's Diamond Blues",
+                          "object_id_s":"508",
+                          "owner_s":"ebmillar",
+                          "deny_acl_ss":["TEST-DENY-ACL"],
+                          "object_type_s":"CASE_FILE",
+                          "allow_acl_ss":["TEST-ALLOW-ACL"],
+                          "id":"508-CASE_FILE",
+                          "modifier_s":"ebmillar",
+                          "author":"ebmillar",
+                          "author_s":"ebmillar",
+                          "last_modified":"2014-10-06T16:28:42Z",
+                          "name":"20141006_508",
+                          "_version_":1481249565804855296},
+                        {
+                          "status_s":"DRAFT",
+                          "create_dt":"2014-10-06T16:23:23Z",
+                          "title_t":"Fire on the Mountain",
+                          "object_id_s":"507",
+                          "owner_s":"ebmillar",
+                          "deny_acl_ss":["TEST-DENY-ACL"],
+                          "object_type_s":"CASE_FILE",
+                          "allow_acl_ss":["TEST-ALLOW-ACL"],
+                          "id":"507-CASE_FILE",
+                          "modifier_s":"ebmillar",
+                          "author":"ebmillar",
+                          "author_s":"ebmillar",
+                          "last_modified":"2014-10-06T16:23:23Z",
+                          "name":"20141006_507",
+                          "_version_":1481249565802758144},
+                        {
+                          "status_s":"CLOSED",
+                          "create_dt":"2014-10-06T16:01:41Z",
+                          "title_t":"ISIS Event at the local Caribou Coffee",
+                          "object_id_s":"506",
+                          "owner_s":"ebmillar",
+                          "deny_acl_ss":["TEST-DENY-ACL"],
+                          "object_type_s":"CASE_FILE",
+                          "allow_acl_ss":["TEST-ALLOW-ACL"],
+                          "id":"506-CASE_FILE",
+                          "modifier_s":"ebmillar",
+                          "author":"ebmillar",
+                          "author_s":"ebmillar",
+                          "last_modified":"2014-10-06T17:50:08Z",
+                          "name":"20141006_506",
+                          "_version_":1481252322875015168}]
+                    }}
+
     /quickSearch:
       securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
       get:

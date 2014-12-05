@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.complaint.web;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -12,6 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.armedia.acm.form.config.FormUrl;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.users.dao.ldap.UserActionDao;
+import com.armedia.acm.services.users.model.AcmUserAction;
+import com.armedia.acm.services.users.model.AcmUserActionName;
 
 
 @RequestMapping("/plugin/complaint")
@@ -21,9 +26,10 @@ public class ComplaintUiController
 
     private AuthenticationTokenService authenticationTokenService;
 	private FormUrl formUrl;
+	private UserActionDao userActionDao;
 	
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView openComplaints(Authentication auth) {
+    public ModelAndView openComplaints(Authentication auth, HttpServletRequest request) {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("complaint");
 
@@ -33,6 +39,25 @@ public class ComplaintUiController
         // Frevvo form URLs
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         retval.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
+        
+        if (null != request && "successful".equals(request.getParameter("frevvoFormSubmit_status")))
+        {
+        	AcmUserAction userAction = getUserActionDao().findByUserIdAndName(auth.getName(), AcmUserActionName.LAST_COMPLAINT_CREATED);
+        	
+        	if (null != userAction)
+			{
+        		Long id = userAction.getObjectId();
+        		
+        		if (null != id)
+        		{
+        			String page = request.getParameter("frevvoFormSubmit_page");
+
+        			retval.addObject("frevvoFormSubmit_id", id);
+        			retval.addObject("frevvoFormSubmit_page", page);
+        		}
+			}
+        }
+        
         return retval;
     }
 
@@ -49,7 +74,6 @@ public class ComplaintUiController
         // Frevvo form URLs
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         retval.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
-        retval.addObject("editCloseComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
         
         log.debug("Security token: " + token);
         return retval;
@@ -110,6 +134,14 @@ public class ComplaintUiController
 
 	public void setFormUrl(FormUrl formUrl) {
 		this.formUrl = formUrl;
+	}
+
+	public UserActionDao getUserActionDao() {
+		return userActionDao;
+	}
+
+	public void setUserActionDao(UserActionDao userActionDao) {
+		this.userActionDao = userActionDao;
 	}
 
 }

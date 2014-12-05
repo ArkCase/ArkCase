@@ -68,6 +68,21 @@ TaskList.Object = {
         this.$btnUnassignTask = $("#btnUnassign");
         this.$btnCompleteTask = $("#btnComplete");
         this.$btnCompleteTask.click(function(e) {TaskList.Event.onClickBtnAdHocTaskComplete(e);});
+        
+        // Reject Task
+        this.$dlgRejectTask = $('#reject');
+        this.$btnRejectTask = $("#btnReject");
+        this.$btnRejectTask.click(function(e) {TaskList.Event.onClickBtnRejectTask(e);});
+        this.$btnSubmitRejectTask = this.$dlgRejectTask.find("button[name=submitRejectTask]");
+        this.$btnSearchRejectTask = this.$dlgRejectTask.find("button[name=searchUsersRejectTask]");
+        this.$btnSearchRejectTask.click(function(e) {TaskList.Event.onClickSearchRejectTask(e);});
+        this.$inputSearchRejectTask = this.$dlgRejectTask.find("input[name=searchKeywordRejectTask]");
+        this.$inputSearchRejectTask.keyup(function(e) {TaskList.Event.onKeyUpSearchRejectTask(e);});
+        this.initDlgRejectTask();
+        this.$dlgRejectTaskSortableColumns = this.$dlgRejectTask.find('thead th.th-sortable');
+        this.$dlgRejectTaskSortableColumns.each(function(index) {
+        	$(this).click(function(e) {TaskList.Event.onClickDlgRejectTaskSortableColumn(e);});
+        });
 
         this.$btnRejectTask = $("#btnReject");
         this.$btnDeleteTask = $("#btnDelete");
@@ -187,14 +202,26 @@ TaskList.Object = {
         this.$divAttachments = $("#divAttachments");
         TaskList.JTable.createJTableAttachments(this.$divAttachments);
 
+        //attachments
+
+        this.$btnNewAttachment = $("#newAttachment");
+        this.$btnNewAttachment.on("change", function(e) {TaskList.Event.onChangeFileInput(e, this);});
+
+        this.$formAttachment = $("#formFiles");
+        this.$formAttachment.submit(function(e) {TaskList.Event.onAddNewAttachment(e, this);});
+
+
         //frevvo edit close complaint
-        this.$lnkEditComplaintClose = $("#editCloseComplaint");
-        this.$lnkEditComplaintClose.click(function(e){TaskList.Event.onEditCloseComplaint(e)});
+        this.$lnkEditComplaintClose = $(".editCloseComplaint");
+        
+        //frevvo change case status
+        this.$lnkChangeCaseStatus = $(".changeCaseStatus");
 
         var formUrls = new Object();
         formUrls["roi"] = $('#roiFormUrl').val();
         formUrls["close_complaint"] = $('#closeComplaintFormUrl').val();
         formUrls["edit_close_complaint"] = $('#editCloseComplaintFormUrl').val();
+        formUrls["change_case_status"] = $('#changeCaseStatusFormUrl').val();
         this.setFormUrls(formUrls);
 
     }
@@ -208,6 +235,58 @@ TaskList.Object = {
     }
     ,setFormUrls: function(formUrls) {
         this._formUrls = formUrls;
+    }
+    
+    ,_popupWindow: null
+    ,getPopUpWindow: function() {
+    	return this._popupWindow;
+    }
+    ,setPopUpWindow: function(popupWindow) {
+    	this._popupWindow = popupWindow;
+    }
+    
+    // Reject Task
+    ,setDlgRejectTaskStart: function(start) {
+    	this._dlgRejectTaskStart = start;
+    }
+    ,getDlgRejectTaskStart: function() {
+    	return this._dlgRejectTaskStart;
+    }
+    ,setDlgRejectTaskN: function(n) {
+    	this._dlgRejectTaskN = n;
+    }
+    ,getDlgRejectTaskN: function() {
+    	return this._dlgRejectTaskN;
+    }
+    ,setDlgRejectTaskSortDirection: function(sortDirection) {
+    	this._dlgRejectTaskSortDirection = sortDirection;
+    }
+    ,getDlgRejectTaskSortDirection: function() {
+    	return this._dlgRejectTaskSortDirection;
+    }
+    ,setDlgRejectTaskPage: function(page) {
+    	this._dlgRejectTaskPage = page;
+    }
+    ,getDlgRejectTaskPage: function() {
+    	return this._dlgRejectTaskPage;
+    }
+    ,setDlgRejectTaskPages: function(pages) {
+    	this._dlgRejectTaskPages = pages;
+    }
+    ,getDlgRejectTaskPages: function() {
+    	return this._dlgRejectTaskPages;
+    }
+    ,setDlgRejectTaskSelected: function(selected) {
+    	this._dlgRejectTaskSelected = selected;
+    }
+    ,getDlgRejectTaskSelected: function() {
+    	return this._dlgRejectTaskSelected;
+    }
+    ,setDlgRejectTaskSearchKeyword: function(keyword) {
+    	this._dlgRejectTaskSearchKeyword = keyword;
+    }
+    ,getDlgRejectTaskSearchKeyword: function() {
+    	return this._dlgRejectTaskSearchKeyword;
     }
 
     //  Use this to build the Admin tree structure
@@ -766,17 +845,30 @@ TaskList.Object = {
         });
     }
     ,updateDetail: function(task) {
+    	if (task && task.attachedToObjectType && task.attachedToObjectType.toLowerCase() == "complaint"){
+    		this.$lnkEditComplaintClose.show();
+    		this.$lnkChangeCaseStatus.hide();
+    	}else if(task && task.attachedToObjectType && task.attachedToObjectType.toLowerCase() == "case_file"){
+    		this.$lnkEditComplaintClose.hide();
+    		this.$lnkChangeCaseStatus.show();
+    	}
         if(task.adhocTask){
             this.hideAllWorkflowButtons();
             if(task.completed != true){
                 this.$btnCompleteTask.show();
                 this.$btnDeleteTask.show();
             }
+            
+            if (task.owner != task.assignee) {
+            	this.$btnRejectTask.show();
+            }
+            
             this.setTaskDetails(task);
 
             this.refreshJTableAttachments();
             this.refreshJTableNotes();
             this.refreshJTableWorkflowOverview();
+            this.refreshJTableHistory();
             this.refreshJTableHistory();
         }
         else{
@@ -817,6 +909,7 @@ TaskList.Object = {
             this.refreshJTableWorkflowOverview();
             this.refreshJTableHistory();
             this.refreshJTableDocuments();
+            this.refreshJTableHistory();
         }
 
     }
@@ -878,6 +971,7 @@ TaskList.Object = {
         this.$btnResubmit.hide();
         this.$btnCancelRequest.hide();
         this.$btnReassignTask.hide();
+        this.$btnRejectTask.hide();
         this.$btnUnassignTask.hide();
         this.$btnCompleteTask.hide();
         this.$btnRejectTask.hide();
@@ -894,6 +988,95 @@ TaskList.Object = {
         this.setValueTaskOwner(task.owner);
         this.setValueAssignedStatus(task.status);
         this.setValueDetails(task.details);
+    }
+    
+    // Reject Task
+    ,initDlgRejectTask: function() {
+    	TaskList.Page.cleanDlgRejectTaskOwner(this.$dlgRejectTask);
+    	TaskList.Page.cleanDlgRejectTaskUsers(this.$dlgRejectTask);
+    	
+    	this.setDlgRejectTaskStart(TaskList.DLG_REJECT_TASK_START);
+    	this.setDlgRejectTaskN(TaskList.DLG_REJECT_TASK_N);
+    	this.setDlgRejectTaskSortDirection(TaskList.DLG_REJECT_TASK_SORT_DIRECTION);
+    	this.setDlgRejectTaskPage(0);
+    	this.setDlgRejectTaskPages(0);
+    	this.setDlgRejectTaskSelected(null);
+    	this.setDlgRejectTaskSearchKeyword('');
+    	this.$btnSubmitRejectTask.addClass('disabled');
+    }
+    ,showDlgRejectTask: function(onClickBtnPrimary) {    	
+        Acm.Dialog.bootstrapModal(this.$dlgRejectTask, onClickBtnPrimary);
+    }
+    ,refreshDlgRejectTaskUsers: function(data) {
+    	var tbodyOwner = this.$dlgRejectTask.find('table#ownerTableRejectTask tbody');
+    	var tbodyUsers = this.$dlgRejectTask.find('table#usersTableRejectTask tbody');
+    	
+    	TaskList.Page.cleanDlgRejectTaskOwner(this.$dlgRejectTask);
+    	TaskList.Page.cleanDlgRejectTaskUsers(this.$dlgRejectTask);
+    	
+    	this._refreshDlgRejectTaskOwner(tbodyOwner, data);
+    	this._refreshDlgRejectTaskUsers(tbodyUsers, data);
+    	this._refreshDlgRejectTaskPaging(data);
+    	
+    	if (this.getDlgRejectTaskSelected() == null) {
+    		this.$btnSubmitRejectTask.addClass('disabled');
+    	} else {
+    		this.$btnSubmitRejectTask.removeClass('disabled');
+    	}
+    }
+    ,_refreshDlgRejectTaskOwner: function(tbody, data) {
+    	if (data && data.response && data.response.owner) {
+    		data = data.response.owner;
+    	}else {
+    		data = null;
+    	}
+    	if (tbody && data && data.response && data.response.docs && data.response.docs.length > 0) {  
+    		TaskList.Page.buildDlgRejectTaskOwner(tbody, data.response.docs);
+    	}
+    }
+    ,_refreshDlgRejectTaskUsers: function(tbody, data) {   
+    	if (tbody && data && data.response && data.response.docs && data.response.docs.length > 0) {    		   		
+    		TaskList.Page.buildDlgRejectTaskUsers(tbody, data.response.docs);
+    	}
+    }
+    ,_refreshDlgRejectTaskPaging: function(data) {
+    	var total = 0;
+    	var from = 0;
+    	var to = 0;
+    	var page = 0;
+    	var pages = 0;
+    	
+    	if (data && data.response && data.response.numFound != -1) {
+    		total = data.response.numFound;
+    	}
+    	
+    	if (data && data.response && data.response.start != -1 && total > 0) {
+    		from = data.response.start + 1;
+    	}
+    	
+    	if (data && data.response && data.response.start != -1 && data.response.docs) {
+    		to = data.response.start + data.response.docs.length;
+    	}
+    	
+    	if (data.response.start != -1) {
+    		page = Math.floor(data.response.start/this.getDlgRejectTaskN()) + 1;
+    		this.setDlgRejectTaskPage(page);
+    	}
+    	
+    	if (total > 0) {
+    		pages = Math.ceil(total/this.getDlgRejectTaskN());
+    		this.setDlgRejectTaskPages(pages);
+    	}
+    	
+    	// Build Muted Text
+    	var $textMuted = this.$dlgRejectTask.find('footer.panel-footer small.text-muted');
+    	TaskList.Page.buildDlgRejectTaskMutedText($textMuted, from, to, total);
+    	
+    	// Build Pagintion
+    	$ulPagination = this.$dlgRejectTask.find('footer.panel-footer ul.pagination');
+    	TaskList.Page.buildDlgRejectTaskPagination($ulPagination, page, pages);
+    	
+    	this.setDlgRejectTaskStart(data.response.start);
     }
 };
 
