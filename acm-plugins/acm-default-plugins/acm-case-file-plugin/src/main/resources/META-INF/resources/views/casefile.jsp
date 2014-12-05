@@ -10,6 +10,7 @@
         <span itemprop="caseFileId">${caseId}</span>
         <span itemprop="token">${token}</span>
         <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
+        <span itemprop="urlReinvestigateCaseFileForm">${reinvestigateCaseFileFormUrl}</span>
         <span itemprop="urlRoiForm">${roiFormUrl}</span>
         <span itemprop="urlChangeCaseStatusForm">${changeCaseStatusFormUrl}</span>
         <span itemprop="urlEditChangeCaseStatusForm">${editChangeCaseStatusFormUrl}</span>
@@ -166,10 +167,11 @@
                                 <div class="wrapper" id="tabTitle" style="display:none;">
                                     <div class="pull-right inline">
                                         <div class="btn-group">
-                                        	<button class="btn btn-default btn-sm" data-title="Edit Case File"><i class="fa fa-archive"></i> Edit</button>
+                                        	<button class="btn btn-default btn-sm" data-title="Edit Case File"><i class="fa fa-edit"></i> Edit</button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Change Case Status"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
-                                            <button class="btn btn-default btn-sm" data-title="Change Case Status" style="display: none" ><i class="fa fa-archive"></i> Change Case Status</button>
+                                            <button class="btn btn-default btn-sm" data-title="Change Case Status" style="display: none" ><i class="fa fa-edit"></i> Change Case Status</button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Consolidate Case"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>--%>
+                                            <button class="btn btn-default btn-sm" data-title="Reinvestigate Case File"><i class="fa fa-reply"></i> Reinvestigate</button>
                                             <button class="btn btn-default btn-sm" data-title="Consolidate Case"><i class="fa fa-random"></i> Consolidate</button>
                                             <!-- Modal -->
                                             <div class="modal fade" id="changeCaseStatus" tabindex="-1" role="dialog" aria-labelledby="labChangeCaseStatus" aria-hidden="true">

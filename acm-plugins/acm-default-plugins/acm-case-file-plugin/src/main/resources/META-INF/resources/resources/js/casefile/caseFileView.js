@@ -41,6 +41,7 @@ CaseFile.View = CaseFile.View || {
             this.formUrls = new Object();
             
             this.formUrls["edit_case_file"] = items.properties("urlEditCaseFileForm").itemValue();
+            this.formUrls["reinvestigate_case_file"] = items.properties("urlReinvestigateCaseFileForm").itemValue();
             this.formUrls["roi"] = items.properties("urlRoiForm").itemValue();
             this.formUrls["enable_frevvo_form_engine"] = items.properties("enableFrevvoFormEngine").itemValue();
             this.formUrls["change_case_status"] = items.properties("urlChangeCaseStatusForm").itemValue();
@@ -385,9 +386,11 @@ CaseFile.View = CaseFile.View || {
             this.$btnEditCaseFile    	= $("#tabTitle button[data-title='Edit Case File']");
             this.$btnChangeCaseStatus   = $("#tabTitle button[data-title='Change Case Status']");
             this.$btnConsolidateCase    = $("#tabTitle button[data-title='Consolidate Case']");
+            this.$btnReinvestigateCaseFile = $("#tabTitle button[data-title='Reinvestigate Case File']");
             this.$btnEditCaseFile   	.on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
             this.$btnChangeCaseStatus   .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
             this.$btnConsolidateCase    .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
+            this.$btnReinvestigateCaseFile.on("click", function(e) {CaseFile.View.Action.onClickBtnReinvestigateCaseFile(e, this);});
         }
         ,onInitialized: function() {
         }
@@ -455,6 +458,36 @@ CaseFile.View = CaseFile.View || {
                 alert("Consolidate case:" + caseNumber);
             });
         }
+        
+        ,onClickBtnReinvestigateCaseFile: function() {
+        	var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.getFormUrls()['reinvestigate_case_file'];
+        	var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+            var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
+            	var xmlId = '';
+            	if (Acm.isNotEmpty(c.childObjects) && c.childObjects.length > 0) {
+            		for (var i = 0; i < c.childObjects.length; i++) {
+            			var child = c.childObjects[i];
+            			
+            			if (child.targetType != null && child.targetType == 'FILE' && 
+            			    child.targetName != null && child.targetName.indexOf('form_case_file_') == 0 &&
+            			    child.targetName.substr(-4) == '.xml') 
+            			{
+            				xmlId = child.targetId;
+            			}
+            		}
+            	}
+            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
+            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',xmlId:'" + xmlId + "',");
+            	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 860, 700
+                    ,function() {
+            			// TODO: When James will find solution, we should change this
+            			location.reload();
+                    }
+                );
+            }
+        }
+        
         ,showDlgChangeCaseStatus: function(onClickBtnPrimary) {
             Acm.Dialog.bootstrapModal(this.$dlgChangeCaseStatus, onClickBtnPrimary);
         }
