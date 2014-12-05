@@ -72,7 +72,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		String mode = getRequest().getParameter("mode");
 		String xmlId = getRequest().getParameter("xmlId");
 		
-		if ("edit".equals(mode) && null != xmlId && !"".equals(xmlId))
+		if (("edit".equals(mode) || "reinvestigate".equals(mode)) && null != xmlId && !"".equals(xmlId))
 		{
 			try{
 				Long id = Long.parseLong(xmlId);
