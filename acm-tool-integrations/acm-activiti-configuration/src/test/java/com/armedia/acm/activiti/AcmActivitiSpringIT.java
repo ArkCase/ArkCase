@@ -67,7 +67,7 @@ public class AcmActivitiSpringIT
         assertEquals(0, acmTaskEventListener.getTimesCalled());
 
         Map<String, Object> processVariables = new HashMap<>();
-        processVariables.put("key", "value");
+        processVariables.put("key", "Grateful Dead");
 
         ProcessInstance pi = runtimeService.startProcessInstanceByKey("TestActivitiSpringProcess", processVariables);
         assertNotNull(pi);
