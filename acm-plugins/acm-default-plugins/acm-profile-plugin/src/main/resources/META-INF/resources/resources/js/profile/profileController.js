@@ -9,148 +9,148 @@ Profile.Controller = {
     ,onInitialized: function() {
     }
 
-    ,ME_PROFILE_INFO_RETRIEVED        : "profile-info-retrieved"             //param: profileInfo
-    ,ME_PROFILE_INFO_SAVED            : "profile-info-saved"                 //param: profileInfo
-    ,ME_TITLE_SAVED                   : "profile-title-saved"                //param: title
-    ,ME_LOCATION_SAVED                : "profile-location-saved"             //param: location
-    ,ME_IM_ACCOUNT_SAVED              : "profile-im-account-saved"           //param: imAccount
-    ,ME_IM_SYSTEM_SAVED               : "profile-im-system-saved"            //param: imSystem
-    ,ME_OFFICE_PHONE_SAVED            : "profile-office-phone-saved"         //param: officePhoneNumber
-    ,ME_MOBILE_PHONE_SAVED            : "profile-mobile-phone-saved"         //param: mobilePhoneNumber
-    ,ME_COMPANY_SAVED                 : "profile-company-saved"              //param: companyName
-    ,ME_STREET_SAVED                  : "profile-street-saved"               //param: firstAddress
-    ,ME_ADDRESS2_SAVED                : "profile-address2-saved"             //param: secondAddress
-    ,ME_CITY_SAVED                    : "profile-city-saved"                 //param: city
-    ,ME_STATE_SAVED                   : "profile-state-saved"                //param: state
-    ,ME_ZIP_SAVED                     : "profile-zip-saved"                  //param: zip
-    ,ME_MAIN_PHONE_SAVED              : "profile-main-phone-saved"           //param: mainOfficePhone
-    ,ME_FAX_SAVED                     : "profile-fax-saved"                  //param: fax
-    ,ME_WEBSITE_SAVED                 : "profile-website-saved"              //param: website
-    ,ME_ECM_FILE_ID_SAVED             : "profile-ecm-file-id-saved"          //param: ecmFileId
+    ,MODEL_RETRIEVED_PROFILE_INFO        : "profile-retrieved-info"             //param: profileInfo
+    ,MODEL_SAVED_PROFILE_INFO            : "profile-saved-info-saved"                 //param: profileInfo
+    ,MODEL_SAVED_TITLE                   : "profile-saved-title-saved"                //param: title
+    ,MODEL_SAVED_LOCATION                : "profile-saved-location-saved"             //param: location
+    ,MODEL_SAVED_IM_ACCOUNT              : "profile-saved-im-account-saved"           //param: imAccount
+    ,MODEL_SAVED_IM_SYSTEM               : "profile-saved-im-system-saved"            //param: imSystem
+    ,MODEL_SAVED_OFFICE_PHONE            : "profile-saved-office-phone-saved"         //param: officePhoneNumber
+    ,MODEL_SAVED_MOBILE_PHONE            : "profile-saved-mobile-phone-saved"         //param: mobilePhoneNumber
+    ,MODEL_SAVED_COMPANY                 : "profile-saved-company-saved"              //param: companyName
+    ,MODEL_SAVED_STREET                  : "profile-saved-street-saved"               //param: firstAddress
+    ,MODEL_SAVED_ADDRESS2                : "profile-saved-address2-saved"             //param: secondAddress
+    ,MODEL_SAVED_CITY                    : "profile-saved-city-saved"                 //param: city
+    ,MODEL_SAVED_STATE                   : "profile-saved-state-saved"                //param: state
+    ,MODEL_SAVED_ZIP                     : "profile-saved-zip-saved"                  //param: zip
+    ,MODEL_SAVED_MAIN_PHONE              : "profile-saved-main-phone-saved"           //param: mainOfficePhone
+    ,MODEL_SAVED_FAX                     : "profile-saved-fax-saved"                  //param: fax
+    ,MODEL_SAVED_WEBSITE                 : "profile-saved-website-saved"              //param: website
+    ,MODEL_SAVED_ECM_FILE_ID             : "profile-saved-ecm-file-id-saved"          //param: ecmFileId
 
-    ,ME_PICTURE_UPLOADED              : "profile-picture-uploaded"           //param: uploadInfo
+    ,MODEL_UPLOADED_PICTURE              : "profile-uploaded-picture"                 //param: uploadInfo
 
-    ,VE_TITLE_CHANGED                 : "profile-title-changed"              //param: title
-    ,VE_LOCATION_CHANGED              : "profile-location-changed"           //param: location
-    ,VE_IM_ACCOUNT_CHANGED            : "profile-im-account-changed"         //param: imAccount
-    ,VE_IM_SYSTEM_CHANGED             : "profile-im-system-changed"          //param: imSystem
-    ,VE_OFFICE_PHONE_CHANGED          : "profile-office-phone-changed"       //param: officePhoneNumber
-    ,VE_MOBILE_PHONE_CHANGED          : "profile-mobile-phone-changed"       //param: mobilePhoneNumber
-    ,VE_COMPANY_CHANGED               : "profile-company-changed"            //param: companyName
-    ,VE_STREET_CHANGED                : "profile-street-changed"             //param: firstAddress
-    ,VE_ADDRESS2_CHANGED              : "profile-address2-changed"           //param: secondAddress
-    ,VE_CITY_CHANGED                  : "profile-city-changed"               //param: city
-    ,VE_STATE_CHANGED                 : "profile-state-changed"              //param: state
-    ,VE_ZIP_CHANGED                   : "profile-zip-changed"                //param: zip
-    ,VE_MAIN_PHONE_CHANGED            : "profile-main-phone-changed"         //param: mainOfficePhone
-    ,VE_FAX_CHANGED                   : "profile-fax-changed"                //param: fax
-    ,VE_WEBSITE_CHANGED               : "profile-website-changed"            //param: website
+    ,VIEW_CHANGED_TITLE                  : "profile-changed-title-changed"              //param: title
+    ,VIEW_CHANGED_LOCATION               : "profile-changed-location-changed"           //param: location
+    ,VIEW_CHANGED_IM_ACCOUNT             : "profile-changed-im-account-changed"         //param: imAccount
+    ,VIEW_CHANGED_IM_SYSTEM              : "profile-changed-im-system-changed"          //param: imSystem
+    ,VIEW_CHANGED_OFFICE_PHONE           : "profile-changed-office-phone-changed"       //param: officePhoneNumber
+    ,VIEW_CHANGED_MOBILE_PHONE           : "profile-changed-mobile-phone-changed"       //param: mobilePhoneNumber
+    ,VIEW_CHANGED_COMPANY                : "profile-changed-company-changed"            //param: companyName
+    ,VIEW_CHANGED_STREET                 : "profile-changed-street-changed"             //param: firstAddress
+    ,VIEW_CHANGED_ADDRESS2               : "profile-changed-address2-changed"           //param: secondAddress
+    ,VIEW_CHANGED_CITY                   : "profile-changed-city-changed"               //param: city
+    ,VIEW_CHANGED_STATE                  : "profile-changed-state-changed"              //param: state
+    ,VIEW_CHANGED_ZIP                    : "profile-changed-zip-changed"                //param: zip
+    ,VIEW_CHANGED_MAIN_PHONE             : "profile-changed-main-phone-changed"         //param: mainOfficePhone
+    ,VIEW_CHANGED_FAX                    : "profile-changed-fax-changed"                //param: fax
+    ,VIEW_CHANGED_WEBSITE                : "profile-changed-website-changed"            //param: website
 
     ,modelRetrievedProfile: function(profileInfo) {
-        Acm.Dispatcher.fireEvent(this.ME_PROFILE_INFO_RETRIEVED, profileInfo);
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_PROFILE_INFO, profileInfo);
         //Sidebar.Controller.modelRetrievedProfile(profileInfo);
         //var z = 1;
         //Acm.Dispatcher.fireEvent(Sidebar.Controller.ME_PROFILE_INFO_RETRIEVED, profileInfo);
     }
     ,modelSavedProfileInfo: function(profileInfo) {
-        Acm.Dispatcher.fireEvent(this.ME_PROFILE_INFO_SAVED, profileInfo);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_PROFILE_INFO, profileInfo);
     }
     ,modelSavedTitle: function(title) {
-        Acm.Dispatcher.fireEvent(this.ME_TITLE_SAVED, title);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_TITLE, title);
     }
     ,modelSavedLocation: function(location) {
-        Acm.Dispatcher.fireEvent(this.ME_LOCATION_SAVED, location);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_LOCATION, location);
     }
     ,modelSavedImAccount: function(imAccount) {
-        Acm.Dispatcher.fireEvent(this.ME_IM_ACCOUNT_SAVED, imAccount);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_IM_ACCOUNT, imAccount);
     }
     ,modelSavedImSystem: function(imSystem) {
-        Acm.Dispatcher.fireEvent(this.ME_IM_SYSTEM_SAVED, imSystem);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_IM_SYSTEM, imSystem);
     }
     ,modelSavedOfficePhone: function(officePhoneNumber) {
-        Acm.Dispatcher.fireEvent(this.ME_OFFICE_PHONE_SAVED, officePhoneNumber);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_OFFICE_PHONE, officePhoneNumber);
     }
     ,modelSavedMobilePhone: function(mobilePhoneNumber) {
-        Acm.Dispatcher.fireEvent(this.ME_MOBILE_PHONE_SAVED, mobilePhoneNumber);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_MOBILE_PHONE, mobilePhoneNumber);
     }
     ,modelSavedCompany: function(companyName) {
-        Acm.Dispatcher.fireEvent(this.ME_COMPANY_SAVED, companyName);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_COMPANY, companyName);
     }
     ,modelSavedStreet: function(firstAddress) {
-        Acm.Dispatcher.fireEvent(this.ME_STREET_SAVED, firstAddress);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_STREET, firstAddress);
     }
     ,modelSavedAddress2: function(secondAddress) {
-        Acm.Dispatcher.fireEvent(this.ME_ADDRESS2_SAVED, secondAddress);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ADDRESS2, secondAddress);
     }
     ,modelSavedCity: function(city) {
-        Acm.Dispatcher.fireEvent(this.ME_CITY_SAVED, city);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CITY, city);
     }
     ,modelSavedState: function(state) {
-        Acm.Dispatcher.fireEvent(this.ME_STATE_SAVED, state);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_STATE, state);
     }
     ,modelSavedZip: function(zip) {
-        Acm.Dispatcher.fireEvent(this.ME_ZIP_SAVED, zip);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ZIP, zip);
     }
     ,modelSavedMainPhone: function(mainOfficePhone) {
-        Acm.Dispatcher.fireEvent(this.ME_MAIN_PHONE_SAVED, mainOfficePhone);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_MAIN_PHONE, mainOfficePhone);
     }
     ,modelSavedFax: function(fax) {
-        Acm.Dispatcher.fireEvent(this.ME_FAX_SAVED, fax);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_FAX, fax);
     }
     ,modelSavedWebsite: function(website) {
-        Acm.Dispatcher.fireEvent(this.ME_WEBSITE_SAVED, website);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_WEBSITE, website);
     }
     ,modelSavedEcmFileId: function(ecmFileId) {
-        Acm.Dispatcher.fireEvent(this.ME_ECM_FILE_ID_SAVED, ecmFileId);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ECM_FILE_ID, ecmFileId);
     }
     ,modelUploadedPicture: function(uploadInfo) {
-        Acm.Dispatcher.fireEvent(this.ME_PICTURE_UPLOADED, uploadInfo);
+        Acm.Dispatcher.fireEvent(this.MODEL_UPLOADED_PICTURE, uploadInfo);
     }
 
     ,viewChangedTitle: function(title) {
-        Acm.Dispatcher.fireEvent(this.VE_TITLE_CHANGED, title);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_TITLE, title);
     }
     ,viewChangedLocation: function(location) {
-        Acm.Dispatcher.fireEvent(this.VE_LOCATION_CHANGED, location);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_LOCATION, location);
     }
     ,viewChangedImAccount: function(imAccount) {
-        Acm.Dispatcher.fireEvent(this.VE_IM_ACCOUNT_CHANGED, imAccount);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_IM_ACCOUNT, imAccount);
     }
     ,viewChangedImSystem: function(imSystem) {
-        Acm.Dispatcher.fireEvent(this.VE_IM_SYSTEM_CHANGED, imSystem);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_IM_SYSTEM, imSystem);
     }
     ,viewChangedOfficePhone: function(officePhoneNumber) {
-        Acm.Dispatcher.fireEvent(this.VE_OFFICE_PHONE_CHANGED, officePhoneNumber);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_OFFICE_PHONE, officePhoneNumber);
     }
     ,viewChangedMobilePhone: function(mobilePhoneNumber) {
-        Acm.Dispatcher.fireEvent(this.VE_MOBILE_PHONE_CHANGED, mobilePhoneNumber);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_MOBILE_PHONE, mobilePhoneNumber);
     }
     ,viewChangedCompany: function(companyName) {
-        Acm.Dispatcher.fireEvent(this.VE_COMPANY_CHANGED, companyName);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_COMPANY, companyName);
     }
     ,viewChangedStreet: function(firstAddress) {
-        Acm.Dispatcher.fireEvent(this.VE_STREET_CHANGED, firstAddress);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_STREET, firstAddress);
     }
     ,viewChangedAddress2: function(secondAddress) {
-        Acm.Dispatcher.fireEvent(this.VE_ADDRESS2_CHANGED, secondAddress);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ADDRESS2, secondAddress);
     }
     ,viewChangedCity: function(city) {
-        Acm.Dispatcher.fireEvent(this.VE_CITY_CHANGED, city);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_CITY, city);
     }
     ,viewChangedState: function(state) {
-        Acm.Dispatcher.fireEvent(this.VE_STATE_CHANGED, state);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_STATE, state);
     }
     ,viewChangedZip: function(zip) {
-        Acm.Dispatcher.fireEvent(this.VE_ZIP_CHANGED, zip);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ZIP, zip);
     }
     ,viewChangedMainPhone: function(mainOfficePhone) {
-        Acm.Dispatcher.fireEvent(this.VE_MAIN_PHONE_CHANGED, mainOfficePhone);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_MAIN_PHONE, mainOfficePhone);
     }
     ,viewChangedFax: function(fax) {
-        Acm.Dispatcher.fireEvent(this.VE_FAX_CHANGED, fax);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_FAX, fax);
     }
     ,viewChangedWebsite: function(website) {
-        Acm.Dispatcher.fireEvent(this.VE_WEBSITE_CHANGED, website);
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_WEBSITE, website);
     }
 
 
