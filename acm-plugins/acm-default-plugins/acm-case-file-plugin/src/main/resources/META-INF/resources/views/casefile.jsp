@@ -48,6 +48,17 @@
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css" type="text/css"/>
     <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/${js_x_editable}"></script>
 
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/easypiechart/${js_easypiechart}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/sparkline/${js_sparkline}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_stack}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_time}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_symbol}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_axislabels}"></script>--%>
+
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jshashtable}/${js_jshashtable}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jshashtable}/${js_jshashset}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_numberformatter}/${js_numberformatter}"></script>--%>
 
 <style>
     table.fancytree-ext-table {
@@ -212,6 +223,10 @@
 
                                 <div class="col-md-12" id="tabDetail" style="display:none;">
                                     <section class="panel b-a ">
+                                        <%--<div id="divHistogram" style="width:300px;height:150px"></div>--%>
+                                        <div id="divHistogram" style="width:512px;height:64px"></div>
+                                        <br/>
+
                                         <div class="panel-heading b-b bg-info">
                                             <ul class="nav nav-pills pull-right">
                                                 <li>

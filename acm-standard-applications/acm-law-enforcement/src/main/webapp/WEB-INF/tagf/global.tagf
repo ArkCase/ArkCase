@@ -26,7 +26,13 @@
 <c:set var="vd_charts"             scope="session" value="charts"/>
 <c:set var="js_easypiechart"       scope="session" value="jquery.easy-pie-chart.js"/>
 <c:set var="js_sparkline"          scope="session" value="jquery.sparkline.min.js"/>
-<c:set var="js_flot"               scope="session" value="jquery.flot.pie.min.js"/>
+<c:set var="vd_flot"               scope="session" value="flot-0.8.3"/>
+<c:set var="js_flot"               scope="session" value="jquery.flot.js"/>
+<c:set var="js_flot_stack"         scope="session" value="jquery.flot.stack.js"/>
+<c:set var="js_flot_time"          scope="session" value="jquery.flot.time.js"/>
+<c:set var="js_flot_symbol"        scope="session" value="jquery.flot.symbol.js"/>
+<c:set var="js_flot_axislabels"    scope="session" value="jquery.flot.axislabels.js"/>
+<c:set var="js_flot_pie"           scope="session" value="jquery.flot.pie.min.js"/>
 <c:set var="js_flot_tooltip"       scope="session" value="jquery.flot.tooltip.min.js"/>
 <c:set var="js_flot_spline"        scope="session" value="jquery.flot.spline.js"/>
 <c:set var="js_flot_resize"        scope="session" value="jquery.flot.resize.js"/>
@@ -133,6 +139,12 @@
 <c:set var="vd_contextmenu"        scope="session" value="ui-contextmenu-1.5.1-0"/>
 <c:set var="js_contextmenu"        scope="session" value="jquery.ui-contextmenu.js"/>
 
+<c:set var="vd_jshashtable"        scope="session" value="jshashtable-3.0"/>
+<c:set var="js_jshashtable"        scope="session" value="hashtable.js"/>
+<c:set var="js_jshashset"          scope="session" value="hashset.js"/>
+
+<c:set var="vd_numberformatter"    scope="session" value="numberformatter-1.2.4"/>
+<c:set var="js_numberformatter"    scope="session" value="jquery.numberformatter-1.2.4.js"/>
 
 
 <!-- Bootstrap http://getbootstrap.com -->
