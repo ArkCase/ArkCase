@@ -4,6 +4,7 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.service.milestone.model.AcmMilestone;
 import com.armedia.acm.services.users.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -98,6 +99,13 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     @OneToMany (cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_person_assoc_parent_id")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
+
+    /**
+     * Milestones are read-only in the parent object; use the milestone service to add them.
+     */
+    @OneToMany
+    @JoinColumn(name = "cm_milestone_object_id", updatable = false, insertable = false)
+    private List<AcmMilestone> milestones = new ArrayList<>();
 
     // the same person could originate many complaints, but each complaint is originated by
     // only one person, so a ManyToOne mapping makes sense here.
@@ -386,6 +394,16 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     public void setPersonAssociations(List<PersonAssociation> personAssociations)
     {
         this.personAssociations = personAssociations;
+    }
+
+    public List<AcmMilestone> getMilestones()
+    {
+        return milestones;
+    }
+
+    public void setMilestones(List<AcmMilestone> milestones)
+    {
+        this.milestones = milestones;
     }
 
     @Override
