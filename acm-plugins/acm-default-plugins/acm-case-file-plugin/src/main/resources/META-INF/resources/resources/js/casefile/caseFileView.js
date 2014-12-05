@@ -388,9 +388,6 @@ CaseFile.View = CaseFile.View || {
             this.$btnEditCaseFile   	.on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
             this.$btnChangeCaseStatus   .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
             this.$btnConsolidateCase    .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
-
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE     ,this.onViewSelectedCaseFile);
         }
         ,onInitialized: function() {
         }
@@ -458,19 +455,6 @@ CaseFile.View = CaseFile.View || {
                 alert("Consolidate case:" + caseNumber);
             });
         }
-
-        ,onModelRetrievedCaseFile: function(caseFile) {
-            if (!caseFile.hasError) {
-                CaseFile.View.Action.showBtnChangeCaseStatus(Acm.goodValue(caseFile.changeCaseStatus, true));
-            }
-        }
-        ,onViewSelectedCaseFile: function(caseFileId) {
-            var caseFile = CaseFile.Model.Detail.cacheCaseFile.get(caseFileId);
-            if (caseFile) {
-                CaseFile.View.Action.showBtnChangeCaseStatus(Acm.goodValue(caseFile.changeCaseStatus, true));
-            }
-        }
-
         ,showDlgChangeCaseStatus: function(onClickBtnPrimary) {
             Acm.Dialog.bootstrapModal(this.$dlgChangeCaseStatus, onClickBtnPrimary);
         }
@@ -483,9 +467,6 @@ CaseFile.View = CaseFile.View || {
         ,setValueEdtConsolidateCase: function(val) {
             Acm.Object.setValue(this.$edtConsolidateCase, val);
         }
-        ,showBtnChangeCaseStatus: function(show) {
-            Acm.Object.show(this.$btnChangeCaseStatus, show);
-        }
     }
 
     ,Detail: {
@@ -493,7 +474,6 @@ CaseFile.View = CaseFile.View || {
             this.$tabTop          = $("#tabTop");
             this.$tabTopBlank     = $("#tabTopBlank");
 
-            this.$divHistogram    = $("#divHistogram");
             this.$divDetail       = $(".divDetail");
             this.$btnEditDetail   = $("#tabDetail button:eq(0)");
             this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
@@ -715,173 +695,16 @@ CaseFile.View = CaseFile.View || {
                 this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
                 this.setTextLnkStatus(Acm.goodValue(c.status));
                 this.setHtmlDivDetail(Acm.goodValue(c.details));
-                this.drawMilestone("milestone");
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
-
-//moved to Action
-//                if (c.changeCaseStatus) {
-//                	this.hideChangeCaseStatusButton();
-//                }else {
-//                	this.showChangeCaseStatusButton();
-//                }
+                
+                if (c.changeCaseStatus) {
+                	this.hideChangeCaseStatusButton();
+                }else {
+                	this.showChangeCaseStatusButton();
+                }
             }
-        }
-
-        ,drawMilestone0: function(milestone) {
-            var d1 = [[1, 300], [2, 600], [3, 550], [4, 400], [5, 300]];
-            $.plot(this.$divHistogram, [d1]);
-            $(".legend").hide();
-        }
-        ,drawMilestone: function(milestone) {
-            return;
-//            var d1 = [[0, 10], [1, 15], 2, 8];
-//            for (var i = 0; i <= 10; i += 1) {
-//                d1.push([i, parseInt(Math.random() * 30)]);
-//            }
-//
-//            var d2 = [];
-//            for (var i = 0; i <= 10; i += 1) {
-//                d2.push([i, parseInt(Math.random() * 30)]);
-//            }
-//
-//            var d3 = [];
-//            for (var i = 0; i <= 10; i += 1) {
-//                d3.push([i, parseInt(Math.random() * 30)]);
-//            }
-            var d1 = [[0, 10], [1, 15], [2, 8]];
-            var d2 = [[0, 5], [1, 25], [2, 18]];
-            var d3 = [[0, 16], [1, 12], [2, 8]];
-            var d4 = [[0, 16], [1, 12], [2, 8]];
-
-            var d5 = [[10, 0]];
-            var d6 = [[5,  0]];
-            var d7 = [[16, 0]];
-            var d8 = [[12, 0]];
-
-            var option = {
-                series: {
-                    stack: true
-                    ,lines: {
-                        show: false
-                        ,fill: true
-                        ,steps: false
-                    }
-                    ,bars: {
-                        show: true
-                        ,barWidth: 1
-                        ,horizontal: true
-                    }
-                }
-                ,yaxis: {
-                    tickLength: 0
-                }
-                ,xaxis: {
-                    tickLength: 0
-                }
-                ,grid: {
-                    borderWidth: {top: 1, right: 0, bottom: 0, left: 1}
-                    ,borderColor: {top: "#FFF", left: "#FFF"}
-                }
-            };
-
-            //$.plot(this.$divHistogram, [d1, d2, d3, d4], option);
-            $.plot(this.$divHistogram, [d5, d6, d7, d8], option);
-
-            $(".flot-x-axis").hide();
-            $(".flot-y-axis").hide();
-
-        }
-
-        ,drawMilestone2: function(milestone) {
-            var data = [[0, 7], [1, 6], [2, 3], [3, 4], [4, 9], [5, 8], [6, 12], [7, 10], [8, 7], [9, 14]];
-            var option = {
-                series: {
-                    bars: {
-                        stack: true,
-                        show: true
-                    }
-                }
-            };
-
-            $.plot(this.$divHistogram, [data], option);
-            //$(".legend").hide();
-        }
-
-        ,_gd: function gd(year, month, day) {
-            return new Date(year, month - 1, day).getTime();
-        }
-
-        ,drawMilestone1: function(milestone) {
-            var gd = this._gd;
-            var dataset0 = [
-//                [569106, gd(2012, 1, 1)], [743944, gd(2012, 1, 2)], [120865, gd(2012, 1, 3)], [890208, gd(2012, 1, 4)],
-//                [259723, gd(2012, 1, 5)], [177150, gd(2012, 1, 6)], [32430, gd(2012, 1, 7)], [274054, gd(2012, 1, 8)],
-//                [63435, gd(2012, 1, 9)], [994514, gd(2012, 1, 10)], [885453, gd(2012, 1, 11)], [289791, gd(2012, 1, 12)],
-//                [411717, gd(2012, 1, 13)], [95324, gd(2012, 1, 14)], [646479, gd(2012, 1, 15)], [448868, gd(2012, 1, 16)],
-//                [669678, gd(2012, 1, 17)], [909944, gd(2012, 1, 18)], [675965, gd(2012, 1, 19)], [281272, gd(2012, 1, 20)],
-                [629781, gd(2012, 1, 21)], [330138, gd(2012, 1, 22)], [802835, gd(2012, 1, 23)], [139079, gd(2012, 1, 24)],
-                [187101, gd(2012, 1, 25)], [354332, gd(2012, 1, 26)], [361090, gd(2012, 1, 27)], [78171, gd(2012, 1, 28)],
-                [452212, gd(2012, 1, 29)], [404369, gd(2012, 1, 30)], [63509, gd(2012, 1, 31)]
-            ];
-            var dataset = [
-//                [569106, 1)], [743944, 2)], [120865, 3)], [890208, 4)],
-//                [259723, 5)], [177150, 6)], [32430, 7)], [274054, 8)],
-//                [63435, 9)], [994514, 10)], [885453, 11)], [289791, 12)],
-//                [411717, 13)], [95324, 14)], [646479, 15)], [448868, 16)],
-//                [669678, 17)], [909944, 18)], [675965, 19)], [281272, 20)],
-                [629781, 21], [330138, 22], [802835, 23], [139079, 24],
-                [187101, 25], [354332, 26], [361090, 27], [78171, 28],
-                [452212, 29], [404369, 30], [63509, 31]
-            ];
-            var options = {
-                series: {
-                    stack: true,
-                    bars: {
-                        show: true
-                    }
-                }
-                ,bars: {
-                    lineWidth: 1,
-                    barWidth: 24 * 60 * 60 * 450,
-                    horizontal: true
-                }
-//                ,xaxis: {
-//                    color: "black",
-//                    axisLabel: "Date",
-//                    axisLabelUseCanvas: true,
-//                    axisLabelFontSizePixels: 12,
-//                    axisLabelFontFamily: 'Verdana, Arial',
-//                    axisLabelPadding: 10
-//                    ,tickFormatter: function (v, axis) {
-//                        return $.formatNumber(v, { format: "#,###", locale: "us" });
-//                    }
-//                }
-//                ,yaxis: {
-//                    mode: "time",
-//                    tickSize: [3, "day"],
-//                    min: gd(2012, 1, 1),
-//                    max: gd(2012, 1, 31),
-//                    tickLength: 10,
-//                    color: "black",
-//                    axisLabel: "DNS Query Count",
-//                    axisLabelUseCanvas: true,
-//                    axisLabelFontSizePixels: 12,
-//                    axisLabelFontFamily: 'Verdana, Arial',
-//                    axisLabelPadding: 3
-//                }
-//                ,grid: {
-//                    hoverable: true,
-//                    borderWidth: 2,
-//                    backgroundColor: { colors: ["#EDF5FF", "#ffffff"] }
-//                }
-            };
-            $.plot(this.$divHistogram, dataset, options);
-            //this.$divHistogram.UseTooltip();
-
-            //$.plot(this.$divHistogram, [d1]);
-            //$(".legend").hide();
         }
 
         ,setTextLabCaseNumber: function(txt) {
@@ -921,16 +744,16 @@ CaseFile.View = CaseFile.View || {
         ,saveDivDetail: function() {
             return AcmEx.Object.SummerNote.save(this.$divDetail);
         }
-//        ,showChangeCaseStatusButton: function() {
-//        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
-//        		CaseFile.View.Action.$btnChangeCaseStatus.show();
-//        	}
-//        }
-//        ,hideChangeCaseStatusButton: function() {
-//        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
-//        		CaseFile.View.Action.$btnChangeCaseStatus.hide();
-//        	}
-//        }
+        ,showChangeCaseStatusButton: function() {
+        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
+        		CaseFile.View.Action.$btnChangeCaseStatus.show();        		
+        	}
+        }
+        ,hideChangeCaseStatusButton: function() {
+        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
+        		CaseFile.View.Action.$btnChangeCaseStatus.hide();        		
+        	}
+        }
 
         ,populateCaseFile_old: function(c) {
             this.setTextLabCaseNumber(c.caseNumber);
