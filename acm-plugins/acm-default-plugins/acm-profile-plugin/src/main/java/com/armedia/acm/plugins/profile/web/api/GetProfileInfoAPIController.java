@@ -124,6 +124,12 @@ public class GetProfileInfoAPIController {
         } else {
             profileDTO.setPictureUrl("");
         }
+        if( userOrgInfo.getTitle() != null ){
+            profileDTO.setTitle(userOrgInfo.getTitle());
+        } else {
+            profileDTO.setTitle("");
+        }
+
         return profileDTO;
     }
 

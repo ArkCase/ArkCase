@@ -163,6 +163,7 @@ public class SetUserOrgInfoAPIController {
             userOrgOld.setOfficePhoneNumber(in.getOfficePhoneNumber());
             userOrgOld.setMobilePhoneNumber(in.getMobilePhoneNumber());
             userOrgOld.setEcmFileId(in.getEcmFileId());
+            userOrgOld.setTitle(in.getTitle());
         return userOrgOld;
     }
 
