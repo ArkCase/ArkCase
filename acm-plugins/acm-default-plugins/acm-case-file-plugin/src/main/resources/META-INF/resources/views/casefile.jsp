@@ -9,6 +9,7 @@
     <div id="detailData" itemscope="true" style="display: none">
         <span itemprop="caseFileId">${caseId}</span>
         <span itemprop="token">${token}</span>
+        <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
         <span itemprop="urlRoiForm">${roiFormUrl}</span>
         <span itemprop="urlChangeCaseStatusForm">${changeCaseStatusFormUrl}</span>
         <span itemprop="urlEditChangeCaseStatusForm">${editChangeCaseStatusFormUrl}</span>
@@ -165,6 +166,7 @@
                                 <div class="wrapper" id="tabTitle" style="display:none;">
                                     <div class="pull-right inline">
                                         <div class="btn-group">
+                                        	<button class="btn btn-default btn-sm" data-title="Edit Case File"><i class="fa fa-archive"></i> Edit</button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Change Case Status"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
                                             <button class="btn btn-default btn-sm" data-title="Change Case Status" style="display: none" ><i class="fa fa-archive"></i> Change Case Status</button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Consolidate Case"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>--%>
