@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
+import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
@@ -39,6 +40,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
+import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
@@ -71,6 +73,10 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
     private MuleClient muleClient;
+    
+    private SaveCaseService saveCaseService;
+    
+    private AcmHistoryDao acmHistoryDao;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -333,5 +339,20 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setUserActionExecutor(AcmUserActionExecutor userActionExecutor) {
 		this.userActionExecutor = userActionExecutor;
 	}
-	
+
+	public SaveCaseService getSaveCaseService() {
+		return saveCaseService;
+	}
+
+	public void setSaveCaseService(SaveCaseService saveCaseService) {
+		this.saveCaseService = saveCaseService;
+	}
+
+	public AcmHistoryDao getAcmHistoryDao() {
+		return acmHistoryDao;
+	}
+
+	public void setAcmHistoryDao(AcmHistoryDao acmHistoryDao) {
+		this.acmHistoryDao = acmHistoryDao;
+	}
 }
