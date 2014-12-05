@@ -119,11 +119,11 @@ public class GetProfileInfoAPIController {
         profileDTO.setZip(userOrgInfo.getZip());
         profileDTO.setUserId(userOrgInfo.getUser().getUserId());
         profileDTO.setEcmFileId(userOrgInfo.getEcmFileId());
-        if(userOrgInfo.getEcmFileId()!=null) {
-            profileDTO.setPictureUrl(URL + userOrgInfo.getEcmFileId() + "?inline=true");
-        } else {
-            profileDTO.setPictureUrl("");
-        }
+//        if(userOrgInfo.getEcmFileId()!=null) {
+//            profileDTO.setPictureUrl(URL + userOrgInfo.getEcmFileId() + "?inline=true");
+//        } else {
+//            profileDTO.setPictureUrl("");
+//        }
         if( userOrgInfo.getTitle() != null ){
             profileDTO.setTitle(userOrgInfo.getTitle());
         } else {
