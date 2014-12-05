@@ -145,10 +145,10 @@ Profile.Service = {
         ,saveTitle: function(title) {
             var profileInfo = Profile.Model.Info.getProfileInfo();
             if (Profile.Service.Info._validateProfile(profileInfo)) {
-                profileInfo.location = title;
+                profileInfo.title = title;
                 this.saveProfileInfo(profileInfo
                     ,function(data) {
-                        Profile.Controller.modelSavedTitle(Profile.Service.Info._dataWrapper(data, data.location));
+                        Profile.Controller.modelSavedTitle(Profile.Service.Info._dataWrapper(data, data.title));
                     }
                 );
             }

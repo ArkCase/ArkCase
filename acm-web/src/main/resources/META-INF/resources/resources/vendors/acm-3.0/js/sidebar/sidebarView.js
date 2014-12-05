@@ -17,31 +17,31 @@ Sidebar.View = {
             this.$imgPicture    = $("#sidebarPic");
             this.$spanTitle     = $("#sidebarTitle");
 
-            Acm.Dispatcher.addEventListener(Sidebar.Controller.ME_PROFILE_INFO_RETRIEVED  ,this.onProfileInfoRetrieved);
+            Acm.Dispatcher.addEventListener(Sidebar.Controller.MODEL_RETRIEVED_PROFILE_INFO  ,this.onModelRetrievedProfileInfo);
             if ("undefined" != typeof Profile) {
-                Acm.Dispatcher.addEventListener(Profile.Controller.ME_TITLE_SAVED         ,this.onTitleSavedByProfile);
-                Acm.Dispatcher.addEventListener(Profile.Controller.ME_ECM_FILE_ID_SAVED   ,this.onEcmFileIdSavedByProfile);
+                Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_TITLE         ,this.onModelSavedTitleByProfile);
+                Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_ECM_FILE_ID   ,this.onSavedEcmFileIdByProfile);
             }
 
         }
         ,onInitialized: function() {
         }
 
-        ,onProfileInfoRetrieved: function(profileInfo) {
+        ,onModelRetrievedProfileInfo: function(profileInfo) {
             if (profileInfo.hasError) {
                 alert("View: onProfileInfoRetrieved, hasError, errorMsg:" + profileInfo.errorMsg);
             } else {
                 Sidebar.View.Profile.populateProfileInfo(profileInfo);
             }
         }
-        ,onTitleSavedByProfile: function(title) {
+        ,onModelSavedTitleByProfile: function(title) {
             if (title.hasError) {
                 Sidebar.View.Profile.setTextSpanTitle("(Error)");
             } else {
                 Sidebar.View.Profile.setTextSpanTitle(title);
             }
         }
-        ,onEcmFileIdSavedByProfile: function(ecmFileId) {
+        ,onSavedEcmFileIdByProfile: function(ecmFileId) {
             if (ecmFileId.hasError) {
                 Sidebar.View.Profile.displayPicture(0);
             } else {
@@ -51,7 +51,7 @@ Sidebar.View = {
 
         ,populateProfileInfo: function(profileInfo) {
             this.displayPicture(Acm.goodValue(profileInfo.ecmFileId, -1));
-            this.setTextSpanTitle(Acm.goodValue(profileInfo.location));
+            this.setTextSpanTitle(Acm.goodValue(profileInfo.title));
         }
         ,displayPicture: function(ecmFileId) {
             var pictureUrl = (0 < ecmFileId)? Sidebar.Service.Profile.getPictureUrl(ecmFileId)

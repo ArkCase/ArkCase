@@ -44,23 +44,23 @@ Profile.Model = {
         create: function() {
             this._profileInfo    = new Acm.Model.SessionData("AcmProfile");
 
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_PICTURE_UPLOADED        ,this.onPictureUploaded);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_UPLOADED_PICTURE        ,this.onModelUploadedPicture);
 
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_TITLE_CHANGED           ,this.onTitleChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_LOCATION_CHANGED        ,this.onLocationChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_IM_ACCOUNT_CHANGED      ,this.onImAccountChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_IM_SYSTEM_CHANGED       ,this.onImSystemChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_OFFICE_PHONE_CHANGED    ,this.onOfficePhoneChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_MOBILE_PHONE_CHANGED    ,this.onMobilePhoneChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_COMPANY_CHANGED         ,this.onCompanyChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_STREET_CHANGED          ,this.onStreetChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_ADDRESS2_CHANGED        ,this.onAddress2Changed);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_CITY_CHANGED            ,this.onCityChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_STATE_CHANGED           ,this.onStateChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_ZIP_CHANGED             ,this.onZipChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_MAIN_PHONE_CHANGED      ,this.onMainPhoneChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_FAX_CHANGED             ,this.onFaxChanged);
-            Acm.Dispatcher.addEventListener(Profile.Controller.VE_WEBSITE_CHANGED         ,this.onWebsiteChanged);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_TITLE            ,this.onViewChangedTitle);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_LOCATION         ,this.onViewChangedLocation);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_IM_ACCOUNT       ,this.onViewChangedImAccount);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_IM_SYSTEM        ,this.onViewChangedImSystem);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_OFFICE_PHONE     ,this.onViewChangedOfficePhone);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_MOBILE_PHONE     ,this.onViewChangedMobilePhone);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_COMPANY          ,this.onViewChangedCompany);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_STREET           ,this.onViewChangedStreet);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_ADDRESS2         ,this.onViewChangedAddress2);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_CITY             ,this.onViewChangedCity);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_STATE            ,this.onViewChangedState);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_ZIP              ,this.onViewChangedZip);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_MAIN_PHONE       ,this.onViewChangedMainPhone);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_FAX              ,this.onViewChangedFax);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_WEBSITE          ,this.onViewChangedWebsite);
         }
         ,onInitialized: function() {
             var profileInfo = Profile.Model.Info.getProfileInfo();
@@ -84,55 +84,55 @@ Profile.Model = {
         }
 
 
-        ,onPictureUploaded: function(uploadInfo) {
+        ,onModelUploadedPicture: function(uploadInfo) {
             if (!uploadInfo.hasError) {
                 var ecmFileId = Profile.Model.Picture.getEcmFileId(uploadInfo);
                 Profile.Service.Info.saveEcmFileId(ecmFileId);
             }
         }
-        ,onTitleChanged: function(title) {
+        ,onViewChangedTitle: function(title) {
             Profile.Service.Info.saveTitle(title);
         }
-        ,onLocationChanged: function(location) {
+        ,onViewChangedLocation: function(location) {
             Profile.Service.Info.saveLocation(location);
         }
-        ,onImAccountChanged: function(imAccount) {
+        ,onViewChangedImAccount: function(imAccount) {
             Profile.Service.Info.saveImAccount(imAccount);
         }
-        ,onImSystemChanged: function(imSystem) {
+        ,onViewChangedImSystem: function(imSystem) {
             Profile.Service.Info.saveImSystem(imSystem);
         }
-        ,onOfficePhoneChanged: function(officePhoneNumber) {
+        ,onViewChangedOfficePhone: function(officePhoneNumber) {
             Profile.Service.Info.saveOfficePhone(officePhoneNumber);
         }
-        ,onMobilePhoneChanged: function(mobilePhoneNumber) {
+        ,onViewChangedMobilePhone: function(mobilePhoneNumber) {
             Profile.Service.Info.saveMobilePhone(mobilePhoneNumber);
         }
-        ,onCompanyChanged: function(companyName) {
+        ,onViewChangedCompany: function(companyName) {
             Profile.Service.Info.saveCompany(companyName);
         }
-        ,onStreetChanged: function(firstAddress) {
+        ,onViewChangedStreet: function(firstAddress) {
             Profile.Service.Info.saveStreet(firstAddress);
         }
-        ,onAddress2Changed: function(secondAddress) {
+        ,onViewChangedAddress2: function(secondAddress) {
             Profile.Service.Info.saveAddress2(secondAddress);
         }
-        ,onCityChanged: function(city) {
+        ,onViewChangedCity: function(city) {
             Profile.Service.Info.saveCity(city);
         }
-        ,onStateChanged: function(state) {
+        ,onViewChangedState: function(state) {
             Profile.Service.Info.saveState(state);
         }
-        ,onZipChanged: function(zip) {
+        ,onViewChangedZip: function(zip) {
             Profile.Service.Info.saveZip(zip);
         }
-        ,onMainPhoneChanged: function(mainOfficePhone) {
+        ,onViewChangedMainPhone: function(mainOfficePhone) {
             Profile.Service.Info.saveMainPhone(mainOfficePhone);
         }
-        ,onFaxChanged: function(fax) {
+        ,onViewChangedFax: function(fax) {
             Profile.Service.Info.saveFax(fax);
         }
-        ,onWebsiteChanged: function(website) {
+        ,onViewChangedWebsite: function(website) {
             Profile.Service.Info.saveWebsite(website);
         }
 
