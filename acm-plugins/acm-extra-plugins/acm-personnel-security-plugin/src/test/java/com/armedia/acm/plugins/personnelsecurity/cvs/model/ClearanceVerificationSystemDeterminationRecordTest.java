@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.personnelsecurity.model;
+package com.armedia.acm.plugins.personnelsecurity.cvs.model;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -19,9 +19,10 @@ public class ClearanceVerificationSystemDeterminationRecordTest
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Test
-    public void toString_correctLength()
+    public void toString_correctRecordFormat()
     {
-        ClearanceVerificationSystemDeterminationRecord record = new ClearanceVerificationSystemDeterminationRecord();
+        ClearanceVerificationSystemDeterminationRecord record =
+                new ClearanceVerificationSystemDeterminationRecord("Garcia", new Date(), true, new Date());
         record.setClearanceType("F");
 
         record.setAccessReported("SAPSCI");
@@ -39,7 +40,6 @@ public class ClearanceVerificationSystemDeterminationRecordTest
         record.setStandardUsedToGrantClearance("A");
         record.setStatusDate(new Date());
         record.setStatusUpdate("N");
-        record.setSubjectDateOfBirth(new Date());
         record.setSubjectUSPlaceOfBirth("IL");
 
         String cvsRecord = record.toString();
