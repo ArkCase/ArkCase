@@ -142,6 +142,17 @@ Profile.Service = {
                 return value;
             }
         }
+        ,saveTitle: function(title) {
+            var profileInfo = Profile.Model.Info.getProfileInfo();
+            if (Profile.Service.Info._validateProfile(profileInfo)) {
+                profileInfo.title = title;
+                this.saveProfileInfo(profileInfo
+                    ,function(data) {
+                        Profile.Controller.modelSavedTitle(Profile.Service.Info._dataWrapper(data, data.title));
+                    }
+                );
+            }
+        }
         ,saveLocation: function(location) {
             var profileInfo = Profile.Model.Info.getProfileInfo();
             if (Profile.Service.Info._validateProfile(profileInfo)) {

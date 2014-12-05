@@ -32,6 +32,7 @@
         <property name="muleClient" ref="muleClient"/>
         <property name="saveCaseService" ref="saveCaseService"/>
         <property name="acmHistoryDao" ref="acmHistoryDao"/>
+        <property name="objectAssociationDao" ref="objectAssociationDao"/>
 	</bean>
 
 </beans>
