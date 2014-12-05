@@ -23,13 +23,12 @@ public class AcmActivitiTaskEventListener implements ApplicationListener<AcmTask
      * To be called from the Activiti business process, to demonstrate we can call Spring beans from Activiti
      * @param message
      */
-    public void logMessage(String message, String... messages)
+    public void logMessage(String message, String moreInfo, String approver)
     {
         log.info("Got a message: " + message);
-        for (String m : messages)
-        {
-            log.info("\t" + m);
-        }
+        log.info("More info: " + moreInfo);
+
+        log.info("approver: " + approver);
     }
 
     public int getTimesCalled()
