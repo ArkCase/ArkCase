@@ -22,6 +22,7 @@ import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 
 import org.apache.commons.io.IOUtils;
@@ -77,6 +78,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
     private SaveCaseService saveCaseService;
     
     private AcmHistoryDao acmHistoryDao;
+    
+    private ObjectAssociationDao objectAssociationDao;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -354,5 +357,13 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setAcmHistoryDao(AcmHistoryDao acmHistoryDao) {
 		this.acmHistoryDao = acmHistoryDao;
+	}
+
+	public ObjectAssociationDao getObjectAssociationDao() {
+		return objectAssociationDao;
+	}
+
+	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
+		this.objectAssociationDao = objectAssociationDao;
 	}
 }
