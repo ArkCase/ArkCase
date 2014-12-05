@@ -27,7 +27,7 @@ public class ProfileDTO {
     private String mobilePhoneNumber;
     private String fullName;
     private String email;
-    private String pictureUrl;
+//    private String pictureUrl;
     private Long ecmFileId;
     private String title;
 
@@ -169,13 +169,13 @@ public class ProfileDTO {
         this.email = email;
     }
 
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
-    }
+//    public String getPictureUrl() {
+//        return pictureUrl;
+//    }
+//
+//    public void setPictureUrl(String pictureUrl) {
+//        this.pictureUrl = pictureUrl;
+//    }
 
     public Long getEcmFileId() {
         return ecmFileId;

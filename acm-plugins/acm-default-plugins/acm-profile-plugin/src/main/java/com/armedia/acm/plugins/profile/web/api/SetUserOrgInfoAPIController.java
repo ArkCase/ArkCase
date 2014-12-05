@@ -123,7 +123,7 @@ public class SetUserOrgInfoAPIController {
             throw new AcmCreateObjectFailedException("user organization info",e.getMessage(),e.getCause());
         }
         getEventPublisher().publishProfileEvent(userOrg,auth,isCompanyNameNull,true);
-        in.setPictureUrl(URL + in.getEcmFileId() + "?inline=true");
+     //   in.setPictureUrl(URL + in.getEcmFileId() + "?inline=true");
         return in;
     }
 
@@ -148,7 +148,6 @@ public class SetUserOrgInfoAPIController {
         return org;
     }
     private UserOrg createUserOrgForUpdate(ProfileDTO in,UserOrg userOrgOld){
-
             userOrgOld.setWebsite(in.getWebsite());
             userOrgOld.setZip(in.getZip());
             userOrgOld.setState(in.getState());
