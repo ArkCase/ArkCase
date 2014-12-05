@@ -78,4 +78,8 @@
         <property name="accessControlEntryDao" ref="acmAccessControlEntryDao"/>
     </bean>
 
+    <bean id="protectedObjectInsertListener" class="com.armedia.acm.services.dataaccess.service.impl.ProtectedObjectInsertListener"/>
+
+    <bean id="protectedObjectUpdateListener" class="com.armedia.acm.services.dataaccess.service.impl.ProtectedObjectUpdateListener"/>
+
 </beans>

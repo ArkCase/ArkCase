@@ -166,6 +166,7 @@
 
 
                     </div>
+                    
                 </div>
                     <%--
                                     <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
@@ -303,7 +304,15 @@
                         <div class="pull-right inline">
                             <div class="btn-group">
                                 <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
+                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "changeCaseStatus" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Change Case Status</button>
                                 <input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />
+                                <input id="changeCaseStatusFormUrl" type="hidden" value="${changeCaseStatusFormUrl}" />
+                                <form id="formFiles" style="display:none;">
+                                            <%--<input type="file" id="file" name="file">--%>
+                                        <input id="newAttachment" type="file" name="files[]" multiple/>
+
+                                        <%--<input type="submit">--%>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -581,23 +590,81 @@
     </div>
 </div>
 <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
+	<div class="modal-dialog">
+		<div class="modal-content">
+  			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="rejectModalLabel">Reject Task</h4>
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to reject this task?</p>
-                <label>Reason</label>
-                <textarea class="form-control"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Reject Task</button>
-            </div>
-        </div>
-    </div>
+  			<div class="modal-body">
+  				<p>Are you sure you want to reject this task?</p>
+    			<p>This task will be returned to the owner:</p>
+    			<section class="panel panel-default">
+					<div class="table-responsive">
+    					<table class="table table-striped b-t b-light" id="ownerTableRejectTask">
+							<thead>
+								<tr>
+									<th width="20"></th>
+									<th>First Name</th>
+									<th>Last Name</th>
+									<th>Username</th>
+									<th>Organization</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- This area is filled dynamically depending of the result of the service -->
+							</tbody>
+						</table>
+					</div>
+				</section>
+				<p>Or select some other people from below:</p>
+				<section class="panel panel-default">
+					<div class="row wrapper">
+						<div class="col-sm-12">
+							<div class="input-group">
+								<input type="text" class="input-sm form-control" name="searchKeywordRejectTask" placeholder="Search people..">
+								<span class="input-group-btn">
+									<button class="btn btn-sm btn-default" type="button" name="searchUsersRejectTask">Go!</button>
+								</span> 
+							</div>
+                       	</div>
+                     </div>
+                     <div class="table-responsive">
+                       <table class="table table-striped b-t b-light" id="usersTableRejectTask">
+			               <thead>
+			                 	<tr>
+			                   		<th width="20"></th>
+			                   		<th class="th-sortable" data-toggle="class">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+			                   		<th>Last Name</th>
+			                   		<th>Username</th>
+			                   		<th>Organization</th>
+			                 	</tr>
+			               	</thead>
+	               			<tbody>
+	               				<!-- This area is filled dynamically depending of the result of the service -->
+	               			</tbody>
+             			</table>
+           			</div>
+					<footer class="panel-footer">
+					  <div class="row">
+					    <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 0-0 of 0 items</small> </div>
+					    <div class="col-sm-6 text-right text-center-xs">
+					      <ul class="pagination pagination-sm m-t-none m-b-none">
+					      	<!-- This area is filled dinamically depending of the result of the service -->
+					      </ul>
+					    </div>
+					  </div>
+					</footer>
+         		</section>
+       			<label>Reason</label>
+            	<textarea class="form-control"></textarea>
+       		</div>
+       		<div class="modal-footer">
+         		<button type="button" class="btn btn-default" data-dismiss="modal" name="cancelRejectTask">Cancel</button>
+         		<button type="button" class="btn btn-primary" name="submitRejectTask">Reject Task</button>
+       		</div>
+     	</div>
+   	</div>
 </div>
 <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">

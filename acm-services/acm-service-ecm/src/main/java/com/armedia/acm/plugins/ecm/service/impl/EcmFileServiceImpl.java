@@ -181,11 +181,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public FileUpload fileUploadFromEcmFile(MultipartFile file, String contextPath, EcmFile uploaded)
     {
         FileUpload fileUpload = new FileUpload();
+
         String baseUrl = contextPath + "/file/" + uploaded.getFileId();
         fileUpload.setDeleteUrl(baseUrl);
         fileUpload.setName(file.getOriginalFilename());
         fileUpload.setSize(file.getSize());
         fileUpload.setUrl(baseUrl);
+        fileUpload.setCreator(uploaded.getCreator());
+        fileUpload.setId(uploaded.getFileId());
+        fileUpload.setStatus(uploaded.getStatus());
+        fileUpload.setCreated(uploaded.getCreated());
         return fileUpload;
     }
 

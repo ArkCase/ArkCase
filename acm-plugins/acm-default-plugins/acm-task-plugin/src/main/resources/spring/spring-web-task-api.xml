@@ -46,4 +46,14 @@
     	<property name="taskDao" ref="acmTaskDao" />
     </bean>
 
+    <bean id="listTaskEventsAPIController" class="com.armedia.acm.plugins.task.web.api.FindTaskEventsByIdAPIController">
+        <property name="auditDao" ref="auditDao"/>
+    </bean>
+
+    <bean id="addFileToTask" class="com.armedia.acm.plugins.task.web.api.AddFileToTaskAPIController">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="muleClient" ref="muleClient"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
 </beans>

@@ -429,13 +429,17 @@ class ActivitiTaskDao implements TaskDao
     	List<WorkflowHistoryInstance> retval = new ArrayList<WorkflowHistoryInstance>();
     	
     	HistoricTaskInstanceQuery query = null;
-    	
+
+        // due to an Activiti issue, we have to retrieve the task local issues separately for each task instance.
+        // if we ask for them at the query level (via "includeTaskLocalVariables") Activiti basically returns one big
+        // map, instead of one map per historic task instance.  Obviously the one big map will contain correct values
+        // only for the last task retrieved.
     	if (!adhoc)
     	{
-    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(id).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(id).orderByHistoricTaskInstanceEndTime().asc();
     	}
     	else{
-    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(id).includeProcessVariables().includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
+    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(id).orderByHistoricTaskInstanceEndTime().asc();
     	}
     	
     	if (null != query)
@@ -456,7 +460,12 @@ class ActivitiTaskDao implements TaskDao
 	    			Date startDate = historicTaskInstance.getStartTime();
 	    			Date endDate = historicTaskInstance.getEndTime();
 	    			
-	    			Map<String, Object> localVariables = historicTaskInstance.getTaskLocalVariables();
+	    			Map<String, Object> localVariables = getActivitiHistoryService()
+                            .createHistoricTaskInstanceQuery()
+                            .taskId(taskId)
+                            .includeTaskLocalVariables()
+                            .singleResult()
+                            .getTaskLocalVariables();
 	    			if (null != localVariables && localVariables.containsKey("outcome"))
 	    			{
 	    				String outcome = (String) localVariables.get("outcome");

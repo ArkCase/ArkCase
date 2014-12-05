@@ -11,6 +11,9 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -128,6 +131,23 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
     	List<CaseFile> results = dbQuery.getResultList();
     	
     	return results;
+    }
+    
+    @Transactional
+    public int updateComplaintStatus(Long caseId, String newStatus, String modifier, Date date)
+    {
+        Query updateStatusQuery = getEm().createQuery(
+                "UPDATE CaseFile " +
+                        "SET status = :newStatus, " +
+                        "modified = :modified, " +
+                        "modifier = :modifier " +
+                        "WHERE caseId = :caseId");
+        updateStatusQuery.setParameter("newStatus", newStatus);
+        updateStatusQuery.setParameter("modified", date);
+        updateStatusQuery.setParameter("modifier", modifier);
+        updateStatusQuery.setParameter("caseId", caseId);
+
+        return updateStatusQuery.executeUpdate();
     }
     
     private Date shiftDateFromToday(int daysFromToday){

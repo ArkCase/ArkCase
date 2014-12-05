@@ -277,7 +277,6 @@ TaskWizard.Object = {
         t.priority = data.priority;
         t.dueDate = data.dueDate;
         t.assignee = data.assignee;
-
         t.taskId = data.taskId;
         t.attachedToObjectType = data.attachedToObjectType;
         t.attachedToObjectId = data.attachedToObjectId;
@@ -294,7 +293,8 @@ TaskWizard.Object = {
         var data = {};
         var t = Task.getTask();
         data.assignee = this.getSelectValueSelOwners();
-        data.attachedToObjectType = "COMPLAINT";
+        if(data.assignee == null){data.assignee = App.getUserName();}
+        data.attachedToObjectType = t.attachedToObjectType;
         data.attachedToObjectName = this.getValueEdtComplaint();
         data.title = this.getValueEdtSubject();
         data.taskStartDate = this.getValueEdtStartDate();

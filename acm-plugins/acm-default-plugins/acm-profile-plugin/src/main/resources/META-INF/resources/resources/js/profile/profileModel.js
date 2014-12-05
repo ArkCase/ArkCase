@@ -8,15 +8,15 @@ Profile.Model = {
         if (Profile.Model.Picture.create) {Profile.Model.Picture.create();}
         if (Profile.Model.Info.create)    {Profile.Model.Info.create();}
     }
-    ,initialize: function() {
-        if (Profile.Model.Picture.initialize) {Profile.Model.Picture.initialize();}
-        if (Profile.Model.Info.initialize)    {Profile.Model.Info.initialize();}
+    ,onInitialized: function() {
+        if (Profile.Model.Picture.onInitialized) {Profile.Model.Picture.onInitialized();}
+        if (Profile.Model.Info.onInitialized)    {Profile.Model.Info.onInitialized();}
     }
 
     ,Picture: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,_uploadInfo: null
@@ -61,7 +61,7 @@ Profile.Model = {
             Acm.Dispatcher.addEventListener(Profile.Controller.VE_FAX_CHANGED             ,this.onFaxChanged);
             Acm.Dispatcher.addEventListener(Profile.Controller.VE_WEBSITE_CHANGED         ,this.onWebsiteChanged);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
             var profileInfo = Profile.Model.Info.getProfileInfo();
             if (profileInfo) {
                 Profile.Controller.modelRetrievedProfile(profileInfo);

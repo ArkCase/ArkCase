@@ -29,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
 import com.armedia.acm.form.closecomplaint.model.ExistingCase;
 import com.armedia.acm.form.closecomplaint.model.ReferExternal;
-import com.armedia.acm.form.config.CloseInformation;
+import com.armedia.acm.form.config.ResolveInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
@@ -39,6 +39,7 @@ import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserActionName;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -53,41 +54,6 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
 	private ApplicationEventPublisher applicationEventPublisher;
-	private MuleClient muleClient;
-			
-	/* (non-Javadoc)
-	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#init()
-	 */
-	@Override
-	public Object init() {
-
-		Object result = "";
-		
-		String mode = getRequest().getParameter("mode");
-		String xmlId = getRequest().getParameter("xmlId");
-		
-		if ("edit".equals(mode) && null != xmlId && !"".equals(xmlId))
-		{
-			try{
-				Long id = Long.parseLong(xmlId);
-				EcmFile file = getEcmFileDao().find(id);
-				
-				MuleMessage message = getMuleClient().send("vm://downloadFileFlow.in", file.getEcmFileId(), null);
-				
-				if (null != message && message.getPayload() instanceof ContentStream)
-				{
-					result = getContent((ContentStream) message.getPayload());
-				}
-				
-			}
-			catch(Exception e)
-			{
-				LOG.warn("EcmFile with id=" + xmlId + " is not found while edit mode. Empty Frevvo form will be shown.");
-			}
-		}
-		
-		return result;
-	}
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -168,10 +134,22 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
         }
         
         CloseComplaintRequest savedRequest = getCloseComplaintRequestDao().save(closeComplaintRequest);
+        
+        if (!"edit".equals(mode))
+        {
+        	// Record user action
+        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_COMPLAINT_CREATED, getAuthentication().getName());
+        }
+        else
+        {
+        	// Record user action
+        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_COMPLAINT_MODIFIED, getAuthentication().getName());
+        }
 		
 		// Update Status to "IN APPROVAL"
 		if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
-			getComplaintDao().updateComplaintStatus(complaint.getComplaintId(), "IN APPROVAL", getAuthentication().getName(), form.getInformation().getCloseDate());
+			complaint.setStatus("IN APPROVAL");
+			getComplaintDao().save(complaint);
 		}
 		
 		// Save attachments (or update XML form and PDF form if the mode is "edit")
@@ -195,12 +173,12 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		String mode = getRequest().getParameter("mode");
 		CloseComplaintForm closeComplaint = new CloseComplaintForm();
 		
-		CloseInformation information = new CloseInformation();
+		ResolveInformation information = new ResolveInformation();
 		if (!"edit".equals(mode))
 		{
-			information.setCloseDate(new Date());
+			information.setDate(new Date());
 		}
-		information.setDispositions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
+		information.setResolveOptions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
 
 		// Get Approvers
 		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
@@ -295,42 +273,6 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		
 		return json;
 	}
-	
-	
-	private String getContent(ContentStream contentStream)
-	{
-		String content = "";
-		InputStream inputStream = null;
-		
-		try
-        {
-			inputStream = contentStream.getStream();
-			StringWriter writer = new StringWriter();
-			IOUtils.copy(inputStream, writer);
-			content = writer.toString();
-        } 
-		catch (IOException e) 
-		{
-        	LOG.error("Could not copy input stream to the writer: " + e.getMessage(), e);
-		}
-		finally
-        {
-            if ( inputStream != null )
-            {
-                try
-                {
-                	inputStream.close();
-                }
-                catch (IOException e)
-                {
-                    LOG.error("Could not close CMIS content stream: " + e.getMessage(), e);
-                }
-            }
-        }
-		
-		return content;
-	}
-
 
     @Override
     public String getFormName()
@@ -384,13 +326,5 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
 	{
 		this.applicationEventPublisher = applicationEventPublisher;
-	}
-
-	public MuleClient getMuleClient() {
-		return muleClient;
-	}
-
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
 	}
 }

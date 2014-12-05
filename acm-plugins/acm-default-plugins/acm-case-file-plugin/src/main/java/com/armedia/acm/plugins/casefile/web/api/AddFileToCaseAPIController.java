@@ -12,10 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
@@ -25,20 +22,21 @@ import javax.servlet.http.HttpServletRequest;
  * Created by marjan.stefanoski on 08.11.2014.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/case", "/api/latest/plugin/case"} )
+@RequestMapping( { "/api/v1/plugin/casefile", "/api/latest/plugin/casefile"} )
 public class AddFileToCaseAPIController {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private CaseFileDao caseFileDao;
     private EcmFileService ecmFileService;
 
-    private final String uploadFileType = "attachment";
+    private final String uploadFileType = "attachment_case";
 
     @RequestMapping(value = "/file", method = RequestMethod.POST, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
+    @ResponseBody
     public ResponseEntity<? extends Object> uploadFile(
-            @RequestParam("caseId") Long caseId,
+            @RequestParam("caseFileId") Long caseId,
             @RequestParam("files[]") MultipartFile file,
             @RequestHeader("Accept") String acceptType,
             HttpServletRequest request,

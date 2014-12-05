@@ -19,14 +19,19 @@
 		<property name="authenticationTokenService" ref="authenticationTokenService" />
 		<property name="acmPluginManager" ref="acmPluginManager"/>
 		<property name="userDao" ref="userJpaDao" />
+		<property name="userActionDao" ref="userActionDao" />
+        <property name="userActionExecutor" ref="userActionExecutor"/>
 		<property name="complaintDao" ref="acmComplaintDao" />
 		<property name="caseFileDao" ref="caseFileDao" />
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
+        <property name="changeCaseStatusDao" ref="changeCaseStatusDao"/>
         <property name="personDao" ref="acmPersonDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="muleClient" ref="muleClient"/>
+        <property name="saveCaseService" ref="saveCaseService"/>
+        <property name="acmHistoryDao" ref="acmHistoryDao"/>
 	</bean>
 
 </beans>

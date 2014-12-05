@@ -203,12 +203,17 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-form</groupId>
-            <artifactId>acm-form-close-case</artifactId>
+            <artifactId>acm-form-change-case-status</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-form</groupId>
             <artifactId>acm-form-close-complaint</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-case-file</artifactId>
             <version>${acm.version}</version>
         </dependency>
         

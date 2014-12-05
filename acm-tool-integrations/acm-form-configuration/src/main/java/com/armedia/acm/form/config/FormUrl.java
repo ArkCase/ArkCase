@@ -17,4 +17,6 @@ public interface FormUrl {
 	 * @return
 	 */
 	public String getPdfRenditionUrl(String formName, String docId);
+
+    public String enableFrevvoFormEngine(String formName);
 }
