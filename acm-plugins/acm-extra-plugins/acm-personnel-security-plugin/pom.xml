@@ -19,6 +19,12 @@
 
     <dependencies>
 
+        <!-- acm -->
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ecm</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- apache commons -->
         <dependency>

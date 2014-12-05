@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,45 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
 
     private ApplicationEventPublisher applicationEventPublisher;
+
+    @Override
+    public EcmFile upload(
+            String fileType,
+            InputStream fileContents,
+            String fileContentType,
+            String fileName,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            String parentObjectName) throws AcmCreateObjectFailedException
+    {
+        if ( log.isInfoEnabled() )
+        {
+            log.info("The user '" + authentication.getName() + "' uploaded file: '" + fileName + "'");
+        }
+
+        try
+        {
+            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
+                    authentication,
+                    fileType,
+                    fileContents,
+                    fileContentType,
+                    fileName,
+                    targetCmisFolderId,
+                    parentObjectType,
+                    parentObjectId,
+                    parentObjectName);
+
+            return uploaded;
+        }
+        catch (MuleException e)
+        {
+            log.error("Could not upload file: " + e.getMessage(), e);
+            throw new AcmCreateObjectFailedException(fileName, e.getMessage(), e);
+        }
+    }
 
     @Override
     public EcmFile upload(

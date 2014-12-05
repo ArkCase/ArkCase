@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.personnelsecurity.model;
+package com.armedia.acm.plugins.personnelsecurity.cvs.model;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -84,6 +84,25 @@ public class ClearanceVerificationSystemDeterminationRecord
       * special access, exceptions, etc) must be U.
     */
     private String statusUpdate;
+
+    public ClearanceVerificationSystemDeterminationRecord(
+            String subjectLastName,
+            Date subjectDateOfBirth,
+            boolean clearanceGranted,
+            Date adjudicationFinishedDate)
+    {
+
+        this.subjectDateOfBirth = subjectDateOfBirth;
+
+        this.statusUpdate = clearanceGranted ? "N" : "D";
+
+        this.clearanceType = clearanceGranted ? "F" : "D";
+
+        this.grantedOrDeniedDate = adjudicationFinishedDate;
+
+        this.subjectLastName = subjectLastName;
+
+    }
 
     @Override
     public String toString()
