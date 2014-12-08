@@ -17,6 +17,7 @@ Admin.Event = {
     }
     ,onPostInit: function() {
 //        Admin.Service.retrieveMyTasks(App.getUserName());
+        Admin.Service.retrieveTemplates();
     }
 
 };

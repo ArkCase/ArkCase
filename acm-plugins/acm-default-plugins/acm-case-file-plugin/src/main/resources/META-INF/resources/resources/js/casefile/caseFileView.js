@@ -2021,8 +2021,8 @@ CaseFile.View = CaseFile.View || {
 
         ,onClickSpanAddDocument: function(event, ctrl) {
             var enableFrevvoFormEngine = CaseFile.View.MicroData.getFormUrls()['enable_frevvo_form_engine'];
-            if(enableFrevvoFormEngine == "true"){
-                var report = CaseFile.View.Documents.getSelectReport();
+            var report = CaseFile.View.Documents.getSelectReport();
+            if(report == "roi"){
                 var token = CaseFile.View.MicroData.getToken();
 
                 var caseFileId = CaseFile.View.Tree.getActiveCaseId();
@@ -2055,8 +2055,8 @@ CaseFile.View = CaseFile.View || {
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
                 + "<option value='roi'>Report of Investigation</option>"
-                + "<option value='roi'>Medical Release</option>"
-                + "<option value='roi'>General Release</option>"
+                + "<option value='mr'>Medical Release</option>"
+                + "<option value='gr'>General Release</option>"
                 + "</select>"
                 + "</span>";
 
