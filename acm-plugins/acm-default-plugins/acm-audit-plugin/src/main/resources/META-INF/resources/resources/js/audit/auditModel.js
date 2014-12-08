@@ -11,16 +11,20 @@ Audit.Model = Audit.Model || {
     }
 
     ,validateAudit: function(data) {
-        return Acm.Validator.validateSolrData(data);
-
         if (Acm.isEmpty(data)) {
             return false;
         }
-        if (!Acm.isArray(data)) {
+        if (Acm.isEmpty(data.totalCount)) {
+            return false;
+        }
+        if (!Acm.isArray(data.resultPage)) {
             return false;
         }
         return true;
     }
+//    ,validateAudit: function(data) {
+//        return Acm.Validator.validateSolrData(data);
+//    }
 
 };
 
