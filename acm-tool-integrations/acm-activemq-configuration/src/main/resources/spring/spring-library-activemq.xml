@@ -17,12 +17,15 @@
         </amq:persistenceAdapter>
         <amq:systemUsage>
             <amq:systemUsage>
+                <!-- memory usage is for non_persistent messages - limit is on memory -->
                 <amq:memoryUsage>
                     <amq:memoryUsage limit="20 mb"/>
                 </amq:memoryUsage>
+                <!-- storeUsage is for persistent messages - the limit is applied to disk space  -->
                 <amq:storeUsage>
                     <amq:storeUsage limit="128 mb"/>
                 </amq:storeUsage>
+                <!-- tempUsage is for temporary messages - limit is on disk space -->
                 <amq:tempUsage>
                     <amq:tempUsage limit="128 mb"/>
                 </amq:tempUsage>

@@ -87,6 +87,7 @@
     </changeSet>
 
     <changeSet id="04-edit-cm-location-and-cm-organization-column" author="marst">
+        <!--<addNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>-->
         <dropNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>
         <dropNotNullConstraint tableName="acm_user_org" columnName="cm_organization"/>
     </changeSet>
@@ -94,6 +95,12 @@
     <changeSet id="05-add-fileId-creator-modifier-and-date-fields" author="marst">
         <addColumn tableName="acm_user_org">
             <column name="cm_ecm_fileId"  type="NUMBER(32,0)" defaultValue="-1"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="06-add-title-field" author="marst">
+        <addColumn tableName="acm_user_org">
+            <column name="cm_title"  type="VARCHAR(1024)"></column>
         </addColumn>
     </changeSet>
 

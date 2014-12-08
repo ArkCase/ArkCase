@@ -55,6 +55,7 @@ CaseFile.Model = CaseFile.Model || {
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE          ,this.onViewSelectedCaseFile);
 
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_FILE           , this.onViewChangedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE          , this.onViewChangedCaseTitle);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_INCIDENT_DATE       , this.onViewChangedIncidentDate);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_ASSIGNEE            , this.onViewChangedAssignee);
@@ -95,6 +96,9 @@ CaseFile.Model = CaseFile.Model || {
             if (!caseFile) {
                 CaseFile.Service.Detail.retrieveCaseFile(caseFileId);
             }
+        }
+        ,onViewChangedCaseFile: function(caseFileId) {
+        	CaseFile.Service.Detail.retrieveCaseFile(caseFileId);
         }
         ,onViewChangedCaseTitle: function(caseFileId, title) {
             CaseFile.Service.Detail.saveCaseTitle(caseFileId, title);
