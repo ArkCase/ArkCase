@@ -38,7 +38,7 @@
                                 <option value="0">Action</option>
                                 <option value="1">Export to Excel</option>
                             </select>
-                            <button class="btn btn-sm btn-default">Apply</button>
+                            <button class="btn btn-sm btn-default" id="btnApply">Apply</button>
                         </div>
                         <div class="col-sm-5 m-b-xs">
                             <div class="btn-group" data-toggle="buttons">

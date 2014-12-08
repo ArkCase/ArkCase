@@ -867,8 +867,8 @@ CaseFile.View = CaseFile.View || {
             }
         }
         ,showMilestone: function(milestone) {
-            var milestones = ["Order", "Payment", "Backed", "Delivered"];
-            var milestone = "Backed";
+            var milestones = ["Initiated", "Waiver", "Adjudication", "Issued", "Closed"];
+            var milestone = "Adjudication";
 
             this.Tracker.show(this.$canvasMilestone, milestone, milestones);
         }

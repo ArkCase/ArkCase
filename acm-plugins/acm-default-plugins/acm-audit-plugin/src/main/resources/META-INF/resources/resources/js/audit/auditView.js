@@ -5,10 +5,18 @@
  */
 Audit.View = Audit.View || {
     create: function() {
+        this.$btnApply = $("#btnApply");
+        this.$btnApply.on("click", function(e) {Audit.View.onClickBtnApply(e, this);});
+
         this.$divAudit = $("#divAudit");
         this.createJTable(this.$divAudit);
     }
     ,onInitialized: function() {
+    }
+
+    ,onClickBtnApply: function(event, ctrl) {
+        var $selectedRows = Audit.View.$divAudit.jtable('selectedRows');
+        var z=1;
     }
 
     ,_makeJtData: function(auditList) {
@@ -25,16 +33,11 @@ Audit.View = Audit.View || {
                 Record.objectId = auditList[i].objectId;
                 jtData.Records.push(Record);
             }
-            jtData.TotalRecordCount = auditList.length;
+
+            jtData.TotalRecordCount = Audit.Model.getTotalCount();
         }
         return jtData;
     }
-
-//    //Delete selected students
-//    $('#DeleteAllButton').button().click(function () {
-//        var $selectedRows = $('#StudentTableContainer').jtable('selectedRows');
-//        $('#StudentTableContainer').jtable('deleteRows', $selectedRows);
-//    });
 
     ,createJTable: function($jt) {
         var sortMap = {};
@@ -43,7 +46,7 @@ Audit.View = Audit.View || {
         AcmEx.Object.JTable.usePaging($jt
             ,{
                 title: 'Audit'
-                ,pageSize: 16
+                ,pageSize: 50
                 ,selecting: true
                 ,multiselect: true
                 ,selectingCheckboxes: true
@@ -83,13 +86,6 @@ Audit.View = Audit.View || {
                         ,edit: false
                         ,sorting: false
                     }
-//                    ,RowCheckbox: {
-//                        title: 'Selected'
-//                        ,width: '12%'
-//                        ,type: 'checkbox'
-//                        //,values: { 'false': fale, 'true': 'Active' }
-//                        ,defaultValue: 'false'
-//                    }
                     ,dateTime: {
                         title: 'Date/Time'
                         ,width: '20%'
