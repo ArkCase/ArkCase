@@ -28,5 +28,18 @@
         <property name="muleClient" ref="muleClient"/>
     </bean>
 
+    <bean id="complaintsSearchByAssignedUserAPIController" class="com.armedia.acm.services.search.web.api.ComplaintsSearchByAssignedUserAPIController">
+        <property name="muleClient" ref="muleClient"/>
+    </bean>
+    <bean id="caseFilesSearchByCreatorAPIController" class="com.armedia.acm.services.search.web.api.CaseFilesSearchByCreatorAPIController">
+        <property name="muleClient" ref="muleClient"/>
+    </bean>
+    <bean id="complaintsSearchByCreatedDateAPIController" class="com.armedia.acm.services.search.web.api.ComplaintsSearchByCreatedDateAPIController">
+        <property name="muleClient" ref="muleClient"/>
+    </bean>
+    <bean id="caseFilesSearchByDueDateTimeIntervalAPIController" class="com.armedia.acm.services.search.web.api.CaseFilesSearchByDueDateTimeIntervalAPIController">
+        <property name="muleClient" ref="muleClient"/>
+    </bean>
+
 </beans>
 

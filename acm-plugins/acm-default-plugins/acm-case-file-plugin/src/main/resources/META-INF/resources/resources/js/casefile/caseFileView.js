@@ -40,6 +40,8 @@ CaseFile.View = CaseFile.View || {
             
             this.formUrls = new Object();
             
+            this.formUrls["edit_case_file"] = items.properties("urlEditCaseFileForm").itemValue();
+            this.formUrls["reinvestigate_case_file"] = items.properties("urlReinvestigateCaseFileForm").itemValue();
             this.formUrls["roi"] = items.properties("urlRoiForm").itemValue();
             this.formUrls["enable_frevvo_form_engine"] = items.properties("enableFrevvoFormEngine").itemValue();
             this.formUrls["change_case_status"] = items.properties("urlChangeCaseStatusForm").itemValue();
@@ -381,14 +383,58 @@ CaseFile.View = CaseFile.View || {
             this.$dlgChangeCaseStatus   = $("#changeCaseStatus");
             this.$dlgConsolidateCase    = $("#consolidateCase");
             this.$edtConsolidateCase    = $("#edtConsolidateCase");
+            this.$btnEditCaseFile    	= $("#tabTitle button[data-title='Edit Case File']");
             this.$btnChangeCaseStatus   = $("#tabTitle button[data-title='Change Case Status']");
             this.$btnConsolidateCase    = $("#tabTitle button[data-title='Consolidate Case']");
+            this.$btnReinvestigateCaseFile = $("#tabTitle button[data-title='Reinvestigate Case File']");
+            this.$btnEditCaseFile   	.on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
             this.$btnChangeCaseStatus   .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
             this.$btnConsolidateCase    .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
+            this.$btnReinvestigateCaseFile.on("click", function(e) {CaseFile.View.Action.onClickBtnReinvestigateCaseFile(e, this);});
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE   ,this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE     ,this.onViewSelectedCaseFile);
         }
         ,onInitialized: function() {
         }
 
+        ,onClickBtnEditCaseFile: function() {
+        	var urlEditCaseFileForm = CaseFile.View.MicroData.getFormUrls()['edit_case_file'];
+        	var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+            var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (Acm.isNotEmpty(urlEditCaseFileForm) && Acm.isNotEmpty(c)) {
+            	var xmlId = '';
+            	var pdfId = '';
+            	if (Acm.isNotEmpty(c.childObjects) && c.childObjects.length > 0) {
+            		for (var i = 0; i < c.childObjects.length; i++) {
+            			var child = c.childObjects[i];
+            			
+            			if (child.targetType != null && child.targetType == 'FILE' && 
+            			    child.targetName != null && child.targetName.indexOf('form_case_file_') == 0 &&
+            			    child.targetName.substr(-4) == '.xml') 
+            			{
+            				xmlId = child.targetId;
+            			}
+            			
+            			if (child.targetType != null && child.targetType == 'FILE' && 
+            				child.targetName != null && child.targetName.indexOf('Case_File_') == 0&&
+            			    child.targetName.substr(-4) == '.pdf') 
+            			{
+            				pdfId = child.targetId;
+            			}
+            		}
+            	}
+            	
+            	urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
+            	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',xmlId:'" + xmlId + "',pdfId:'" + pdfId + "',");
+            	Acm.Dialog.openWindow(urlEditCaseFileForm, "", 860, 700
+                    ,function() {
+                        CaseFile.Controller.viewChangedCaseFile(caseFileId);
+                    }
+                );
+            }
+        }
+        
         ,onClickBtnChangeCaseStatus: function() {
             CaseFile.View.Action.showDlgChangeCaseStatus(function(event, ctrl){
                 var urlChangeCaseStatusForm = CaseFile.View.MicroData.getFormUrls()['change_case_status'];
@@ -415,6 +461,47 @@ CaseFile.View = CaseFile.View || {
                 alert("Consolidate case:" + caseNumber);
             });
         }
+        ,onClickBtnReinvestigateCaseFile: function() {
+        	var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.getFormUrls()['reinvestigate_case_file'];
+        	var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+            var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
+            	var xmlId = '';
+            	if (Acm.isNotEmpty(c.childObjects) && c.childObjects.length > 0) {
+            		for (var i = 0; i < c.childObjects.length; i++) {
+            			var child = c.childObjects[i];
+            			
+            			if (child.targetType != null && child.targetType == 'FILE' && 
+            			    child.targetName != null && child.targetName.indexOf('form_case_file_') == 0 &&
+            			    child.targetName.substr(-4) == '.xml') 
+            			{
+            				xmlId = child.targetId;
+            			}
+            		}
+            	}
+            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
+            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',xmlId:'" + xmlId + "',");
+            	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 860, 700
+                    ,function() {
+            			// TODO: When James will find solution, we should change this
+            			location.reload();
+                    }
+                );
+            }
+        }
+
+        ,onModelRetrievedCaseFile: function(caseFile) {
+            if (!caseFile.hasError) {
+                CaseFile.View.Action.showBtnChangeCaseStatus(Acm.goodValue(caseFile.changeCaseStatus, true));
+            }
+        }
+        ,onViewSelectedCaseFile: function(caseFileId) {
+            var caseFile = CaseFile.Model.Detail.cacheCaseFile.get(caseFileId);
+            if (caseFile) {
+                CaseFile.View.Action.showBtnChangeCaseStatus(Acm.goodValue(caseFile.changeCaseStatus, true));
+            }
+        }
+
         ,showDlgChangeCaseStatus: function(onClickBtnPrimary) {
             Acm.Dialog.bootstrapModal(this.$dlgChangeCaseStatus, onClickBtnPrimary);
         }
@@ -427,6 +514,9 @@ CaseFile.View = CaseFile.View || {
         ,setValueEdtConsolidateCase: function(val) {
             Acm.Object.setValue(this.$edtConsolidateCase, val);
         }
+        ,showBtnChangeCaseStatus: function(show) {
+            Acm.Object.show(this.$btnChangeCaseStatus, show);
+        }
     }
 
     ,Detail: {
@@ -434,6 +524,7 @@ CaseFile.View = CaseFile.View || {
             this.$tabTop          = $("#tabTop");
             this.$tabTopBlank     = $("#tabTopBlank");
 
+            this.$canvasMilestone = $("#canvasMilestone");
             this.$divDetail       = $(".divDetail");
             this.$btnEditDetail   = $("#tabDetail button:eq(0)");
             this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
@@ -655,16 +746,131 @@ CaseFile.View = CaseFile.View || {
                 this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
                 this.setTextLnkStatus(Acm.goodValue(c.status));
                 this.setHtmlDivDetail(Acm.goodValue(c.details));
+                this.showMilestone("milestone");
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
-                
-                if (c.changeCaseStatus) {
-                	this.hideChangeCaseStatusButton();
-                }else {
-                	this.showChangeCaseStatusButton();
+
+//moved to Action
+//                if (c.changeCaseStatus) {
+//                	this.hideChangeCaseStatusButton();
+//                }else {
+//                	this.showChangeCaseStatusButton();
+//                }
+            }
+        }
+
+        ,Tracker: {
+            show: function($s, milestone, milestones) {
+                var c = $s[0];
+                var ctx = c.getContext("2d");
+                ctx.font = "12px Arial";
+                ctx.fillStyle = "white";
+                ctx.strokeStyle = "white";
+                var factor = 0.67;
+                var textOffsetX = 5;
+                var textOffsetY = 20;
+
+                var found = -1;
+                for (var i = 0; i < milestones.length; i++) {
+                    if (milestones[i] == milestone) {
+                        found = i;
+                        break;
+                    }
+                }
+
+                var h;
+                var w;
+                var pos = 0;
+                var $trackerImages = $(".trackerImage");
+                if (9 != $trackerImages.length) {
+                    return;
+                }
+                for (var i = 0; i < milestones.length; i++) {
+                    if (found >= i) {
+                        if (0 == i) {
+                            w = $trackerImages[0].width * factor;
+                            h = $trackerImages[0].height * factor;
+                            ctx.drawImage($trackerImages[0],pos,0, w, h);
+                            pos += w;
+                            //ctx.drawImage($trackerImages[0],pos,0);
+                            //pos += $trackerImages[0].width;
+                        }
+
+                        w = $trackerImages[1].width * factor;
+                        h = $trackerImages[1].height * factor;
+                        ctx.drawImage($trackerImages[1],pos,0, w, h);
+                        //ctx.drawImage($trackerImages[1],pos,0);
+                        ctx.fillText(milestones[i], pos+textOffsetX,textOffsetY);
+                        pos += w;
+                        //pos += $trackerImages[1].width;
+
+                        if ((milestones.length - 1) == i) {
+                            w = $trackerImages[2].width * factor;
+                            h = $trackerImages[2].height * factor;
+                            ctx.drawImage($trackerImages[2],pos,0, w, h);
+                            pos += w;
+                            //ctx.drawImage($trackerImages[2],pos,0);
+                            //pos += $trackerImages[2].width;
+                        } else if (found >= (i+1)) {
+                            w = $trackerImages[6].width * factor;
+                            h = $trackerImages[6].height * factor;
+                            ctx.drawImage($trackerImages[6],pos,0, w, h);
+                            pos += w;
+                            //ctx.drawImage($trackerImages[6],pos,0);
+                            //pos += $trackerImages[6].width;
+                        } else {
+                            w = $trackerImages[7].width * factor;
+                            h = $trackerImages[7].height * factor;
+                            ctx.drawImage($trackerImages[7],pos,0, w, h);
+                            pos += w;
+//                            ctx.drawImage($trackerImages[7],pos,0);
+//                            pos += $trackerImages[7].width;
+                        }
+                    } else {
+                        if (0 == i) {
+                            w = $trackerImages[3].width * factor;
+                            h = $trackerImages[3].height * factor;
+                            ctx.drawImage($trackerImages[3],pos,0, w, h);
+                            pos += w;
+                            //ctx.drawImage($trackerImages[3],pos,0);
+                            //pos += $trackerImages[3].width;
+                        }
+
+                        w = $trackerImages[4].width * factor;
+                        h = $trackerImages[4].height * factor;
+                        ctx.drawImage($trackerImages[4],pos,0, w, h);
+                        //ctx.drawImage($trackerImages[4],pos,0);
+                        ctx.fillText(milestones[i], pos+textOffsetX,textOffsetY);
+                        pos += w;
+                        //pos += $trackerImages[4].width;
+
+                        if ((milestones.length - 1) == i) {
+                            w = $trackerImages[5].width * factor;
+                            h = $trackerImages[5].height * factor;
+                            ctx.drawImage($trackerImages[5],pos,0, w, h);
+                            pos += w;
+                            //ctx.drawImage($trackerImages[5],pos,0);
+                            //pos += $trackerImages[5].width;
+                        } else {
+                            w = $trackerImages[8].width * factor;
+                            h = $trackerImages[8].height * factor;
+                            ctx.drawImage($trackerImages[8],pos,0, w, h);
+                            pos += w;
+                            //ctx.drawImage($trackerImages[8],pos,0);
+                            //pos += $trackerImages[8].width;
+                        }
+
+                    }
+
                 }
             }
+        }
+        ,showMilestone: function(milestone) {
+            var milestones = ["Initiated", "Waiver", "Adjudication", "Issued", "Closed"];
+            var milestone = "Adjudication";
+
+            this.Tracker.show(this.$canvasMilestone, milestone, milestones);
         }
 
         ,setTextLabCaseNumber: function(txt) {
@@ -704,16 +910,16 @@ CaseFile.View = CaseFile.View || {
         ,saveDivDetail: function() {
             return AcmEx.Object.SummerNote.save(this.$divDetail);
         }
-        ,showChangeCaseStatusButton: function() {
-        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
-        		CaseFile.View.Action.$btnChangeCaseStatus.show();        		
-        	}
-        }
-        ,hideChangeCaseStatusButton: function() {
-        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
-        		CaseFile.View.Action.$btnChangeCaseStatus.hide();        		
-        	}
-        }
+//        ,showChangeCaseStatusButton: function() {
+//        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
+//        		CaseFile.View.Action.$btnChangeCaseStatus.show();
+//        	}
+//        }
+//        ,hideChangeCaseStatusButton: function() {
+//        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
+//        		CaseFile.View.Action.$btnChangeCaseStatus.hide();
+//        	}
+//        }
 
         ,populateCaseFile_old: function(c) {
             this.setTextLabCaseNumber(c.caseNumber);
@@ -2595,6 +2801,11 @@ CaseFile.View = CaseFile.View || {
                             ,width: '30%'
                             ,edit: true
                             ,create: false
+                            ,display: function(data) {
+                                var url = App.getContextPath() + '/plugin/casefile/' + data.record.id;
+                                var $lnk = $("<a href='" + url + "'>" + data.record.title + "</a>");
+                                return $lnk;
+                            }
                         }
                         ,modified: {
                             title: 'Modified'

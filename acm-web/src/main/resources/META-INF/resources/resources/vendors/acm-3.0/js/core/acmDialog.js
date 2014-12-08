@@ -143,12 +143,31 @@ Acm.Dialog = {
 
     ,_checkClosePopup: function(newWindow, onDone){
         var timer = setInterval(function() {
+         	var href = null;
+         	try{
+			     if (newWindow && newWindow.location && newWindow.location.href){
+			     	href = newWindow.location.href;
+			     }
+         	}catch(e){
+
+         	}
+
+         	if (href && 
+     			href.indexOf('/web/') == -1 &&
+     			href.indexOf('/tn/') == -1 &&
+     			href.indexOf('/user/') == -1 &&
+     			href.indexOf('/app/') == -1 &&
+     			href.indexOf('/formtype/') == -1 &&
+     			href.indexOf('about:blank') == -1)
+         		{
+         			newWindow.close();
+         		}
             if(newWindow.closed) {
                 clearInterval(timer);
                 if (onDone) {
                     onDone();
                 }
             }
-        }, 1000);
+        }, 50);
     }
 }

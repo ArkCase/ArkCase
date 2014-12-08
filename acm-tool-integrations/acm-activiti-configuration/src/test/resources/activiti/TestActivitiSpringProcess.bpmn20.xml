@@ -1,19 +1,42 @@
-<definitions targetNamespace="http://activiti.org/bpmn20"
-             xmlns:activiti="http://activiti.org/bpmn"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL
-                    http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+<definitions
+        xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:activiti="http://activiti.org/bpmn"
+        xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+        xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+        xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+        typeLanguage="http://www.w3.org/2001/XMLSchema"
+        expressionLanguage="http://www.w3.org/1999/XPath"
+        targetNamespace="http://www.activiti.org/processdef">
 
     <process id="TestActivitiSpringProcess" name="Testing Activiti Spring Module">
-
         <startEvent id="start" />
 
         <sequenceFlow id="approvals" sourceRef="start" targetRef="approvalTasks" />
 
-        <userTask id="approvalTasks" name="Approve Task"/>
+        <userTask id="approvalTasks" name="approvalTasks">
+            <extensionElements>
+                <activiti:taskListener event="complete" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
+                    <activiti:field name="language">
+                        <activiti:string><![CDATA[javascript]]></activiti:string>
+                    </activiti:field>
+                    <activiti:field name="resultVariable">
+                        <activiti:string><![CDATA[approver]]></activiti:string>
+                    </activiti:field>
+                    <activiti:field name="script">
+                        <activiti:string><![CDATA[task.assignee]]></activiti:string>
+                    </activiti:field>
+                </activiti:taskListener>
+            </extensionElements>
+        </userTask>
 
-        <sequenceFlow id="approvalTasksToEnd" sourceRef="approvalTasks" targetRef="done" />
+        <sequenceFlow id="callSpringBean" sourceRef="approvalTasks" targetRef="springBean" />
+
+        <serviceTask id="springBean"
+                     activiti:expression="#{acmActivitiTaskEventListener.logMessage('Hello from Business Process', key, approver)}"/>
+
+        <sequenceFlow id="toEnd" sourceRef="springBean" targetRef="done" />
 
         <endEvent id="done" />
 

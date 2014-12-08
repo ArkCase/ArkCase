@@ -96,6 +96,11 @@
             <version>${acm.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-audit</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- date time -->
         <dependency>
