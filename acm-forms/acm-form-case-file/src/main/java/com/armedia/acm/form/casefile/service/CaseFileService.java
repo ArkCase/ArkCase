@@ -9,6 +9,9 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+import org.activiti.engine.RuntimeService;
 import org.drools.core.RuntimeDroolsException;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -49,6 +52,11 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	private AcmHistoryDao acmHistoryDao;
 	private CaseFileDao caseFileDao;
 	private ObjectAssociationDao objectAssociationDao;
+	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+
+	private RuntimeService activitiRuntimeService;
+
+	private CaseFile caseFile;
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -99,14 +107,23 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		form = saveReference(form);
 		
 		// Cave Attachments
-		saveAttachments(attachments, form.getCmisFolderId(), FrevvoFormName.CASE_FILE.toUpperCase(), form.getId(), form.getNumber());
+		FrevvoUploadedFiles frevvoFiles = saveAttachments(attachments, form.getCmisFolderId(),
+				FrevvoFormName.CASE_FILE.toUpperCase(), form.getId(), form.getNumber());
 		
 		// Log the last user action
 		if (null != form && null != form.getId())
 		{
 			getUserActionExecutor().execute(form.getId(), AcmUserActionName.LAST_CASE_CREATED, getAuthentication().getName());
 		}
-		
+
+
+		String mode = getRequest().getParameter("mode");
+		if ( !"edit".equals(mode) )
+		{
+			CaseFileWorkflowListener workflowListener = new CaseFileWorkflowListener();
+			workflowListener.handleNewCaseFile(getCaseFile(), frevvoFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule());
+		}
+
 		return true;
 	}
 	
@@ -193,6 +210,8 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		{
 			form.getSubject().setPersonId(caseFile.getOriginator().getPerson().getId());		
 		}
+
+		setCaseFile(caseFile);
 		
 		return form;
 	}
@@ -406,5 +425,35 @@ public class CaseFileService extends FrevvoFormAbstractService {
 
 	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
 		this.objectAssociationDao = objectAssociationDao;
+	}
+
+	public FileWorkflowBusinessRule getFileWorkflowBusinessRule()
+	{
+		return fileWorkflowBusinessRule;
+	}
+
+	public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
+	{
+		this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
+	}
+
+	public RuntimeService getActivitiRuntimeService()
+	{
+		return activitiRuntimeService;
+	}
+
+	public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+	{
+		this.activitiRuntimeService = activitiRuntimeService;
+	}
+
+	public CaseFile getCaseFile()
+	{
+		return caseFile;
+	}
+
+	public void setCaseFile(CaseFile caseFile)
+	{
+		this.caseFile = caseFile;
 	}
 }
