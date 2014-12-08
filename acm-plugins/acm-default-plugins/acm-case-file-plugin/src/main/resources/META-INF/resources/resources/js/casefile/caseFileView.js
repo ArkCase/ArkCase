@@ -2801,6 +2801,11 @@ CaseFile.View = CaseFile.View || {
                             ,width: '30%'
                             ,edit: true
                             ,create: false
+                            ,display: function(data) {
+                                var url = App.getContextPath() + '/plugin/casefile/' + data.record.id;
+                                var $lnk = $("<a href='" + url + "'>" + data.record.title + "</a>");
+                                return $lnk;
+                            }
                         }
                         ,modified: {
                             title: 'Modified'
