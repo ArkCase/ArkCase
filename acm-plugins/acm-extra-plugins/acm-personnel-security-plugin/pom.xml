@@ -25,6 +25,11 @@
             <artifactId>acm-service-ecm</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-service</groupId>
+            <artifactId>acm-service-milestone</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- apache commons -->
         <dependency>

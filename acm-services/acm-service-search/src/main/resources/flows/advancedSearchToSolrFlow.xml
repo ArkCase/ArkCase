@@ -13,7 +13,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
 
     <http:endpoint name="submitAdvancedSearchDocuments"
-                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.updateHandler}?commit=true&amp;overwrite=true"
+                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.updateHandler}?overwrite=true"
                    contentType="application/json; charset=UTF-8"
                    mimeType="application/json"
                    encoding="UTF-8"
