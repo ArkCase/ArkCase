@@ -34,11 +34,23 @@ public class GetAuditAPIController {
 	@ResponseBody
 	public QueryResultPageWithTotalCount<AuditEvent> auditPage(@RequestParam(value="start", required = false, defaultValue = "0") int start,
 									 @RequestParam(value="n", required = false, defaultValue = "10") int n,
-									 @RequestParam(value="sortBy", required = false, defaultValue = "eventDate") String sortBy,
-									 @RequestParam(value="sort", required = false, defaultValue = "DESC") String sort)
+									 @RequestParam(value="s", required = false, defaultValue = "eventDate DESC") String s)
 	{
 		QueryResultPageWithTotalCount<AuditEvent> page = new QueryResultPageWithTotalCount<AuditEvent>();
 		List<AuditEvent> result = new ArrayList<AuditEvent>();
+		
+		String sortBy = "eventDate";
+		String sort = "DESC";
+		
+		String[] sArray = s.split(" ");
+		if (sArray != null) {
+			if (sArray.length == 1) {
+				sortBy = sArray[0];
+			} else if (sArray.length > 1) {
+				sortBy = sArray[0];
+				sort = sArray[1];
+			}
+		}
 		
 		LOG.info("Taking audit records: start=" + start + ", n=" + n);
 		result = getAuditDao().findPage(start, n, sortBy, sort);
