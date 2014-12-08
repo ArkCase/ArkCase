@@ -166,12 +166,12 @@
     <sequenceFlow id="addressWaiverOutcome" sourceRef="addressWaiverTask" targetRef="addressWaiverGateway"/>
     <sequenceFlow id="employmentOutcome" sourceRef="employmentTask" targetRef="employmentGateway"/>
     <sequenceFlow id="addressOutcome" sourceRef="addressTask" targetRef="addressGateway"/>
-    <serviceTask id="sid-45F71BED-C633-49B5-BCE4-225807030BED" name="Record 'Waiver' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Issuance of Address Waiver')}"/>
-    <serviceTask id="sid-44BDD3AD-5E4E-4261-8E91-96DBC6A59C1A" name="Record 'Waiver' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Issuance of Employent Waiver')}"/>
-    <serviceTask id="sid-6A168DE3-6579-45EA-A262-F35264B77585" name="Record 'Waiver' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Issuance of eVerify Waiver')}"/>
+    <serviceTask id="sid-45F71BED-C633-49B5-BCE4-225807030BED" name="Record 'Waiver' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Waiver')}"/>
+    <serviceTask id="sid-44BDD3AD-5E4E-4261-8E91-96DBC6A59C1A" name="Record 'Waiver' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Waiver')}"/>
+    <serviceTask id="sid-6A168DE3-6579-45EA-A262-F35264B77585" name="Record 'Waiver' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Waiver')}"/>
     <sequenceFlow id="sid-651D8EE2-B855-4A3B-A7C8-1050F80EC770" sourceRef="sid-6A168DE3-6579-45EA-A262-F35264B77585" targetRef="verifyTasksCompletedGateway"/>
     <serviceTask id="sid-0441797A-AFEC-4696-9198-BC8B5C349BFD" name="Record 'Adjudication' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Adjudication')}"/>
-    <serviceTask id="sid-1BECB0F0-1100-4BDB-AAB2-A04F5BBFCE1D" name="Record 'Clearance Issued' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Clearance Issued')}"/>
+    <serviceTask id="sid-1BECB0F0-1100-4BDB-AAB2-A04F5BBFCE1D" name="Record 'Clearance Issued' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Issued')}"/>
     <parallelGateway id="sid-4E7279B4-CE0A-4BBE-BD4A-09DDD7CA96D8"/>
     <serviceTask id="sid-3CCDB716-DA05-4426-8FF2-9934534FC10D" name="Record 'Closed' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Closed')}"/>
     <sequenceFlow id="sid-00EDB086-C917-49F7-88D0-4E6F68C2C17D" sourceRef="sid-45F71BED-C633-49B5-BCE4-225807030BED" targetRef="verifyTasksCompletedGateway"/>
