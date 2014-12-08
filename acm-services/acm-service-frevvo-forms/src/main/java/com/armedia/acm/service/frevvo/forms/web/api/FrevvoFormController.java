@@ -22,9 +22,11 @@ import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 
+import org.activiti.engine.RuntimeService;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.mule.api.client.MuleClient;
@@ -80,6 +82,10 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
     private AcmHistoryDao acmHistoryDao;
     
     private ObjectAssociationDao objectAssociationDao;
+
+	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+
+	private RuntimeService activitiRuntimeService;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -365,5 +371,25 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
 		this.objectAssociationDao = objectAssociationDao;
+	}
+
+	public FileWorkflowBusinessRule getFileWorkflowBusinessRule()
+	{
+		return fileWorkflowBusinessRule;
+	}
+
+	public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
+	{
+		this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
+	}
+
+	public RuntimeService getActivitiRuntimeService()
+	{
+		return activitiRuntimeService;
+	}
+
+	public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+	{
+		this.activitiRuntimeService = activitiRuntimeService;
 	}
 }

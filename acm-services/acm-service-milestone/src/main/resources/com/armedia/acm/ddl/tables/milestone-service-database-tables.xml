@@ -1,0 +1,46 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="milestone-01-tables" author="dmiller">
+        <createTable tableName="acm_milestone">
+            <column name="cm_milestone_id" type="NUMBER(32,0)">
+                <constraints primaryKey="true" primaryKeyName="pk_acm_milestone"/>
+            </column>
+            <column name="cm_milestone_object_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_milestone_object_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_milestone_achieved_date" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_milestone_name" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_milestone_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_milestone_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_milestone_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_milestone_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="milestone-02-indexes" author="dmiller">
+        <createIndex tableName="acm_milestone" indexName="idx_milestone_object_id">
+            <column name="cm_milestone_object_id"/>
+        </createIndex>
+    </changeSet>
+
+
+</databaseChangeLog>

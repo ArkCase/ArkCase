@@ -216,6 +216,12 @@
             <artifactId>acm-form-case-file</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
+            <artifactId>acm-personnel-security-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         
         <!-- spring -->
         <dependency>
