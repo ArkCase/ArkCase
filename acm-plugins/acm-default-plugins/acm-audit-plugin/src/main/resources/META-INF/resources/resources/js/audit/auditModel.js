@@ -10,6 +10,14 @@ Audit.Model = Audit.Model || {
     ,onInitialized: function() {
     }
 
+    ,_totalCount: 0
+    ,getTotalCount: function() {
+        return this._totalCount;
+    }
+    ,setTotalCount: function(totalCount) {
+        this._totalCount = totalCount;
+    }
+
     ,validateAudit: function(data) {
         if (Acm.isEmpty(data)) {
             return false;
@@ -22,9 +30,6 @@ Audit.Model = Audit.Model || {
         }
         return true;
     }
-//    ,validateAudit: function(data) {
-//        return Acm.Validator.validateSolrData(data);
-//    }
 
 };
 
