@@ -1,7 +1,10 @@
 package com.armedia.acm.services.note;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -27,8 +30,17 @@ public class NoteIT
 {
     @Autowired
     private NoteDao noteDao;
+    
+    @Autowired
+    private AuditPropertyEntityAdapter auditAdapter;
 
     private Logger log = LoggerFactory.getLogger(getClass());
+    
+    @Before
+    public void setUp()
+    {
+        auditAdapter.setUserId("auditUser");
+    }
 
 
     @Test
@@ -40,6 +52,7 @@ public class NoteIT
         n.setCreator("testCreator");
         n.setCreated(new Date());
         n.setNote("testNote");
+        n.setType("GENERAL");
         n.setParentId(234L);
         n.setParentType("COMPLAINT");
         Note saved = noteDao.save(n);

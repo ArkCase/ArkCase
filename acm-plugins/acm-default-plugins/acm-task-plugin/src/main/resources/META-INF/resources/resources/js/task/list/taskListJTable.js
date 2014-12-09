@@ -543,6 +543,70 @@ TaskList.JTable = {
     //----------------- end of history ----------------------
 
 
+    //
+    //----------------- Reject Comments ------------------------------
+
+    ,createJTableRejectComments: function($s) {
+        $s.jtable({
+            title: 'Reject Comments'
+            ,paging: false
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var task = TaskList.getTask();
+                    if(task)
+                    {
+                        var rejectComments = TaskList.cacheRejectComments.get(task.taskId);
+                        if (rejectComments) {
+                            for (var i = 0; i < rejectComments.length; i++) {
+                                var rejectCommentRecord = rejectComments[i];
+                                var record = {};
+                                record.id = Acm.goodValue(rejectCommentRecord.id);
+                                record.comment = rejectCommentRecord.note;
+                                record.created = Acm.getDateFromDatetime(rejectCommentRecord.created);
+                                record.creator = rejectCommentRecord.creator;
+                                record.parentId = Acm.goodValue(rejectCommentRecord.parentId);
+                                record.parentType = rejectCommentRecord.parentType;
+                                rc.Records.push(record);
+                            }
+                        }
+                    }
+                    return rc;
+                }
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                    ,defaultvalue : 0
+                }
+                ,comment: {
+                    title: 'Comment'
+                    ,type: 'textarea'
+                    ,width: '50%'
+                    ,edit: false
+                }
+                ,created: {
+                    title: 'Created'
+                    ,width: '15%'
+                    ,edit: false
+                    ,create: false
+                }
+                ,creator: {
+                    title: 'Author'
+                    ,width: '15%'
+                    ,edit: false
+                    ,create: false
+                }
+            }
+        });
+
+        $s.jtable('load');
+    }
+    //----------------- end of Notes ----------------------
 
 };
 
