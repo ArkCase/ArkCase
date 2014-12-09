@@ -77,6 +77,11 @@
             <artifactId>acm-web</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-data-source</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
 
         <!-- bean validation -->
