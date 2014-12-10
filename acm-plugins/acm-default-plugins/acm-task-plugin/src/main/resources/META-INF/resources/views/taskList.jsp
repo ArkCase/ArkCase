@@ -244,7 +244,14 @@
                         </section>
                     </div>
                 </div>
-
+                
+              	<div class="row" id="tabRejectComments" style="display:none;">
+                    <div class="col-md-12">
+                        <section class="panel b-a">
+                            <div id="divRejectComments" style="width:100%"></div>
+                        </section>
+                    </div>
+                </div>
 
                 <div class="row" id="tabDocuments" style="display:none;">
                     <div class="col-md-12">
@@ -649,7 +656,7 @@
 					</footer>
          		</section>
        			<label>Reason</label>
-            	<textarea class="form-control"></textarea>
+            	<textarea class="form-control" id="commentRejectTask"></textarea>
        		</div>
        		<div class="modal-footer">
          		<button type="button" class="btn btn-default" data-dismiss="modal" name="cancelRejectTask">Cancel</button>

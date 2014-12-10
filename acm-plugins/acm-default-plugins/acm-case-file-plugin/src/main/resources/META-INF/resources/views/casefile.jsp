@@ -225,29 +225,38 @@
                                         </div>
                                     </div>
                                     <%--<h4 class="m-n">Case Details</h4>--%>
-                                    <%--<hr/>--%>
+                                    <h4 class="m-n">&nbsp;</h4>
+                                    <hr/>
+
+                                    <%--<ol class="track-progress" data-steps="5">--%>
+                                        <%--<li class="done">--%>
+                                            <%--<span>Initiated</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li class="done">--%>
+                                            <%--<span>Waiver</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<span>Adjudication</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<span>Issued</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<span>Closed</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                    <%--</ol>--%>
+                                    <%--<br/>--%>
+                                    <ol class="track-progress" id="anotherTracker">
+                                    </ol>
                                 </div>
 
                                 <div class="col-md-12" id="tabDetail" style="display:none;">
                                     <section class="panel b-a ">
-                                        <%--<div id="divHistogram" style="width:300px;height:150px"></div>--%>
-                                        <%--<div id="divHistogram" style="width:512px;height:64px"></div>--%>
-                                        <div style="display:none">
-                                            <img class= "trackerImage" id="tracker_on_begin"   src="<c:url value='/'/>resources/vendors/${acm_theme}/images/tracker_on_begin.png">
-                                            <img class= "trackerImage" id="tracker_on_middle"  src="<c:url value='/'/>resources/vendors/${acm_theme}/images/tracker_on_middle.png">
-                                            <img class= "trackerImage" id="tracker_on_end"     src="<c:url value='/'/>resources/vendors/${acm_theme}/images/tracker_on_end.png">
-                                            <img class= "trackerImage" id="tracker_off_begin"  src="<c:url value='/'/>resources/vendors/${acm_theme}/images/tracker_off_begin.png">
-                                            <img class= "trackerImage" id="tracker_off_middle" src="<c:url value='/'/>resources/vendors/${acm_theme}/images/tracker_off_middle.png">
-                                            <img class= "trackerImage" id="tracker_off_end"    src="<c:url value='/'/>resources/vendors/${acm_theme}/images/tracker_off_end.png">
-                                            <img class= "trackerImage" id="tracker_on2on"      src="<c:url value='/'/>resources/vendors/${acm_theme}/images/tracker_on2on.png">
-                                            <img class= "trackerImage" id="tracker_on2off"     src="<c:url value='/'/>resources/vendors/${acm_theme}/images/tracker_on2off.png">
-                                            <img class= "trackerImage" id="tracker_off2off"    src="<c:url value='/'/>resources/vendors/${acm_theme}/images/tracker_off2off.png">
-                                        </div>
-                                        <br/>
-                                        <canvas id="canvasMilestone" width="1600" height="51" style="border:0px solid #d3d3d3;">
-                                            Your browser does not support the HTML5 canvas tag.</canvas>
-                                        <br/>
-
                                         <div class="panel-heading b-b bg-info">
                                             <ul class="nav nav-pills pull-right">
                                                 <li>

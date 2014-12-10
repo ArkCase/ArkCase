@@ -38,4 +38,12 @@
         </createIndex>
 
     </changeSet>
+    
+    <changeSet id="02-note-table-add-type-column" author="riste.tutureski">
+    	<addColumn tableName="acm_note">
+    		<column name="cm_note_type" afterColumn="cm_note_text" beforeColumn="cm_note_creator" defaultValue="GENERAL" type="VARCHAR(1024)">
+    			<constraints nullable = "false"/>
+    		</column>
+    	</addColumn>
+    </changeSet>
 </databaseChangeLog>

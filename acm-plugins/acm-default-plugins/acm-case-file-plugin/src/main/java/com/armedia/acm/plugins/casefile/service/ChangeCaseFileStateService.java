@@ -36,10 +36,6 @@ public class ChangeCaseFileStateService
             Date now = new Date();
 
             retval.setStatus(newState);
-            retval.setModified(now);
-            retval.setModifier(auth.getName());
-
-            retval.setStatus(newState);
 
             if ( "CLOSED".equals(newState) )
             {
