@@ -26,8 +26,9 @@ public class NoteDao extends AcmAbstractDao<Note>
         return Note.class;
     }
 
-    public List<Note> listNotes(Long parentId, String parentType)
+    public List<Note> listNotes(String type, Long parentId, String parentType)
     {
+    	Preconditions.checkNotNull(type, "Note type cannot be null");
         Preconditions.checkNotNull(parentId, "Parent Id cannot be null");
         Preconditions.checkNotNull(parentType, "Parent type cannot be null");
 
@@ -35,8 +36,10 @@ public class NoteDao extends AcmAbstractDao<Note>
                 "SELECT note " +
                         "FROM Note note " +
                         "WHERE note.parentId = :parentId AND " +
-                        "note.parentType  = :parentType");
+                        "note.parentType  = :parentType AND " +
+                        "note.type = :type ORDER BY note.created DESC");
 
+        note.setParameter("type", type);
         note.setParameter("parentType", parentType.toUpperCase());
         note.setParameter("parentId", parentId);
 
