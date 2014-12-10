@@ -139,6 +139,7 @@ public class FrevvoFormServiceFactory {
             service.setMuleClient(frevvoFormController.getMuleClient());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             service.setObjectAssociationDao(frevvoFormController.getObjectAssociationDao());
+            service.setPersonIdentificationDao(frevvoFormController.getPersonIdentificationDao());
             service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
             service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
             
