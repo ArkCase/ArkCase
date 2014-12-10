@@ -19,7 +19,7 @@ public class PersonIdentification  implements Serializable, AcmEntity {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @Column(name = "cm_person_identification_person_id")
+    @Column(name = "cm_person_identification_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long personIdentificationID;
 
@@ -27,31 +27,31 @@ public class PersonIdentification  implements Serializable, AcmEntity {
     @JoinColumn(name="cm_person", nullable = false)
     private Person person;
 
-    @Column(name = "cm_identification_type")
+    @Column(name = "cm_id_type")
     private String identificationType;
 
-    @Column(name = "cm_identification_number")
+    @Column(name = "cm_id_number")
     private String identificationNumber;
 
-    @Column(name = "cm_identification_issuer")
+    @Column(name = "cm_id_issuer")
     private String identificationIssuer;
 
     @Column(name = "cm_year_issued")
     @Temporal(TemporalType.TIMESTAMP)
     private Date identificationYearIssued;
 
-    @Column(name = "cm_person_identification_created", nullable = false, insertable = true, updatable = false)
+    @Column(name = "cm_person_id_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @Column(name = "cm_person_identification_creator", insertable = true, updatable = false)
+    @Column(name = "cm_person_id_creator", insertable = true, updatable = false)
     private String creator;
 
-    @Column(name = "cm_person_identification_modified", nullable = false)
+    @Column(name = "cm_person_id_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Column(name = "cm_person_identification_modifier")
+    @Column(name = "cm_person_id_modifier")
     private String modifier;
 
     @Override
