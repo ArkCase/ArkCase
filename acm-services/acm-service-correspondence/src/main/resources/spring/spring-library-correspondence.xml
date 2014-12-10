@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!--<bean id="auditWriter" class="com.armedia.acm.audit.AuditWriter"/>-->
+    <context:property-placeholder
+            properties-ref="correspondencePluginProperties"
+            ignore-unresolvable="true"
+            local-override="false"
+            order="1"/>
 
-    <!--<bean id="auditConfigurer" class="com.armedia.acm.audit.AuditConfigurer"-->
-            <!--destroy-method="closeBean">-->
-        <!--<property name="auditConfigFilename" value="/audit.xml"/>-->
-    <!--</bean>-->
+    <!-- keeping this bean for now even though we are not using any properties yet.  -->
+    <bean id="correspondencePluginProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/correspondencePlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
 
-    <!--<bean id="auditSpringDataSourceHelper" class="com.armedia.commons.audit.sink.jdbc.SpringDataSourceHelper">-->
-        <!--<property name="sinks">-->
-            <!--<set>-->
-                <!--<value>jdbcSink</value>-->
-            <!--</set>-->
-        <!--</property>-->
-    <!--</bean>-->
-
-    <!--<bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>-->
 
 </beans>
