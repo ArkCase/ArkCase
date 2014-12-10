@@ -33,6 +33,7 @@
         <property name="saveCaseService" ref="saveCaseService"/>
         <property name="acmHistoryDao" ref="acmHistoryDao"/>
         <property name="objectAssociationDao" ref="objectAssociationDao"/>
+        <property name="personIdentificationDao" ref="acmPersonIdentificationDao"/>
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
 	</bean>

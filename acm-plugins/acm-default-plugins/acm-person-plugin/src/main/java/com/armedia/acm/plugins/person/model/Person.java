@@ -127,6 +127,7 @@ public class Person implements Serializable, AcmEntity
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
     private List<PersonIdentification> personIdentification = new ArrayList<>();
     
