@@ -62,7 +62,7 @@ Topbar.View = {
         create: function() {
             this.$formSearch = $("form[role='search']");
             this.$edtSearch = this.$formSearch.find("input.typeahead");
-            this.useTypeAhead(this.$edtSearch);
+            //this.useTypeAhead(this.$edtSearch);
 
             Acm.Dispatcher.addEventListener(Topbar.Controller.Suggestion.MODEL_CHANGED_SUGGESTION, this.onModelChangedSuggestion);
         }
