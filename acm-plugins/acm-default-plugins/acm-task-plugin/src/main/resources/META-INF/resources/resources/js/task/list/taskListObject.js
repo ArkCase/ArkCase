@@ -51,21 +51,13 @@ TaskList.Object = {
 
 
         //workflow approval buttons
-        this.$btnApproveTask = $("#btnApprove");
-        this.$btnApproveTask.click(function(e) {TaskList.Event.onClickBtnTaskOutcomeApprove(e);});
+        this.$btnGroup = $("div.btn-group-task");
+        this.$btnGroup.on("click", ".businessProcess", function(e) {var clicked = e.target.id;
+                                                        TaskList.Event.onClickBtnTaskWithOutcome(clicked);
+                                                        $('.businessProcess').each(function(){$(this).hide();})
+                                                        //$("#" + clicked).hide();
+                                                        });
 
-        this.$btnSendForRework = $("#btnSendForRework");
-        this.$btnSendForRework.click(function(e) {TaskList.Event.onClickBtnTaskOutcomeRework(e);});
-
-        this.$btnResubmit = $("#btnResubmit");
-        this.$btnResubmit.click(function(e) {TaskList.Event.onClickBtnTaskOutcomeResubmit(e);});
-
-        this.$btnCancelRequest = $("#btnCancelRequest");
-        this.$btnCancelRequest.click(function(e) {TaskList.Event.onClickBtnTaskOutcomeCancelRequest(e);});
-
-        this.$bthAssignTask = $("#btnAssign");
-        this.$btnReassignTask = $("#btnReassign");
-        this.$btnUnassignTask = $("#btnUnassign");
         this.$btnCompleteTask = $("#btnComplete");
         this.$btnCompleteTask.click(function(e) {TaskList.Event.onClickBtnAdHocTaskComplete(e);});
         
@@ -877,29 +869,20 @@ TaskList.Object = {
                 if(task.availableOutcomes != null){
                     for(var i = 0; i < task.availableOutcomes.length; i++){
                         var availableOutcomes = task.availableOutcomes;
-                        switch (availableOutcomes[i].name){
-                            case "APPROVE":
-                                this.$btnApproveTask.show();
-                                break;
-
-                            case "SEND_FOR_REWORK":
-                                this.$btnSendForRework.show();
-                                break;
-
-                            case "RESUBMIT":
-                                this.$btnResubmit.show();
-                                break;
-
-                            case "CANCEL_DOCUMENT":
-                                this.$btnCancelRequest.show();
-                                break;
-
-                            default:
-                                break;
-                        }
+                        var availableOutcomeName = availableOutcomes[i].description;
+                        var html =  "<button class='btn btn-default btn-sm businessProcess' id='" + availableOutcomes[i].name +
+                                    "' data-title='" +availableOutcomes[i].description +"'>" +
+                                    "<i class='fa fa-check'>" +
+                                    "</i>" +
+                                     availableOutcomes[i].description +
+                                    "</button>";
+                        this.$btnGroup.append(html);
+                        this.$btnFromAvailableOutcomes = $("#" + availableOutcomes[i].name);
+                        this.$btnFromAvailableOutcomes.show();
                     }
                 }
             }
+
             TaskList.Object.refreshTaskTreeNode(task);
             this.setTaskDetails(task);
             this.setValueReworkInstructions(task.reworkInstructions);
@@ -966,17 +949,9 @@ TaskList.Object = {
     }
 
     ,hideAllWorkflowButtons: function(){
-        this.$btnApproveTask.hide();
-        this.$btnSendForRework.hide();
-        this.$btnResubmit.hide();
-        this.$btnCancelRequest.hide();
-        this.$btnReassignTask.hide();
-        this.$btnRejectTask.hide();
-        this.$btnUnassignTask.hide();
         this.$btnCompleteTask.hide();
         this.$btnRejectTask.hide();
         this.$btnDeleteTask.hide();
-        this.$bthAssignTask.hide();
         this.$btnSignature.hide();
     }
     ,setTaskDetails : function(task){
