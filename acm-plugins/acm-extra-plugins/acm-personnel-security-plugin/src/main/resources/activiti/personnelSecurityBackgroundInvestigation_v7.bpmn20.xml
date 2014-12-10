@@ -86,7 +86,7 @@
       </extensionElements>
     </userTask>
     <serviceTask id="cvsExportTask" name="Generate CVS Export" activiti:expression="#{clearanceVerificationSystemExportService.exportDeterminationRecord(adjudicator, OBJECT_ID, OBJECT_NAME, OBJECT_FOLDER_ID, SUBJECT_LAST_NAME, adjudicationOutcome)}"/>
-    <userTask id="adjudicationTask" name="Adjudicate Clearance Request '${OBJECT_NAME}'" activiti:assignee="sally-acm">
+    <userTask id="adjudicationTask" name="Adjudicate Clearance Request '${OBJECT_NAME}'" activiti:assignee="ann-acm">
       <extensionElements>
         <activiti:formProperty id="adjudicationOutcome" name="adjudicationOutcome" type="enum" required="true">
           <activiti:value id="GRANT_CLEARANCE" name="Grant Clearance"/>
@@ -552,9 +552,8 @@
         <omgdi:waypoint x="915.1333333333333" y="660.1333333333333"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-00EDB086-C917-49F7-88D0-4E6F68C2C17D" id="BPMNEdge_sid-00EDB086-C917-49F7-88D0-4E6F68C2C17D">
-        <omgdi:waypoint x="490.0" y="550.0"/>
-        <omgdi:waypoint x="639.1970267502786" y="550.0"/>
-        <omgdi:waypoint x="646.9468282368683" y="588.0531717631317"/>
+        <omgdi:waypoint x="490.0" y="563.1828978622327"/>
+        <omgdi:waypoint x="633.8815789473684" y="601.1184210526316"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-636718C2-DD84-474A-94CB-754EDE754149" id="BPMNEdge_sid-636718C2-DD84-474A-94CB-754EDE754149">
         <omgdi:waypoint x="1085.5" y="459.5"/>
