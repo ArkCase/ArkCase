@@ -135,6 +135,20 @@
                                                 </div>
                                             </div>
 
+                                                    <%--JTable - Access Control Policy--%>
+                                            <div class="row" id="tabCorrespondence" style="display:none;">
+                                                <div class="col-md-12">
+                                                    <section class="panel panel-default">
+                                                        <div id="divCorrespondence" style="width:100%">
+                                                            <form id="formAddNewTemplate" style="display:none;">
+                                                                <input id="addNewTemplate" type="file" name="files[]" multiple/>
+                                                            </form>
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                            </div>
+
+
 
                                             <%--Reports Configuration Table--%>
                                             <div class="row" id="tabReports" style="display:none;">

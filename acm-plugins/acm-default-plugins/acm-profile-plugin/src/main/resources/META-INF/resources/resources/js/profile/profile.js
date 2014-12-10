@@ -9,10 +9,10 @@ var Profile = Profile || {
         if (Profile.View.create)       {Profile.View.create();}
         if (Profile.Controller.create) {Profile.Controller.create();}
     }
-    ,initialize: function() {
-        if (Profile.Model.initialize)      {Profile.Model.initialize();}
-        if (Profile.View.initialize)       {Profile.View.initialize();}
-        if (Profile.Controller.initialize) {Profile.Controller.initialize();}
+    ,onInitialized: function() {
+        if (Profile.Model.onInitialized)      {Profile.Model.onInitialized();}
+        if (Profile.View.onInitialized)       {Profile.View.onInitialized();}
+        if (Profile.Controller.onInitialized) {Profile.Controller.onInitialized();}
     }
 };
 

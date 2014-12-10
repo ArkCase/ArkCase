@@ -27,6 +27,7 @@ TaskList.Service = {
     ,API_TASK_EVENTS : "/api/latest/plugin/task/events/"
     ,API_RETRIEVE_USERS : "/api/latest/plugin/search/usersSearch"
     ,API_UPLOAD_FILE: "/api/latest/plugin/task/file"
+    ,API_LIST_REJECT_COMMENTS : "/api/latest/plugin/note/"
 
 
     ,listTaskSaveDetail : function(taskId, data) {
@@ -162,5 +163,10 @@ TaskList.Service = {
                 }
             }
         });
+    }
+    
+    ,retrieveRejectComments : function(type, parentId, parentType) {
+        var url = (App.getContextPath() + this.API_LIST_REJECT_COMMENTS + parentType + "/" + parentId + "?type=" + type);
+        Acm.Ajax.asyncGet(url ,TaskList.Callback.EVENT_REJECT_COMMENTS_LIST_RETRIEVED);
     }
 }

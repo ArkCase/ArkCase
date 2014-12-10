@@ -5,6 +5,10 @@
  */
 var Admin = Admin || {
     create: function() {
+
+        Admin.cacheTemplates = new Acm.Model.CacheFifo(3);
+
+
         Admin.Object.create();
         Admin.Event.create();
         Admin.Page.create();
@@ -12,8 +16,18 @@ var Admin = Admin || {
         Admin.Service.create();
         Admin.Callback.create();
 
-        Acm.deferred(Admin.Event.onPostInit);
+        Acm.deferred(Admin.Event.onPostInit());
     }
+    ,Object: {}
+    ,Event:{}
+    ,Page: {}
+    ,Rule: {}
+    ,Service: {}
+    ,Callback: {}
+
+    ,cacheTemplates: null
+
+
     ,_adminAccessList : {}
 
     ,getUpdatedAdminAccessList : function(){
@@ -34,11 +48,8 @@ var Admin = Admin || {
         };
     }
 
-    ,Object: {}
-    ,Event:{}
-    ,Page: {}
-    ,Rule: {}
-    ,Service: {}
-    ,Callback: {}
+    ,getTemplates: function() {
+        return this.cacheTemplates.get(0);
+    }
 };
 

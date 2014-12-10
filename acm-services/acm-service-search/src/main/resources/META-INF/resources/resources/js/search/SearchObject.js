@@ -198,7 +198,7 @@ Search.Object = {
                         ,display: function(data) {
                             var url = App.getContextPath();
                             if (App.OBJTYPE_CASE == data.record.type) {
-                                url += "/plugin/case/" + data.record.id;
+                                url += "/plugin/casefile/" + data.record.id;
                             } else if (App.OBJTYPE_COMPLAINT == data.record.type) {
                                 url += "/plugin/complaint/" + data.record.id;
                             } else if (App.OBJTYPE_TASK == data.record.type) {
@@ -207,6 +207,8 @@ Search.Object = {
                                 url += "/plugin/document/" + data.record.id;
                             } else if (App.OBJTYPE_PEOPLE == data.record.type) {
                                 url += "/plugin/people/" + data.record.id;
+                            }else if (App.OBJTYPE_PERSON == data.record.type) {
+                                url += "/plugin/person/" + data.record.id;
                             }
                             var $lnk = $("<a href='" + url + "'>" + data.record.name + "</a>");
                             //$lnk.click(function(){alert("click" + data.record.id)});

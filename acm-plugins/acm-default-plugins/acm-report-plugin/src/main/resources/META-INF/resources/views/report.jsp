@@ -30,7 +30,7 @@
 	            <section class="scrollable">
 	                <div class="wrapper b-b header"><spring:message code="report.page.descShort" text="Report" /></div>
 	                <div class="wrapper">
-	                    <label for="priority"  class="label">Report</label>
+	                    <label for="selectReport"  class="label">Report</label>
 	                    <select name="priority" class="form-control" id ="selectReport">
 	                        <option>Choose Report</option>
 	                        <c:forEach items="${reportUrlsMap}" var="entry">
@@ -40,19 +40,20 @@
 	                    
 	                    <section id="caseNumberSection">
 		                    <div class="line line-dashed b-b line-lg pull-in"></div>
-		                    <label for="Case Number"  class="label" id="caseNumberlbl">Case Number</label>
+		                    <label for="caseNumber"  class="label" id="caseNumberlbl">Case Number</label>
 		                    <input id="caseNumber" type="text" class="form-control" placeholder="Case Number"  >
 	                    </section>
 
 						<section id="caseStatusSection">
 	                        <div class="line line-dashed b-b line-lg pull-in"></div>
-	                        <label for="State"  class="label" id="caseStatuslbl">State</label>
+	                        <label for="selectCaseStatus"  class="label" id="caseStatuslbl">State</label>
 	                        <select name="cStatus" class="form-control" id ="selectCaseStatus">
 	                            <option value="Choose State">Choose State</option>
 	                            <%--<option value="ACTIVE">Active</option>
 	                            <option value="APPROVED">Approved</option>--%>
-                                <option value="OPEN">OPEN</option>
-                                <option value="CLOSE">CLOSED</option>
+                                <option value="DRAFT">DRAFT</option>
+                                <option value="IN APPROVAL">IN APPROVAL</option>
+                                <option value="CLOSED">CLOSED</option>
 	                            <%--<option value="DRAFT">Draft</option>
 	                            <option value="IN APPROVAL">In Approval</option>   --%>
 		<%--                                                 <c:forEach items="${caseStatusMap}" var="entry">
@@ -64,7 +65,7 @@
 	                    
 	                    <section id="datepickerSection">
 		                    <div class="line line-dashed b-b line-lg pull-in"></div>                                            
-		                    <label for="Data Range"  class="label">Date Range</label>
+		                    <label for="startDate"  class="label">Date Range</label>
 		                    <div class="clearfix"></div>
 		                    <label class="label col-sm-3">From</label>
 		                    <div class="col-sm-9">

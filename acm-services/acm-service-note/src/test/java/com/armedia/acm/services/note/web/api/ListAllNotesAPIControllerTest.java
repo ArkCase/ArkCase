@@ -67,6 +67,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
     @Test
     public void ListNote() throws Exception
     {
+    	String type = "GENERAL";
         Long parentId = 1329L;
         String parentType = "COMPLAINT";
 
@@ -76,6 +77,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
         note.setCreator("testCreator");
         note.setCreated(new Date());
         note.setNote("Note");
+        note.setType(type);
         note.setParentType(parentType);
         note.setParentId(parentId);
 
@@ -85,7 +87,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
 
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
 
-        expect(mockNoteDao.listNotes(parentId, parentType)).andReturn(noteList);
+        expect(mockNoteDao.listNotes(type, parentId, parentType)).andReturn(noteList);
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
 
@@ -111,6 +113,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
 
         assertNotNull(fromReturnedNoteList);
         assertEquals(fromReturnedNoteList.size(),1);
+        assertEquals(fromReturnedNoteList.get(0).getType(), type);
         assertEquals(fromReturnedNoteList.get(0).getParentId(), parentId);
         assertEquals(fromReturnedNoteList.get(0).getParentType(), parentType);
 
@@ -121,6 +124,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
     @Test
     public void listNote_exception() throws Exception
     {
+    	String type = "GENERAL";
         Long parentId = 1329L;
         String parentType = "COMPLAINT";
 
@@ -130,6 +134,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
         note.setCreator("testCreator");
         note.setCreated(new Date());
         note.setNote("Note");
+        note.setType(type);
         note.setParentType(parentType);
         note.setParentId(parentId);
 
@@ -139,7 +144,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
 
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
 
-        expect(mockNoteDao.listNotes(parentId,parentType)).andThrow(new QueryTimeoutException("test exception"));
+        expect(mockNoteDao.listNotes(type, parentId,parentType)).andThrow(new QueryTimeoutException("test exception"));
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
 

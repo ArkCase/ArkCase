@@ -78,6 +78,8 @@ TaskList.Object = {
         this.$btnSearchRejectTask.click(function(e) {TaskList.Event.onClickSearchRejectTask(e);});
         this.$inputSearchRejectTask = this.$dlgRejectTask.find("input[name=searchKeywordRejectTask]");
         this.$inputSearchRejectTask.keyup(function(e) {TaskList.Event.onKeyUpSearchRejectTask(e);});
+        this.$txtCommentRejectTask = this.$dlgRejectTask.find("textarea[id=commentRejectTask]");
+        this.$txtCommentRejectTask.change(function(e) {TaskList.Event.onChangeCommentRejectTask(e);});
         this.initDlgRejectTask();
         this.$dlgRejectTaskSortableColumns = this.$dlgRejectTask.find('thead th.th-sortable');
         this.$dlgRejectTaskSortableColumns.each(function(index) {
@@ -198,6 +200,9 @@ TaskList.Object = {
         this.$btnSaveReworkInstructions    = $("#tabReworkInstructions button:eq(1)");
         this.$btnEditReworkInstructions.on("click", function(e) {TaskList.Event.onClickBtnEditReworkInstructions(e);});
         this.$btnSaveReworkInstructions.on("click", function(e) {TaskList.Event.onClickBtnSaveReworkInstructions(e);});
+        
+        this.$divRejectComments = $("#divRejectComments");
+        TaskList.JTable.createJTableRejectComments(this.$divRejectComments);
 
         this.$divAttachments = $("#divAttachments");
         TaskList.JTable.createJTableAttachments(this.$divAttachments);
@@ -287,6 +292,12 @@ TaskList.Object = {
     }
     ,getDlgRejectTaskSearchKeyword: function() {
     	return this._dlgRejectTaskSearchKeyword;
+    }
+    ,setDlgRejectTaskComment: function(comment) {
+    	this._dlgRejectTaskComment = comment;
+    }
+    ,getDlgRejectTaskComment: function() {
+    	return this._dlgRejectTaskComment;
     }
 
     //  Use this to build the Admin tree structure
@@ -388,6 +399,7 @@ TaskList.Object = {
         taskAdHoc     : ["tabDetails",
                         "tabNotes",
                         "tabHistory",
+                        "tabRejectComments",
                         "tabWorkflowOverview",
                         "tabAttachments",
                         ],
@@ -397,6 +409,7 @@ TaskList.Object = {
         taskNotes    : ["tabNotes"],
         taskHistory  : ["tabHistory"],
         taskReworkInstructions : ["tabReworkInstructions"],
+        taskRejectComments : ["tabRejectComments"],
         taskWorkflowOverview : ["tabWorkflowOverview"],
         taskAttachments: ["tabAttachments"]
     }
@@ -419,6 +432,7 @@ TaskList.Object = {
             ,"tabHistory"
             ,"tabWorkflowOverview"
             ,"tabReworkInstructions"
+            ,"tabRejectComments"
             ,"tabAttachments"
         ];
         var tabIdsToShow = this._getTabIdsByKey(key);
@@ -611,6 +625,9 @@ TaskList.Object = {
 
                     .addLeaf({key: pageId + "." + taskBranchID + ".Details"                   //level 2: /Task/Details
                         , title: "Details"
+                    })
+                    .addLeaf({key: pageId + "." + taskBranchID + ".RejectComments"                   //level 2: /Task/Reject Comments
+                        , title: "Reject Comments"
                     })
                     .addLeaf({key: pageId + "." + taskBranchID + ".Attachments"                   //level 2: /Task/Attachments
                         , title: "Attachments"
@@ -868,7 +885,7 @@ TaskList.Object = {
             this.refreshJTableAttachments();
             this.refreshJTableNotes();
             this.refreshJTableWorkflowOverview();
-            this.refreshJTableHistory();
+            this.refreshJTableRejectComments();
             this.refreshJTableHistory();
         }
         else{
@@ -960,6 +977,10 @@ TaskList.Object = {
         AcmEx.Object.jTableLoad(this.$divReworkInstructions);
 
     }
+    ,refreshJTableRejectComments: function(){
+        AcmEx.Object.jTableLoad(this.$divRejectComments);
+
+    }
     ,refreshJTableWorkflowOverview: function(){
         AcmEx.Object.jTableLoad(this.$divWorkflowOverview);
 
@@ -991,9 +1012,12 @@ TaskList.Object = {
     }
     
     // Reject Task
-    ,initDlgRejectTask: function() {
+    ,initDlgRejectTask: function() {    	
     	TaskList.Page.cleanDlgRejectTaskOwner(this.$dlgRejectTask);
     	TaskList.Page.cleanDlgRejectTaskUsers(this.$dlgRejectTask);
+    	
+    	this.$inputSearchRejectTask.val('');
+    	this.$txtCommentRejectTask.val('');
     	
     	this.setDlgRejectTaskStart(TaskList.DLG_REJECT_TASK_START);
     	this.setDlgRejectTaskN(TaskList.DLG_REJECT_TASK_N);
@@ -1002,6 +1026,7 @@ TaskList.Object = {
     	this.setDlgRejectTaskPages(0);
     	this.setDlgRejectTaskSelected(null);
     	this.setDlgRejectTaskSearchKeyword('');
+    	this.setDlgRejectTaskComment('');
     	this.$btnSubmitRejectTask.addClass('disabled');
     }
     ,showDlgRejectTask: function(onClickBtnPrimary) {    	

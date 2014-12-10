@@ -10,6 +10,7 @@
         <span itemprop="caseFileId">${caseId}</span>
         <span itemprop="token">${token}</span>
         <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
+        <span itemprop="urlReinvestigateCaseFileForm">${reinvestigateCaseFileFormUrl}</span>
         <span itemprop="urlRoiForm">${roiFormUrl}</span>
         <span itemprop="urlChangeCaseStatusForm">${changeCaseStatusFormUrl}</span>
         <span itemprop="urlEditChangeCaseStatusForm">${editChangeCaseStatusFormUrl}</span>
@@ -50,6 +51,17 @@
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css" type="text/css"/>
     <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/${js_x_editable}"></script>
 
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/easypiechart/${js_easypiechart}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/sparkline/${js_sparkline}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_stack}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_time}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_symbol}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_axislabels}"></script>--%>
+
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jshashtable}/${js_jshashtable}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jshashtable}/${js_jshashset}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_numberformatter}/${js_numberformatter}"></script>--%>
 
 <style>
     table.fancytree-ext-table {
@@ -166,10 +178,11 @@
                                 <div class="wrapper" id="tabTitle" style="display:none;">
                                     <div class="pull-right inline">
                                         <div class="btn-group">
-                                        	<button class="btn btn-default btn-sm" data-title="Edit Case File"><i class="fa fa-archive"></i> Edit</button>
+                                        	<button class="btn btn-default btn-sm" data-title="Edit Case File"><i class="fa fa-edit"></i> Edit</button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Change Case Status"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
-                                            <button class="btn btn-default btn-sm" data-title="Change Case Status" style="display: none" ><i class="fa fa-archive"></i> Change Case Status</button>
+                                            <button class="btn btn-default btn-sm" data-title="Change Case Status" style="display: none" ><i class="fa fa-edit"></i> Change Case Status</button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Consolidate Case"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>--%>
+                                            <button class="btn btn-default btn-sm" data-title="Reinvestigate Case File"><i class="fa fa-reply"></i> Reinvestigate</button>
                                             <button class="btn btn-default btn-sm" data-title="Consolidate Case"><i class="fa fa-random"></i> Consolidate</button>
                                             <!-- Modal -->
                                             <div class="modal fade" id="changeCaseStatus" tabindex="-1" role="dialog" aria-labelledby="labChangeCaseStatus" aria-hidden="true">
@@ -212,7 +225,34 @@
                                         </div>
                                     </div>
                                     <%--<h4 class="m-n">Case Details</h4>--%>
-                                    <%--<hr/>--%>
+                                    <h4 class="m-n">&nbsp;</h4>
+                                    <hr/>
+
+                                    <%--<ol class="track-progress" data-steps="5">--%>
+                                        <%--<li class="done">--%>
+                                            <%--<span>Initiated</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li class="done">--%>
+                                            <%--<span>Waiver</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<span>Adjudication</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<span>Issued</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<span>Closed</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                    <%--</ol>--%>
+                                    <%--<br/>--%>
+                                    <ol class="track-progress" id="anotherTracker">
+                                    </ol>
                                 </div>
 
                                 <div class="col-md-12" id="tabDetail" style="display:none;">

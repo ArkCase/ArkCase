@@ -3,7 +3,10 @@ package com.armedia.acm.services.note.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.armedia.acm.data.AcmEntity;
+
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.lang.Long;
 import java.lang.String;
@@ -12,7 +15,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_note")
-public class Note implements Serializable
+public class Note implements Serializable, AcmEntity
 
 {
     private static final long serialVersionUID = -1154137631399833851L;
@@ -26,6 +29,9 @@ public class Note implements Serializable
     @Lob
     @Column(name = "cm_note_text")
     private String note;
+    
+    @Column(name = "cm_note_type")
+    private String type;
 
     @Column(name = "cm_note_creator", nullable = false, insertable = true, updatable = false)
     private String creator;
@@ -44,6 +50,10 @@ public class Note implements Serializable
     public void beforeInsert() {
         Date today = new Date();
         setCreated(today);
+        
+        if (null == getType()) {
+        	setType("GENERAL");
+        }
     }
 
     public Long getId() {
@@ -62,18 +72,30 @@ public class Note implements Serializable
         this.note = note;
     }
 
-    public String getCreator() {
+    public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Override
+	public String getCreator() {
         return creator;
     }
 
+	@Override
     public void setCreator(String creator) {
         this.creator = creator;
     }
 
+    @Override
     public Date getCreated() {
         return created;
     }
 
+    @Override
     public void setCreated(Date created) {
         this.created = created;
     }
@@ -93,4 +115,26 @@ public class Note implements Serializable
     public void setParentType(String parentType) {
         this.parentType = parentType;
     }
+
+	@Override
+	public String getModifier() {
+		// Not used. Modifier not exist in the database
+		return null;
+	}
+
+	@Override
+	public void setModifier(String modifier) {
+		// Not used. Modifier not exist in the database
+	}
+
+	@Override
+	public Date getModified() {
+		// Not used. Modified not exist in the database
+		return null;
+	}
+
+	@Override
+	public void setModified(Date modified) {
+		// Not used. Modified not exist in the database
+	}
 }
