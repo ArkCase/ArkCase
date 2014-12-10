@@ -286,11 +286,7 @@ TaskList.Callback = {
             TaskList.Object.hideAllWorkflowButtons();
             var taskId = TaskList.getTaskId();
             TaskList.cacheTask.put(taskId,response);
-
-            /*var workflowHistory = TaskList.getWorkflowHistory();
-            workflowHistory.push(response.status);
-            TaskList.cacheWorkflowHistory.put(taskId,workflowHistory);
-            TaskList.Object.refreshJTableWorkflowOverview();*/
+            TaskList.Object.hideDynamicWorkflowButtons();
         }
     }
     ,onTaskDeleted : function(Callback, response) {

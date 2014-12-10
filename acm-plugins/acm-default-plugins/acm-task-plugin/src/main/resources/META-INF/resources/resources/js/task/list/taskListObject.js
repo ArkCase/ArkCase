@@ -52,11 +52,8 @@ TaskList.Object = {
 
         //workflow approval buttons
         this.$btnGroup = $("div.btn-group-task");
-        this.$btnGroup.on("click", ".businessProcess", function(e) {var clicked = e.target.id;
-                                                        TaskList.Event.onClickBtnTaskWithOutcome(clicked);
-                                                        $('.businessProcess').each(function(){$(this).hide();})
-                                                        //$("#" + clicked).hide();
-                                                        });
+        this.$btnGroup.on("click", ".businessProcess", function(e) {TaskList.Event.onOutcomeSelected(e);});
+
 
         this.$btnCompleteTask = $("#btnComplete");
         this.$btnCompleteTask.click(function(e) {TaskList.Event.onClickBtnAdHocTaskComplete(e);});
@@ -222,6 +219,7 @@ TaskList.Object = {
         this.setFormUrls(formUrls);
 
     }
+
 
     //frevvo edit close complaint
 
@@ -882,6 +880,7 @@ TaskList.Object = {
         }
         else{
             this.hideAllWorkflowButtons();
+            this.hideDynamicWorkflowButtons();
             if(task.completed != true){
                 if(task.availableOutcomes != null){
                     for(var i = 0; i < task.availableOutcomes.length; i++){
@@ -974,6 +973,10 @@ TaskList.Object = {
         this.$btnRejectTask.hide();
         this.$btnDeleteTask.hide();
         this.$btnSignature.hide();
+    }
+    ,hideDynamicWorkflowButtons: function(){
+        var $businessProcessButtons = $(".businessProcess");
+        $businessProcessButtons.remove();
     }
     ,setTaskDetails : function(task){
         this.setValueLnkTaskSubject(task.title);

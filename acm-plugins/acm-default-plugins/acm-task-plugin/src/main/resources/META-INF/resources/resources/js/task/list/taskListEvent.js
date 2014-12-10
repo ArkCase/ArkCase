@@ -176,21 +176,33 @@ TaskList.Event = {
         var availableOutcome = {};
         for(var i = 0; i < task.availableOutcomes.length; i++){
             availableOutcome = task.availableOutcomes[i];
-            if(availableOutcome.name == outcome){
+            if(availableOutcome.name == outcome) {
                 task.taskOutcome = availableOutcome;
+                TaskList.Service.completeTaskWithOutcome(task);
             }
         }
         //eventually we need a json to jsp field mapper, this is a temp solution
-        if(outcome == "SEND_FOR_REWORK") {
+
+    }
+    ,onOutcomeSelected : function(e) {var clicked = e.target.id;
+        if (clicked == "SEND_FOR_REWORK") {
             var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
             if (reworkInstructions == null || reworkInstructions == "") {
                 Acm.Dialog.error("Invalid rework instructions")
             }
             else {
+                var task = TaskList.getTask();
                 task.reworkInstructions = reworkInstructions;
+                TaskList.Event.onClickBtnTaskWithOutcome(clicked);
             }
         }
-        TaskList.Service.completeTaskWithOutcome(task);
+        else
+        {
+            TaskList.Event.onClickBtnTaskWithOutcome(clicked);
+        }
+        //$('.businessProcess').each(function(){$(this).hide();})
+        //alert(clicked);
+        //$("#" + clicked).hide();
     }
     ,onPostInit: function() {
 
