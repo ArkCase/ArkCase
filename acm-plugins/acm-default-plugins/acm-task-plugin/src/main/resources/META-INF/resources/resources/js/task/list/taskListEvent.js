@@ -171,53 +171,23 @@ TaskList.Event = {
     ,onChangeDlgRejectTaskSelected: function(e) {
     	TaskList.Object.setDlgRejectTaskSelected($(e.target).val());
     }
-
-    ,onClickBtnTaskOutcomeApprove : function(e) {
+    ,onClickBtnTaskWithOutcome : function(outcome) {
         var task = TaskList.getTask();
+        var availableOutcome = {};
         for(var i = 0; i < task.availableOutcomes.length; i++){
-            var availableOutcome = task.availableOutcomes[i];
-            if(availableOutcome.name == "APPROVE"){
+            availableOutcome = task.availableOutcomes[i];
+            if(availableOutcome.name == outcome){
                 task.taskOutcome = availableOutcome;
             }
         }
-        TaskList.Service.completeTaskWithOutcome(task);
-    }
-    ,onClickBtnTaskOutcomeRework : function(e) {
-        var task = TaskList.getTask();
-        var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
-        if(reworkInstructions == null || reworkInstructions == ""){
-            Acm.Dialog.error("Invalid rework instructions")
-        }
-        else{
-            //reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
-            task.reworkInstructions = reworkInstructions;
-
-            var requiredField = {};
-            for(var i = 0; i < task.availableOutcomes.length; i++){
-                var availableOutcome = task.availableOutcomes[i];
-                if(availableOutcome.name == "SEND_FOR_REWORK"){
-                    task.taskOutcome = availableOutcome;
-                }
+        //eventually we need a json to jsp field mapper, this is a temp solution
+        if(outcome == "SEND_FOR_REWORK") {
+            var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
+            if (reworkInstructions == null || reworkInstructions == "") {
+                Acm.Dialog.error("Invalid rework instructions")
             }
-            TaskList.Service.completeTaskWithOutcome(task);
-        }
-    }
-    ,onClickBtnTaskOutcomeResubmit : function(e) {
-        var task = TaskList.getTask();
-        for(var i = 0; i < task.availableOutcomes.length; i++){
-            var availableOutcome = task.availableOutcomes[i];
-            if(availableOutcome.name == "RESUBMIT"){
-                task.taskOutcome = availableOutcome;
-            }
-        }
-        TaskList.Service.completeTaskWithOutcome(task);
-    }
-    ,onClickBtnTaskOutcomeCancelRequest : function(e) {
-        var task = TaskList.getTask();
-        for(var i = 0; i < task.availableOutcomes.length; i++){
-            var availableOutcome = task.availableOutcomes[i];
-            if(availableOutcome.name == "CANCEL_DOCUMENT"){
-                task.taskOutcome = availableOutcome;
+            else {
+                task.reworkInstructions = reworkInstructions;
             }
         }
         TaskList.Service.completeTaskWithOutcome(task);
