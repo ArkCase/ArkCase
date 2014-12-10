@@ -41,6 +41,7 @@ CaseFile.View = CaseFile.View || {
             this.formUrls = new Object();
             
             this.formUrls["edit_case_file"] = items.properties("urlEditCaseFileForm").itemValue();
+            this.formUrls["reinvestigate_case_file"] = items.properties("urlReinvestigateCaseFileForm").itemValue();
             this.formUrls["roi"] = items.properties("urlRoiForm").itemValue();
             this.formUrls["enable_frevvo_form_engine"] = items.properties("enableFrevvoFormEngine").itemValue();
             this.formUrls["change_case_status"] = items.properties("urlChangeCaseStatusForm").itemValue();
@@ -379,15 +380,21 @@ CaseFile.View = CaseFile.View || {
 
     ,Action: {
         create: function() {
-            this.$dlgChangeCaseStatus   = $("#changeCaseStatus");
-            this.$dlgConsolidateCase    = $("#consolidateCase");
-            this.$edtConsolidateCase    = $("#edtConsolidateCase");
-            this.$btnEditCaseFile    	= $("#tabTitle button[data-title='Edit Case File']");
-            this.$btnChangeCaseStatus   = $("#tabTitle button[data-title='Change Case Status']");
-            this.$btnConsolidateCase    = $("#tabTitle button[data-title='Consolidate Case']");
-            this.$btnEditCaseFile   	.on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
-            this.$btnChangeCaseStatus   .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
-            this.$btnConsolidateCase    .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
+            this.$olMilestoneTrack          = $(".track-progress");
+            this.$dlgChangeCaseStatus      = $("#changeCaseStatus");
+            this.$dlgConsolidateCase       = $("#consolidateCase");
+            this.$edtConsolidateCase       = $("#edtConsolidateCase");
+            this.$btnEditCaseFile    	   = $("#tabTitle button[data-title='Edit Case File']");
+            this.$btnChangeCaseStatus      = $("#tabTitle button[data-title='Change Case Status']");
+            this.$btnConsolidateCase       = $("#tabTitle button[data-title='Consolidate Case']");
+            this.$btnReinvestigateCaseFile = $("#tabTitle button[data-title='Reinvestigate Case File']");
+            this.$btnEditCaseFile   	  .on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
+            this.$btnChangeCaseStatus     .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
+            this.$btnConsolidateCase      .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
+            this.$btnReinvestigateCaseFile.on("click", function(e) {CaseFile.View.Action.onClickBtnReinvestigateCaseFile(e, this);});
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE   ,this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE     ,this.onViewSelectedCaseFile);
         }
         ,onInitialized: function() {
         }
@@ -455,6 +462,74 @@ CaseFile.View = CaseFile.View || {
                 alert("Consolidate case:" + caseNumber);
             });
         }
+        ,onClickBtnReinvestigateCaseFile: function() {
+        	var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.getFormUrls()['reinvestigate_case_file'];
+        	var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+            var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
+            	var xmlId = '';
+            	if (Acm.isNotEmpty(c.childObjects) && c.childObjects.length > 0) {
+            		for (var i = 0; i < c.childObjects.length; i++) {
+            			var child = c.childObjects[i];
+            			
+            			if (child.targetType != null && child.targetType == 'FILE' && 
+            			    child.targetName != null && child.targetName.indexOf('form_case_file_') == 0 &&
+            			    child.targetName.substr(-4) == '.xml') 
+            			{
+            				xmlId = child.targetId;
+            			}
+            		}
+            	}
+            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
+            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',xmlId:'" + xmlId + "',");
+            	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 860, 700
+                    ,function() {
+            			// TODO: When James will find solution, we should change this
+            			location.reload();
+                    }
+                );
+            }
+        }
+
+        ,onModelRetrievedCaseFile: function(caseFile) {
+            if (!caseFile.hasError) {
+                CaseFile.View.Action.populate(caseFile);
+            }
+        }
+        ,onViewSelectedCaseFile: function(caseFileId) {
+            var caseFile = CaseFile.Model.Detail.cacheCaseFile.get(caseFileId);
+            CaseFile.View.Action.populate(caseFile);
+        }
+
+        ,populate: function(caseFile) {
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                CaseFile.View.Action.showBtnChangeCaseStatus(Acm.goodValue(caseFile.changeCaseStatus, true));
+                CaseFile.View.Action.showMilestone(Acm.goodValue(caseFile.milestone));
+            }
+        }
+        ,showMilestone: function(milestone) {
+            var milestones = ["Initiated", "Waiver", "Adjudication", "Issued", "Closed"];
+            milestone = "Adjudication";
+
+            var lastCompleted = -1;
+            for (var i = 0; i < milestones.length; i++) {
+                if (milestones[i] == milestone) {
+                    lastCompleted = i;
+                    break;
+                }
+            }
+
+            var html = "";
+            for (var i = 0; i < milestones.length; i++) {
+                html += "<li";
+                if (i <= lastCompleted) {
+                    html += " class='done'"
+                }
+                html += "><span>" + milestones[i] + "</span><i></i></li>";
+            }
+            this.setHtmlOlMilestoneTracker(html);
+            this.setAttrOlMilestoneTracker("data-steps", milestones.length);
+        }
         ,showDlgChangeCaseStatus: function(onClickBtnPrimary) {
             Acm.Dialog.bootstrapModal(this.$dlgChangeCaseStatus, onClickBtnPrimary);
         }
@@ -466,6 +541,15 @@ CaseFile.View = CaseFile.View || {
         }
         ,setValueEdtConsolidateCase: function(val) {
             Acm.Object.setValue(this.$edtConsolidateCase, val);
+        }
+        ,showBtnChangeCaseStatus: function(show) {
+            Acm.Object.show(this.$btnChangeCaseStatus, show);
+        }
+        ,setHtmlOlMilestoneTracker: function(html) {
+            Acm.Object.setHtml(this.$olMilestoneTrack, html);
+        }
+        ,setAttrOlMilestoneTracker: function(name, value) {
+            this.$olMilestoneTrack.attr(name, value);
         }
     }
 
@@ -698,12 +782,6 @@ CaseFile.View = CaseFile.View || {
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
-                
-                if (c.changeCaseStatus) {
-                	this.hideChangeCaseStatusButton();
-                }else {
-                	this.showChangeCaseStatusButton();
-                }
             }
         }
 
@@ -744,16 +822,16 @@ CaseFile.View = CaseFile.View || {
         ,saveDivDetail: function() {
             return AcmEx.Object.SummerNote.save(this.$divDetail);
         }
-        ,showChangeCaseStatusButton: function() {
-        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
-        		CaseFile.View.Action.$btnChangeCaseStatus.show();        		
-        	}
-        }
-        ,hideChangeCaseStatusButton: function() {
-        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
-        		CaseFile.View.Action.$btnChangeCaseStatus.hide();        		
-        	}
-        }
+//        ,showChangeCaseStatusButton: function() {
+//        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
+//        		CaseFile.View.Action.$btnChangeCaseStatus.show();
+//        	}
+//        }
+//        ,hideChangeCaseStatusButton: function() {
+//        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
+//        		CaseFile.View.Action.$btnChangeCaseStatus.hide();
+//        	}
+//        }
 
         ,populateCaseFile_old: function(c) {
             this.setTextLabCaseNumber(c.caseNumber);
@@ -1855,8 +1933,8 @@ CaseFile.View = CaseFile.View || {
 
         ,onClickSpanAddDocument: function(event, ctrl) {
             var enableFrevvoFormEngine = CaseFile.View.MicroData.getFormUrls()['enable_frevvo_form_engine'];
-            if(enableFrevvoFormEngine == "true"){
-                var report = CaseFile.View.Documents.getSelectReport();
+            var report = CaseFile.View.Documents.getSelectReport();
+            if(report == "roi"){
                 var token = CaseFile.View.MicroData.getToken();
 
                 var caseFileId = CaseFile.View.Tree.getActiveCaseId();
@@ -1889,8 +1967,8 @@ CaseFile.View = CaseFile.View || {
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
                 + "<option value='roi'>Report of Investigation</option>"
-                + "<option value='roi'>Medical Release</option>"
-                + "<option value='roi'>General Release</option>"
+                + "<option value='mr'>Medical Release</option>"
+                + "<option value='gr'>General Release</option>"
                 + "</select>"
                 + "</span>";
 
@@ -2635,6 +2713,11 @@ CaseFile.View = CaseFile.View || {
                             ,width: '30%'
                             ,edit: true
                             ,create: false
+                            ,display: function(data) {
+                                var url = App.getContextPath() + '/plugin/casefile/' + data.record.id;
+                                var $lnk = $("<a href='" + url + "'>" + data.record.title + "</a>");
+                                return $lnk;
+                            }
                         }
                         ,modified: {
                             title: 'Modified'

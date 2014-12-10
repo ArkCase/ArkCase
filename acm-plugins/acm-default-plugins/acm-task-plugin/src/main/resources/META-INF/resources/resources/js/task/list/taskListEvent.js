@@ -82,8 +82,12 @@ TaskList.Event = {
     	this._onRetrieveUsers();
     	TaskList.Object.showDlgRejectTask(function(event, ctrl) {
     		var returnTo = TaskList.Object.getDlgRejectTaskSelected();
+    		var note = TaskList.Object.getDlgRejectTaskComment();
     		if (returnTo != null) {
     			TaskList.Event.onSaveAssignee(returnTo);
+    			if (note && note.trim() !== '') {
+    				TaskList.Event.onSaveNote(note, TaskList.REJECT_COMMENT, TaskList.getTaskId(), 'TASK');
+    			}
     		}
     	});
     }
@@ -156,6 +160,12 @@ TaskList.Event = {
         	TaskList.Object.setDlgRejectTaskPages(0);
         	
     		this._onRetrieveUsers();
+    	}
+    }
+    ,onChangeCommentRejectTask: function(e) {
+    	var comment = TaskList.Object.$txtCommentRejectTask.val();
+    	if (comment && comment.trim() !== '') {
+    		TaskList.Object.setDlgRejectTaskComment(comment);    		
     	}
     }
     ,onChangeDlgRejectTaskSelected: function(e) {
@@ -328,6 +338,20 @@ TaskList.Event = {
         var task = TaskList.getTask();
         task.assignee = value;
         TaskList.Service.listTaskSaveDetail(task.taskId, task);
+    }
+    
+    /**
+     * Save Note
+     */
+    ,onSaveNote : function(note, type, parentId, parentType) {
+    	var noteToSave = {};
+    	
+        noteToSave.note = note;
+        noteToSave.type = type;
+        noteToSave.parentId = Acm.goodValue(parentId);
+        noteToSave.parentType = parentType;
+        
+        TaskList.Service.saveNote(noteToSave);
     }
 
     /**

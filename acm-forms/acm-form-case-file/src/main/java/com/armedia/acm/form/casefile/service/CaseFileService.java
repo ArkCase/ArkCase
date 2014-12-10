@@ -9,6 +9,9 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+import org.activiti.engine.RuntimeService;
 import org.drools.core.RuntimeDroolsException;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -28,6 +31,8 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
+import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.service.history.model.AcmHistory;
@@ -46,6 +51,12 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	private SaveCaseService saveCaseService;
 	private AcmHistoryDao acmHistoryDao;
 	private CaseFileDao caseFileDao;
+	private ObjectAssociationDao objectAssociationDao;
+	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+
+	private RuntimeService activitiRuntimeService;
+
+	private CaseFile caseFile;
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -92,20 +103,34 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		// Save Employment History
 		form = saveEmploymentHistory(form);
 		
+		// Save Reference (Reinvestigation)
+		form = saveReference(form);
+		
 		// Cave Attachments
-		saveAttachments(attachments, form.getCmisFolderId(), FrevvoFormName.CASE_FILE.toUpperCase(), form.getId(), form.getNumber());
+		FrevvoUploadedFiles frevvoFiles = saveAttachments(attachments, form.getCmisFolderId(),
+				FrevvoFormName.CASE_FILE.toUpperCase(), form.getId(), form.getNumber());
 		
 		// Log the last user action
 		if (null != form && null != form.getId())
 		{
 			getUserActionExecutor().execute(form.getId(), AcmUserActionName.LAST_CASE_CREATED, getAuthentication().getName());
 		}
-		
+
+
+		String mode = getRequest().getParameter("mode");
+		if ( !"edit".equals(mode) )
+		{
+			CaseFileWorkflowListener workflowListener = new CaseFileWorkflowListener();
+			workflowListener.handleNewCaseFile(getCaseFile(), frevvoFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule());
+		}
+
 		return true;
 	}
 	
 	private CaseFileForm saveCaseFile(CaseFileForm form) throws AcmCreateObjectFailedException 
 	{
+		LOG.info("Saving case file ...");
+		
 		CaseFile caseFile = null;
 		
 		String mode = getRequest().getParameter("mode");
@@ -185,12 +210,16 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		{
 			form.getSubject().setPersonId(caseFile.getOriginator().getPerson().getId());		
 		}
+
+		setCaseFile(caseFile);
 		
 		return form;
 	}
 	
 	private CaseFileForm saveAddressHistory(CaseFileForm form)
 	{
+		LOG.info("Saving address history ...");
+		
 		String objectType = "POSTAL_ADDRESS";
 		Long personId = form.getSubject().getPersonId();
 		List<AddressHistory> addressHistoryArray = form.getAddressHistory();
@@ -221,6 +250,8 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	
 	private CaseFileForm saveEmploymentHistory(CaseFileForm form)
 	{
+		LOG.info("Saving employment history ...");
+		
 		String objectType = "ORGANIZATION";
 		Long personId = form.getSubject().getPersonId();
 		List<EmploymentHistory> employmentHistoryArray = form.getEmploymentHistory();
@@ -252,6 +283,51 @@ public class CaseFileService extends FrevvoFormAbstractService {
 				acmHistory.setEndDate(employmentHistory.getEndDate());
 				
 				getAcmHistoryDao().save(acmHistory);
+			}
+		}
+		
+		return form;
+	}
+	
+	private CaseFileForm saveReference(CaseFileForm form)
+	{		
+		String mode = getRequest().getParameter("mode");
+		if (mode != null && "reinvestigate".equals(mode))
+		{
+			LOG.info("Saving reference ...");
+			
+			String oldCaseIdAsString = getRequest().getParameter("caseId");
+			String oldCaseNumber = getRequest().getParameter("caseNumber");
+			Long oldCaseId = null;
+			try
+			{
+				oldCaseId = Long.parseLong(oldCaseIdAsString);
+			}
+			catch(Exception e)
+			{
+				LOG.error("Cannot parse String oldCaseId=" + oldCaseIdAsString + " to Long.", e);
+			}
+			
+			if (oldCaseId != null && oldCaseNumber != null && form.getId() != null && form.getNumber() != null)
+			{		
+				String status = "ACTIVE";
+				CaseFile caseFile = getCaseFileDao().find(oldCaseId);
+				if (caseFile != null && caseFile.getStatus() != null)
+				{
+					status = caseFile.getStatus();
+				}
+				
+				ObjectAssociation objectAssociation = new ObjectAssociation();
+				
+				objectAssociation.setStatus(status);
+				objectAssociation.setParentType("CASE_FILE");
+				objectAssociation.setParentId(form.getId());
+				objectAssociation.setParentName(form.getNumber());
+				objectAssociation.setTargetType("CASE_FILE");
+				objectAssociation.setTargetId(oldCaseId);
+				objectAssociation.setTargetName(oldCaseNumber);
+				
+				getObjectAssociationDao().save(objectAssociation);
 			}
 		}
 		
@@ -343,4 +419,41 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		this.caseFileDao = caseFileDao;
 	}
 
+	public ObjectAssociationDao getObjectAssociationDao() {
+		return objectAssociationDao;
+	}
+
+	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
+		this.objectAssociationDao = objectAssociationDao;
+	}
+
+	public FileWorkflowBusinessRule getFileWorkflowBusinessRule()
+	{
+		return fileWorkflowBusinessRule;
+	}
+
+	public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
+	{
+		this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
+	}
+
+	public RuntimeService getActivitiRuntimeService()
+	{
+		return activitiRuntimeService;
+	}
+
+	public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+	{
+		this.activitiRuntimeService = activitiRuntimeService;
+	}
+
+	public CaseFile getCaseFile()
+	{
+		return caseFile;
+	}
+
+	public void setCaseFile(CaseFile caseFile)
+	{
+		this.caseFile = caseFile;
+	}
 }

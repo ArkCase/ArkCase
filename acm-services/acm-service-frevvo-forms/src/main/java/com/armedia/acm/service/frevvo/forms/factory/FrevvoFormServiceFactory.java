@@ -138,6 +138,9 @@ public class FrevvoFormServiceFactory {
             service.setEcmFileDao(frevvoFormController.getEcmFileDao());
             service.setMuleClient(frevvoFormController.getMuleClient());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
+            service.setObjectAssociationDao(frevvoFormController.getObjectAssociationDao());
+            service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
+            service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
             
             return service;
 		}

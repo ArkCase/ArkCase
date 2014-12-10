@@ -31,7 +31,8 @@
         <module>acm-service-note</module>
         <module>acm-service-history</module>
         <module>acm-service-correspondence</module>
-  </modules>
+        <module>acm-service-milestone</module>
+    </modules>
 
 
 </project>

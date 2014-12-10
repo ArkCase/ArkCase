@@ -5,7 +5,6 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import org.apache.ibatis.annotations.Case;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;

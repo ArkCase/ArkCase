@@ -911,6 +911,71 @@ body.container {
 
 
 
+.track-progress {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.track-progress li {
+  list-style-type: none;
+  display: inline-block;
+
+  position: relative;
+  margin: 0;
+  padding: 0;
+
+  text-align: center;
+  line-height: 30px;
+  height: 30px;
+
+  background-color: #f0f0f0;
+}
+
+.track-progress[data-steps="3"] li { width: 33%; }
+.track-progress[data-steps="4"] li { width: 24%; }
+.track-progress[data-steps="5"] li { width: 20%; }
+
+.track-progress li > span {
+  display: block;
+
+  color: #999;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.track-progress li.done > span {
+  color: #666;
+  background-color: #bef5f6;
+}
+
+.track-progress li:first-child i,
+.track-progress li:last-child i {
+  display: block;
+  height: 0;
+  width: 0;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  border: solid transparent;
+  border-left-color: white;
+  border-width: 15px;
+}
+
+.track-progress li:last-child i {
+  left: auto;
+  right: -15px;
+
+  border-left-color: transparent;
+  border-top-color: white;
+  border-bottom-color: white;
+}
+
+
+
+
 #peopleinvolved table.table.table-striped.table-hover {
 	padding: 0px;
 	margin: 0px;

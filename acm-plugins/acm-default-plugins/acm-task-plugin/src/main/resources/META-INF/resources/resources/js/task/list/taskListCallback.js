@@ -23,6 +23,7 @@ TaskList.Callback = {
         Acm.Dispatcher.addEventListener(this.EVENT_WORKFLOW_HISTORY_RETRIEVED, this.onWorkflowHistoryRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_EVENTS_RETRIEVED, this.onTaskEventsRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_USERS_RETRIEVED, this.onUsersRetrieved);
+        Acm.Dispatcher.addEventListener(this.EVENT_REJECT_COMMENTS_LIST_RETRIEVED, this.onRejectCommentsListRetrieved);
     }
 
     ,EVENT_LIST_RETRIEVED			 : "task-list-retrieved"
@@ -42,6 +43,7 @@ TaskList.Callback = {
     ,EVENT_WORKFLOW_HISTORY_RETRIEVED: "workflow-history-retrieved"
     ,EVENT_TASK_EVENTS_RETRIEVED: "task-events-retrieved"
     ,EVENT_USERS_RETRIEVED: "task-users-retrieved"
+    ,EVENT_REJECT_COMMENTS_LIST_RETRIEVED  : "object-reject-comments-retrieved"
 
     ,onDetailSaved : function(Callback, response) {
         if (response.hasError) {
@@ -182,6 +184,16 @@ TaskList.Callback = {
                         attachmentsList.push(attachment);
                     }
                     TaskList.cacheAttachments.put(task.taskId, attachmentsList);
+                }
+                
+                // Reject Comments
+                if(task && task.adhocTask == true){
+	                var rejectComments = TaskList.cacheRejectComments.get(parentId);
+	                if (rejectComments) {
+	                    TaskList.Object.refreshJTableRejectComments();
+	                } else {
+	                    TaskList.Service.retrieveRejectComments(TaskList.REJECT_COMMENT,parentId,parentType);
+	                }
                 }
 
                 //load all the details
@@ -422,6 +434,16 @@ TaskList.Callback = {
             Acm.Dialog.error("Failed to retrieve users." + response.errorMsg);
         } else {
         	TaskList.Object.refreshDlgRejectTaskUsers(response);
+        }
+    }
+    
+    ,onRejectCommentsListRetrieved : function(Callback, response) {
+        if (response.hasError) {
+            Acm.Dialog.error("Failed to list reject comments:" + response.errorMsg);
+        } else {
+            var taskId = TaskList.getTaskId();
+            TaskList.cacheRejectComments.put(taskId,response)
+            TaskList.Object.refreshJTableRejectComments();
         }
     }
 };
