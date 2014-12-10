@@ -47,4 +47,18 @@
         <constructor-arg ref="caseFileStateServiceClass"/>
     </bean>
 
+    <bean id="clearanceVerificationSystemExportServiceClass" class="java.lang.Class" factory-method="forName">
+        <constructor-arg value="com.armedia.acm.plugins.personnelsecurity.cvs.service.ClearanceVerificationSystemExportService"/>
+    </bean>
+    <bean id="clearanceVerificationSystemExportService" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg ref="clearanceVerificationSystemExportServiceClass"/>
+    </bean>
+
+    <bean id="personnelSecurityCorrespondenceServiceClass" class="java.lang.Class" factory-method="forName">
+        <constructor-arg value="com.armedia.acm.plugins.personnelsecurity.correspondence.service.PersonnelSecurityCorrespondenceService"/>
+    </bean>
+    <bean id="personnelSecurityCorrespondenceService" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg ref="personnelSecurityCorrespondenceServiceClass"/>
+    </bean>
+
 </beans>
