@@ -76,7 +76,7 @@ public class BackgroundInvestigationBusinessProcessIT
     private String folderId = "folderId";
     private String subjectLastName = "Garcia";
     private String processName = "personnelSecurityBackgroundInvestigation";
-    private String defaultAdjudicator = "sally-acm";
+    private String defaultAdjudicator = "ann-acm";
     Map<String, Object> pvars = new HashMap<>();
 
     @Before
@@ -85,7 +85,7 @@ public class BackgroundInvestigationBusinessProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/personnelSecurityBackgroundInvestigation_v6.bpmn20.xml")
+                .addClasspathResource("activiti/personnelSecurityBackgroundInvestigation_v7.bpmn20.xml")
                 .deploy();
 
         mocks = new Object[] { mockMilestoneService, caseFileStateService, clearanceVerificationSystemExportService };
