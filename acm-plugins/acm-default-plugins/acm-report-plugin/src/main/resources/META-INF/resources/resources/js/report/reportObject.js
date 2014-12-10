@@ -11,6 +11,7 @@ Report.Object = {
     CLOSE_CASE_REPORT : "Close Case Report",
     COMPLAINT_REPORT : "Complaint Report",
     BILLING_REPORT : "Billing Report",
+    BACKGROUND_INVESTIGATION_SUMMARY_REPORT : "Background Investigations Report",
     CHOOSE_REPORT : "Choose Report",
 
     create : function() {
