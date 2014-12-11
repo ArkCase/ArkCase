@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+
 import org.activiti.engine.RuntimeService;
 import org.drools.core.RuntimeDroolsException;
 import org.json.JSONObject;
@@ -33,6 +34,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.service.history.model.AcmHistory;
@@ -52,6 +54,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	private AcmHistoryDao acmHistoryDao;
 	private CaseFileDao caseFileDao;
 	private ObjectAssociationDao objectAssociationDao;
+	private PersonIdentificationDao personIdentificationDao;
 	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
 	private RuntimeService activitiRuntimeService;
@@ -167,6 +170,8 @@ public class CaseFileService extends FrevvoFormAbstractService {
             throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
         }
 		
+		
+		
 		// Add id's and other information to the Frevvo form
 		form.setId(caseFile.getId());
 		form.setCmisFolderId(caseFile.getEcmFolderId());
@@ -207,8 +212,8 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		}
 		
 		if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
-		{
-			form.getSubject().setPersonId(caseFile.getOriginator().getPerson().getId());		
+		{			
+			form.getSubject().setPersonId(caseFile.getOriginator().getPerson().getId());	
 		}
 
 		setCaseFile(caseFile);
@@ -333,7 +338,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		
 		return form;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#getFormName()
 	 */
@@ -425,6 +430,15 @@ public class CaseFileService extends FrevvoFormAbstractService {
 
 	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
 		this.objectAssociationDao = objectAssociationDao;
+	}
+
+	public PersonIdentificationDao getPersonIdentificationDao() {
+		return personIdentificationDao;
+	}
+
+	public void setPersonIdentificationDao(
+			PersonIdentificationDao personIdentificationDao) {
+		this.personIdentificationDao = personIdentificationDao;
 	}
 
 	public FileWorkflowBusinessRule getFileWorkflowBusinessRule()

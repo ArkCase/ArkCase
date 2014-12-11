@@ -255,6 +255,8 @@
                                     </ol>
                                 </div>
 
+                                <br/>
+
                                 <div class="col-md-12" id="tabDetail" style="display:none;">
                                     <section class="panel b-a ">
                                         <div class="panel-heading b-b bg-info">
@@ -325,6 +327,13 @@
                                         <div id="divEvents" style="width:100%"></div>
                                     </section>
                                 </div>
+
+                                <div class="col-md-12" id="tabTemplates" style="display:none;">
+                                    <section class="panel b-a ">
+                                        <div id="divTemplates" style="width:100%"></div>
+                                    </section>
+                                </div>
+
 
                             </div>
                         </section>
