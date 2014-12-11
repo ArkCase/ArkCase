@@ -504,31 +504,34 @@ CaseFile.View = CaseFile.View || {
         ,populate: function(caseFile) {
             if (CaseFile.Model.Detail.validateData(caseFile)) {
                 CaseFile.View.Action.showBtnChangeCaseStatus(Acm.goodValue(caseFile.changeCaseStatus, true));
-                CaseFile.View.Action.showMilestone(Acm.goodValue(caseFile.milestone));
+                CaseFile.View.Action.showMilestone(Acm.goodValue(caseFile.milestones));
             }
         }
-        ,showMilestone: function(milestone) {
-            var milestones = ["Initiated", "Waiver", "Adjudication", "Issued", "Closed"];
-            milestone = "Adjudication";
-
-            var lastCompleted = -1;
-            for (var i = 0; i < milestones.length; i++) {
-                if (milestones[i] == milestone) {
-                    lastCompleted = i;
-                    break;
-                }
+        ,showMilestone: function(milestones) {
+            var achievedMilestones = [];
+            for ( var m = 0; m < milestones.length; m++ )
+            {
+                achievedMilestones.push(milestones[m].milestoneName);
             }
+
+            var allMilestones = ["Initiated", "Waiver", "Adjudication", "Issued", "Closed"];
 
             var html = "";
-            for (var i = 0; i < milestones.length; i++) {
+            for ( var i = 0; i < allMilestones.length; i++ )
+            {
                 html += "<li";
-                if (i <= lastCompleted) {
-                    html += " class='done'"
+                for ( var j = 0; j < achievedMilestones.length; j++ )
+                {
+                    if ( achievedMilestones[j] === allMilestones[i] )
+                    {
+                        html += " class='done'";
+                        break;
+                    }
                 }
-                html += "><span>" + milestones[i] + "</span><i></i></li>";
+                html += "><span>" + allMilestones[i] + "</span><i></i></li>\r";
             }
             this.setHtmlOlMilestoneTracker(html);
-            this.setAttrOlMilestoneTracker("data-steps", milestones.length);
+            this.setAttrOlMilestoneTracker("data-steps", allMilestones.length);
         }
         ,showDlgChangeCaseStatus: function(onClickBtnPrimary) {
             Acm.Dialog.bootstrapModal(this.$dlgChangeCaseStatus, onClickBtnPrimary);
