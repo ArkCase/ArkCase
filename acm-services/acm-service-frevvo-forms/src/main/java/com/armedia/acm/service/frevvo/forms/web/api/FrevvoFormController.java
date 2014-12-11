@@ -25,6 +25,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
+import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
 
 import org.activiti.engine.RuntimeService;
 import org.apache.commons.io.IOUtils;
@@ -82,6 +83,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
     private AcmHistoryDao acmHistoryDao;
     
     private ObjectAssociationDao objectAssociationDao;
+    private PersonIdentificationDao personIdentificationDao;
 
 	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
@@ -371,6 +373,15 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
 		this.objectAssociationDao = objectAssociationDao;
+	}
+
+	public PersonIdentificationDao getPersonIdentificationDao() {
+		return personIdentificationDao;
+	}
+
+	public void setPersonIdentificationDao(
+			PersonIdentificationDao personIdentificationDao) {
+		this.personIdentificationDao = personIdentificationDao;
 	}
 
 	public FileWorkflowBusinessRule getFileWorkflowBusinessRule()

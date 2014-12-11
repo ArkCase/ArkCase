@@ -11,10 +11,10 @@
 <link rel="stylesheet" href="resources/css/font.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/app.css" type="text/css" />
 <!--[if lt IE 9]>
-<script src="js/ie/html5shiv.js"></script>
-<script src="js/ie/respond.min.js"></script>
-<script src="js/ie/excanvas.js"></script>
-<![endif]-->
+    <script src="resources/js/ie/html5shiv.js"></script>
+    <script src="resources/js/ie/respond.min.js"></script>
+    <script src="resources/js/ie/excanvas.js"></script>
+    <![endif]-->
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="resources/js/fancytree/jquery.fancytree.js"></script>
@@ -88,7 +88,7 @@
                   <li class=""> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
                   <li class="active"> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
                   <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
-                  
+                  <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
                   <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
 <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
@@ -240,25 +240,26 @@
                         </div>
                         <h4 class="m-n">Case Details</h4>
                         <hr/>
-                         <ol class="track-progress" data-steps="4">
-   <li class="done">
-     <span>Order</span>
-     <i></i>
-   </li><!--
---><li class="done">
-     <span>Payment</span>
-   </li><!--
---><li>
-     <span>Backed</span>
-     <i></i>
-   </li>
-   <!--
---><li>
-     <span>Delivered</span>
-     <i></i>
-   </li>
- </ol>
-                 
+                        <ol class="track-progress" data-steps="5">
+                            <li class="done"><span>Initiated</span><i></i></li>
+                            <li class="done"><span>Waiver</span><i></i></li>
+                            <li class="done"><span>Adjudication</span><i></i></li>
+                            <li><span>Issued</span><i></i></li>
+                            <li><span>Closed</span><i></i></li>
+                        </ol>
+                        <br/>
+                        <ol class="track-progress" data-steps="5" id="anotherTracker">
+                        </ol>
+<script>
+  $(document).ready(function() {
+      var html = '<li class="done"><span>Initiated</span><i></i></li> \r';
+      html    += '<li class="done"><span>Waiver</span><i></i></li> \r';
+      html    += '<li class="done"><span>Adjudication</span><i></i></li> \r';
+      html    += '<li><span>Issued</span><i></i></li> \r';
+      html    += '<li><span>Closed</span><i></i></li> \r';
+      $('#anotherTracker').html(html);
+  });
+</script>
                       </div>
                       
                       
@@ -540,7 +541,7 @@
                               <tbody>
                                 <tr class="odd gradeA">
                                   <td>[ID]</td>
-                                  <td><a href="#" onClick="window.open('documents.html', '_blank', 'toolbar=no, scrollbars=yes, resizable=yes, top=500, left=500, width=1024, height=768');">[Title]</a></td>
+                                  <td>[Title]</td>
                                   <td>[Type]</td>
                                   <td>[Created]</td>
                                   <td>[Author]</td>
@@ -967,7 +968,7 @@ $(document).ready(function() { $('#duedate').editable({
                 weekStart: 1
            }
         }); }); 
-</script> 
+</script>
 
 <!-- App --> 
 <script src="resources/js/app.js"></script> 

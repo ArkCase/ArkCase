@@ -500,6 +500,7 @@ Admin.Object = {
             fd.append("files[]", Admin.Object.$btnNewTemplate[0].files[i]);
         }
         Admin.Service.uploadTemplateFile(fd);
+        this.$formNewTemplate[0].reset();
     }
 };
 
