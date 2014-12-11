@@ -1969,6 +1969,7 @@ CaseFile.View = CaseFile.View || {
                 + "<option value='roi'>Report of Investigation</option>"
                 + "<option value='mr'>Medical Release</option>"
                 + "<option value='gr'>General Release</option>"
+                + "<option value='ev'>eVerify</option>"
                 + "</select>"
                 + "</span>";
 

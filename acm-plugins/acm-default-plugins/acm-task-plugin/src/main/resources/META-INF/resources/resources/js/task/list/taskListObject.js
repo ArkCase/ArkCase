@@ -861,6 +861,7 @@ TaskList.Object = {
     	}
         if(task.adhocTask){
             this.hideAllWorkflowButtons();
+            this.hideDynamicWorkflowButtons();
             if(task.completed != true){
                 this.$btnCompleteTask.show();
                 this.$btnDeleteTask.show();
