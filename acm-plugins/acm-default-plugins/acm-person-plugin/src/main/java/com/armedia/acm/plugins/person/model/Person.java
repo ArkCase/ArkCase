@@ -120,7 +120,7 @@ public class Person implements Serializable, AcmEntity
     @Column(name = "cm_security_tag")
     private List<String> securityTags = new ArrayList<>();
     
-    @OneToMany(cascade= CascadeType.ALL, orphanRemoval = true, mappedBy="person")   
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy="person")
     private List<PersonAlias> personAliases = new ArrayList<>();
     
     @JsonIgnore

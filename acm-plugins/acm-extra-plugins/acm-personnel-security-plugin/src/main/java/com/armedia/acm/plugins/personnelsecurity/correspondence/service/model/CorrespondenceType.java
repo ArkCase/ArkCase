@@ -1,4 +1,4 @@
-package com.armedia.acm.correspondence.model;
+package com.armedia.acm.plugins.personnelsecurity.correspondence.service.model;
 
 /**
  * Created by marjan.stefanoski on 08.12.2014.
