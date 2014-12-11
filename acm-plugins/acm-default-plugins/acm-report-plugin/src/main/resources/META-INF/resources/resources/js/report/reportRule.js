@@ -37,6 +37,10 @@ Report.Rule = {
 		if ( reportName === Report.Object.BILLING_REPORT) {
 			Report.Rule.updateBillingReportSection();
 		}
+		else if ( reportName === Report.Object.BACKGROUND_INVESTIGATION_SUMMARY_REPORT )
+		{
+			Report.Rule.updateBackgroundInvestigationReportSection();
+		}
 		else {
 			Report.Page.toggleBillingReportCriteria(false);    			    			
 			Report.Page.toggleCaseStatusCriteria(true);			
@@ -52,6 +56,13 @@ Report.Rule = {
 		Report.Page.toggleDatepickertCriteria(false);
 		Report.Page.toggleReportButton(true);
 		
+	},
+
+	updateBackgroundInvestigationReportSection : function() {
+		Report.Page.toggleBillingReportCriteria(false);
+		Report.Page.toggleCaseStatusCriteria(false);
+		Report.Page.toggleDatepickertCriteria(true);
+		Report.Page.toggleReportButton(true);
 	}
 	
 	,resetCriteria : function() {

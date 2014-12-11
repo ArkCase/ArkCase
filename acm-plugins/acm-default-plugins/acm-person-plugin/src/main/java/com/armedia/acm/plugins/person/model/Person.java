@@ -126,6 +126,10 @@ public class Person implements Serializable, AcmEntity
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
+    private List<PersonIdentification> personIdentification = new ArrayList<>();
     
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -394,5 +398,12 @@ public class Person implements Serializable, AcmEntity
     public void setOrganizations(List<Organization> organizations) {
         this.organizations = organizations;
     }
-    
+
+    public List<PersonIdentification> getPersonIdentification() {
+        return personIdentification;
+    }
+
+    public void setPersonIdentification(List<PersonIdentification> personIdentification) {
+        this.personIdentification = personIdentification;
+    }
 }
