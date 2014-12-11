@@ -2,10 +2,6 @@ package com.armedia.acm.correspondence.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.correspondence.model.CorrespondenceType;
-import com.armedia.acm.correspondence.model.ObjectType;
-import com.armedia.acm.correspondence.service.CreateWordDocFactory;
-import com.armedia.acm.correspondence.service.WordDocFromTemplate;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.mule.api.MuleException;
 import org.mule.api.security.Authentication;
@@ -32,9 +28,10 @@ public class CreateWordDocumentAPIController {
             @RequestHeader("correspondenceType") String correspondenceType,
             Authentication authentication) throws AcmCreateObjectFailedException, AcmObjectNotFoundException, MuleException {
 
-        CreateWordDocFactory createWordDocFactory = new CreateWordDocFactory();
-        WordDocFromTemplate wordDocFromTemplate  = createWordDocFactory.getWordCreator(CorrespondenceType.getCorrespondenceType(correspondenceType));
-        EcmFile retFile  =  wordDocFromTemplate.create(ObjectType.getObjectType(objectType), Long.toString(objectId));
-        return retFile;
+//        CreateWordDocFactory createWordDocFactory = new CreateWordDocFactory();
+//        WordDocFromTemplate wordDocFromTemplate  = createWordDocFactory.getWordCreator(CorrespondenceType.getCorrespondenceType(correspondenceType));
+//        EcmFile retFile  =  wordDocFromTemplate.create(ObjectType.getObjectType(objectType), Long.toString(objectId));
+//        return retFile;
+        return null;
     }
 }

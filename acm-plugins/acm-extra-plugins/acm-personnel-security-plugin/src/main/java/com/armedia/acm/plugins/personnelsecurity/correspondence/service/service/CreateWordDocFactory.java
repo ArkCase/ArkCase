@@ -1,6 +1,7 @@
-package com.armedia.acm.correspondence.service;
+package com.armedia.acm.plugins.personnelsecurity.correspondence.service.service;
 
-import com.armedia.acm.correspondence.model.CorrespondenceType;
+
+import com.armedia.acm.plugins.personnelsecurity.correspondence.service.model.CorrespondenceType;
 
 /**
  * Created by marjan.stefanoski on 03.12.2014.
