@@ -21,6 +21,7 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
     {
         return PersonAssociation.class;
     }
+
     public List<Person> findPersonByParentIdAndParentType(String parentType, Long parentId)
     {
          
@@ -31,7 +32,7 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
                             "AND personAssociation.person.id = person.id"
                             );
                  
-       personInAssociation.setParameter("parentType", parentType.toUpperCase()); 
+        personInAssociation.setParameter("parentType", parentType.toUpperCase());
         personInAssociation.setParameter("parentId", parentId);
        
     

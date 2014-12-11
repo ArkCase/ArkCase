@@ -36,26 +36,10 @@
             <artifactId>acm-service-ecm</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
-        <!-- apache poi -->
         <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.10.1</version>
-        </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.apache.poi</groupId>-->
-            <!--<artifactId>poi-scratchpad</artifactId>-->
-            <!--<version>3.9</version>-->
-        <!--</dependency>-->
-
-
-
-        <!-- apache tika -->
-        <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-parsers</artifactId>
-            <version>1.6</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- spring -->

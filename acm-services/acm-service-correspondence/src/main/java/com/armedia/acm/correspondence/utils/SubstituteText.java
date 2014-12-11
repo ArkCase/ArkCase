@@ -9,20 +9,16 @@ import java.util.Map;
  */
 public class SubstituteText {
 
-    public void substitute(String[] args) throws Exception {
-        Map<String, String> env = System.getenv();
-        String dir = null;
-        dir = env.get("HOME");
-        if ( dir == null ) {
-            dir = env.get("HOMEPATH");
-        }
+    private Map<String,String> subMap;
+    public void substitute(Map<String,String> substituitonMap, String docxName) throws Exception {
 
-        final String docxDir = "C:\\$HOME\\Downloads\\"; // directory with
+        subMap = substituitonMap;
+        final String docxDir = "C:\\Users\\marjan.stefanoski\\Downloads\\"; // directory with
         // the original
         // .docx file
-        final String docxName = "ClearanceDenied.docx"; // file name of the original .docx
+        //final String docxName = "ClearanceDenied.docx"; // file name of the original .docx
         // file
-        final String docxSubName = "CD_TEST.docx"; // file name of the .docx
+        final String docxSubName = "TMP_FILE.docx"; // file name of the .docx
         // file created with
         // substituted texts
         ZipUtility zipUtility = new ZipUtility();
@@ -62,7 +58,7 @@ public class SubstituteText {
      * Function to substitute placeholders with other text IMPORTANT:
      * Placeholders must start and end with %
      */
-    private  boolean substituteText(File origFile, File tmpFile)
+    private boolean substituteText(File origFile, File tmpFile)
             throws Exception {
         StringBuffer sb = new StringBuffer();
         BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -72,16 +68,20 @@ public class SubstituteText {
 
         // Names of placeholders, starting and ending with % (to be updated
         // accordingly)
+
+        //These placeholders will go to a property file
+
         String placeholder1 = "%Date%";
         String placeholder2 = "%EmployeeName%";
         String placeholder3 = "%EmployeeID%";
         String placeholder4 = "%CurrentAddress%";
 
         // Values to replace placeholders (to be updated accordingly)
-        String var1 = escapeHTML(new Date().toString()); // %name%
-        String var2 = escapeHTML("Marjan Stefanoski"); // %text%
-        String var3 = escapeHTML("2702980433007");
-        String var4 = escapeHTML("Vera Jocik 14/40 1000 Skopje");
+        //These will be solved more elegant in the future
+        String var1 = escapeHTML(subMap.get("DATE")); // %Dame%
+        String var2 = escapeHTML(subMap.get("EMPLOYEE_NAME")); // %EmployeeName%
+        String var3 = escapeHTML(subMap.get("EMPLOYEE_ID"));// %EmployeeID%
+        String var4 = escapeHTML(subMap.get("CURRENT_LOCATION")); // %CurrentAddress%
 
         String line;
         for (int i = 1; ((line = reader.readLine()) != null); i++) {
@@ -129,6 +129,7 @@ public class SubstituteText {
             sb.append(line);
             sb.append("\r\n");
         }
+
         writer.write(sb.toString());
         writer.flush();
         writer.close();
@@ -138,6 +139,7 @@ public class SubstituteText {
         origFile.delete();
         // Rename file (or directory)
         return tmpFile.renameTo(origFile);
+
     }
 
     /**
