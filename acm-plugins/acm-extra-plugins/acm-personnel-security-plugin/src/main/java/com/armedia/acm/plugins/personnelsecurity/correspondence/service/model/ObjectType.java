@@ -1,14 +1,14 @@
-package com.armedia.acm.correspondence.model;
+package com.armedia.acm.plugins.personnelsecurity.correspondence.service.model;
 
 /**
  * Created by marjan.stefanoski on 08.12.2014.
  */
 public enum ObjectType {
 
-    COMPLAINT("complaint"),
-    CASE("case"),
-    TASK("task"),
-    NONE("none");
+    COMPLAINT("COMPLAINT"),
+    CASE("CASE_FILE"),
+    TASK("TASK"),
+    NONE("NONE");
 
     private String objectType;
 
@@ -23,5 +23,9 @@ public enum ObjectType {
             }
         }
         return ObjectType.NONE;
+    }
+
+    public String getObjectType() {
+        return objectType;
     }
 }
