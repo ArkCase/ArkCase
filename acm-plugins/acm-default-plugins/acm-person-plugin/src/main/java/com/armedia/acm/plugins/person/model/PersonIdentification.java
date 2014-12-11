@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ public class PersonIdentification  implements Serializable, AcmEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long personIdentificationID;
 
+    @JsonIgnore
     @ManyToOne(cascade = { CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     @JoinColumn(name="cm_person", nullable = false)
     private Person person;
