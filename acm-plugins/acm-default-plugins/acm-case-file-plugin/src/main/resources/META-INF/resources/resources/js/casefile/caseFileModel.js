@@ -14,6 +14,8 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Tasks.create)         {CaseFile.Model.Tasks.create();}
         if (CaseFile.Model.References.create)    {CaseFile.Model.References.create();}
         if (CaseFile.Model.Events.create)        {CaseFile.Model.Events.create();}
+        if (CaseFile.Model.CorrespondenceTemplates.create)        {CaseFile.Model.CorrespondenceTemplates.create();}
+
     }
     ,onInitialized: function() {
         var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
@@ -33,6 +35,8 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Tasks.onInitialized)      {CaseFile.Model.Tasks.onInitialized();}
         if (CaseFile.Model.References.onInitialized) {CaseFile.Model.References.onInitialized();}
         if (CaseFile.Model.Events.onInitialized)     {CaseFile.Model.Events.onInitialized();}
+        if (CaseFile.Model.CorrespondenceTemplates.onInitialized)        {CaseFile.Model.CorrespondenceTemplates.onInitialized();}
+
     }
 
     ,_objectType: "CASE_FILE"
@@ -467,12 +471,14 @@ CaseFile.Model = CaseFile.Model || {
             ,NODE_TYPE_PART_TASKS:        "t"
             ,NODE_TYPE_PART_REFERENCES:   "r"
             ,NODE_TYPE_PART_HISTORY:      "h"
+            ,NODE_TYPE_PART_TEMPLATES:    "tm"
+
 
             ,_mapNodeType: [
                  {nodeType: "prevPage" ,icon: "i-arrow-up"   ,tabIds: ["tabBlank"]}
                 ,{nodeType: "nextPage" ,icon: "i-arrow-down" ,tabIds: ["tabBlank"]}
                 ,{nodeType: "p"        ,icon: ""             ,tabIds: ["tabBlank"]}
-                ,{nodeType: "pc"       ,icon: "i-folder"     ,tabIds: ["tabTitle","tabDetail","tabPeople","tabDocs","tabParticipants","tabNotes","tabTasks","tabRefs","tabHistory"]}
+                ,{nodeType: "pc"       ,icon: "i-folder"     ,tabIds: ["tabTitle","tabDetail","tabPeople","tabDocs","tabParticipants","tabNotes","tabTasks","tabRefs","tabHistory","tabTemplates"]}
                 ,{nodeType: "pcd"      ,icon: "",tabIds: ["tabDetail"]}
                 ,{nodeType: "pcp"      ,icon: "",tabIds: ["tabPeople"]}
                 ,{nodeType: "pco"      ,icon: "",tabIds: ["tabDocs"]}
@@ -482,6 +488,7 @@ CaseFile.Model = CaseFile.Model || {
                 ,{nodeType: "pct"      ,icon: "",tabIds: ["tabTasks"]}
                 ,{nodeType: "pcr"      ,icon: "",tabIds: ["tabRefs"]}
                 ,{nodeType: "pch"      ,icon: "",tabIds: ["tabHistory"]}
+                ,{nodeType: "pctm"      ,icon: "",tabIds: ["tabTemplates"]}
             ]
 
             ,getTabIdsByKey: function(key) {
@@ -662,6 +669,13 @@ CaseFile.Model = CaseFile.Model || {
             this.cacheEventList = new Acm.Model.CacheFifo(4);
         }
         ,onInitialized: function() {
+        }
+    }
+
+    ,CorrespondenceTemplates: {
+        create: function () {
+        }
+        , onInitialized: function () {
         }
     }
 

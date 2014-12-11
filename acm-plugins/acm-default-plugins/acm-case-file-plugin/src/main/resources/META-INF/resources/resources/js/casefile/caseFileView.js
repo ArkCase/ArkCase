@@ -16,6 +16,8 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.Tasks.create)           {CaseFile.View.Tasks.create();}
         if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
         if (CaseFile.View.Events.create)          {CaseFile.View.Events.create();}
+        if (CaseFile.View.Correspondence.create)        {CaseFile.View.Correspondence.create();}
+
     }
     ,onInitialized: function() {
         if (CaseFile.View.MicroData.onInitialized)   {CaseFile.View.MicroData.onInitialized();}
@@ -29,6 +31,8 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.Tasks.onInitialized)       {CaseFile.View.Tasks.onInitialized();}
         if (CaseFile.View.References.onInitialized)  {CaseFile.View.References.onInitialized();}
         if (CaseFile.View.Events.onInitialized)      {CaseFile.View.Events.onInitialized();}
+        if (CaseFile.View.Correspondence.onInitialized)        {CaseFile.View.Correspondence.onInitialized();}
+
     }
 
     ,MicroData: {
@@ -315,6 +319,9 @@ CaseFile.View = CaseFile.View || {
                         })
                         .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY         //level 2: /CaseFile/History
                             ,title: "History"
+                        })
+                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES         //level 2: /CaseFile/Correspondence
+                            ,title: "Correspondence"
                         })
                         .getTree();
 
@@ -1969,7 +1976,7 @@ CaseFile.View = CaseFile.View || {
                 + "<option value='roi'>Report of Investigation</option>"
                 + "<option value='mr'>Medical Release</option>"
                 + "<option value='gr'>General Release</option>"
-                + "<option value='ev'>eVerify</option>"
+                + "<option value='ev'>eDelivery</option>"
                 + "</select>"
                 + "</span>";
 
@@ -2888,6 +2895,130 @@ CaseFile.View = CaseFile.View || {
                 } //end arg
                 ,sortMap
             );
+        }
+    }
+
+
+
+    ,Correspondence: {
+        create: function () {
+            this.$divTemplates = $("#divTemplates");
+            this.createJTableCorrespondence(this.$divTemplates);
+
+            AcmEx.Object.JTable.clickAddRecordHandler(this.$divTemplates, CaseFile.View.Correspondence.onClickSpanAddDocument);
+            this.$spanAddTemplate = this.$divTemplates.find(".jtable-toolbar-item-add-record");
+            CaseFile.View.Correspondence.fillReportSelection();
+
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE, this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE, this.onViewSelectedCaseFile);
+        }
+        , onInitialized: function () {
+        }
+        , onModelRetrievedCaseFile: function (caseFile) {
+            if (caseFile.hasError) {
+                //empty table?
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divTemplates);
+            }
+        }
+        , onViewSelectedCaseFile: function (caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divTemplates);
+        }
+        , _makeJtData: function (eventList) {
+            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            return jtData;
+        }
+        ,getSelectReport: function() {
+            return Acm.Object.getSelectValue(this.$spanAddTemplate.prev().find("select"));
+        }
+        ,onClickSpanAddDocument: function(event, ctrl) {
+            var enableFrevvoFormEngine = CaseFile.View.MicroData.getFormUrls()['enable_frevvo_form_engine'];
+            var report = CaseFile.View.Correspondence.getSelectReport();
+            alert(report);
+            /*if(report == "roi"){
+                var token = CaseFile.View.MicroData.getToken();
+
+                var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+                if (caseFile) {
+                    var url = CaseFile.View.MicroData.getFormUrls()[report];
+                    if (Acm.isNotEmpty(url)) {
+                        url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
+                            + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
+                            + "',caseTitle:'" + Acm.goodValue(caseFile.title)
+                            + "',");
+
+                        Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30
+                            ,function() {
+                                CaseFile.Controller.viewAddedDocument(caseFileId);
+                            }
+                        );
+                    }
+                }
+            }
+            else{
+                CaseFile.View.Documents.$btnAddDocument.click();
+            }*/
+        }
+
+        ,fillReportSelection: function() {
+            var html = "<span>"
+                + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
+                + "<option value='GR'>General Release</option>"
+                + "<option value='MR'>Medical Release</option>"
+                + "<option value='CG'>Clearance Granted</option>"
+                + "<option value='CD'>Clearance Denied</option>"
+                + "</select>"
+                + "</span>";
+
+
+            this.$spanAddTemplate.before(html);
+        }
+        , createJTableCorrespondence: function ($s) {
+            $s.jtable({
+                title: 'Correspondence'
+                , paging: false
+                , actions: {
+                    listAction: function (postData, jtParams) {
+                        var rc = AcmEx.Object.jTableGetEmptyRecords();
+                        return rc;
+                    }
+                    ,createAction: function(postData, jtParams) {
+                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:""}};
+                        return rc;
+                    }
+                }
+                , fields: {
+                    id: {
+                        title: 'ID'
+                        , key: true
+                        , list: false
+                        , create: false
+                        , edit: false
+                        , defaultvalue: 0
+                    }
+                    , title: {
+                        title: 'Title'
+                        , width: '50%'
+                        , edit: false
+                        , create: false
+                    }
+                    , created: {
+                        title: 'Created'
+                        , width: '15%'
+                        , edit: false
+                        , create: false
+                    }
+                    , creator: {
+                        title: 'Creator'
+                        , width: '15%'
+                        , edit: false
+                        , create: false
+                    }
+                }
+            });
+
+            $s.jtable('load');
         }
     }
 };
