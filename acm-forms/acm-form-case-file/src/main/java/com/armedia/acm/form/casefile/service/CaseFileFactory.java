@@ -16,6 +16,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.model.PersonIdentification;
 
 /**
  * @author riste.tutureski
@@ -97,6 +98,38 @@ public class CaseFileFactory
 				person.getOrganizations().addAll(Arrays.asList(employmentHistory.getOrganization()));
 			}
 		}
+
+		String employeeId = subject.getId();
+		if ( employeeId != null && !employeeId.trim().isEmpty() )
+		{
+			boolean exists = false;
+			if ( person.getPersonIdentification() != null )
+			{
+				for ( PersonIdentification pi : person.getPersonIdentification() )
+				{
+					if ( "EMPLOYEE_ID".equals(pi.getIdentificationType())  )
+					{
+						pi.setIdentificationNumber(employeeId);
+						exists = true;
+						break;
+					}
+				}
+			}
+
+			if ( ! exists )
+			{
+				if ( person.getPersonIdentification() != null )
+				{
+					person.setPersonIdentification(new ArrayList<PersonIdentification>());
+				}
+				PersonIdentification pi = new PersonIdentification();
+				pi.setIdentificationNumber(employeeId);
+				pi.setIdentificationType("EMPLOYEE_ID");
+				pi.setPerson(person);
+				person.getPersonIdentification().add(pi);
+			}
+		}
+
 	}
 	
 }
