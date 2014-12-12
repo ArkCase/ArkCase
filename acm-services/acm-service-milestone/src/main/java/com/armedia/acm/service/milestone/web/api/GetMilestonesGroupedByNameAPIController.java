@@ -31,7 +31,7 @@ public class GetMilestonesGroupedByNameAPIController {
     public List<MilestoneByNameDto> getMilestonesGroupedByDate(
             @PathVariable("objectType") String objectType,
             Authentication authentication,
-           HttpSession session ) throws AcmListObjectsFailedException {
+            HttpSession session ) throws AcmListObjectsFailedException {
         if (log.isInfoEnabled()){
             log.info("Getting milestones grouped by date");
         }
