@@ -1918,6 +1918,7 @@ CaseFile.View = CaseFile.View || {
                 fd.append("files[]", CaseFile.View.Documents.$btnAddDocument[0].files[i]);
             }
             CaseFile.Service.Documents.uploadDocument(fd);
+            this.$formAddDocument[0].reset();
         }
         ,onModelAddedDocument: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
