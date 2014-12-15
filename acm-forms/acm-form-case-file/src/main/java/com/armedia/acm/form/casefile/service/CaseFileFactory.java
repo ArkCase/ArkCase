@@ -79,6 +79,7 @@ public class CaseFileFactory
 		person.setTitle(subject.getTitle());
 		person.setGivenName(subject.getFirstName());
 		person.setFamilyName(subject.getLastName());
+		person.setDateOfBirth(subject.getDateOfBirth());
 		
 		person.setAddresses(new ArrayList<PostalAddress>());
 		person.setOrganizations(new ArrayList<Organization>());
@@ -99,17 +100,26 @@ public class CaseFileFactory
 			}
 		}
 
-		String employeeId = subject.getId();
-		if ( employeeId != null && !employeeId.trim().isEmpty() )
+		String employeeId = subject.getEmployeeId();
+		String ssn = subject.getSocialSecurityNumber();
+		
+		populatePersonIdentification("EMPLOYEE_ID", employeeId, person);
+		populatePersonIdentification("SSN", ssn, person);
+
+	}
+	
+	private void populatePersonIdentification(String key, String value, Person person)
+	{
+		if ( value != null && !value.trim().isEmpty() )
 		{
 			boolean exists = false;
 			if ( person.getPersonIdentification() != null )
 			{
 				for ( PersonIdentification pi : person.getPersonIdentification() )
 				{
-					if ( "EMPLOYEE_ID".equals(pi.getIdentificationType())  )
+					if ( key.equals(pi.getIdentificationType())  )
 					{
-						pi.setIdentificationNumber(employeeId);
+						pi.setIdentificationNumber(value);
 						exists = true;
 						break;
 					}
@@ -118,18 +128,19 @@ public class CaseFileFactory
 
 			if ( ! exists )
 			{
-				if ( person.getPersonIdentification() != null )
+				if ( person.getPersonIdentification() == null )
 				{
 					person.setPersonIdentification(new ArrayList<PersonIdentification>());
 				}
+				
 				PersonIdentification pi = new PersonIdentification();
-				pi.setIdentificationNumber(employeeId);
-				pi.setIdentificationType("EMPLOYEE_ID");
+				pi.setIdentificationNumber(value);
+				pi.setIdentificationType(key);
 				pi.setPerson(person);
+				
 				person.getPersonIdentification().add(pi);
 			}
 		}
-
 	}
 	
 }
