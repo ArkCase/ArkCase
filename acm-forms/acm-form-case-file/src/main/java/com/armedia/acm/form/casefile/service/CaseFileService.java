@@ -213,7 +213,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		
 		if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
 		{			
-			form.getSubject().setPersonId(caseFile.getOriginator().getPerson().getId());	
+			form.getSubject().setId(caseFile.getOriginator().getPerson().getId());	
 		}
 
 		setCaseFile(caseFile);
@@ -226,7 +226,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		LOG.info("Saving address history ...");
 		
 		String objectType = "POSTAL_ADDRESS";
-		Long personId = form.getSubject().getPersonId();
+		Long personId = form.getSubject().getId();
 		List<AddressHistory> addressHistoryArray = form.getAddressHistory();
 		
 		if (personId != null && addressHistoryArray != null && addressHistoryArray.size() > 0)
@@ -258,7 +258,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		LOG.info("Saving employment history ...");
 		
 		String objectType = "ORGANIZATION";
-		Long personId = form.getSubject().getPersonId();
+		Long personId = form.getSubject().getId();
 		List<EmploymentHistory> employmentHistoryArray = form.getEmploymentHistory();
 		
 		if (personId != null && employmentHistoryArray != null && employmentHistoryArray.size() > 0)
@@ -367,6 +367,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		subject.setTitles(convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".titles"), ","));
 		
 		postalAddress.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".locationTypes"), ","));
+		postalAddress.setType("Home");
 		addressHistory.setLocation(postalAddress);
 		addressHistoryList.add(addressHistory);
 		
