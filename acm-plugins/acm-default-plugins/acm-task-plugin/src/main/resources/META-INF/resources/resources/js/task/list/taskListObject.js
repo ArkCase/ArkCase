@@ -391,7 +391,7 @@ TaskList.Object = {
                         "tabHistory",
                         "tabRejectComments",
                         "tabWorkflowOverview",
-                        "tabAttachments",
+                        "tabAttachments"
                         ],
 
         taskDetails  : ["tabDetails"],
@@ -585,8 +585,8 @@ TaskList.Object = {
                     .addLeaf({key: pageId + "." + taskBranchID + ".Details"                   //level 2: /Task/Details
                         , title: "Details"
                     })
-                    .addLeaf({key: pageId + "." + taskBranchID + ".ReworkInstructions"                   //level 2: /Task/Rework Instructions
-                        , title: "Rework Instructions"
+                    .addLeaf({key: pageId + "." + taskBranchID + ".ReworkInstructions"                   //level 2: /Task/Waiver Details
+                        , title: "Waiver Details"
                     })
                     .addLeaf({key: pageId + "." + taskBranchID + ".Documents"                   //level 2: /Task/Documents
                         , title: "Documents Under Review"
@@ -872,6 +872,7 @@ TaskList.Object = {
             }
             
             this.setTaskDetails(task);
+            TaskList.Object.refreshTaskTreeNode(task);
 
             this.refreshJTableAttachments();
             this.refreshJTableNotes();
@@ -888,10 +889,8 @@ TaskList.Object = {
                         var availableOutcomes = task.availableOutcomes;
                         var availableOutcomeName = availableOutcomes[i].description;
                         var html =  "<button class='btn btn-default btn-sm businessProcess' id='" + availableOutcomes[i].name +
-                                    "' data-title='" +availableOutcomes[i].description +"'>" +
-                                    "<i class='fa fa-check'>" +
-                                    "</i>" +
-                                     availableOutcomes[i].description +
+                                    "'title='" +availableOutcomes[i].description +"'><b>" +
+                                    availableOutcomes[i].description +
                                     "</button>";
                         this.$btnGroup.append(html);
                         this.$btnFromAvailableOutcomes = $("#" + availableOutcomes[i].name);

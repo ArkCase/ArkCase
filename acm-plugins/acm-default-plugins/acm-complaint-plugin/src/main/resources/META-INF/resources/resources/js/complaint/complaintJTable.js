@@ -69,11 +69,10 @@ Complaint.JTable = {
             ,create: false
             ,openChildAsAccordion: true
             ,display: function (commData) {
-                var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
-                var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
-                var $c = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-map-marker'></i></a>");
-                var $d = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-users'></i></a>");
-
+                var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Communication Devices'><i class='fa fa-phone'></i></a>");
+                var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Organizations'><i class='fa fa-book'></i></a>");
+                var $c = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Locations'><i class='fa fa-map-marker'></i></a>");
+                var $d = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Aliases'><i class='fa fa-users'></i></a>");
                 $a.click(function (e) {
                     Complaint.JTable._toggleInitiatorDevices($s, $a);
                     e.preventDefault();
@@ -118,10 +117,10 @@ Complaint.JTable = {
             ,create: false
             ,openChildAsAccordion: true
             ,display: function (commData) {
-                var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
-                var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
-                var $c = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-map-marker'></i></a>");
-                var $d = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-users'></i></a>");
+                var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Communication Devices'><i class='fa fa-phone'></i></a>");
+                var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Organizations'><i class='fa fa-book'></i></a>");
+                var $c = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Locations'><i class='fa fa-map-marker'></i></a>");
+                var $d = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Aliases'><i class='fa fa-users'></i></a>");
 
                 $a.click(function (e) {
                     Complaint.JTable._togglePeopleDevices($s, $a);
@@ -2177,6 +2176,12 @@ Complaint.JTable = {
                         ,edit: false
                         ,sorting: false
                         ,width: '5%'
+                        ,display: function (commData) {
+                            var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
+                                + ((0 >= commData.record.id)? "#" : commData.record.id)
+                                + "'>" + commData.record.id + "</a>";
+                            return $(a);
+                        }
                     }
                     ,title: {
                         title: 'Title'
@@ -2214,7 +2219,7 @@ Complaint.JTable = {
                         ,width: '10%'
                         ,sorting: false
                     }
-                    ,description: {
+                    /*,description: {
                         title: 'Action'
                         ,width: '5%'
                         ,sorting: false
@@ -2234,7 +2239,7 @@ Complaint.JTable = {
                             });
                             return $a.add($b);
                         }
-                    }
+                    }*/
                 } //end field
             } //end arg
             ,sortMap

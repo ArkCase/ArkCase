@@ -740,7 +740,7 @@ CaseFile.Model = CaseFile.Model || {
             return this._personTypes;
         }
 
-        ,_personTitles : ['Mr', 'Mrs', 'Ms', 'Miss']
+        ,_personTitles : ['Mr','mr', 'Mrs','mrs', 'Ms','ms', 'Miss','miss']
         ,getPersonTitles : function() {
             return this._personTitles;
         }

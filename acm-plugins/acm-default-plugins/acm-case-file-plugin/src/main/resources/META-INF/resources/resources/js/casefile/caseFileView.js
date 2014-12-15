@@ -1092,7 +1092,7 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Communication Devices'><i class='fa fa-phone'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_CONTACT_METHODS);
                     e.preventDefault();
@@ -1400,7 +1400,7 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Organizations'><i class='fa fa-book'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Organizations.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ORGANIZATIONS);
                     e.preventDefault();
@@ -1548,7 +1548,7 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-map-marker'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Locations'><i class='fa fa-map-marker'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Addresses.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ADDRESSES);
                     e.preventDefault();
@@ -1755,7 +1755,7 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-users'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Aliases'><i class='fa fa-users'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Aliases.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ALIASES);
                     e.preventDefault();
@@ -1981,6 +1981,8 @@ CaseFile.View = CaseFile.View || {
                 + "<option value='mr'>Medical Release</option>"
                 + "<option value='gr'>General Release</option>"
                 + "<option value='ev'>eDelivery</option>"
+                + "<option value='sig'>SF86 Signature</option>"
+                + "<option value='ot'>Other</option>"
                 + "</select>"
                 + "</span>";
 
@@ -2544,6 +2546,7 @@ CaseFile.View = CaseFile.View || {
                     title: 'Tasks'
                     ,selecting: true
                     ,multiselect: false
+                    ,selecting: false
                     ,selectingCheckboxes: false
                     ,messages: {
                         addNewRecord: 'Add Task'
@@ -2587,11 +2590,23 @@ CaseFile.View = CaseFile.View || {
                             ,create: false
                             ,edit: false
                             ,sorting: false
+                            ,display: function (commData) {
+                                var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
+                                    + ((0 >= commData.record.id)? "#" : commData.record.id)
+                                    + "'>" + commData.record.id + "</a>";
+                                return $(a);
+                            }
                         }
                         ,title: {
                             title: 'Title'
                             ,width: '30%'
                             ,sorting: false
+                            ,display: function (commData) {
+                                var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
+                                    + ((0 >= commData.record.id)? "#" : commData.record.id)
+                                    + "'>" + commData.record.title + "</a>";
+                                return $(a);
+                            }
                         }
                         ,created: {
                             title: 'Created'
@@ -2620,18 +2635,21 @@ CaseFile.View = CaseFile.View || {
                             ,edit: false
                             ,create: false
                             ,display: function (commData) {
-                                var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
-                                var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
+                                var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' ><i class='fa fa-check'></i></a>");
+                                var $a = $("<button class='btn btn-default btn-sm' id='btnComplete' data-title='Complete Task'><b>Complete</b></button>");
+
+                                //var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
 
                                 $a.click(function (e) {
                                     CaseFile.View.Tasks.onClickBtnTaskAssign(e, this);
                                     e.preventDefault();
                                 });
-                                $b.click(function (e) {
+                                /*$b.click(function (e) {
                                     CaseFile.View.Tasks.onClickBtnTaskUnassign(e, this);
                                     e.preventDefault();
                                 });
-                                return $a.add($b);
+                                return $a.add($b);*/
+                                return $a;
                             }
                         }
                     } //end field
