@@ -492,7 +492,7 @@ CaseFile.View = CaseFile.View || {
             	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 860, 700
                     ,function() {
             			// TODO: When James will find solution, we should change this
-            			location.reload();
+            			window.location.href = App.getContextPath() + '/plugin/casefile';
                     }
                 );
             }
