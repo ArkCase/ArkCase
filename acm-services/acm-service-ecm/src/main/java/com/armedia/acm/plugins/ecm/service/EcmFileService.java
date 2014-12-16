@@ -52,6 +52,18 @@ public interface EcmFileService
             Long parentObjectId,
             String parentObjectName) throws AcmCreateObjectFailedException;
 
+    EcmFile upload(
+            String fileType,
+            String fileCategory,
+            InputStream fileContents,
+            String fileContentType,
+            String fileName,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            String parentObjectName) throws AcmCreateObjectFailedException;
+
     /** This method is meant to be called via Frevvo form submissions and any other file upload method aside from the
      * webapp file uploader.
      *

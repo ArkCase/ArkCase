@@ -42,6 +42,28 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             String parentObjectName)
             throws MuleException
     {
+        // by default, files are documents
+        String category = "DOCUMENT";
+        EcmFile retval = addFileTransaction(authentication, fileType, category, fileInputStream, mimeType, fileName,
+                cmisFolderId, parentObjectType, parentObjectId, parentObjectName);
+
+        return retval;
+    }
+
+    @Override
+    public EcmFile addFileTransaction(
+            Authentication authentication,
+            String fileType,
+            String fileCategory,
+            InputStream fileInputStream,
+            String mimeType,
+            String fileName,
+            String cmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            String parentObjectName)
+            throws MuleException
+    {
         EcmFile toAdd = new EcmFile();
         toAdd.setFileMimeType(mimeType);
         toAdd.setFileName(fileName);
@@ -51,6 +73,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         parent.setParentId(parentObjectId);
         parent.setParentType(parentObjectType);
         parent.setParentName(parentObjectName);
+        parent.setCategory(fileCategory);
+        parent.setTargetSubtype(fileType);
         toAdd.addParentObject(parent);
 
         Map<String, Object> messageProps = new HashMap<>();
