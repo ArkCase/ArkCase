@@ -205,24 +205,10 @@ CaseFile.Service = {
                                     document.creator = childObject.creator;
                                     document.status = childObject.status;
                                     document.targetType = childObject.targetType;
+                                    document.category = childObject.category;
                                     documents.push(document);
                                 }
                                 CaseFile.Model.Documents.cacheDocuments.put(caseFileId, documents);
-                            }
-                            if(caseFile.correspondence){
-                                var documents = [];
-                                for (var i = 0; i < caseFile.correspondence.length; i++) {
-                                    var childObject = caseFile.correspondence[i];
-                                    var document = {};
-                                    document.id = childObject.targetId;
-                                    document.name = childObject.targetName;
-                                    document.created = childObject.created;
-                                    document.creator = childObject.creator;
-                                    document.status = childObject.status;
-                                    document.targetType = childObject.targetType;
-                                    documents.push(document);
-                                }
-                                CaseFile.Model.Correspondence.cacheCorrespondence.put(caseFileId, documents);
                             }
 
 
@@ -1159,7 +1145,7 @@ CaseFile.Service = {
                                     attachment.creator = response.files[i].creator;
                                     attachment.created = response.files[i].created;
                                     attachment.targetType = "FILE";
-                                    prevAttachmentsList.push(attachment);
+                                    //attachment.category = response.files[i].category;
                                 }
                                 CaseFile.Model.Documents.cacheDocuments.put(caseFileId, prevAttachmentsList);
                                 CaseFile.Controller.modelAddedDocument(uploadInfo);
@@ -1477,13 +1463,13 @@ CaseFile.Service = {
             return true;
         }
         ,createCorrespondence : function(data, templateName) {
-            var caseFile = data;
+            var caseFileIn = data;
             var url = App.getContextPath() + this.API_CREATE_CORRESPONDENCE_
                 + "?templateName=" + templateName
-                + "&parentObjectType=CASE_FILE"
-                + "&parentObjectId=" + caseFile.id
-                + "&parentObjectName=" + caseFile.caseNumber
-                + "&targetCmisFolderId=" + caseFile.ecmFolderId
+                + "&parentObjectType=" + CaseFile.Model.getObjectType()
+                + "&parentObjectId=" + caseFileIn.id
+                + "&parentObjectName=" + caseFileIn.caseNumber
+                + "&targetCmisFolderId=" + caseFileIn.ecmFolderId
                 ;
 
             Acm.Service.asyncPost(
@@ -1494,7 +1480,25 @@ CaseFile.Service = {
                     } else {
                         if (CaseFile.Service.Correspondence._validateEcmFile(response)) {
                             var ecmFile = response;
-                            var caseFileId = caseFile.id;
+                            var caseFileId = caseFileIn.id;
+
+                            var caseFile = CaseFile.Model.Detail.cacheCaseFile.get(caseFileId);
+                            if(CaseFile.Model.Detail.validateData(caseFile)){
+                                var childObject = {};
+                                childObject.targetId = ecmFile.fileId;
+                                childObject.targetName = ecmFile.fileName;
+                                childObject.created = ecmFile.creator;
+                                childObject.creator = ecmFile.created;
+                                childObject.modified = ecmFile.modified;
+                                childObject.modifier = ecmFile.modifier;
+                                childObject.status = ecmFile.status;
+                                childObject.targetType = CaseFile.Model.DOCUMENT_TARGET_TYPE_FILE;
+                                childObject.category = CaseFile.Model.DOCUMENT_CATEGORY_CORRESPONDENCE;
+
+                                caseFile.childObjects.push(childObject);
+                                CaseFile.Model.Detail.cacheCaseFile.put(caseFileId, caseFile);
+                            }
+
                             var documents = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
                             var document = {};
                             document.id = ecmFile.fileId;
@@ -1502,66 +1506,20 @@ CaseFile.Service = {
                             document.status = ecmFile.status;
                             document.creator = ecmFile.creator;
                             document.created = ecmFile.created;
-                            document.targetType = "FILE";
+                            document.targetType = CaseFile.Model.DOCUMENT_TARGET_TYPE_FILE;
+                            document.category = CaseFile.Model.DOCUMENT_CATEGORY_CORRESPONDENCE;
                             documents.push(document);
                             CaseFile.Model.Documents.cacheDocuments.put(caseFileId, documents);
+
+
                             CaseFile.Controller.modelCreatedCorrespondence(caseFileId);
                         }
                     }
                 }
                 ,url
-                ,JSON.stringify(caseFile)
             )
         }
-        ,createCorrespondence0: function(formData) {
-            var url = App.getContextPath() + this.API_CREATE_CORRESPONDENCE_;
-            Acm.Service.ajax({
-                url: url
-                ,data: formData
-                ,processData: false
-                ,contentType: false
-                ,type: 'POST'
-                ,success: function(response){
-                    if (response.hasError) {
-                        CaseFile.Controller.modelAddedDocument(response);
-                    } else {
-                        if (CaseFile.Service.Documents._validateUploadInfo(response)) {
-                            if(response!= null){
-                                var uploadInfo = response;
-                                var caseFileId = CaseFile.Model.getCaseFileId();
-                                var prevAttachmentsList = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
-                                for(var i = 0; i < response.files.length; i++){
-                                    var attachment = {};
-                                    attachment.id = response.files[i].id;
-                                    attachment.name = response.files[i].name;
-                                    attachment.status = response.files[i].status;
-                                    attachment.creator = response.files[i].creator;
-                                    attachment.created = response.files[i].created;
-                                    attachment.targetType = "FILE";
-                                    prevAttachmentsList.push(attachment);
-                                }
-                                CaseFile.Model.Documents.cacheDocuments.put(caseFileId, prevAttachmentsList);
-                                CaseFile.Controller.modelAddedDocument(uploadInfo);
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
     }
-
-//    ,API_LIST_CASE_FILE         : "/api/latest/plugin/search/CASE_FILE"
-//    ,API_RETRIEVE_PERSON_       : "/api/latest/plugin/person/find?assocId="
-//    ,API_RETRIEVE_DETAIL        : "/api/latest/plugin/casefile/byId/"
-//    ,API_SAVE_CASE_FILE         : "/api/latest/plugin/casefile/"
-//    ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
-//    ,API_UPLOAD_CASE_FILE_FILE  : "/api/latest/plugin/casefile/file"
-//    ,API_RETRIEVE_TASKS         : "/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId="
-//    ,API_CLOSE_CASE_FILE_       : "/api/latest/plugin/casefile/closeCase/"
-
-
-
 
 };
 
