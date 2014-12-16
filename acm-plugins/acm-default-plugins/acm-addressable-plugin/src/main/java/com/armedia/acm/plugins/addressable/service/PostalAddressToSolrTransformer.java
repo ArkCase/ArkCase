@@ -76,7 +76,7 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
         boolean classNames = theirClassName.equals(ourClassName);
         boolean isSupported = objectNotNull && classNames;
 
-        return isSupported;
+         return isSupported;
     }
 
     public PostalAddressDao getPostalAddressDao()
