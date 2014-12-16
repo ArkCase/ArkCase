@@ -14,7 +14,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Tasks.create)         {CaseFile.Model.Tasks.create();}
         if (CaseFile.Model.References.create)    {CaseFile.Model.References.create();}
         if (CaseFile.Model.Events.create)        {CaseFile.Model.Events.create();}
-        if (CaseFile.Model.CorrespondenceTemplates.create)        {CaseFile.Model.CorrespondenceTemplates.create();}
+        if (CaseFile.Model.Correspondence.create) {CaseFile.Model.Correspondence.create();}
 
     }
     ,onInitialized: function() {
@@ -38,7 +38,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Tasks.onInitialized)      {CaseFile.Model.Tasks.onInitialized();}
         if (CaseFile.Model.References.onInitialized) {CaseFile.Model.References.onInitialized();}
         if (CaseFile.Model.Events.onInitialized)     {CaseFile.Model.Events.onInitialized();}
-        if (CaseFile.Model.CorrespondenceTemplates.onInitialized)        {CaseFile.Model.CorrespondenceTemplates.onInitialized();}
+        if (CaseFile.Model.Correspondence.onInitialized) {CaseFile.Model.Correspondence.onInitialized();}
 
     }
 
@@ -305,6 +305,9 @@ CaseFile.Model = CaseFile.Model || {
             if (!Acm.isArray(data.personAssociations)) {
                 return false;
             }
+//            if (!Acm.isArray(data.correspondence)) {
+//                return false;
+//            }
             return true;
         }
         ,validatePersonAssociation: function(data) {
@@ -659,6 +662,21 @@ CaseFile.Model = CaseFile.Model || {
         ,onInitialized: function() {
         }
     }
+    ,Correspondence: {
+        create : function() {
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_ADD_CORRESPONDENCE, this.onViewClickedAddCorrespondence);
+        }
+        ,onInitialized: function() {
+        }
+
+
+        ,onViewClickedAddCorrespondence: function(caseFileId, templateName) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                CaseFile.Service.Correspondence.createCorrespondence(caseFile, templateName);
+            }
+        }
+    }
 
     ,References: {
         create : function() {
@@ -676,12 +694,6 @@ CaseFile.Model = CaseFile.Model || {
         }
     }
 
-    ,CorrespondenceTemplates: {
-        create: function () {
-        }
-        , onInitialized: function () {
-        }
-    }
 
     ,Lookup: {
         create: function() {

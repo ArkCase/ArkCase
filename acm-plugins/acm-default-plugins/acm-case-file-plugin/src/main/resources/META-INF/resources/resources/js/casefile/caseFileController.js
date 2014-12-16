@@ -53,6 +53,7 @@ CaseFile.Controller = CaseFile.Controller || {
     ,MODEL_DELETED_NOTE                    : "case-model-deleted-note"                 //param: noteId
 
     ,MODEL_ADDED_DOCUMENT                  : "case-model-added-document"               //param: caseFileId
+    ,MODEL_CREATED_CORRESPONDENCE          : "case-model-created-correspondence"       //param: caseFileId
 
     ,MODEL_RETRIEVED_TASKS                 : "case-model-task-retrieved"               //param: taskId
     ,MODEL_COMPLETED_TASK                 : "case-model-task-completed"               //param: task
@@ -73,6 +74,7 @@ CaseFile.Controller = CaseFile.Controller || {
 
     ,VIEW_CLOSED_CASE_FILE                 : "case-view-closed-case"                   //param: caseFileId
     ,VIEW_ADDED_DOCUMENT                   : "case-view-added-document"                //param: caseFileId
+    ,VIEW_CLICKED_ADD_CORRESPONDENCE       : "case-model-clicked-add-correspondence"   //param: caseFileId, templateName
     ,VIEW_CHANGED_CHILD_OBJECT             : "case-view-changed-child-object"          //param: caseFileId, childObject
     ,VIEW_ADDED_PARTICIPANT                : "case-view-added-participant"             //param: caseFileId, participant
     ,VIEW_UPDATED_PARTICIPANT              : "case-view-updated-participant"           //param: caseFileId, participant
@@ -209,6 +211,9 @@ CaseFile.Controller = CaseFile.Controller || {
     ,modelAddedDocument: function(caseFileId) {
         Acm.Dispatcher.fireEvent(this.MODEL_ADDED_DOCUMENT, caseFileId);
     }
+    ,modelCreatedCorrespondence: function(caseFileId) {
+        Acm.Dispatcher.fireEvent(this.MODEL_CREATED_CORRESPONDENCE, caseFileId);
+    }
     ,modelSavedNote : function(note) {
         Acm.Dispatcher.fireEvent(this.MODEL_UPDATED_NOTE, note);
     }
@@ -268,6 +273,9 @@ CaseFile.Controller = CaseFile.Controller || {
     }
     ,viewAddedDocument: function(caseFileId) {
         Acm.Dispatcher.fireEvent(this.VIEW_ADDED_DOCUMENT, caseFileId);
+    }
+    ,viewClickedAddCorrespondence: function(caseFileId, templateName) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLICKED_ADD_CORRESPONDENCE, caseFileId, templateName);
     }
     ,viewChangedChildObject: function(caseFileId, childObject) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_CHILD_OBJECT, caseFileId, childObject);
