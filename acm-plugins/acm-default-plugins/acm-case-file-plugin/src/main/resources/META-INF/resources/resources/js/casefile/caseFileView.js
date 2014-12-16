@@ -2484,14 +2484,18 @@ CaseFile.View = CaseFile.View || {
             this.createJTableTasks(this.$divTasks);
             AcmEx.Object.JTable.clickAddRecordHandler(this.$divTasks, CaseFile.View.Tasks.onClickSpanAddTask);
 
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_TASKS    ,this.onModelRetrievedTasks);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_COMPLETED_TASK      ,this.onModelCompletedTask);
+
         }
         ,onInitialized: function() {
         }
 
         ,URL_TASK_DETAIL:  "/plugin/task/"
         ,URL_NEW_TASK_:    "/plugin/task/wizard?parentType=CASE_FILE&reference="
+
 
         ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
@@ -2502,6 +2506,20 @@ CaseFile.View = CaseFile.View || {
         }
         ,onViewSelectedCaseFile: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
+        }
+        ,onModelRetrievedTasks: function(tasks) {
+            if (tasks.hasError) {
+                //empty table?
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
+            }
+        }
+        ,onModelCompletedTask: function(task) {
+            if (task.hasError) {
+                //empty table?
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
+            }
         }
         ,onClickSpanAddTask: function(event, ctrl) {
             var caseFileId = CaseFile.View.Tree.getActiveCaseId();
@@ -2517,6 +2535,42 @@ CaseFile.View = CaseFile.View || {
         }
         ,onClickBtnTaskUnassign: function(event, ctrl) {
             alert("onClickBtnTaskUnassign");
+        }
+        ,onClickBtnCompleteTask : function(e, taskId) {
+            CaseFile.Service.Tasks.completeTask(taskId);
+        }
+        /*,onClickBtnTaskWithOutcome : function(outcome) {
+            var tasks = CaseFile.Model.Tasks.cacheTasks.get(0);
+            for(var i = 0; i < tasks.length; i++) {
+                if (tasks[i].taskId == taskId) {
+                    var task = tasks[i];
+                }
+            }
+            task.taskOutcome = outcome;
+            CaseFile.Service.Tasks.completeTask(task);
+        }*/
+        ,retrieveTaskOutcome : function(taskId){
+            var tasks = CaseFile.Model.Tasks.cacheTasks.get(0);
+            var $a = $("");
+            if(tasks){
+                for(var i = 0; i < tasks.length; i++){
+                    if(tasks[i].taskId == taskId){
+                        var task = tasks[i];
+                        if(task.adhocTask == true && task.completed == false){
+                            $a = $("<button class='btn btn-default btn-sm' title='Complete Task'><b>Complete</b></button>");
+                        }
+                        /*else if(task.adhocTask == false && task.completed == false && task.availableOutcomes != null){
+                         var availableOutcomes = task.availableOutcomes;
+                         for(var j = 0; j < availableOutcomes.length; j++ ){
+                         if(availableOutcomes[j].name == 'COMPLETE'){
+                         $a = $("<button class='btn btn-default btn-sm outcome' title='Complete Task Outcome'><b>Complete</b></button>");
+                         }
+                         }
+                         }*/
+                    }
+                }
+            }
+            return $a;
         }
 
         ,_makeJtData: function(taskList) {
@@ -2558,7 +2612,7 @@ CaseFile.View = CaseFile.View || {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
 
-                            var taskList = CaseFile.Model.Tasks.cacheTaskList.get(caseFileId);
+                            var taskList = CaseFile.Model.Tasks.cacheTaskSolr.get(caseFileId);
                             if (taskList) {
                                 return CaseFile.View.Tasks._makeJtData(taskList);
 
@@ -2635,20 +2689,18 @@ CaseFile.View = CaseFile.View || {
                             ,edit: false
                             ,create: false
                             ,display: function (commData) {
+                                var $a = CaseFile.View.Tasks.retrieveTaskOutcome(commData.record.id);
+                                /*for()
                                 var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' ><i class='fa fa-check'></i></a>");
                                 var $a = $("<button class='btn btn-default btn-sm' id='btnComplete' data-title='Complete Task'><b>Complete</b></button>");
-
+*/
                                 //var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
 
                                 $a.click(function (e) {
-                                    CaseFile.View.Tasks.onClickBtnTaskAssign(e, this);
+                                    $a.hide();
+                                    CaseFile.View.Tasks.onClickBtnCompleteTask(e, commData.record.id);
                                     e.preventDefault();
                                 });
-                                /*$b.click(function (e) {
-                                    CaseFile.View.Tasks.onClickBtnTaskUnassign(e, this);
-                                    e.preventDefault();
-                                });
-                                return $a.add($b);*/
                                 return $a;
                             }
                         }
