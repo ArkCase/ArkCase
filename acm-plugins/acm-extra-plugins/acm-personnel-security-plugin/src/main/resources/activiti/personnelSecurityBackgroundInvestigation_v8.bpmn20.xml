@@ -105,7 +105,7 @@
         </activiti:taskListener>
       </extensionElements>
     </userTask>
-    <serviceTask id="clearanceDeniedTask" name="Generate Clearance Denied correspondence" activiti:expression="#{personnelSecurityCorrespondenceService.generateClearanceDeniedCorrespondence(SUBJECT_LAST_NAME)}">
+    <serviceTask id="clearanceDeniedTask" name="Generate Clearance Denied correspondence" activiti:expression="#{correspondenceService.generate('ClearanceDenied.docx', 'CASE_FILE', OBJECT_ID, OBJECT_NAME, OBJECT_FOLDER_ID)}">
       <extensionElements>
         <activiti:executionListener event="end" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
           <activiti:field name="language">
@@ -120,7 +120,7 @@
         </activiti:executionListener>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="clearanceGrantedTask" name="Generate Clearance Granted Correspondence" activiti:expression="#{personnelSecurityCorrespondenceService.generateClearanceGrantedCorrespondence(SUBJECT_LAST_NAME)}"/>
+    <serviceTask id="clearanceGrantedTask" name="Generate Clearance Granted Correspondence" activiti:expression="#{correspondenceService.generate('ClearanceGranted.docx', 'CASE_FILE', OBJECT_ID, OBJECT_NAME, OBJECT_FOLDER_ID)}"/>
     <userTask id="issueClearanceTask" name="Issue Clearance '${OBJECT_NAME}'" activiti:assignee="ann-acm">
       <extensionElements>
         <activiti:formProperty id="issueClearanceOutcome" name="issueClearanceOutcome" type="enum" required="true">

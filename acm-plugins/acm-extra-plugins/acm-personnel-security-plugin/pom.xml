@@ -31,8 +31,28 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-correspondence</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-person-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-case-file-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-complaint-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-task-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -77,7 +97,17 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>jdbc</artifactId>
+            <scope>test</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 

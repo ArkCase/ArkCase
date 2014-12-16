@@ -11047,6 +11047,9 @@ Showdown.converter = function(converter_options) {
                 resolve: {
                     cases: function(serviceCasesByStatusSummary, config) {
                         return serviceCasesByStatusSummary.get(config.period)
+                    },
+                    milestones: function(caseMilestonesService, config){
+                        return caseMilestonesService.getMilestones()
                     }
                 },
                 edit: {
@@ -11057,9 +11060,28 @@ Showdown.converter = function(converter_options) {
                 title: "Cases by Status",
                 description: "Displays Cases by Status Summary as a pie chart",
                 controller: "casesByStatusSummaryCtrl"
+            }, widget)).widget("caseMilestones", angular.extend({
+                title: "Milestones",
+                description: "Displays case milestones as chart",
+                controller: "caseMilestonesCtrl",
+                text: "Currently, there are no new milestones"
             }, widget))
         }
-    ]).service("serviceCasesByStatusSummary", ["$q", "$http",
+    ]).service("caseMilestonesService", ["$q", "$http",
+    function($q, $http) {
+        return {
+            getMilestones: function() {
+                var deferred = $q.defer(),
+                    url = App.Object.getContextPath() + "/api/latest/milestonebyname/CASE_FILE";
+                return $http.get(url).success(function(data) {
+                    data ? deferred.resolve(data) : deferred.reject()
+                }).error(function() {
+                    deferred.reject()
+                }), deferred.promise
+            }
+        }
+    }
+]).service("serviceCasesByStatusSummary", ["$q", "$http",
         function($q, $http) {
             return {
                 get: function(period) {
@@ -11073,7 +11095,77 @@ Showdown.converter = function(converter_options) {
                 }
             }
         }
-    ]).controller("casesByStatusSummaryCtrl", ["$scope", "config", "cases",
+    ]).controller("caseMilestonesCtrl", ["$scope", "config", "milestones",
+    function($scope, config, milestones) {
+
+        $scope.showChartCase = milestones.length> 0 ? true : false;
+
+
+        var options = [
+            {
+                idO: "all", nameO: "All"
+            },
+            {
+                idO: "lastWeek", nameO:"Last Week"
+            },
+            {
+                idO: "lastMonth", nameO:"Last Month"
+            },
+            {
+                idO: "lastYear", nameO:"Last Year"
+            }];
+
+        var chartTitle =  "All";
+        angular.forEach(options, function(option) {
+            if (option.idO == config.period) {
+                chartTitle = option.nameO;
+            }
+        });
+        $scope.chartTitle = chartTitle;
+        var seriesData = [];
+        if (angular.forEach(milestones, function(milestone) {
+            seriesData.push([milestone.name, milestone.count])
+        }), seriesData.length > 0) {
+            seriesData.sort(function(a, b) {
+                return b[1] - a[1]
+            });
+            var s = seriesData[0];
+            seriesData[0] = {
+                name: s[0],
+                y: s[1],
+                sliced: !0,
+                selected: !0
+            }
+        }
+        milestones && ($scope.chartConfigTest = {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: !1
+            },
+            title: {
+                text: chartTitle
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: !0,
+                    cursor: "pointer",
+                    dataLabels: {
+                        enabled: !0,
+                        color: "#000000",
+                        connectorColor: "#000000",
+                        format: "<b>{point.name}</b>: {point.percentage:.1f} %"
+                    }
+                }
+            },
+            series: [{
+                type: "pie",
+                name: config.period,
+                data: seriesData
+            }]
+        })
+    }
+]).controller("casesByStatusSummaryCtrl", ["$scope", "config", "cases",
         function($scope, config,  cases) {
             $scope.showChartCase = cases.length> 0 ? true : false;
 
@@ -11114,7 +11206,7 @@ Showdown.converter = function(converter_options) {
                     selected: !0
                 }
             }
-            cases && ($scope.chartConfig = {
+            cases && ($scope.chartConfigTest = {
                 chart: {
                     plotBackgroundColor: null,
                     plotBorderWidth: null,
@@ -11278,7 +11370,7 @@ Showdown.converter = function(converter_options) {
                 tasks: function(teamTaskWorkloadService, config) {
                     return teamTaskWorkloadService.getTasks(config.due)
                 },
-                complaints : function(newComplaintsService, config){
+                complaints: function(newComplaintsService, config){
                     return newComplaintsService.getComplaints()
                 }
             },
@@ -11548,7 +11640,7 @@ Showdown.converter = function(converter_options) {
 
 
             $templateCache.put("scripts/widgets/mytasks/edit.html", '<form role="form"><div class="form-group" ><input type="text" class="form-control" id="rowsT" ng-model="config.rowsT" placeholder="Enter Default Row Numbers"></div></form>'),
-            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="myTasks"><div class="alert alert-info"  ng-controller="myTasksCtrl" ng-if="!isData"><p style="text-align:center;">No active tasks assigned</p></div><div ng-controller="myTasksCtrl" ng-if="isData"><div style="overflow-x: auto;"><table  ng-table="tableParams" class="table"><tr ng-repeat="task in $data"><td data-title="\'Task ID\'" sortable="\'id\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.status}}</td><td data-title="\'Case ID\'" sortable="\'parentNumber\'"><a ng-href="{{task.parentObjectUrl}}{{task.parentID}}"><a ng-href="{{task.parentObjectUrl}}{{task.parentID}}">{{task.parentNumber}}</td></tr></table></div></div></div>'),
+            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="myTasks"><div class="alert alert-info"  ng-controller="myTasksCtrl" ng-if="!isData"><p style="text-align:center;">No active tasks assigned</p></div><div ng-controller="myTasksCtrl" ng-if="isData"><div style="overflow-x: auto;"><table  ng-table="tableParams" class="table"><tr ng-repeat="task in $data"><td data-title="\'Parent ID\'" sortable="\'parentNumber\'"><a ng-href="{{task.parentObjectUrl}}{{task.parentID}}"><a ng-href="{{task.parentObjectUrl}}{{task.parentID}}">{{task.parentNumber}}</td><td data-title="\'Task ID\'" sortable="\'id\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.status}}</td></tr></table></div></div></div>'),
 //<label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url">
 
             $templateCache.put("scripts/widgets/mycases/edit.html", '<form role="form"><div class="form-group"></div></form>'),
@@ -11580,8 +11672,16 @@ Showdown.converter = function(converter_options) {
             $templateCache.put("scripts/widgets/teamtaskworkload/edit.html", '<form role="form"><div class="form-group"><label for="path">Select Due Date Period</label><select type="text" class="form-control" id="due" ng-model="config.due"><option value="all" ng-selected="selected">All</option><option value="pastDue">Past Due</option><option value="dueTomorrow" >Due Tomorrow</option><option value="dueInAWeek">Due in 7 Days</option><option value="dueInAMonth">Due in 30 Days</option></select></div></form>'),
             $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="showChart==false"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">{{text}}</p></div><div ng-if="showChart"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
 
-            $templateCache.put("scripts/widgets/casessum/caseStatus.html", '<div>' +
-                '<div class="alert alert-info" ng-if="!showChartCase"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">Currently, there are no outstanding cases</p></div><div ng-if="showChartCase"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
+            $templateCache.put("scripts/widgets/casessum/caseStatus.html",
+                    '<div>' +
+                        '<div class="alert alert-info" ng-if="!showChartCase">' +
+                            '<p style="text-align:center; font-size:large;">{{chartTitle}}</p></br>' +
+                            '<p style="text-align:center;">No results found</p>' +
+                        '</div>' +
+                        '<div ng-if="showChartCase">' +
+                            '<highchart id="chart2" config="chartConfigTest"></highchart>' +
+                        '</div>' +
+                    '</div>'),
             $templateCache.put("scripts/widgets/casessum/edit.html", '<form role="form"><div class="form-group">' +
                 '<label for="path">Select Time Period</label>' +
                 '<select type="text" class="form-control" id="period" ng-model="config.period">' +
@@ -11592,7 +11692,25 @@ Showdown.converter = function(converter_options) {
                 '</select>'+
                 '</div></form>'),
 
-
+//            $templateCache.put("scripts/widgets/casessum/caseStatus.html",
+//                    '<div>' +
+//                    '<div class="alert alert-info" ng-if="!showChartCase">' +
+//                    '<p style="text-align:center; font-size:large;">{{chartTitle}}</p></br>' +
+//                    '<p style="text-align:center;">{{text}}</p>' +
+//                    '</div>' +
+//                    '<div ng-if="showChartCase">' +
+//                    '<highchart id="chart2" config="chartConfigTest"></highchart>' +
+//                    '</div>' +
+//                    '</div>'),
+//            $templateCache.put("scripts/widgets/casessum/edit.html", '<form role="form"><div class="form-group">' +
+//                '<label for="path">Select Time Period</label>' +
+//                '<select type="text" class="form-control" id="period" ng-model="config.period">' +
+//                '<option value="all" ng-selected="selected">All</option>' +
+//                '<option value="lastWeek">Last Week</option>' +
+//                '<option value="lastMonth">Last Month</option>' +
+//                '<option value="lastYear">Last Year</option>' +
+//                '</select>'+
+//                '</div></form>'),
 
 
 

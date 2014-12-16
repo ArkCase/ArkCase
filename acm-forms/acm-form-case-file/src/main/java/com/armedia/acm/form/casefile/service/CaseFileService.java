@@ -36,8 +36,6 @@ import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
 import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonIdentification;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.service.history.model.AcmHistory;
 import com.armedia.acm.services.users.model.AcmUserActionName;
@@ -215,10 +213,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		
 		if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
 		{			
-			form.getSubject().setPersonId(caseFile.getOriginator().getPerson().getId());	
-			
-			// Save Person Identification
-			savePersonIdentification(caseFile.getOriginator().getPerson(), form);
+			form.getSubject().setId(caseFile.getOriginator().getPerson().getId());	
 		}
 
 		setCaseFile(caseFile);
@@ -231,7 +226,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		LOG.info("Saving address history ...");
 		
 		String objectType = "POSTAL_ADDRESS";
-		Long personId = form.getSubject().getPersonId();
+		Long personId = form.getSubject().getId();
 		List<AddressHistory> addressHistoryArray = form.getAddressHistory();
 		
 		if (personId != null && addressHistoryArray != null && addressHistoryArray.size() > 0)
@@ -263,7 +258,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		LOG.info("Saving employment history ...");
 		
 		String objectType = "ORGANIZATION";
-		Long personId = form.getSubject().getPersonId();
+		Long personId = form.getSubject().getId();
 		List<EmploymentHistory> employmentHistoryArray = form.getEmploymentHistory();
 		
 		if (personId != null && employmentHistoryArray != null && employmentHistoryArray.size() > 0)
@@ -344,40 +339,6 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		return form;
 	}
 	
-	private void savePersonIdentification(Person person, CaseFileForm form) throws AcmCreateObjectFailedException
-	{
-		LOG.info("Saving EMPLOYEE_ID person identification ...");
-		
-		String type = "EMPLOYEE_ID";
-		PersonIdentification personIdentification = null;
-		
-		String mode = getRequest().getParameter("mode");
-		if (mode != null && "edit".equals(mode))
-		{
-			personIdentification = getPersonIdentificationDao().findByPersonIdAndType(person.getId(), type);
-		}
-		
-		if (personIdentification == null)
-		{
-			personIdentification = new PersonIdentification();
-		}
-		
-		personIdentification.setIdentificationType(type);
-		personIdentification.setIdentificationNumber(form.getSubject().getId());
-		personIdentification.setPerson(person);
-		
-		
-		// Save Person Identification
-		try
-        {
-			getPersonIdentificationDao().save(personIdentification);
-        }
-		catch (PersistenceException | RuntimeDroolsException e)
-        {
-            throw new AcmCreateObjectFailedException("Person Identification", e.getMessage(), e);
-        }
-	}
-
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#getFormName()
 	 */
@@ -406,6 +367,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		subject.setTitles(convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".titles"), ","));
 		
 		postalAddress.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".locationTypes"), ","));
+		postalAddress.setType("Home");
 		addressHistory.setLocation(postalAddress);
 		addressHistoryList.add(addressHistory);
 		

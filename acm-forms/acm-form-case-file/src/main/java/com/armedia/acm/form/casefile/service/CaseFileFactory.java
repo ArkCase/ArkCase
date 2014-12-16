@@ -16,6 +16,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.model.PersonIdentification;
 
 /**
  * @author riste.tutureski
@@ -78,6 +79,7 @@ public class CaseFileFactory
 		person.setTitle(subject.getTitle());
 		person.setGivenName(subject.getFirstName());
 		person.setFamilyName(subject.getLastName());
+		person.setDateOfBirth(subject.getDateOfBirth());
 		
 		person.setAddresses(new ArrayList<PostalAddress>());
 		person.setOrganizations(new ArrayList<Organization>());
@@ -95,6 +97,48 @@ public class CaseFileFactory
 			for (EmploymentHistory employmentHistory : employmentHistoryArray)
 			{
 				person.getOrganizations().addAll(Arrays.asList(employmentHistory.getOrganization()));
+			}
+		}
+
+		String employeeId = subject.getEmployeeId();
+		String ssn = subject.getSocialSecurityNumber();
+		
+		populatePersonIdentification("EMPLOYEE_ID", employeeId, person);
+		populatePersonIdentification("SSN", ssn, person);
+
+	}
+	
+	private void populatePersonIdentification(String key, String value, Person person)
+	{
+		if ( value != null && !value.trim().isEmpty() )
+		{
+			boolean exists = false;
+			if ( person.getPersonIdentification() != null )
+			{
+				for ( PersonIdentification pi : person.getPersonIdentification() )
+				{
+					if ( key.equals(pi.getIdentificationType())  )
+					{
+						pi.setIdentificationNumber(value);
+						exists = true;
+						break;
+					}
+				}
+			}
+
+			if ( ! exists )
+			{
+				if ( person.getPersonIdentification() == null )
+				{
+					person.setPersonIdentification(new ArrayList<PersonIdentification>());
+				}
+				
+				PersonIdentification pi = new PersonIdentification();
+				pi.setIdentificationNumber(value);
+				pi.setIdentificationType(key);
+				pi.setPerson(person);
+				
+				person.getPersonIdentification().add(pi);
 			}
 		}
 	}

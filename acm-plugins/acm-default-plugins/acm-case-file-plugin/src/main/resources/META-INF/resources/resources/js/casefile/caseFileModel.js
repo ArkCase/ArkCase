@@ -22,8 +22,11 @@ CaseFile.Model = CaseFile.Model || {
         if (0 < treeInfo.caseFileId) { //single caseFile
             CaseFile.Model.setCaseFileId(treeInfo.caseFileId);
             CaseFile.Service.Detail.retrieveCaseFile(treeInfo.caseFileId);
+            CaseFile.Service.Tasks.retrieveTask();
+
         } else {
             CaseFile.Service.List.retrieveCaseFileList(treeInfo);
+            CaseFile.Service.Tasks.retrieveTask();
         }
 
         if (CaseFile.Model.Lookup.onInitialized)     {CaseFile.Model.Lookup.onInitialized();}
@@ -643,7 +646,8 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Tasks: {
         create : function() {
-            this.cacheTaskList = new Acm.Model.CacheFifo(4);
+            this.cacheTaskSolr = new Acm.Model.CacheFifo(4);
+            this.cacheTasks = new Acm.Model.CacheFifo(4);
         }
         ,onInitialized: function() {
         }
@@ -740,7 +744,7 @@ CaseFile.Model = CaseFile.Model || {
             return this._personTypes;
         }
 
-        ,_personTitles : ['Mr', 'Mrs', 'Ms', 'Miss']
+        ,_personTitles : ['Mr','mr', 'Mrs','mrs', 'Ms','ms', 'Miss','miss']
         ,getPersonTitles : function() {
             return this._personTitles;
         }

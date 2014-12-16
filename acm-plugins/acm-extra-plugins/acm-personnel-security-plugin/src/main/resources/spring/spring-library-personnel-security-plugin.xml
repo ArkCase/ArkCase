@@ -12,6 +12,10 @@
     <bean id="personnelSecurityCorrespondenceService"
           class="com.armedia.acm.plugins.personnelsecurity.correspondence.service.PersonnelSecurityCorrespondenceService"/>
 
+    <bean id="personAssociationDao" class="com.armedia.acm.plugins.person.dao.PersonAssociationDao"/>
+    <bean id="complaintDao" class="com.armedia.acm.plugins.complaint.dao.ComplaintDao"/>
+    <bean id="caseFileDao" class="com.armedia.acm.plugins.casefile.dao.CaseFileDao"/>
+    <bean id="taskDao" class="com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao"/>
     <bean id="caseFileStateService" class="com.armedia.acm.plugins.personnelsecurity.casestatus.service.CaseFileStateService">
         <property name="changeCaseFileStateService" ref="changeCaseFileStateService"/>
     </bean>
