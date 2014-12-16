@@ -1922,16 +1922,23 @@ CaseFile.View = CaseFile.View || {
             this.$formAddDocument[0].reset();
         }
         ,onModelAddedDocument: function(caseFileId) {
-            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+            if (caseFileId.hasError) {
+                ;
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+            }
         }
         ,onModelCreatedCorrespondence: function(caseFileId) {
-            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+            if (caseFileId.hasError) {
+                ;
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+            }
         }
         ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
                 //empty table?
             } else {
-
                 AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
             }
         }
@@ -2012,13 +2019,12 @@ CaseFile.View = CaseFile.View || {
                         }
 
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
-                        //var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                         var documents = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
 
                         if(Acm.isArray(documents)){
                             for (var i = 0; i < documents.length; i++) {
                                 var childObject = documents[i];
-                                if (Acm.compare("FILE", childObject.targetType)) {
+                                if (Acm.compare(CaseFile.Model.DOCUMENT_TARGET_TYPE_FILE, childObject.targetType)) {
                                     var record = {};
                                     record.id = Acm.goodValue(childObject.id, 0);
                                     record.title = Acm.goodValue(childObject.name);
@@ -2029,7 +2035,8 @@ CaseFile.View = CaseFile.View || {
                                 }
                             }
                         }
-                        /*if (c && Acm.isArray(c.childObjects)) {
+                        /*var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
+                        if (c && Acm.isArray(c.childObjects)) {
                             for (var i = 0; i < c.childObjects.length; i++) {
                                 var childObject = c.childObjects[i];
                                 if (Acm.compare("FILE", childObject.targetType)) {
@@ -2724,6 +2731,8 @@ CaseFile.View = CaseFile.View || {
             this.createJTableReferences(this.$divReferences);
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_DOCUMENT         ,this.onModelAddedDocument);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_CREATED_CORRESPONDENCE ,this.onModelCreatedCorrespondence);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewCaseFileSelected);
         }
         ,onInitialized: function() {
@@ -2731,7 +2740,21 @@ CaseFile.View = CaseFile.View || {
 
         ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
-                //empty table?
+                ;
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.References.$divReferences);
+            }
+        }
+        ,onModelAddedDocument: function(caseFileId) {
+            if (caseFileId.hasError) {
+                ;
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.References.$divReferences);
+            }
+        }
+        ,onModelCreatedCorrespondence: function(caseFileId) {
+            if (caseFileId.hasError) {
+                ;
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.References.$divReferences);
             }
@@ -2998,7 +3021,7 @@ CaseFile.View = CaseFile.View || {
         }
         , onModelRetrievedCaseFile: function (caseFile) {
             if (caseFile.hasError) {
-                //empty table?
+                ;
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divTemplates);
             }
@@ -3007,7 +3030,11 @@ CaseFile.View = CaseFile.View || {
             AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divTemplates);
         }
         ,onModelCreatedCorrespondence: function(caseFileId) {
-            AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divTemplates);
+            if (caseFileId.hasError) {
+                ;
+            } else {
+                AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divTemplates);
+            }
         }
 
         ,getSelectTemplate: function() {
@@ -3022,16 +3049,22 @@ CaseFile.View = CaseFile.View || {
         ,fillReportSelection: function() {
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
-                + "<option value='GR'>General Release</option>"
-                + "<option value='MR'>Medical Release</option>"
-                + "<option value='CG'>Clearance Granted</option>"
-                + "<option value='CD'>Clearance Denied</option>"
+//                + "<option value='GR'>General Release</option>"
+//                + "<option value='MR'>Medical Release</option>"
+//                + "<option value='CG'>Clearance Granted</option>"
+//                + "<option value='CD'>Clearance Denied</option>"
+                + "<option value='GeneralRelease.docx'>General Release</option>"
+                + "<option value='MedicalRelease.docx'>Medical Release</option>"
+                + "<option value='ClearanceGranted.docx'>Clearance Granted</option>"
+                + "<option value='ClearanceDenied.docx'>Clearance Denied</option>"
                 + "</select>"
-                + "</span>";
+                + "</span>"
+                ;
 
 
             this.$spanAddTemplate.before(html);
         }
+
         , createJTableCorrespondence: function ($s) {
             $s.jtable({
                 title: 'Correspondence'
@@ -3051,9 +3084,9 @@ CaseFile.View = CaseFile.View || {
                         if(Acm.isArray(documents)){
                             for (var i = 0; i < documents.length; i++) {
                                 var childObject = documents[i];
-                                if (Acm.compare("FILE", childObject.targetType)) {
+                                if (Acm.compare(CaseFile.Model.DOCUMENT_TARGET_TYPE_FILE, childObject.targetType)) {
                                     var record = {};
-                                    if (Acm.compare("CORRESPONDENCE", childObject.category)) {
+                                    if (Acm.compare(CaseFile.Model.DOCUMENT_CATEGORY_CORRESPONDENCE, childObject.category)) {
                                         record.id = Acm.goodValue(childObject.id, 0);
                                         record.title = Acm.goodValue(childObject.name);
                                         record.created = Acm.getDateFromDatetime(childObject.created);
