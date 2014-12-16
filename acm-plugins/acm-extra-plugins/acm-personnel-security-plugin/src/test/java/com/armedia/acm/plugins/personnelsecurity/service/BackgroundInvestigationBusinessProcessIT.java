@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.personnelsecurity.service;
 
 
+import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.personnelsecurity.casestatus.service.CaseFileStateService;
 import com.armedia.acm.plugins.personnelsecurity.correspondence.service.PersonnelSecurityCorrespondenceService;
 import com.armedia.acm.plugins.personnelsecurity.cvs.service.ClearanceVerificationSystemExportService;
@@ -66,8 +67,8 @@ public class BackgroundInvestigationBusinessProcessIT
     private ClearanceVerificationSystemExportService clearanceVerificationSystemExportService;
 
     @Autowired
-    @Qualifier(value = "personnelSecurityCorrespondenceService")
-    private PersonnelSecurityCorrespondenceService personnelSecurityCorrespondenceService;
+    @Qualifier(value = "correspondenceService")
+    private CorrespondenceService correspondenceService;
 
     private Object[] mocks;
 
@@ -85,7 +86,7 @@ public class BackgroundInvestigationBusinessProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/personnelSecurityBackgroundInvestigation_v7.bpmn20.xml")
+                .addClasspathResource("activiti/personnelSecurityBackgroundInvestigation_v8.bpmn20.xml")
                 .deploy();
 
         mocks = new Object[] { mockMilestoneService, caseFileStateService, clearanceVerificationSystemExportService };
@@ -122,7 +123,7 @@ public class BackgroundInvestigationBusinessProcessIT
                 folderId,
                 subjectLastName,
                 "GRANT_CLEARANCE");
-        personnelSecurityCorrespondenceService.generateClearanceGrantedCorrespondence(subjectLastName);
+        expect(correspondenceService.generate("ClearanceGranted.docx", "CASE_FILE", caseId, caseNumber, folderId)).andReturn(null);
 
         // should happen after clearance is issued
         mockMilestoneService.saveMilestone(caseId, "CASE_FILE", "Issued");
