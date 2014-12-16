@@ -12,7 +12,7 @@ public class FileUpload
     private String deleteUrl;
     private String deleteType = "DELETE";
     private String error;
-
+    private String uploadFileType;
     private String creator;
     private Date created;
     private String status;
@@ -120,4 +120,14 @@ public class FileUpload
     {
         this.error = error;
     }
+
+    public String getUploadFileType() {
+        return uploadFileType;
+    }
+
+    public void setUploadFileType(String uploadFileType) {
+        this.uploadFileType = uploadFileType;
+    }
+
+
 }

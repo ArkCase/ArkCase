@@ -205,6 +205,7 @@ CaseFile.Service = {
                                     document.creator = childObject.creator;
                                     document.status = childObject.status;
                                     document.targetType = childObject.targetType;
+                                    document.targetSubtype = childObject.targetSubtype;
                                     documents.push(document);
                                 }
                                 CaseFile.Model.Documents.cacheDocuments.put(caseFileId, documents);
@@ -1158,6 +1159,7 @@ CaseFile.Service = {
                                     attachment.status = response.files[i].status;
                                     attachment.creator = response.files[i].creator;
                                     attachment.created = response.files[i].created;
+                                    attachment.targetSubtype = response.files[i].uploadFileType;
                                     attachment.targetType = "FILE";
                                     prevAttachmentsList.push(attachment);
                                 }
@@ -1537,6 +1539,7 @@ CaseFile.Service = {
                                     attachment.status = response.files[i].status;
                                     attachment.creator = response.files[i].creator;
                                     attachment.created = response.files[i].created;
+                                    //attachment.targetSubtype = response.files[i].uploadFileType;
                                     attachment.targetType = "FILE";
                                     prevAttachmentsList.push(attachment);
                                 }
