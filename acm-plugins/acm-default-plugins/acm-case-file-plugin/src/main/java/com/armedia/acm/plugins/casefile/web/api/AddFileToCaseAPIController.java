@@ -28,13 +28,14 @@ public class AddFileToCaseAPIController {
     private CaseFileDao caseFileDao;
     private EcmFileService ecmFileService;
 
-    private final String uploadFileType = "attachment_case";
+    //private final String uploadFileType = "attachment_case";
 
     @RequestMapping(value = "/file", method = RequestMethod.POST, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
     public ResponseEntity<? extends Object> uploadFile(
+            @RequestParam("uploadFileType") String uploadFileType,
             @RequestParam("caseFileId") Long caseId,
             @RequestParam("files[]") MultipartFile file,
             @RequestHeader("Accept") String acceptType,
@@ -45,6 +46,9 @@ public class AddFileToCaseAPIController {
         if ( log.isInfoEnabled() )
         {
             log.info("Adding file to case id " + caseId);
+        }
+        if(uploadFileType == null){
+            uploadFileType = "Case Attachment";
         }
 
         try
@@ -89,7 +93,7 @@ public class AddFileToCaseAPIController {
         this.ecmFileService = ecmFileService;
     }
 
-    public String getUploadFileType() {
+    /*public String getUploadFileType() {
         return uploadFileType;
-    }
+    }*/
 }

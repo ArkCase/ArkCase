@@ -274,6 +274,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         fileUpload.setId(uploaded.getFileId());
         fileUpload.setStatus(uploaded.getStatus());
         fileUpload.setCreated(uploaded.getCreated());
+        fileUpload.setUploadFileType(uploaded.getFileType());
         return fileUpload;
     }
 

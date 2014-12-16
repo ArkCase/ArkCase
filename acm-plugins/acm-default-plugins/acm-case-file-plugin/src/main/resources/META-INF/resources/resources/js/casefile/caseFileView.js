@@ -1913,7 +1913,10 @@ CaseFile.View = CaseFile.View || {
         ,onSubmitAddDocument: function(event, ctrl) {
             event.preventDefault();
             var count = CaseFile.View.Documents.$btnAddDocument[0].files.length;
+            var report = CaseFile.View.Documents.getSelectReportText();
+
             var fd = new FormData();
+            fd.append("uploadFileType", report);
             fd.append("caseFileId", CaseFile.Model.getCaseFileId());
             for(var i = 0; i < count; i++ ){
                 fd.append("files[]", CaseFile.View.Documents.$btnAddDocument[0].files[i]);
@@ -1949,6 +1952,8 @@ CaseFile.View = CaseFile.View || {
         ,onClickSpanAddDocument: function(event, ctrl) {
             var enableFrevvoFormEngine = CaseFile.View.MicroData.getFormUrls()['enable_frevvo_form_engine'];
             var report = CaseFile.View.Documents.getSelectReport();
+            var reportext = CaseFile.View.Documents.getSelectReportText();
+
             if(report == "roi"){
                 var token = CaseFile.View.MicroData.getToken();
 
@@ -1996,6 +2001,9 @@ CaseFile.View = CaseFile.View || {
         ,getSelectReport: function() {
             return Acm.Object.getSelectValue(this.$spanAddDocument.prev().find("select"));
         }
+        ,getSelectReportText: function() {
+            return Acm.Object.getSelectedText(this.$spanAddDocument.prev().find("select"));
+        }
 
         ,createJTableDocuments: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
@@ -2025,6 +2033,7 @@ CaseFile.View = CaseFile.View || {
                                     record.created = Acm.getDateFromDatetime(childObject.created);
                                     record.creator = Acm.goodValue(childObject.creator);
                                     record.status = Acm.goodValue(childObject.status);
+                                    record.docType = Acm.goodValue(childObject.targetSubtype);
                                     rc.Records.push(record);
                                 }
                             }
@@ -2091,6 +2100,11 @@ CaseFile.View = CaseFile.View || {
                                 + "'>" + commData.record.title + "</a>";
                             return $(a);
                         }
+                    }
+                    ,docType: {
+                        title: 'Document Type'
+                        ,width: '15%'
+                        ,edit: false
                     }
                     ,created: {
                         title: 'Created'
