@@ -44,6 +44,8 @@ public class CorrespondenceGenerator
 
     protected static final String WORD_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
+    protected static final String CORRESPONDENCE_CATEGORY = "CORRESPONDENCE";
+
     /**
      * Generate correspondence based on the supplied template, and store the correspondence in the ECM repository
      * under the supplied parent object.
@@ -104,6 +106,7 @@ public class CorrespondenceGenerator
 
         EcmFile retval = ecmFileService.upload(
                 template.getDocumentType(),
+                CORRESPONDENCE_CATEGORY,
                 correspondenceInputStream,
                 WORD_MIME_TYPE,
                 fileName,
