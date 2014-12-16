@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.form.casefile.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -19,11 +20,15 @@ public class Subject {
 
 	@XmlElements({
 		@XmlElement(name="id"),
+		@XmlElement(name="personId")
+	})
+	private Long id;
+	
+	@XmlElements({
+		@XmlElement(name="id"),
 		@XmlElement(name="employeeId")
 	})
-	private String id;
-	
-	private Long personId;
+	private String employeeId;
 	
 	@XmlElements({
 		@XmlElement(name="title"),
@@ -65,6 +70,18 @@ public class Subject {
 	private String lastName;
 	
 	@XmlElements({
+		@XmlElement(name="dateOfBirth"),
+		@XmlElement(name="employeeDateOfBirth")
+	})
+	private Date dateOfBirth;
+	
+	@XmlElements({
+		@XmlElement(name="socialSecurityNumber"),
+		@XmlElement(name="employeeSocialSecurityNumber")
+	})
+	private String socialSecurityNumber;
+	
+	@XmlElements({
 		@XmlElement(name="phoneNumber"),
 		@XmlElement(name="referencePhoneNumber"),
 		@XmlElement(name="employerPhoneNumber"),
@@ -72,21 +89,21 @@ public class Subject {
 		@XmlElement(name="employerReferencePhoneNumber")
 	})
 	private String phoneNumber;
-	
-	public String getId() {
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Long getPersonId() {
-		return personId;
+	public String getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setPersonId(Long personId) {
-		this.personId = personId;
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public String getTitle() 
@@ -149,6 +166,22 @@ public class Subject {
 		this.lastName = lastName;
 	}
 	
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public String getSocialSecurityNumber() {
+		return socialSecurityNumber;
+	}
+
+	public void setSocialSecurityNumber(String socialSecurityNumber) {
+		this.socialSecurityNumber = socialSecurityNumber;
+	}
+
 	public String getPhoneNumber() 
 	{
 		return phoneNumber;

@@ -14,12 +14,6 @@
 
     <dependencies>
 
-        <!-- armedia commons -->
-        <dependency>
-            <groupId>com.armedia.commons</groupId>
-            <artifactId>audit-sink-jdbc</artifactId>
-        </dependency>
-
         <!-- acm -->
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
@@ -36,32 +30,22 @@
             <artifactId>acm-service-ecm</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
-        <!-- apache poi -->
         <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.10.1</version>
-        </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.apache.poi</groupId>-->
-            <!--<artifactId>poi-scratchpad</artifactId>-->
-            <!--<version>3.9</version>-->
-        <!--</dependency>-->
-
-
-
-        <!-- apache tika -->
-        <dependency>
-            <groupId>org.apache.tika</groupId>
-            <artifactId>tika-parsers</artifactId>
-            <version>1.6</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <!-- poi -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
         </dependency>
 
         <!-- liquibase (database ddl maintenance) -->
@@ -102,17 +86,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
-        <!-- datasource -->
         <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-jdbc</artifactId>
-            <scope>test</scope>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>jdbc</artifactId>
-            <scope>test</scope>
-        </dependency>
+
 
     </dependencies>
 

@@ -438,7 +438,7 @@ class ActivitiTaskDao implements TaskDao
     	{
     		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(id).orderByHistoricTaskInstanceEndTime().asc();
     	}
-    	else{
+    	else {
     		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(id).orderByHistoricTaskInstanceEndTime().asc();
     	}
     	

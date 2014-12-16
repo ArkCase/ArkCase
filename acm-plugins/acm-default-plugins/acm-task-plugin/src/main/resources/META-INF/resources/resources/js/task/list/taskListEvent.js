@@ -184,7 +184,8 @@ TaskList.Event = {
         //eventually we need a json to jsp field mapper, this is a temp solution
 
     }
-    ,onOutcomeSelected : function(e) {var clicked = e.target.id;
+    ,onOutcomeSelected : function(e) {
+        var clicked = e.target.id;
         if (clicked == "SEND_FOR_REWORK") {
             var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
             if (reworkInstructions == null || reworkInstructions == "") {
