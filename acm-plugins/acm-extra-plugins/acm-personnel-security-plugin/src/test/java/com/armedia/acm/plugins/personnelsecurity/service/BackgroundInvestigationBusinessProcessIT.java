@@ -78,6 +78,8 @@ public class BackgroundInvestigationBusinessProcessIT
     private String subjectLastName = "Garcia";
     private String processName = "personnelSecurityBackgroundInvestigation";
     private String defaultAdjudicator = "ann-acm";
+    private String taskDueDateExpression = "P1D";
+    private int priority = 55;
     Map<String, Object> pvars = new HashMap<>();
 
     @Before
@@ -86,7 +88,7 @@ public class BackgroundInvestigationBusinessProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/personnelSecurityBackgroundInvestigation_v9.bpmn20.xml")
+                .addClasspathResource("activiti/personnelSecurityBackgroundInvestigation_v10.bpmn20.xml")
                 .deploy();
 
         mocks = new Object[] { mockMilestoneService, caseFileStateService, clearanceVerificationSystemExportService };
@@ -99,6 +101,9 @@ public class BackgroundInvestigationBusinessProcessIT
         pvars.put("REQUEST_ID", caseId);
         pvars.put("OBJECT_FOLDER_ID", folderId);
         pvars.put("SUBJECT_LAST_NAME", subjectLastName);
+        pvars.put("taskDueDateExpression", taskDueDateExpression);
+        pvars.put("taskPriority", priority);
+
 
         EasyMock.reset(mockMilestoneService, caseFileStateService, clearanceVerificationSystemExportService, correspondenceService);
     }
@@ -213,6 +218,10 @@ public class BackgroundInvestigationBusinessProcessIT
         String expectedName = "Issue Clearance " + caseNumberInQuotes;
 
         assertEquals(expectedName, userTasks.get(0).getName());
+
+        assertNotNull(userTasks.get(0).getDueDate());
+
+        assertEquals(priority, userTasks.get(0).getPriority());
     }
 
     private void happyPath_completeAdjudicationTask(ProcessInstance pi, String outcomeValue)
@@ -238,6 +247,10 @@ public class BackgroundInvestigationBusinessProcessIT
         String expectedName = "Adjudicate Clearance Request " + caseNumberInQuotes;
 
         assertEquals(expectedName, userTasks.get(0).getName());
+
+        assertNotNull(userTasks.get(0).getDueDate());
+
+        assertEquals(priority, userTasks.get(0).getPriority());
     }
 
     private void happyPath_completeInitialUserTasks(ProcessInstance pi)
@@ -284,6 +297,15 @@ public class BackgroundInvestigationBusinessProcessIT
         }
 
         assertEquals(expectedNames, foundTaskNames);
+
+        for ( Task task : verifyTasks )
+        {
+            assertNotNull(task.getDueDate());
+            log.debug(task.getName() + " is due on: " + task.getDueDate());
+
+            assertEquals(priority, task.getPriority());
+        }
+
     }
 
 
