@@ -149,9 +149,9 @@
                         <button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
 
                         <!-- from the mockup -->
-                        <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task"><b>Reject</b></button>
-                        <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" title="Delete Task"><b>Delete</b></button>
-                        <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" title="Complete Task"><b>Complete</b></button>
+                        <button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>
+                        <button class="btn btn-info btn-sm" id="btnDelete" data-toggle="modal" title="Delete Task">Delete</button>
+                        <button class="btn btn-info btn-sm" id="btnComplete" data-toggle="modal" title="Complete Task">Complete</button>
 
 
                         <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>

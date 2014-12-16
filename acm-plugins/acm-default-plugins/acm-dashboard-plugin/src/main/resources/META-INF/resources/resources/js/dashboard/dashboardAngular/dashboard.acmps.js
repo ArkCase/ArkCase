@@ -5002,7 +5002,9 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 row.due=moment(row.dueDate).format('MM/DD/YYYY');
                 row.id=parseInt(row.taskId)
                 if(row.attachedToObjectId != null){
-                    row.parentObject = row.attachedToObjectType.toLowerCase();
+                    if(row.attachedToObjectType.toLowerCase() == "case_file"){
+                        row.parentObject = "casefile";
+                    }else{row.parentObject = row.attachedToObjectType.toLowerCase();}
                     row.parentNumber = row.attachedToObjectName;
                     row.parentID = row.attachedToObjectId;
                 }
@@ -5054,6 +5056,8 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                     row=_.clone(row);
                     row.number = row.caseNumber;
                     row.id=parseInt(row.id);
+                    row.priority = row.priority;
+                    row.status = row.status;
                     //row.priority = "LOW";
                     row.caseUrl = App.Object.getContextPath() + "/plugin/casefile/";
                     return row;
