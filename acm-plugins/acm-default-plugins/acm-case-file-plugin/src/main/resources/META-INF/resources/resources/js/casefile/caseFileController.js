@@ -53,6 +53,10 @@ CaseFile.Controller = CaseFile.Controller || {
     ,MODEL_DELETED_NOTE                    : "case-model-deleted-note"                 //param: noteId
 
     ,MODEL_ADDED_DOCUMENT                  : "case-model-added-document"               //param: caseFileId
+
+    ,MODEL_RETRIEVED_TASKS                 : "case-model-task-retrieved"               //param: taskId
+    ,MODEL_COMPLETED_TASK                 : "case-model-task-completed"               //param: task
+
     ,VIEW_CLICKED_PREV_PAGE                : "case-view-clicked-prev-page"             //param: none
     ,VIEW_CLICKED_NEXT_PAGE 	           : "case-view-clicked-next-page"             //param: none
     ,VIEW_SELECTED_CASE_FILE 		       : "case-view-selected-case"                 //param: caseFileId
@@ -216,6 +220,12 @@ CaseFile.Controller = CaseFile.Controller || {
     }
     ,modelDeletedNote : function(noteId) {
         Acm.Dispatcher.fireEvent(this.MODEL_DELETED_NOTE, noteId);
+    }
+    ,modelRetrievedTasks: function(tasks) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_TASKS, tasks);
+    }
+    ,modelCompletedTask: function(task) {
+        Acm.Dispatcher.fireEvent(this.MODEL_COMPLETED_TASK, task);
     }
     ,viewClickedPrevPage: function() {
         Acm.Dispatcher.fireEvent(this.VIEW_CLICKED_PREV_PAGE);
