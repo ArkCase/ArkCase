@@ -1896,10 +1896,11 @@ CaseFile.View = CaseFile.View || {
 
 
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE      ,this.onViewSelectedCaseFile);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLOSED_CASE_FILE        ,this.onViewClosedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE     ,this.onModelRetrievedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_CREATED_CORRESPONDENCE  ,this.onModelCreatedCorrespondence);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE       ,this.onViewSelectedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLOSED_CASE_FILE         ,this.onViewClosedCaseFile);
 
 
         }
@@ -1921,6 +1922,9 @@ CaseFile.View = CaseFile.View || {
             this.$formAddDocument[0].reset();
         }
         ,onModelAddedDocument: function(caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+        }
+        ,onModelCreatedCorrespondence: function(caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
         }
         ,onModelRetrievedCaseFile: function(caseFile) {
@@ -2983,8 +2987,9 @@ CaseFile.View = CaseFile.View || {
             this.$spanAddTemplate = this.$divTemplates.find(".jtable-toolbar-item-add-record");
             CaseFile.View.Correspondence.fillReportSelection();
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE, this.onModelRetrievedCaseFile);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE, this.onViewSelectedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE     ,this.onModelRetrievedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_CREATED_CORRESPONDENCE  ,this.onModelCreatedCorrespondence);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE       ,this.onViewSelectedCaseFile);
         }
         , onInitialized: function () {
         }
@@ -2998,41 +3003,17 @@ CaseFile.View = CaseFile.View || {
         , onViewSelectedCaseFile: function (caseFileId) {
             AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divTemplates);
         }
-        , _makeJtData: function (eventList) {
-            var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            return jtData;
+        ,onModelCreatedCorrespondence: function(caseFileId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divTemplates);
         }
-        ,getSelectReport: function() {
+
+        ,getSelectTemplate: function() {
             return Acm.Object.getSelectValue(this.$spanAddTemplate.prev().find("select"));
         }
         ,onClickSpanAddDocument: function(event, ctrl) {
-            var enableFrevvoFormEngine = CaseFile.View.MicroData.getFormUrls()['enable_frevvo_form_engine'];
-            var report = CaseFile.View.Correspondence.getSelectReport();
-            alert(report);
-            /*if(report == "roi"){
-                var token = CaseFile.View.MicroData.getToken();
-
-                var caseFileId = CaseFile.View.Tree.getActiveCaseId();
-                var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
-                if (caseFile) {
-                    var url = CaseFile.View.MicroData.getFormUrls()[report];
-                    if (Acm.isNotEmpty(url)) {
-                        url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
-                            + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
-                            + "',caseTitle:'" + Acm.goodValue(caseFile.title)
-                            + "',");
-
-                        Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30
-                            ,function() {
-                                CaseFile.Controller.viewAddedDocument(caseFileId);
-                            }
-                        );
-                    }
-                }
-            }
-            else{
-                CaseFile.View.Documents.$btnAddDocument.click();
-            }*/
+            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+            var templateName = CaseFile.View.Correspondence.getSelectTemplate();
+            CaseFile.Controller.viewClickedAddCorrespondence(caseFileId, templateName);
         }
 
         ,fillReportSelection: function() {
@@ -3052,12 +3033,40 @@ CaseFile.View = CaseFile.View || {
             $s.jtable({
                 title: 'Correspondence'
                 , paging: false
+                , messages: {
+                    addNewRecord: 'Add Correspondence'
+                }
                 , actions: {
                     listAction: function (postData, jtParams) {
-                        var rc = AcmEx.Object.jTableGetEmptyRecords();
+                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        if (0 >= caseFileId) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+                        }
+
+                        var rc = AcmEx.Object.JTable.getEmptyRecords();
+                        var documents = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
+                        if(Acm.isArray(documents)){
+                            for (var i = 0; i < documents.length; i++) {
+                                var childObject = documents[i];
+                                if (Acm.compare("FILE", childObject.targetType)) {
+                                    var record = {};
+                                    if (Acm.compare("CORRESPONDENCE", childObject.category)) {
+                                        record.id = Acm.goodValue(childObject.id, 0);
+                                        record.title = Acm.goodValue(childObject.name);
+                                        record.created = Acm.getDateFromDatetime(childObject.created);
+                                        record.creator = Acm.goodValue(childObject.creator);
+                                        //record.status = Acm.goodValue(childObject.status);
+                                        rc.Records.push(record);
+                                    }
+                                }
+                            }
+                            rc.TotalRecordCount = rc.Records.length;
+                        }
                         return rc;
+
                     }
                     ,createAction: function(postData, jtParams) {
+                        //placeholder. this action should never be called
                         var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:""}};
                         return rc;
                     }
