@@ -1294,13 +1294,69 @@ CaseFile.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_RETRIEVE_TASKS_         : "/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId="
+        ,API_RETRIEVE_TASKS_SOLR         : "/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId="
+        ,API_RETRIEVE_TASKS    : "/api/latest/plugin/task/forUser/"
+        ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask/"
 
+
+        ,retrieveTask : function() {
+            var url = App.getContextPath() + this.API_RETRIEVE_TASKS + App.getUserName();
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedTasks(response);
+
+                    } else {
+                        //if (CaseFile.Model.Detail.validateData(response)) {
+                            var tasks = response;
+                            CaseFile.Model.Tasks.cacheTasks.put(0, tasks);
+                            CaseFile.Controller.modelRetrievedTasks(response);
+                        //}
+                    }
+                }
+                ,url
+            )
+        }
+        ,completeTask : function(taskId) {
+            var url = App.getContextPath() + this.API_COMPLETE_TASK + taskId;
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelCompletedTask(response);
+
+                    } else {
+                        //if (CaseFile.Model.Detail.validateData(response)) {
+                        var task = response;
+                        var caseFileId = CaseFile.Model.getCaseFileId();
+                        var tasks = CaseFile.Model.Tasks.cacheTasks.get(0);
+                        var taskList = CaseFile.Model.Tasks.cacheTaskSolr.get(caseFileId);
+                        for(var i = 0; i < tasks.length; i++){
+                            if(task.taskId ==  tasks[i].taskId){
+                                tasks[i] = task;
+                            }
+                        }
+                        for(var i = 0; i < taskList.length; i++){
+                            if(task.taskId ==  taskList[i].id){
+                                taskList[i].status = 'COMPLETE';
+                            }
+                        }
+                        CaseFile.Model.Tasks.cacheTasks.put(0,tasks);
+                        CaseFile.Model.Tasks.cacheTaskSolr.put(caseFileId,taskList);
+
+                        // CaseFile.Model.Tasks.cacheTaskSolr.reset();
+                        CaseFile.Controller.modelCompletedTask(response);
+                        //}
+                    }
+                }
+                ,url
+                ,"{}"
+            )
+        }
         ,retrieveTaskListDeferred : function(caseFileId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
             return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
                 ,function() {
                     var url;
-                    url =  App.getContextPath() + CaseFile.Service.Tasks.API_RETRIEVE_TASKS_;
+                    url =  App.getContextPath() + CaseFile.Service.Tasks.API_RETRIEVE_TASKS_SOLR;
                     url += caseFileId;
 
                     //for test
@@ -1330,7 +1386,7 @@ CaseFile.Service = {
                                 task.assignee = Acm.goodValue(doc.assignee_s);
                                 taskList.push(task);
                             }
-                            CaseFile.Model.Tasks.cacheTaskList.put(caseFileId, taskList);
+                            CaseFile.Model.Tasks.cacheTaskSolr.put(caseFileId, taskList);
 
                             jtData = callbackSuccess(taskList);
 

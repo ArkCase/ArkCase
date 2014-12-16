@@ -888,11 +888,11 @@ TaskList.Object = {
                     for(var i = 0; i < task.availableOutcomes.length; i++){
                         var availableOutcomes = task.availableOutcomes;
                         var availableOutcomeName = availableOutcomes[i].description;
-                        var html =  "<button class='btn btn-default btn-sm businessProcess' id='" + availableOutcomes[i].name +
-                                    "'title='" +availableOutcomes[i].description +"'><b>" +
-                                    availableOutcomes[i].description +
-                                    "</button>";
-                        this.$btnGroup.append(html);
+
+                        var html =  "<button class='btn btn-info btn-sm businessProcess' id='" + availableOutcomes[i].name +
+                                    "' data-toggle='modal' title='" +availableOutcomes[i].description +
+                                    "'>" + availableOutcomes[i].description +"</button>";
+                        this.$btnGroup.append(html).append(" ");
                         this.$btnFromAvailableOutcomes = $("#" + availableOutcomes[i].name);
                         this.$btnFromAvailableOutcomes.show();
                     }
