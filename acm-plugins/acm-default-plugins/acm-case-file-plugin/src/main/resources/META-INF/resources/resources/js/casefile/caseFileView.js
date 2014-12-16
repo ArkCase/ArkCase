@@ -2540,19 +2540,32 @@ CaseFile.View = CaseFile.View || {
         ,onClickBtnTaskUnassign: function(event, ctrl) {
             alert("onClickBtnTaskUnassign");
         }
-        ,onClickBtnCompleteTask : function(e, taskId) {
+        ,onClickBtnCompleteTask : function(taskId) {
+           // alert("adhoc task");
+
             CaseFile.Service.Tasks.completeTask(taskId);
         }
-        /*,onClickBtnTaskWithOutcome : function(outcome) {
+        ,onClickBtnTaskWithOutcome : function(outcome,taskId) {
             var tasks = CaseFile.Model.Tasks.cacheTasks.get(0);
+            var task = {};
             for(var i = 0; i < tasks.length; i++) {
                 if (tasks[i].taskId == taskId) {
-                    var task = tasks[i];
+                    task = tasks[i];
                 }
             }
-            task.taskOutcome = outcome;
-            CaseFile.Service.Tasks.completeTask(task);
-        }*/
+            for(var i = 0; i < task.availableOutcomes.length; i++){
+                var availableOutcome = task.availableOutcomes[i];
+                if(availableOutcome.name == outcome) {
+                    task.taskOutcome = availableOutcome;
+                }
+            }
+            if(task.taskOutcome){
+                CaseFile.Service.Tasks.completeTaskWithOutcome(task);
+            }
+
+            //alert("task with outcome");
+
+        }
         ,retrieveTaskOutcome : function(taskId){
             var tasks = CaseFile.Model.Tasks.cacheTasks.get(0);
             var $a = $("");
@@ -2561,16 +2574,16 @@ CaseFile.View = CaseFile.View || {
                     if(tasks[i].taskId == taskId){
                         var task = tasks[i];
                         if(task.adhocTask == true && task.completed == false){
-                            $a = $("<button class='btn btn-default btn-sm' title='Complete Task'><b>Complete</b></button>");
+                            $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' title='Complete Task'>Complete</button></div>");
                         }
-                        /*else if(task.adhocTask == false && task.completed == false && task.availableOutcomes != null){
-                         var availableOutcomes = task.availableOutcomes;
-                         for(var j = 0; j < availableOutcomes.length; j++ ){
-                         if(availableOutcomes[j].name == 'COMPLETE'){
-                         $a = $("<button class='btn btn-default btn-sm outcome' title='Complete Task Outcome'><b>Complete</b></button>");
-                         }
-                         }
-                         }*/
+                        else if(task.adhocTask == false && task.completed == false && task.availableOutcomes != null){
+                             var availableOutcomes = task.availableOutcomes;
+                             for(var j = 0; j < availableOutcomes.length; j++ ){
+                                 if(availableOutcomes[j].name == 'COMPLETE'){
+                                 $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm businessProcess' id='COMPLETE' title='Complete Task Outcome'>Complete</button></div>");
+                                 }
+                             }
+                        }
                     }
                 }
             }
@@ -2602,7 +2615,6 @@ CaseFile.View = CaseFile.View || {
             AcmEx.Object.JTable.usePaging($jt
                 ,{
                     title: 'Tasks'
-                    ,selecting: true
                     ,multiselect: false
                     ,selecting: false
                     ,selectingCheckboxes: false
@@ -2694,17 +2706,8 @@ CaseFile.View = CaseFile.View || {
                             ,create: false
                             ,display: function (commData) {
                                 var $a = CaseFile.View.Tasks.retrieveTaskOutcome(commData.record.id);
-                                /*for()
-                                var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' ><i class='fa fa-check'></i></a>");
-                                var $a = $("<button class='btn btn-default btn-sm' id='btnComplete' data-title='Complete Task'><b>Complete</b></button>");
-*/
-                                //var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
-
-                                $a.click(function (e) {
-                                    $a.hide();
-                                    CaseFile.View.Tasks.onClickBtnCompleteTask(e, commData.record.id);
-                                    e.preventDefault();
-                                });
+                                $a.on("click", ".businessProcess", function(e) {CaseFile.View.Tasks.onClickBtnTaskWithOutcome(e.target.id,commData.record.id);$a.hide();});
+                                $a.on("click", ".adhoc", function(e) {CaseFile.View.Tasks.onClickBtnCompleteTask(commData.record.id);$a.hide();});
                                 return $a;
                             }
                         }
