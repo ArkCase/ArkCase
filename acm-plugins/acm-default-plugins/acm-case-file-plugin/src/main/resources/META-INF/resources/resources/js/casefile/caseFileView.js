@@ -934,7 +934,7 @@ CaseFile.View = CaseFile.View || {
                                     if (CaseFile.Model.Detail.validatePersonAssociation(personAssociations[i])) {
                                         rc.Records.push({
                                             assocId:     personAssociations[i].id
-                                            ,title:      personAssociations[i].person.title.charAt(0).toUpperCase() + personAssociations[i].person.title.slice(1)
+                                            ,title:      personAssociations[i].person.title
                                             ,givenName:  personAssociations[i].person.givenName
                                             ,familyName: personAssociations[i].person.familyName
                                             ,personType: personAssociations[i].personType
