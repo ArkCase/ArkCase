@@ -131,6 +131,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(substitutions));
         expect(mockEcmFileService.upload(
                 eq(correspondenceTemplate.getDocumentType()),
+                eq(CorrespondenceGenerator.CORRESPONDENCE_CATEGORY),
                 eq(mockInputStream),
                 eq(CorrespondenceGenerator.WORD_MIME_TYPE),
                 capture(filename),

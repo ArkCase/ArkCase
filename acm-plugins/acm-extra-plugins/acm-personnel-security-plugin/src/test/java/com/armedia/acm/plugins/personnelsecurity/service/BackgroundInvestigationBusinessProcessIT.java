@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.personnelsecurity.service;
 
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.personnelsecurity.casestatus.service.CaseFileStateService;
-import com.armedia.acm.plugins.personnelsecurity.correspondence.service.PersonnelSecurityCorrespondenceService;
 import com.armedia.acm.plugins.personnelsecurity.cvs.service.ClearanceVerificationSystemExportService;
 import com.armedia.acm.service.milestone.service.MilestoneService;
 import org.activiti.engine.HistoryService;
@@ -13,6 +12,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,6 +78,8 @@ public class BackgroundInvestigationBusinessProcessIT
     private String subjectLastName = "Garcia";
     private String processName = "personnelSecurityBackgroundInvestigation";
     private String defaultAdjudicator = "ann-acm";
+    private String taskDueDateExpression = "P1D";
+    private int priority = 55;
     Map<String, Object> pvars = new HashMap<>();
 
     @Before
@@ -86,7 +88,7 @@ public class BackgroundInvestigationBusinessProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/personnelSecurityBackgroundInvestigation_v8.bpmn20.xml")
+                .addClasspathResource("activiti/personnelSecurityBackgroundInvestigation_v10.bpmn20.xml")
                 .deploy();
 
         mocks = new Object[] { mockMilestoneService, caseFileStateService, clearanceVerificationSystemExportService };
@@ -99,10 +101,15 @@ public class BackgroundInvestigationBusinessProcessIT
         pvars.put("REQUEST_ID", caseId);
         pvars.put("OBJECT_FOLDER_ID", folderId);
         pvars.put("SUBJECT_LAST_NAME", subjectLastName);
+        pvars.put("taskDueDateExpression", taskDueDateExpression);
+        pvars.put("taskPriority", priority);
+
+
+        EasyMock.reset(mockMilestoneService, caseFileStateService, clearanceVerificationSystemExportService, correspondenceService);
     }
 
     @After
-    public void shutDown() throws Exception
+    public void tearDown() throws Exception
     {
         pe.close();
     }
@@ -142,11 +149,50 @@ public class BackgroundInvestigationBusinessProcessIT
 
         happyPath_verifyAdjudicationTask(pi);
 
-        happyPath_completeAdjudicationTask(pi);
+        happyPath_completeAdjudicationTask(pi, "GRANT_CLEARANCE");
 
         happyPath_verifyIssueClearanceTask(pi);
 
         happyPath_completeIssueClearanceTask(pi);
+
+        verify(mocks);
+
+
+    }
+
+    @Test
+    public void startProcess_processStart_denyClearance() throws Exception
+    {
+        // these calls should happen when process is started
+        mockMilestoneService.saveMilestone(caseId, "CASE_FILE", "Initiated");
+        caseFileStateService.changeCaseFileState(caseId, "ACTIVE");
+
+        // should happen when adjudication task is completed, no matter what the outcome
+        mockMilestoneService.saveMilestone(caseId, "CASE_FILE", "Adjudication");
+        clearanceVerificationSystemExportService.exportDeterminationRecord(
+                defaultAdjudicator,
+                caseId,
+                caseNumber,
+                folderId,
+                subjectLastName,
+                "DENY_CLEARANCE");
+        expect(correspondenceService.generate("ClearanceDenied.docx", "CASE_FILE", caseId, caseNumber, folderId)).andReturn(null);
+
+        // always happens at end of process
+        mockMilestoneService.saveMilestone(caseId, "CASE_FILE", "Closed");
+        caseFileStateService.changeCaseFileState(caseId, "CLOSED");
+
+        replay(mocks);
+
+        ProcessInstance pi = rt.startProcessInstanceByKey(processName, pvars);
+
+        happyPath_verifyInitialUserTasks(pi);
+
+        happyPath_completeInitialUserTasks(pi);
+
+        happyPath_verifyAdjudicationTask(pi);
+
+        happyPath_completeAdjudicationTask(pi, "DENY_CLEARANCE");
 
         verify(mocks);
 
@@ -172,12 +218,16 @@ public class BackgroundInvestigationBusinessProcessIT
         String expectedName = "Issue Clearance " + caseNumberInQuotes;
 
         assertEquals(expectedName, userTasks.get(0).getName());
+
+        assertNotNull(userTasks.get(0).getDueDate());
+
+        assertEquals(priority, userTasks.get(0).getPriority());
     }
 
-    private void happyPath_completeAdjudicationTask(ProcessInstance pi)
+    private void happyPath_completeAdjudicationTask(ProcessInstance pi, String outcomeValue)
     {
         String caseNumberInQuotes = "'" + caseNumber + "'";
-        completeTask("Adjudicate Clearance Request " + caseNumberInQuotes, "adjudicationOutcome", "GRANT_CLEARANCE");
+        completeTask("Adjudicate Clearance Request " + caseNumberInQuotes, "adjudicationOutcome", outcomeValue);
     }
 
     /** should now have one user task to adjudicate the case
@@ -197,6 +247,10 @@ public class BackgroundInvestigationBusinessProcessIT
         String expectedName = "Adjudicate Clearance Request " + caseNumberInQuotes;
 
         assertEquals(expectedName, userTasks.get(0).getName());
+
+        assertNotNull(userTasks.get(0).getDueDate());
+
+        assertEquals(priority, userTasks.get(0).getPriority());
     }
 
     private void happyPath_completeInitialUserTasks(ProcessInstance pi)
@@ -243,6 +297,15 @@ public class BackgroundInvestigationBusinessProcessIT
         }
 
         assertEquals(expectedNames, foundTaskNames);
+
+        for ( Task task : verifyTasks )
+        {
+            assertNotNull(task.getDueDate());
+            log.debug(task.getName() + " is due on: " + task.getDueDate());
+
+            assertEquals(priority, task.getPriority());
+        }
+
     }
 
 
