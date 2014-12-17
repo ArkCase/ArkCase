@@ -357,6 +357,8 @@ TaskList.Callback = {
                     updatedNotesList.push(response);
                 }
                 TaskList.cacheNoteList.put(id, updatedNotesList);
+                TaskList.Object.refreshJTableNotes();
+
             }
         }
     }
@@ -386,6 +388,7 @@ TaskList.Callback = {
                         oldNotesList.splice(i, 1);
                         updatedNotesList = oldNotesList;
                         TaskList.cacheNoteList.put(id, updatedNotesList);
+                        TaskList.Object.refreshJTableNotes();
                     }
                 }
             }

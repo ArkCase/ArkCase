@@ -2037,7 +2037,7 @@ CaseFile.View = CaseFile.View || {
                                     record.id = Acm.goodValue(childObject.id, 0);
                                     record.title = Acm.goodValue(childObject.name);
                                     record.created = Acm.getDateFromDatetime(childObject.created);
-                                    record.creator = Acm.goodValue(childObject.creator);
+                                    record.creator = Acm.__FixMe__getUserFullName(Acm.goodValue(childObject.creator));
                                     record.status = Acm.goodValue(childObject.status);
                                     record.docType = Acm.goodValue(childObject.targetSubtype);
                                     rc.Records.push(record);
@@ -2343,7 +2343,7 @@ CaseFile.View = CaseFile.View || {
                     Record.id         = Acm.goodValue(noteList[i].id, 0);
                     Record.note       = Acm.goodValue(noteList[i].note);
                     Record.created    = Acm.getDateFromDatetime(noteList[i].created);
-                    Record.creator    = Acm.goodValue(noteList[i].creator);
+                    Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
                     //Record.parentId   = Acm.goodValue(noteList[i].parentId);
                     //Record.parentType = Acm.goodValue(noteList[i].parentType);
                     jtData.Records.push(Record);
@@ -2624,7 +2624,7 @@ CaseFile.View = CaseFile.View || {
                         Record.priority = taskList[i].priority;
                         Record.dueDate  = taskList[i].dueDate;
                         Record.status   = taskList[i].status;
-                        Record.assignee = taskList[i].assignee;
+                        Record.assignee = Acm.__FixMe__getUserFullName(taskList[i].assignee);
                         jtData.Records.push(Record);
                     }
                 }
@@ -2705,22 +2705,22 @@ CaseFile.View = CaseFile.View || {
                         ,assignee: {
                             title: 'Assignee'
                             ,sorting: false
-                            ,width: '10'
+                            ,width: '25'
                         }
                         ,created: {
                             title: 'Created'
-                            ,width: '15%'
+                            ,width: '10%'
                             ,sorting: false
                         }
                         ,priority: {
                             title: 'Priority'
-                            ,width: '10%'
+                            ,width: '7%'
                             ,sorting: false
                         }
                         ,dueDate: {
                             title: 'Due'
-                            ,width: '15%'
-                            ,sorting: true
+                            ,width: '5%'
+                            ,sorting: false
                         }
                         ,status: {
                             title: 'Status'
@@ -3112,7 +3112,7 @@ CaseFile.View = CaseFile.View || {
                                         record.id = Acm.goodValue(childObject.id, 0);
                                         record.title = Acm.goodValue(childObject.name);
                                         record.created = Acm.getDateFromDatetime(childObject.created);
-                                        record.creator = Acm.goodValue(childObject.creator);
+                                        record.creator = Acm.__FixMe__getUserFullName(Acm.goodValue(childObject.creator));
                                         //record.status = Acm.goodValue(childObject.status);
                                         rc.Records.push(record);
                                     }

@@ -24,7 +24,7 @@ TaskList.JTable = {
                         record.id = Acm.goodValue(documentUnderReview.fileId, 0);
                         record.title = Acm.goodValue(documentUnderReview.fileName);
                         record.created = Acm.getDateFromDatetime(documentUnderReview.created);
-                        record.creator = Acm.goodValue(documentUnderReview.creator);
+                        record.creator = Acm.__FixMe__getUserFullName((Acm.goodValue(documentUnderReview.creator)));
                         record.status = Acm.goodValue(documentUnderReview.parentObjects[0].status);
                         rc.Records.push(record);
                     }
@@ -145,7 +145,7 @@ TaskList.JTable = {
                             record.id = Acm.goodValue(childObject.id, 0);
                             record.title = Acm.goodValue(childObject.name);
                             record.created = Acm.getDateFromDatetime(childObject.created);
-                            record.creator = Acm.goodValue(childObject.creator);
+                            record.creator = Acm.__FixMe__getUserFullName(Acm.goodValue(childObject.creator));
                             record.status = Acm.goodValue(childObject.status);
                             rc.Records.push(record);
                         }
@@ -318,7 +318,7 @@ TaskList.JTable = {
                                 record.id = Acm.goodValue(noteRecord.id);
                                 record.note = noteRecord.note;
                                 record.created = Acm.getDateFromDatetime(noteRecord.created);
-                                record.creator = noteRecord.creator;
+                                record.creator = Acm.__FixMe__getUserFullName(noteRecord.creator);
                                 record.parentId = Acm.goodValue(noteRecord.parentId);
                                 record.parentType = noteRecord.parentType;
                                 rc.Records.push(record);
@@ -564,7 +564,7 @@ TaskList.JTable = {
                                 record.id = Acm.goodValue(rejectCommentRecord.id);
                                 record.comment = rejectCommentRecord.note;
                                 record.created = Acm.getDateFromDatetime(rejectCommentRecord.created);
-                                record.creator = rejectCommentRecord.creator;
+                                record.creator = Acm.__FixMe__getUserFullName(rejectCommentRecord.creator);
                                 record.parentId = Acm.goodValue(rejectCommentRecord.parentId);
                                 record.parentType = rejectCommentRecord.parentType;
                                 rc.Records.push(record);

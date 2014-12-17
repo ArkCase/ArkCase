@@ -205,6 +205,7 @@ CaseFile.Service = {
                                     document.creator = childObject.creator;
                                     document.status = childObject.status;
                                     document.targetType = childObject.targetType;
+                                    document.targetSubtype = childObject.targetSubtype;
                                     document.category = childObject.category;
                                     documents.push(document);
                                 }
