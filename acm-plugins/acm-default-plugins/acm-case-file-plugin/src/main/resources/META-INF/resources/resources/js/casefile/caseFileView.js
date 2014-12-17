@@ -934,7 +934,7 @@ CaseFile.View = CaseFile.View || {
                                     if (CaseFile.Model.Detail.validatePersonAssociation(personAssociations[i])) {
                                         rc.Records.push({
                                             assocId:     personAssociations[i].id
-                                            ,title:      personAssociations[i].person.title
+                                            ,title:      personAssociations[i].person.title.charAt(0).toUpperCase() + personAssociations[i].person.title.slice(1)
                                             ,givenName:  personAssociations[i].person.givenName
                                             ,familyName: personAssociations[i].person.familyName
                                             ,personType: personAssociations[i].personType
@@ -2608,15 +2608,18 @@ CaseFile.View = CaseFile.View || {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
             if (taskList) {
                 for (var i = 0; i < taskList.length; i++) {
-                    var Record = {};
-                    Record.id       = taskList[i].id;
-                    Record.title    = taskList[i].title;
-                    Record.created  = taskList[i].created;
-                    Record.priority = taskList[i].priority;
-                    Record.dueDate  = taskList[i].dueDate;
-                    Record.status   = taskList[i].status;
-                    Record.assignee = taskList[i].assignee;
-                    jtData.Records.push(Record);
+                    if(taskList[i].status != 'DELETE'){
+                        var Record = {};
+                        var test = App.Object.getApprovers();
+                        Record.id       = taskList[i].id;
+                        Record.title    = taskList[i].title;
+                        Record.created  = taskList[i].created;
+                        Record.priority = taskList[i].priority;
+                        Record.dueDate  = taskList[i].dueDate;
+                        Record.status   = taskList[i].status;
+                        Record.assignee = taskList[i].assignee;
+                        jtData.Records.push(Record);
+                    }
                 }
                 jtData.TotalRecordCount = taskList.length;
             }
@@ -2691,6 +2694,11 @@ CaseFile.View = CaseFile.View || {
                                     + "'>" + commData.record.title + "</a>";
                                 return $(a);
                             }
+                        }
+                        ,assignee: {
+                            title: 'Assignee'
+                            ,sorting: false
+                            ,width: '10'
                         }
                         ,created: {
                             title: 'Created'

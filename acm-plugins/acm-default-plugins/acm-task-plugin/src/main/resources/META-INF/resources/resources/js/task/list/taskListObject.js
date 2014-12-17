@@ -984,7 +984,7 @@ TaskList.Object = {
         this.setValueLnkStartDate(Acm.getDateFromDatetime(task.taskStartDate));
         this.setValueLnkDueDate(Acm.getDateFromDatetime(task.dueDate));
         this.setValueLnkPriority(task.priority);
-        this.setValueTaskOwner(task.owner);
+        this.setValueTaskOwner(task.assignee);
         this.setValueAssignedStatus(task.status);
         this.setValueDetails(task.details);
     }
