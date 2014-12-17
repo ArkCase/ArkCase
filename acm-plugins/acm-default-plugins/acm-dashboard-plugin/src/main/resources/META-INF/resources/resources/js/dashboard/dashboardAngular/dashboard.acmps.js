@@ -11504,10 +11504,20 @@ Showdown.converter = function(converter_options) {
         $scope.chartTitle=chartTitle;
         var data = {};
         angular.forEach(tasks, function(task) {
-            //work around for already inserted  data into the DB about ann-acm
+            //work around for already inserted  data into the DB about users
              var user;
-            if(task.assignee==="ann-acm"){
-                user = "Ann Administrator"
+            if ("albert-acm" == task.assignee) {
+                user = "Albert Analyst";
+            } else if ("Ann-acm" == task.assignee || "ann-acm" == task.assignee) {
+                user = "Ann Admin";
+            } else if ("charles-acm" == task.assignee) {
+                user = "Charles Call Center";
+            } else if ("ian-acm" == task.assignee) {
+                user = "Ian Investigator";
+            } else if ("samuel-acm" == task.assignee) {
+                user = "Samuel Supervisor";
+            } else if ("sally-acm" == task.assignee) {
+                user = "Sally Supervisor";
             } else {
                 user = task.assignee;
             }
