@@ -680,13 +680,10 @@ Topbar.View = {
 
         }
 
-        ,onClickLnkAsn: function(event, ctrl) {
+        ,onClickLnkAsn1: function(event, ctrl) {
             this.$divAsnList.empty();
             this.$divAsnList.prev().show();
             this.$divAsnList.next().show();
-
-            //this._buildAsnListUiDropdown(asnList);
-            this._buildAsnUi(asnList, Topbar.View.Asn.UI_TYPE_LIST);
 
             if (!Acm.Object.isVisible(this.$divAsnList)) {
                 var asnList = Topbar.Model.Asn.getAsnList();
@@ -694,18 +691,21 @@ Topbar.View = {
                 var asnListNew = Topbar.View.Asn.getAsnListNew();
                 var asnListOld = Topbar.View.Asn.getAsnListOld();
 
+                Topbar.View.Asn._buildAsnUi(asnListOld, Topbar.View.Asn.UI_TYPE_LIST);
+                Topbar.View.Asn.showNewAsn(asnListNew);
                 this.$sectionAsn.toggle();
+
+
             } else {
                 this.$sectionAsn.toggle();
             }
         }
-        ,onClickLnkAsn0: function(event, ctrl) {
+        ,onClickLnkAsn: function(event, ctrl) {
             this.$divAsnList.empty();
             this.$divAsnList.prev().show();
             this.$divAsnList.next().show();
 
             var asnList = Topbar.Model.Asn.getAsnList();
-            //this._buildAsnListUiDropdown(asnList);
             this._buildAsnUi(asnList, Topbar.View.Asn.UI_TYPE_LIST);
             this.$sectionAsn.toggle();
 
