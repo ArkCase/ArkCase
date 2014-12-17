@@ -201,8 +201,12 @@ Topbar.View = {
 
 
         ,_asnListNew: []
+        ,_asnListOld: []
         ,getAsnListNew: function() {
             return this._asnListNew;
+        }
+        ,getAsnListOld: function() {
+            return this._asnListOld;
         }
         ,_isNewStatus: function(status) {
             if (status) {
@@ -221,6 +225,8 @@ Topbar.View = {
                     var asn = asnList[i];
                     if (this._isNewStatus(asn.status)) {
                         this._asnListNew.push(asn);
+                    } else {
+                        this._asnListOld.push(asn);
                     }
                 }
             }
@@ -675,6 +681,25 @@ Topbar.View = {
         }
 
         ,onClickLnkAsn: function(event, ctrl) {
+            this.$divAsnList.empty();
+            this.$divAsnList.prev().show();
+            this.$divAsnList.next().show();
+
+            //this._buildAsnListUiDropdown(asnList);
+            this._buildAsnUi(asnList, Topbar.View.Asn.UI_TYPE_LIST);
+
+            if (!Acm.Object.isVisible(this.$divAsnList)) {
+                var asnList = Topbar.Model.Asn.getAsnList();
+                Topbar.View.Asn.buildAsnListNew(asnList);
+                var asnListNew = Topbar.View.Asn.getAsnListNew();
+                var asnListOld = Topbar.View.Asn.getAsnListOld();
+
+                this.$sectionAsn.toggle();
+            } else {
+                this.$sectionAsn.toggle();
+            }
+        }
+        ,onClickLnkAsn0: function(event, ctrl) {
             this.$divAsnList.empty();
             this.$divAsnList.prev().show();
             this.$divAsnList.next().show();
