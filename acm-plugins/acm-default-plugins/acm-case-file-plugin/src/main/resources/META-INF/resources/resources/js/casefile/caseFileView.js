@@ -3135,6 +3135,12 @@ CaseFile.View = CaseFile.View || {
                         , width: '50%'
                         , edit: false
                         , create: false
+                        ,display: function (commData) {
+                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
+                                + ((0 >= commData.record.id)? "#" : commData.record.id)
+                                + "'>" + commData.record.title + "</a>";
+                            return $(a);
+                        }
                     }
                     , created: {
                         title: 'Created'
