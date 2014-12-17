@@ -8,11 +8,13 @@ Topbar.Model = {
         if (Topbar.Model.QuickSearch.create) {Topbar.Model.QuickSearch.create();}
         if (Topbar.Model.Suggestion.create)  {Topbar.Model.Suggestion.create();}
         if (Topbar.Model.Asn.create)         {Topbar.Model.Asn.create();}
+        if (Topbar.Model.Flash.create)       {Topbar.Model.Flash.create();}
     }
     ,onInitialized: function() {
         if (Topbar.Model.QuickSearch.onInitialized) {Topbar.Model.QuickSearch.onInitialized();}
         if (Topbar.Model.Suggestion.onInitialized)  {Topbar.Model.Suggestion.onInitialized();}
         if (Topbar.Model.Asn.onInitialized)         {Topbar.Model.Asn.onInitialized();}
+        if (Topbar.Model.Flash.onInitialized)       {Topbar.Model.Flash.onInitialized();}
     }
 
     ,QuickSearch: {
@@ -89,13 +91,16 @@ Topbar.Model = {
 //            );
         }
 
-        ,STATUS_READ    : "Read"
-        ,STATUS_UNREAD  : "Unread"
-        ,STATUS_DELETED : "Deleted"
+        ,STATUS_AUTO     : "Auto"
+        ,STATUS_NEW      : "New"
+        ,STATUS_UNMARKED : "Unmarked"
+        ,STATUS_MARKED   : "Marked"
+        ,STATUS_DELETED  : "Deleted"
 
-        ,ACTION_NEW     : "New"
-        ,ACTION_ACK     : "Ack"
-        ,ACTION_EXPIRED : "Expired"
+        ,ACTION_ACK      : "Ack"
+        ,ACTION_EXPIRED  : "Expired"
+        ,ACTION_STOPPED  : "Stopped"
+        ,ACTION_EXECUTED : "Executed"
 
         ,_asnListData: null
         ,getAsnList: function() {
@@ -168,17 +173,70 @@ Topbar.Model = {
 
 
         ,onViewChangedAsnAction: function(asnId, action) {
-            Topbar.Service.Asn.updateAsnAction(asnId, action);
+            if (0 < asnId) {
+                Topbar.Service.Asn.updateAsnAction(asnId, action);
+            }
         }
         ,onViewChangedAsnStatus: function(asnId, status) {
-            Topbar.Service.Asn.updateAsnStatus(asnId, status);
+            if (0 < asnId) {
+                Topbar.Service.Asn.updateAsnStatus(asnId, status);
+            }
         }
         ,onViewDeletedAsn: function(asnId) {
-            Topbar.Service.Asn.deleteAsn(asnId);
+            if (0 < asnId) {
+                Topbar.Service.Asn.deleteAsn(asnId);
+            }
         }
 
 
     } //Asn
+
+    ,Flash: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_ACTION,this.onViewChangedAsnAction);
+        }
+
+        ,onViewChangedAsnAction: function(asnId, action) {
+            if (0 > asnId) { //negative id is used for Flash
+                Topbar.Model.Flash.removeMsg(asnId);
+            }
+        }
+
+        ,_msgList: []
+        ,_nextId: -1
+        ,getMsgList: function() {
+            return this._msgList;
+        }
+        ,reset: function() {
+            this._msgList = [];
+        }
+        ,addMsg: function(msg) {
+            var n = {};
+            if (0 >= this._msgList.length) {
+                this._nextId = -1;
+            }
+            //we are borrowing ASN data structure so that it can share UI component. Use negative ID to avoid collision with real ASN
+            n.id = this._nextId--;
+            n.status = Topbar.Model.Asn.STATUS_NEW;
+            n.note  = msg;
+            n.flash = true;
+            this._msgList.push(n);
+        }
+        ,removeMsg: function(id) {
+            for (var i = 0; i < this._msgList.length; i++) {
+                if (this._msgList[i].id == id) {
+                    this._msgList.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        ,add: function(msg) {
+            this.addMsg(msg);
+            Topbar.Controller.Flash.modelAddedFlashMsg(msg);
+        }
+    }
 
 };
 

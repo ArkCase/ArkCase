@@ -82,5 +82,20 @@ Topbar.Controller = {
 
 
     }
+
+    ,Flash: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        //,MODEL_CHANGED_MSG_LIST                 : "topbar-model-flash-changed-msg-list"                    //param: msgList
+        ,MODEL_ADDED_FLASH_MSG                 : "topbar-model-flash-added-msg"                    //param: msg
+        //,MODEL_REMOVED_MSG                 : "topbar-model-flash-removed-msg"                    //param: msgId
+
+        ,modelAddedFlashMsg: function(msg) {
+            Acm.Dispatcher.fireEvent(this.MODEL_ADDED_FLASH_MSG, msg);
+        }
+    }
 };
 

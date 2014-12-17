@@ -69,5 +69,14 @@
         <modifyDataType tableName="acm_object_association" columnName="cm_target_id" newDataType="NUMBER(32,0)"/>
     </changeSet>
 
+    <changeSet id="object-association-05-add-category-and-subtype" author="dmiller">
+        <addColumn tableName="acm_object_association">
+            <column name="cm_target_category" type="VARCHAR(128)"/>
+        </addColumn>
+        <addColumn tableName="acm_object_association">
+            <column name="cm_target_subtype" type="VARCHAR(128)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

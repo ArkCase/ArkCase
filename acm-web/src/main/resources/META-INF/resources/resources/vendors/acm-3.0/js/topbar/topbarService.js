@@ -101,6 +101,9 @@ Topbar.Service = {
             var asn = Topbar.Model.Asn.findAsn(asnId, asnList);
             if (asn) {
                 asn.action = action;
+                if (Topbar.Model.Asn.STATUS_MARKED != asn.status && Topbar.Model.Asn.STATUS_DELETED != asn.status) {
+                    asn.status = Topbar.Model.Asn.STATUS_UNMARKED;
+                }
                 Topbar.Service.Asn.saveAsn(asn
                     ,function(data) {
                         Topbar.Controller.Asn.modelUpdatedAsnAction(asnId, Acm.Service.responseWrapper(data, data.action));
