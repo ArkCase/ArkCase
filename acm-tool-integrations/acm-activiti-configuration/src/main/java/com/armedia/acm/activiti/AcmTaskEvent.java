@@ -33,4 +33,8 @@ public interface AcmTaskEvent extends Serializable
     boolean isAdhocTask();
 
     String getOwner();
+
+
+
+    String getBuisenesProcessName();
 }

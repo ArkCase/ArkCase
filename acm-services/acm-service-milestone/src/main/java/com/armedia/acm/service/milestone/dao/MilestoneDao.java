@@ -25,12 +25,13 @@ public class MilestoneDao extends AcmAbstractDao<AcmMilestone>
 
     public List<MilestoneByNameDto> getAllMilestonesForCaseFilesGroupedByName(String objectType){
 
-        String queryText = "SELECT ms.milestoneName, COUNT(ms) as counted FROM AcmMilestone ms where ms.created >= :created AND ms.objectType=:objectType GROUP BY ms.milestoneName";
+        String queryText = "SELECT ms.milestoneName, COUNT(ms) as counted FROM AcmMilestone ms where ms.created >= :created AND ms.objectType=:objectType AND ms.milestoneName<>:mName GROUP BY ms.milestoneName";
 
         Query milestonesGroupedByName = getEm().createQuery(queryText);
 
         milestonesGroupedByName.setParameter("created",shiftDateFromToday(14));
         milestonesGroupedByName.setParameter("objectType",objectType); //"CASE_FILE");
+        milestonesGroupedByName.setParameter("mName","Closed");
 
         List<Object[]> milestonesGroupedByN = milestonesGroupedByName.getResultList();
 

@@ -21,6 +21,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
                    doc:name="Issue an advanced search request to SOLR">
     </http:endpoint>
 
+
     <flow name="advancedSearchQuery" doc:name="Advanced Search Query Flow">
         <vm:inbound-endpoint
                 address="vm://advancedSearchQuery.in"

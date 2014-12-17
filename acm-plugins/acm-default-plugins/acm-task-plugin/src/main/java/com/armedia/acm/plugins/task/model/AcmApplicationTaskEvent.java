@@ -22,6 +22,8 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     private String parentObjectName;
     private boolean adhocTask;
     private String owner;
+//    private String assigneeFullName;
+    private String buisenesProcessName;
 
 
 
@@ -50,6 +52,8 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
         setParentObjectName(source.getAttachedToObjectName());
         setAdhocTask(source.isAdhocTask());
         setOwner(source.getOwner());
+
+        setBuisenesProcessName(source.getBusinessProcessName());
 
     }
 
@@ -169,4 +173,21 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
         this.owner = owner;
     }
 
+//    @Override
+//    public String getAssigneeFullName() {
+//        return assigneeFullName;
+//    }
+//
+//    public void setAssigneeFullName(String assigneeFullName) {
+//        this.assigneeFullName = assigneeFullName;
+//    }
+
+    @Override
+    public String getBuisenesProcessName() {
+        return buisenesProcessName;
+    }
+
+    public void setBuisenesProcessName(String buisenesProcessName) {
+        this.buisenesProcessName = buisenesProcessName;
+    }
 }

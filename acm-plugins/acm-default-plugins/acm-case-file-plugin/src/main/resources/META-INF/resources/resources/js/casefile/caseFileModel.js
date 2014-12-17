@@ -42,6 +42,10 @@ CaseFile.Model = CaseFile.Model || {
 
     }
 
+
+    ,DOCUMENT_TARGET_TYPE_FILE: "FILE"
+    ,DOCUMENT_CATEGORY_CORRESPONDENCE: "CORRESPONDENCE"
+
     ,_objectType: "CASE_FILE"
     ,getObjectType: function() {
         return this._objectType;
@@ -305,9 +309,6 @@ CaseFile.Model = CaseFile.Model || {
             if (!Acm.isArray(data.personAssociations)) {
                 return false;
             }
-//            if (!Acm.isArray(data.correspondence)) {
-//                return false;
-//            }
             return true;
         }
         ,validatePersonAssociation: function(data) {
