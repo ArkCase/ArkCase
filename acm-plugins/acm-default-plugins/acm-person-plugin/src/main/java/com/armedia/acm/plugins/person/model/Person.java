@@ -150,6 +150,11 @@ public class Person implements Serializable, AcmEntity
         {
             pa.setPerson(this);
         }
+
+        for (PersonIdentification pi : getPersonIdentification() )
+        {
+            pi.setPerson(this);
+        }
     }
 
     @PreUpdate
@@ -158,6 +163,11 @@ public class Person implements Serializable, AcmEntity
         for ( PersonAlias pa : getPersonAliases() )
         {
             pa.setPerson(this);
+        }
+
+        for (PersonIdentification pi : getPersonIdentification() )
+        {
+            pi.setPerson(this);
         }
     }
 
