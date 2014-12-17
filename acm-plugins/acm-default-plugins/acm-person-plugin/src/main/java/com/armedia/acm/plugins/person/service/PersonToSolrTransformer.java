@@ -40,6 +40,9 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         solrDoc.setPerson_title_lcs(person.getTitle());
         solrDoc.setFirst_name_lcs(person.getGivenName());
         solrDoc.setLast_name_lcs(person.getFamilyName());
+
+        solrDoc.setFull_name_lcs(person.getGivenName() + " " + person.getFamilyName());
+
         solrDoc.setCreate_date_tdt(person.getCreated());
         solrDoc.setCreator_lcs(person.getCreator());
         solrDoc.setModified_date_tdt(person.getModified());
