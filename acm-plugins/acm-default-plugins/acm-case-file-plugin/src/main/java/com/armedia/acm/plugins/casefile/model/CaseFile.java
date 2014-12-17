@@ -135,7 +135,7 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
         {
             childObject.setParentId(getId());
             childObject.setParentName(getCaseNumber());
-            childObject.setParentType("CASE");
+            childObject.setParentType("CASE_FILE");
         }
         for ( PersonAssociation persAssoc : personAssociations)
         {
@@ -144,7 +144,7 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getId());
-            ap.setObjectType("CASE");
+            ap.setObjectType("CASE_FILE");
         }
     }
 
@@ -362,6 +362,51 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     public void setParticipants(List<AcmParticipant> participants) {
         this.participants = participants;
     }
+
+    public void setAssignee(String assigneeUserId)
+    {
+        boolean found = false;
+        if ( participants != null )
+        {
+            for ( AcmParticipant p : participants )
+            {
+                if ( "assignee".equals(p.getParticipantType() ) )
+                {
+                    p.setParticipantLdapId(assigneeUserId);
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        if ( ! found )
+        {
+            AcmParticipant p = new AcmParticipant();
+            p.setParticipantLdapId(assigneeUserId);
+            p.setParticipantType("assignee");
+            p.setObjectType("CASE_FILE");
+            p.setObjectId(getId());
+            participants.add(p);
+        }
+    }
+
+    public String getAssignee()
+    {
+        if ( participants != null )
+        {
+            for ( AcmParticipant p : participants )
+            {
+                if ( "assignee".equals(p.getParticipantType() ) )
+                {
+                    return p.getParticipantLdapId();
+                }
+            }
+        }
+
+        return null;
+    }
+
+
     public ChangeCaseStatus getChangeCaseStatus() {
 		return changeCaseStatus;
 	}
