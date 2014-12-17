@@ -51,7 +51,7 @@
 
 <%--</section>--%>
 <footer class="footer bg-white b-t b-light">
-    <p>Powered by Armedia Case Management 3.0.</p>
+    <p>Powered by Armedia Case Manager 3.0</p>
 </footer>
 </section>
 </section>
