@@ -40,6 +40,9 @@
     <bean id="caseFilesSearchByDueDateTimeIntervalAPIController" class="com.armedia.acm.services.search.web.api.CaseFilesSearchByDueDateTimeIntervalAPIController">
         <property name="muleClient" ref="muleClient"/>
     </bean>
+    <bean id="facetedSearchAPIController" class="com.armedia.acm.services.search.web.api.FacetedSearchAPIController">
+        <property name="muleClient" ref="muleClient"/>
+    </bean>
 
 </beans>
 

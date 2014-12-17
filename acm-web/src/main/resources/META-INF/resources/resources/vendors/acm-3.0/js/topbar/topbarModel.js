@@ -218,7 +218,7 @@ Topbar.Model = {
                 this._nextId = -1;
             }
             //we are borrowing ASN data structure so that it can share UI component. Use negative ID to avoid collision with real ASN
-            n.asnId = this._nextId--;
+            n.id = this._nextId--;
             n.status = Topbar.Model.Asn.STATUS_NEW;
             n.note  = msg;
             n.flash = true;
@@ -226,7 +226,7 @@ Topbar.Model = {
         }
         ,removeMsg: function(id) {
             for (var i = 0; i < this._msgList.length; i++) {
-                if (this._msgList[i].asnId == id) {
+                if (this._msgList[i].id == id) {
                     this._msgList.splice(i, 1);
                     break;
                 }

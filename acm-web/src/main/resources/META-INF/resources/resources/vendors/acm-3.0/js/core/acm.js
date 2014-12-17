@@ -13,6 +13,26 @@ var Acm = Acm || {
         Acm.Model.create();
     }
 
+    ,__FixMe__getUserFullName: function(user) {
+        var fullName;
+        if ("albert-acm" == user) {
+            fullName = "Albert Analyst";
+        } else if ("ann-acm" == user) {
+            fullName = "Ann Admin";
+        } else if ("charles-acm" == user) {
+            fullName = "Charles Call Center";
+        } else if ("ian-acm" == user) {
+            fullName = "Ian Investigator";
+        } else if ("samuel-acm" == user) {
+            fullName = "Samuel Supervisor";
+        } else if ("sally-acm" == user) {
+            fullName = "Sally Supervisor";
+        } else {
+            fullName = user;
+        }
+        return fullName;
+    }
+
 	,isEmpty: function (val) {
 //        if (typeof val == "undefined") {
 //            return true;

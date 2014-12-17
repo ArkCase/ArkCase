@@ -38,6 +38,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String assignee_id_lcs;
     private String assignee_first_name_lcs;
     private String assignee_last_name_lcs;
+    private String assignee_full_name_lcs;
     private String incident_type_lcs;
 
     /////////////////// for docs with a status date ////////////
@@ -47,6 +48,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String person_title_lcs;
     private String first_name_lcs;
     private String last_name_lcs;
+    private String full_name_lcs;
 
     /////////////////// for acm users ///////////////
     private String email_lcs;
@@ -425,5 +427,21 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
 
     public void setDueDate_tdt(Date dueDate_tdt) {
         this.dueDate_tdt = dueDate_tdt;
+    }
+
+    public String getAssignee_full_name_lcs() {
+        return assignee_full_name_lcs;
+    }
+
+    public void setAssignee_full_name_lcs(String assignee_full_name_lcs) {
+        this.assignee_full_name_lcs = assignee_full_name_lcs;
+    }
+
+    public String getFull_name_lcs() {
+        return full_name_lcs;
+    }
+
+    public void setFull_name_lcs(String full_name_lcs) {
+        this.full_name_lcs = full_name_lcs;
     }
 }

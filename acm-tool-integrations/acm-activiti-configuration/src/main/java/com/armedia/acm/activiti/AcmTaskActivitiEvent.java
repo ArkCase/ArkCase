@@ -19,9 +19,10 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
     private String parentObjectName;
     private boolean adhocTask;
     private String owner;
+    private String buisenesProcessName;
 
 
-    public AcmTaskActivitiEvent(Task source, String taskEvent, Long parentObjectId, String parentObjectType, String parentObjectName) {
+    public AcmTaskActivitiEvent(Task source, String taskEvent, Long parentObjectId, String parentObjectType, String parentObjectName, String buisenesProcessName) {
         super(source);
         setSucceeded(true);
         setObjectType("TASK");
@@ -41,6 +42,9 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
         setParentObjectId(parentObjectId);
         setParentObjectType(parentObjectType);
         setParentObjectName(parentObjectName);
+
+        //TODO IMPORTANT!!!! Find a way to provide buisenesProcessName to set it bellow
+        setBuisenesProcessName("");
     }
 
     private String determinePriority(int priority)
@@ -163,5 +167,14 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public String getBuisenesProcessName() {
+        return buisenesProcessName;
+    }
+
+    public void setBuisenesProcessName(String buisenesProcessName) {
+        this.buisenesProcessName = buisenesProcessName;
     }
 }
