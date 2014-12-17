@@ -18,7 +18,7 @@ CaseFile.Service = {
         }
 
         ,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
-        ,API_GET_SUBJECT_TYPES         : "/api/latest/plugin/complaint/types"
+        ,API_GET_SUBJECT_TYPES         : "/api/latest/plugin/casefile/caseTypes"
         ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
 
         ,_validateAssignees: function(data) {
