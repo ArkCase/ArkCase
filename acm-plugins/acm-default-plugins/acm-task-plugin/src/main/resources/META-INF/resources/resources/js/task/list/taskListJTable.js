@@ -13,7 +13,8 @@ TaskList.JTable = {
     ,createJTableDocuments: function($s) {
         $s.jtable({
             title: 'Documents Under Review'
-            ,paging: false
+            ,paging: true   //fix me
+            ,sorting: true  //fix me
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -75,7 +76,7 @@ TaskList.JTable = {
                 }
                 ,title: {
                     title: 'Title'
-                    ,width: '10%'
+                    ,width: '50%'
                     ,display: function (commData) {
                         var a = "<a href='" + App.getContextPath() + TaskList.Service.API_DOWNLOAD_DOCUMENT
                             + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -95,7 +96,7 @@ TaskList.JTable = {
                 }
                 ,status: {
                     title: 'Status'
-                    ,width: '30%'
+                    ,width: '20%'
                 }
             }
             /*,recordUpdated : function (event, data) {
@@ -128,7 +129,8 @@ TaskList.JTable = {
     ,createJTableAttachments: function($s) {
         $s.jtable({
             title: 'Attachments'
-            ,paging: false
+            ,paging: true   //fix me
+            ,sorting: true  //fix me
             ,messages: {
                 addNewRecord: 'Add Attachment'
             }
@@ -225,7 +227,8 @@ TaskList.JTable = {
     ,createJTableWorkflowOverview: function($s) {
         $s.jtable({
             title: 'Workflow Overview'
-            ,paging: false
+            ,paging: true   //fix me
+            ,sorting: true  //fix me
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -300,7 +303,8 @@ TaskList.JTable = {
     ,createJTableNotes: function($s) {
         $s.jtable({
             title: 'Notes'
-            ,paging: false
+            ,paging: true   //fix me
+            ,sorting: true  //fix me
             ,messages: {
                 addNewRecord: 'Add Note'
             }
@@ -478,7 +482,7 @@ TaskList.JTable = {
                                 var Record = {};
                                 Record.eventType = resultPage[i].eventType;
                                 Record.eventDate = Acm.getDateFromDatetime(resultPage[i].eventDate);
-                                Record.userId = resultPage[i].userId;
+                                Record.userId = Acm.__FixMe__getUserFullName(resultPage[i].userId);
                                 jtData.Records.push(Record);
                             }
                             jtData.TotalRecordCount = taskEvents.totalCount;
@@ -504,7 +508,7 @@ TaskList.JTable = {
                                             resultPage[i].eventType == ('findById'))){*/
                                             Record.eventType = resultPage[i].eventType;
                                             Record.eventDate = Acm.getDateFromDatetime(resultPage[i].eventDate);
-                                            Record.userId = resultPage[i].userId;
+                                            Record.userId = Acm.__FixMe__getUserFullName(resultPage[i].userId);
                                             jtData.Records.push(Record);
                                         //}
                                     }
@@ -549,7 +553,8 @@ TaskList.JTable = {
     ,createJTableRejectComments: function($s) {
         $s.jtable({
             title: 'Reject Comments'
-            ,paging: false
+            ,paging: true   //fix me
+            ,sorting: true  //fix me
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
