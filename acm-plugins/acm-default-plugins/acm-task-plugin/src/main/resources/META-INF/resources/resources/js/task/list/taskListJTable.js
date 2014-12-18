@@ -13,7 +13,8 @@ TaskList.JTable = {
     ,createJTableDocuments: function($s) {
         $s.jtable({
             title: 'Documents Under Review'
-            ,paging: false
+            ,paging: true   //fix me
+            ,sorting: true  //fix me
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -128,7 +129,8 @@ TaskList.JTable = {
     ,createJTableAttachments: function($s) {
         $s.jtable({
             title: 'Attachments'
-            ,paging: false
+            ,paging: true   //fix me
+            ,sorting: true  //fix me
             ,messages: {
                 addNewRecord: 'Add Attachment'
             }
@@ -225,7 +227,8 @@ TaskList.JTable = {
     ,createJTableWorkflowOverview: function($s) {
         $s.jtable({
             title: 'Workflow Overview'
-            ,paging: false
+            ,paging: true   //fix me
+            ,sorting: true  //fix me
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -300,7 +303,8 @@ TaskList.JTable = {
     ,createJTableNotes: function($s) {
         $s.jtable({
             title: 'Notes'
-            ,paging: false
+            ,paging: true   //fix me
+            ,sorting: true  //fix me
             ,messages: {
                 addNewRecord: 'Add Note'
             }
@@ -549,7 +553,8 @@ TaskList.JTable = {
     ,createJTableRejectComments: function($s) {
         $s.jtable({
             title: 'Reject Comments'
-            ,paging: false
+            ,paging: true   //fix me
+            ,sorting: true  //fix me
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();

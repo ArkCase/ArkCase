@@ -919,7 +919,8 @@ CaseFile.View = CaseFile.View || {
                 ]
                 ,{
                     title: 'People'
-                    ,paging: false
+                    ,paging: true   //fix me
+                    ,sorting: true  //fix me
                     ,messages: {
                         addNewRecord: 'Add Person'
                     }
@@ -2015,7 +2016,8 @@ CaseFile.View = CaseFile.View || {
         ,createJTableDocuments: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: 'Documents'
-                ,paging: false
+                ,paging: true   //fix me
+                ,sorting: true  //fix me
                 ,messages: {
                     addNewRecord: 'Add Document'
                 }
@@ -2043,6 +2045,7 @@ CaseFile.View = CaseFile.View || {
                                     rc.Records.push(record);
                                 }
                             }
+                            rc.TotalRecordCount = rc.Records.length;
                         }
                         /*var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                         if (c && Acm.isArray(c.childObjects)) {
@@ -2177,7 +2180,8 @@ CaseFile.View = CaseFile.View || {
         ,createJTableParticipants: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: 'Participants'
-                ,paging: false
+                ,paging: true   //fix me
+                ,sorting: true  //fix me
                 ,messages: {
                     addNewRecord: 'Add Participant'
                 }
@@ -2639,6 +2643,8 @@ CaseFile.View = CaseFile.View || {
                     ,multiselect: false
                     ,selecting: false
                     ,selectingCheckboxes: false
+                    ,paging: true   //fix me
+                    ,sorting: true  //fix me
                     ,messages: {
                         addNewRecord: 'Add Task'
                     }
@@ -2702,27 +2708,27 @@ CaseFile.View = CaseFile.View || {
                         ,created: {
                             title: 'Created'
                             ,width: '15%'
-                            ,sorting: false
+                            //,sorting: false
                         }
                         ,priority: {
                             title: 'Priority'
                             ,width: '10%'
-                            ,sorting: false
+                            //,sorting: false
                         }
                         ,dueDate: {
                             title: 'Due'
                             ,width: '15%'
-                            ,sorting: true
+                            //,sorting: true
                         }
                         ,status: {
                             title: 'Status'
                             ,width: '10%'
-                            ,sorting: false
+                            //,sorting: false
                         }
                         ,description: {
                             title: 'Action'
                             ,width: '10%'
-                            ,sorting: false
+                            //,sorting: false
                             ,edit: false
                             ,create: false
                             ,display: function (commData) {
@@ -2783,7 +2789,8 @@ CaseFile.View = CaseFile.View || {
 
             AcmEx.Object.JTable.useBasic($jt, {
                     title: 'References'
-                    ,paging: false
+                    ,paging: true   //fix me
+                    ,sorting: true  //fix me
                     ,messages: {
                         addNewRecord: 'Add Reference'
                     }
@@ -3080,9 +3087,10 @@ CaseFile.View = CaseFile.View || {
         }
 
         , createJTableCorrespondence: function ($s) {
-            $s.jtable({
+            AcmEx.Object.JTable.useBasic($s, {
                 title: 'Correspondence'
-                , paging: false
+                ,paging: true   //fix me
+                ,sorting: true  //fix me
                 , messages: {
                     addNewRecord: 'Add Correspondence'
                 }
@@ -3156,8 +3164,6 @@ CaseFile.View = CaseFile.View || {
                     }
                 }
             });
-
-            $s.jtable('load');
         }
     }
 };
