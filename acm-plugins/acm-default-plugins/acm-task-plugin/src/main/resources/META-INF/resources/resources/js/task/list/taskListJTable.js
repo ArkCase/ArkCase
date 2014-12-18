@@ -478,7 +478,7 @@ TaskList.JTable = {
                                 var Record = {};
                                 Record.eventType = resultPage[i].eventType;
                                 Record.eventDate = Acm.getDateFromDatetime(resultPage[i].eventDate);
-                                Record.userId = resultPage[i].userId;
+                                Record.userId = Acm.__FixMe__getUserFullName(resultPage[i].userId);
                                 jtData.Records.push(Record);
                             }
                             jtData.TotalRecordCount = taskEvents.totalCount;
@@ -504,7 +504,7 @@ TaskList.JTable = {
                                             resultPage[i].eventType == ('findById'))){*/
                                             Record.eventType = resultPage[i].eventType;
                                             Record.eventDate = Acm.getDateFromDatetime(resultPage[i].eventDate);
-                                            Record.userId = resultPage[i].userId;
+                                            Record.userId = Acm.__FixMe__getUserFullName(resultPage[i].userId);
                                             jtData.Records.push(Record);
                                         //}
                                     }
