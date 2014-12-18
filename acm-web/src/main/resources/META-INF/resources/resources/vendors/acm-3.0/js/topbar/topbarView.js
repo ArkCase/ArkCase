@@ -675,6 +675,8 @@ Topbar.View = {
                     }
                     if (canStopAuto) {
                     }
+                    if (canCloseAuto) {
+                    }
                 } // if asn.id
             } //for i
 
@@ -765,7 +767,7 @@ Topbar.View = {
             if (asnId) {
                 Topbar.View.Asn._removeAsnFromUi(asnId);
                 Acm.Timer.removeListener(asnId);
-                Topbar.Controller.Asn.viewChangedAsnAction(asnId, Topbar.Model.Asn.ACTION_EXPIRED);
+                Topbar.Controller.Asn.viewChangedAsnAction(asnId, Topbar.Model.Asn.ACTION_ACK);
             }
 
         }

@@ -2697,7 +2697,7 @@ CaseFile.View = CaseFile.View || {
                         ,title: {
                             title: 'Title'
                             ,width: '30%'
-                            ,sorting: false
+                            //,sorting: false
                             ,display: function (commData) {
                                 var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
                                     + ((0 >= commData.record.id)? "#" : commData.record.id)
