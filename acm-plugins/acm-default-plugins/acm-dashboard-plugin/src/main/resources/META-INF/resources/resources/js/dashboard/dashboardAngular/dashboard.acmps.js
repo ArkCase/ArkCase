@@ -6173,8 +6173,10 @@ Showdown.converter = function(converter_options) {
                     month: "%B %Y",
                     year: "%Y"
                 },
+//                headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
+//                pointFormat: '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y}</b><br/>',
                 headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
-                pointFormat: '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y}</b><br/>',
+                pointFormat: '<span style="color:{series.color}">●</span> Count: <b>{point.y}</b><br/>',
                 shadow: !0,
                 snap: Hb ? 25 : 10,
                 style: {
@@ -11121,6 +11123,8 @@ Showdown.converter = function(converter_options) {
                 chartTitle = option.nameO;
             }
         });
+        //remove this after the demo
+        chartTitle="";
         $scope.chartTitle = chartTitle;
         var seriesData = [];
         if (angular.forEach(milestones, function(milestone) {
@@ -11155,6 +11159,7 @@ Showdown.converter = function(converter_options) {
                         color: "#000000",
                         connectorColor: "#000000",
                         format: "<b>{point.name}</b>: {point.percentage:.1f} %"
+//                        format: "<b>Count</b>: {point.percentage:.1f} %"
                     }
                 }
             },
@@ -11190,6 +11195,8 @@ Showdown.converter = function(converter_options) {
                     chartTitle = option.nameO;
                 }
             });
+            //remove this after the demo
+            chartTitle="";
             $scope.chartTitle = chartTitle;
             var seriesData = [];
             if (angular.forEach(cases, function(caseS) {
@@ -11224,6 +11231,7 @@ Showdown.converter = function(converter_options) {
                             color: "#000000",
                             connectorColor: "#000000",
                             format: "<b>{point.name}</b>: {point.percentage:.1f} %"
+//                            format: "<b>Count</b>: {point.percentage:.1f} %"
                         }
                     }
                 },
@@ -11350,6 +11358,7 @@ Showdown.converter = function(converter_options) {
                         color: "#000000",
                         connectorColor: "#000000",
                         format: "<b>{point.name}</b>: {point.percentage:.1f} %"
+//                        format: "<b>Count</b>: {point.percentage:.1f} %"
                     }
                 }
             },
@@ -11490,10 +11499,28 @@ Showdown.converter = function(converter_options) {
                 chartTitle = option.nameO;
             }
         });
+        //remove this after the demo
+        chartTitle="";
         $scope.chartTitle=chartTitle;
         var data = {};
         angular.forEach(tasks, function(task) {
-            var user = task.assignee;
+            //work around for already inserted  data into the DB about users
+             var user;
+            if ("albert-acm" == task.assignee) {
+                user = "Albert Analyst";
+            } else if ("Ann-acm" == task.assignee || "ann-acm" == task.assignee) {
+                user = "Ann Admin";
+            } else if ("charles-acm" == task.assignee) {
+                user = "Charles Call Center";
+            } else if ("ian-acm" == task.assignee) {
+                user = "Ian Investigator";
+            } else if ("samuel-acm" == task.assignee) {
+                user = "Samuel Supervisor";
+            } else if ("sally-acm" == task.assignee) {
+                user = "Sally Supervisor";
+            } else {
+                user = task.assignee;
+            }
             data[user] ? data[user] ++ : data[user] = 1
         });
         var seriesData = [];
@@ -11529,6 +11556,7 @@ Showdown.converter = function(converter_options) {
                         color: "#000000",
                         connectorColor: "#000000",
                         format: "<b>{point.name}</b>: {point.percentage:.1f} %"
+//                        format: "<b>Count</b>: {point.percentage:.1f} %"
                     }
                 }
             },
@@ -11671,7 +11699,9 @@ Showdown.converter = function(converter_options) {
             $templateCache.put("scripts/widgets/randommsg/randommsg.html", "<blockquote><p>{{msg.text}}</p><small>{{msg.author}}</small></blockquote>"),
 
             $templateCache.put("scripts/widgets/teamtaskworkload/edit.html", '<form role="form"><div class="form-group"><label for="path">Select Due Date Period</label><select type="text" class="form-control" id="due" ng-model="config.due"><option value="all" ng-selected="selected">All</option><option value="pastDue">Past Due</option><option value="dueTomorrow" >Due Tomorrow</option><option value="dueInAWeek">Due in 7 Days</option><option value="dueInAMonth">Due in 30 Days</option></select></div></form>'),
-            $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="showChart==false"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">{{text}}</p></div><div ng-if="showChart"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
+            $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="showChart==false">' +
+                '<p style="text-align:center; font-size:large;">{{chartTitle}}</p></br>' +
+                '<p style="text-align:center;">{{text}}</p></div><div ng-if="showChart"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
 
             $templateCache.put("scripts/widgets/casessum/caseStatus.html",
                     '<div>' +

@@ -32,8 +32,10 @@ public class AcmUserTaskEventHandler implements ApplicationEventPublisherAware
         String parentObjectType =(String)processVariables.get("OBJECT_TYPE");
         String parentObjectName =(String)processVariables.get("OBJECT_NAME");
 
+        //TODO find a way to fetch the businesProcessName;
+        String buisenesProcessName = (String)processVariables.get("");
 
-        AcmTaskActivitiEvent event = new AcmTaskActivitiEvent(task, eventName, parentObjectId, parentObjectType, parentObjectName );
+        AcmTaskActivitiEvent event = new AcmTaskActivitiEvent(task, eventName, parentObjectId, parentObjectType, parentObjectName,buisenesProcessName);
 
         getApplicationEventPublisher().publishEvent(event);
 
