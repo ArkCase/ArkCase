@@ -2195,7 +2195,7 @@ CaseFile.View = CaseFile.View || {
                                 var participant = c.participants[i];
                                 var record = {};
                                 record.id = Acm.goodValue(participant.id, 0);
-                                record.title = Acm.goodValue(participant.participantLdapId);
+                                record.title = Acm.__FixMe__getUserFullName(Acm.goodValue(participant.participantLdapId));
                                 record.type = Acm.goodValue(participant.participantType);
                                 rc.Records.push(record);
                             }
