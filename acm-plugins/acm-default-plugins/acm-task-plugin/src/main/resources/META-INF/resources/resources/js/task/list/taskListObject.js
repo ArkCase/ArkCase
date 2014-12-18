@@ -917,7 +917,7 @@ TaskList.Object = {
         this.setLnkParentObjTitle(parentObj.title);
         this.setValueLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObj.incidentDate));
         this.setLnkParentObjPriority(parentObj.priority);
-        this.setLnkParentObjAssigned(parentObj.assignee);
+        this.setLnkParentObjAssigned(Acm.__FixMe__getUserFullName(parentObj.assignee));
         this.setLnkParentObjStatus(parentObj.status);
         this.setLnkParentObjSubjectType(parentObj.subjectType);
         this.setValueLnkParentObjNumber(parentObj.number);
@@ -984,7 +984,7 @@ TaskList.Object = {
         this.setValueLnkStartDate(Acm.getDateFromDatetime(task.taskStartDate));
         this.setValueLnkDueDate(Acm.getDateFromDatetime(task.dueDate));
         this.setValueLnkPriority(task.priority);
-        this.setValueTaskOwner(task.owner);
+        this.setValueTaskOwner(Acm.__FixMe__getUserFullName(task.assignee));
         this.setValueAssignedStatus(task.status);
         this.setValueDetails(task.details);
     }

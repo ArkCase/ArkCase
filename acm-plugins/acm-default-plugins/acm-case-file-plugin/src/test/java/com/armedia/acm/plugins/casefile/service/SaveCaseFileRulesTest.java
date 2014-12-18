@@ -17,6 +17,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.io.StringReader;
+import java.util.Calendar;
+import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -68,6 +70,46 @@ public class SaveCaseFileRulesTest
     }
 
     @Test
+    public void nullAssignee() throws Exception
+    {
+        CaseFile caseFile = new CaseFile();
+        caseFile.setId(12345L);
+
+        workingMemory.execute(caseFile);
+
+        assertNotNull(caseFile.getAssignee());
+
+        assertEquals("ann-acm", caseFile.getAssignee());
+    }
+
+    @Test
+    public void existingAssignee_shouldNotBeOverwritten() throws Exception
+    {
+        CaseFile caseFile = new CaseFile();
+        caseFile.setId(12345L);
+        caseFile.setAssignee("samuel-acm");
+
+        workingMemory.execute(caseFile);
+
+        assertNotNull(caseFile.getAssignee());
+
+        assertEquals("samuel-acm", caseFile.getAssignee());
+    }
+
+    @Test
+    public void nullDueDate() throws Exception
+    {
+        CaseFile caseFile = new CaseFile();
+        caseFile.setId(12345L);
+
+        workingMemory.execute(caseFile);
+
+        assertNotNull(caseFile.getDueDate());
+
+        log.debug("due date: " + caseFile.getDueDate());
+    }
+
+    @Test
     public void caseNumberExists() throws Exception
     {
         CaseFile caseFile = new CaseFile();
@@ -89,6 +131,16 @@ public class SaveCaseFileRulesTest
         assertNotNull(caseFile.getPriority());
 
         log.info("Case priority: " + caseFile.getPriority());
+    }
+
+    @Test
+    public void date()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 180);
+
+        Date date180 = cal.getTime();
+        log.debug("date180: " + date180);
     }
 
 }

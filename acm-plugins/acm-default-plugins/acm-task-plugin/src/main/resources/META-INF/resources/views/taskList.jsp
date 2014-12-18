@@ -176,7 +176,7 @@
                                     <small class="text-muted">% of Completion</small></div>
                                 <div class="col-xs-2 b-r">
                                     <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="text" data-pk="1" data-title="Enter Owner"></a></div>
-                                    <small class="text-muted">Owner</small></div>
+                                    <small class="text-muted">Assignee</small></div>
                                 <div class="col-xs-2 b-r">
                                     <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter priority"></a></div>
                                     <small class="text-muted">Priority</small></div>

@@ -38,15 +38,19 @@ public class TaskToAdvancedSearchJsonConverter
         advancedSearchMap.put("object_id_s", event.getObjectId());
         advancedSearchMap.put("create_dt", event.getTaskCreated());
         advancedSearchMap.put("name", event.getTaskName());
-        advancedSearchMap.put("status_s", event.getTaskEvent() == null ? null : event.getTaskEvent().toUpperCase());
+        advancedSearchMap.put("status_s", event.getTaskEvent() == null ? null : event.getTaskEvent().toUpperCase()); //
         advancedSearchMap.put("assignee_s", event.getAssignee());
         advancedSearchMap.put("id", event.getObjectId() + "-" + TASK_TYPE);
-        advancedSearchMap.put("priority_s", event.getPriority());
+        advancedSearchMap.put("priority_s", event.getPriority());//
         advancedSearchMap.put("parent_object_id_i", event.getParentObjectId());
-        advancedSearchMap.put("parent_object_type_s", event.getParentObjectType());
+        advancedSearchMap.put("parent_object_type_s", event.getParentObjectType());//
         advancedSearchMap.put("due_dt", event.getDueDate());
         advancedSearchMap.put("adhocTask_b", event.isAdhocTask());
         advancedSearchMap.put("owner_s", event.getOwner());
+
+        advancedSearchMap.put("assignee_full_name_lcs",event.getAssignee());
+        advancedSearchMap.put("buisenes_process_name_lcs",event.getBuisenesProcessName());
+
 
         advancedSearchMap.put(SearchConstants.SOLR_OBJECT_TYPE_FIELD_NAME, TASK_TYPE);
 

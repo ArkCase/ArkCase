@@ -18,7 +18,7 @@ CaseFile.Service = {
         }
 
         ,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
-        ,API_GET_SUBJECT_TYPES         : "/api/latest/plugin/complaint/types"
+        ,API_GET_SUBJECT_TYPES         : "/api/latest/plugin/casefile/caseTypes"
         ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
 
         ,_validateAssignees: function(data) {
@@ -205,6 +205,7 @@ CaseFile.Service = {
                                     document.creator = childObject.creator;
                                     document.status = childObject.status;
                                     document.targetType = childObject.targetType;
+                                    document.targetSubtype = childObject.targetSubtype;
                                     document.category = childObject.category;
                                     documents.push(document);
                                 }

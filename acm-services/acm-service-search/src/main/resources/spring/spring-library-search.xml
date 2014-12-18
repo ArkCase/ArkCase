@@ -119,6 +119,11 @@
                     <property name="url" value="/api/{version}/plugin/search/complaintsSearch/byTimeInterval"/>
                     <property name="requiredPrivilege" ref="searchPrivilege"/>
                 </bean>
+                <bean id="ComplaintsUrlByCreatedDate" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/facetedSearch/{objectType}"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
             </list>
         </property>
 
