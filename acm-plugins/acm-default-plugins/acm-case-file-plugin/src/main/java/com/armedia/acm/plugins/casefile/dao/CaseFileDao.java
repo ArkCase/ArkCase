@@ -51,11 +51,12 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
 
     }
 
-    public List<CaseByStatusDto> getAllCasesByStatus(){
+    public List<CaseByStatusDto> getAllCasesByStatus() {
         String queryText = "SELECT cf.status, COUNT(cf) as counted FROM CaseFile cf GROUP BY cf.status";
         Query caseGroupedByStatus = getEm().createQuery(queryText);
 
         List<Object[]> caseGroupedByS = caseGroupedByStatus.getResultList();
+
 
         List<CaseByStatusDto> result = new ArrayList<CaseByStatusDto>();
 
@@ -79,7 +80,18 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
         }
         return retval;
     }
-
+    public List<CaseFile> getNotClosedCaseFilesByUser(String user) throws AcmObjectNotFoundException{
+        String queryText = "SELECT cf FROM CaseFile cf " +
+                "WHERE cf.creator = :user AND cf.status<>:statusName";
+        Query casesByUser = getEm().createQuery(queryText);
+        casesByUser.setParameter("user",user);
+        casesByUser.setParameter("statusName","CLOSED");
+        List<CaseFile> retval = casesByUser.getResultList();
+        if(retval.isEmpty()) {
+            throw new AcmObjectNotFoundException("Case File",null, "Cases not found for the user: "+user+"",null);
+        }
+        return retval;
+    }
         public List<CaseByStatusDto> getCasesByStatusAndByTimePeriod(TimePeriod numberOfDaysFromToday) {
         String queryText = "SELECT cf.status, COUNT(cf) as counted FROM CaseFile cf WHERE cf.created >= :created GROUP BY cf.status";
         Query caseGroupedByStatus = getEm().createQuery(queryText);
