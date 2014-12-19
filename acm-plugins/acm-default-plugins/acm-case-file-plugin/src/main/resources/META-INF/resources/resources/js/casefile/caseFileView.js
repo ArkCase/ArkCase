@@ -2705,6 +2705,11 @@ CaseFile.View = CaseFile.View || {
                                 return $(a);
                             }
                         }
+                        ,assignee: {
+                            title: 'Assignee'
+                            ,sorting: false
+                            ,width: '25'
+                        }
                         ,created: {
                             title: 'Created'
                             ,width: '15%'
