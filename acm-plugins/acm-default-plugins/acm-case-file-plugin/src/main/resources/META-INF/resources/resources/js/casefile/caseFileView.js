@@ -919,7 +919,8 @@ CaseFile.View = CaseFile.View || {
                 ]
                 ,{
                     title: 'People'
-                    ,paging: false
+                    ,paging: true   //fix me
+                    ,sorting: true  //fix me
                     ,messages: {
                         addNewRecord: 'Add Person'
                     }
@@ -2015,7 +2016,8 @@ CaseFile.View = CaseFile.View || {
         ,createJTableDocuments: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: 'Documents'
-                ,paging: false
+                ,paging: true   //fix me
+                ,sorting: true  //fix me
                 ,messages: {
                     addNewRecord: 'Add Document'
                 }
@@ -2043,6 +2045,7 @@ CaseFile.View = CaseFile.View || {
                                     rc.Records.push(record);
                                 }
                             }
+                            rc.TotalRecordCount = rc.Records.length;
                         }
                         /*var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                         if (c && Acm.isArray(c.childObjects)) {
@@ -2177,7 +2180,8 @@ CaseFile.View = CaseFile.View || {
         ,createJTableParticipants: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: 'Participants'
-                ,paging: false
+                ,paging: true   //fix me
+                ,sorting: true  //fix me
                 ,messages: {
                     addNewRecord: 'Add Participant'
                 }
@@ -2195,7 +2199,7 @@ CaseFile.View = CaseFile.View || {
                                 var participant = c.participants[i];
                                 var record = {};
                                 record.id = Acm.goodValue(participant.id, 0);
-                                record.title = Acm.goodValue(participant.participantLdapId);
+                                record.title = Acm.__FixMe__getUserFullName(Acm.goodValue(participant.participantLdapId));
                                 record.type = Acm.goodValue(participant.participantType);
                                 rc.Records.push(record);
                             }
@@ -2615,18 +2619,15 @@ CaseFile.View = CaseFile.View || {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
             if (taskList) {
                 for (var i = 0; i < taskList.length; i++) {
-                    if(taskList[i].status != 'DELETE'){
-                        var Record = {};
-                        var test = App.Object.getApprovers();
-                        Record.id       = taskList[i].id;
-                        Record.title    = taskList[i].title;
-                        Record.created  = taskList[i].created;
-                        Record.priority = taskList[i].priority;
-                        Record.dueDate  = taskList[i].dueDate;
-                        Record.status   = taskList[i].status;
-                        Record.assignee = Acm.__FixMe__getUserFullName(taskList[i].assignee);
-                        jtData.Records.push(Record);
-                    }
+                    var Record = {};
+                    Record.id       = taskList[i].id;
+                    Record.title    = taskList[i].title;
+                    Record.created  = taskList[i].created;
+                    Record.priority = taskList[i].priority;
+                    Record.dueDate  = taskList[i].dueDate;
+                    Record.status   = taskList[i].status;
+                    Record.assignee = Acm.__FixMe__getUserFullName(taskList[i].assignee);
+                    jtData.Records.push(Record);
                 }
                 jtData.TotalRecordCount = taskList.length;
             }
@@ -2642,6 +2643,8 @@ CaseFile.View = CaseFile.View || {
                     ,multiselect: false
                     ,selecting: false
                     ,selectingCheckboxes: false
+                    ,paging: true   //fix me
+                    ,sorting: true  //fix me
                     ,messages: {
                         addNewRecord: 'Add Task'
                     }
@@ -2694,7 +2697,7 @@ CaseFile.View = CaseFile.View || {
                         ,title: {
                             title: 'Title'
                             ,width: '30%'
-                            ,sorting: false
+                            //,sorting: false
                             ,display: function (commData) {
                                 var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
                                     + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -2709,28 +2712,28 @@ CaseFile.View = CaseFile.View || {
                         }
                         ,created: {
                             title: 'Created'
-                            ,width: '10%'
-                            ,sorting: false
+                            ,width: '15%'
+                            //,sorting: false
                         }
                         ,priority: {
                             title: 'Priority'
-                            ,width: '7%'
-                            ,sorting: false
+                            ,width: '10%'
+                            //,sorting: false
                         }
                         ,dueDate: {
                             title: 'Due'
-                            ,width: '5%'
-                            ,sorting: false
+                            ,width: '15%'
+                            //,sorting: true
                         }
                         ,status: {
                             title: 'Status'
                             ,width: '10%'
-                            ,sorting: false
+                            //,sorting: false
                         }
                         ,description: {
                             title: 'Action'
                             ,width: '10%'
-                            ,sorting: false
+                            //,sorting: false
                             ,edit: false
                             ,create: false
                             ,display: function (commData) {
@@ -2791,7 +2794,8 @@ CaseFile.View = CaseFile.View || {
 
             AcmEx.Object.JTable.useBasic($jt, {
                     title: 'References'
-                    ,paging: false
+                    ,paging: true   //fix me
+                    ,sorting: true  //fix me
                     ,messages: {
                         addNewRecord: 'Add Reference'
                     }
@@ -2804,15 +2808,15 @@ CaseFile.View = CaseFile.View || {
 
                             var rc = AcmEx.Object.JTable.getEmptyRecords();
                             var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
-                            if (c && Acm.isArray(c.childObjects)) {
-                                for (var i = 0; i < c.childObjects.length; i++) {
-                                    var childObject = c.childObjects[i];
+                            if (c && Acm.isArray(c.references)) {
+                                for (var i = 0; i < c.references.length; i++) {
+                                    var reference = c.references[i];
                                     var record = {};
-                                    record.id = Acm.goodValue(childObject.targetId, 0);
-                                    record.title = Acm.goodValue(childObject.targetName);
-                                    record.modified = Acm.getDateFromDatetime(childObject.modified);
-                                    record.type = Acm.goodValue(childObject.targetType);
-                                    record.status = Acm.goodValue(childObject.status);
+                                    record.id = Acm.goodValue(reference.targetId, 0);
+                                    record.title = Acm.goodValue(reference.targetName);
+                                    record.modified = Acm.getDateFromDatetime(reference.modified);
+                                    record.type = Acm.goodValue(reference.targetType);
+                                    record.status = Acm.goodValue(reference.status);
                                     rc.Records.push(record);
                                 }
                                 rc.TotalRecordCount = rc.Records.length;
@@ -3088,9 +3092,10 @@ CaseFile.View = CaseFile.View || {
         }
 
         , createJTableCorrespondence: function ($s) {
-            $s.jtable({
+            AcmEx.Object.JTable.useBasic($s, {
                 title: 'Correspondence'
-                , paging: false
+                ,paging: true   //fix me
+                ,sorting: true  //fix me
                 , messages: {
                     addNewRecord: 'Add Correspondence'
                 }
@@ -3112,7 +3117,7 @@ CaseFile.View = CaseFile.View || {
                                         record.id = Acm.goodValue(childObject.id, 0);
                                         record.title = Acm.goodValue(childObject.name);
                                         record.created = Acm.getDateFromDatetime(childObject.created);
-                                        record.creator = Acm.__FixMe__getUserFullName(Acm.goodValue(childObject.creator));
+                                        record.creator = Acm.goodValue(childObject.creator);
                                         //record.status = Acm.goodValue(childObject.status);
                                         rc.Records.push(record);
                                     }
@@ -3164,8 +3169,6 @@ CaseFile.View = CaseFile.View || {
                     }
                 }
             });
-
-            $s.jtable('load');
         }
     }
 };

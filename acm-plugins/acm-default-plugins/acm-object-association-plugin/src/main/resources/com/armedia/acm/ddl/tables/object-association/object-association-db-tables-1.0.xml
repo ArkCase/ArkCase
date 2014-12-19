@@ -78,5 +78,22 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="object-association-06-add-association-type" author="dmiller">
+        <addColumn tableName="acm_object_association">
+            <column name="cm_association_type" type="VARCHAR(128)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="object-association-07-populate-association-type" author="dmiller">
+        <update tableName="acm_object_association">
+            <column name="cm_association_type" value="REFERENCE"/>
+            <where>cm_target_type IN ('CASE', 'CASE_FILE', 'COMPLAINT')</where>
+        </update>
+        <update tableName="acm_object_association">
+            <column name="cm_association_type" value="OWNERSHIP"/>
+            <where>cm_target_type NOT IN ('CASE', 'CASE_FILE', 'COMPLAINT')</where>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>
 

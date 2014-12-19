@@ -570,7 +570,7 @@ Topbar.View = {
                 if (asn && asn.id) {
 
                     var isFlash = Acm.isNotEmpty(asn.flash);
-                    var isAuto = (Topbar.Model.Asn.STATUS_AUTO == asn.status);
+                    var isAuto = (Topbar.Model.Asn.STATUS_AUTO == Acm.goodValue(asn.status));
 
                     var canMark = false;
                     var canDelete = false;
@@ -578,17 +578,21 @@ Topbar.View = {
                     var canClose = false;
                     var canCloseFlash = false;
                     var canStopAuto = false;
+                    var canCloseAuto = false;
                     if (isFlash) {
                         canCloseFlash = true;
                     } else if (isAuto) {
-                        canStopAuto = true;
+                        canMark = true;
+                        canDelete = true;
+                        canStopAuto = (this.UI_TYPE_LIST == uiType);
+                        canCloseAuto = (this.UI_TYPE_POPUP == uiType);
                     } else {
                         canMark = true;
                         canDelete = true;
                         canAck = (this.UI_TYPE_LIST == uiType) && (Topbar.Model.Asn.STATUS_NEW == Acm.goodValue(asn.status));
                         canClose = (this.UI_TYPE_POPUP == uiType) && (Topbar.Model.Asn.STATUS_NEW == Acm.goodValue(asn.status));
                     }
-                    var hasResult = Acm.isNotEmpty(asn.data);
+                    var canGo = Acm.isNotEmpty(asn.data);
                     var styleRefined = this._getStyle(asn.status, uiType);
 
                     var msg = "<div class='" + this.ASN_DEFAULT_STYLE + " "
@@ -609,8 +613,8 @@ Topbar.View = {
                     if (canDelete) {
                         msg += "<input type='button' name='delete' value='Delete'/>";
                     }
-                    if (hasResult) {
-                        msg += "<input type='button' name='result' value='Result'/>";
+                    if (canGo) {
+                        msg += "<input type='button' name='go' value='Go'/>";
                     }
                     if (canAck) {
                         msg += "<input type='button' name='ack' value='Ack'/>";
@@ -624,6 +628,10 @@ Topbar.View = {
                     if (canStopAuto) {
                         msg += "<small class='text-muted'><span>3</span> sec</small>";
                         msg += "<input type='button' name='stopAuto' value='Stop'/>";
+                    }
+                    if (canCloseAuto) {
+                        msg += "<small class='text-muted'><span>3</span> sec</small>";
+                        msg += "<input type='button' name='closeAuto' value='Stop'/>";
                     }
                     msg += "</div>";
 
@@ -667,17 +675,19 @@ Topbar.View = {
                     }
                     if (canStopAuto) {
                     }
+                    if (canCloseAuto) {
+                    }
                 } // if asn.id
             } //for i
 
             this.$divAsnList.find("input[name='mark']")       .unbind("click").on("click", function(e) {Topbar.View.Asn.onClickBtnMark(e, this);});
             this.$divAsnList.find("input[name='delete']")     .unbind("click").on("click", function(e) {Topbar.View.Asn.onClickBtnDelete(e, this);});
-            this.$divAsnList.find("input[name='result']")     .unbind("click").on("click", function(e) {Topbar.View.Asn.onClickBtnResult(e, this);});
+            this.$divAsnList.find("input[name='go']")         .unbind("click").on("click", function(e) {Topbar.View.Asn.onClickBtnGo(e, this);});
             this.$divAsnList.find("input[name='ack']")        .unbind("click").on("click", function(e) {Topbar.View.Asn.onClickBtnAck(e, this);});
             this.$divAsnList.find("input[name='close']")      .unbind("click").on("click", function(e) {Topbar.View.Asn.onClickBtnClose(e, this);});
             this.$divAsnList.find("input[name='closeFlash']") .unbind("click").on("click", function(e) {Topbar.View.Asn.onClickBtnCloseFlash(e, this);});
             this.$divAsnList.find("input[name='stopAuto']")   .unbind("click").on("click", function(e) {Topbar.View.Asn.onClickBtnStopAuto(e, this);});
-
+            this.$divAsnList.find("input[name='CloseAuto']")  .unbind("click").on("click", function(e) {Topbar.View.Asn.onClickBtnCloseAuto(e, this);});
         }
 
         ,onClickLnkAsn1: function(event, ctrl) {
@@ -713,10 +723,10 @@ Topbar.View = {
                 var asnListNew = Topbar.View.Asn.buildAsnListNew(asnList);
             }
         }
-        ,onClickBtnResult: function(event, ctrl) {
+        ,onClickBtnGo: function(event, ctrl) {
             var asnId = Topbar.View.Asn._getClickedAsnId(ctrl);
             if (asnId) {
-                alert("onClickBtnMarkAsRead, asnId=" + asnId);
+                alert("onClickBtnGo, asnId=" + asnId);
             }
         }
         ,onClickBtnDelete: function(event, ctrl) {
@@ -757,13 +767,27 @@ Topbar.View = {
             if (asnId) {
                 Topbar.View.Asn._removeAsnFromUi(asnId);
                 Acm.Timer.removeListener(asnId);
-                Topbar.Controller.Asn.viewChangedAsnAction(asnId, Topbar.Model.Asn.ACTION_EXPIRED);
+                Topbar.Controller.Asn.viewChangedAsnAction(asnId, Topbar.Model.Asn.ACTION_ACK);
             }
 
         }
         ,onClickBtnStopAuto: function(event, ctrl) {
-
+            var asnId = Topbar.View.Asn._getClickedAsnId(ctrl);
+            if (asnId) {
+                Topbar.View.Asn._hideAckButtonFromUi(asnId, Topbar.Model.Asn.ACTION_STOPPED);
+                Acm.Timer.removeListener(asnId);
+                Topbar.Controller.Asn.viewChangedAsnAction(asnId, Topbar.Model.Asn.ACTION_STOPPED);
+            }
         }
+        ,onClickBtnCloseAuto: function(event, ctrl) {
+            var asnId = Topbar.View.Asn._getClickedAsnId(ctrl);
+            if (asnId) {
+                Topbar.View.Asn._removeAsnFromUi(asnId);
+                Acm.Timer.removeListener(asnId);
+                Topbar.Controller.Asn.viewChangedAsnAction(asnId, Topbar.Model.Asn.ACTION_STOPPED);
+            }
+        }
+
         ,_getClickedAsnId: function(ctrl) {
             var $ctrl = $(ctrl);
             var $msg = $ctrl.closest("div.list-group-item");

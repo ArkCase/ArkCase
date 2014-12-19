@@ -17,8 +17,8 @@ var Acm = Acm || {
         var fullName;
         if ("albert-acm" == user) {
             fullName = "Albert Analyst";
-        } else if ("ann-acm" == user) {
-            fullName = "Ann Admin";
+        } else if ("ann-acm" == user || "Ann-acm" == user) {
+            fullName = "Ann Administrator";
         } else if ("charles-acm" == user) {
             fullName = "Charles Call Center";
         } else if ("ian-acm" == user) {
