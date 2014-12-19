@@ -1145,7 +1145,9 @@ CaseFile.Service = {
                                     attachment.status = response.files[i].status;
                                     attachment.creator = response.files[i].creator;
                                     attachment.created = response.files[i].created;
-                                    attachment.targetType = "FILE";
+                                    attachment.targetSubtype = response.files[i].uploadFileType;
+                                    attachment.targetType = CaseFile.Model.DOCUMENT_TARGET_TYPE_FILE;
+                                    prevAttachmentsList.push(attachment);
                                     //attachment.category = response.files[i].category;
                                 }
                                 CaseFile.Model.Documents.cacheDocuments.put(caseFileId, prevAttachmentsList);
