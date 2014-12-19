@@ -331,6 +331,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 				objectAssociation.setTargetType("CASE_FILE");
 				objectAssociation.setTargetId(oldCaseId);
 				objectAssociation.setTargetName(oldCaseNumber);
+				objectAssociation.setAssociationType("REFERENCE");
 				
 				getObjectAssociationDao().save(objectAssociation);
 			}

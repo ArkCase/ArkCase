@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
 import com.armedia.acm.services.users.model.AcmParticipant;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -404,6 +405,25 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
         }
 
         return null;
+    }
+
+    @JsonGetter
+    public List<ObjectAssociation> getReferences()
+    {
+        List<ObjectAssociation> retval = new ArrayList<>();
+
+        if ( getChildObjects() != null )
+        {
+            for ( ObjectAssociation child : childObjects )
+            {
+                if ( "REFERENCE".equals(child.getAssociationType()) )
+                {
+                    retval.add(child);
+                }
+            }
+        }
+
+        return retval;
     }
 
 

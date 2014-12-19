@@ -2697,7 +2697,7 @@ CaseFile.View = CaseFile.View || {
                         ,title: {
                             title: 'Title'
                             ,width: '30%'
-                            ,sorting: false
+                            //,sorting: false
                             ,display: function (commData) {
                                 var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
                                     + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -2808,15 +2808,15 @@ CaseFile.View = CaseFile.View || {
 
                             var rc = AcmEx.Object.JTable.getEmptyRecords();
                             var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
-                            if (c && Acm.isArray(c.childObjects)) {
-                                for (var i = 0; i < c.childObjects.length; i++) {
-                                    var childObject = c.childObjects[i];
+                            if (c && Acm.isArray(c.references)) {
+                                for (var i = 0; i < c.references.length; i++) {
+                                    var reference = c.references[i];
                                     var record = {};
-                                    record.id = Acm.goodValue(childObject.targetId, 0);
-                                    record.title = Acm.goodValue(childObject.targetName);
-                                    record.modified = Acm.getDateFromDatetime(childObject.modified);
-                                    record.type = Acm.goodValue(childObject.targetType);
-                                    record.status = Acm.goodValue(childObject.status);
+                                    record.id = Acm.goodValue(reference.targetId, 0);
+                                    record.title = Acm.goodValue(reference.targetName);
+                                    record.modified = Acm.getDateFromDatetime(reference.modified);
+                                    record.type = Acm.goodValue(reference.targetType);
+                                    record.status = Acm.goodValue(reference.status);
                                     rc.Records.push(record);
                                 }
                                 rc.TotalRecordCount = rc.Records.length;

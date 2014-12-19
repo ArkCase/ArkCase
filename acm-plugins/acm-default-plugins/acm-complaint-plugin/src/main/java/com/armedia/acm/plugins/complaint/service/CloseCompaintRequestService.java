@@ -217,6 +217,7 @@ public class CloseCompaintRequestService
         originalComplaint.setTargetId(updatedComplaint.getComplaintId());
         originalComplaint.setTargetName(updatedComplaint.getComplaintNumber());
         originalComplaint.setTargetType("COMPLAINT");
+        originalComplaint.setAssociationType("REFERENCE");
         return originalComplaint;
     }
 
