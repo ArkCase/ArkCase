@@ -76,7 +76,7 @@ TaskList.JTable = {
                 }
                 ,title: {
                     title: 'Title'
-                    ,width: '10%'
+                    ,width: '50%'
                     ,display: function (commData) {
                         var a = "<a href='" + App.getContextPath() + TaskList.Service.API_DOWNLOAD_DOCUMENT
                             + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -96,7 +96,7 @@ TaskList.JTable = {
                 }
                 ,status: {
                     title: 'Status'
-                    ,width: '30%'
+                    ,width: '20%'
                 }
             }
             /*,recordUpdated : function (event, data) {
