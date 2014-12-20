@@ -144,7 +144,7 @@ Complaint.Event = {
         var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()[report] : '';
         if (url != '') {
         	url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
-        	this._showPopup(url, "", 810, $(window).height() - 30);
+        	Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, this.onDone);
         }
     }
 
@@ -166,7 +166,7 @@ Complaint.Event = {
     	var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()['close_complaint'] : '';
         if (url != null && url != '') {
         	url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',");
-        	this._showPopup(url, "", 860, 700);        	
+        	Acm.Dialog.openWindow(url, "", 860, 700, this.onDone);        	
         }
     }
     ,onEditCloseComplaint: function(e) {
@@ -175,41 +175,12 @@ Complaint.Event = {
         var url = Complaint.Object.getFormUrls() != null ? Complaint.Object.getFormUrls()['close_complaint'] : '';
         if (url != null && url != '') {
             url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',mode:'edit',xmlId:'816',pdfId:'818',requestId:'813',");
-            //this._showPopup(url, "", 860, 700);
-            Acm.Dialog.openWindow(url, "", 860, 700
-                , function () {
-                    Complaint.Object.refreshJTableDocuments();
-                }
-            );
+            Acm.Dialog.openWindow(url, "", 860, 700, this.onDone);
         }
     }
-    ,_showPopup: function(url, title, w, h) {
 
-        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
-
-        width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-        height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-
-        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
-        var top = ((height / 2) - (h / 2)) + dualScreenTop;
-        var newWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
-
-
-        if (window.focus) {
-            newWindow.focus();
-        }
-
-        this._checkClosePopup(newWindow);
-    }
-
-    ,_checkClosePopup: function(newWindow){
-        var timer = setInterval(function() {
-            if(newWindow.closed) {
-                clearInterval(timer);
-                Complaint.Object.refreshJTableDocuments();
-            }
-        }, 1000);
+    ,onDone: function() {
+    	// TODO: Open module after closing the popup window
     }
 
 

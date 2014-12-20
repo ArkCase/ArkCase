@@ -20,7 +20,8 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "/spring/spring-library-data-source.xml"
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-context-holder.xml"
 })
 @TransactionConfiguration(defaultRollback = false)
 public class ParticipantJpaIT

@@ -10,6 +10,12 @@
     <bean id="springLdapDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapDao"/>
 
     <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.ldap.UserDao"/>
+    
+    <bean id="userActionDao" class="com.armedia.acm.services.users.dao.ldap.UserActionDao"/>
+    
+    <bean id="userActionExecutor" class="com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor">
+    	<property name="userActionDao" ref="userActionDao" />
+    </bean>
 
     <bean id="userDatabaseHelper" class="com.armedia.acm.services.users.service.ldap.LdapSyncDatabaseHelper">
         <property name="userDao" ref="userJpaDao"/>

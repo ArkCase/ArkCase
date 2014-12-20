@@ -66,8 +66,8 @@ public class UploadProfileImgAPIController {
                         if( in.getEcmFolderId() == null ){
                             try {
                                    in = getSaveUserOrgTransaction().saveUserOrg(in,authentication);
-                            } catch (MuleException e) {
-                                if(log.isErrorEnabled()){
+                            } catch ( MuleException e ) {
+                                if( log.isErrorEnabled()){
                                     log.error("Saving of the info for user and organization throw an exception",e);
                                 }
                                 throw new AcmCreateObjectFailedException("user organization info",e.getMessage(),e.getCause());

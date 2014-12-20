@@ -39,13 +39,15 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setId(in.getComplaintId() + "-COMPLAINT");
         solr.setObject_id_s(in.getComplaintId() + "");
         solr.setObject_type_s("COMPLAINT");
-        solr.setTitle_parseable(in.getComplaintTitle());
-        solr.setName(in.getComplaintNumber());
+        //solr.setTitle_parseable(in.getComplaintTitle());
+        //solr.setName(in.getComplaintNumber());
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
+
+        solr.setDueDate_tdt(in.getDueDate());
 
         solr.setIncident_date_tdt(in.getIncidentDate());
         solr.setPriority_lcs(in.getPriority());
@@ -53,13 +55,15 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setStatus_lcs(in.getStatus());
 
         String assigneeUserId = findAssigneeUserId(in);
-        solr.setAssignee_id_lcs(assigneeUserId);
+        //solr.setAssignee_id_lcs(assigneeUserId);
 
         AcmUser assignee = findAssignee(assigneeUserId);
+
         if ( assignee != null )
         {
-            solr.setAssignee_first_name_lcs(assignee.getFirstName());
-            solr.setAssignee_last_name_lcs(assignee.getLastName());
+            //solr.setAssignee_first_name_lcs(assignee.getFirstName());
+            //solr.setAssignee_last_name_lcs(assignee.getLastName());
+              solr.setAssignee_full_name_lcs(assignee.getFullName());
         }
 
         return solr;

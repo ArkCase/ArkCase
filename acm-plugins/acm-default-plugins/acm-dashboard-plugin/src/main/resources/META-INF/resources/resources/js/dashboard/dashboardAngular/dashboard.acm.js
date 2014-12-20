@@ -5001,7 +5001,15 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 //row.due=moment(row.dueDate, "YYYY MM D").toDate()
                 row.due=moment(row.dueDate).format('MM/DD/YYYY');
                 row.id=parseInt(row.taskId)
+                if(row.attachedToObjectId != null){
+                    if(row.attachedToObjectType.toLowerCase() == "case_file"){
+                        row.parentObject = "casefile";
+                    }else{row.parentObject = row.attachedToObjectType.toLowerCase();}
+                    row.parentNumber = row.attachedToObjectName;
+                    row.parentID = row.attachedToObjectId;
+                }
                 row.status = row.taskStartDate != null ? "In Progress" : "Not Started"
+                row.parentObjectUrl = App.Object.getContextPath() + "/plugin/" + row.parentObject + "/";
                 row.taskUrl = App.Object.getContextPath() + "/plugin/task/";
                 return row
             })
@@ -5047,8 +5055,11 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 dataCa=_.map(rawData,function(row){
                     row=_.clone(row);
                     row.number = row.caseNumber;
+                    row.id=parseInt(row.id);
+                    row.priority = row.priority;
+                    row.status = row.status;
                     //row.priority = "LOW";
-                    row.taskUrl = App.Object.getContextPath() + "/plugin/casefile/";
+                    row.caseUrl = App.Object.getContextPath() + "/plugin/casefile/";
                     return row;
                 })
                 $scope.isData = dataCa.length > 0 ? true : false
@@ -11339,19 +11350,22 @@ Showdown.converter = function(converter_options) {
                 type: "spline"
             },
             title: {
-                text: "Complaints creation history"
+                text: " "
             },
             xAxis: {
-                type: "datetime"
+                type: "datetime",
+                title: {
+                    text: "Date"
+                }
             },
             yAxis: {
                 title: {
-                    text: "complaints"
+                    text: "Complaints"
                 },
                 min: 0
             },
             series: [{
-                name: "test name",//config.due,
+                name: "# of Complaints",//config.due,
                 data: seriesData
             }]
         })
@@ -11534,7 +11548,7 @@ Showdown.converter = function(converter_options) {
 
 
             $templateCache.put("scripts/widgets/mytasks/edit.html", '<form role="form"><div class="form-group" ><input type="text" class="form-control" id="rowsT" ng-model="config.rowsT" placeholder="Enter Default Row Numbers"></div></form>'),
-            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="myTasks"><div class="alert alert-info"  ng-controller="myTasksCtrl" ng-if="!isData"><p style="text-align:center;">No active tasks assigned</p></div><div ng-controller="myTasksCtrl" ng-if="isData"><div style="overflow-x: auto;"><table  ng-table="tableParams" class="table"><tr ng-repeat="task in $data"><td data-title="\'ID\'" sortable="\'id\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.status}}</td></tr></table></div></div></div>'),
+            $templateCache.put("scripts/widgets/mytasks/mytasks.html", '<div class="myTasks"><div class="alert alert-info"  ng-controller="myTasksCtrl" ng-if="!isData"><p style="text-align:center;">No active tasks assigned</p></div><div ng-controller="myTasksCtrl" ng-if="isData"><div style="overflow-x: auto;"><table  ng-table="tableParams" class="table"><tr ng-repeat="task in $data"><td data-title="\'Task ID\'" sortable="\'id\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.taskId}}</td><td data-title="\'Title\'" sortable="\'title\'"><a ng-href="{{task.taskUrl}}{{task.taskId}}">{{task.title}}</td><td data-title="\'Priority\'" sortable="\'priority\'">{{task.priority}}</td><td data-title="\'Due\'" sortable="\'due\'">{{task.due}}</td><td data-title="\'Status\'" sortable="\'status\'">{{task.status}}</td><td data-title="\'Case ID\'" sortable="\'parentNumber\'"><a ng-href="{{task.parentObjectUrl}}{{task.parentID}}"><a ng-href="{{task.parentObjectUrl}}{{task.parentID}}">{{task.parentNumber}}</td></tr></table></div></div></div>'),
 //<label for="url">Feed url</label><input type="url" class="form-control" id="url" ng-model="config.url" placeholder="Enter feed url">
 
             $templateCache.put("scripts/widgets/mycases/edit.html", '<form role="form"><div class="form-group"></div></form>'),
@@ -11547,8 +11561,8 @@ Showdown.converter = function(converter_options) {
                         '<div style="overflow-x: auto;">' +
                             '<table  ng-table="tableParams" class="table">' +
                                 '<tr ng-repeat="case in $data">' +
-                                    '<td data-title="\'Number\'" sortable="\'number\'"><a ng-href="{{case.caseUrl}}{{case.number}}">{{case.number}}</td>' +
-                                    '<td data-title="\'Title\'" sortable="\'title\'">{{case.title}}</td>' +
+                                    '<td data-title="\'Number\'" sortable="\'number\'"><a ng-href="{{case.caseUrl}}{{case.id}}">{{case.number}}</td>' +
+                                    '<td data-title="\'Title\'" sortable="\'title\'"><a ng-href="{{case.caseUrl}}{{case.id}}">{{case.title}}</td>' +
                                     '<td data-title="\'Priority\'" sortable="\'priority\'">{{case.priority}}</td>' +
                                     '<td data-title="\'Status\'" sortable="\'status\'">{{case.status}}</td>' +
                                 '</tr>' +

@@ -9,9 +9,12 @@
     <div id="detailData" itemscope="true" style="display: none">
         <span itemprop="caseFileId">${caseId}</span>
         <span itemprop="token">${token}</span>
+        <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
+        <span itemprop="urlReinvestigateCaseFileForm">${reinvestigateCaseFileFormUrl}</span>
         <span itemprop="urlRoiForm">${roiFormUrl}</span>
-        <span itemprop="urlCloseCaseForm">${closeCaseFormUrl}</span>
-        <span itemprop="urlEditCloseCaseForm">${editCloseCaseFormUrl}</span>
+        <span itemprop="urlChangeCaseStatusForm">${changeCaseStatusFormUrl}</span>
+        <span itemprop="urlEditChangeCaseStatusForm">${editChangeCaseStatusFormUrl}</span>
+        <span itemprop="enableFrevvoFormEngine">${enableFrevvoFormEngine}</span>
     </div>
 </jsp:attribute>
 
@@ -48,6 +51,17 @@
     <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css" type="text/css"/>
     <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/${js_x_editable}"></script>
 
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/easypiechart/${js_easypiechart}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/sparkline/${js_sparkline}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_stack}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_time}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_symbol}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_flot}/${js_flot_axislabels}"></script>--%>
+
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jshashtable}/${js_jshashtable}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jshashtable}/${js_jshashset}"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_numberformatter}/${js_numberformatter}"></script>--%>
 
 <style>
     table.fancytree-ext-table {
@@ -75,6 +89,7 @@
                                 <h3 class="m-b-xs text-black pull-left"><spring:message code="caseFile.page.descShort" text="Cases" /></h3>
                                 <div class="btn-group inline select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
+
                                     <ul class="dropdown-menu text-left text-sm">
                                         <li><a href="#">Sort Date Ascending</a></li>
                                         <li><a href="#">Sort Date Descending</a></li>
@@ -82,6 +97,7 @@
                                         <li><a href="#">Sort Case ID Ascending</a></li>
                                     </ul>
                                 </div>
+
                                 <div class="btn-group select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
                                     <ul class="dropdown-menu text-left text-sm">
@@ -127,7 +143,7 @@
                                                     <small class="text-muted"><a href="#" id="caseNumber" ></a></small></div>
                                                 <div class="col-xs-2 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                                    <small class="text-muted">Start Date</small></div>
+                                                    <small class="text-muted">Create Date</small></div>
 
                                                 <div class="col-xs-1 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority">High</a></div>
@@ -137,7 +153,7 @@
                                                     <small class="text-muted">Assigned To</small></div>
                                                 <div class="col-xs-2 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
-                                                    <small class="text-muted">Subject Type</small></div>
+                                                    <small class="text-muted">Case Type</small></div>
                                                 <div class="col-xs-2 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
                                                     <small class="text-muted">Due Date</small></div>
@@ -162,22 +178,24 @@
                                 <div class="wrapper" id="tabTitle" style="display:none;">
                                     <div class="pull-right inline">
                                         <div class="btn-group">
-                                            <%--<button class="btn btn-default btn-sm" data-title="Close Case"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
-                                            <button class="btn btn-default btn-sm" data-title="Close Case" ><i class="fa fa-archive"></i> Close</button>
+                                        	<button class="btn btn-default btn-sm" data-title="Edit Case File"><i class="fa fa-edit"></i> Edit</button>
+                                            <%--<button class="btn btn-default btn-sm" data-title="Change Case Status"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
+                                            <button class="btn btn-default btn-sm" data-title="Change Case Status" style="display: none" ><i class="fa fa-edit"></i> Change Case Status</button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Consolidate Case"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>--%>
+                                            <button class="btn btn-default btn-sm" data-title="Reinvestigate Case File"><i class="fa fa-reply"></i> Reinvestigate</button>
                                             <button class="btn btn-default btn-sm" data-title="Consolidate Case"><i class="fa fa-random"></i> Consolidate</button>
                                             <!-- Modal -->
-                                            <div class="modal fade" id="closeCase" tabindex="-1" role="dialog" aria-labelledby="labCloseCase" aria-hidden="true">
+                                            <div class="modal fade" id="changeCaseStatus" tabindex="-1" role="dialog" aria-labelledby="labChangeCaseStatus" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                            <h4 class="modal-title" id="labCloseCase">Close Case</h4>
+                                                            <h4 class="modal-title" id="labChangeCaseStatus">Change Case Status</h4>
                                                         </div>
-                                                        <div class="modal-body"> Are you sure you want to close this case? </div>
+                                                        <div class="modal-body"> Are you sure you want to change the status for this case? </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                            <button type="button" class="btn btn-primary">Close Case</button>
+                                                            <button type="button" class="btn btn-primary">Change Case Status</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -207,8 +225,37 @@
                                         </div>
                                     </div>
                                     <%--<h4 class="m-n">Case Details</h4>--%>
-                                    <%--<hr/>--%>
+                                    <h4 class="m-n">&nbsp;</h4>
+                                    <hr/>
+
+                                    <%--<ol class="track-progress" data-steps="5">--%>
+                                        <%--<li class="done">--%>
+                                            <%--<span>Initiated</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li class="done">--%>
+                                            <%--<span>Waiver</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<span>Adjudication</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<span>Issued</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                        <%--<li>--%>
+                                            <%--<span>Closed</span>--%>
+                                            <%--<i></i>--%>
+                                        <%--</li>--%>
+                                    <%--</ol>--%>
+                                    <%--<br/>--%>
+                                    <ol class="track-progress" id="anotherTracker">
+                                    </ol>
                                 </div>
+
+                                <br/>
 
                                 <div class="col-md-12" id="tabDetail" style="display:none;">
                                     <section class="panel b-a ">
@@ -243,6 +290,11 @@
                                 <div class="col-md-12" id="tabDocs" style="display:none;">
                                     <section class="panel b-a ">
                                         <div id="divDocs" style="width:100%"></div>
+                                        <form id="formAddDocument" style="display:none;">
+                                                <%--<input type="file" id="file" name="file">--%>
+                                            <input id="addDocument" type="file" name="files[]" multiple/>
+                                                <%--<input type="submit">--%>
+                                        </form>
                                     </section>
                                 </div>
 
@@ -275,6 +327,13 @@
                                         <div id="divEvents" style="width:100%"></div>
                                     </section>
                                 </div>
+
+                                <div class="col-md-12" id="tabTemplates" style="display:none;">
+                                    <section class="panel b-a ">
+                                        <div id="divTemplates" style="width:100%"></div>
+                                    </section>
+                                </div>
+
 
                             </div>
                         </section>

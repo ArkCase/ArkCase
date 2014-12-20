@@ -120,12 +120,15 @@ public class Person implements Serializable, AcmEntity
     @Column(name = "cm_security_tag")
     private List<String> securityTags = new ArrayList<>();
     
-    @OneToMany(cascade= CascadeType.ALL, orphanRemoval = true, mappedBy="person")   
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy="person")
     private List<PersonAlias> personAliases = new ArrayList<>();
     
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
+    private List<PersonIdentification> personIdentification = new ArrayList<>();
     
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -147,6 +150,11 @@ public class Person implements Serializable, AcmEntity
         {
             pa.setPerson(this);
         }
+
+        for (PersonIdentification pi : getPersonIdentification() )
+        {
+            pi.setPerson(this);
+        }
     }
 
     @PreUpdate
@@ -155,6 +163,11 @@ public class Person implements Serializable, AcmEntity
         for ( PersonAlias pa : getPersonAliases() )
         {
             pa.setPerson(this);
+        }
+
+        for (PersonIdentification pi : getPersonIdentification() )
+        {
+            pi.setPerson(this);
         }
     }
 
@@ -394,5 +407,12 @@ public class Person implements Serializable, AcmEntity
     public void setOrganizations(List<Organization> organizations) {
         this.organizations = organizations;
     }
-    
+
+    public List<PersonIdentification> getPersonIdentification() {
+        return personIdentification;
+    }
+
+    public void setPersonIdentification(List<PersonIdentification> personIdentification) {
+        this.personIdentification = personIdentification;
+    }
 }

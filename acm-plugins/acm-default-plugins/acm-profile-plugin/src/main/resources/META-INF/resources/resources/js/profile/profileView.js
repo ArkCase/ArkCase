@@ -9,10 +9,10 @@ Profile.View = {
         if (Profile.View.Info.create)             {Profile.View.Info.create();}
         if (Profile.View.Subscription.create)     {Profile.View.Subscription.create();}
     }
-    ,initialize: function() {
-        if (Profile.View.Picture.initialize)      {Profile.View.Picture.initialize();}
-        if (Profile.View.Info.initialize)         {Profile.View.Info.initialize();}
-        if (Profile.View.Subscription.initialize) {Profile.View.Subscription.initialize();}
+    ,onInitialized: function() {
+        if (Profile.View.Picture.onInitialized)      {Profile.View.Picture.onInitialized();}
+        if (Profile.View.Info.onInitialized)         {Profile.View.Info.onInitialized();}
+        if (Profile.View.Subscription.onInitialized) {Profile.View.Subscription.onInitialized();}
     }
 
     ,Picture: {
@@ -28,10 +28,10 @@ Profile.View = {
             this.$formPicture.submit(function(e) {Profile.View.Picture.onSubmitFormPicture(e, this);});
 
 
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_PROFILE_INFO_RETRIEVED  ,this.onProfileInfoRetrieved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_PICTURE_UPLOADED        ,this.onPictureUploaded);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_RETRIEVED_PROFILE_INFO  ,this.onModelRetrievedProfileInfo);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_UPLOADED_PICTURE        ,this.onModelUploadedPicture);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,onClickLnkChangePicture: function(event, ctrl) {
@@ -52,14 +52,14 @@ Profile.View = {
         }
 
 
-        ,onProfileInfoRetrieved: function(profileInfo) {
+        ,onModelRetrievedProfileInfo: function(profileInfo) {
             if (Profile.Model.Info.isReadOnly()) {
                 //disable chnage pic link
             } else {
                 //enable chnage pic link
             }
         }
-        ,onPictureUploaded: function(uploadInfo) {
+        ,onModelUploadedPicture: function(uploadInfo) {
             if (uploadInfo.hasError) {
                 alert("View: onPictureUploaded, hasError, errorMsg:" + uploadInfo.errorMsg);
             }
@@ -77,6 +77,7 @@ Profile.View = {
             this.$imgPicture     = $("#picture");
             this.$h4FullName     = $("#fullName");
             this.$h4Email        = $("#email");
+            this.$lnkTitle        = $("#title");
 
             this.$divGroups      = $("#groups");
 
@@ -110,6 +111,9 @@ Profile.View = {
             this.$h4Website      = this.$lnkWebsite.parent();
 
             if (!Profile.Model.Info.isReadOnly()) {
+                AcmEx.Object.XEditable.useEditable(this.$lnkTitle, {success: function(response, newValue) {
+                    Profile.Controller.viewChangedTitle(newValue);
+                }});
                 AcmEx.Object.XEditable.useEditable(this.$lnkLocation, {success: function(response, newValue) {
                     Profile.Controller.viewChangedLocation(newValue);
                 }});
@@ -155,37 +159,39 @@ Profile.View = {
             }
 
 
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_PROFILE_INFO_RETRIEVED  ,this.onProfileInfoRetrieved);
-            //Acm.Dispatcher.addEventListener(Profile.Controller.ME_PROFILE_INFO_SAVED      ,this.onProfileInfoSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_LOCATION_SAVED          ,this.onLocationSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_IM_ACCOUNT_SAVED        ,this.onImAccountSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_IM_SYSTEM_SAVED         ,this.onImSystemSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_OFFICE_PHONE_SAVED      ,this.onOfficePhoneSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_MOBILE_PHONE_SAVED      ,this.onMobilePhoneSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_COMPANY_SAVED           ,this.onCompanySaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_STREET_SAVED            ,this.onStreetSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_ADDRESS2_SAVED          ,this.onAddress2Saved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_CITY_SAVED              ,this.onCitySaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_STATE_SAVED             ,this.onStateSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_ZIP_SAVED               ,this.onZipSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_MAIN_PHONE_SAVED        ,this.onMainPhoneSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_FAX_SAVED               ,this.onFaxSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_WEBSITE_SAVED           ,this.onWebsiteSaved);
-            Acm.Dispatcher.addEventListener(Profile.Controller.ME_ECM_FILE_ID_SAVED       ,this.onEcmFileIdSaved);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_RETRIEVED_PROFILE_INFO  ,this.onModelRetrievedProfileInfo);
+            //Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_PROFILE_INFO      ,this.onModelSavedProfileInfo);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_TITLE             ,this.onModelSavedTitle);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_LOCATION          ,this.onModelSavedLocation);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_IM_ACCOUNT        ,this.onModelSavedImAccount);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_IM_SYSTEM         ,this.onModelSavedImSystem);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_OFFICE_PHONE      ,this.onModelSavedOfficePhone);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_MOBILE_PHONE      ,this.onModelSavedMobilePhone);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_COMPANY           ,this.onModelSavedCompany);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_STREET            ,this.onModelSavedStreet);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_ADDRESS2          ,this.onModelSavedAddress2);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_CITY              ,this.onModelSavedCity);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_STATE             ,this.onModelSavedState);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_ZIP               ,this.onModelSavedZip);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_MAIN_PHONE        ,this.onModelSavedMainPhone);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_FAX               ,this.onModelSavedFax);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_WEBSITE           ,this.onModelSavedWebsite);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_ECM_FILE_ID       ,this.onModelSavedEcmFileId);
 
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,populateProfileInfo: function(profileInfo) {
-            this._displayPicture(Acm.goodValue(profileInfo.ecmFileId, -1));
+            this.displayPicture(Acm.goodValue(profileInfo.ecmFileId, -1));
 
             this.setTextH4FullName     (Acm.goodValue(profileInfo.fullName));
             this.setTextH4Email        (Acm.goodValue(profileInfo.email));
 
-            this._displayGroups(profileInfo.groups);
+            this.displayGroups(profileInfo.groups);
 
             if (Profile.Model.Info.isReadOnly()) {
+                this.setTextH4Title        (Acm.goodValue(profileInfo.title));
                 this.setTextH4Location     (Acm.goodValue(profileInfo.location));
                 this.setTextH4Im           (Acm.goodValue(profileInfo.imAccount) + " (" + Acm.goodValue(profileInfo.imAccount) + ")");
                 this.setTextH4OfficePhone  (Acm.goodValue(profileInfo.officePhoneNumber));
@@ -200,6 +206,7 @@ Profile.View = {
                 this.setTextH4Fax          (Acm.goodValue(profileInfo.fax));
                 this.setTextH4Website      (Acm.goodValue(profileInfo.website));
             } else {
+                this.setTextLnkTitle       (Acm.goodValue(profileInfo.title));
                 this.setTextLnkLocation    (Acm.goodValue(profileInfo.location));
                 this.setTextLnkImAccount   (Acm.goodValue(profileInfo.imAccount));
                 this.setTextLnkImSystem    (Acm.goodValue(profileInfo.imSystem));
@@ -217,16 +224,13 @@ Profile.View = {
             }
 
         }
-        ,_displayPicture: function(ecmFileId) {
+        ,displayPicture: function(ecmFileId) {
             var pictureUrl = (0 < ecmFileId)? Profile.Service.Info.getPictureUrl(ecmFileId)
                 : this.getDefaultImgPicture();
 
             this.setSrcImgPicture(pictureUrl);
-
-            $("#sidebarPic").attr("src", pictureUrl);
-
         }
-        ,_displayGroups: function(groups) {
+        ,displayGroups: function(groups) {
             if (Acm.isArray(groups)) {
                 var html = "";
                 for (var i = 0; i < groups.length; i++) {
@@ -247,6 +251,12 @@ Profile.View = {
         }
         ,setTextH4FullName: function(txt) {
             Acm.Object.setText(this.$h4FullName, txt);
+        }
+        ,setTextH4Title: function(txt) {
+            Acm.Object.setText(this.$lnkTitle, txt);
+        }
+        ,setTextLnkTitle: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkTitle, txt);
         }
         ,setTextH4Email: function(txt) {
             Acm.Object.setText(this.$h4Email, txt);
@@ -333,14 +343,14 @@ Profile.View = {
             Acm.Object.setText(this.$h4Website, txt);
         }
 
-        ,onProfileInfoRetrieved: function(profileInfo) {
+        ,onModelRetrievedProfileInfo: function(profileInfo) {
             if (profileInfo.hasError) {
                 alert("View: onProfileInfoRetrieved, hasError, errorMsg:" + profileInfo.errorMsg);
             } else {
                 Profile.View.Info.populateProfileInfo(profileInfo);
             }
         }
-//        ,onProfileInfoSaved: function(profileInfo) {
+//        ,onModelSavedProfileInfo: function(profileInfo) {
 //            if (profileInfo.hasError) {
 //                alert("View: onProfileInfoSaved, hasError");
 //                //update the field to as error
@@ -349,87 +359,89 @@ Profile.View = {
 //            }
 //
 //        }
-        ,onLocationSaved: function(location) {
+        ,onModelSavedTitle: function(title) {
+            if (title.hasError) {
+                Profile.View.Info.setTextLnkTitle("(Error)");
+            }
+        }
+        ,onModelSavedLocation: function(location) {
             if (location.hasError) {
                 //alert("View: onLocationSaved, hasError, errorMsg:" + location.errorMsg);
                 Profile.View.Info.setTextLnkLocation("(Error)");
             }
         }
-        ,onImAccountSaved: function(imAccount) {
+        ,onModelSavedImAccount: function(imAccount) {
             if (imAccount.hasError) {
                 Profile.View.Info.setTextLnkImAccount("(Error)");
             }
         }
-        ,onImSystemSaved: function(imSystem) {
+        ,onModelSavedImSystem: function(imSystem) {
             if (imSystem.hasError) {
                 Profile.View.Info.setTextLnkImSystem("(Error)");
             }
         }
-        ,onOfficePhoneSaved: function(officePhoneNumber) {
+        ,onModelSavedOfficePhone: function(officePhoneNumber) {
             if (officePhoneNumber.hasError) {
                 Profile.View.Info.setTextLnkOfficePhone("(Error)");
             }
         }
-        ,onMobilePhoneSaved: function(mobilePhoneNumber) {
+        ,onModelSavedMobilePhone: function(mobilePhoneNumber) {
             if (mobilePhoneNumber.hasError) {
                 Profile.View.Info.setTextLnkMobilePhone("(Error)");
             }
         }
-        ,onCompanySaved: function(companyName) {
+        ,onModelSavedCompany: function(companyName) {
             if (companyName.hasError) {
                 Profile.View.Info.setTextLnkCompany("(Error)");
             }
         }
-        ,onStreetSaved: function(firstAddress) {
+        ,onModelSavedStreet: function(firstAddress) {
             if (firstAddress.hasError) {
                 Profile.View.Info.setTextLnkStreet("(Error)");
             }
         }
-        ,onAddress2Saved: function(secondAddress) {
+        ,onModelSavedAddress2: function(secondAddress) {
             if (secondAddress.hasError) {
                 Profile.View.Info.setTextLnkAddress2("(Error)");
             }
         }
-        ,onCitySaved: function(city) {
+        ,onModelSavedCity: function(city) {
             if (city.hasError) {
                 Profile.View.Info.setTextLnkCity("(Error)");
             }
         }
-        ,onStateSaved: function(state) {
+        ,onModelSavedState: function(state) {
             if (state.hasError) {
                 Profile.View.Info.setTextLnkState("(Error)");
             }
         }
-        ,onZipSaved: function(zip) {
+        ,onModelSavedZip: function(zip) {
             if (zip.hasError) {
                 Profile.View.Info.setTextLnkZip("(Error)");
             }
         }
-        ,onMainPhoneSaved: function(mainOfficePhone) {
+        ,onModelSavedMainPhone: function(mainOfficePhone) {
             if (mainOfficePhone.hasError) {
                 Profile.View.Info.setTextLnkMainPhone("(Error)");
             }
         }
-        ,onFaxSaved: function(fax) {
+        ,onModelSavedFax: function(fax) {
             if (fax.hasError) {
                 Profile.View.Info.setTextLnkFax("(Error)");
             }
         }
-        ,onWebsiteSaved: function(website) {
+        ,onModelSavedWebsite: function(website) {
             if (website.hasError) {
                 Profile.View.Info.setTextLnkWebsite("(Error)");
             }
         }
-        ,onEcmFileIdSaved: function(ecmFileId) {
+        ,onModelSavedEcmFileId: function(ecmFileId) {
             if (ecmFileId.hasError) {
                 alert("Save FildId: " + ecmFileId.errorMsg);
             } else {
-                Profile.View.Info._displayPicture(ecmFileId)
+                Profile.View.Info.displayPicture(ecmFileId)
             }
         }
-
-
-
     }
 
     ,Subscription: {
@@ -437,7 +449,7 @@ Profile.View = {
             this.$divSubscriptions = $("#divSubscriptions");
             this.useJTable(this.$divSubscriptions);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
         ,useJTable: function($s) {
             $s.jtable({
@@ -454,11 +466,11 @@ Profile.View = {
                             ,date: "11/2/2014"
                         });
                         /*rc.Records.push({
-                            id: 124
-                            ,type: "type2"
-                            ,title: "title2"
-                            ,date: "m2/dd/yyyy"
-                        });*/
+                         id: 124
+                         ,type: "type2"
+                         ,title: "title2"
+                         ,date: "m2/dd/yyyy"
+                         });*/
                         return rc;
                     }
                     ,deleteAction: function (postData, jtParams) {

@@ -42,6 +42,9 @@ public class ObjectAssociation implements AcmEntity
     @Column(name = "cm_target_type")
     private String targetType;
 
+    @Column(name = "cm_target_subtype")
+    private String targetSubtype;
+
     @Column(name = "cm_target_id")
     private Long targetId;
 
@@ -58,6 +61,12 @@ public class ObjectAssociation implements AcmEntity
 
     @Column(name = "cm_object_assn_modifier")
     private String modifier;
+
+    @Column(name = "cm_target_category")
+    private String category;
+
+    @Column(name = "cm_association_type")
+    private String associationType = "OWNERSHIP";
 
     @PrePersist
     protected void beforeInsert()
@@ -152,6 +161,36 @@ public class ObjectAssociation implements AcmEntity
     public void setTargetId(Long targetId)
     {
         this.targetId = targetId;
+    }
+
+    public String getTargetSubtype()
+    {
+        return targetSubtype;
+    }
+
+    public void setTargetSubtype(String targetSubtype)
+    {
+        this.targetSubtype = targetSubtype;
+    }
+
+    public String getCategory()
+    {
+        return category;
+    }
+
+    public void setCategory(String category)
+    {
+        this.category = category;
+    }
+
+    public String getAssociationType()
+    {
+        return associationType;
+    }
+
+    public void setAssociationType(String associationType)
+    {
+        this.associationType = associationType;
     }
 
     @Override

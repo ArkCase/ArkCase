@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+
 /**
  * Created by armdev on 5/1/14.
  */
@@ -33,6 +35,29 @@ public interface EcmFileService
             MultipartFile file,
             String acceptHeader,
             String contextPath,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            String parentObjectName) throws AcmCreateObjectFailedException;
+
+    EcmFile upload(
+            String fileType,
+            InputStream fileContents,
+            String fileContentType,
+            String fileName,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            String parentObjectName) throws AcmCreateObjectFailedException;
+
+    EcmFile upload(
+            String fileType,
+            String fileCategory,
+            InputStream fileContents,
+            String fileContentType,
+            String fileName,
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,

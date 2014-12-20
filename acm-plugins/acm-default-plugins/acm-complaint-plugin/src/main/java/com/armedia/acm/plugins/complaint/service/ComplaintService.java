@@ -30,7 +30,11 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
+import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserAction;
+import com.armedia.acm.services.users.model.AcmUserActionName;
+import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -114,7 +118,12 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
 		saveAttachments(attachments, complaint.getCmisFolderId(), FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), complaint.getComplaintNumber());
 
-		return false;
+		if (null != complaint && null != complaint.getComplaintId())
+		{
+			getUserActionExecutor().execute(complaint.getComplaintId(), AcmUserActionName.LAST_COMPLAINT_CREATED, getAuthentication().getName());
+		}
+		
+		return true;
 	}
 
     protected Complaint saveComplaint(Complaint complaint) throws MuleException

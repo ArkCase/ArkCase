@@ -10,15 +10,15 @@ Profile.Service = {
         if (this.Picture.create) {this.Picture.create();}
         if (this.Info.create)    {this.Info.create();}
     }
-    ,initialize: function() {
-        if (Profile.Service.Picture.initialize) {Profile.Service.Picture.initialize();}
-        if (Profile.Service.Info.initialize)    {Profile.Service.Info.initialize();}
+    ,onInitialized: function() {
+        if (Profile.Service.Picture.onInitialized) {Profile.Service.Picture.onInitialized();}
+        if (Profile.Service.Info.onInitialized)    {Profile.Service.Info.onInitialized();}
     }
 
     ,Picture: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,API_UPLOAD_IMAGE: "/api/latest/plugin/profile/img"
@@ -64,7 +64,7 @@ Profile.Service = {
     ,Info: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,API_RETRIEVE_PROFILE_INFO_          : "/api/latest/plugin/profile/get/"
@@ -140,6 +140,17 @@ Profile.Service = {
                 return data;
             } else {
                 return value;
+            }
+        }
+        ,saveTitle: function(title) {
+            var profileInfo = Profile.Model.Info.getProfileInfo();
+            if (Profile.Service.Info._validateProfile(profileInfo)) {
+                profileInfo.title = title;
+                this.saveProfileInfo(profileInfo
+                    ,function(data) {
+                        Profile.Controller.modelSavedTitle(Profile.Service.Info._dataWrapper(data, data.title));
+                    }
+                );
             }
         }
         ,saveLocation: function(location) {

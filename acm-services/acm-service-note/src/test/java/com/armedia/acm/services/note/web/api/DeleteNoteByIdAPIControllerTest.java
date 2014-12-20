@@ -98,7 +98,7 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
 
     }
 
-    /*@Test
+    @Test
     public void deleteNoteById_notFound() throws Exception {
 
         Long noteId =234L;
@@ -116,5 +116,5 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
                         .principal(mockAuthentication));
 
         verifyAll();
-    }*/
+    }
 }

@@ -65,56 +65,145 @@ TaskList.Event = {
         TaskList.Service.deleteTask(taskId);
 
     }
+    
+    // Reject Task Events
+    ,_onRetrieveUsers: function() {
+    	var task = TaskList.getTask();
+    	var start = TaskList.Object.getDlgRejectTaskStart();
+    	var n = TaskList.Object.getDlgRejectTaskN();
+    	var sortDirection = TaskList.Object.getDlgRejectTaskSortDirection();
+    	var searchKeyword = TaskList.Object.getDlgRejectTaskSearchKeyword();
+    	var exclude = task.owner;
+    	
+    	TaskList.Service.retrieveUsers(start, n, sortDirection, searchKeyword, exclude);
+    }
+    ,onClickBtnRejectTask: function(e) {
+    	TaskList.Object.initDlgRejectTask();
+    	this._onRetrieveUsers();
+    	TaskList.Object.showDlgRejectTask(function(event, ctrl) {
+    		var returnTo = TaskList.Object.getDlgRejectTaskSelected();
+    		var note = TaskList.Object.getDlgRejectTaskComment();
+    		if (returnTo != null) {
+    			TaskList.Event.onSaveAssignee(returnTo);
+    			if (note && note.trim() !== '') {
+    				TaskList.Event.onSaveNote(note, TaskList.REJECT_COMMENT, TaskList.getTaskId(), 'TASK');
+    			}
+    		}
+    	});
+    }
+    ,onClickDlgRejectTaskSortableColumn: function(e) {
+    	var sortDirection = TaskList.Object.getDlgRejectTaskSortDirection();
+    	
+    	if (sortDirection && sortDirection == 'ASC') {
+    		TaskList.Object.setDlgRejectTaskSortDirection('DESC');
+    	} else {
+    		TaskList.Object.setDlgRejectTaskSortDirection('ASC');
+    	}
+    	
+    	this._onRetrieveUsers();
+    }
+    ,onClickDlgRejectTaskLeftBtn: function(e) {
+    	var start = TaskList.Object.getDlgRejectTaskStart();
+    	var page = TaskList.Object.getDlgRejectTaskPage();
+    	
+    	if (page > 0) {
+    		TaskList.Object.setDlgRejectTaskStart(start - TaskList.Object.getDlgRejectTaskN());
+    		TaskList.Object.setDlgRejectTaskPage(page - 1);
+    	}
+    	
+    	this._onRetrieveUsers();
+    }
+    ,onClickDlgRejectTaskRightBtn: function(e) {
+    	var start = TaskList.Object.getDlgRejectTaskStart();
+    	var page = TaskList.Object.getDlgRejectTaskPage();
+    	var pages = TaskList.Object.getDlgRejectTaskPages();
+    	
+    	if (page < pages) {
+    		TaskList.Object.setDlgRejectTaskStart(start + TaskList.Object.getDlgRejectTaskN());
+    		TaskList.Object.setDlgRejectTaskPage(page + 1);
+    	}
+    	
+    	this._onRetrieveUsers();
+    }
+    ,onClickDlgRejectTaskPageBtn: function(e) {
+    	var $page = $(e.target);
+    	var page = $page.html();
+    	
+    	if (page) {
+    		TaskList.Object.setDlgRejectTaskStart((page - 1) * TaskList.Object.getDlgRejectTaskN());
+    		TaskList.Object.setDlgRejectTaskPage(page);
+    	}
+    	
+    	this._onRetrieveUsers();
+    }
+    ,onClickSearchRejectTask: function(e) {
+    	var keyword = TaskList.Object.$inputSearchRejectTask.val();
+    	TaskList.Object.setDlgRejectTaskSearchKeyword(keyword);
+    	
+    	TaskList.Object.setDlgRejectTaskStart(TaskList.DLG_RETURN_TASK_START);
+    	TaskList.Object.setDlgRejectTaskN(TaskList.DLG_REJECT_TASK_N);
+    	TaskList.Object.setDlgRejectTaskSortDirection(TaskList.DLG_REJECT_TASK_SORT_DIRECTION);
+    	TaskList.Object.setDlgRejectTaskPage(0);
+    	TaskList.Object.setDlgRejectTaskPages(0);
+    	
+    	this._onRetrieveUsers();
+    }
+    ,onKeyUpSearchRejectTask: function(e) {
+    	if (e.keyCode == 13) {
+    		var keyword = TaskList.Object.$inputSearchRejectTask.val();
+        	TaskList.Object.setDlgRejectTaskSearchKeyword(keyword);
+        	
+        	TaskList.Object.setDlgRejectTaskStart(TaskList.DLG_REJECT_TASK_START);
+        	TaskList.Object.setDlgRejectTaskN(TaskList.DLG_REJECT_TASK_N);
+        	TaskList.Object.setDlgRejectTaskSortDirection(TaskList.DLG_REJECT_TASK_SORT_DIRECTION);
+        	TaskList.Object.setDlgRejectTaskPage(0);
+        	TaskList.Object.setDlgRejectTaskPages(0);
+        	
+    		this._onRetrieveUsers();
+    	}
+    }
+    ,onChangeCommentRejectTask: function(e) {
+    	var comment = TaskList.Object.$txtCommentRejectTask.val();
+    	if (comment && comment.trim() !== '') {
+    		TaskList.Object.setDlgRejectTaskComment(comment);    		
+    	}
+    }
+    ,onChangeDlgRejectTaskSelected: function(e) {
+    	TaskList.Object.setDlgRejectTaskSelected($(e.target).val());
+    }
+    ,onClickBtnTaskWithOutcome : function(outcome) {
+        var task = TaskList.getTask();
+        var availableOutcome = {};
+        for(var i = 0; i < task.availableOutcomes.length; i++){
+            availableOutcome = task.availableOutcomes[i];
+            if(availableOutcome.name == outcome) {
+                task.taskOutcome = availableOutcome;
+                TaskList.Service.completeTaskWithOutcome(task);
+            }
+        }
+        //eventually we need a json to jsp field mapper, this is a temp solution
 
-    ,onClickBtnTaskOutcomeApprove : function(e) {
-        var task = TaskList.getTask();
-        for(var i = 0; i < task.availableOutcomes.length; i++){
-            var availableOutcome = task.availableOutcomes[i];
-            if(availableOutcome.name == "APPROVE"){
-                task.taskOutcome = availableOutcome;
-            }
-        }
-        TaskList.Service.completeTaskWithOutcome(task);
     }
-    ,onClickBtnTaskOutcomeRework : function(e) {
-        var task = TaskList.getTask();
-        var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
-        if(reworkInstructions == null || reworkInstructions == ""){
-            Acm.Dialog.error("Invalid rework instructions")
-        }
-        else{
-            //reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
-            task.reworkInstructions = reworkInstructions;
-
-            var requiredField = {};
-            for(var i = 0; i < task.availableOutcomes.length; i++){
-                var availableOutcome = task.availableOutcomes[i];
-                if(availableOutcome.name == "SEND_FOR_REWORK"){
-                    task.taskOutcome = availableOutcome;
-                }
+    ,onOutcomeSelected : function(e) {
+        var clicked = e.target.id;
+        if (clicked == "SEND_FOR_REWORK") {
+            var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
+            if (reworkInstructions == null || reworkInstructions == "") {
+                Acm.Dialog.error("Invalid rework instructions")
             }
-            TaskList.Service.completeTaskWithOutcome(task);
-        }
-    }
-    ,onClickBtnTaskOutcomeResubmit : function(e) {
-        var task = TaskList.getTask();
-        for(var i = 0; i < task.availableOutcomes.length; i++){
-            var availableOutcome = task.availableOutcomes[i];
-            if(availableOutcome.name == "RESUBMIT"){
-                task.taskOutcome = availableOutcome;
+            else {
+                var task = TaskList.getTask();
+                task.reworkInstructions = reworkInstructions;
+                TaskList.Event.onClickBtnTaskWithOutcome(clicked);
             }
         }
-        TaskList.Service.completeTaskWithOutcome(task);
-    }
-    ,onClickBtnTaskOutcomeCancelRequest : function(e) {
-        var task = TaskList.getTask();
-        for(var i = 0; i < task.availableOutcomes.length; i++){
-            var availableOutcome = task.availableOutcomes[i];
-            if(availableOutcome.name == "CANCEL_DOCUMENT"){
-                task.taskOutcome = availableOutcome;
-            }
+        else
+        {
+            TaskList.Event.onClickBtnTaskWithOutcome(clicked);
         }
-        TaskList.Service.completeTaskWithOutcome(task);
+        //$('.businessProcess').each(function(){$(this).hide();})
+        //alert(clicked);
+        //$("#" + clicked).hide();
     }
     ,onPostInit: function() {
 
@@ -224,6 +313,29 @@ TaskList.Event = {
         task.dueDate = Acm.xDateToDatetime(value);
         TaskList.Service.listTaskSaveDetail(task.taskId, task);
     }
+    
+    /**
+     * Save assignee value changed
+     */
+    ,onSaveAssignee : function(value) {
+        var task = TaskList.getTask();
+        task.assignee = value;
+        TaskList.Service.listTaskSaveDetail(task.taskId, task);
+    }
+    
+    /**
+     * Save Note
+     */
+    ,onSaveNote : function(note, type, parentId, parentType) {
+    	var noteToSave = {};
+    	
+        noteToSave.note = note;
+        noteToSave.type = type;
+        noteToSave.parentId = Acm.goodValue(parentId);
+        noteToSave.parentType = parentType;
+        
+        TaskList.Service.saveNote(noteToSave);
+    }
 
     /**
      * Open the detail section editor
@@ -292,6 +404,22 @@ TaskList.Event = {
         return data;
     }
 
+    ,onAddNewAttachment: function(event, ctrl) {
+        event.preventDefault();
+        /*this.$formAttachment = TaskList.Object.$formAttachment;
+         this.$btnNewAttachment = TaskList.Object.$btnNewAttachment;*/
+        var count = TaskList.Object.$btnNewAttachment[0].files.length;
+        var fd = new FormData();
+        fd.append("taskId", TaskList.getTaskId());
+        for(var i = 0; i < count; i++ ){
+            fd.append("files[]", TaskList.Object.$btnNewAttachment[0].files[i]);
+        }
+        TaskList.Service.uploadFile(fd);
+    }
+    ,onChangeFileInput: function(event, ctrl) {
+        TaskList.Object.$formAttachment.submit();
+    }
+
     //frevvo edit close complaint
     ,onEditCloseComplaint: function(e) {
         /*var doc = {
@@ -344,7 +472,38 @@ TaskList.Event = {
                     "',mode:'edit',xmlId:" + "'" + reviewDocumentFormXmlId + "'" + ",pdfId:" + "'" + reviewDocumentPdfRenditionId + "'" + ",requestId:" + "'" + workflowRequestId + "'" + ",");
                 //url = url.replace("_data=(", "_data=(complaintId:'" + "409" + "',complaintNumber:'" + "20140806_198" + "',mode:'edit',xmlId:'783',pdfId:'785',requestId:'780',");
 
-                this._showPopup(url, "", 860, 700);
+                Acm.Dialog.openWindow(url, "", 860, 700, this.onDone);
+            }
+        }
+        else{
+            Acm.Dialog.info("Edit cannot be performed without documents under review")
+        }
+    }
+    
+    ,onChangeCaseStatus: function(e) {
+        var task = TaskList.getTask();
+        var documentUnderReview = null;
+        var parentName = null;
+        var parentId = null;
+        var reviewDocumentPdfRenditionId = null;
+        var reviewDocumentFormXmlId = null;
+        var workflowRequestId = null;
+
+        //task.documentUnderReview = doc;
+        if(task.documentUnderReview != null){
+            var documentUnderReview = task.documentUnderReview;
+            var parentName = documentUnderReview.parentObjects[0].parentName;
+            var parentId = documentUnderReview.parentObjects[0].parentId;
+            var reviewDocumentPdfRenditionId = task.reviewDocumentPdfRenditionId;
+            var reviewDocumentFormXmlId = task.reviewDocumentFormXmlId;
+            var workflowRequestId = task.workflowRequestId;
+
+            var url = TaskList.Object.getFormUrls() != null ? TaskList.Object.getFormUrls()['change_case_status'] : '';
+            if (url != null && url != '') {
+                url = url.replace("_data=(", "_data=(caseId:'" +  parentId + "',caseNumber:'" + parentName +
+                    "',mode:'edit',xmlId:" + "'" + reviewDocumentFormXmlId + "'" + ",pdfId:" + "'" + reviewDocumentPdfRenditionId + "'" + ",requestId:" + "'" + workflowRequestId + "'" + ",");
+
+                Acm.Dialog.openWindow(url, "", 860, 700, this.onDone);
             }
         }
         else{
@@ -352,32 +511,7 @@ TaskList.Event = {
         }
     }
 
-    ,_showPopup: function(url, title, w, h) {
-
-        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
-
-        width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-        height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-
-        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
-        var top = ((height / 2) - (h / 2)) + dualScreenTop;
-        var newWindow = window.open(url, title, 'scrollbars=yes, resizable=1, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
-
-
-        if (window.focus) {
-            newWindow.focus();
-        }
-
-        this._checkClosePopup(newWindow);
-    }
-
-    ,_checkClosePopup: function(newWindow){
-        var timer = setInterval(function() {
-            if(newWindow.closed) {
-                clearInterval(timer);
-                Complaint.Object.refreshJTableDocuments();
-            }
-        }, 1000);
+    ,onDone: function() {
+    	// TODO: Open module after closing the popup window
     }
 };

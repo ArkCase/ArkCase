@@ -143,29 +143,22 @@
             </div>
             <div class="wrapper bg-empty  clearfix">
                 <div class="pull-right inline">
-                    <div class="btn-group">
+                    <div class="btn-group-task">
                         <!-- TODO: when data-toggle is modal, the tooltip won't come up
                         -->
                         <button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
 
                         <!-- from the mockup -->
-                        <button class="btn btn-default btn-sm" id="btnAssign" data-title="Assign Task" data-toggle="modal" data-target="#assign"><i class="fa fa-male"></i> Assign</button>
-                        <button class="btn btn-default btn-sm" id="btnReassign" data-toggle="modal" data-target="#reassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
-                        <button class="btn btn-default btn-sm" id="btnUnassign" data-toggle="modal" data-target="#unassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>
-                        <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" data-title="Reject Task"><i class="fa fa-reply"></i> Reject</button>
-
-                        <%--task approval workflow buttons--%>
-                        <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" data-title="Delete Task"><i class="fa fa-times"></i> Delete</button>
-                        <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" data-title="Complete Task"><i class="fa fa-check-square-o"></i> Complete</button>
-                        <button class="btn btn-default btn-sm" id="btnApprove" data-title="Approve Document"><i class="fa fa-check"></i>Approve Document</button>
-                        <button class="btn btn-default btn-sm" id="btnSendForRework" data-title="Send for Rework"><i class="fa fa-times"></i> Send For Rework</button>
-                        <button class="btn btn-default btn-sm" id="btnResubmit" data-title="Resubmit"><i class="fa fa-times"></i>Resubmit</button>
-                        <button class="btn btn-default btn-sm" id="btnCancelRequest" data-title="Cancel Request"><i class="fa fa-times"></i>Cancel Request</button>
+                        <button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>
+                        <button class="btn btn-info btn-sm" id="btnDelete" data-toggle="modal" title="Delete Task">Delete</button>
+                        <button class="btn btn-info btn-sm" id="btnComplete" data-toggle="modal" title="Complete Task">Complete</button>
 
 
-
+                        <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
+                        <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
 
                     </div>
+                    
                 </div>
                     <%--
                                     <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
@@ -183,7 +176,7 @@
                                     <small class="text-muted">% of Completion</small></div>
                                 <div class="col-xs-2 b-r">
                                     <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="text" data-pk="1" data-title="Enter Owner"></a></div>
-                                    <small class="text-muted">Owner</small></div>
+                                    <small class="text-muted">Assignee</small></div>
                                 <div class="col-xs-2 b-r">
                                     <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter priority"></a></div>
                                     <small class="text-muted">Priority</small></div>
@@ -244,14 +237,21 @@
                                     </li>
                                     <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                 </ul>
-                                </span> <a href="#" class="font-bold">Rework Instructions</a> </div>
+                                </span> <a href="#" class="font-bold">Waiver Details</a> </div>
                             <div class="panel-body">
-                                <div class="taskReworkInstructions"></div>
+                                <div class="taskReworkInstructions" data-field=""></div>
                             </div>
                         </section>
                     </div>
                 </div>
-
+                
+              	<div class="row" id="tabRejectComments" style="display:none;">
+                    <div class="col-md-12">
+                        <section class="panel b-a">
+                            <div id="divRejectComments" style="width:100%"></div>
+                        </section>
+                    </div>
+                </div>
 
                 <div class="row" id="tabDocuments" style="display:none;">
                     <div class="col-md-12">
@@ -303,7 +303,15 @@
                         <div class="pull-right inline">
                             <div class="btn-group">
                                 <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
+                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "changeCaseStatus" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Change Case Status</button>
                                 <input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />
+                                <input id="changeCaseStatusFormUrl" type="hidden" value="${changeCaseStatusFormUrl}" />
+                                <form id="formFiles" style="display:none;">
+                                            <%--<input type="file" id="file" name="file">--%>
+                                        <input id="newAttachment" type="file" name="files[]" multiple/>
+
+                                        <%--<input type="submit">--%>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -581,23 +589,81 @@
     </div>
 </div>
 <div class="modal fade" id="reject" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
+	<div class="modal-dialog">
+		<div class="modal-content">
+  			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="rejectModalLabel">Reject Task</h4>
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to reject this task?</p>
-                <label>Reason</label>
-                <textarea class="form-control"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Reject Task</button>
-            </div>
-        </div>
-    </div>
+  			<div class="modal-body">
+  				<p>Are you sure you want to reject this task?</p>
+    			<p>This task will be returned to the owner:</p>
+    			<section class="panel panel-default">
+					<div class="table-responsive">
+    					<table class="table table-striped b-t b-light" id="ownerTableRejectTask">
+							<thead>
+								<tr>
+									<th width="20"></th>
+									<th>First Name</th>
+									<th>Last Name</th>
+									<th>Username</th>
+									<th>Organization</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- This area is filled dynamically depending of the result of the service -->
+							</tbody>
+						</table>
+					</div>
+				</section>
+				<p>Or select some other people from below:</p>
+				<section class="panel panel-default">
+					<div class="row wrapper">
+						<div class="col-sm-12">
+							<div class="input-group">
+								<input type="text" class="input-sm form-control" name="searchKeywordRejectTask" placeholder="Search people..">
+								<span class="input-group-btn">
+									<button class="btn btn-sm btn-default" type="button" name="searchUsersRejectTask">Go!</button>
+								</span> 
+							</div>
+                       	</div>
+                     </div>
+                     <div class="table-responsive">
+                       <table class="table table-striped b-t b-light" id="usersTableRejectTask">
+			               <thead>
+			                 	<tr>
+			                   		<th width="20"></th>
+			                   		<th class="th-sortable" data-toggle="class">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+			                   		<th>Last Name</th>
+			                   		<th>Username</th>
+			                   		<th>Organization</th>
+			                 	</tr>
+			               	</thead>
+	               			<tbody>
+	               				<!-- This area is filled dynamically depending of the result of the service -->
+	               			</tbody>
+             			</table>
+           			</div>
+					<footer class="panel-footer">
+					  <div class="row">
+					    <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 0-0 of 0 items</small> </div>
+					    <div class="col-sm-6 text-right text-center-xs">
+					      <ul class="pagination pagination-sm m-t-none m-b-none">
+					      	<!-- This area is filled dinamically depending of the result of the service -->
+					      </ul>
+					    </div>
+					  </div>
+					</footer>
+         		</section>
+       			<label>Reason</label>
+            	<textarea class="form-control" id="commentRejectTask"></textarea>
+       		</div>
+       		<div class="modal-footer">
+         		<button type="button" class="btn btn-default" data-dismiss="modal" name="cancelRejectTask">Cancel</button>
+         		<button type="button" class="btn btn-primary" name="submitRejectTask">Reject Task</button>
+       		</div>
+     	</div>
+   	</div>
 </div>
 <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">

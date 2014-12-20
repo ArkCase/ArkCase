@@ -50,7 +50,7 @@ public class SaveTaskAPIController
         catch (AcmTaskException e)
         {
             publishTaskSavedEvent(authentication, httpSession, in, false);
-            throw new AcmUserActionFailedException("Save", "Task", taskId, e.getMessage(), e);
+            throw new AcmUserActionFailedException("save", "Task", taskId, e.getMessage(), e);
         }
     }
 

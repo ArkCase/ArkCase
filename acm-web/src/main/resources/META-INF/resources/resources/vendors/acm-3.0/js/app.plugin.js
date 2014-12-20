@@ -86,10 +86,12 @@
 	// slim-scroll
 	$('.no-touch .slim-scroll').each(function(){
 		var $self = $(this), $data = $self.data(), $slimResize;
-		$self.slimScroll($data);
+		if ($self.slimScroll) {
+			$self.slimScroll($data);			
+		}
 		$(window).resize(function(e) {
 			clearTimeout($slimResize);
-			$slimResize = setTimeout(function(){$self.slimScroll($data);}, 500);
+			$slimResize = setTimeout(function(){if ($self.slimScroll){$self.slimScroll($data);}}, 500);
 		});
     $(document).on('updateNav', function(){
       $self.slimScroll($data);

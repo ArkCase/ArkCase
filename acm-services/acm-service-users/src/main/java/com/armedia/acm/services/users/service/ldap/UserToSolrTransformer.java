@@ -39,6 +39,10 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
 
         solr.setStatus_lcs(in.getUserState());
 
+        //TODO find a way to add Organization
+        //TODO find a way to add Application Title
+        //TODO find a way to add Location
+        //TODO find a way to add Groups
         return solr;
 
     }

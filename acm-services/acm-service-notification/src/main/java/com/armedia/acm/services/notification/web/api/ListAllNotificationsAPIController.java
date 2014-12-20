@@ -10,37 +10,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
 
-/**
- * Created by manojd on 8/16/14.
- */
 @Controller
 @RequestMapping({ "/api/v1/plugin/notification", "/api/latest/plugin/notification" })
 public class ListAllNotificationsAPIController {
 
     private NotificationDao notificationDao;
-    private NotificationEventPublisher notificationEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/list/{user}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{user}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Notification> findAllNotifications(
+    public List<Notification> findAllNotificationsInParentObject(
             @PathVariable("user") String user
-    ) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException {
+        ) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException {
         if (log.isInfoEnabled()) {
             log.info("Finding all notifications");
         }
         if(user != null){
             try {
-                List<Notification> notificationList = getNotificationDao().listNotifications();
+                List<Notification> notificationList = getNotificationDao().listNotifications(user);
                 log.debug("notificationList size " + notificationList.size());
                 return notificationList;
             } catch (PersistenceException e) {

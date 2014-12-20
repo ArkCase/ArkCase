@@ -15,13 +15,19 @@ import javax.servlet.http.HttpSession;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
+import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
+import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
 
+import org.activiti.engine.RuntimeService;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.mule.api.client.MuleClient;
@@ -38,8 +44,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
+import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 
 /**
  * @author riste.tutureski
@@ -56,15 +65,29 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private AuthenticationTokenService authenticationTokenService;
 	private AcmPluginManager acmPluginManager;
 	private UserDao userDao;
+	private UserActionDao userActionDao;
 	private ComplaintDao complaintDao;
 	private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
+    private ChangeCaseStatusDao changeCaseStatusDao;
     private PersonDao personDao;
     private EcmFileDao ecmFileDao;
+    private AcmUserActionExecutor userActionExecutor;
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
     private MuleClient muleClient;
+    
+    private SaveCaseService saveCaseService;
+    
+    private AcmHistoryDao acmHistoryDao;
+    
+    private ObjectAssociationDao objectAssociationDao;
+    private PersonIdentificationDao personIdentificationDao;
+
+	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+
+	private RuntimeService activitiRuntimeService;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -217,6 +240,20 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	}
 
     /**
+	 * @return the userActionDao
+	 */
+	public UserActionDao getUserActionDao() {
+		return userActionDao;
+	}
+
+	/**
+	 * @param userActionDao the userActionDao to set
+	 */
+	public void setUserActionDao(UserActionDao userActionDao) {
+		this.userActionDao = userActionDao;
+	}
+
+	/**
 	 * @return the complaintDao
 	 */
 	public ComplaintDao getComplaintDao() {
@@ -274,6 +311,14 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
         this.closeComplaintRequestDao = closeComplaintRequestDao;
     }
 
+	public ChangeCaseStatusDao getChangeCaseStatusDao() {
+		return changeCaseStatusDao;
+	}
+
+	public void setChangeCaseStatusDao(ChangeCaseStatusDao changeCaseStatusDao) {
+		this.changeCaseStatusDao = changeCaseStatusDao;
+	}
+
 	public PersonDao getPersonDao() {
 		return personDao;
 	}
@@ -296,5 +341,66 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setMuleClient(MuleClient muleClient) {
 		this.muleClient = muleClient;
+	}
+
+	public AcmUserActionExecutor getUserActionExecutor() {
+		return userActionExecutor;
+	}
+
+	public void setUserActionExecutor(AcmUserActionExecutor userActionExecutor) {
+		this.userActionExecutor = userActionExecutor;
+	}
+
+	public SaveCaseService getSaveCaseService() {
+		return saveCaseService;
+	}
+
+	public void setSaveCaseService(SaveCaseService saveCaseService) {
+		this.saveCaseService = saveCaseService;
+	}
+
+	public AcmHistoryDao getAcmHistoryDao() {
+		return acmHistoryDao;
+	}
+
+	public void setAcmHistoryDao(AcmHistoryDao acmHistoryDao) {
+		this.acmHistoryDao = acmHistoryDao;
+	}
+
+	public ObjectAssociationDao getObjectAssociationDao() {
+		return objectAssociationDao;
+	}
+
+	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
+		this.objectAssociationDao = objectAssociationDao;
+	}
+
+	public PersonIdentificationDao getPersonIdentificationDao() {
+		return personIdentificationDao;
+	}
+
+	public void setPersonIdentificationDao(
+			PersonIdentificationDao personIdentificationDao) {
+		this.personIdentificationDao = personIdentificationDao;
+	}
+
+	public FileWorkflowBusinessRule getFileWorkflowBusinessRule()
+	{
+		return fileWorkflowBusinessRule;
+	}
+
+	public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
+	{
+		this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
+	}
+
+	public RuntimeService getActivitiRuntimeService()
+	{
+		return activitiRuntimeService;
+	}
+
+	public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
+	{
+		this.activitiRuntimeService = activitiRuntimeService;
 	}
 }

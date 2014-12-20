@@ -11,6 +11,9 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,11 +51,12 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
 
     }
 
-    public List<CaseByStatusDto> getAllCasesByStatus(){
+    public List<CaseByStatusDto> getAllCasesByStatus() {
         String queryText = "SELECT cf.status, COUNT(cf) as counted FROM CaseFile cf GROUP BY cf.status";
         Query caseGroupedByStatus = getEm().createQuery(queryText);
 
         List<Object[]> caseGroupedByS = caseGroupedByStatus.getResultList();
+
 
         List<CaseByStatusDto> result = new ArrayList<CaseByStatusDto>();
 
@@ -76,7 +80,18 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
         }
         return retval;
     }
-
+    public List<CaseFile> getNotClosedCaseFilesByUser(String user) throws AcmObjectNotFoundException{
+        String queryText = "SELECT cf FROM CaseFile cf " +
+                "WHERE cf.creator = :user AND cf.status<>:statusName";
+        Query casesByUser = getEm().createQuery(queryText);
+        casesByUser.setParameter("user",user);
+        casesByUser.setParameter("statusName","CLOSED");
+        List<CaseFile> retval = casesByUser.getResultList();
+        if(retval.isEmpty()) {
+            throw new AcmObjectNotFoundException("Case File",null, "Cases not found for the user: "+user+"",null);
+        }
+        return retval;
+    }
         public List<CaseByStatusDto> getCasesByStatusAndByTimePeriod(TimePeriod numberOfDaysFromToday) {
         String queryText = "SELECT cf.status, COUNT(cf) as counted FROM CaseFile cf WHERE cf.created >= :created GROUP BY cf.status";
         Query caseGroupedByStatus = getEm().createQuery(queryText);
@@ -128,6 +143,23 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
     	List<CaseFile> results = dbQuery.getResultList();
     	
     	return results;
+    }
+    
+    @Transactional
+    public int updateComplaintStatus(Long caseId, String newStatus, String modifier, Date date)
+    {
+        Query updateStatusQuery = getEm().createQuery(
+                "UPDATE CaseFile " +
+                        "SET status = :newStatus, " +
+                        "modified = :modified, " +
+                        "modifier = :modifier " +
+                        "WHERE caseId = :caseId");
+        updateStatusQuery.setParameter("newStatus", newStatus);
+        updateStatusQuery.setParameter("modified", date);
+        updateStatusQuery.setParameter("modifier", modifier);
+        updateStatusQuery.setParameter("caseId", caseId);
+
+        return updateStatusQuery.executeUpdate();
     }
     
     private Date shiftDateFromToday(int daysFromToday){

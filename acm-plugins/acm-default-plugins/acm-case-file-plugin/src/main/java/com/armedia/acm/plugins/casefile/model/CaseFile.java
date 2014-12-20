@@ -4,7 +4,9 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.service.milestone.model.AcmMilestone;
 import com.armedia.acm.services.users.model.AcmParticipant;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -77,6 +79,9 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_due_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
+    
+    @Transient
+    private ChangeCaseStatus changeCaseStatus;
 
     /**
      * These approvers are added by the web application and they become the assignees of the Activiti business process.
@@ -95,6 +100,13 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     @OneToMany (cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_person_assoc_parent_id")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
+
+    /**
+     * Milestones are read-only in the parent object; use the milestone service to add them.
+     */
+    @OneToMany
+    @JoinColumn(name = "cm_milestone_object_id", updatable = false, insertable = false)
+    private List<AcmMilestone> milestones = new ArrayList<>();
 
     // the same person could originate many complaints, but each complaint is originated by
     // only one person, so a ManyToOne mapping makes sense here.
@@ -124,7 +136,7 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
         {
             childObject.setParentId(getId());
             childObject.setParentName(getCaseNumber());
-            childObject.setParentType("CASE");
+            childObject.setParentType("CASE_FILE");
         }
         for ( PersonAssociation persAssoc : personAssociations)
         {
@@ -133,7 +145,7 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getId());
-            ap.setObjectType("CASE");
+            ap.setObjectType("CASE_FILE");
         }
     }
 
@@ -352,7 +364,78 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
         this.participants = participants;
     }
 
-    public List<String> getApprovers() {
+    public void setAssignee(String assigneeUserId)
+    {
+        boolean found = false;
+        if ( participants != null )
+        {
+            for ( AcmParticipant p : participants )
+            {
+                if ( "assignee".equals(p.getParticipantType() ) )
+                {
+                    p.setParticipantLdapId(assigneeUserId);
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        if ( ! found )
+        {
+            AcmParticipant p = new AcmParticipant();
+            p.setParticipantLdapId(assigneeUserId);
+            p.setParticipantType("assignee");
+            p.setObjectType("CASE_FILE");
+            p.setObjectId(getId());
+            participants.add(p);
+        }
+    }
+
+    public String getAssignee()
+    {
+        if ( participants != null )
+        {
+            for ( AcmParticipant p : participants )
+            {
+                if ( "assignee".equals(p.getParticipantType() ) )
+                {
+                    return p.getParticipantLdapId();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @JsonGetter
+    public List<ObjectAssociation> getReferences()
+    {
+        List<ObjectAssociation> retval = new ArrayList<>();
+
+        if ( getChildObjects() != null )
+        {
+            for ( ObjectAssociation child : childObjects )
+            {
+                if ( "REFERENCE".equals(child.getAssociationType()) )
+                {
+                    retval.add(child);
+                }
+            }
+        }
+
+        return retval;
+    }
+
+
+    public ChangeCaseStatus getChangeCaseStatus() {
+		return changeCaseStatus;
+	}
+
+	public void setChangeCaseStatus(ChangeCaseStatus changeCaseStatus) {
+		this.changeCaseStatus = changeCaseStatus;
+	}
+
+	public List<String> getApprovers() {
         return approvers;
     }
 
@@ -366,6 +449,26 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
 
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public List<PersonAssociation> getPersonAssociations()
+    {
+        return personAssociations;
+    }
+
+    public void setPersonAssociations(List<PersonAssociation> personAssociations)
+    {
+        this.personAssociations = personAssociations;
+    }
+
+    public List<AcmMilestone> getMilestones()
+    {
+        return milestones;
+    }
+
+    public void setMilestones(List<AcmMilestone> milestones)
+    {
+        this.milestones = milestones;
     }
 
     @Override

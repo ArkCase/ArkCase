@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+
+    <bean id="addCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.AddCorrespondenceTemplatesAPI">
+    </bean>
+
+    <bean id="downloadCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.TemplateDownloadControllerAPI">
+    </bean>
+
+    <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI">
+    </bean>
+
+    <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
+
+</beans>

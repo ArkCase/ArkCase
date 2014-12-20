@@ -33,14 +33,17 @@ TaskWizard.Callback = {
             if (Acm.isNotEmpty(response.taskId)) {
                 TaskWizard.Object.setTaskData(response);
 
-                var attachedToObjectType = TaskWizard.Object.getAttachedToObjectType();
-                var attachedToObjectId = TaskWizard.Object.getAttachedToObjectId();
+                var attachedToObjectType = response.attachedToObjectType;
+                var attachedToObjectId = response.attachedToObjectId;
                 var url;
                 if (Acm.isEmpty(attachedToObjectId)) {
-                    url = TaskWizard.Page.URL_DASHBOARD;
+                    url = TaskWizard.Page.URL_TASK;
                 } else {
                     if ("COMPLAINT" == attachedToObjectType) {
                         url = TaskWizard.Page.URL_PARENT_COMPLAINT;
+                    }
+                    else if ("CASE_FILE" == attachedToObjectType){
+                        url = TaskWizard.Page.URL_PARENT_CASE;
                     }
                     url += attachedToObjectId;
                 }

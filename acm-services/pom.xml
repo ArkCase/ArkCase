@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.17</version>
+        <version>3.0.18</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -29,7 +29,10 @@
     	<module>acm-service-frevvo-forms</module>
         <module>acm-service-notification</module>
         <module>acm-service-note</module>
-  </modules>
+        <module>acm-service-history</module>
+        <module>acm-service-correspondence</module>
+        <module>acm-service-milestone</module>
+    </modules>
 
 
 </project>

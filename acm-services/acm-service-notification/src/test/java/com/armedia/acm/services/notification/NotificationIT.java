@@ -20,28 +20,13 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(locations = {
         "/spring/spring-library-notification.xml",
         "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-mule-context-manager.xml",
-        "/spring/spring-library-activemq.xml",
-        "/spring/spring-library-folder-watcher.xml",
-        "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-mule-context-manager.xml",
-        "/spring/spring-library-activiti-actions.xml",
-        "/spring/spring-library-activemq.xml",
-        "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-folder-watcher.xml",
-        "/spring/spring-library-drools-monitor.xml",
-        "/spring/spring-library-cmis-configuration.xml",
-        "/spring/spring-library-ecm-file.xml",
-        "/spring/spring-library-search.xml",
-        "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-event.xml"})
+        "/spring/spring-library-context-holder.xml"
+})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NotificationIT
 {
     @Autowired
     private NotificationDao notificationDao;
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
 
@@ -50,20 +35,24 @@ public class NotificationIT
     public void saveNotification() throws Exception
     {
         Notification n = new Notification();
-        //n.setModifier("testModifier");
+
+        n.setModifier("testModifier");
+        n.setModified(new Date());
         n.setCreator("testCreator");
         n.setCreated(new Date());
-        //n.setModified(new Date());
         n.setStatus("testStatus");
         n.setNote("testNote");
         n.setAction("Acknow");
-        n.setComment("TestComment");
+        n.setAuto("true");
+        n.setData("data");
+        n.setUser("user");
+
 
         Notification saved = notificationDao.save(n);
 
         assertNotNull(saved.getId());
 
-        //notificationDao.deleteNotificationById(saved.getId());
+        notificationDao.deleteNotificationById(saved.getId());
         
 
         log.info("Notification ID: " + saved.getId());        

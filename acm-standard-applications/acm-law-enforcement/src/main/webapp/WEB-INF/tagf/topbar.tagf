@@ -58,10 +58,10 @@
         <%--<div class="asn-popup" style="display:none;">ASN popup</div>--%>
     </div>
     <%--<div class="asn-popup">ASN popup</div>--%>
-    <%--<div><input type="button" value="test1" id="test1"/></div>--%>
-    <%--<div><input type="button" value="test2" id="test2"/></div>--%>
-    <%--<div><input type="button" value="test3 add" id="test3"/></div>--%>
-    <%--<div><input type="button" value="test4 remove" id="test4"/></div>--%>
+    <%--<div><input type="button" value="11111" id="test1"/></div>--%>
+    <%--<div><input type="button" value="22222" id="test2"/></div>--%>
+    <%--<div><input type="button" value="33333 add" id="test3"/></div>--%>
+    <%--<div><input type="button" value="44444 remove" id="test4"/></div>--%>
 </header>
 
 

@@ -9,7 +9,9 @@ TaskWizard.Page = {
     create : function() {
     }
 
-    ,URL_DASHBOARD:           "/plugin/task"
-    ,URL_PARENT_COMPLAINT:    "/plugin/complaint?initTab=tasks&initId="
+    ,URL_TASK:           "/plugin/task"
+    ,URL_PARENT_COMPLAINT:    "/plugin/complaint/"
+    ,URL_PARENT_CASE:    "/plugin/casefile/"
+
 };
 

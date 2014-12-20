@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+       <bean id="milestoneDao" class="com.armedia.acm.service.milestone.dao.MilestoneDao"/>
+
+       <bean id="milestoneService" class="com.armedia.acm.service.milestone.service.MilestoneService">
+              <property name="dao" ref="milestoneDao"/>
+       </bean>
+
+    <bean id="milestonePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="Milestone Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="listMilestonesGroupedByDate"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="downloadUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/milestonebyname"/>
+                    <property name="requiredPrivilege" ref="listMilestonesGroupedByDate"/>
+                </bean>
+
+            </list>
+        </property>
+    </bean>
+
+    <bean id="listMilestonesGroupedByDate" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-milestone-service"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_ANALYST</value>
+            </list>
+        </property>
+    </bean>
+
+
+</beans>

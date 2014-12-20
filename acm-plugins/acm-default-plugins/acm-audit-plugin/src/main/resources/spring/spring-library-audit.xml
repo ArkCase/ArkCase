@@ -43,6 +43,11 @@
                     <property name="url" value="/plugin/audit"/>
                     <property name="requiredPrivilege" ref="auditPrivilege"/>
                 </bean>
+                <bean id="auditPageUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/audit/page"/>
+                    <property name="requiredPrivilege" ref="auditPrivilege"/>
+                </bean>
             </list>
         </property>
 
