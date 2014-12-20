@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 
 /**
@@ -40,6 +41,9 @@ public interface FrevvoFormService {
 	
 	public UserDao getUserDao();
 	public void setUserDao(UserDao userDao);
+
+	public UserActionDao getUserActionDao();
+	public void setUserActionDao(UserActionDao userActionDao);
 	
 	public EcmFileService getEcmFileService();
 	public void setEcmFileService(EcmFileService ecmFileService);

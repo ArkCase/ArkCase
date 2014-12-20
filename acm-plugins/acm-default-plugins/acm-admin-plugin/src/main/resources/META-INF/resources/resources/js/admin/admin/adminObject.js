@@ -19,11 +19,24 @@ Admin.Object = {
          this.$btnTest.click(function(e) {Admin.Event.onClickBtnTest(e);});
          */
 
+        this.$divCorrespondence = $("#divCorrespondence");
+        this.$btnNewTemplate = $("#addNewTemplate");
+        this.$formNewTemplate = $("#formAddNewTemplate");
+
+        this.$btnNewTemplate.on("change", function(e) {Admin.Object.onChangeFileInput(e, this);});
+        this.$formNewTemplate.submit(function(e) {Admin.Object.onSubmitAddTemplate(e, this);});
+
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree)
 
-        this.$tabAdminAccessControlPolicy     = $("#tabACP");
-        this._createJTableAdminAccessControl(this.$tabAdminAccessControlPolicy);
+        this.$divAdminAccessControlPolicy = $("#divACP");
+        this._createJTableAdminAccessControl(this.$divAdminAccessControlPolicy);
+
+        this.$divCorrespondence = $("#divCorrespondence");
+        this._createJTableCorrespondenceTemplates(this.$divCorrespondence);
+        AcmEx.Object.JTable.clickAddRecordHandler(this.$divCorrespondence,Admin.Object.onClickSpanAddNewTemplate);
+
+
 
     }
 
@@ -38,7 +51,7 @@ Admin.Object = {
 
         AcmEx.Object.jTableCreatePaging($jt
             , {
-                title: 'Access Control Policy'
+                title: 'Data Access Control'
                 ,selecting: true
                 ,multiselect: false
                 ,selectingCheckboxes: false
@@ -152,8 +165,8 @@ Admin.Object = {
 
                         // ,options: ['GRANT' , 'DENY', 'MANDATORY_DENY']
                     }, allowDiscretionaryUpdate: {
-                        title: 'Allow Discretionary Update',
-                        width: '5%'
+                        title: 'Allow Discretionary',
+                        width: '10%'
                         ,options: [{ Value: 'true', DisplayText: 'True' } , { Value: 'false', DisplayText: 'False' }]
                     }
 
@@ -168,6 +181,78 @@ Admin.Object = {
             ,sortMap
         );
 
+    }
+
+
+
+    //correspondence
+    ,_createJTableCorrespondenceTemplates: function($s) {
+        $s.jtable({
+            title: 'Correspondence Management'
+            ,messages: {
+                addNewRecord: 'Add New Template'
+            }
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var templates = Admin.getTemplates();
+                    if(templates){
+                        for (var i = 0; i < templates.length; i++) {
+                            var template = templates[i];
+                            var record = {};
+                            //record.id = Acm.goodValue(template.id, 0);
+                            record.title = Acm.goodValue(template.name);
+                            record.created = Acm.getDateFromDatetime(template.created);
+                            record.creator = Acm.goodValue(template.creator);
+                            record.path = Acm.goodValue(template.path);
+                            record.modified = Acm.getDateFromDatetime(template.modified);
+                            rc.Records.push(record);
+                        }
+                    }
+                    return rc;
+                }
+                ,createAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                }
+                ,title: {
+                    title: 'Title'
+                    ,width: '30%'
+                    ,display: function (commData) {
+                        var a = "<a href='" + App.getContextPath() + Admin.Service.API_DOWNLOAD_TEMPLATE
+                            + commData.record.path + "'>" + commData.record.title + "</a>";
+                        return $(a);
+                    }
+                }
+                ,created: {
+                    title: 'Created'
+                    ,width: '15%'
+                    ,edit: false
+                }
+                ,modified: {
+                    title: 'Modified'
+                    ,width: '15%'
+                    ,edit: false
+                }
+                ,creator: {
+                    title: 'Creator'
+                    ,width: '15%'
+                    ,edit: false
+                }
+            }
+        });
+
+        $s.jtable('load');
     }
 
     //  Use this to build the Admin tree structure
@@ -190,6 +275,12 @@ Admin.Object = {
         } else if (key == "rpt") {
             return "rpt";
         }
+        else if (key == "cm") {
+            return "cm";
+        }
+        else if (key == "ct") {
+            return "ct";
+        }
 
         return null;
     }
@@ -199,7 +290,9 @@ Admin.Object = {
         rpt: ["tabReports"],
         dac: ["tabACP"],
         dc: ["tabDashboard"],
-        rc: ["tabReports"]
+        rc: ["tabReports"],
+        cm: ["tabCorrespondence"],
+        ct: ["tabCorrespondence"]
     }
     ,_getTabIdsByKey: function(key) {
         var nodeType = this.getNodeTypeByKey(key);
@@ -219,6 +312,7 @@ Admin.Object = {
             ,"tabReports"
             ,"tabLocks"
             ,"tabMainPage"
+            ,"tabCorrespondence"
         ];
         var tabIdsToShow = this._getTabIdsByKey(key);
         for (var i = 0; i < tabIds.length; i++) {
@@ -272,8 +366,8 @@ Admin.Object = {
         var builder = AcmEx.FancyTreeBuilder.reset();
 
     builder.addBranch({key: "acc"                                                   //level 1: /Access Control
-            ,title: "Access Controls"
-            ,tooltip: "Access Controls"
+            ,title: "Security"
+            ,tooltip: "Security"
             ,folder : true
             ,expanded: true
         })
@@ -359,7 +453,7 @@ Admin.Object = {
                     ,tooltip: "Business Object Configuration"
                 })
 
-            .addBranchLast({key: "al"                                                           //level 4.4.1: /Forms/Form Configuration/Form/Application Labels
+            .addBranch({key: "al"                                                           //level 4.4.1: /Forms/Form Configuration/Form/Application Labels
                     ,title: "Application Labels"
                     ,tooltip: "Application Labels"
                     ,folder : true
@@ -369,14 +463,44 @@ Admin.Object = {
                     ,title: "Label Configuration"
                     ,tooltip: "Label Configuration"
                 })
+            .addBranchLast({key: "cm"                                                           //level 4.5.1: /Forms/Form Configuration/Form/Correspondence Management
+                ,title: "Correspondence Management"
+                ,tooltip: "Correspondence Management"
+                ,folder : true
+                ,expanded: true
+            })
+            .addLeafLast({key: "ct"                                                                 //level 4.5.1.1: /Forms/Form Configuration/Form/Correspondence Templates
+                ,title: "Correspondence Templates"
+                ,tooltip: "Correspondence Templates"
+            })
 
         return builder.getTree();
     }
 
     //----------------- end of tree -----------------
 
+
+    ,onClickSpanAddNewTemplate: function(event, ctrl) {
+        Admin.Object.$btnNewTemplate.click();
+    }
     ,refreshJTableACL: function(){
-        AcmEx.Object.jTableLoad(this.$tabAdminAccessControlPolicy);
+        AcmEx.Object.jTableLoad(this.$divAdminAccessControlPolicy);
+    }
+    ,refreshJTableTemplates: function(){
+        AcmEx.Object.jTableLoad(this.$divCorrespondence);
+    }
+    ,onChangeFileInput: function(event, ctrl) {
+       Admin.Object.$formNewTemplate.submit();
+    }
+    ,onSubmitAddTemplate: function(event, ctrl) {
+        event.preventDefault();
+        var count = Admin.Object.$btnNewTemplate[0].files.length;
+        var fd = new FormData();
+        for(var i = 0; i < count; i++ ){
+            fd.append("files[]", Admin.Object.$btnNewTemplate[0].files[i]);
+        }
+        Admin.Service.uploadTemplateFile(fd);
+        this.$formNewTemplate[0].reset();
     }
 };
 

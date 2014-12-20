@@ -47,6 +47,8 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
 
+        solr.setDueDate_tdt(in.getDueDate());
+
         solr.setIncident_date_tdt(in.getIncidentDate());
         solr.setPriority_lcs(in.getPriority());
         solr.setIncident_type_lcs(in.getCaseType());
@@ -60,6 +62,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         {
             solr.setAssignee_first_name_lcs(assignee.getFirstName());
             solr.setAssignee_last_name_lcs(assignee.getLastName());
+            solr.setAssignee_full_name_lcs(assignee.getFirstName()+" "+assignee.getLastName());
         }
 
         return solr;

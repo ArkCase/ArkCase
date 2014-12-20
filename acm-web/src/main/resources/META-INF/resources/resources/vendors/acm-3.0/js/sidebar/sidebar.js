@@ -11,19 +11,19 @@ var Sidebar = Sidebar || {
 
         Sidebar.create_old();
     }
-    ,initialize: function() {
-        if (Sidebar.Model.initialize)      {Sidebar.Model.initialize();}
-        if (Sidebar.View.initialize)       {Sidebar.View.initialize();}
-        if (Sidebar.Controller.initialize) {Sidebar.Controller.initialize();}
+    ,onInitialized: function() {
+        if (Sidebar.Model.onInitialized)      {Sidebar.Model.onInitialized();}
+        if (Sidebar.View.onInitialized)       {Sidebar.View.onInitialized();}
+        if (Sidebar.Controller.onInitialized) {Sidebar.Controller.onInitialized();}
     }
 
     ,create_old: function() {
         Sidebar.Object.create();
         Sidebar.Event.create();
-        Sidebar.Page.create();
-        Sidebar.Rule.create();
+        //Sidebar.Page.create();
+        //Sidebar.Rule.create();
         //Sidebar.Service.create();
-        Sidebar.Callback.create();
+        //Sidebar.Callback.create();
 
         Acm.deferred(Sidebar.Event.onPostInit);
     }

@@ -27,7 +27,10 @@ public class CaseFileUiController
         retval.setViewName("casefile");
         
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
-        retval.addObject("closeCaseFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_CASE));
+        retval.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS));
+        retval.addObject("enableFrevvoFormEngine", formUrl.enableFrevvoFormEngine(FrevvoFormName.ROI));
+        retval.addObject("editCaseFileFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE));
+        retval.addObject("reinvestigateCaseFileFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE));
         
         return retval;
     }
@@ -40,9 +43,25 @@ public class CaseFileUiController
         retval.addObject("caseId", caseId);
         
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
-        retval.addObject("closeCaseFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_CASE));
-        
+        retval.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS));
+        retval.addObject("enableFrevvoFormEngine", formUrl.enableFrevvoFormEngine(FrevvoFormName.ROI));
+        retval.addObject("editCaseFileFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE));
+        retval.addObject("reinvestigateCaseFileFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE));
+
         return retval;
+    }
+    
+    @RequestMapping(value = "/wizard", method = RequestMethod.GET)
+    public ModelAndView openCaseFileWizard()
+    {
+        ModelAndView retval = new ModelAndView();
+        retval.setViewName("casefileWizard");
+
+        // Frevvo form URLs
+        retval.addObject("newCaseFileFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE));
+
+        return retval;
+
     }
 
 	public FormUrl getFormUrl() {

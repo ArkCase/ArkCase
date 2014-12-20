@@ -41,6 +41,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                     <spring:prop key="alfresco.user">admin</spring:prop>
                     <spring:prop key="alfresco.password">AdM!n</spring:prop>
                     <spring:prop key="alfresco.contextRoot">alfresco</spring:prop>
+                    <spring:prop key="rma.root.folder">ACM</spring:prop>
                 </spring:props>
             </spring:property>
         </spring:bean>
@@ -60,7 +61,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     </http:endpoint>
     <!-- TODO: the record location is hard-coded below but it should be a business rule -->
     <http:endpoint name="alfresco-move-to-record-folder"
-                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/slingshot/doclib/action/move-to/site/rm/documentLibrary/ACM/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]?alf_ticket=#[flowVars['alfTicket']]"
+                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/slingshot/doclib/action/move-to/site/rm/documentLibrary/${rma.root.folder}/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]?alf_ticket=#[flowVars['alfTicket']]"
                    doc:name="alf-move-to-record-folder" exchange-pattern="request-response" method="POST">
         <reconnect/>
     </http:endpoint>
@@ -81,7 +82,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <timer-interceptor/>
 
         <set-variable variableName="record-folder-name" value="#[message.payload.folderName]" doc:name="Rec Folder"/>
-        <set-variable variableName="category-folder-name" value="Complaints" doc:name="Category Folder"/>
+        <set-variable variableName="category-folder-name" value="#[message.payload.categoryFolder]" doc:name="Category Folder"/>
         <set-variable variableName="record-folder-rma-id" value="#[flowVars['record-folder-name']]_#[flowVars['category-folder-name']]" doc:name="Rec Folder RMA ID"/>
 
         <flow-ref name="get-alfresco-ticket" doc:name="Get Ticket"/>
@@ -191,7 +192,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                 </when>
                 <otherwise>
                     <processor-chain doc:name="Folder Lookup">
-                        <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/ACM/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]"/>
+                        <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/${rma.root.folder}/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]"/>
                         <set-variable variableName="record-folder-id" value="#[message.payload.id]" doc:name="Variable"/>
                     </processor-chain>
                 </otherwise>
@@ -204,7 +205,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <sub-flow name="find-category-folder" doc:name="find-category-folder">
 
         <enricher doc:name="get category folder id" source="#[message.payload.id]" target="#[flowVars['category-folder-id']]">
-            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/ACM/#[flowVars['category-folder-name']]"/>
+            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/${rma.root.folder}/#[flowVars['category-folder-name']]"/>
         </enricher>
         <logger level="DEBUG" doc:name="Log category folder ID" message="Category folder results - #[flowVars['category-folder-id']]"/>
 
@@ -213,7 +214,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
     <sub-flow name="get-parent-folder" doc:name="get-parent-folder">
         <enricher doc:name="get parent folder id" source="#[message.payload]" target="#[flowVars['invest-folder-id']]">
-            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/ACM"/>
+            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/${rma.root.folder}"/>
         </enricher>
         <logger level="DEBUG" doc:name="Log acm folder id" message="ACM folder id - #[flowVars['invest-folder-id'].id]"/>
     </sub-flow>

@@ -8,18 +8,22 @@ Topbar.Model = {
         if (Topbar.Model.QuickSearch.create) {Topbar.Model.QuickSearch.create();}
         if (Topbar.Model.Suggestion.create)  {Topbar.Model.Suggestion.create();}
         if (Topbar.Model.Asn.create)         {Topbar.Model.Asn.create();}
+        if (Topbar.Model.Flash.create)       {Topbar.Model.Flash.create();}
     }
-    ,initialize: function() {
-        if (Topbar.Model.QuickSearch.initialize) {Topbar.Model.QuickSearch.initialize();}
-        if (Topbar.Model.Suggestion.initialize)  {Topbar.Model.Suggestion.initialize();}
-        if (Topbar.Model.Asn.initialize)         {Topbar.Model.Asn.initialize();}
+    ,onInitialized: function() {
+        if (Topbar.Model.QuickSearch.onInitialized) {Topbar.Model.QuickSearch.onInitialized();}
+        if (Topbar.Model.Suggestion.onInitialized)  {Topbar.Model.Suggestion.onInitialized();}
+        if (Topbar.Model.Asn.onInitialized)         {Topbar.Model.Asn.onInitialized();}
+        if (Topbar.Model.Flash.onInitialized)       {Topbar.Model.Flash.onInitialized();}
     }
 
     ,QuickSearch: {
         create: function() {
             this._quickSearchTerm = new Acm.Model.SessionData("AcmQuickSearchTerm");
+
+            Acm.Dispatcher.addEventListener(Topbar.Controller.QuickSearch.VIEW_CHANGED_QUICK_SEARCH_TERM, this.onViewChangedQuickSearchTerm);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
         ,getQuickSearchTerm: function() {
             return this._quickSearchTerm.get();
@@ -27,12 +31,16 @@ Topbar.Model = {
         ,setQuickSearchTerm: function(term) {
             this._quickSearchTerm.set(term);
         }
+
+        ,onViewChangedQuickSearchTerm: function(term) {
+            Topbar.Model.QuickSearch.setQuickSearchTerm(term);
+        }
     }
 
     ,Suggestion: {
         create: function() {
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
         }
 
         ,_ctrObjs: {}
@@ -62,17 +70,37 @@ Topbar.Model = {
     ,Asn: {
         create : function() {
             this._asnListData = new Acm.Model.SessionData("AcmAsnList");
+
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_ACTION,this.onViewChangedAsnAction);
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_STATUS,this.onViewChangedAsnStatus);
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_DELETED_ASN       ,this.onViewDeletedAsn);
         }
-        ,initialize: function() {
+        ,onInitialized: function() {
+            var asnList = Topbar.Model.Asn.getAsnList();
+            if (Topbar.Model.Asn.validateAsnList(asnList)) {
+                Topbar.Controller.Asn.modelRetrievedAsnList(asnList);
+            }
+
+            Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
+//            Acm.Timer.registerListener("AsnWatch"
+//                ,16
+//                ,function() {
+//                    Topbar.Service.Asn.retrieveAsnList(App.getUserName());
+//                    return true;
+//                }
+//            );
         }
 
-        ,STATUS_READ    : "Read"
-        ,STATUS_UNREAD  : "Unread"
-        ,STATUS_DELETED : "Deleted"
+        ,STATUS_AUTO     : "Auto"
+        ,STATUS_NEW      : "New"
+        ,STATUS_UNMARKED : "Unmarked"
+        ,STATUS_MARKED   : "Marked"
+        ,STATUS_DELETED  : "Deleted"
 
-        ,ACTION_NEW     : "New"
-        ,ACTION_ACK     : "Ack"
-        ,ACTION_EXPIRED : "Expired"
+        ,ACTION_ACK      : "Ack"
+        ,ACTION_EXPIRED  : "Expired"
+        ,ACTION_STOPPED  : "Stopped"
+        ,ACTION_EXECUTED : "Executed"
 
         ,_asnListData: null
         ,getAsnList: function() {
@@ -80,6 +108,32 @@ Topbar.Model = {
         }
         ,setAsnList: function(asnList) {
             this._asnListData.set(asnList);
+        }
+        ,getAsnCount: function(asnList) {
+            return (Acm.isArray(asnList))? asnList.length : 0;
+        }
+        ,setAsn: function(asn) {
+            if (this.validateAsn(asn)) {
+                var asnList = this.getAsnList();
+                if (!asnList) {
+                    asnList = [];
+                }
+
+                var found = -1;
+                for (var i = 0; i < asnList.length; i++) {
+                    if (asn.id == asnList[i].id) {
+                        found = i;
+                        break;
+                    }
+                }
+                if (0 <= found) {
+                    asnList[found] = asn;
+                } else {
+                    asnList.push(asn);
+                }
+
+                this.setAsnList(asnList);
+            }
         }
         ,findAsn: function(asnId, asnList) {
             var found = null;
@@ -97,92 +151,92 @@ Topbar.Model = {
             return found;
         }
 
-        ,_asnListNew: []
-        ,getAsnListNew: function() {
-            return this._asnListNew;
+        ,validateAsnList: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
         }
-//    ,setAsnListNew: function(asnListNew) {
-//        this._asnListNew = asnListNew;
-//    }
-        ,buildAsnListNew: function(asnList) {
-            this._asnListNew = [];
-            if (asnList) {
-                for (var i = 0; i < asnList.length; i++) {
-                    var asn = asnList[i];
-                    if (asn.action && "New" == asn.action) {
-                        this._asnListNew.push(asn);
-                    }
-                }
-            }
-            return this._asnListNew;
-        }
-        ,getAsnListNewMore: function(asnList) {
-            var asnListNewMore = [];
-            if (!asnList  || !(asnList instanceof Array)) {
-                return asnListNewMore;
-            }
 
-            var asnListNew = this.getAsnListNew();
-            for (var i = 0; i < asnList.length; i++) {
-                var asn = asnList[i];
-                if (asn.action && "New" == asn.action) {
-                    var found = null;
-                    for (var j = 0; j < asnListNew.length; j++) {
-                        var asnNew = asnListNew[j];
-                        if (asn.id == asnNew.id) {
-                            found =asn;
-                            break;
-                        }
-                    }
-                    if (null == found) {
-                        asnListNewMore.push(asn);
-                    }
-                }
+        ,validateAsn: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
             }
-
-            return asnListNewMore;
-        }
-        ,getAsnListNewNoLonger: function(asnList) {
-            var asnListNewNoLonger = [];
-            if (!asnList  || !(asnList instanceof Array)) {
-                return asnListNewNoLonger;
+            if (Acm.isEmpty(data.id) || Acm.isEmpty(data.note)) {
+                return false;
             }
-
-            var asnListNew = this.getAsnListNew();
-            for (var i = 0; i < asnListNew.length; i++) {
-                var asnNew = asnListNew[i];
-                var found = null;
-                for (var j = 0; j < asnList.length; j++) {
-                    var asn = asnList[j];
-                    if (asn.action && "New" == asn.action) {
-                        if (asn.id == asnNew.id) {
-                            found =asn;
-                            break;
-                        }
-                    }
-                }
-                if (null == found) {
-                    asnListNewNoLonger.push(asnNew);
-                }
-            }
-
-            return asnListNewNoLonger;
+            return true;
         }
 
 
-        ,ctrlRetrieveAsnList: function(user) {
-            Topbar.Service.Asn.retrieveAsnList(user);
-        }
-        ,ctrlUpdateAsnAction: function(asnId, action) {
-            var asnList = this.getAsnList();
-            var asn = this.findAsn(asnId, asnList);
-            if (asn) {
-                asn.action = action;
-                this.setAsnList(asnList);
+        ,onViewChangedAsnAction: function(asnId, action) {
+            if (0 < asnId) {
+                Topbar.Service.Asn.updateAsnAction(asnId, action);
             }
-            Topbar.Service.Asn.updateAsnList(asnList);
         }
+        ,onViewChangedAsnStatus: function(asnId, status) {
+            if (0 < asnId) {
+                Topbar.Service.Asn.updateAsnStatus(asnId, status);
+            }
+        }
+        ,onViewDeletedAsn: function(asnId) {
+            if (0 < asnId) {
+                Topbar.Service.Asn.deleteAsn(asnId);
+            }
+        }
+
+
     } //Asn
+
+    ,Flash: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_ACTION,this.onViewChangedAsnAction);
+        }
+
+        ,onViewChangedAsnAction: function(asnId, action) {
+            if (0 > asnId) { //negative id is used for Flash
+                Topbar.Model.Flash.removeMsg(asnId);
+            }
+        }
+
+        ,_msgList: []
+        ,_nextId: -1
+        ,getMsgList: function() {
+            return this._msgList;
+        }
+        ,reset: function() {
+            this._msgList = [];
+        }
+        ,addMsg: function(msg) {
+            var n = {};
+            if (0 >= this._msgList.length) {
+                this._nextId = -1;
+            }
+            //we are borrowing ASN data structure so that it can share UI component. Use negative ID to avoid collision with real ASN
+            n.id = this._nextId--;
+            n.status = Topbar.Model.Asn.STATUS_NEW;
+            n.note  = msg;
+            n.flash = true;
+            this._msgList.push(n);
+        }
+        ,removeMsg: function(id) {
+            for (var i = 0; i < this._msgList.length; i++) {
+                if (this._msgList[i].id == id) {
+                    this._msgList.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        ,add: function(msg) {
+            this.addMsg(msg);
+            Topbar.Controller.Flash.modelAddedFlashMsg(msg);
+        }
+    }
 
 };
 

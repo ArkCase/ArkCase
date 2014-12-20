@@ -23,7 +23,8 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-library-activiti-configuration.xml",
         "classpath:/spring/spring-library-data-source.xml",
-        "classpath:/spring/spring-library-test-activiti-configuration.xml"
+        "classpath:/spring/spring-library-test-activiti-configuration.xml",
+        "classpath:/spring/spring-library-context-holder.xml"
 })
 public class AcmActivitiSpringIT
 {
@@ -66,7 +67,7 @@ public class AcmActivitiSpringIT
         assertEquals(0, acmTaskEventListener.getTimesCalled());
 
         Map<String, Object> processVariables = new HashMap<>();
-        processVariables.put("key", "value");
+        processVariables.put("key", "Grateful Dead");
 
         ProcessInstance pi = runtimeService.startProcessInstanceByKey("TestActivitiSpringProcess", processVariables);
         assertNotNull(pi);

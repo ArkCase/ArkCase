@@ -10,6 +10,11 @@ var TaskList = TaskList || {
         TaskList.cacheParentObject = new Acm.Model.CacheFifo(3);
         TaskList.cacheNoteList = new Acm.Model.CacheFifo(3);
         TaskList.cacheWorkflowHistory = new Acm.Model.CacheFifo(3);
+        TaskList.cacheTaskEvents = new Acm.Model.CacheFifo(3);
+        TaskList.cacheAttachments = new Acm.Model.CacheFifo(3);
+        TaskList.cacheRejectComments = new Acm.Model.CacheFifo(3);
+
+
 
 
 
@@ -35,6 +40,15 @@ var TaskList = TaskList || {
     ,cacheTask: null
     ,cacheParentObject: null
     ,cacheWorkflowHistory: null
+    ,cacheTaskEvents: null
+    ,cacheAttachments: null
+    ,cacheRejectComments: null
+
+    ,DLG_REJECT_TASK_START: 0
+    ,DLG_REJECT_TASK_N: 10
+    ,DLG_REJECT_TASK_SORT_DIRECTION: 'ASC'
+    	
+    ,REJECT_COMMENT: 'REJECT_COMMENT'
 
     ,_parentObjId: 0
     ,getParentObjId: function(){
@@ -49,9 +63,6 @@ var TaskList = TaskList || {
         }
         return this.cacheParentObject.get(this._parentObjId);
     }
-
-
-
     ,_taskId: 0
     ,getTaskId : function() {
         return this._taskId;
@@ -70,8 +81,13 @@ var TaskList = TaskList || {
         return null;
     }
     return this.cacheWorkflowHistory.get(this._taskId);
-}
-
+    }
+    ,getAttachmentsList: function() {
+        if (0 >= this._taskId) {
+            return null;
+        }
+        return this.cacheAttachments.get(this._taskId);
+    }
     ,_taskList: []
     ,getTaskList: function() {
         return this._taskList;

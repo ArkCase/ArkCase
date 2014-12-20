@@ -50,16 +50,17 @@
     <footer id="footer">
         <div class="text-center padder">
             <p>
-                <%--<small>Armedia Case Management 3.0 <br>&copy; 2014</small>--%>
-                <small><small><spring:message code="login.footer" text="Armedia Case Management 3.0 <br>&copy; 2014" /></small>
+                <small><spring:message code="login.footer" text="Armedia Case Management 3.0 <br>&copy; 2014" /></small>
             </p>
         </div>
     </footer>
 
     <script src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
-
     <script type="text/javascript" src="<c:url value='/resources/js/login/login.js'/>"></script>
-
-    <%@include file="/WEB-INF/tagf/ready.tagf"%>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            Application.run();
+        });
+    </script>
 </body>
 </html>

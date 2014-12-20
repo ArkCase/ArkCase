@@ -27,6 +27,7 @@ public class TaskUiController
 
         //frevvo form URLs
         retval.addObject("editCloseComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
+        retval.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS));
 
         return retval;
     }
@@ -40,6 +41,7 @@ public class TaskUiController
 
         //frevvo form URLs
         retval.addObject("editCloseComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
+        retval.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS));
 
         return retval;
     }

@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-standard-applications</artifactId>
-        <version>3.0.17</version>
+        <version>3.0.18</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -203,12 +203,28 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-form</groupId>
-            <artifactId>acm-form-close-case</artifactId>
+            <artifactId>acm-form-change-case-status</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-form</groupId>
             <artifactId>acm-form-close-complaint</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-case-file</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
+            <artifactId>acm-personnel-security-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-correspondence</artifactId>
             <version>${acm.version}</version>
         </dependency>
         

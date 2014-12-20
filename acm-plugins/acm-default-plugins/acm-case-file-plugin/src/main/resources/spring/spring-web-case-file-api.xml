@@ -7,24 +7,13 @@
         <property name="saveCaseService" ref="saveCaseService"/>
     </bean>
 
-    <bean id="listCaseFilesAPIController" class="com.armedia.acm.plugins.casefile.web.api.ListCaseFilesAPIController">
-        <property name="caseFileDao" ref="caseFileDao"/>
-    </bean>
-
     <bean id="findCaseByIdAPIController" class="com.armedia.acm.plugins.casefile.web.api.FindCaseByIdAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="changeCaseStatusDao" ref="changeCaseStatusDao" />
     </bean>
 
     <bean id="getCasesByStatusAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
-    </bean>
-
-    <bean id="closeCaseAPIController" class="com.armedia.acm.plugins.casefile.web.api.CloseCaseAPIController">
-        <property name="changeCaseFileStateService" ref="changeCaseFileStateService"/>
-    </bean>
-
-    <bean id="findCaseFileEventsAPIController" class="com.armedia.acm.plugins.casefile.web.api.FindCaseFileEventsAPIController">
-        <property name="dao" ref="auditDao"/>
     </bean>
 
     <bean id="listCaseFilesByUserAPIController" class="com.armedia.acm.plugins.casefile.web.api.ListCaseFilesByUserAPIController">
@@ -40,5 +29,9 @@
     <bean id="addCaseFileController" class="com.armedia.acm.plugins.casefile.web.api.AddFileToCaseAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="getCaseTypesAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCaseTypesAPIController">
+        <property name="caseFileProperties" ref="caseFilePluginProperties"/>
     </bean>
 </beans>

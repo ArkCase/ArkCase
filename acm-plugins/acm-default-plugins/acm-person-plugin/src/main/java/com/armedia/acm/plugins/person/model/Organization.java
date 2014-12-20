@@ -58,7 +58,7 @@ public class Organization implements Serializable, AcmEntity
     private List<String> organizationTypes;
 
     @XmlElements({
-		@XmlElement(name="name"),
+		@XmlElement(name="organizationValue"),
 		@XmlElement(name="initiatorOrganizationName"),
 		@XmlElement(name="peopleOrganizationName")
 		

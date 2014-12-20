@@ -13,11 +13,12 @@ var App = App || {
         Acm.deferred(App.Event.onPostInit);
     }
 
-    ,OBJTYPE_CASE:        "Case"
+    ,OBJTYPE_CASE:        "CASE_FILE"
     ,OBJTYPE_COMPLAINT:   "COMPLAINT"
     ,OBJTYPE_TASK:        "TASK"
-    ,OBJTYPE_DOCUMENT:    "Document"
-    ,OBJTYPE_PEOPLE:    "People"
+    ,OBJTYPE_DOCUMENT:    "DOCUMENT"
+    ,OBJTYPE_PEOPLE:    "PEOPLE"
+    ,OBJTYPE_PERSON:    "PERSON"
     ,OBJTYPE_BUSINESS_PROCESS: "BUSINESS_PROCESS"
 
 

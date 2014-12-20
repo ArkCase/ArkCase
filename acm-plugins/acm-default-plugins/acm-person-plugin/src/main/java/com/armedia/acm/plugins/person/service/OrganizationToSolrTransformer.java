@@ -40,7 +40,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         orgDoc.setType_lcs(org.getOrganizationType());
         orgDoc.setValue_parseable(org.getOrganizationValue());
 
-        orgDoc.setName(org.getOrganizationValue());
+          orgDoc.setName(org.getOrganizationValue());
 
         return orgDoc;
     }

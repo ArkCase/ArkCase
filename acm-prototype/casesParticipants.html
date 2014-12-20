@@ -91,7 +91,7 @@
                   <li class=""> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
                   <li class="active"> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
                   <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
-                  <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span> </a> </li>
+                  
                   <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
 <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
@@ -197,29 +197,48 @@
                     </div>
                     </div>
                     </div>
-                    <div>
-                      <div class="wrapper">
-                      
-                        <div class="panel-heading b-b bg-info"> <a href="#" class="font-bold">Participants</a></div>
-                        <section class="panel panel-default">
-                          <div class="table-responsive"></div>
-                          <footer class="panel-footer">
-                            <div class="row">
-                              <div class="col-sm-8 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small></div>
-                              <div class="col-sm-4 text-right text-center-xs">
-                                <ul class="pagination pagination-sm m-t-none m-b-none">
-                                  <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                                  <li><a href="#">1</a></li>
-                                  <li><a href="#">2</a></li>
-                                  <li><a href="#">3</a></li>
-                                  <li><a href="#">4</a></li>
-                                  <li><a href="#">5</a></li>
-                                  <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
-                                </ul>
-                              </div>
+                    <div class="wrapper">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <section class="panel b-a">
+                            <div class="panel-heading b-b bg-info">
+                              <ul class="nav nav-pills pull-right">
+                                <li style="margin-right:5px"></li>
+                                <li>
+                                  <div class="btn-group padder-v2">
+                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
+                                  </div>
+                                </li>
+                                <li> </li>
+                              </ul>
+                              <a href="#" class="font-bold">Participants </a></div>
+                            <div class="panel-body max-200 no-padder">
+                              <table class="table table-striped th-sortable table-hover">
+                                <thead>
+                                  <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Title</th>
+                                    <th>Role</th>
+                                    <th width="10%">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr class="odd gradeA">
+                                    <td>[First Name]</td>
+                                    <td>[First Name]</td>
+                                    <td>[Title]</td>
+                                    <td>[Role]</td>
+                                    <td><select name="select2" class="input-sm form-control input-s-sm inline v-middle">
+                                      <option value="0">Choose Action</option>
+                                      <option value="1">Remove</option>
+                                    </select></td>
+                                  </tr>
+                                </tbody>
+                              </table>
                             </div>
-                          </footer>
-                        </section>
+                          </section>
+                        </div>
                       </div>
                     </div>
                     </div>

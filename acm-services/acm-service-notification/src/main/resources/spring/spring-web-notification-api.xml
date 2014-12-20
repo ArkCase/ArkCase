@@ -10,4 +10,10 @@
     <bean id="deleteNotificationByNotificationId" class="com.armedia.acm.services.notification.web.api.DeleteNotificationByIdAPIController">
         <property name="notificationDao" ref="notificationDao"/>
     </bean>
+
+    <bean id="saveNotification" class="com.armedia.acm.services.notification.web.api.SaveNotificationAPIController">
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
+    </bean>
+    
 </beans>

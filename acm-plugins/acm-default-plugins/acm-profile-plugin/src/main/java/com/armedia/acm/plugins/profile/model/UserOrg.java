@@ -82,6 +82,9 @@ public class UserOrg implements Serializable{
     @Column(name = "cm_ecm_fileId")
     private Long ecmFileId;
 
+    @Column(name = "cm_title")
+    private String title;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cm_user")
     private AcmUser user;
@@ -243,5 +246,13 @@ public class UserOrg implements Serializable{
 
     public void setEcmFileId(Long ecmFileId) {
         this.ecmFileId = ecmFileId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

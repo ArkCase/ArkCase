@@ -309,7 +309,10 @@ Date.now = Date.now || function() { return +new Date; };
             }
   			return true;
   		}
-  		$('[data-toggle^="shift"]').shift('init');
+  		if ($('[data-toggle^="shift"]').shift) {
+  			$('[data-toggle^="shift"]').shift('init');
+  			
+  		}
       return true;
   	};
   	// unmobile

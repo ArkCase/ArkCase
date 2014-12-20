@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.0.17</version>
+        <version>3.0.18</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -145,7 +145,7 @@
         </dependency>
 
         <!-- mule -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.mule</groupId>
             <artifactId>mule-core</artifactId>
         </dependency>
@@ -169,23 +169,47 @@
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-scripting</artifactId>
             <scope>compile</scope>
-        </dependency>
+        </dependency>-->
 
         <!-- activiti -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-spring</artifactId>
-        </dependency>
+        </dependency>-->
 
         <!-- json -->
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${org.json.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson-mapper-asl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${fasterxml-jackson-core.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${fasterxml-jackson-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
         </dependency>
 
         <!-- servlet -->

@@ -38,6 +38,29 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
         <echo-component doc:name="Echo"/>
 
+
+
+        <http:outbound-endpoint ref="submitAdvancedSearchDocuments"/>
+    </flow>
+
+    <flow name="jmsSendTaskEventToAdvancedSearchSolr"
+          doc:name="Send Tasks to SOLR"
+          doc:description="Send tasks to the SOLR quick search collection.  Payload must be an AcmTaskEvent pojo.">
+
+        <jms:inbound-endpoint
+                queue="solrTaskToAdvancedSearch.in"
+                exchange-pattern="one-way"
+                connector-ref="ActiveMQ-ACM"
+                doc:name="JMS" />
+
+        <timer-interceptor/>
+
+        <echo-component doc:name="Echo"/>
+
+        <component doc:name="Convert to JSON Format">
+            <spring-object bean="taskToAdvancedSearchJsonConverter"/>
+        </component>
+
         <http:outbound-endpoint ref="submitAdvancedSearchDocuments"/>
     </flow>
 

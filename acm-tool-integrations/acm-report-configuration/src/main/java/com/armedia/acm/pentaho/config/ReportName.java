@@ -8,12 +8,13 @@ public enum ReportName {
 	CLOSE_CASE_REPORT("Close Case Report"),
 	OPEN_CASE_REPORT("Open Case Report"),
 	COMPLAINT_REPORT("Complaint Report"),
-	BILLING_REPORT("Billing Report");
+	BILLING_REPORT("Billing Report"),
+    BACKGROUND_INVESTIGATION_SUMMARY_REPORT("Background Investigations Report");
 
 	protected transient static Logger log = LoggerFactory
 			.getLogger(ReportName.class);
 	
-	ReportName(String displayName) {
+	private ReportName(String displayName) {
 		this.displayName = displayName;		
 	}
 	
@@ -21,9 +22,6 @@ public enum ReportName {
 
     public String getDisplayName() {
         return displayName;
-    }
-    public void setDescription(String displayName) {
-        this.displayName = displayName;
     }
 
     public static ReportName fromString(String name)

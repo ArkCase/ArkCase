@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.0.17</version>
+    <version>3.0.18</version>
     <packaging>pom</packaging>
 
     <name>Armedia Case Management Framework and Default Plugins</name>
@@ -26,6 +26,7 @@
         <apache-commons-io.version>2.4</apache-commons-io.version>
         <apache-commons-lang.version>2.6</apache-commons-lang.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
+        <apache-poi.version>3.10.1</apache-poi.version>
         <armedia-audit-jdbc.version>0.3.6</armedia-audit-jdbc.version>
         <c3p0.version>0.9.2.1</c3p0.version>
         <camel.version>2.13.1</camel.version>
@@ -645,6 +646,14 @@
                 <artifactId>activemq-spring</artifactId>
                 <version>${activemq.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+
+
+            <!-- poi -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>3.10.1</version>
             </dependency>
 
             <!-- mule -->
