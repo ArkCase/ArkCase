@@ -5,12 +5,46 @@
  */
 Sidebar.View = {
     create : function() {
+        if (Sidebar.View.Navigation.create)          {Sidebar.View.Navigation.create();}
         if (Sidebar.View.Profile.create)             {Sidebar.View.Profile.create();}
     }
     ,onInitialized: function() {
+        if (Sidebar.View.Navigation.onInitialized)   {Sidebar.View.Navigation.onInitialized();}
         if (Sidebar.View.Profile.onInitialized)      {Sidebar.View.Profile.onInitialized();}
     }
 
+    ,Navigation: {
+        create : function() {
+            this.$ulPlugin = $("#ulPlugin");
+            this.$lnkNav   = $("nav a");
+            this.$lnkNav.click(function(e){Sidebar.View.Navigation.onClickLnkNav(e, this);});
+        }
+        ,onInitialized: function() {
+            Sidebar.View.Navigation.hiLiteActivePlugin();
+        }
+
+        ,onClickLnkNav : function(event, ctrl) {
+            Topbar.Model.QuickSearch.setQuickSearchTerm(null);
+        }
+
+        ,hiLiteActivePlugin: function() {
+            //
+            //looking for href url that pathname begins with to hilite.
+            //Added "/" is necessary to avoid false match when href url is partial of pathname.
+            //ex) Following should not match:
+            //  pathname = "/acm/somepath/location"
+            //  href     = "/acm/somepa"
+            //
+            var pathname = window.location.pathname + "/";
+            this.$ulPlugin.find("a").each(function(index) {
+                var url = $(this).attr("href") + "/";
+                if (0 == pathname.indexOf(url)) {
+                    $(this).parent().attr("class", "active");
+                    return false;
+                }
+            });
+        }
+    }
 
     ,Profile: {
         create: function() {
