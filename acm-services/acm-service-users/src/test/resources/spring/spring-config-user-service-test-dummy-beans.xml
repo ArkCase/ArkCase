@@ -14,5 +14,7 @@
     <bean id="drlDeployer" class="java.lang.String">
         <constructor-arg value="This is a dummy bean.  Don't expect anything real in here."/>
     </bean>
+    
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
 </beans>

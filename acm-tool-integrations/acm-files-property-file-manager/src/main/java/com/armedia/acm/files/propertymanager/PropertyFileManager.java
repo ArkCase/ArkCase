@@ -8,6 +8,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 /**
@@ -46,6 +49,116 @@ public class PropertyFileManager
                 }
             }
         }
+    }
+    
+    public void storeMultiple(Map<String, String> propertiesMap, String fileName)
+    {
+    	if (propertiesMap != null && propertiesMap.size() > 0)
+    	{
+    		FileInputStream in = null;
+    		FileOutputStream out = null;
+    		try
+    		{
+    			in = new FileInputStream(fileName);
+    			
+    			Properties p = new Properties();
+    			p.load(in);
+    			
+    			out = new FileOutputStream(fileName);
+    			
+    			for (Entry<String, String> entry : propertiesMap.entrySet())
+        		{
+    				p.setProperty(entry.getKey(), entry.getValue());
+        		}
+    			
+    			p.store(out, null);
+    		}
+    		catch(IOException e)
+    		{
+    			log.debug("Could not update properties file: " + e.getMessage(), e);
+    		}
+    		finally
+            {
+                if ( in != null )
+                {
+                    try
+                    {
+                        in.close();
+                    }
+                    catch (IOException e)
+                    {
+                        log.warn("Could not close input stream: " + e.getMessage(), e);
+                    }
+                }
+                
+                if ( out != null )
+                {
+                    try
+                    {
+                        out.close();
+                    }
+                    catch (IOException e)
+                    {
+                        log.warn("Could not close output stream: " + e.getMessage(), e);
+                    }
+                }
+            }
+    	}
+    }
+    
+    public void removeMultiple(List<String> properties, String fileName)
+    {
+    	if (properties != null && properties.size() > 0)
+    	{
+    		FileInputStream in = null;
+    		FileOutputStream out = null;
+    		try
+    		{
+    			in = new FileInputStream(fileName);
+    			
+    			Properties p = new Properties();
+    			p.load(in);
+    			
+    			out = new FileOutputStream(fileName);
+    			
+    			for (String key : properties)
+        		{
+    				p.remove(key);
+        		}
+    			
+    			p.store(out, null);
+    		}
+    		catch(IOException e)
+    		{
+    			log.debug("Could not remove properties file: " + e.getMessage(), e);
+    		}
+    		finally
+            {
+                if ( in != null )
+                {
+                    try
+                    {
+                        in.close();
+                    }
+                    catch (IOException e)
+                    {
+                        log.warn("Could not close input stream: " + e.getMessage(), e);
+                    }
+                }
+                
+                if ( out != null )
+                {
+                    try
+                    {
+                        out.close();
+                    }
+                    catch (IOException e)
+                    {
+                        log.warn("Could not close output stream: " + e.getMessage(), e);
+                    }
+                }
+            }
+    	}
     }
 
     public String load(String filename, String key, String defaultValue)

@@ -37,6 +37,13 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
+        
+        <dependency>
+			<groupId>net.unicon.springframework</groupId>
+			<artifactId>springframework-addons</artifactId>
+			<version>0.1</version>
+		</dependency>
+        
     </dependencies>
 
 </project>
