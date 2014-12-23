@@ -12,6 +12,10 @@ public class PentahoReportUrl implements ReportUrl{
     private Logger log = LoggerFactory.getLogger(getClass());
     private static final String REPORT_SERVER_URL = "PENTAHO_SERVER_URL";
     private static final String REPORT_SERVER_PORT = "PENTAHO_SERVER_PORT";
+    private static final String PENTAHO_SERVER_USER = "PENTAHO_SERVER_USER";
+    private static final String PENTAHO_SERVER_PASSWORD = "PENTAHO_SERVER_PASSWORD";
+    
+    private static final String REPORTS_URL = "PENTAHO_REPORTS_URL";
 
     /**
      * List of form-specific properties.
@@ -95,6 +99,35 @@ public class PentahoReportUrl implements ReportUrl{
         builder.append(port);
     	builder.append(path);
 		return builder.toString();
+	}
+	
+	public String getReportsUrl()
+	{
+		StringBuilder builder = new StringBuilder();
+		
+        String serverFormUrl = getReportsProperties().get(REPORT_SERVER_URL).toString();
+        
+        String serverFormUser = getReportsProperties().get(PENTAHO_SERVER_USER).toString();
+        String serverFormPassword = getReportsProperties().get(PENTAHO_SERVER_PASSWORD).toString();
+        
+        if (serverFormUrl != null)
+        {
+        	serverFormUrl = serverFormUrl.replace("http://", "http://" + serverFormUser + ":" + serverFormPassword + "@");
+        	serverFormUrl = serverFormUrl.replace("https://", "https://" + serverFormUser + ":" + serverFormPassword + "@");
+        }
+        
+        builder.append(serverFormUrl);
+
+        String serverFormPort = getReportsProperties().get(REPORT_SERVER_PORT).toString();
+        builder.append(serverFormPort);
+        
+        String pentahoReportsUrl = getReportsProperties().get(REPORTS_URL).toString();
+        builder.append(pentahoReportsUrl);
+        
+        String url = builder.toString();
+        log.debug("getReportsUrl(): " + url);
+        
+        return url;
 	}
 
 }
