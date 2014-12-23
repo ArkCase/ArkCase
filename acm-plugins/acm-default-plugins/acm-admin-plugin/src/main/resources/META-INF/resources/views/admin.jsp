@@ -11,12 +11,10 @@
 
 <jsp:attribute name="endOfBody">
     <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/admin.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminRule.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminCallback.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
 
@@ -136,10 +134,10 @@
                                             </div>
 
                                                     <%--JTable - Access Control Policy--%>
-                                            <div class="row" id="tabCorrespondence" style="display:none;">
+                                            <div class="row" id="tabCorrespondenceTemplates" style="display:none;">
                                                 <div class="col-md-12">
                                                     <section class="panel panel-default">
-                                                        <div id="divCorrespondence" style="width:100%">
+                                                        <div id="divCorrespondenceTemplates" style="width:100%">
                                                             <form id="formAddNewTemplate" style="display:none;">
                                                                 <input id="addNewTemplate" type="file" name="files[]" multiple/>
                                                             </form>
