@@ -48,6 +48,12 @@
             <artifactId>acm-service-data-access-control</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-mule-context-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -56,7 +62,7 @@
         <dependency>
             <groupId>org.springframework.ldap</groupId>
             <artifactId>spring-ldap-core</artifactId>
-        </dependency>
+        </dependency>     
 
         <!-- bean validation -->
         <dependency>
@@ -129,6 +135,17 @@
             <groupId>com.oracle</groupId>
             <artifactId>jdbc</artifactId>
             <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
