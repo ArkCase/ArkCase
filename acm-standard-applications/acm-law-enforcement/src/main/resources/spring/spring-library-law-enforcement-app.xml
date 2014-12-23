@@ -39,6 +39,24 @@
     </bean>
 
     <import resource="file:${user.home}/.acm/app-config.xml"/>
+    
+    <!-- Reload .properties files -->
+    <bean id="reloadPropertiesFiles" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<bean id="reloadProperties" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+				<property name="period" value="1000"/>
+				<property name="runnable">
+					<bean class="net.unicon.springframework.addons.properties.ReloadConfiguration">
+						<property name="reconfigurableBeans">
+							<list>
+								<ref bean="acm-reports-properties"/>
+							</list>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
 
 
 </beans>
