@@ -78,7 +78,14 @@ public class AcmJpaBatchUpdateService
 
             for (AcmObjectToSolrDocTransformer transformer : transformers)
             {
-                sendUpdatedObjectsToSolr(lastBatchRunDate, transformer);
+            	try
+            	{
+            		sendUpdatedObjectsToSolr(lastBatchRunDate, transformer);
+            	}
+            	catch(Exception exception)
+            	{
+            		log.error("Could not send index updates to SOLR for transformer " + transformer.getClass(), exception);
+            	}
             }
         }
         catch (ParseException e)

@@ -22,6 +22,8 @@ public class AcmUserActionExecutor {
 
 	public boolean execute(Long objectId, String actionName, String userId)
 	{
+		LOG.info("Last user action: ObjectId: " + objectId + ", Action: " + actionName + ", User: " + userId);
+		
 		boolean success = true;
 		try
 		{

@@ -13,12 +13,15 @@
     
     <bean id="userActionDao" class="com.armedia.acm.services.users.dao.ldap.UserActionDao"/>
     
+    <bean id="groupDao" class="com.armedia.acm.services.users.dao.group.AcmGroupDao"/>
+    
     <bean id="userActionExecutor" class="com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor">
     	<property name="userActionDao" ref="userActionDao" />
     </bean>
 
     <bean id="userDatabaseHelper" class="com.armedia.acm.services.users.service.ldap.LdapSyncDatabaseHelper">
         <property name="userDao" ref="userJpaDao"/>
+        <property name="groupDao" ref="groupDao"/>
     </bean>
     
     <bean id="acmLdapAuthenticateManager" class="com.armedia.acm.services.users.service.ldap.LdapAuthenticateManager">
@@ -32,7 +35,12 @@
     <!-- NOTE: LdapAuthenticateService beans (of class com.armedia.acm.services.users.service.ldap.LdapAuthenticateService) should
          be defined in dynamically-loaded Spring config files, placed in the ACM spring configuration folder
          ($HOME/.acm/spring). -->
-<bean id="userToSolrTransformer" class="com.armedia.acm.services.users.service.ldap.UserToSolrTransformer">
-    <property name="userDao" ref="userJpaDao"/>
-</bean>
+	<bean id="userToSolrTransformer" class="com.armedia.acm.services.users.service.ldap.UserToSolrTransformer">
+	    <property name="userDao" ref="userJpaDao"/>
+	</bean>
+    
+    <bean id="groupToSolrTransformer" class="com.armedia.acm.services.users.service.group.GroupToSolrTransformer">
+    	<property name="groupDao" ref="groupDao"/>
+    </bean>
+
 </beans>
