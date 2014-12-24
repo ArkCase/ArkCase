@@ -43,6 +43,9 @@ Admin.Model = Admin.Model || {
         }
     }
 
+    ,Organization: {
+    }
+
     ,Correspondence:{
         create : function() {
             this.cacheTemplatesList = new Acm.Model.CacheFifo(4);
@@ -92,6 +95,8 @@ Admin.Model = Admin.Model || {
             ,NODE_TYPE_PART_BRANCH_REPORTS:          "rpt"
             ,NODE_TYPE_PART_BRANCH_CORRESPONDENCE:   "cm"
             ,NODE_TYPE_PART_BRANCH_TEMPLATES:        "ct"
+            ,NODE_TYPE_PART_BRANCH_ORGANIZATION:     "og"
+
 
             ,_mapNodeType: [
                 {nodeType: "mp"      ,icon: "",tabIds: ["tabMainPage"]}
@@ -103,6 +108,7 @@ Admin.Model = Admin.Model || {
                 ,{nodeType: "rc"      ,icon: "",tabIds: ["tabReports"]}
                 ,{nodeType: "cm"      ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
                 ,{nodeType: "ct"      ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
+                ,{nodeType: "og"      ,icon: "",tabIds: ["tOrganization"]}
             ]
 
             ,getTabIdsByKey: function(key) {
@@ -151,6 +157,8 @@ Admin.Model = Admin.Model || {
                     return this.NODE_TYPE_PART_BRANCH_CORRESPONDENCE;
                 }else if (key == this.NODE_TYPE_PART_BRANCH_TEMPLATES) {
                     return this.NODE_TYPE_PART_BRANCH_TEMPLATES;
+                }else if (key == this.NODE_TYPE_PART_BRANCH_ORGANIZATION) {
+                    return this.NODE_TYPE_PART_BRANCH_ORGANIZATION;
                 }
                 return null;
             }
