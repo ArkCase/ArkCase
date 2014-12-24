@@ -7,14 +7,220 @@ Admin.View = Admin.View || {
     create: function() {
         if (Admin.View.AccessControl.create)        {Admin.View.AccessControl.create();}
         if (Admin.View.Correspondence.create)       {Admin.View.Correspondence.create();}
+        if (Admin.View.Organization.create)         {Admin.View.Organization.create();}
+
         if (Admin.View.Tree.create)                 {Admin.View.Tree.create();}
     }
     ,onInitialized: function() {
         if (Admin.View.AccessControl.onInitialized)        {Admin.View.AccessControl.onInitialized();}
         if (Admin.View.Correspondence.onInitialized)       {Admin.View.Correspondence.onInitialized();}
+        if (Admin.View.Organization.onInitialized)         {Admin.View.Organization.onInitialized();}
+
         if (Admin.View.Tree.onInitialized)                 {Admin.View.Tree.onInitialized();}
     }
 
+    ,Organization:{
+        create: function () {
+            if (Admin.View.Organization.Tree.create)        {Admin.View.Organization.Tree.create();}
+
+            /*this.$divAdminAccessControlPolicy = $("#divACP");
+            this.createJTableAdminAccessControl(this.$divAdminAccessControlPolicy);
+
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_UPDATED_ACCESS_CONTROL, this.onModelUpdatedAccessControlList);*/
+
+        }
+        , onInitialized: function () {
+        }
+        ,Tree:{
+            create: function () {
+                this.$treeOrganization = $("#treeOrganization");
+                this._useFancyTree(this.$treeOrganization);
+            }
+            , onInitialized: function () {
+            }
+            ,_useFancyTree: function($s) {
+
+                $s.fancytree({
+                    extensions: ["table"],
+                    checkbox: false,
+                    table: {
+                        indentation: 20,      // indent 20px per node level
+                        nodeColumnIdx: 2,     // render the node title into the 2nd column
+                        checkboxColumnIdx: 0  // render the checkboxes into the 1st column
+                    },
+                    /*activate: function(event, data){
+                        var node = data.node;
+                        Admin.View.Tree.showPanel(node.key);
+                    },*/
+                    source: function() {
+                        var source = [
+                            {"title": "Group", "expanded": true, "folder": true, "children": [
+                                {"title": "Subgroup", "folder": true, "children": [
+                                    {"title": "First Name", "second" : "Last Name", "third" : "Job Title", "fourth"  : "Group Role"},
+                                    {"title": "First Name", "second" : "Last Name", "third" : "Job Title", "fourth"  : "Group Role"},
+                                    {"title": "First Name", "second" : "Last Name", "third" : "Job Title", "fourth"  : "Group Role"},
+                                    {"title": "First Name", "second" : "Last Name", "third" : "Job Title", "fourth"  : "Group Role"}
+                                ]}
+                            ]}
+                        ];
+                        return source;
+                        //Admin.View.Organization.Tree.treeSource();
+                    } //end source
+                    ,renderColumns: function(event, data) {
+                        var node = data.node,
+                            $tdList = $(node.tr).find(">td");
+                            // (index #0 is rendered by fancytree by adding the checkbox)
+                            //$tdList.eq(1).text(node.getIndexHier()).addClass("alignRight");
+                            // (index #2 is rendered by fancytree)
+                            if(node.title != "Subgroup" && node.title != "Group"){
+                                $tdList.eq(3).text(node.data.second);
+                                $tdList.eq(4).text(node.data.third);
+                                $tdList.eq(5).text(node.data.fourth);
+                            }
+                            else{
+                                $tdList.eq(3).text("Group Type");
+                                $tdList.eq(4).text("Supervisor Name");
+                                $tdList.eq(5).text("Location");
+                            }
+
+                            //html("<input type='checkbox' name='like' value='" + node.key + "'>");
+                    }
+                }); //end fancytree
+
+                $s.contextmenu({
+                    //delegate: "span.fancytree-title",
+                    delegate: ".fancytree-title",
+                    beforeOpen: function(event, ui) {
+                        var node = $.ui.fancytree.getNode(ui.target);
+                        node.setActive();
+                    },
+                    select: function(event, ui) {
+                        var node = $.ui.fancytree.getNode(ui.target);
+                        alert("select " + ui.cmd + " on " + node);
+                    }
+                });
+
+            }
+
+/*
+            ,treeSource: function() {
+                var builder = AcmEx.FancyTreeBuilder.reset();
+
+                builder.addBranch({key: "acc"                                                   //level 1: /Access Control
+                    ,title: "Security"
+                    ,tooltip: "Security"
+                    ,folder : true
+                    ,expanded: true
+                })
+                    .addLeaf({key: "dac"                                                        //level 1.1: /Access Control/Data Access Control
+                        ,title: "Data Access Control"
+                        ,tooltip: "Data Access Control"
+                        ,href: "/plugin/admin/access"
+                    })
+                    .addLeaf({key: "fac"                                                        //level 1.2: /Access Control/Functional Access Control
+                        ,title: "Functional Access Control"
+                        ,tooltip: "Functional Access Control"
+                    })
+                    .addLeafLast({key: "ldap"                                                   //level 1.3: /Access Control/LDAP Configuration
+                        ,title: "LDAP Configuration"
+                        ,tooltip: "LDAP Configuration"
+                    })
+
+                builder.addBranch({key: "dsh"                                               //level 2: /Dashboard
+                    ,title: "Dashboard"
+                    ,tooltip: "Dashboard"
+                    ,folder : true
+                    ,expanded: true
+                })
+                    .addLeafLast({key: "dc"                                                 //level 2.1: /Dashboard/Dashboard Configuration
+                        ,title: "Dashboard Configuration"
+                        ,tooltip: "Dashboard Configuration"
+                        ,href: "/plugin/admin/dashboard"
+                    })
+
+                builder.addBranch({key: "rpt"                                               //level 3: /Reports
+                    ,title: "Reports"
+                    ,tooltip: "Reports"
+                    ,folder : true
+                    ,expanded: true
+                })
+                    .addLeafLast({key: "rc"                                                     //level 3.1: /Reports/Reports Configuration
+                        ,title: "Reports Configuration"
+                        ,tooltip: "Reports Configuration"
+                    })
+
+
+                //for demo purposes
+                builder.addBranch({key: "forms"                                               //level 4: /Forms
+                    ,title: "Forms"
+                    ,tooltip: "Forms"
+                    ,folder : true
+                    ,expanded: true
+                })
+                    .addLeafLast({key: "fc"                                                           //level 4.1: /Forms/Form Configuration
+                        ,title: "Form Configuration"
+                        ,tooltip: "Form Configuration"
+                    })
+                    .addBranch({key: "wf"                                                               //level 4.1.1: /Forms/Form Configuration/Workflows
+                        ,title: "Workflows"
+                        ,tooltip: "Workflows"
+                        ,folder : true
+                        ,expanded: true
+                    })
+                    .addLeafLast({key: "wfc"                                                                //level 4.1.1.1: /Forms/Form Configuration/Workflows/Workflow Configuration
+                        ,title: "Workflow Configuration"
+                        ,tooltip: "Workflow Configuration"
+                    })
+
+                    .addBranch({key: "wfl"                                                              //level 4.2.1: /Forms/Form Configuration/Form/Workflow Link
+                        ,title: "Form/Workflow Link"
+                        ,tooltip: "Form/Workflow Link"
+                        ,folder : true
+                        ,expanded: true
+                    })
+                    .addLeafLast({key: "wfc"                                                                //level 4.2.1.1: /Forms/Form Configuration/Form/Workflow Link/Link Forms/Workflows
+                        ,title: "Link Forms/Workflows"
+                        ,tooltip: "Link Forms/Workflows"
+                    })
+
+                    .addBranch({key: "bo"                                                               //level 4.3.1: /Forms/Form Configuration/Form/Business Objects
+                        ,title: "Business Objects"
+                        ,tooltip: "Business Objects"
+                        ,folder : true
+                        ,expanded: true
+                    })
+                    .addLeafLast({key: "wfc"                                                                    //level 4.3.1.1: /Forms/Form Configuration/Form/Business Objects/Business Object Configuration
+                        ,title: "Business Object Configuration"
+                        ,tooltip: "Business Object Configuration"
+                    })
+
+                    .addBranch({key: "al"                                                           //level 4.4.1: /Forms/Form Configuration/Form/Application Labels
+                        ,title: "Application Labels"
+                        ,tooltip: "Application Labels"
+                        ,folder : true
+                        ,expanded: true
+                    })
+                    .addLeafLast({key: "lc"                                                                 //level 4.4.1.1: /Forms/Form Configuration/Form/Application Labels/Label Configuration
+                        ,title: "Label Configuration"
+                        ,tooltip: "Label Configuration"
+                    })
+                    .addBranchLast({key: "cm"                                                           //level 4.5.1: /Forms/Form Configuration/Form/Correspondence Management
+                        ,title: "Correspondence Management"
+                        ,tooltip: "Correspondence Management"
+                        ,folder : true
+                        ,expanded: true
+                    })
+                    .addLeafLast({key: "ct"                                                                 //level 4.5.1.1: /Forms/Form Configuration/Form/Correspondence Templates
+                        ,title: "Correspondence Templates"
+                        ,tooltip: "Correspondence Templates"
+                    })
+
+                return builder.getTree();
+            }
+*/
+        }
+
+    }
     ,AccessControl : {
         create: function () {
 
@@ -26,6 +232,8 @@ Admin.View = Admin.View || {
         }
         , onInitialized: function () {
         }
+
+
         , onModelUpdatedAccessControlList: function () {
             AcmEx.Object.JTable.load(Admin.View.AccessControl.$divAdminAccessControlPolicy);
         }
@@ -59,7 +267,8 @@ Admin.View = Admin.View || {
                     , selectingCheckboxes: false
                     , actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
-                            var pageIndex = jtParams.jtStartIndex;
+                            //var pageIndex = jtParams.jtStartIndex;
+                            var pageIndex = jtParams.jtPageSize.toString() + jtParams.jtStartIndex.toString();
                             if (0 > pageIndex) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
@@ -323,15 +532,18 @@ Admin.View = Admin.View || {
                 .addLeaf({key: "dac"                                                        //level 1.1: /Access Control/Data Access Control
                     ,title: "Data Access Control"
                     ,tooltip: "Data Access Control"
-                    ,href: "/plugin/admin/access"
                 })
                 .addLeaf({key: "fac"                                                        //level 1.2: /Access Control/Functional Access Control
                     ,title: "Functional Access Control"
                     ,tooltip: "Functional Access Control"
                 })
-                .addLeafLast({key: "ldap"                                                   //level 1.3: /Access Control/LDAP Configuration
+                .addLeaf({key: "ldap"                                                   //level 1.3: /Access Control/LDAP Configuration
                     ,title: "LDAP Configuration"
                     ,tooltip: "LDAP Configuration"
+                })
+                .addLeafLast({key: "og"                                                        //level 1.1: /Access Control/Data Access Control
+                    ,title: "Organizational Hierarchy"
+                    ,tooltip: "Organizational Hierarchy"
                 })
 
             builder.addBranch({key: "dsh"                                               //level 2: /Dashboard
@@ -343,7 +555,6 @@ Admin.View = Admin.View || {
                 .addLeafLast({key: "dc"                                                 //level 2.1: /Dashboard/Dashboard Configuration
                     ,title: "Dashboard Configuration"
                     ,tooltip: "Dashboard Configuration"
-                    ,href: "/plugin/admin/dashboard"
                 })
 
             builder.addBranch({key: "rpt"                                               //level 3: /Reports

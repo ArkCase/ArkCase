@@ -26,6 +26,8 @@
     <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
     <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree}"></script>
     <script src="<c:url value='/'/>resources/vendors/${vd_contextmenu}/${js_contextmenu}"></script>
+    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/jquery.fancytree.table.js"></script>
+
 
 
     <!-- Dashboard -->
@@ -133,7 +135,7 @@
                                                 </div>
                                             </div>
 
-                                                    <%--JTable - Access Control Policy--%>
+                                                    <%--JTable - Correspondence--%>
                                             <div class="row" id="tabCorrespondenceTemplates" style="display:none;">
                                                 <div class="col-md-12">
                                                     <section class="panel panel-default">
@@ -146,7 +148,24 @@
                                                 </div>
                                             </div>
 
+                                                    <%--JTable - Access Control Policy Tree--%>
 
+
+                                            <div class="row" id="tOrganization" style="display:none;">
+                                                <%--<div class="col-md-12">
+                                                    <section class="panel panel-default">--%>
+                                                        <table id="treeOrganization">
+                                                            <thead>
+                                                            <tr> <th> </th> <th></th> <th></th> <th></th> <th></th> <th></th></tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+
+                                                        <%--<div id="divTreeOrganization" style="width:100%"></div>
+                                                    </section>
+                                                </div>--%>
+                                            </div>
 
                                             <%--Reports Configuration Table--%>
                                             <div class="row" id="tabReports" style="display:none;">

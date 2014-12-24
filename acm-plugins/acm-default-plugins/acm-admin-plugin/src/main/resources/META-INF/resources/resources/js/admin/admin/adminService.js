@@ -73,7 +73,8 @@ Admin.Service = {
         , API_UPDATE_ACCESS_CONTROL: "/api/latest/plugin/dataaccess/default/"
 
         , retrieveAccessControlListDeferred: function (postData, jtParams, sortMap, callbackSuccess, callbackError) {
-            var pageIndex = jtParams.jtStartIndex;
+            //var pageIndex = jtParams.jtStartIndex;
+            var pageIndex = jtParams.jtPageSize.toString() + jtParams.jtStartIndex.toString();
 
             return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
                 , function () {
