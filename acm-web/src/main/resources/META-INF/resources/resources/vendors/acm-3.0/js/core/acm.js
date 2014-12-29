@@ -358,7 +358,6 @@ var Acm = Acm || {
         return true;
     }
 
-
     ,Timer: {
         _worker: null
         ,startWorker: function(workerUrl) {

@@ -16,18 +16,14 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Events.create)        {CaseFile.Model.Events.create();}
         if (CaseFile.Model.Correspondence.create) {CaseFile.Model.Correspondence.create();}
 
+        if ("undefined" != typeof Topbar) {
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_SET_ASN_DATA, this.onTopbarViewSetAsnData);
+        }
+
     }
     ,onInitialized: function() {
         var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
-        if (0 < treeInfo.caseFileId) { //single caseFile
-            CaseFile.Model.setCaseFileId(treeInfo.caseFileId);
-            CaseFile.Service.Detail.retrieveCaseFile(treeInfo.caseFileId);
-            CaseFile.Service.Tasks.retrieveTask();
-
-        } else {
-            CaseFile.Service.List.retrieveCaseFileList(treeInfo);
-            CaseFile.Service.Tasks.retrieveTask();
-        }
+        CaseFile.Model._retrieveData(treeInfo);
 
         if (CaseFile.Model.Lookup.onInitialized)     {CaseFile.Model.Lookup.onInitialized();}
         if (CaseFile.Model.Tree.onInitialized)       {CaseFile.Model.Tree.onInitialized();}
@@ -42,6 +38,31 @@ CaseFile.Model = CaseFile.Model || {
 
     }
 
+    ,onTopbarViewSetAsnData: function(asnData) {
+        if (CaseFile.Model.Tree.Config.validateTreeInfo(asnData)) {
+            if ("/plugin/casefile" == asnData.name) {
+                var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
+                var sameResultSet = CaseFile.Model.Tree.Config.sameResultSet(asnData);
+                CaseFile.Model.Tree.Config.readConfig();
+
+                if (!sameResultSet) {
+                    CaseFile.Model._retrieveData(treeInfo);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    ,_retrieveData: function(treeInfo) {
+        if (0 < treeInfo.objId) { //single caseFile
+            CaseFile.Model.setCaseFileId(treeInfo.objId);
+            CaseFile.Service.Detail.retrieveCaseFile(treeInfo.objId);
+
+        } else {
+            CaseFile.Service.List.retrieveCaseFileList(treeInfo);
+        }
+    }
 
     ,DOCUMENT_TARGET_TYPE_FILE: "FILE"
     ,DOCUMENT_CATEGORY_CORRESPONDENCE: "CORRESPONDENCE"
@@ -406,36 +427,21 @@ CaseFile.Model = CaseFile.Model || {
 
         ,Config: {
             create: function() {
-                this._caseFileTreeInfo = new Acm.Model.SessionData("AcmCaseFileTreeInfo");
-
-                var ti = this.getTreeInfo();
-                var tiApp = this.getCaseFileTreeInfo();
-                if (tiApp) {
-                    ti.initKey = tiApp.initKey;
-                    ti.start = tiApp.start;
-                    ti.n = tiApp.n;
-                    ti.s = tiApp.s;
-                    ti.q = tiApp.q;
-                    ti.caseFileId = tiApp.caseFileId;
-                    this.setCaseFileTreeInfo(null);
-                }
-                var items = $(document).items();
-                var caseFileId = items.properties("caseFileId").itemValue();
-                if (Acm.isNotEmpty(caseFileId)) {
-                    ti.caseFileId = caseFileId;
-                }
+                this.readConfig();
             }
             ,onInitialized: function() {
             }
 
             ,_treeInfo: {
-                start           : 0
+                name            : "/plugin/casefile"
+                ,start          : 0
                 ,n              : 50
                 ,total          : -1
-                ,s              : null
+                ,sort           : null
+                ,filter         : null
                 ,q              : null
-                ,initKey        : null
-                ,caseFileId    : 0
+                ,key            : null
+                ,objId          : 0
             }
             ,getTreeInfo: function() {
                 return this._treeInfo;
@@ -444,16 +450,70 @@ CaseFile.Model = CaseFile.Model || {
                 return this._treeInfo.start;
             }
 
-            ,getCaseFileTreeInfo: function() {
-                var data = this._caseFileTreeInfo.get();
+            ,validateTreeInfo: function(data) {
                 if (Acm.isEmpty(data)) {
-                    return null;
+                    return false;
                 }
-                return JSON.parse(data);
+                if (Acm.isEmpty(data.name)) {
+                    return false;
+                }
+                if (0 < Acm.goodValue(data.objId, 0)) {
+                    return Acm.isEmpty(data.key);
+                }
+                if (Acm.isNotEmpty(data.key)) {
+                    return 0 == Acm.goodValue(data.objId, 0);
+                }
+                return true;
             }
-            ,setCaseFileTreeInfo: function(treeInfo) {
-                var data = (Acm.isEmpty(treeInfo))? null : JSON.stringify(treeInfo);
-                this._caseFileTreeInfo.set(data);
+            ,readConfig: function() {
+                this._initTreeInfo = new Acm.Model.SessionData("AcmTreeInfo");
+
+                var ti = this.getTreeInfo();
+                var tiInit = this._initTreeInfo.get();
+                if (this.validateTreeInfo(tiInit)) {
+                    if ("/plugin/casefile" == Acm.goodValue(tiInit.name)) {
+                        ti.start  = Acm.goodValue(tiInit.start, 0);
+                        ti.n      = Acm.goodValue(tiInit.n, 50);
+                        ti.sort   = Acm.goodValue(tiInit.sort, null);
+                        ti.filter = Acm.goodValue(tiInit.filter, null);
+                        ti.q      = Acm.goodValue(tiInit.q, null);
+                        ti.key    = Acm.goodValue(tiInit.key, null);
+                        ti.objId  = Acm.goodValue(tiInit.objId, 0);
+
+                        this._initTreeInfo.set(null);
+                    }
+                }
+
+                if (0 == ti.objId && null == ti.key) {
+                    var caseFileId = Acm.Object.MicroData.get("caseFileId");
+                    if (Acm.isNotEmpty(caseFileId)) {
+                        ti.objId = caseFileId;
+                    }
+                }
+            }
+            ,sameResultSet: function(treeInfo) {
+                if (!Acm.compare(this._treeInfo.name, treeInfo.name)) {
+                    return false;
+                }
+
+                if (0 < this._treeInfo.objId) {
+                    return Acm.compare(this._treeInfo.objId, treeInfo.objId);
+                }
+
+                if (!Acm.compare(this._treeInfo.start, treeInfo.start)) {
+                    return false;
+                }
+                if (!Acm.compare(this._treeInfo.sort, treeInfo.sort)) {
+                    return false;
+                }
+                if (!Acm.compare(this._treeInfo.filter, treeInfo.filter)) {
+                    return false;
+                }
+                if (!Acm.compare(this._treeInfo.n, treeInfo.n)) {
+                    return false;
+                }
+
+                return true;
             }
         }
 
@@ -463,22 +523,22 @@ CaseFile.Model = CaseFile.Model || {
             ,onInitialized: function() {
             }
 
+            ,KEY_SEPARATOR               : "."
+            ,NODE_TYPE_PART_PREV_PAGE    : "prevPage"
+            ,NODE_TYPE_PART_NEXT_PAGE    : "nextPage"
+            ,NODE_TYPE_PART_PAGE         : "p"
+            ,NODE_TYPE_PART_OBJECT       : "c"
+            ,NODE_TYPE_PART_CHILD        : "c"
 
-            ,NODE_TYPE_PART_PREV_PAGE:    "prevPage"
-            ,NODE_TYPE_PART_NEXT_PAGE:    "nextPage"
-            ,NODE_TYPE_PART_PAGE:         "p"
-            ,NODE_TYPE_PART_OBJECT:       "c"
-            ,NODE_TYPE_PART_CHILD:        "c"
-
-            ,NODE_TYPE_PART_DETAILS:      "d"
-            ,NODE_TYPE_PART_PEOPLE:       "p"
-            ,NODE_TYPE_PART_DOCUMENTS:    "o"
-            ,NODE_TYPE_PART_PARTICIPANTS: "a"
-            ,NODE_TYPE_PART_NOTES:        "n"
-            ,NODE_TYPE_PART_TASKS:        "t"
-            ,NODE_TYPE_PART_REFERENCES:   "r"
-            ,NODE_TYPE_PART_HISTORY:      "h"
-            ,NODE_TYPE_PART_TEMPLATES:    "tm"
+            ,NODE_TYPE_PART_DETAILS      : "d"
+            ,NODE_TYPE_PART_PEOPLE       : "p"
+            ,NODE_TYPE_PART_DOCUMENTS    : "o"
+            ,NODE_TYPE_PART_PARTICIPANTS : "a"
+            ,NODE_TYPE_PART_NOTES        : "n"
+            ,NODE_TYPE_PART_TASKS        : "t"
+            ,NODE_TYPE_PART_REFERENCES   : "r"
+            ,NODE_TYPE_PART_HISTORY      : "h"
+            ,NODE_TYPE_PART_TEMPLATES    : "tm"
 
 
             ,_mapNodeType: [
@@ -539,7 +599,7 @@ CaseFile.Model = CaseFile.Model || {
                     return null;
                 }
 
-                var arr = key.split(".");
+                var arr = key.split(this.KEY_SEPARATOR);
                 if (1 == arr.length) {
                     if (this.NODE_TYPE_PART_PREV_PAGE == key) {
                         return this.NODE_TYPE_PART_PREV_PAGE;
@@ -572,7 +632,7 @@ CaseFile.Model = CaseFile.Model || {
                     return parts;
                 }
 
-                var arr = key.split(".");
+                var arr = key.split(this.KEY_SEPARATOR);
                 if (1 <= arr.length) {
                     var pageId = parseInt(arr[0]);
                     if (! isNaN(pageId)) {
@@ -598,7 +658,10 @@ CaseFile.Model = CaseFile.Model || {
             }
             ,getCaseFileKey: function(caseFileId) {
                 var pageId = CaseFile.Model.Tree.Config.getPageId();
-                return pageId + "." + caseFileId;
+                return pageId + this.KEY_SEPARATOR + caseFileId;
+            }
+            ,combinePageIdSubKey: function(pageId, subKey) {
+                return pageId + this.KEY_SEPARATOR + subKey;
             }
         }
     }
@@ -654,6 +717,7 @@ CaseFile.Model = CaseFile.Model || {
             this.cacheTasks = new Acm.Model.CacheFifo(4);
         }
         ,onInitialized: function() {
+            CaseFile.Service.Tasks.retrieveTask();
         }
     }
     ,Documents: {

@@ -77,7 +77,7 @@ Acm.Model.CacheFifo.prototype = {
         }
 
         this._advanceToNext();
-        return this._getNextSlotN(n + 1);
+        return this._getNextN(n + 1);
 
     }
     ,_advanceToNext: function() {
@@ -138,7 +138,7 @@ Acm.Model.CacheFifo.prototype = {
     }
     ,unlock: function(key) {
         for (var i = 0; i < this.locks.length; i++) {
-            if (this.isLock(keys[i])) {
+            if (this.locks[i] == key) {
                 this.locks.splice(i, 1);
                 return;
             }
@@ -146,7 +146,7 @@ Acm.Model.CacheFifo.prototype = {
     }
     ,isLock: function(key) {
         for (var i = 0; i < this.locks.length; i++) {
-           if (this.keys[i] == key) {
+           if (this.locks[i] == key) {
                return true;
            }
         }

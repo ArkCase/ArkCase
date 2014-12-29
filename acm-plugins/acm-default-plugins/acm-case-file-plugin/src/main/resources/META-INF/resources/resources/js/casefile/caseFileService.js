@@ -112,19 +112,18 @@ CaseFile.Service = {
         ,API_RETRIEVE_CASE_FILE_LIST         : "/api/latest/plugin/search/CASE_FILE"
 
         ,retrieveCaseFileList: function(treeInfo){
-            var caseFileId = treeInfo.caseFileId;
-            var initKey = treeInfo.initKey;
-            var start = treeInfo.start;
-            var n = treeInfo.n;
-            var s = treeInfo.s;
-            var q = treeInfo.q;
+            var start  = treeInfo.start;
+            var n      = treeInfo.n;
+            var sort   = treeInfo.sort;
+            var filter = treeInfo.filter;
+            var q      = treeInfo.q;
 
-            s = s ? s : "name desc";
+            sort = sort ? sort : "name desc";
 
             var url = App.getContextPath() + this.API_RETRIEVE_CASE_FILE_LIST;
             url += "?start=" + treeInfo.start;
             url += "&n=" + treeInfo.n;
-            url += "&s=" + s;
+            url += "&s=" + sort;
 
             Acm.Service.asyncGet(
                 function(response) {
@@ -140,22 +139,24 @@ CaseFile.Service = {
                             var pageId = CaseFile.Model.Tree.Config.getPageId();
                             CaseFile.Model.List.cachePage.put(pageId, caseFiles);
 
-                            var key = treeInfo.initKey;
+                            var subKey = treeInfo.key;
 
-                            var caseFileId;
-                            if (null == key) {
+                            var objId;
+                            var key;
+                            if (null == subKey) {
                                 if (0 < caseFiles.length) {
-                                    caseFileId = parseInt(caseFiles[0].object_id_s);
-                                    if (0 < caseFileId) {
-                                        key = start + "." + caseFileId;
+                                    objId = parseInt(caseFiles[0].object_id_s);
+                                    if (0 < objId) {
+                                        key = CaseFile.Model.Tree.Key.combinePageIdSubKey(start, objId);
                                     }
                                 }
                             } else {
-                                caseFileId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(key);
-                                treeInfo.initKey = null;
+                                key = CaseFile.Model.Tree.Key.combinePageIdSubKey(pageId, subKey);
+                                objId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(key);
+                                treeInfo.key = null;
                             }
 
-                            CaseFile.Model.setCaseFileId(caseFileId);
+                            CaseFile.Model.setCaseFileId(objId);
                             CaseFile.Controller.modelRetrievedCaseFileList(key);
                         }
                     }
@@ -214,7 +215,7 @@ CaseFile.Service = {
 
 
                             var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
-                            if (0 < treeInfo.caseFileId) {      //handle single caseFil situation
+                            if (0 < treeInfo.objId) {      //handle single caseFile situation
                                 treeInfo.total = 1;
 
                                 var pageId = treeInfo.start;
@@ -234,7 +235,7 @@ CaseFile.Service = {
                                 var caseFiles = [caseFilSolr];
                                 CaseFile.Model.List.cachePage.put(pageId, caseFiles);
 
-                                var key = pageId + "." + treeInfo.caseFileId.toString();
+                                var key = CaseFile.Model.Tree.Key.combinePageIdSubKey(pageId, treeInfo.objId.toString());
                                 CaseFile.Controller.modelRetrievedCaseFileList(key);
 
                             } else {

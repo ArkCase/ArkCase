@@ -5,11 +5,17 @@
  */
 var AcmEx = AcmEx || {
     create : function() {
-        AcmEx.Object.create();
-        AcmEx.Service.create();
+        if (AcmEx.Object.create)  {AcmEx.Object.create()};
+        //if (AcmEx.Model.create)   {AcmEx.Model.create();}
+        if (AcmEx.Service.create) {AcmEx.Service.create();}
+    }
+    ,onInitialize : function() {
+        if (AcmEx.Object.onInitialize)  {AcmEx.Object.onInitialize()};
+        //if (AcmEx.Model.onInitialize)   {AcmEx.Model.onInitialize();}
+        if (AcmEx.Service.onInitialize) {AcmEx.Service.onInitialize();}
     }
 
-//    ,Object : {}
+
 
 
     //
