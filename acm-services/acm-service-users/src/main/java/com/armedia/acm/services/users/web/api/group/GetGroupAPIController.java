@@ -39,6 +39,47 @@ public class GetGroupAPIController {
 	private AcmGroupDao groupDao;
 	private MuleClient muleClient;
 	
+	@RequestMapping(value="/groups/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getAllGroupsAndSubgroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+				              @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,			
+				              @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+    						  Authentication auth,
+    						  HttpSession httpSession) throws MuleException, Exception
+    {
+		if (LOG.isInfoEnabled()) 
+		{
+			LOG.info("Taking all groups and subgroups from Solr.");
+		}
+		
+		String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED";
+		
+		if ( LOG.isDebugEnabled() )
+        {
+			LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
+        }
+		
+		Map<String, Object> headers = new HashMap<>();
+        headers.put("query", query);
+        headers.put("firstRow", startRow);
+        headers.put("maxRows", maxRows);
+        headers.put("sort", sort);
+        
+        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
+
+        LOG.debug("Response type: " + response.getPayload().getClass());
+
+        if ( response.getPayload() instanceof String )
+        {
+            String responsePayload = (String) response.getPayload();
+          
+            return responsePayload;
+        }
+
+        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+		
+    }
+	
 	@RequestMapping(value="/group/{groupId}/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getGroup(@PathVariable("groupId") String groupId, 
