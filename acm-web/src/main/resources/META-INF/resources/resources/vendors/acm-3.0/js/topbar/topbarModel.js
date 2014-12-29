@@ -82,13 +82,13 @@ Topbar.Model = {
             }
 
             Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
-//            Acm.Timer.registerListener("AsnWatch"
-//                ,16
-//                ,function() {
-//                    Topbar.Service.Asn.retrieveAsnList(App.getUserName());
-//                    return true;
-//                }
-//            );
+            Acm.Timer.registerListener("AsnWatch"
+                ,16
+                ,function() {
+                    Topbar.Service.Asn.retrieveAsnList(App.getUserName());
+                    return true;
+                }
+            );
         }
 
         ,STATUS_AUTO     : "Auto"
@@ -160,7 +160,6 @@ Topbar.Model = {
             }
             return true;
         }
-
         ,validateAsn: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;

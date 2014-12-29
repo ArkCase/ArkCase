@@ -38,8 +38,10 @@ CaseFile.View = CaseFile.View || {
     ,MicroData: {
         create : function() {
             var items = $(document).items();
-            this.caseFileId = items.properties("caseFileId").itemValue();
-            this.token = items.properties("token").itemValue();
+            //this.caseFileId = items.properties("caseFileId").itemValue();
+            //this.token = items.properties("token").itemValue();
+            this.caseFileId = Acm.Object.MicroData.get("caseFileId");
+            this.token      = Acm.Object.MicroData.get("token");
             
             
             this.formUrls = new Object();
@@ -72,6 +74,9 @@ CaseFile.View = CaseFile.View || {
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE_LIST, this.onModelRetrievedCaseFileList);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE       , this.onViewChangedCaseTitle);
+            if ("undefined" != typeof Topbar) {
+                Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_SET_ASN_DATA       , this.onTopbarViewSetAsnData, Acm.Dispatcher.PRIORITY_HIGH);
+            }
         }
         ,onInitialized: function() {
         }
@@ -86,7 +91,21 @@ CaseFile.View = CaseFile.View || {
         ,onViewChangedCaseTitle: function(caseFileId, title) {
             CaseFile.View.Tree.updateTitle(caseFileId, title);
         }
-
+        ,onTopbarViewSetAsnData: function(asnData) {
+            if (CaseFile.Model.Tree.Config.validateTreeInfo(asnData)) {
+                if (0 == asnData.name.indexOf("/plugin/casefile")) {
+                    var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
+                    if (CaseFile.Model.Tree.Config.sameResultSet(asnData)) {
+                        if (asnData.key) {
+                            var key = CaseFile.Model.Tree.Key.combinePageIdSubKey(asnData.start, asnData.key);
+                            CaseFile.View.Tree.refreshTree(key);
+                        }
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
         ,onTreeNodeActivated: function(node) {
             if ("prevPage" == node.key) {
                 CaseFile.Controller.viewClickedPrevPage();
@@ -99,10 +118,53 @@ CaseFile.View = CaseFile.View || {
 
             CaseFile.Controller.viewSelectedTreeNode(node.key);
         }
+        ,testTree: function() {
+            var key = "0.441.p";
+            var node;
+            var a;
+            //this.refreshTree(key);
+            //return;
+            this.toggleAllTreeNode("0.441");
+            //this.expandAllTreeNode("0.441");
+            //this.collapseAllTreeNode("0.441");
 
+            return;
+
+            node = $("#tree").fancytree("getActiveNode");
+            node = this.tree.getActiveNode();
+            node = $("#tree").fancytree("getRootNode");
+            node = this.tree.getRootNode();
+            node = this.tree.getNodeByKey("0.441");
+            node = this.tree.getNodeByKey("0.441.p");
+            if (node) {
+                a = node.isExpanded();
+                if (!a) {
+                    node.setExpanded(true);
+                }
+                a = node.isExpanded();
+            }
+            var z = 1;
+
+
+        }
         ,refreshTree: function(key) {
             this.tree.reload().done(function(){
                 if (Acm.isNotEmpty(key)) {
+                    var parts = key.split(CaseFile.Model.Tree.Key.KEY_SEPARATOR);
+                    if (parts && 1 < parts.length) {
+                        var parentKey = parts[0];
+                        //exclue page ID, so start from 1; expand parents only, not include self, so length-1
+                        for (var i = 1; i < parts.length-1; i++) {
+                            parentKey += CaseFile.Model.Tree.Key.KEY_SEPARATOR + parts[i];
+                            var node = CaseFile.View.Tree.tree.getNodeByKey(parentKey);
+                            if (node) {
+                                if (!node.isExpanded()) {
+                                    node.setExpanded(true);
+                                }
+                            }
+                        }
+                    }
+
                     CaseFile.View.Tree.tree.activateKey(key);
                 }
             });
@@ -111,7 +173,31 @@ CaseFile.View = CaseFile.View || {
             this.tree.activateKey(key);
         }
         ,expandAllTreeNode: function(key) {
-            this.tree.activateKey(key);
+            var thisNode = this.tree.getNodeByKey(key);
+            if (thisNode) {
+                thisNode.setExpanded(true);
+                thisNode.visit(function(node) {
+                    node.setExpanded(true);
+                });
+            }
+        }
+        ,collapseAllTreeNode: function(key) {
+            var thisNode = this.tree.getNodeByKey(key);
+            if (thisNode) {
+                thisNode.setExpanded(false);
+                thisNode.visit(function(node) {
+                    node.setExpanded(false);
+                });
+            }
+        }
+        ,toggleAllTreeNode: function(key) {
+            var thisNode = this.tree.getNodeByKey(key);
+            if (thisNode) {
+                thisNode.toggleExpanded();
+                thisNode.visit(function(node) {
+                    node.toggleExpanded();
+                });
+            }
         }
 
         ,_activeKey: null
@@ -258,7 +344,7 @@ CaseFile.View = CaseFile.View || {
             for (var i = 0; i < caseFiles.length; i++) {
                 var c = caseFiles[i];
                 var caseId = parseInt(c.object_id_s);
-                builder.addLeaf({key: treeInfo.start + "." + caseId                       //level 1: /CaseFile
+                builder.addLeaf({key: treeInfo.start + CaseFile.Model.Tree.Key.KEY_SEPARATOR + caseId                       //level 1: /CaseFile
                     ,title: this._getCaseNodeDisplay(c.title_t, c.name)
                     ,tooltip: c.title_t
                     ,expanded: false
@@ -293,34 +379,34 @@ CaseFile.View = CaseFile.View || {
                 case CaseFile.Model.Tree.Key.NODE_TYPE_PART_PAGE + CaseFile.Model.Tree.Key.NODE_TYPE_PART_OBJECT: //"pc":
                     data.result = AcmEx.FancyTreeBuilder
                         .reset()
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS         //level 2: /CaseFile/Details
+                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS         //level 2: /CaseFile/Details
                             ,title: "Details"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE          //level 2: /CaseFile/People
+                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE          //level 2: /CaseFile/People
                             ,title: "People"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS       //level 2: /CaseFile/Documents
+                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS       //level 2: /CaseFile/Documents
                             ,title: "Documents"
 //                            ,folder: true
 //                            ,lazy: true
 //                            ,cache: false
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS    //level 2: /CaseFile/Participants
+                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS    //level 2: /CaseFile/Participants
                             ,title: "Participants"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES           //level 2: /CaseFile/Notes
+                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES           //level 2: /CaseFile/Notes
                             ,title: "Notes"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/Tasks
+                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/Tasks
                             ,title: "Tasks"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES      //level 2: /CaseFile/References
+                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES      //level 2: /CaseFile/References
                             ,title: "References"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY         //level 2: /CaseFile/History
+                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY         //level 2: /CaseFile/History
                             ,title: "History"
                         })
-                        .addLeaf({key: key + "." + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES         //level 2: /CaseFile/Correspondence
+                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES         //level 2: /CaseFile/Correspondence
                             ,title: "Correspondence"
                         })
                         .getTree();
@@ -331,16 +417,18 @@ CaseFile.View = CaseFile.View || {
                     var caseFileId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(key);
                     var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                     if (c) {
-                        data.result = [{key: key + "." + "1", title: "Document1" + "[Status]"}
-                            ,{key: key + "." + "2", title: "Doc2" + "[Status]"}
+                        data.result = [
+                             {key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + "1", title: "Document1" + "[Status]"}
+                            ,{key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + "2", title: "Doc2" + "[Status]"}
                         ];
                     } else {
                         data.result = CaseFile.Service.Detail.retrieveCaseFileDeferred(caseFileId
                             ,function(response) {
                                 var z = 1;
 
-                                var resultFake = [{key: key + "." + "3", title: "Document3" + "[Status]"}
-                                    ,{key: key + "." + "4", title: "Doc4" + "[Status]"}
+                                var resultFake = [
+                                     {key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + "3", title: "Document3" + "[Status]"}
+                                    ,{key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + "4", title: "Doc4" + "[Status]"}
                                 ];
                                 return resultFake;
                             }

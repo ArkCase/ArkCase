@@ -192,6 +192,7 @@
 
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmEx.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmExObject.js"></script>
+<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmExModel.js"></script>--%>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmExService.js"></script>
 
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.js" ></script>

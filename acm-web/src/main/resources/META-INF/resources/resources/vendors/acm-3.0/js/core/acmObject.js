@@ -10,6 +10,19 @@ Acm.Object = {
     create : function() {
     }
 
+    ,MicroData: {
+        _items: null
+        ,get: function(item) {
+            if (null == this._items) {
+                this._items = $(document).items();
+                if (null == this._items) {
+                    return null;
+                }
+            }
+            return this._items.properties(item).itemValue();
+        }
+    }
+
 
     ,getValue : function($s) {
         return $s.val();
