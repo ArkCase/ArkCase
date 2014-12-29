@@ -6,11 +6,15 @@ Admin.Model = Admin.Model || {
     create : function() {
         if (Admin.Model.AccessControl.create)           {Admin.Model.AccessControl.create();}
         if (Admin.Model.Correspondence.create)          {Admin.Model.Correspondence.create();}
+        if (Admin.Model.Organization.create)            {Admin.Model.Organization.create();}
+
         if (Admin.Model.Tree.create)                    {Admin.Model.Tree.create();}
     }
     ,onInitialized: function() {
         if (Admin.Model.AccessControl.onInitialized)          {Admin.Model.AccessControl.onInitialized();}
         if (Admin.Model.Correspondence.onInitialized)         {Admin.Model.Correspondence.onInitialized();}
+        if (Admin.Model.Organization.onInitialized)           {Admin.Model.Organization.onInitialized();}
+
         if (Admin.Model.Tree.onInitialized)                   {Admin.Model.Tree.onInitialized();}
     }
 
@@ -44,6 +48,20 @@ Admin.Model = Admin.Model || {
     }
 
     ,Organization: {
+        create : function() {
+            this.cacheGroup = new Acm.Model.CacheFifo(4);
+            this.cacheGroupMembers = new Acm.Model.CacheFifo(4);
+            //Admin.Service.Organization.retrieveGroup("Armedia");
+        }
+        ,onInitialized: function() {
+        }
+
+        ,validateGroup: function(group) {
+            if (Acm.isEmpty(group)) {
+                return false;
+            }
+            return true;
+        }
     }
 
     ,Correspondence:{

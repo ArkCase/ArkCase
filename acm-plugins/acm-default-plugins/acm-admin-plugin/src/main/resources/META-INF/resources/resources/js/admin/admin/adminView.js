@@ -23,13 +23,13 @@ Admin.View = Admin.View || {
         create: function () {
             if (Admin.View.Organization.Tree.create)        {Admin.View.Organization.Tree.create();}
 
-            /*this.$divAdminAccessControlPolicy = $("#divACP");
-            this.createJTableAdminAccessControl(this.$divAdminAccessControlPolicy);
-
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_UPDATED_ACCESS_CONTROL, this.onModelUpdatedAccessControlList);*/
-
+            /*Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUP, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUP_MEMBERS, this.onModelRetrievedHierarchy);*/
         }
         , onInitialized: function () {
+        }
+        ,onModelRetrievedHierarchy: function(){
+            if (Admin.View.Organization.Tree.create)        {Admin.View.Organization.Tree.create();}
         }
         ,Tree:{
             create: function () {
@@ -39,7 +39,6 @@ Admin.View = Admin.View || {
             , onInitialized: function () {
             }
             ,_useFancyTree: function($s) {
-
                 $s.fancytree({
                     extensions: ["table"],
                     checkbox: false,
@@ -48,11 +47,19 @@ Admin.View = Admin.View || {
                         nodeColumnIdx: 2,     // render the node title into the 2nd column
                         checkboxColumnIdx: 0  // render the checkboxes into the 1st column
                     },
-                    /*activate: function(event, data){
-                        var node = data.node;
-                        Admin.View.Tree.showPanel(node.key);
-                    },*/
                     source: function() {
+                        //var source_s = Admin.Model.Organization.cacheGroup.get("Armedia");
+                        /*var source = [
+                            {"title": source_s.name, "expanded": true, "folder": true, "children": [
+                                {"title": source_s.child_id_ss[0], "folder": true, "children": [
+                                    {"title": "First Name", "second" : "Last Name", "third" : "Job Title", "fourth"  : "Group Role"},
+                                    {"title": "First Name", "second" : "Last Name", "third" : "Job Title", "fourth"  : "Group Role"},
+                                    {"title": "First Name", "second" : "Last Name", "third" : "Job Title", "fourth"  : "Group Role"},
+                                    {"title": "First Name", "second" : "Last Name", "third" : "Job Title", "fourth"  : "Group Role"}
+                                ]}
+                            ]}
+                        ];*/
+
                         var source = [
                             {"title": "Group", "expanded": true, "folder": true, "children": [
                                 {"title": "Subgroup", "folder": true, "children": [
@@ -64,7 +71,6 @@ Admin.View = Admin.View || {
                             ]}
                         ];
                         return source;
-                        //Admin.View.Organization.Tree.treeSource();
                     } //end source
                     ,renderColumns: function(event, data) {
                         var node = data.node,
@@ -101,125 +107,7 @@ Admin.View = Admin.View || {
                 });
 
             }
-
-/*
-            ,treeSource: function() {
-                var builder = AcmEx.FancyTreeBuilder.reset();
-
-                builder.addBranch({key: "acc"                                                   //level 1: /Access Control
-                    ,title: "Security"
-                    ,tooltip: "Security"
-                    ,folder : true
-                    ,expanded: true
-                })
-                    .addLeaf({key: "dac"                                                        //level 1.1: /Access Control/Data Access Control
-                        ,title: "Data Access Control"
-                        ,tooltip: "Data Access Control"
-                        ,href: "/plugin/admin/access"
-                    })
-                    .addLeaf({key: "fac"                                                        //level 1.2: /Access Control/Functional Access Control
-                        ,title: "Functional Access Control"
-                        ,tooltip: "Functional Access Control"
-                    })
-                    .addLeafLast({key: "ldap"                                                   //level 1.3: /Access Control/LDAP Configuration
-                        ,title: "LDAP Configuration"
-                        ,tooltip: "LDAP Configuration"
-                    })
-
-                builder.addBranch({key: "dsh"                                               //level 2: /Dashboard
-                    ,title: "Dashboard"
-                    ,tooltip: "Dashboard"
-                    ,folder : true
-                    ,expanded: true
-                })
-                    .addLeafLast({key: "dc"                                                 //level 2.1: /Dashboard/Dashboard Configuration
-                        ,title: "Dashboard Configuration"
-                        ,tooltip: "Dashboard Configuration"
-                        ,href: "/plugin/admin/dashboard"
-                    })
-
-                builder.addBranch({key: "rpt"                                               //level 3: /Reports
-                    ,title: "Reports"
-                    ,tooltip: "Reports"
-                    ,folder : true
-                    ,expanded: true
-                })
-                    .addLeafLast({key: "rc"                                                     //level 3.1: /Reports/Reports Configuration
-                        ,title: "Reports Configuration"
-                        ,tooltip: "Reports Configuration"
-                    })
-
-
-                //for demo purposes
-                builder.addBranch({key: "forms"                                               //level 4: /Forms
-                    ,title: "Forms"
-                    ,tooltip: "Forms"
-                    ,folder : true
-                    ,expanded: true
-                })
-                    .addLeafLast({key: "fc"                                                           //level 4.1: /Forms/Form Configuration
-                        ,title: "Form Configuration"
-                        ,tooltip: "Form Configuration"
-                    })
-                    .addBranch({key: "wf"                                                               //level 4.1.1: /Forms/Form Configuration/Workflows
-                        ,title: "Workflows"
-                        ,tooltip: "Workflows"
-                        ,folder : true
-                        ,expanded: true
-                    })
-                    .addLeafLast({key: "wfc"                                                                //level 4.1.1.1: /Forms/Form Configuration/Workflows/Workflow Configuration
-                        ,title: "Workflow Configuration"
-                        ,tooltip: "Workflow Configuration"
-                    })
-
-                    .addBranch({key: "wfl"                                                              //level 4.2.1: /Forms/Form Configuration/Form/Workflow Link
-                        ,title: "Form/Workflow Link"
-                        ,tooltip: "Form/Workflow Link"
-                        ,folder : true
-                        ,expanded: true
-                    })
-                    .addLeafLast({key: "wfc"                                                                //level 4.2.1.1: /Forms/Form Configuration/Form/Workflow Link/Link Forms/Workflows
-                        ,title: "Link Forms/Workflows"
-                        ,tooltip: "Link Forms/Workflows"
-                    })
-
-                    .addBranch({key: "bo"                                                               //level 4.3.1: /Forms/Form Configuration/Form/Business Objects
-                        ,title: "Business Objects"
-                        ,tooltip: "Business Objects"
-                        ,folder : true
-                        ,expanded: true
-                    })
-                    .addLeafLast({key: "wfc"                                                                    //level 4.3.1.1: /Forms/Form Configuration/Form/Business Objects/Business Object Configuration
-                        ,title: "Business Object Configuration"
-                        ,tooltip: "Business Object Configuration"
-                    })
-
-                    .addBranch({key: "al"                                                           //level 4.4.1: /Forms/Form Configuration/Form/Application Labels
-                        ,title: "Application Labels"
-                        ,tooltip: "Application Labels"
-                        ,folder : true
-                        ,expanded: true
-                    })
-                    .addLeafLast({key: "lc"                                                                 //level 4.4.1.1: /Forms/Form Configuration/Form/Application Labels/Label Configuration
-                        ,title: "Label Configuration"
-                        ,tooltip: "Label Configuration"
-                    })
-                    .addBranchLast({key: "cm"                                                           //level 4.5.1: /Forms/Form Configuration/Form/Correspondence Management
-                        ,title: "Correspondence Management"
-                        ,tooltip: "Correspondence Management"
-                        ,folder : true
-                        ,expanded: true
-                    })
-                    .addLeafLast({key: "ct"                                                                 //level 4.5.1.1: /Forms/Form Configuration/Form/Correspondence Templates
-                        ,title: "Correspondence Templates"
-                        ,tooltip: "Correspondence Templates"
-                    })
-
-                return builder.getTree();
-            }
-*/
         }
-
     }
     ,AccessControl : {
         create: function () {
@@ -479,6 +367,7 @@ Admin.View = Admin.View || {
 
     ,Tree:{
         create: function () {
+            this.$btnCreateAdHocGroup = $("#btnCreateAdHoc");
             this.$tree = $("#tree");
             this._useFancyTree(this.$tree);
         }
@@ -490,6 +379,12 @@ Admin.View = Admin.View || {
             for (var i = 0; i < tabIds.length; i++) {
                 var show = Acm.isItemInArray(tabIds[i], tabIdsToShow);
                 Acm.Object.show($("#" + tabIds[i]), show);
+                if(show == true && tabIdsToShow == "tOrganization"){
+                    this.$btnCreateAdHocGroup.show();
+                }
+                else{
+                    this.$btnCreateAdHocGroup.hide();
+                }
             }
         }
         ,_useFancyTree: function($s) {
