@@ -8,6 +8,54 @@ Admin.Service = {
     ,onInitialized: function() {
     }
 
+    ,Organization: {
+        create: function(){
+        }
+        ,onInitialized: function(){
+        }
+        ,API_GROUP                  : "/api/latest/users/group/"
+
+        ,retrieveGroup : function(groupId){
+            var url = App.getContextPath() + Admin.Service.Organization.API_GROUP + groupId + "/get";
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var group = response.response.docs[0];
+                        Admin.Controller.modelRetrievedGroup(group);
+
+                    } else {
+                        if (Admin.Model.Organization.validateGroup(response)) {
+                            var group = response.response.docs[0];
+                            Admin.Model.Organization.cacheGroup.put(group.name, group);
+                            Admin.Controller.modelRetrievedGroup(group);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+
+        ,retrieveGroupMembers : function(groupId){
+            var url = App.getContextPath()+ Admin.Service.Organization.API_GROUP + groupId + "/get/members" ;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var groupMembers = response;
+                        Admin.Controller.modelRetrievedGroup(groupMembers);
+
+                    } else {
+                        if (Admin.Model.Organization.validateGroup(response)) {
+                            var groupMembers = response;
+                            Admin.Model.Organization.cacheGroupMembers.put(groupId, groupMembers);
+                            Admin.Controller.modelRetrievedGroupMembers(groupMembers);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+
+    }
 
     ,Correspondence : {
 
