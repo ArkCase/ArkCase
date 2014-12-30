@@ -1,8 +1,9 @@
 package com.armedia.acm.plugins.complaint.service;
 
-import com.armedia.acm.form.config.Item;
+import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
+import com.armedia.acm.plugins.complaint.model.complaint.ParticipantItem;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
@@ -25,7 +26,7 @@ public class ComplaintFactory
         retval.setIncidentDate(formComplaint.getDate());
         retval.setPriority(formComplaint.getPriority());
         retval.setComplaintTitle(formComplaint.getComplaintTitle());
-        retval.setParticipants(convertToParticipants(formComplaint.getOwners()));
+        retval.setParticipants(convertToAcmParticipants(formComplaint.getParticipants()));
         
         Calendar  cal = Calendar.getInstance();
         cal.setTime(formComplaint.getDate());
@@ -116,16 +117,18 @@ public class ComplaintFactory
         }
     }
     
-    private List<AcmParticipant> convertToParticipants(List<Item> items){
+    private List<AcmParticipant> convertToAcmParticipants(List<ParticipantItem> items){
     	List<AcmParticipant> participants = new ArrayList<AcmParticipant>();
     	
     	if (items != null && items.size() > 0){
-    		for (Item item : items){
+    		for (ParticipantItem item : items){
     			AcmParticipant participant = new AcmParticipant();
-    			participant.setParticipantLdapId(item.getValue());
-    			participant.setParticipantType("assignee");
     			
-    			participants.add(participant);
+    			participant.setObjectType(FrevvoFormName.COMPLAINT.toUpperCase());
+    			participant.setParticipantLdapId(item.getValue());
+				participant.setParticipantType(item.getType());
+				
+				participants.add(participant);
     		}
     	}
     	
