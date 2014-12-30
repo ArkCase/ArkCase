@@ -175,7 +175,7 @@ Topbar.View = {
         }
         ,onModelRetrievedAsnList: function(asnList) {
             if (asnList.hasError) {
-                Acm.Dialog.error("Failed to retrieve notifications:" + asnList.errorMsg);
+                Topbar.Model.Flash.add("Failed to retrieve notifications:" + asnList.errorMsg);
             } else {
                 Topbar.View.Asn.showNewAsn(asnList);
             }
