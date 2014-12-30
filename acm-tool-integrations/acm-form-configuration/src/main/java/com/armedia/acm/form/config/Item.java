@@ -17,9 +17,8 @@ public class Item {
 
 	@XmlElements({
 		@XmlElement(name="value"),
-		@XmlElement(name="owner"),
-		@XmlElement(name="follower"),
-		@XmlElement(name="approverId")
+		@XmlElement(name="approverId"),
+		@XmlElement(name="participant")
 	})
 	private String value;
 

@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
-import com.armedia.acm.frevvo.config.FrevvoFormUrl;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -30,11 +29,8 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
-import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserAction;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -159,27 +155,17 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 		complaint.setInitiator(initiator);
 		complaint.setPeople(peoples);
-		
-		
-        // Owners Initialization		
+        
+        // Participants Initialization
         if (users != null && users.size() > 0) {
-        	List<String> ownersOptions = new ArrayList<String>();
+        	List<String> participantsOptions = new ArrayList<String>();
         	for (int i = 0; i < users.size(); i++) {
-        		ownersOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
+        		participantsOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
         	}
-        	complaint.setOwnersOptions(ownersOptions);
+        	complaint.setParticipantsOptions(participantsOptions);
         }
-     
-		
-		// Followers Initialization
-        if (users != null && users.size() > 0) {
-        	List<String> followersOptions = new ArrayList<String>();
-        	for (int i = 0; i < users.size(); i++) {
-        		followersOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
-        	}
-        	complaint.setFollowersOptions(followersOptions);
-        }     
-			
+        List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".participantTypes"), ",");
+		complaint.setParticipantsTypeOptions(participantTypes);
 		
 		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
 		String jsonString = gson.toJson(complaint);
