@@ -65,6 +65,9 @@ public class ObjectAssociation implements AcmEntity
     @Column(name = "cm_target_category")
     private String category;
 
+    @Column(name = "cm_association_type")
+    private String associationType = "OWNERSHIP";
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -178,6 +181,16 @@ public class ObjectAssociation implements AcmEntity
     public void setCategory(String category)
     {
         this.category = category;
+    }
+
+    public String getAssociationType()
+    {
+        return associationType;
+    }
+
+    public void setAssociationType(String associationType)
+    {
+        this.associationType = associationType;
     }
 
     @Override

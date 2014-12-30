@@ -91,7 +91,7 @@ public class ListCaseFilesByUserAPIControllerTest extends EasyMockSupport {
 
 
 
-        expect(mockCaseFileDao.getCaseFilesByUser(user)).andReturn(Arrays.asList(caseFile));
+        expect(mockCaseFileDao.getNotClosedCaseFilesByUser(user)).andReturn(Arrays.asList(caseFile));
 
         Capture<CaseFile> capturedCase = new Capture<CaseFile>();
 
