@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.complaint.model.complaint;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -47,7 +48,7 @@ public class Complaint {
 		
 	})
     private List<ParticipantItem> participants;
-    private List<String> participantsOptions;
+    private Map<String, List<String>> participantsOptions;
     private List<String> participantsTypeOptions;
 
     /**
@@ -278,11 +279,11 @@ public class Complaint {
 		this.participants = participants;
 	}
 
-	public List<String> getParticipantsOptions() {
+	public Map<String, List<String>> getParticipantsOptions() {
 		return participantsOptions;
 	}
 
-	public void setParticipantsOptions(List<String> participantsOptions) {
+	public void setParticipantsOptions(Map<String, List<String>> participantsOptions) {
 		this.participantsOptions = participantsOptions;
 	}
 
