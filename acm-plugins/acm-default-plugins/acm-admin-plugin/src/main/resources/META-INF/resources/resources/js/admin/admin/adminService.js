@@ -14,7 +14,26 @@ Admin.Service = {
         ,onInitialized: function(){
         }
         ,API_GROUP                  : "/api/latest/users/group/"
+        ,API_RETRIEVE_GROUPS        : "/api/latest/users/groups/get"
 
+        ,createAdHocGroup: function(group){
+            var url = App.getContextPath() + Admin.Service.Organization.API_GROUP + "/save";
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response.hasError) {
+                        Admin.Controller.modelCreatedAdHocGroup(response);
+
+                    } else {
+                        if (Admin.Model.Organization.validateGroup(response)) {
+                            Admin.Controller.modelCreatedAdHocGroup(group);
+                        }
+                    }
+                }
+                ,url
+                ,JSON.stringify(group)
+            )
+
+        }
         ,retrieveGroup : function(groupId){
             var url = App.getContextPath() + Admin.Service.Organization.API_GROUP + groupId + "/get";
             Acm.Service.asyncGet(
@@ -28,6 +47,45 @@ Admin.Service = {
                             var group = response.response.docs[0];
                             Admin.Model.Organization.cacheGroup.put(group.name, group);
                             Admin.Controller.modelRetrievedGroup(group);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+
+        ,retrieveGroups : function(groupId){
+            var url = App.getContextPath() + Admin.Service.Organization.API_RETRIEVE_GROUPS;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var allGroups = response.response.docs;
+                        Admin.Controller.modelRetrievedGroups(group);
+
+                    } else {
+                        if (Admin.Model.Organization.validateGroup(response)) {
+                            var allGroups = response.response.docs;
+                            Admin.Model.Organization.cacheAllGroups.put("allGroups", allGroups);
+                            var subgroups = [];
+                            var groups = [];
+                            for(var i = 0; i<allGroups.length; i++){
+                                var group = allGroups[i];
+                                if(group.parent_type_s != null || group.parent_type_s == "GROUP"){
+                                    subgroups.push(group);
+                                }
+                                else{
+                                    groups.push(group);
+                                }
+                            }
+                            if(subgroups !=null){
+                                Admin.Model.Organization.cacheSubgroups.put("subgroups", subgroups);
+                            }
+                            if(groups !=null){
+                                Admin.Model.Organization.cacheGroups.put("groups", groups);
+                            }
+                            //Admin.Model.Organization.cacheGroups.put("groups", groups);
+
+                            Admin.Controller.modelRetrievedGroups(groups);
                         }
                     }
                 }
@@ -54,6 +112,63 @@ Admin.Service = {
                 ,url
             )
         }
+
+        ,removeGroupMember : function(groupMember,parentGroupId){
+            var url = App.getContextPath()+ Admin.Service.Organization.API_GROUP + parentGroupId + "/members/remove" ;
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response.hasError) {
+                        var removedMember = response;
+                        Admin.Controller.modelRemovedGroupMember(removedMember);
+
+                    } else {
+                            var removedMember = response;
+                            Admin.Controller.modelRemovedGroupMember(removedMember);
+                    }
+                }
+                ,url
+                ,JSON.stringify(groupMember)
+            )
+        }
+
+        ,removeGroup : function(groupId){
+            var url = App.getContextPath()+ Admin.Service.Organization.API_GROUP + groupId + "/remove" ;
+            Acm.Service.asyncDelete(
+                function(response) {
+                    if (response.hasError) {
+                        var removedGroup = response;
+                        Admin.Controller.modelRemovedGroup(removedGroup);
+
+                    } else {
+                        if (Admin.Model.Organization.validateGroup(response)) {
+                            var removedGroup = response;
+                            var groups = Admin.Model.Organization.cacheGroups.get("groups");
+                            var subGroups = Admin.Model.Organization.cacheSubgroups.get("subgroups");
+                            var foundInGroup = false;
+                            //first check in groups to remove the object manually from cache
+                            for(var i = 0; i < groups.length; i++){
+                                if(removedGroup.id == groups[i].object_id_s){
+                                    groups.splice(i,1);
+                                    foundInGroup = true;
+                                    break;
+                                }
+                            }
+                            //then check in subgroups to remove the object manually from cache
+                            if(foundInGroup == false){
+                                for(var j = 0; j < subGroups.length; j++){
+                                    if(removedGroup.id == subGroups[i].object_id_s){
+                                        subGroups.splice(i,1);
+                                    }
+                                }
+                            }
+                            Admin.Controller.modelRemovedGroup(removedGroup);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+
 
     }
 

@@ -167,8 +167,11 @@
                                             <div class="row" id="tOrganization" style="display:none;">
                                                 <%--<div class="col-md-12">
                                                     <section class="panel panel-default">--%>
-                                                        <table id="treeOrganization">
+
+                                                    <table id="treeOrganization">
                                                             <thead>
+                                                            <tr>  <th></th> <th></th><th>Name </th> <th> Type </th> <th>Supervisor Name</th> <th>Location</th></tr>
+
                                                             <tr> <th> </th> <th></th> <th></th> <th></th> <th></th> <th></th></tr>
                                                             </thead>
                                                             <tbody>
@@ -247,18 +250,18 @@
                     <div class="row wrapper">
                         <div class="col-sm-12">
                             <label>Name</label>
-                            <input type="text" class="input-sm form-control" placeholder="Enter group name">
+                            <input type="text" class="input-sm form-control" id="groupName" placeholder="Enter group name">
                         </div>
 
                         <div class="col-sm-12">
                             <label>Description</label>
-                            <textarea class="form-control" placeholder="Enter description"></textarea>
+                            <textarea class="form-control" placeholder="Enter description" disabled></textarea>
                         </div>
 
                         <div class="col-sm-12">
                             <label>Add people to group</label>
                             <div class="input-group">
-                                <input type="text" class="input-sm form-control" placeholder="Search people..">
+                                <input type="text" class="input-sm form-control" placeholder="Search people.." disabled>
                                   <span class="input-group-btn">
                                     <button class="btn btn-sm btn-default" type="button"><i class="fa fa-search"></i></button>
                                   </span>
@@ -270,16 +273,16 @@
                             <div id="additionalFields" class="collapse in">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Title">
+                                        <input type="text" class="input-sm form-control" placeholder="Title" disabled>
                                     </div>
                                     <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Location">
+                                        <input type="text" class="input-sm form-control" placeholder="Location" disabled>
                                     </div>
                                     <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Phone Number">
+                                        <input type="text" class="input-sm form-control" placeholder="Phone Number" disabled>
                                     </div>
                                     <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Email Address">
+                                        <input type="text" class="input-sm form-control" placeholder="Email Address" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -339,7 +342,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Add Ad-Hoc Group</button>
+                <button type="button" class="btn btn-primary" id="addAdHocGroup">Add Ad-Hoc Group</button>
             </div>
         </div>
     </div>

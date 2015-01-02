@@ -49,9 +49,17 @@ Admin.Model = Admin.Model || {
 
     ,Organization: {
         create : function() {
+            this.cacheAllGroups = new Acm.Model.CacheFifo(4);
             this.cacheGroup = new Acm.Model.CacheFifo(4);
+            this.cacheGroups = new Acm.Model.CacheFifo(4);
+            this.cacheSubgroups = new Acm.Model.CacheFifo(4);
             this.cacheGroupMembers = new Acm.Model.CacheFifo(4);
-            //Admin.Service.Organization.retrieveGroup("Armedia");
+            Admin.Service.Organization.retrieveGroups();
+
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP_MEMBER, this.onModelModifiedGroupData);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CREATED_ADHOC_GROUP, this.onModelModifiedGroupData);
+            //Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP, this.onModelModifiedGroupData);
+
         }
         ,onInitialized: function() {
         }
@@ -61,6 +69,10 @@ Admin.Model = Admin.Model || {
                 return false;
             }
             return true;
+        }
+
+        ,onModelModifiedGroupData: function(){
+            Admin.Service.Organization.retrieveGroups();
         }
     }
 
