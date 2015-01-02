@@ -41,7 +41,6 @@
         <dependency>
 			<groupId>net.unicon.springframework</groupId>
 			<artifactId>springframework-addons</artifactId>
-			<version>0.1</version>
 		</dependency>
         
     </dependencies>
