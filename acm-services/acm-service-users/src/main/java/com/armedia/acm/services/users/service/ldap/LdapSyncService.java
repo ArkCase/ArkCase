@@ -5,7 +5,9 @@ import com.armedia.acm.services.users.model.AcmLdapEntity;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
+import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
@@ -62,20 +64,23 @@ public class LdapSyncService
         List<AcmUser> users = new ArrayList<>();
         Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
         Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
+        Map<String, String> childParentPair = new HashMap<String, String>();
 
         queryLdapUsers(getLdapSyncConfig(),
                 getDirectoryName(),
                 allRoles,
                 users,
                 usersByApplicationRole,
-                usersByLdapGroup);
+                usersByLdapGroup, 
+                childParentPair);
 
         // ldap work is done.  now for the database work.
         getLdapSyncDatabaseHelper().updateDatabase(getDirectoryName(),
                 allRoles,
                 users,
                 usersByApplicationRole,
-                usersByLdapGroup);
+                usersByLdapGroup,
+                childParentPair);
     }
 
 
@@ -86,7 +91,8 @@ public class LdapSyncService
             Set<String> allRoles,
             List<AcmUser> users,
             Map<String, List<AcmUser>> usersByApplicationRole,
-            Map<String, List<AcmUser>> usersByLdapGroup)
+            Map<String, List<AcmUser>> usersByLdapGroup,
+            Map<String, String> childParentPair)
     {
         boolean debug = log.isDebugEnabled();
         if ( debug )
@@ -113,7 +119,7 @@ public class LdapSyncService
                         group.getMemberDistinguishedNames().length + " members");
             }
 
-            List<AcmUser> usersForThisGroup = findAllUsersForGroup(config, template, group);
+            List<AcmUser> usersForThisGroup = findAllUsersForGroup(config, template, group, childParentPair);
 
             String ucGroupName = group.getGroupName().toUpperCase();
 
@@ -125,7 +131,7 @@ public class LdapSyncService
         }
     }
 
-    private List<AcmUser> findAllUsersForGroup(AcmLdapSyncConfig config, LdapTemplate template, LdapGroup group)
+    private List<AcmUser> findAllUsersForGroup(AcmLdapSyncConfig config, LdapTemplate template, LdapGroup group, Map<String, String> childParentPair)
     {
         List<AcmRole> nestedGroups = new ArrayList<>();
 
@@ -134,9 +140,11 @@ public class LdapSyncService
         List<AcmLdapEntity> foundEntities = getLdapDao().findGroupMembers(template, config, group);
 
         splitEntitiesIntoNestedGroupsAndUsers(foundEntities, nestedGroups, allUsersForGroup);
+        
+        populateChildParentPair(group, nestedGroups, childParentPair);
 
         findUsersForNestedGroups(config, template, nestedGroups, allUsersForGroup);
-
+        
         return allUsersForGroup;
     }
 
@@ -233,6 +241,25 @@ public class LdapSyncService
             userMap.put(mapKey, new ArrayList<AcmUser>());
         }
         userMap.get(mapKey).addAll(users);
+    }
+    
+    private void populateChildParentPair(LdapGroup parent, List<AcmRole> children, Map<String, String> childParentPair)
+    {
+    	if (children != null && children.size() > 0)
+    	{
+    		for (AcmRole child : children)
+    		{
+    			if (childParentPair == null)
+    			{
+    				childParentPair = new HashMap<String, String>();
+    			}
+    			
+    			if (child.getRoleName() != null && parent.getGroupName() != null)
+    			{
+    				childParentPair.put(child.getRoleName().toUpperCase(), parent.getGroupName().toUpperCase());
+    			}
+    		}
+    	}
     }
 
     public SpringLdapDao getLdapDao()

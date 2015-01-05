@@ -6,7 +6,9 @@ package com.armedia.acm.plugins.complaint.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -18,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
-import com.armedia.acm.frevvo.config.FrevvoFormUrl;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -30,11 +31,8 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
-import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserAction;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -144,10 +142,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         return complaint;
     }
 	
-	private JSONObject initFormData(){
-		List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege("acm-complaint-approve");
-        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
-		
+	private JSONObject initFormData(){		
 		// Initiator, People and Incident initialization
 		Contact initiator = initInitiatorFields();
 		Contact people = initPeopleFields();
@@ -159,27 +154,46 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 		complaint.setInitiator(initiator);
 		complaint.setPeople(peoples);
-		
-		
-        // Owners Initialization		
-        if (users != null && users.size() > 0) {
-        	List<String> ownersOptions = new ArrayList<String>();
-        	for (int i = 0; i < users.size(); i++) {
-        		ownersOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
-        	}
-        	complaint.setOwnersOptions(ownersOptions);
-        }
-     
-		
-		// Followers Initialization
-        if (users != null && users.size() > 0) {
-        	List<String> followersOptions = new ArrayList<String>();
-        	for (int i = 0; i < users.size(); i++) {
-        		followersOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
-        	}
-        	complaint.setFollowersOptions(followersOptions);
-        }     
+        
+        // Participants Initialization
+		List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".participantTypes"), ",");
+		complaint.setParticipantsTypeOptions(participantTypes);
+        
+		if (participantTypes != null && participantTypes.size() > 0)
+		{
+			Map<String, List<String>> participantsOptions = new HashMap<String, List<String>>();
+			for (String participantType : participantTypes)
+			{
+				String type = "";
+				String[] participantTypeArray = participantType.split("=");
+				if (participantTypeArray != null && participantTypeArray.length == 2)
+				{
+					type = participantTypeArray[0];
+					String privilege = (String) getProperties().get(FrevvoFormName.COMPLAINT + "." + type + ".privilege");
+					
+					try
+					{
+						List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(privilege);
+				        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
+				        
+				        if (users != null && users.size() > 0) {
+				        	List<String> options = new ArrayList<String>();
+				        	for (int i = 0; i < users.size(); i++) {
+				        		options.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
+				        	}
+				        	
+				        	participantsOptions.put(type, options);
+				        }
+					}
+					catch(Exception e)
+					{
+						LOG.warn("Cannot find users with privilege = " + type + ". Continue and not break the execution - normal behavior when configuration has some wrong data.");
+					}
+				}
+			}
 			
+			complaint.setParticipantsOptions(participantsOptions);
+		}
 		
 		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
 		String jsonString = gson.toJson(complaint);

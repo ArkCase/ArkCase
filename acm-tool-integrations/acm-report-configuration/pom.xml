@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-tool-integrations</artifactId>
-        <version>3.0.18-SNAPSHOT</version>
+        <version>3.0.19-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -37,6 +37,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
+        
+        <dependency>
+			<groupId>net.unicon.springframework</groupId>
+			<artifactId>springframework-addons</artifactId>
+		</dependency>
+        
     </dependencies>
 
 </project>
