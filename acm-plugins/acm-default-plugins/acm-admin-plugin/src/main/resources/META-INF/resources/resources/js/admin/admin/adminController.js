@@ -22,7 +22,11 @@ Admin.Controller = Admin.Controller || {
 
     ,MODEL_RETRIEVED_GROUP_MEMBERS                            : "organization-hierarchy-group-members-retrieved"              //param : groupMembers
 
+    ,MODEL_ADDED_GROUP_MEMBER                                 : "organization-hierarchy-group-members-added"                  //param : addedMember
+
     ,MODEL_REMOVED_GROUP_MEMBER                               : "organization-hierarchy-group-member-removed"                //param : removedMember
+
+    ,MODEL_RETRIEVED_USERS                                    : "organization-hierarchy-all-users-retrieved"                //param : allUsers
 
     ,modelRetrievedCorrespondenceTemplates : function(templatesList) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES, templatesList);
@@ -52,7 +56,15 @@ Admin.Controller = Admin.Controller || {
         Acm.Dispatcher.fireEvent(this.MODEL_REMOVED_GROUP_MEMBER, removedMember);
     }
 
+    ,modelAddedGroupMember: function(addedMember){
+        Acm.Dispatcher.fireEvent(this.MODEL_ADDED_GROUP_MEMBER, addedMember);
+    }
+
     ,modelUpdatedAccessControl : function(accessControlList){
         Acm.Dispatcher.fireEvent(this.MODEL_UPDATED_ACCESS_CONTROL, accessControlList);
+    }
+
+    ,modelRetrievedUsers : function(allUsers){
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_USERS, allUsers);
     }
 }
