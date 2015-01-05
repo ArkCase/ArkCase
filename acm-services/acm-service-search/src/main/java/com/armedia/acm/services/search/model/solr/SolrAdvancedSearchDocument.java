@@ -1,8 +1,5 @@
 package com.armedia.acm.services.search.model.solr;
 
-import org.codehaus.plexus.util.StringOutputStream;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +12,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String id;
     private String object_id_s;
     private String object_type_s;
+    private String object_sub_type_s;
     private String name;
     private Date create_date_tdt;
     private String creator_lcs;
@@ -78,6 +76,11 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
 
     ////////////////// for objects that own contact methods, e.g. persons /////////////////////
     private List<String> contact_method_ss;
+    
+    ///////////////// for objects that have multiple children, supervisor, members ... e.g. group ///////////////////
+    private String supervisor_id_s;
+    private List<String> child_id_ss;
+    private List<String> member_id_ss;
 
 
     @Override
@@ -112,7 +115,17 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
         this.object_type_s = object_type_s;
     }
 
-    public String getTitle_parseable()
+    public String getObject_sub_type_s() 
+    {
+		return object_sub_type_s;
+	}
+
+	public void setObject_sub_type_s(String object_sub_type_s) 
+	{
+		this.object_sub_type_s = object_sub_type_s;
+	}
+
+	public String getTitle_parseable()
     {
         return title_parseable;
     }
@@ -432,16 +445,40 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     public String getAssignee_full_name_lcs() {
         return assignee_full_name_lcs;
     }
-
+    
     public void setAssignee_full_name_lcs(String assignee_full_name_lcs) {
         this.assignee_full_name_lcs = assignee_full_name_lcs;
     }
-
+    
     public String getFull_name_lcs() {
         return full_name_lcs;
     }
-
+    
     public void setFull_name_lcs(String full_name_lcs) {
         this.full_name_lcs = full_name_lcs;
     }
+
+    public List<String> getChild_id_ss() {
+		return child_id_ss;
+	}
+
+	public void setChild_id_ss(List<String> child_id_ss) {
+		this.child_id_ss = child_id_ss;
+	}
+
+	public String getSupervisor_id_s() {
+		return supervisor_id_s;
+	}
+
+	public void setSupervisor_id_s(String supervisor_id_s) {
+		this.supervisor_id_s = supervisor_id_s;
+	}
+
+	public List<String> getMember_id_ss() {
+		return member_id_ss;
+	}
+
+	public void setMember_id_ss(List<String> member_id_ss) {
+		this.member_id_ss = member_id_ss;
+	}
 }

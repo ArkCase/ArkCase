@@ -210,4 +210,110 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
     </changeSet>
+    
+    <changeSet id="10-create-group-table" author="riste.tutureski">
+        <createTable tableName="acm_group">
+            <column name="cm_group_name" type="VARCHAR(1024)">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_group_name"/>
+            </column>
+            <column name="cm_group_parent_name" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_group_description" type="VARCHAR(4000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_group_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_group_status" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_group_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_group_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_group_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_group_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_group_parent_name"
+                                 constraintName="fk_group_parent_name"
+                                 referencedTableName="acm_group"
+                                 referencedColumnNames="cm_group_name"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
+    
+    <changeSet id="11-create-group-supervisor-table" author="riste.tutureski">
+        <createTable tableName="acm_group_supervisor">
+            <column name="cm_group_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+             <column name="cm_user_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_group_supervisor" baseColumnNames="cm_group_name"
+                                 constraintName="fk_group_supervisor_group_name"
+                                 referencedTableName="acm_group"
+                                 referencedColumnNames="cm_group_name"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+                                 
+        <addForeignKeyConstraint baseTableName="acm_group_supervisor" baseColumnNames="cm_user_id"
+                                 constraintName="fk_group_supervisor_user_id"
+                                 referencedTableName="acm_user"
+                                 referencedColumnNames="cm_user_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
+    
+    <changeSet id="12-create-group-member-table" author="riste.tutureski">
+        <createTable tableName="acm_group_member">
+            <column name="cm_group_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+             <column name="cm_user_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_group_member" baseColumnNames="cm_group_name"
+                                 constraintName="fk_group_member_group_name"
+                                 referencedTableName="acm_group"
+                                 referencedColumnNames="cm_group_name"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+                                 
+        <addForeignKeyConstraint baseTableName="acm_group_member" baseColumnNames="cm_user_id"
+                                 constraintName="fk_group_member_user_id"
+                                 referencedTableName="acm_user"
+                                 referencedColumnNames="cm_user_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
+    
+    <changeSet id="13-remove-group-supervisor-table" author="riste.tutureski">
+    	<dropForeignKeyConstraint baseTableName="acm_group_supervisor" constraintName="fk_group_supervisor_group_name"/>
+    	<dropForeignKeyConstraint baseTableName="acm_group_supervisor" constraintName="fk_group_supervisor_user_id"/>
+    	<dropTable tableName="acm_group_supervisor"/>
+    </changeSet>
+    
+    <changeSet id="14-add-column-to-group-table" author="riste.tutureski">
+    	<addColumn tableName="acm_group">
+	    	<column name="cm_group_supervisor_id" type="VARCHAR(1024)">
+	                <constraints nullable="true"/>
+	        </column>
+    	</addColumn>
+    	<addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_group_supervisor_id"
+                                 constraintName="fk_group_supervisor_id"
+                                 referencedTableName="acm_user"
+                                 referencedColumnNames="cm_user_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
 </databaseChangeLog>
