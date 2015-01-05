@@ -6,10 +6,7 @@ package com.armedia.acm.services.users.web.api.group;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
@@ -43,12 +40,12 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
         "classpath:/spring/spring-web-acm-web.xml",
         "classpath:/spring/spring-config-user-service-test-dummy-beans.xml"
 })
-public class SaveSupervisorsToGroupAPIControllerTest extends EasyMockSupport {
+public class RemoveSupervisorToGroupAPIControllerTest extends EasyMockSupport {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private MockMvc mockMvc;
-	private SaveSupervisorsToGroupAPIController unit;
+	private RemoveSupervisorFromGroupAPIController unit;
 	private Authentication mockAuthentication;
 	private AcmGroupDao mockGroupDao;
 	
@@ -58,7 +55,7 @@ public class SaveSupervisorsToGroupAPIControllerTest extends EasyMockSupport {
 	@Before
     public void setUp() throws Exception
     {
-		setUnit(new SaveSupervisorsToGroupAPIController());
+		setUnit(new RemoveSupervisorFromGroupAPIController());
 		setMockMvc(MockMvcBuilders.standaloneSetup(getUnit()).setHandlerExceptionResolvers(getExceptionResolver()).build());
 		setMockAuthentication(createMock(Authentication.class));	
 		setMockGroupDao(createMock(AcmGroupDao.class));
@@ -67,7 +64,7 @@ public class SaveSupervisorsToGroupAPIControllerTest extends EasyMockSupport {
     }
 	
 	@Test
-    public void saveSupervisorsToGroupTest() throws Exception
+    public void removeSupervisorsFromGroupTest() throws Exception
     {   
 		AcmGroup group = new AcmGroup();
 		
@@ -76,20 +73,15 @@ public class SaveSupervisorsToGroupAPIControllerTest extends EasyMockSupport {
 		group.setType("Group Type");
 		group.setStatus("Group Status");
 		
-		AcmUser user = new AcmUser();
-		user.setUserId("test-user");
-		user.setUserDirectoryName("Test Directory Name");
-		user.setUserState("TEST");
-		user.setFirstName("First Name");
-		user.setLastName("Last Name");
+		AcmUser supervisor = new AcmUser();
+		supervisor.setUserId("test-user-1");
+		supervisor.setUserDirectoryName("Test Directory Name 1");
+		supervisor.setUserState("TEST");
+		supervisor.setFirstName("First Name 1");
+		supervisor.setLastName("Last Name 1");
+
+		group.setSupervisor(supervisor);
 		
-		List<AcmUser> supervisors = new ArrayList<AcmUser>();
-		supervisors.add(user);
-		
-		ObjectMapper objectMapper = new ObjectMapper();
-		String supervisorsAsJson = objectMapper.writeValueAsString(supervisors);
-		
-		LOG.debug("Input JSON: " + supervisorsAsJson);
 		
 		Capture<AcmGroup> found = new Capture<AcmGroup>();
 		
@@ -100,20 +92,20 @@ public class SaveSupervisorsToGroupAPIControllerTest extends EasyMockSupport {
 		replayAll();
 		
 		MvcResult result = getMockMvc().perform(
-	            post("/api/v1/users/group/" + group.getName() + "/supervisors/save/false")
+	            delete("/api/v1/users/group/" + group.getName() + "/supervisor/remove/false")
 	                    .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .principal(getMockAuthentication())
-	                    .content(supervisorsAsJson))
+	                    .principal(getMockAuthentication()))
 	                .andReturn();
 		
 		LOG.info("Results: " + result.getResponse().getContentAsString());
 		
 		verifyAll();
 		
+		ObjectMapper objectMapper = new ObjectMapper();
 		AcmGroup resultGroup = objectMapper.readValue(result.getResponse().getContentAsString(), AcmGroup.class);
 		
-		assertEquals(supervisors.get(0).getUserId(), resultGroup.getSupervisors().get(0).getUserId());
+		assertEquals(null, resultGroup.getSupervisor());
 		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
 
@@ -125,11 +117,11 @@ public class SaveSupervisorsToGroupAPIControllerTest extends EasyMockSupport {
 		this.mockMvc = mockMvc;
 	}
 
-	public SaveSupervisorsToGroupAPIController getUnit() {
+	public RemoveSupervisorFromGroupAPIController getUnit() {
 		return unit;
 	}
 
-	public void setUnit(SaveSupervisorsToGroupAPIController unit) {
+	public void setUnit(RemoveSupervisorFromGroupAPIController unit) {
 		this.unit = unit;
 	}
 
