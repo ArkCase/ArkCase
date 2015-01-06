@@ -78,12 +78,9 @@ public class AcmGroup implements Serializable, AcmEntity, AcmLdapEntity{
 	@JsonIgnore
 	private List<AcmGroup> childGroups;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-				name = "acm_group_supervisor",
-				joinColumns = { @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name") },
-				inverseJoinColumns = { @JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id") })
-	private List<AcmUser> supervisors;
+	@ManyToOne
+	@JoinColumn(name = "cm_group_supervisor_id")
+	private AcmUser supervisor;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
@@ -233,12 +230,12 @@ public class AcmGroup implements Serializable, AcmEntity, AcmLdapEntity{
 		this.childGroups = childGroups;
 	}
 
-	public List<AcmUser> getSupervisors() {
-		return supervisors;
+	public AcmUser getSupervisor() {
+		return supervisor;
 	}
 
-	public void setSupervisors(List<AcmUser> supervisors) {
-		this.supervisors = supervisors;
+	public void setSupervisor(AcmUser supervisor) {
+		this.supervisor = supervisor;
 	}
 
 	public List<AcmUser> getMembers() {

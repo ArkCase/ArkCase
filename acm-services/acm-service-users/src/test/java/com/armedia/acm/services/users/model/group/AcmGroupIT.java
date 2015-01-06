@@ -230,17 +230,14 @@ public class AcmGroupIT {
 		group.setType("Group Type");
 		group.setStatus("Group Status");
 		
-		AcmUser user = new AcmUser();
-		user.setUserId("test-user");
-		user.setUserDirectoryName("Test Directory Name");
-		user.setUserState("TEST");
-		user.setFirstName("First Name");
-		user.setLastName("Last Name");
+		AcmUser supervisor = new AcmUser();
+		supervisor.setUserId("test-user");
+		supervisor.setUserDirectoryName("Test Directory Name");
+		supervisor.setUserState("TEST");
+		supervisor.setFirstName("First Name");
+		supervisor.setLastName("Last Name");
 		
-		List<AcmUser> supervisors = new ArrayList<AcmUser>();
-		supervisors.add(user);
-		
-		group.setSupervisors(supervisors);
+		group.setSupervisor(supervisor);
 		
 		AcmGroup savedGroup = getGroupDao().save(group);
 		getEntityManager().flush();
@@ -254,7 +251,7 @@ public class AcmGroupIT {
 		subGroup.setType("SubGroup Type");
 		subGroup.setStatus("SubGroup Status");
 		subGroup.setParentGroup(savedGroup);
-		subGroup.setSupervisors(savedGroup.getSupervisors());
+		subGroup.setSupervisor(savedGroup.getSupervisor());
 		
 		AcmGroup savedSubGroup = getGroupDao().save(subGroup);
 		getEntityManager().flush();
@@ -263,7 +260,7 @@ public class AcmGroupIT {
 		
 		assertNotNull(savedGroup.getName());
 		assertNotNull(savedSubGroup.getName());
-		assertEquals(savedGroup.getSupervisors().get(0).getUserId(), savedSubGroup.getSupervisors().get(0).getUserId());
+		assertEquals(savedGroup.getSupervisor().getUserId(), savedSubGroup.getSupervisor().getUserId());
 		
 		
 		

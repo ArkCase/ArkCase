@@ -32,14 +32,14 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
  */
 @Controller
 @RequestMapping({ "/api/v1/users", "/api/latest/users" })
-public class GetGroupSupervisorsAPIController {
+public class GetGroupSupervisorAPIController {
 	
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private AcmGroupDao groupDao;
 	private MuleClient muleClient;
 	
-	@RequestMapping(value="/group/{groupId}/get/supervisors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/group/{groupId}/get/supervisor", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getGroupSupervisors(@PathVariable("groupId") String groupId, 
 				              @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
@@ -50,7 +50,7 @@ public class GetGroupSupervisorsAPIController {
     {
 		if (LOG.isInfoEnabled()) 
 		{
-			LOG.info("Taking group supervisors from Solr for group ID = " + groupId);
+			LOG.info("Taking group supervisor from Solr for group ID = " + groupId);
 		}
 		
 		String groupString = getGroup(groupId, 0, 1, "", auth);
@@ -64,17 +64,17 @@ public class GetGroupSupervisorsAPIController {
 				groupJson.getJSONObject("response").getJSONArray("docs").length() == 1)
 			{
 				JSONObject doc = groupJson.getJSONObject("response").getJSONArray("docs").getJSONObject(0);
-				JSONArray supervisorIds = null;
+				JSONObject supervisorId = null;
 				try
 				{
-					supervisorIds = doc.getJSONArray("supervisor_id_ss");
+					supervisorId = doc.getJSONObject("supervisor_id_s");
 				}
 				catch(Exception e)
 				{
-					throw new IllegalStateException("There are no any supervisors for group with ID = " + groupId);
+					throw new IllegalStateException("There are no supervisor for group with ID = " + groupId);
 				}
 				
-				return getSupervisors(groupId, supervisorIds, startRow, maxRows, sort, auth);
+				return getSupervisor(groupId, supervisorId, startRow, maxRows, sort, auth);
 				
 			}
 		}
@@ -111,25 +111,11 @@ public class GetGroupSupervisorsAPIController {
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
 	}
 	
-	private String getSupervisors(String groupId, JSONArray supervisorIds, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+	private String getSupervisor(String groupId, JSONObject supervisorId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
 	{		
-		if (supervisorIds != null && supervisorIds.length() > 0)
+		if (supervisorId != null)
 		{
-			String query = "object_id_s:(";
-			
-			for (int i = 0; i < supervisorIds.length(); i++)
-			{
-				if (i < supervisorIds.length() - 1)
-				{
-					query += supervisorIds.getString(i) + " OR ";
-				}
-				else
-				{
-					query += supervisorIds.getString(i) + ")";
-				}
-			}
-			
-			query += " AND object_type_s:USER AND status_lcs:VALID";
+			String query = "object_id_s:" + supervisorId.toString() + " AND object_type_s:USER AND status_lcs:VALID";
 			
 			if ( LOG.isDebugEnabled() )
 	        {

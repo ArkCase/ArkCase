@@ -77,9 +77,9 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     ////////////////// for objects that own contact methods, e.g. persons /////////////////////
     private List<String> contact_method_ss;
     
-    ///////////////// for objects that have multiple children, supervisors, members ... e.g. group ///////////////////
+    ///////////////// for objects that have multiple children, supervisor, members ... e.g. group ///////////////////
+    private String supervisor_id_s;
     private List<String> child_id_ss;
-    private List<String> supervisor_id_ss;
     private List<String> member_id_ss;
 
 
@@ -466,12 +466,12 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
 		this.child_id_ss = child_id_ss;
 	}
 
-	public List<String> getSupervisor_id_ss() {
-		return supervisor_id_ss;
+	public String getSupervisor_id_s() {
+		return supervisor_id_s;
 	}
 
-	public void setSupervisor_id_ss(List<String> supervisor_id_ss) {
-		this.supervisor_id_ss = supervisor_id_ss;
+	public void setSupervisor_id_s(String supervisor_id_s) {
+		this.supervisor_id_s = supervisor_id_s;
 	}
 
 	public List<String> getMember_id_ss() {
