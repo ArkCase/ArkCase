@@ -23,6 +23,11 @@
             <artifactId>acm-person-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-participants</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <!-- case file plugin has the disposition table -->
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>

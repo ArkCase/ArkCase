@@ -1,4 +1,4 @@
-package com.armedia.acm.services.users.model;
+package com.armedia.acm.services.participants.model;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import org.junit.Before;

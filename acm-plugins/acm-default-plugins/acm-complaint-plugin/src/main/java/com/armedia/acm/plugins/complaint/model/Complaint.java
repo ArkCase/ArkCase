@@ -1,12 +1,12 @@
 package com.armedia.acm.plugins.complaint.model;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.services.users.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_complaint")
-public class Complaint implements Serializable, AcmObject, AcmEntity
+public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -379,6 +379,7 @@ public class Complaint implements Serializable, AcmObject, AcmEntity
     @JsonIgnore
     public String getObjectType()
     {
+        log.debug("reading object type");
         return "COMPLAINT";
     }
 
@@ -437,6 +438,7 @@ public class Complaint implements Serializable, AcmObject, AcmEntity
 		this.location = location;
 	}
 
+    @Override
 	public List<AcmParticipant> getParticipants()
     {
         return participants;
