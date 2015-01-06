@@ -140,6 +140,7 @@
         <property name="persistenceUnitManager" ref="acmPersistenceUnitManager"/>
     </bean>
 
+    <bean id="preObjectChangeAccumulator" class="com.armedia.acm.data.PreObjectChangeAccumulator"/>
     <bean id="objectChangesBySessionAccumulator" class="com.armedia.acm.data.ObjectChangesBySessionAccumulator"/>
     <bean id="sessionCommitListener" class="com.armedia.acm.data.SessionAccumulatingSessionListener">
         <property name="descriptorListener" ref="objectChangesBySessionAccumulator"/>
@@ -155,6 +156,7 @@
             <list>
                 <ref bean="objectChangesBySessionAccumulator"/>
                 <ref bean="auditPropertyEntityAdapter"/>
+                <ref bean="preObjectChangeAccumulator"/>
             </list>
         </property>
     </bean>

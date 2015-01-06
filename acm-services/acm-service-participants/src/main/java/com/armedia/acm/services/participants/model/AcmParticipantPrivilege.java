@@ -50,8 +50,8 @@ public class AcmParticipantPrivilege implements Serializable, AcmEntity
     @Column(name = "cm_access_reason")
     private String accessReason;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_participant_id")
+    @ManyToOne
+    @JoinColumn(name = "cm_participant_id", nullable = false)
     private AcmParticipant participant;
 
     public String getObjectAction()
