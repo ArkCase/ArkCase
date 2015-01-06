@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
@@ -12,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.PersistenceException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,8 +42,8 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setId(in.getComplaintId() + "-COMPLAINT");
         solr.setObject_id_s(in.getComplaintId() + "");
         solr.setObject_type_s("COMPLAINT");
-        //solr.setTitle_parseable(in.getComplaintTitle());
-        //solr.setName(in.getComplaintNumber());
+        solr.setTitle_parseable(in.getComplaintTitle());
+        solr.setName(in.getComplaintNumber());
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
@@ -55,15 +58,15 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setStatus_lcs(in.getStatus());
 
         String assigneeUserId = findAssigneeUserId(in);
-        //solr.setAssignee_id_lcs(assigneeUserId);
+        solr.setAssignee_id_lcs(assigneeUserId);
 
         AcmUser assignee = findAssignee(assigneeUserId);
 
         if ( assignee != null )
         {
-            //solr.setAssignee_first_name_lcs(assignee.getFirstName());
-            //solr.setAssignee_last_name_lcs(assignee.getLastName());
-              solr.setAssignee_full_name_lcs(assignee.getFullName());
+            solr.setAssignee_first_name_lcs(assignee.getFirstName());
+            solr.setAssignee_last_name_lcs(assignee.getLastName());
+            solr.setAssignee_full_name_lcs(assignee.getFullName());
         }
 
         return solr;
@@ -73,6 +76,24 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     public SolrDocument toSolrQuickSearch(Complaint in)
     {
         SolrDocument solr = new SolrDocument();
+
+        // all protected objects must have protected_object_b
+        solr.setProtected_object_b(true);
+
+        boolean publicDoc = everyoneHasRead(in);
+        solr.setPublic_doc_b(publicDoc);
+
+        if ( !publicDoc )
+        {
+            List<String> readers = getReaders(in);
+            solr.setAllow_acl_ss(readers);
+        }
+
+        List<String> denied = getDenied(in);
+        solr.setDeny_acl_ss(denied);
+
+        // fq: protected_object_b:true AND (public_doc_b:true OR allow_acl_ss:ecmillar)
+
         solr.setName(in.getComplaintNumber());
         solr.setObject_id_s(in.getComplaintId() + "");
         solr.setObject_type_s("COMPLAINT");
@@ -91,6 +112,54 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         return solr;
     }
+
+    private List<String> getDenied(AcmAssignedObject in)
+    {
+        return getReadersWithLevel("mandatory deny", in);
+    }
+
+    private List<String> getReaders(AcmAssignedObject in)
+    {
+        return getReadersWithLevel("grant", in);
+    }
+
+    private List<String> getReadersWithLevel(String level, AcmAssignedObject in)
+    {
+        List<String> readers = new ArrayList<>();
+        for ( AcmParticipant ap : in.getParticipants() )
+        {
+            for ( AcmParticipantPrivilege priv : ap.getPrivileges() )
+            {
+                if ("read".equals(priv.getObjectAction()) && level.equals(priv.getAccessType()) )
+                {
+                    readers.add(ap.getParticipantLdapId());
+                    break;
+                }
+            }
+        }
+
+        return readers;
+    }
+
+    private boolean everyoneHasRead(Complaint in)
+    {
+        for ( AcmParticipant ap : in.getParticipants() )
+        {
+            if ( "*".equals(ap.getParticipantLdapId()) )
+            {
+                for ( AcmParticipantPrivilege priv : ap.getPrivileges() )
+                {
+                    if ( "read".equals(priv.getObjectAction()) && "grant".equals(priv.getAccessType()) )
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
 
     private AcmUser findAssignee(String assigneeUserId)
     {

@@ -22,6 +22,9 @@ public class SolrDocument implements SolrBaseDocument {
     private String priority_s;
     private String parent_object_type_s;
     private boolean adhocTask_b;
+
+    private boolean public_doc_b;
+    private boolean protected_object_b;
     
     private List<String> deny_acl_ss;
     private List<String> allow_acl_ss;
@@ -134,18 +137,52 @@ public class SolrDocument implements SolrBaseDocument {
     public String getPriority_s() {return priority_s;}
     public void setPriority_s(String priority_s) {this.priority_s = priority_s;}
 
-    @Override
-    public String toString() {
-        return "SolrDocument [id=" + id + ", status_s=" + status_s
-                + ", author=" + author + ", author_s=" + author_s
-                + ", modifier_s=" + modifier_s + ", last_modified="
-                + last_modified + ", create_dt=" + create_dt + ", due_dt=" + due_dt +
-                ", title_t=" + title_t + ", name=" + name + ", object_id_s=" + object_id_s
-                + ", owner_s=" + owner_s + ", object_type_s=" + object_type_s
-                + ", assignee_s=" + assignee_s + ", priority_i=" + priority_i
-                + ", deny_acl_ss=" + deny_acl_ss + ", allow_acl_ss="
-                + allow_acl_ss + ", parent_object_type_s=" + parent_object_type_s + ", adhocTask_b=" + adhocTask_b + "]";
+    public boolean isPublic_doc_b()
+    {
+        return public_doc_b;
     }
-    
-    
+
+    public void setPublic_doc_b(boolean public_doc_b)
+    {
+        this.public_doc_b = public_doc_b;
+    }
+
+    public boolean isProtected_object_b()
+    {
+        return protected_object_b;
+    }
+
+    public void setProtected_object_b(boolean protected_object_b)
+    {
+        this.protected_object_b = protected_object_b;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "SolrDocument{" +
+                "id='" + id + '\'' +
+                ", status_s='" + status_s + '\'' +
+                ", author='" + author + '\'' +
+                ", author_s='" + author_s + '\'' +
+                ", modifier_s='" + modifier_s + '\'' +
+                ", last_modified=" + last_modified +
+                ", create_dt=" + create_dt +
+                ", due_dt=" + due_dt +
+                ", title_t='" + title_t + '\'' +
+                ", name='" + name + '\'' +
+                ", object_id_s='" + object_id_s + '\'' +
+                ", owner_s='" + owner_s + '\'' +
+                ", object_type_s='" + object_type_s + '\'' +
+                ", assignee_s='" + assignee_s + '\'' +
+                ", priority_i=" + priority_i +
+                ", priority_s='" + priority_s + '\'' +
+                ", parent_object_type_s='" + parent_object_type_s + '\'' +
+                ", adhocTask_b=" + adhocTask_b +
+                ", public_doc_b=" + public_doc_b +
+                ", protected_object_b=" + protected_object_b +
+                ", deny_acl_ss=" + deny_acl_ss +
+                ", allow_acl_ss=" + allow_acl_ss +
+                '}';
+    }
 }
