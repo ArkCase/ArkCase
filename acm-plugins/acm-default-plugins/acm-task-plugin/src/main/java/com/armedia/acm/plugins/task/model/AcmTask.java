@@ -218,6 +218,7 @@ public class AcmTask implements AcmObject
     }
 
     @Override
+    @JsonIgnore
     public Long getId()
     {
         return taskId;
