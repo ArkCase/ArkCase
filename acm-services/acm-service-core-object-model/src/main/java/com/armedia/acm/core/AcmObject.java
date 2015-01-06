@@ -18,4 +18,6 @@ public interface AcmObject
      * @return The object type; there should be an AcmObjectType bean whose 'name' property is set to this value.
      */
     String getObjectType();
+
+    Long getId();
 }

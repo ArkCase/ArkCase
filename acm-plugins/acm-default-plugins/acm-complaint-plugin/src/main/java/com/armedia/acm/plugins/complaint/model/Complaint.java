@@ -379,8 +379,15 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     @JsonIgnore
     public String getObjectType()
     {
-        log.debug("reading object type");
         return "COMPLAINT";
+    }
+
+
+    @Override
+    @JsonIgnore
+    public Long getId()
+    {
+        return complaintId;
     }
 
     public List<PersonAssociation> getPersonAssociations() 

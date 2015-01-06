@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
 
-public class AcmTaskSolr implements AcmObject
+public class AcmTaskSolr
 {
     private String id;
     private String priority_s;
@@ -123,10 +123,7 @@ public class AcmTaskSolr implements AcmObject
 	}
     public Boolean isAdhocTask() {return adhocTask;}
     public void setAdhocTask(boolean adhocTask) {this.adhocTask = adhocTask;}
-    @Override
-	public String getObjectType() {
-		return object_type_s;
-	}
+
 	@Override
 	public String toString() {
 		return "AcmTaskSolr [id=" + id + ", priority_s=" + priority_s
