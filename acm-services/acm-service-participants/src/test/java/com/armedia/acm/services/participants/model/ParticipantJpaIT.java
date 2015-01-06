@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml"
 })
-@TransactionConfiguration(defaultRollback = false)
+@TransactionConfiguration(defaultRollback = true)
 public class ParticipantJpaIT
 {
     @PersistenceContext
@@ -68,11 +68,18 @@ public class ParticipantJpaIT
         acmParticipant.setParticipantLdapId(participantLdapId);
         acmParticipant.setParticipantType(participantType);
 
+        AcmParticipantPrivilege privilege = new AcmParticipantPrivilege();
+        acmParticipant.getPrivileges().add(privilege);
+        privilege.setAccessReason("reason");
+        privilege.setAccessType("type");
+        privilege.setObjectAction("action");
+
         entityManager.persist(acmParticipant);
 
         entityManager.flush();
 
         assertNotNull(acmParticipant.getId());
+        assertNotNull(privilege.getId());
 
     }
 }

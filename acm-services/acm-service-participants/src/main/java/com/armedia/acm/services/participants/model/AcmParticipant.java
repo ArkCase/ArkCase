@@ -2,11 +2,16 @@ package com.armedia.acm.services.participants.model;
 
 import com.armedia.acm.data.AcmEntity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -53,8 +58,30 @@ public class AcmParticipant implements Serializable, AcmEntity
     @Column(name = "cm_participant_modifier")
     private String modifier;
 
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cm_participant_id")
     private List<AcmParticipantPrivilege> privileges = new ArrayList<>();
+
+    @PrePersist
+    public void beforeInsert()
+    {
+        updatePrivileges();
+    }
+
+    @PreUpdate
+    public void beforeUpdate()
+    {
+        updatePrivileges();
+    }
+
+    private void updatePrivileges()
+    {
+        for ( AcmParticipantPrivilege privilege : getPrivileges() )
+        {
+            privilege.setParticipant(this);
+        }
+    }
+
 
     public Long getId()
     {
