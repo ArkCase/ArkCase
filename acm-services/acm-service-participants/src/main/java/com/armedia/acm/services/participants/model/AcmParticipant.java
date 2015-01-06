@@ -1,4 +1,4 @@
-package com.armedia.acm.services.users.model;
+package com.armedia.acm.services.participants.model;
 
 import com.armedia.acm.data.AcmEntity;
 
@@ -7,12 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "acm_participant")
@@ -50,6 +52,9 @@ public class AcmParticipant implements Serializable, AcmEntity
 
     @Column(name = "cm_participant_modifier")
     private String modifier;
+
+    @Transient
+    private List<AcmParticipantPrivilege> privileges = new ArrayList<>();
 
     public Long getId()
     {
@@ -147,5 +152,15 @@ public class AcmParticipant implements Serializable, AcmEntity
     public void setModifier(String modifier)
     {
         this.modifier = modifier;
+    }
+
+    public List<AcmParticipantPrivilege> getPrivileges()
+    {
+        return privileges;
+    }
+
+    public void setPrivileges(List<AcmParticipantPrivilege> privileges)
+    {
+        this.privileges = privileges;
     }
 }
