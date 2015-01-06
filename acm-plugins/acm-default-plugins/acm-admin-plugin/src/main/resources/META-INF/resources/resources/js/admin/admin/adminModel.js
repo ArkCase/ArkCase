@@ -54,14 +54,26 @@ Admin.Model = Admin.Model || {
             this.cacheGroups = new Acm.Model.CacheFifo(4);
             this.cacheSubgroups = new Acm.Model.CacheFifo(4);
             this.cacheGroupMembers = new Acm.Model.CacheFifo(4);
+            this.cacheAllUsers = new Acm.Model.CacheFifo(4);
+
+            //Admin.Service.Organization.retrieveUsers();
             Admin.Service.Organization.retrieveGroups();
 
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP_MEMBER, this.onModelModifiedGroupData);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CREATED_ADHOC_GROUP, this.onModelModifiedGroupData);
-            //Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP, this.onModelModifiedGroupData);
-
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_MEMBER, this.onModelModifiedGroupData);
         }
         ,onInitialized: function() {
+        }
+
+        ,Tree:{
+            _parentNode: null
+            ,getParentNode : function() {
+                return this._parentNode;
+            }
+            ,setParentNode : function(parentNode) {
+                this._parentNode = parentNode;
+            }
         }
 
         ,validateGroup: function(group) {
