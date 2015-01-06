@@ -23,8 +23,13 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-data-source</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-data-access-control</artifactId>
+            <artifactId>acm-service-core-object-model</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

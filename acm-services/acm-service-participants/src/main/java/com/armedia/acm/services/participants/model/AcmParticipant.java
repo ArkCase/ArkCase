@@ -1,6 +1,8 @@
 package com.armedia.acm.services.participants.model;
 
 import com.armedia.acm.data.AcmEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,6 +28,8 @@ import java.util.List;
 public class AcmParticipant implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 5046781644315879063L;
+
+    private final transient Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
     @Column(name = "cm_participant_id")
@@ -58,8 +62,7 @@ public class AcmParticipant implements Serializable, AcmEntity
     @Column(name = "cm_participant_modifier")
     private String modifier;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_participant_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant")
     private List<AcmParticipantPrivilege> privileges = new ArrayList<>();
 
     @PrePersist
@@ -78,7 +81,10 @@ public class AcmParticipant implements Serializable, AcmEntity
     {
         for ( AcmParticipantPrivilege privilege : getPrivileges() )
         {
-            privilege.setParticipant(this);
+            if ( privilege.getParticipant() == null )
+            {
+                privilege.setParticipant(this);
+            }
         }
     }
 
