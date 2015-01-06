@@ -137,30 +137,27 @@ Admin.View = Admin.View || {
                         member.userId = node.title;
                         var parentGroupId = node.parent.title;
                         //data should be sth like this : [{"userId":"ann-acm"}]
-                        Acm.Dialog.confirm("<b> Are you sure you want to remove  " + "'" + node.title + "'" + " from " + node.parent.title + " ? </b>"
+                        Admin.Service.Organization.removeGroupMember([member], parentGroupId);
+
+                        /*Acm.Dialog.confirm("<b> Are you sure you want to remove  " + "'" + node.title + "'" + " from " + "'" + node.parent.title + "'" + " ? </b>"
                             ,function(result) {
                                 if (result == true) {
-                                    alert("Do it");
-                                } else {
-                                    alert("Do nothing");
+                                    Admin.Service.Organization.removeGroupMember([member], parentGroupId);
                                 }
                             }
-                            ,"My Title");
-                        Admin.Service.Organization.removeGroupMember([member], parentGroupId);
+                        );*/
                     }
                     else{
-                        Acm.Dialog.confirm("<b> Are you sure you want to remove  " + "'" + node.title + "'" + " and all its subgroups/members ? </b>"
+                        var groupId = node.title;
+                        Admin.Service.Organization.removeGroup(groupId);
+                        /*Acm.Dialog.confirm("<b> Are you sure you want to remove  " + "'" + node.title + "'" + " and all its subgroups/members ? </b>"
                             ,function(result) {
                                 if (result == true) {
-                                    alert("Do it");
-                                } else {
-                                    alert("Do nothing");
+                                    var groupId = node.title;
+                                    Admin.Service.Organization.removeGroup(groupId);
                                 }
                             }
-                            ,"My Title");
-
-                        var groupId = node.title;
-                        //Admin.Service.Organization.removeGroup(groupId);
+                        );*/
                     }
                 }
             }
