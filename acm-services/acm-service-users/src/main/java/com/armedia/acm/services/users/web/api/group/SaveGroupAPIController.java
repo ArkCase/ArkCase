@@ -68,9 +68,9 @@ public class SaveGroupAPIController {
 			AcmGroup parent = getGroupDao().findByName(parentId);
 			subGroup.setParentGroup(parent);
 			
-			// If supervisors for the subgroup us empty, get from the parent group
-			if (subGroup.getSupervisors() == null || subGroup.getSupervisors().size() == 0) {
-				subGroup.setSupervisors(parent.getSupervisors());
+			// If supervisor for the subgroup is empty, get from the parent group
+			if (subGroup.getSupervisor() == null) {
+				subGroup.setSupervisor(parent.getSupervisor());
 			}
 			
 			AcmGroup saved = getGroupDao().save(subGroup);
