@@ -1,6 +1,7 @@
 package com.armedia.acm.services.participants.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -50,6 +51,7 @@ public class AcmParticipantPrivilege implements Serializable, AcmEntity
     @Column(name = "cm_access_reason")
     private String accessReason;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cm_participant_id", nullable = false)
     private AcmParticipant participant;
