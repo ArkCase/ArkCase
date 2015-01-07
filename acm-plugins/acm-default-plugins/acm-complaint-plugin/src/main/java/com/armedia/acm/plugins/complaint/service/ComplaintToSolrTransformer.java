@@ -92,8 +92,6 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         List<String> denied = getDenied(in);
         solr.setDeny_acl_ss(denied);
 
-        // fq: protected_object_b:true AND (public_doc_b:true OR allow_acl_ss:ecmillar)
-
         solr.setName(in.getComplaintNumber());
         solr.setObject_id_s(in.getComplaintId() + "");
         solr.setObject_type_s("COMPLAINT");
