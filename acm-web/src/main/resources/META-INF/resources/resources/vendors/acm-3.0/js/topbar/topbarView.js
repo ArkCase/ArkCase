@@ -175,7 +175,8 @@ Topbar.View = {
         }
         ,onModelRetrievedAsnList: function(asnList) {
             if (asnList.hasError) {
-                Topbar.Model.Flash.add("Failed to retrieve notifications:" + asnList.errorMsg);
+                //Topbar.Model.Flash.add("Failed to retrieve notifications:" + asnList.errorMsg);
+                Topbar.Model.Flash.add("Failed to connect to server");
             } else {
                 Topbar.View.Asn.showNewAsn(asnList);
             }
@@ -559,10 +560,10 @@ Topbar.View = {
                         msg += "<input type='button' name='ack' value='Ack'/>";
                     }
                     if (canClose) {
-                        msg += "<input type='button' name='close' value='AckClose'/>";
+                        msg += "<input type='button' name='close' value='Close'/>";
                     }
                     if (canCloseFlash) {
-                        msg += "<input type='button' name='closeFlash' value='CloseFlash'/>";
+                        msg += "<input type='button' name='closeFlash' value='Close'/>";
                     }
                     if (canStopAuto) {
                         msg += "<small class='text-muted'><span>5</span> sec</small>";
@@ -570,7 +571,7 @@ Topbar.View = {
                     }
                     if (canCloseAuto) {
                         msg += "<small class='text-muted'><span>5</span> sec</small>";
-                        msg += "<input type='button' name='closeAuto' value='Stop'/>";
+                        msg += "<input type='button' name='closeAuto' value='Close'/>";
                     }
                     msg += "</div>";
 

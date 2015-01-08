@@ -132,11 +132,11 @@ CaseFile.Service = {
 
                     } else {
                         if (Acm.Validator.validateSolrData(response)) {
-                            var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
+                            var treeInfo = AcmEx.Model.Tree.Config.getTreeInfo();
                             treeInfo.total = response.response.numFound;
 
                             var caseFiles = response.response.docs;
-                            var pageId = CaseFile.Model.Tree.Config.getPageId();
+                            var pageId = AcmEx.Model.Tree.Config.getPageId();
                             CaseFile.Model.List.cachePage.put(pageId, caseFiles);
 
                             var subKey = treeInfo.key;
@@ -147,12 +147,12 @@ CaseFile.Service = {
                                 if (0 < caseFiles.length) {
                                     objId = parseInt(caseFiles[0].object_id_s);
                                     if (0 < objId) {
-                                        key = CaseFile.Model.Tree.Key.combinePageIdSubKey(start, objId);
+                                        key = CaseFile.Model.Tree.Key.getKeyByObjWithPage(start, objId);
                                     }
                                 }
                             } else {
-                                key = CaseFile.Model.Tree.Key.combinePageIdSubKey(pageId, subKey);
-                                objId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(key);
+                                key = CaseFile.Model.Tree.Key.getKeyBySubWithPage(pageId, subKey);
+                                objId = AcmEx.Model.Tree.Key.getObjIdByKey(key);
                                 treeInfo.key = null;
                             }
 
@@ -214,7 +214,7 @@ CaseFile.Service = {
                             }
 
 
-                            var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
+                            var treeInfo = AcmEx.Model.Tree.Config.getTreeInfo();
                             if (0 < treeInfo.objId) {      //handle single caseFile situation
                                 treeInfo.total = 1;
 
@@ -235,7 +235,7 @@ CaseFile.Service = {
                                 var caseFiles = [caseFilSolr];
                                 CaseFile.Model.List.cachePage.put(pageId, caseFiles);
 
-                                var key = CaseFile.Model.Tree.Key.combinePageIdSubKey(pageId, treeInfo.objId.toString());
+                                var key = CaseFile.Model.Tree.Key.getKeyByObjWithPage(pageId, treeInfo.objId);
                                 CaseFile.Controller.modelRetrievedCaseFileList(key);
 
                             } else {

@@ -21,6 +21,14 @@ Acm.Object = {
             }
             return this._items.properties(item).itemValue();
         }
+        ,getJson: function(item) {
+            var json = null;
+            var value = this.get(item);
+            if (value) {
+                json = $.parseJSON(value);
+            }
+            return json;
+        }
     }
 
 
