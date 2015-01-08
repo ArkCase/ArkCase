@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.complaint.dao;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -9,7 +8,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
@@ -18,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
-import com.armedia.acm.services.users.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 
 /**
  * Created by armdev on 10/17/14.

@@ -130,6 +130,7 @@ public class CreateAdHocTaskAPIController
             headers.put("firstRow", 0);
             headers.put("maxRows", 10);
             headers.put("sort", "");
+            headers.put("acmUser", authentication);
 
             MuleMessage response = getMuleClient().send("vm://quickSearchQuery.in", "", headers);
             log.debug("Response type: " + response.getPayload().getClass());

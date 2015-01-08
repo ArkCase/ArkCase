@@ -83,7 +83,6 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>javax.persistence</artifactId>
-            <version>${javax-persistence.version}</version>
         </dependency>
 
         <!-- logging -->

@@ -58,8 +58,11 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         	solr.setParent_type_s("GROUP");
         }
         
+        if (in.getSupervisor() != null)
+        {
+        	solr.setSupervisor_id_s(in.getSupervisor().getUserId());        	
+        }
         solr = addSubGroupIds(in, solr);
-        solr = addSupervisorIds(in, solr);
         solr = addMemberIds(in, solr);
 		
 		return solr;
@@ -111,22 +114,6 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         	}
         	
         	solr.setChild_id_ss(subGroupIds);
-        }
-		
-		return solr;
-	}
-	
-	private SolrAdvancedSearchDocument addSupervisorIds(AcmGroup in, SolrAdvancedSearchDocument solr)
-	{
-		if (in.getSupervisors() != null && in.getSupervisors().size() > 0)
-        {
-        	List<String> supervisorIds = new ArrayList<String>();
-        	for (AcmUser user : in.getSupervisors())
-        	{
-        		supervisorIds.add(user.getUserId());
-        	}
-        	
-        	solr.setSupervisor_id_ss(supervisorIds);
         }
 		
 		return solr;

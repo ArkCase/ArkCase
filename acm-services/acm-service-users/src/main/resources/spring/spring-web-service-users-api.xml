@@ -18,6 +18,11 @@
     	<property name="muleClient" ref="muleClient" />
     </bean>
     
+    <bean id="getGroupSupervisorAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupSupervisorAPIController">
+    	<property name="groupDao" ref="groupDao" />
+    	<property name="muleClient" ref="muleClient" />
+    </bean>
+    
     <bean id="getGroupMembersAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupMembersAPIController">
     	<property name="groupDao" ref="groupDao" />
     	<property name="muleClient" ref="muleClient" />
@@ -31,7 +36,7 @@
     	<property name="groupDao" ref="groupDao" />
     </bean>
     
-    <bean id="saveSupervisorsToGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SaveSupervisorsToGroupAPIController">
+    <bean id="saveSupervisorToGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SaveSupervisorToGroupAPIController">
     	<property name="groupDao" ref="groupDao" />
     </bean>
     
@@ -39,7 +44,7 @@
     	<property name="groupDao" ref="groupDao" />
     </bean>
     
-    <bean id="removeSupervisorsFromGroupAPIController" class="com.armedia.acm.services.users.web.api.group.RemoveSupervisorsFromGroupAPIController">
+    <bean id="removeSupervisorFromGroupAPIController" class="com.armedia.acm.services.users.web.api.group.RemoveSupervisorFromGroupAPIController">
     	<property name="groupDao" ref="groupDao" />
     </bean>
     

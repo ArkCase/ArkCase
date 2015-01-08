@@ -3,7 +3,7 @@ package com.armedia.acm.plugins.complaint.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.casefile.model.Disposition;
-import com.armedia.acm.services.users.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
