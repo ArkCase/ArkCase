@@ -7,6 +7,10 @@ import java.util.List;
  */
 public class FacetDto {
 
+    private String q;
+    private int start=0;
+    private int n=100;
+
     private List<IFacetDto> facets;
 
     public List<IFacetDto> getFacets() {
@@ -15,5 +19,29 @@ public class FacetDto {
 
     public void setFacets(List<IFacetDto> facets) {
         this.facets = facets;
+    }
+
+    public String getQ() {
+        return q;
+    }
+
+    public void setQ(String q) {
+        this.q = q;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public int getN() {
+        return n;
+    }
+
+    public void setN(int n) {
+        this.n = n;
     }
 }
