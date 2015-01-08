@@ -6,12 +6,12 @@
 var AcmEx = AcmEx || {
     create : function() {
         if (AcmEx.Object.create)  {AcmEx.Object.create()};
-        //if (AcmEx.Model.create)   {AcmEx.Model.create();}
+        if (AcmEx.Model.create)   {AcmEx.Model.create();}
         if (AcmEx.Service.create) {AcmEx.Service.create();}
     }
     ,onInitialize : function() {
         if (AcmEx.Object.onInitialize)  {AcmEx.Object.onInitialize()};
-        //if (AcmEx.Model.onInitialize)   {AcmEx.Model.onInitialize();}
+        if (AcmEx.Model.onInitialize)   {AcmEx.Model.onInitialize();}
         if (AcmEx.Service.onInitialize) {AcmEx.Service.onInitialize();}
     }
 

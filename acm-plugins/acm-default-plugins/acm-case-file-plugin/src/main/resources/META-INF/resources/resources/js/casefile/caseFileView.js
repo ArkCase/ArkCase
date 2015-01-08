@@ -37,21 +37,18 @@ CaseFile.View = CaseFile.View || {
 
     ,MicroData: {
         create : function() {
-            var items = $(document).items();
-            //this.caseFileId = items.properties("caseFileId").itemValue();
-            //this.token = items.properties("token").itemValue();
-            this.caseFileId = Acm.Object.MicroData.get("caseFileId");
+            this.caseFileId = Acm.Object.MicroData.get("objId");
             this.token      = Acm.Object.MicroData.get("token");
-            
+            this.treeFilter = Acm.Object.MicroData.getJson("treeFilter");
+            this.treeSort   = Acm.Object.MicroData.getJson("treeSort");
             
             this.formUrls = new Object();
-            
-            this.formUrls["edit_case_file"] = items.properties("urlEditCaseFileForm").itemValue();
-            this.formUrls["reinvestigate_case_file"] = items.properties("urlReinvestigateCaseFileForm").itemValue();
-            this.formUrls["roi"] = items.properties("urlRoiForm").itemValue();
-            this.formUrls["enable_frevvo_form_engine"] = items.properties("enableFrevvoFormEngine").itemValue();
-            this.formUrls["change_case_status"] = items.properties("urlChangeCaseStatusForm").itemValue();
-            this.formUrls["edit_change_case_status"] = items.properties("urlEditChangeCaseStatusForm").itemValue();
+            this.formUrls["edit_case_file"]            = Acm.Object.MicroData.get("urlEditCaseFileForm");
+            this.formUrls["reinvestigate_case_file"]   = Acm.Object.MicroData.get("urlReinvestigateCaseFileForm");
+            this.formUrls["roi"]                       = Acm.Object.MicroData.get("urlRoiForm");
+            this.formUrls["enable_frevvo_form_engine"] = Acm.Object.MicroData.get("enableFrevvoFormEngine");
+            this.formUrls["change_case_status"]        = Acm.Object.MicroData.get("urlChangeCaseStatusForm");
+            this.formUrls["edit_change_case_status"]   = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
         }
         ,onInitialized: function() {
         }
@@ -67,10 +64,14 @@ CaseFile.View = CaseFile.View || {
         }
     }
 
+
     ,Tree: {
         create: function() {
-            this.$tree = $("#tree");
-            this._useFancyTree(this.$tree);
+            this.$ulFilter = $("#ulFilter");
+            this.$ulSort   = $("#ulSort");
+            this.$tree     = $("#tree");
+            this._createTree(this.$tree);
+
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE_LIST, this.onModelRetrievedCaseFileList);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE       , this.onViewChangedCaseTitle);
@@ -79,26 +80,38 @@ CaseFile.View = CaseFile.View || {
             }
         }
         ,onInitialized: function() {
+            AcmEx.Object.TreeModifier.buildFilter(CaseFile.View.Tree.$ulFilter
+                , CaseFile.View.MicroData.treeFilter
+                , function(value) {
+                    CaseFile.Controller.viewChangedTreeFilter(value);
+                }
+            );
+            AcmEx.Object.TreeModifier.buildSort(CaseFile.View.Tree.$ulSort
+                , CaseFile.View.MicroData.treeSort
+                , function(value) {
+                    CaseFile.Controller.viewChangedTreeSort(value);
+                }
+            );
         }
 
         ,onModelRetrievedCaseFileList: function(key) {
             if (key.hasError) {
                 alert(key.errorMsg);
             } else {
-                CaseFile.View.Tree.refreshTree(key);
+                AcmEx.Object.Tree.refreshTree(key);
             }
         }
         ,onViewChangedCaseTitle: function(caseFileId, title) {
             CaseFile.View.Tree.updateTitle(caseFileId, title);
         }
         ,onTopbarViewSetAsnData: function(asnData) {
-            if (CaseFile.Model.Tree.Config.validateTreeInfo(asnData)) {
+            if (AcmEx.Model.Tree.Config.validateTreeInfo(asnData)) {
                 if (0 == asnData.name.indexOf("/plugin/casefile")) {
-                    var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
-                    if (CaseFile.Model.Tree.Config.sameResultSet(asnData)) {
+                    var treeInfo = AcmEx.Model.Tree.Config.getTreeInfo();
+                    if (AcmEx.Model.Tree.Config.sameResultSet(asnData)) {
                         if (asnData.key) {
-                            var key = CaseFile.Model.Tree.Key.combinePageIdSubKey(asnData.start, asnData.key);
-                            CaseFile.View.Tree.refreshTree(key);
+                            var key = CaseFile.Model.Tree.Key.getSubKeyWithPage(asnData.start, asnData.key);
+                            AcmEx.Object.Tree.refreshTree(key);
                         }
                         return true;
                     }
@@ -107,319 +120,138 @@ CaseFile.View = CaseFile.View || {
             return false;
         }
         ,onTreeNodeActivated: function(node) {
-            if ("prevPage" == node.key) {
+            if (AcmEx.Model.Tree.Key.getKeyPrevPage() == node.key) {
                 CaseFile.Controller.viewClickedPrevPage();
-            } else if ("nextPage" == node.key) {
+            } else if (AcmEx.Model.Tree.Key.getKeyNextPage() == node.key) {
                 CaseFile.Controller.viewClickedNextPage();
             } else {
-                var caseFileId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(node.key);
+                var caseFileId = AcmEx.Model.Tree.Key.getObjIdByKey(node.key);
                 CaseFile.Controller.viewSelectedCaseFile(caseFileId);
             }
 
             CaseFile.Controller.viewSelectedTreeNode(node.key);
         }
-        ,testTree: function() {
-            var key = "0.441.p";
-            var node;
-            var a;
-            //this.refreshTree(key);
-            //return;
-            this.toggleAllTreeNode("0.441");
-            //this.expandAllTreeNode("0.441");
-            //this.collapseAllTreeNode("0.441");
 
-            return;
-
-            node = $("#tree").fancytree("getActiveNode");
-            node = this.tree.getActiveNode();
-            node = $("#tree").fancytree("getRootNode");
-            node = this.tree.getRootNode();
-            node = this.tree.getNodeByKey("0.441");
-            node = this.tree.getNodeByKey("0.441.p");
-            if (node) {
-                a = node.isExpanded();
-                if (!a) {
-                    node.setExpanded(true);
-                }
-                a = node.isExpanded();
-            }
-            var z = 1;
-
-
-        }
-        ,refreshTree: function(key) {
-            this.tree.reload().done(function(){
-                if (Acm.isNotEmpty(key)) {
-                    var parts = key.split(CaseFile.Model.Tree.Key.KEY_SEPARATOR);
-                    if (parts && 1 < parts.length) {
-                        var parentKey = parts[0];
-                        //exclue page ID, so start from 1; expand parents only, not include self, so length-1
-                        for (var i = 1; i < parts.length-1; i++) {
-                            parentKey += CaseFile.Model.Tree.Key.KEY_SEPARATOR + parts[i];
-                            var node = CaseFile.View.Tree.tree.getNodeByKey(parentKey);
-                            if (node) {
-                                if (!node.isExpanded()) {
-                                    node.setExpanded(true);
-                                }
-                            }
-                        }
-                    }
-
-                    CaseFile.View.Tree.tree.activateKey(key);
-                }
-            });
-        }
-        ,activeTreeNode: function(key) {
-            this.tree.activateKey(key);
-        }
-        ,expandAllTreeNode: function(key) {
-            var thisNode = this.tree.getNodeByKey(key);
-            if (thisNode) {
-                thisNode.setExpanded(true);
-                thisNode.visit(function(node) {
-                    node.setExpanded(true);
-                });
-            }
-        }
-        ,collapseAllTreeNode: function(key) {
-            var thisNode = this.tree.getNodeByKey(key);
-            if (thisNode) {
-                thisNode.setExpanded(false);
-                thisNode.visit(function(node) {
-                    node.setExpanded(false);
-                });
-            }
-        }
-        ,toggleAllTreeNode: function(key) {
-            var thisNode = this.tree.getNodeByKey(key);
-            if (thisNode) {
-                thisNode.toggleExpanded();
-                thisNode.visit(function(node) {
-                    node.toggleExpanded();
-                });
-            }
-        }
-
-        ,_activeKey: null
-        ,getActiveKey: function() {
-            return this._activeKey;
-        }
-        ,getActiveCaseId: function() {
-            var caseFileId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(this._activeKey);
-            return caseFileId;
-        }
-
-        ,_useFancyTree: function($s) {
-            $s.fancytree({
+        ,_createTree: function($s) {
+            AcmEx.Object.Tree.useFancyTree($s, {
                 activate: function(event, data) {
-                    var node = data.node;
-                    var key = node.key;
-                    var nodeType = CaseFile.Model.Tree.Key.getNodeTypeByKey(key);
-
-                    CaseFile.View.Tree._activeKey = key;
                     CaseFile.View.Tree.onTreeNodeActivated(data.node);
                 }
-                ,beforeActivate: function(event, data) {
-                    if (App.Object.Dirty.isDirty()) {
-                        var node = data.node;
-                        var key = node.key;
-                        if (key == CaseFile.View.Tree._activeKey) {
-                            return true;
-                        } else {
-                            var reason = App.Object.Dirty.getFirst();
-                            Acm.Dialog.alert("Need to save data first: " + reason);
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                ,dblclick: function(event, data) {
-                    var node = data.node;
-                    //alert("dblclick:(" + node.key + "," + node.title + ")");
-                    //node.setExpanded();
-                    //toggleExpanded();
-                }
-
-                ,focus: function(event, data) {
-//                var node = data.node;
-//                if ("prevPage" == node.key) {
-//                    alert("onFocus:" + node.key);
-//                } else if ("nextPage" == node.key) {
-//                    alert("onFocus:" + node.key);
-//                }
-                }
-                ,renderNode: function(event, data) {
-                    var node = data.node;
-                    CaseFile.View.Tree._fixNodeIcon(node);
-                }
-//            ,extensions: ["table"]
-//
-//            ,table: {
-//                nodeColumnIdx: 0 // render the node title into the 2nd column
-//                //,checkboxColumnIdx: 1 // render the checkboxes into the 1st column
-//            }
-//
-//            ,renderColumns: function(event, data) {
-//                var node = data.node,
-//                $tdList = $(node.tr).find(">td");
-//                // (index #0 is rendered by fancytree by adding the checkbox)
-//                $tdList.eq(1).text(node.data.description1);
-//                // (index #2 is rendered by fancytree)
-//            }
-
                 ,lazyLoad: function(event, data) {
                     CaseFile.View.Tree.lazyLoad(event, data);
                 }
-                ,loadError: function(event, data) {
-                    CaseFile.View.Tree.loadError(event, data);
-                }
                 ,source: function() {
-                    return CaseFile.View.Tree.treeSource();
-                } //end source
-            }); //end fancytree
+                    var treeInfo = AcmEx.Model.Tree.Config.getTreeInfo();
+                    var caseFiles = CaseFile.Model.List.cachePage.get(treeInfo.start);
+                    return AcmEx.Object.Tree.solrSource(caseFiles
+                        ,function(treeInfo, obj) {
+                            var key = "";
+                            if (treeInfo && obj) {
+                                key = AcmEx.Model.Tree.Key.makeKey([
+                                    {type:AcmEx.Model.Tree.Key.NODE_TYPE_PART_PAGE        , id:Acm.goodValue(treeInfo.start, 0)}
+                                    ,{type:CaseFile.Model.Tree.Key.NODE_TYPE_PART_OBJECT  , id:Acm.goodValue(obj.object_id_s)}
+                                ]);
+                            }
+                            return key;
+                        }
+                        ,function(treeInfo, obj) {
+                            var title = "";
+                            if (obj) {
+                                title = Acm.goodValue(obj.title_t) + " (" + Acm.goodValue(obj.name) + ")";
+                            }
+                            return title;
+                        }
+                        ,function(treeInfo, obj) {
+                            var toolTip = "";
+                            if (obj) {
+                                toolTip = Acm.goodValue(obj.title_t);
+                            }
+                            return toolTip;
+                        }
+                    );
+                }
+            });
 
-            this.tree = this.$tree.fancytree("getTree");
+
 
             $s.contextmenu({
-                //delegate: "span.fancytree-title",
-                delegate: ".fancytree-title",
-                menu: CaseFile.View.Tree.menu_cur,
-                beforeOpen: function(event, ui) {
+                //delegate: "span.fancytree-title"
+                delegate: ".fancytree-title"
+                ,beforeOpen: function(event, ui) {
                     var node = $.ui.fancytree.getNode(ui.target);
-//                node.setFocus();
+                    //node.setFocus();
                     node.setActive();
                     CaseFile.View.Tree.$tree.contextmenu("replaceMenu", CaseFile.View.Tree._getMenu(node));
 
-                },
-                select: function(event, ui) {
+                }
+                ,select: function(event, ui) {
                     var node = $.ui.fancytree.getNode(ui.target);
                     alert("select " + ui.cmd + " on " + node);
                 }
             });
+        }
 
-        }
-        ,_getCaseNodeDisplay: function(caseTitle, caseName) {
-            return  caseTitle + " (" + caseName + ")";
-        }
-        ,_fixNodeIcon: function(node) {
-            var key = node.key;
-            var nodeType = CaseFile.Model.Tree.Key.getNodeTypeByKey(key);
-            var acmIcon = CaseFile.Model.Tree.Key.getIconByKey(key);
-            if (acmIcon) {
-                var span = node.span;
-                var $spanIcon = $(span.children[1]);
-                $spanIcon.removeClass("fancytree-icon");
-                $spanIcon.html("<i class='i " + acmIcon + "'></i>");
-            }
-        }
         ,updateTitle: function(caseFileId, caseTitle) {
-            //var node = this.$tree.fancytree("getActiveNode");
-            var key = CaseFile.Model.Tree.Key.getCaseFileKey(caseFileId);
+            var key = CaseFile.Model.Tree.Key.getKeyByObj(caseFileId);
             var node = this.tree.getNodeByKey(key);
             var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
             if (node && caseFile) {
-                var nodeDisplay = this._getCaseNodeDisplay(caseTitle, Acm.goodValue(caseFile.caseNumber));
+                var nodeDisplay = Acm.goodValue(caseTitle) + " (" + Acm.goodValue(caseFile.caseNumber) + ")";
                 node.setTitle(nodeDisplay);
-                this._fixNodeIcon(node);
+                AcmEx.Object.Tree.fixNodeIcon(node);
             }
-        }
-        ,treeSource: function() {
-            var builder = AcmEx.FancyTreeBuilder.reset();
-
-            var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
-            var caseFiles = CaseFile.Model.List.cachePage.get(treeInfo.start);
-            if (null == caseFiles || 0 >= caseFiles.length) {
-                return builder.getTree();
-            }
-
-            if (0 < treeInfo.start) {
-                builder.addLeaf({key: CaseFile.Model.Tree.Key.NODE_TYPE_PART_PREV_PAGE
-                    ,title: treeInfo.start + " records above..."
-                    ,tooltip: "Review previous records"
-                    ,expanded: false
-                    ,folder: false
-                });
-            }
-
-            for (var i = 0; i < caseFiles.length; i++) {
-                var c = caseFiles[i];
-                var caseId = parseInt(c.object_id_s);
-                builder.addLeaf({key: treeInfo.start + CaseFile.Model.Tree.Key.KEY_SEPARATOR + caseId                       //level 1: /CaseFile
-                    ,title: this._getCaseNodeDisplay(c.title_t, c.name)
-                    ,tooltip: c.title_t
-                    ,expanded: false
-                    ,folder: true
-                    ,lazy: true
-                    ,cache: false
-                });
-            } //end for i
-            builder.makeLast();
-
-            if ((0 > treeInfo.total)                                    //unknown size
-                || (treeInfo.total - treeInfo.n > treeInfo.start)) {   //no more page left
-                var title = (0 > treeInfo.total)? "More records..."
-                    : (treeInfo.total - treeInfo.start - treeInfo.n) + " more records...";
-                builder.addLeafLast({key: CaseFile.Model.Tree.Key.NODE_TYPE_PART_PREV_PAGE
-                    ,title: title
-                    ,tooltip: "Load more records"
-                    ,expanded: false
-                    ,folder: false
-                });
-            }
-
-            return builder.getTree();
         }
         ,lazyLoad: function(event, data) {
-            var treeInfo = CaseFile.Model.Tree.Config.getTreeInfo();
+            var treeInfo = AcmEx.Model.Tree.Config.getTreeInfo();
             var pageId = treeInfo.start;
 
             var key = data.node.key;
-            var nodeType = CaseFile.Model.Tree.Key.getNodeTypeByKey(key);
+            var nodeType = AcmEx.Model.Tree.Key.getNodeTypeByKey(key);
             switch (nodeType) {
-                case CaseFile.Model.Tree.Key.NODE_TYPE_PART_PAGE + CaseFile.Model.Tree.Key.NODE_TYPE_PART_OBJECT: //"pc":
+                case AcmEx.Model.Tree.Key.makeNodeType([AcmEx.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.Tree.Key.NODE_TYPE_PART_OBJECT]): //"p/c":
                     data.result = AcmEx.FancyTreeBuilder
                         .reset()
-                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS         //level 2: /CaseFile/Details
+                        .addLeaf({key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS         //level 2: /CaseFile/Details
                             ,title: "Details"
                         })
-                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE          //level 2: /CaseFile/People
+                        .addLeaf({key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE          //level 2: /CaseFile/People
                             ,title: "People"
                         })
-                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS       //level 2: /CaseFile/Documents
+                        .addLeaf({key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS       //level 2: /CaseFile/Documents
                             ,title: "Documents"
 //                            ,folder: true
 //                            ,lazy: true
 //                            ,cache: false
                         })
-                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS    //level 2: /CaseFile/Participants
+                        .addLeaf({key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS    //level 2: /CaseFile/Participants
                             ,title: "Participants"
                         })
-                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES           //level 2: /CaseFile/Notes
+                        .addLeaf({key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES           //level 2: /CaseFile/Notes
                             ,title: "Notes"
                         })
-                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/Tasks
+                        .addLeaf({key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/Tasks
                             ,title: "Tasks"
                         })
-                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES      //level 2: /CaseFile/References
+                        .addLeaf({key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES      //level 2: /CaseFile/References
                             ,title: "References"
                         })
-                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY         //level 2: /CaseFile/History
+                        .addLeaf({key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY         //level 2: /CaseFile/History
                             ,title: "History"
                         })
-                        .addLeaf({key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES         //level 2: /CaseFile/Correspondence
+                        .addLeaf({key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES       //level 2: /CaseFile/Correspondence
                             ,title: "Correspondence"
                         })
                         .getTree();
 
                     break;
 
-                case CaseFile.Model.Tree.Key.NODE_TYPE_PART_PAGE + CaseFile.Model.Tree.Key.NODE_TYPE_PART_OBJECT + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS: //"pco":
-                    var caseFileId = CaseFile.Model.Tree.Key.getCaseFileIdByKey(key);
+                case AcmEx.Model.Tree.Key.makeNodeType([AcmEx.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.Tree.Key.NODE_TYPE_PART_OBJECT, CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS]): //"p/c/o":
+                    var caseFileId = AcmEx.Model.Tree.Key.getObjIdByKey(key);
                     var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                     if (c) {
                         data.result = [
-                             {key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + "1", title: "Document1" + "[Status]"}
-                            ,{key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + "2", title: "Doc2" + "[Status]"}
+                            {key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + "c.1", title: "Document1" + "[Status]"}
+                            ,{key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + "c.2", title: "Doc2" + "[Status]"}
                         ];
                     } else {
                         data.result = CaseFile.Service.Detail.retrieveCaseFileDeferred(caseFileId
@@ -427,8 +259,8 @@ CaseFile.View = CaseFile.View || {
                                 var z = 1;
 
                                 var resultFake = [
-                                     {key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + "3", title: "Document3" + "[Status]"}
-                                    ,{key: key + CaseFile.Model.Tree.Key.KEY_SEPARATOR + "4", title: "Doc4" + "[Status]"}
+                                    {key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + "c.3", title: "Document3" + "[Status]"}
+                                    ,{key: key + AcmEx.Model.Tree.Key.KEY_SEPARATOR + "c.4", title: "Doc4" + "[Status]"}
                                 ];
                                 return resultFake;
                             }
@@ -444,17 +276,6 @@ CaseFile.View = CaseFile.View || {
             }
         }
 
-        ,loadError: function(e, data) {
-            var error = data.error;
-            if (error.status && error.statusText) {
-                data.details = "Error status: " + error.statusText + "[" + error.status + "]";
-            } else {
-                data.details = "Error: " + error;
-            }
-            //data.message = "Custom error: " + data.message;
-        }
-
-        ,menu_cur: []  //initial default menu; todo: combine with _getMenu(null)
         ,_getMenu: function(node) {
             var key = node.key;
             var menu = [
@@ -496,7 +317,7 @@ CaseFile.View = CaseFile.View || {
 
         ,onClickBtnEditCaseFile: function() {
         	var urlEditCaseFileForm = CaseFile.View.MicroData.getFormUrls()['edit_case_file'];
-        	var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+        	var caseFileId = AcmEx.Object.Tree.getActiveObjId();
             var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
             if (Acm.isNotEmpty(urlEditCaseFileForm) && Acm.isNotEmpty(c)) {
             	var xmlId = '';
@@ -534,7 +355,7 @@ CaseFile.View = CaseFile.View || {
         ,onClickBtnChangeCaseStatus: function() {
             CaseFile.View.Action.showDlgChangeCaseStatus(function(event, ctrl){
                 var urlChangeCaseStatusForm = CaseFile.View.MicroData.getFormUrls()['change_case_status'];
-                var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                 var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                 if (Acm.isNotEmpty(urlChangeCaseStatusForm) && Acm.isNotEmpty(c)) {
                     if (Acm.isNotEmpty(c.caseNumber)) {
@@ -559,7 +380,7 @@ CaseFile.View = CaseFile.View || {
         }
         ,onClickBtnReinvestigateCaseFile: function() {
         	var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.getFormUrls()['reinvestigate_case_file'];
-        	var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+        	var caseFileId = AcmEx.Object.Tree.getActiveObjId();
             var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
             if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
             	var xmlId = '';
@@ -673,17 +494,17 @@ CaseFile.View = CaseFile.View || {
 
             AcmEx.Object.XEditable.useEditable(this.$lnkCaseTitle, {
                 success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedCaseTitle(CaseFile.View.Tree.getActiveCaseId(), newValue);
+                    CaseFile.Controller.viewChangedCaseTitle(AcmEx.Object.Tree.getActiveObjId(), newValue);
                 }
             });
 //            AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
 //                success: function(response, newValue) {
-//                    CaseFile.Controller.viewChangedIncidentDate(CaseFile.View.Tree.getActiveCaseId(), newValue);
+//                    CaseFile.Controller.viewChangedIncidentDate(AcmEx.Object.Tree.getActiveObjId(), newValue);
 //                }
 //            });
             AcmEx.Object.XEditable.useEditableDate(this.$lnkDueDate, {
                 success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedDueDate(CaseFile.View.Tree.getActiveCaseId(), newValue);
+                    CaseFile.Controller.viewChangedDueDate(AcmEx.Object.Tree.getActiveObjId(), newValue);
                 }
             });
 
@@ -742,7 +563,7 @@ CaseFile.View = CaseFile.View || {
             AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkAssignee, {
                 source: choices
                 ,success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedAssignee(CaseFile.View.Tree.getActiveCaseId(), newValue);
+                    CaseFile.Controller.viewChangedAssignee(AcmEx.Object.Tree.getActiveObjId(), newValue);
                 }
             });
         }
@@ -758,7 +579,7 @@ CaseFile.View = CaseFile.View || {
             AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkSubjectType, {
                 source: choices
                 ,success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedSubjectType(CaseFile.View.Tree.getActiveCaseId(), newValue);
+                    CaseFile.Controller.viewChangedSubjectType(AcmEx.Object.Tree.getActiveObjId(), newValue);
                 }
             });
         }
@@ -774,7 +595,7 @@ CaseFile.View = CaseFile.View || {
             AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkPriority, {
                 source: choices
                 ,success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedPriority(CaseFile.View.Tree.getActiveCaseId(), newValue);
+                    CaseFile.Controller.viewChangedPriority(AcmEx.Object.Tree.getActiveObjId(), newValue);
                 }
             });
         }
@@ -850,7 +671,7 @@ CaseFile.View = CaseFile.View || {
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = CaseFile.View.Detail.saveDivDetail();
-            CaseFile.Controller.viewChangedDetail(CaseFile.View.Tree.getActiveCaseId(), htmlDetail);
+            CaseFile.Controller.viewChangedDetail(AcmEx.Object.Tree.getActiveObjId(), htmlDetail);
             App.Object.Dirty.clear("Editing case detail");
         }
 
@@ -860,8 +681,8 @@ CaseFile.View = CaseFile.View || {
             Acm.Object.show(this.$tabTopBlank, !show);
         }
         ,showPanel: function(key) {
-            var tabIds = CaseFile.Model.Tree.Key.getTabIds();
-            var tabIdsToShow = CaseFile.Model.Tree.Key.getTabIdsByKey(key);
+            var tabIds = AcmEx.Model.Tree.Key.getTabIds();
+            var tabIdsToShow = AcmEx.Model.Tree.Key.getTabIdsByKey(key);
             for (var i = 0; i < tabIds.length; i++) {
                 var show = Acm.isItemInArray(tabIds[i], tabIdsToShow);
                 Acm.Object.show($("#" + tabIds[i]), show);
@@ -1015,7 +836,7 @@ CaseFile.View = CaseFile.View || {
                     ,actions: {
                         listAction: function(postData, jtParams) {
                             var rc = AcmEx.Object.JTable.getEmptyRecords();
-                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                            var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                             var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                             if (CaseFile.Model.Detail.validateData(c)) {
                                 var personAssociations = c.personAssociations;
@@ -1094,7 +915,7 @@ CaseFile.View = CaseFile.View || {
                     }
                     ,recordAdded: function(event, data){
                         var record = data.record;
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId) {
                             var pa = {};
                             pa.personType = record.personType;
@@ -1111,7 +932,7 @@ CaseFile.View = CaseFile.View || {
                         var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                         var record = data.record;
                         var assocId = record.assocId;
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                         if (CaseFile.Model.Detail.validateData(c)) {
                             if (c.personAssociations.length > whichRow) {
@@ -1130,7 +951,7 @@ CaseFile.View = CaseFile.View || {
                         var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                         var record = data.record;
                         var personAssociationId = record.assocId;
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < personAssociationId) {
                             CaseFile.Controller.viewDeletedPersonAssociation(caseFileId, personAssociationId);
                         }
@@ -1202,7 +1023,7 @@ CaseFile.View = CaseFile.View || {
                             if (recordParent && recordParent.assocId) {
                                 var assocId = recordParent.assocId;
 
-                                var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                                var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                                 var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                                 if (CaseFile.Model.Detail.validateData(c)) {
                                     var personAssociations = c.personAssociations;
@@ -1278,7 +1099,7 @@ CaseFile.View = CaseFile.View || {
                         var assocId = record.assocId;
                         contactMethod.type  = Acm.goodValue(record.type);
                         contactMethod.value = Acm.goodValue(record.value);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedContactMethod(caseFileId, assocId, contactMethod);
                         }
@@ -1294,7 +1115,7 @@ CaseFile.View = CaseFile.View || {
                         contactMethod.id    = Acm.goodValue(record.id, 0);
                         contactMethod.type  = Acm.goodValue(record.type);
                         contactMethod.value = Acm.goodValue(record.value);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId && 0 < contactMethod.id) {
                             CaseFile.Controller.viewUpdatedContactMethod(caseFileId, assocId, contactMethod);
                         }
@@ -1304,7 +1125,7 @@ CaseFile.View = CaseFile.View || {
                         var record = data.record;
                         var assocId = record.assocId;
                         var contactMethodId = Acm.goodValue(record.id, 0);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId && 0 < contactMethodId) {
                             CaseFile.Controller.viewDeletedContactMethod(caseFileId, assocId, contactMethodId);
                         }
@@ -1360,7 +1181,7 @@ CaseFile.View = CaseFile.View || {
                             if (recordParent && recordParent.assocId) {
                                 var assocId = recordParent.assocId;
 
-                                var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                                var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                                 var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                                 if (CaseFile.Model.Detail.validateData(c)) {
                                     var personAssociations = c.personAssociations;
@@ -1433,7 +1254,7 @@ CaseFile.View = CaseFile.View || {
                         var assocId = record.assocId;
                         securityTag.type  = Acm.goodValue(record.type);
                         securityTag.value = Acm.goodValue(record.value);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedSecurityTag(caseFileId, assocId, securityTag);
                         }
@@ -1445,7 +1266,7 @@ CaseFile.View = CaseFile.View || {
                         securityTag.id    = Acm.goodValue(record.id, 0);
                         securityTag.type  = Acm.goodValue(record.type);
                         securityTag.value = Acm.goodValue(record.value);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId && 0 < securityTag.id) {
                             CaseFile.Controller.viewUpdatedSecurityTag(caseFileId, assocId, securityTag);
                         }
@@ -1454,7 +1275,7 @@ CaseFile.View = CaseFile.View || {
                         var record = data.record;
                         var assocId = record.assocId;
                         var securityTagId = Acm.goodValue(record.id, 0);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId && 0 < securityTagId) {
                             CaseFile.Controller.viewDeletedSecurityTag(caseFileId, assocId, securityTagId);
                         }
@@ -1510,7 +1331,7 @@ CaseFile.View = CaseFile.View || {
                             if (recordParent && recordParent.assocId) {
                                 var assocId = recordParent.assocId;
 
-                                var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                                var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                                 var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                                 if (CaseFile.Model.Detail.validateData(c)) {
                                     var personAssociations = c.personAssociations;
@@ -1581,7 +1402,7 @@ CaseFile.View = CaseFile.View || {
                         var assocId = record.assocId;
                         organization.organizationType  = Acm.goodValue(record.type);
                         organization.organizationValue = Acm.goodValue(record.value);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedOrganization(caseFileId, assocId, organization);
                         }
@@ -1593,7 +1414,7 @@ CaseFile.View = CaseFile.View || {
                         organization.organizationId    = Acm.goodValue(record.id, 0);
                         organization.organizationType  = Acm.goodValue(record.type);
                         organization.organizationValue = Acm.goodValue(record.value);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId && 0 < organization.organizationId) {
                             CaseFile.Controller.viewUpdatedOrganization(caseFileId, assocId, organization);
                         }
@@ -1602,7 +1423,7 @@ CaseFile.View = CaseFile.View || {
                         var record = data.record;
                         var assocId = record.assocId;
                         var organizationId = Acm.goodValue(record.id, 0);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId && 0 < organizationId) {
                             CaseFile.Controller.viewDeletedOrganization(caseFileId, assocId, organizationId);
                         }
@@ -1658,7 +1479,7 @@ CaseFile.View = CaseFile.View || {
                             if (recordParent && recordParent.assocId) {
                                 var assocId = recordParent.assocId;
 
-                                var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                                var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                                 var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                                 if (CaseFile.Model.Detail.validateData(c)) {
                                     var personAssociations = c.personAssociations;
@@ -1784,7 +1605,7 @@ CaseFile.View = CaseFile.View || {
                         address.state         = Acm.goodValue(record.state);
                         address.zip           = Acm.goodValue(record.zip);
                         address.country       = Acm.goodValue(record.country);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedAddress(caseFileId, assocId, address);
                         }
@@ -1800,7 +1621,7 @@ CaseFile.View = CaseFile.View || {
                         address.state         = Acm.goodValue(record.state);
                         address.zip           = Acm.goodValue(record.zip);
                         address.country       = Acm.goodValue(record.country);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId && 0 < address.id) {
                             CaseFile.Controller.viewUpdatedAddress(caseFileId, assocId, address);
                         }
@@ -1809,7 +1630,7 @@ CaseFile.View = CaseFile.View || {
                         var record = data.record;
                         var assocId = record.assocId;
                         var addressId  = Acm.goodValue(record.id, 0);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId && 0 < addressId) {
                             CaseFile.Controller.viewDeletedAddress(caseFileId, assocId, addressId);
                         }
@@ -1865,7 +1686,7 @@ CaseFile.View = CaseFile.View || {
                             if (recordParent && recordParent.assocId) {
                                 var assocId = recordParent.assocId;
 
-                                var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                                var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                                 var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                                 if (CaseFile.Model.Detail.validateData(c)) {
                                     var personAssociations = c.personAssociations;
@@ -1938,7 +1759,7 @@ CaseFile.View = CaseFile.View || {
                         var assocId = record.assocId;
                         personAlias.aliasType  = Acm.goodValue(record.type);
                         personAlias.aliasValue = Acm.goodValue(record.value);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedPersonAlias(caseFileId, assocId, personAlias);
                         }
@@ -1950,7 +1771,7 @@ CaseFile.View = CaseFile.View || {
                         personAlias.id         = Acm.goodValue(record.id, 0);
                         personAlias.aliasType  = Acm.goodValue(record.type);
                         personAlias.aliasValue = Acm.goodValue(record.value);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId && 0 < personAlias.id) {
                             CaseFile.Controller.viewUpdatedPersonAlias(caseFileId, assocId, personAlias);
                         }
@@ -1959,7 +1780,7 @@ CaseFile.View = CaseFile.View || {
                         var record = data.record;
                         var assocId = record.assocId;
                         var personAliasId = Acm.goodValue(record.id, 0);
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId && 0 < assocId && 0 < personAliasId) {
                             CaseFile.Controller.viewDeletedPersonAlias(caseFileId, assocId, personAliasId);
                         }
@@ -2053,7 +1874,7 @@ CaseFile.View = CaseFile.View || {
             if(report == "roi"){
                 var token = CaseFile.View.MicroData.getToken();
 
-                var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                 var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
                 if (caseFile) {
                     var url = CaseFile.View.MicroData.getFormUrls()[report];
@@ -2111,7 +1932,7 @@ CaseFile.View = CaseFile.View || {
                 }
                 ,actions: {
                     listAction: function(postData, jtParams) {
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 >= caseFileId) {
                             return AcmEx.Object.JTable.getEmptyRecords();
                         }
@@ -2222,7 +2043,7 @@ CaseFile.View = CaseFile.View || {
                 ,recordUpdated : function (event, data) {
                     var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                     var record = data.record;
-                    var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                    var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                     var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                     if (c && Acm.isArray(c.childObjects)) {
                         var childObject = {};
@@ -2275,7 +2096,7 @@ CaseFile.View = CaseFile.View || {
                 }
                 ,actions: {
                     listAction: function(postData, jtParams) {
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 >= caseFileId) {
                             return AcmEx.Object.JTable.getEmptyRecords();
                         }
@@ -2298,7 +2119,7 @@ CaseFile.View = CaseFile.View || {
                     ,createAction: function(postData, jtParams) {
                         var record = Acm.urlToJson(postData);
                         var rc = AcmEx.Object.JTable.getEmptyRecord();
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
                         if (caseFile) {
                             rc.Record.title = record.title;
@@ -2309,7 +2130,7 @@ CaseFile.View = CaseFile.View || {
                     ,updateAction: function(postData, jtParams) {
                         var record = Acm.urlToJson(postData);
                         var rc = AcmEx.Object.JTable.getEmptyRecord();
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
                         if (caseFile) {
                             rc.Record.title = record.title;
@@ -2342,7 +2163,7 @@ CaseFile.View = CaseFile.View || {
                 }
                 ,recordAdded : function (event, data) {
                     var record = data.record;
-                    var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                    var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                     if (0 < caseFileId) {
                         var participant = {};
                         participant.participantLdapId = record.title;
@@ -2353,7 +2174,7 @@ CaseFile.View = CaseFile.View || {
                 ,recordUpdated : function (event, data) {
                     var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                     var record = data.record;
-                    var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                    var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                     var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                     if (c && Acm.isArray(c.participants)) {
                         if (0 < c.participants.length && whichRow < c.participants.length) {
@@ -2367,7 +2188,7 @@ CaseFile.View = CaseFile.View || {
                 ,recordDeleted : function (event, data) {
                     var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                     var record = data.record;
-                    var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                    var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                     var c = CaseFile.Model.Detail.getCaseFile(caseFileId);
                     if (c && Acm.isArray(c.participants)) {
                         if (0 < c.participants.length && whichRow < c.participants.length) {
@@ -2459,7 +2280,7 @@ CaseFile.View = CaseFile.View || {
                     }
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
-                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                            var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                             if (0 >= caseFileId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
@@ -2485,7 +2306,7 @@ CaseFile.View = CaseFile.View || {
                         ,createAction: function(postData, jtParams) {
                             var record = Acm.urlToJson(postData);
                             var rc = AcmEx.Object.JTable.getEmptyRecord();
-                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                            var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                             var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
                             if (caseFile) {
                                 rc.Record.parentId = Acm.goodValue(caseFileId, 0);
@@ -2499,7 +2320,7 @@ CaseFile.View = CaseFile.View || {
                         ,updateAction: function(postData, jtParams) {
                             var record = Acm.urlToJson(postData);
                             var rc = AcmEx.Object.jTableGetEmptyRecord();
-                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                            var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                             var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
                             if (caseFile) {
                                 rc.Record.parentId = Acm.goodValue(caseFileId, 0);
@@ -2547,7 +2368,7 @@ CaseFile.View = CaseFile.View || {
                     } //end field
                     ,recordAdded : function (event, data) {
                         var record = data.record;
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId) {
                             var noteToSave = {};
                             //noteToSave.id = record.id;
@@ -2564,7 +2385,7 @@ CaseFile.View = CaseFile.View || {
                     ,recordUpdated: function(event,data){
                         var whichRow = data.row.prevAll("tr").length;
                         var record = data.record;
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId) {
                             var notes = CaseFile.Model.Notes.cacheNoteList.get(caseFileId);
                             if (notes) {
@@ -2578,7 +2399,7 @@ CaseFile.View = CaseFile.View || {
                     }
                     ,recordDeleted : function (event, data) {
                         var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 < caseFileId) {
                             var notes = CaseFile.Model.Notes.cacheNoteList.get(caseFileId);
                             if (notes) {
@@ -2639,7 +2460,7 @@ CaseFile.View = CaseFile.View || {
             }
         }
         ,onClickSpanAddTask: function(event, ctrl) {
-            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+            var caseFileId = AcmEx.Object.Tree.getActiveObjId();
             var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
             if (caseFile) {
                 var caseNumber = Acm.goodValue(caseFile.caseNumber);
@@ -2738,7 +2559,7 @@ CaseFile.View = CaseFile.View || {
                     }
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
-                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                            var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                             if (0 >= caseFileId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
@@ -2889,7 +2710,7 @@ CaseFile.View = CaseFile.View || {
                     }
                     ,actions: {
                         listAction: function(postData, jtParams) {
-                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                            var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                             if (0 >= caseFileId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
@@ -3068,7 +2889,7 @@ CaseFile.View = CaseFile.View || {
                         pagingListAction: function (postData, jtParams, sortMap) {
                             return AcmEx.Object.JTable.getEmptyRecords();
 
-//                            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+//                            var caseFileId = AcmEx.Object.Tree.getActiveObjId();
 //                            if (0 >= caseFileId) {
 //                                return AcmEx.Object.JTable.getEmptyRecords();
 //                            }
@@ -3155,7 +2976,7 @@ CaseFile.View = CaseFile.View || {
             return Acm.Object.getSelectValue(this.$spanAddTemplate.prev().find("select"));
         }
         ,onClickSpanAddDocument: function(event, ctrl) {
-            var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+            var caseFileId = AcmEx.Object.Tree.getActiveObjId();
             var templateName = CaseFile.View.Correspondence.getSelectTemplate();
             CaseFile.Controller.viewClickedAddCorrespondence(caseFileId, templateName);
         }
@@ -3189,7 +3010,7 @@ CaseFile.View = CaseFile.View || {
                 }
                 , actions: {
                     listAction: function (postData, jtParams) {
-                        var caseFileId = CaseFile.View.Tree.getActiveCaseId();
+                        var caseFileId = AcmEx.Object.Tree.getActiveObjId();
                         if (0 >= caseFileId) {
                             return AcmEx.Object.JTable.getEmptyRecords();
                         }

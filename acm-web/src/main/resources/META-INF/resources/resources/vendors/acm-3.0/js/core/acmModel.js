@@ -1,6 +1,9 @@
 Acm.Model = {
     create: function() {
     }
+    ,
+    onInitialized: function() {
+    }
 
     ,SessionData: function(name) {
         this.name = name;
