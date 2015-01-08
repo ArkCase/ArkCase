@@ -1,24 +1,35 @@
-package com.armedia.acm.services.users.model;
+package com.armedia.acm.services.participants.model;
 
 import com.armedia.acm.data.AcmEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "acm_participant")
 public class AcmParticipant implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 5046781644315879063L;
+
+    private final transient Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
     @Column(name = "cm_participant_id")
@@ -50,6 +61,33 @@ public class AcmParticipant implements Serializable, AcmEntity
 
     @Column(name = "cm_participant_modifier")
     private String modifier;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant")
+    private List<AcmParticipantPrivilege> privileges = new ArrayList<>();
+
+    @PrePersist
+    public void beforeInsert()
+    {
+        updatePrivileges();
+    }
+
+    @PreUpdate
+    public void beforeUpdate()
+    {
+        updatePrivileges();
+    }
+
+    private void updatePrivileges()
+    {
+        for ( AcmParticipantPrivilege privilege : getPrivileges() )
+        {
+            if ( privilege.getParticipant() == null )
+            {
+                privilege.setParticipant(this);
+            }
+        }
+    }
+
 
     public Long getId()
     {
@@ -147,5 +185,15 @@ public class AcmParticipant implements Serializable, AcmEntity
     public void setModifier(String modifier)
     {
         this.modifier = modifier;
+    }
+
+    public List<AcmParticipantPrivilege> getPrivileges()
+    {
+        return privileges;
+    }
+
+    public void setPrivileges(List<AcmParticipantPrivilege> privileges)
+    {
+        this.privileges = privileges;
     }
 }

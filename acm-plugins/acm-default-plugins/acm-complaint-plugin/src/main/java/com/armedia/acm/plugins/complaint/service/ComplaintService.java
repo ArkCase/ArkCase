@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.armedia.acm.plugins.complaint.model.complaint.Strings;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -161,7 +162,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         
 		if (participantTypes != null && participantTypes.size() > 0)
 		{
-			Map<String, List<String>> participantsOptions = new HashMap<String, List<String>>();
+			Map<String, Strings> participantsOptions = new HashMap<>();
 			for (String participantType : participantTypes)
 			{
 				String type = "";
@@ -177,7 +178,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 				        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
 				        
 				        if (users != null && users.size() > 0) {
-				        	List<String> options = new ArrayList<String>();
+				        	Strings options = new Strings();
 				        	for (int i = 0; i < users.size(); i++) {
 				        		options.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
 				        	}

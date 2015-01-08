@@ -1,6 +1,8 @@
-package com.armedia.acm.services.users.model;
+package com.armedia.acm.services.dataaccess.service.impl;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,16 +23,20 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-context-holder.xml"
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-data-access-control.xml"
 })
-@TransactionConfiguration(defaultRollback = false)
-public class ParticipantJpaIT
+@TransactionConfiguration(defaultRollback = true)
+public class ParticipantPrivilegeIT
 {
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
+
+    @Autowired
+    private DataAccessPrivilegeListener dataAccessPrivilegeListener;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -68,11 +74,18 @@ public class ParticipantJpaIT
         acmParticipant.setParticipantLdapId(participantLdapId);
         acmParticipant.setParticipantType(participantType);
 
+        AcmParticipantPrivilege privilege = new AcmParticipantPrivilege();
+        acmParticipant.getPrivileges().add(privilege);
+        privilege.setAccessReason("reason");
+        privilege.setAccessType("type");
+        privilege.setObjectAction("action");
+
         entityManager.persist(acmParticipant);
 
         entityManager.flush();
 
         assertNotNull(acmParticipant.getId());
+        assertNotNull(privilege.getId());
 
     }
 }

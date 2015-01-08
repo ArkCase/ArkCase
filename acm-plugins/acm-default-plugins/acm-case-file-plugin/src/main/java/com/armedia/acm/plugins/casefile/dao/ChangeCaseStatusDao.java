@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
-import com.armedia.acm.services.users.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 
 /**
  * @author riste.tutureski

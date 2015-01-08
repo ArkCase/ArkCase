@@ -14,10 +14,15 @@ Admin.Service = {
         ,onInitialized: function(){
         }
         ,API_GROUP                  : "/api/latest/users/group/"
-        ,API_RETRIEVE_GROUPS        : "/api/latest/users/groups/get"
+        ,API_RETRIEVE_GROUPS        : "/api/latest/users/groups/get?n=50"
+        ,API_RETRIEVE_USERS        : "/api/v1/plugin/search/USER"
 
-        ,createAdHocGroup: function(group){
-            var url = App.getContextPath() + Admin.Service.Organization.API_GROUP + "/save";
+
+        ,createAdHocGroup: function(group,parentId){
+            var url = App.getContextPath() + Admin.Service.Organization.API_GROUP + "save";
+            if(parentId != null && parentId != ""){
+                url += "/" + parentId;
+            }
             Acm.Service.asyncPost(
                 function(response) {
                     if (response.hasError) {
@@ -32,7 +37,23 @@ Admin.Service = {
                 ,url
                 ,JSON.stringify(group)
             )
+        }
+        ,addGroupMember : function(groupMember,parentGroupId){
+            var url = App.getContextPath()+ Admin.Service.Organization.API_GROUP + parentGroupId + "/members/save" ;
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response.hasError) {
+                        var addedMember = response;
+                        Admin.Controller.modelAddedGroupMember(addedMember);
 
+                    } else {
+                        var addedMember = response;
+                        Admin.Controller.modelAddedGroupMember(addedMember);
+                    }
+                }
+                ,url
+                ,JSON.stringify(groupMember)
+            )
         }
         ,retrieveGroup : function(groupId){
             var url = App.getContextPath() + Admin.Service.Organization.API_GROUP + groupId + "/get";
@@ -60,7 +81,7 @@ Admin.Service = {
                 function(response) {
                     if (response.hasError) {
                         var allGroups = response.response.docs;
-                        Admin.Controller.modelRetrievedGroups(group);
+                        Admin.Controller.modelRetrievedGroups(allGroups);
 
                     } else {
                         if (Admin.Model.Organization.validateGroup(response)) {
@@ -92,6 +113,26 @@ Admin.Service = {
                 ,url
             )
         }
+
+        /*,retrieveUsers : function(groupId){
+            var url = App.getContextPath() + Admin.Service.Organization.API_RETRIEVE_USERS;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var allUsers = response.response.docs;
+                        Admin.Controller.modelRetrievedUsers(allUsers);
+
+                    } else {
+                        if (Admin.Model.Organization.validateGroup(response)) {
+                            var allUsers = response.response.docs;
+                            Admin.Model.Organization.cacheAllUsers.put("allUsers", allUsers);
+                            Admin.Controller.modelRetrievedUsers(allUsers);
+                        }
+                    }
+                }
+                ,url
+            )
+        }*/
 
         ,retrieveGroupMembers : function(groupId){
             var url = App.getContextPath()+ Admin.Service.Organization.API_GROUP + groupId + "/get/members" ;
@@ -156,7 +197,7 @@ Admin.Service = {
                             //then check in subgroups to remove the object manually from cache
                             if(foundInGroup == false){
                                 for(var j = 0; j < subGroups.length; j++){
-                                    if(removedGroup.id == subGroups[i].object_id_s){
+                                    if(removedGroup.id == subGroups[j].object_id_s){
                                         subGroups.splice(i,1);
                                     }
                                 }
