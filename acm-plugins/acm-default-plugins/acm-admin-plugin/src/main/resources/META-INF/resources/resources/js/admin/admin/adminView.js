@@ -25,13 +25,13 @@ Admin.View = Admin.View || {
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUPS, this.onModelRetrievedHierarchy);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP, this.onModelRetrievedHierarchy);
 
-            if (Admin.View.Organization.Modal.create)         {Admin.View.Organization.Modal.create();}
+            if (Admin.View.Organization.ModalDialog.create)         {Admin.View.Organization.ModalDialog.create();}
 
             /*Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUP, this.onModelRetrievedHierarchy);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUP_MEMBERS, this.onModelRetrievedHierarchy);*/
         }
         , onInitialized: function () {
-            if (Admin.View.Organization.Modal.onInitialized)         {Admin.View.Organization.Modal.onInitialized();}
+            if (Admin.View.Organization.ModalDialog.onInitialized)         {Admin.View.Organization.ModalDialog.onInitialized();}
         }
         ,onModelRetrievedHierarchy: function(){
             if (Admin.View.Organization.Tree.create)        {Admin.View.Organization.Tree.create();}
@@ -58,6 +58,8 @@ Admin.View = Admin.View || {
                     member.lastName = group.supervisor_id_ss;
                     member.jobTitle = group.location;
                     member.groupRole = group.role;*/
+                    //member.parentId = group.parent_id_s;
+                    member.parentGroupType = group.object_sub_type_s;
                     member.isMember = true;
                     member.folder = false;
                     member.children = [];
@@ -66,48 +68,68 @@ Admin.View = Admin.View || {
             }
             return members;
         }
-        ,Modal:{
+        ,ModalDialog:{
             create: function () {
                 this.$modalCreateAdHocGroup = $("#createAdHoc");
+                this.$modalCreateAdHocGroup.on("hidden.bs.modal", function(e) {Admin.View.Organization.ModalDialog.$modalLabel.text("Add Ad-Hoc Group");});
                 this.$txtGroupName = $("#groupName");
+                this.$txtGroupDescription = $("#groupDescription");
                 this.$adHocGroup = $("#addAdHocGroup");
-                this.$adHocGroup.on("click", function(e) {Admin.View.Organization.Modal.onClickBtnCreateAdHocGroup(e, this);});
+                this.$adHocGroup.on("click", function(e) {Admin.View.Organization.ModalDialog.onClickBtnCreateAdHocGroup(e, this);});
+                this.$modalLabel = $("#modalLabel");
+                this.$modalAddPeople = $("#addPeople");
+                this.$modalLabelPeople = $("#modalLabelPeople");
+
             }
             , onInitialized: function () {
 
             }
             ,onClickBtnCreateAdHocGroup:function(event, ctrl){
                 event.preventDefault();
-                var groupName = Admin.View.Organization.Modal.getTextGroupName();
+                var parentId = Admin.Model.Organization.Tree.getParentNode();
+                var groupName = Admin.View.Organization.ModalDialog.getTextGroupName();
+                var groupDescription = Admin.View.Organization.ModalDialog.getTextGroupDescription();
                 if(groupName != null && groupName != ""){
                     var group = {};
                     group.name = groupName;
-                    Admin.View.Organization.Modal.hideCreateAdHocGroupModal();
-                    Admin.Service.Organization.createAdHocGroup(group);
+                    if(groupDescription != null && groupDescription != ""){
+                        group.description = groupDescription;
+                    }
+                    Admin.View.Organization.ModalDialog.hideCreateAdHocGroupModal();
+                    Admin.View.Organization.ModalDialog.clearModalContents();
+                    Admin.Service.Organization.createAdHocGroup(group,parentId);
+                    //reset the saved parent node in preparation of next addition
+                    Admin.Model.Organization.Tree.setParentNode(null);
                 }
                 else{
                     Acm.Dialog.info("Please enter group name.");
                 };
             }
 
+            ,clearModalContents: function(){
+                Admin.View.Organization.ModalDialog.$txtGroupName.val('');
+                Admin.View.Organization.ModalDialog.$txtGroupDescription.val('');
+                //Admin.View.Organization.ModalDialog.$modalLabel[0].textContent.reset();
+            }
             ,hideCreateAdHocGroupModal: function() {
                 this.$modalCreateAdHocGroup.modal('hide');
             }
             ,getTextGroupName: function() {
                 return Acm.Object.getValue(this.$txtGroupName);
             }
+            ,getTextGroupDescription: function() {
+                return Acm.Object.getValue(this.$txtGroupDescription);
+            }
 
         }
         ,Tree:{
             create: function () {
                 this.$treeOrganization = $("#treeOrganization");
-                this.$removeAdHocGroup = $("#removeAdHocGroup");
-
                 this._useFancyTree(this.$treeOrganization);
             }
             , onInitialized: function () {
             }
-            ,onClickBtnRemoveAdHocGroup: function(node){
+            ,onClickBtnRemoveItem: function(node){
                 event.preventDefault();
                 if(node.title != "" && node.title != null){
                     if(node.data.isMember == true){
@@ -116,23 +138,51 @@ Admin.View = Admin.View || {
                         var parentGroupId = node.parent.title;
                         //data should be sth like this : [{"userId":"ann-acm"}]
                         Admin.Service.Organization.removeGroupMember([member], parentGroupId);
+
+                        /*Acm.Dialog.confirm("<b> Are you sure you want to remove  " + "'" + node.title + "'" + " from " + "'" + node.parent.title + "'" + " ? </b>"
+                            ,function(result) {
+                                if (result == true) {
+                                    Admin.Service.Organization.removeGroupMember([member], parentGroupId);
+                                }
+                            }
+                        );*/
                     }
                     else{
                         var groupId = node.title;
                         Admin.Service.Organization.removeGroup(groupId);
+                        /*Acm.Dialog.confirm("<b> Are you sure you want to remove  " + "'" + node.title + "'" + " and all its subgroups/members ? </b>"
+                            ,function(result) {
+                                if (result == true) {
+                                    var groupId = node.title;
+                                    Admin.Service.Organization.removeGroup(groupId);
+                                }
+                            }
+                        );*/
                     }
                 }
+            }
+            ,onClickBtnAddSubgroup: function(node){
+                event.preventDefault();
+                Admin.View.Organization.ModalDialog.$modalLabel.text("Add Subgroup to " + "'" + node.title + "'");
+                Admin.View.Organization.ModalDialog.$modalCreateAdHocGroup.modal('show');
+            }
+            ,onClickBtnAddMembers: function(node){
+                event.preventDefault();
+                Admin.View.Organization.ModalDialog.$modalLabelPeople.text("Add Members to " + "'" + node.title + "'");
+                Admin.View.Organization.ModalDialog.$modalAddPeople.modal('show');
             }
             ,_useFancyTree: function($s) {
                 $s.fancytree({
                     extensions: ["table"],
                     checkbox: false,
                     table: {
-                        indentation: 20,      // indent 20px per node level
+                        indentation: 16,      // indent 20px per node level
                         nodeColumnIdx: 2,     // render the node title into the 2nd column
-                        checkboxColumnIdx: 0  // render the checkboxes into the 1st column
+                        checkboxColumnIdx: null  // render the checkboxes into the 1st column
                     }
                     ,source: function() {
+
+                        //group details
                         var groups = Admin.Model.Organization.cacheGroups.get("groups");
                         var source = [];
                         for(var i = 0; i < groups.length; i++) {
@@ -151,21 +201,8 @@ Admin.View = Admin.View || {
                                     subgroups.push(members[k]);
                                 }
                             }
-                            /*if(groups[i].member_id_ss !=null){
-                             var children = groups[i].member_id_ss;
-                             for(var j = 0; j< children.length; j++){
-                             var child = {};
-                             var subgroup = Admin.View.Organization.findSubGroup(children[j]);
-                             child.title = children[j];
-                             child.firstName = subgroup.object_sub_type_s;
-                             child.lastName = subgroup.supervisor_id_ss;
-                             child.jobTitle = subgroup.location;
-                             child.groupRole = subgroup.role;
-                             child.folder = false;
-                             child.children = [];
-                             subgroups.push(child);
-                             }
-                             }*/
+
+                            //subgroups details
                             if (groups[i].child_id_ss != null) {
                                 var children = groups[i].child_id_ss;
                                 for (var j = 0; j < children.length; j++) {
@@ -174,18 +211,19 @@ Admin.View = Admin.View || {
                                     var subgroup = Admin.View.Organization.findSubgroupDetails(children[j]);
                                     child.title = children[j];
                                     child.type = subgroup.object_sub_type_s;
+                                    child.parentId = subgroup.parent_id_s;
                                     child.supervisor = subgroup.supervisor_id_ss;
                                     child.location = subgroup.location;
                                     child.folder = true;
 
                                     //find subgroup members
                                     var subGroupMembers = Admin.View.Organization.findMembers(subgroup);
-                                    if (subGroupMembers.length > 0) {
+                                    /*if (subGroupMembers.length > 0) {
                                         for (var l = 0; l < subGroupMembers.length; l++) {
                                             subGroupM.push(subGroupMembers[l]);
                                         }
-                                    }
-                                    child.children = subGroupM;
+                                    }*/
+                                    child.children = subGroupMembers;
                                     subgroups.push(child);
                                 }
                             }
@@ -202,32 +240,46 @@ Admin.View = Admin.View || {
                             //$tdList.eq(1).text(node.getIndexHier()).addClass("alignRight");
                             // (index #2 is rendered by fancytree)
 
-                        //right now, users do not have required information, so this code stub is kept here for future purposes
-                        //refactoring will be done as the module develops further
-                        if(node.title != "Subgroup" && node.title != "Group"){
-                            $tdList.eq(3).text(node.data.type);
-                            $tdList.eq(4).text(node.data.supervisor);
-                            $tdList.eq(5).text(node.data.location);
-                            if(node.data.type == "ADHOC_GROUP"){
-                                $tdList.eq(6).html("<button class='btn btn-default btn-xs' type='button' id='removeAdHocGroup'><i class='fa fa-trash-o'></i></button>");
-                            }
-                            //$tdList.eq(6).html("<input type='checkbox' name='like' value='" + node.key + "'>"); <i class='fa fa-chevron-right'></i>
+                        $tdList.eq(3).text(node.data.type);
+                        $tdList.eq(4).text(node.data.supervisor);
+                        $tdList.eq(5).text(node.data.location);
+                        if(node.data.type == "ADHOC_GROUP"){
+                            $tdList.eq(6).html("<button class='btn btn-link btn-xs' type='button' id='addNewItem' title='Add Subgroup'><i class='fa fa-users'></i></button>" +
+                            "<button class='btn btn-link btn-xs' type='button' id='addMembers' title='Add Members'><i class='fa fa-user'></i></button>"
+                            );
                         }
-                        else{
-                            $tdList.eq(3).text(node.data.type);
-                            $tdList.eq(4).text(node.data.supervisor);
-                            $tdList.eq(5).text(node.data.location);
+                        if(node.data.type == "ADHOC_GROUP" || node.data.parentGroupType == "ADHOC_GROUP"){
+                            $tdList.eq(6).append("<button class='btn btn-link btn-xs' type='button' id='removeItem' title='Remove'><i class='fa fa-trash-o'></i></button>");
                         }
-
-                            //html("<input type='checkbox' name='like' value='" + node.key + "'>");
+                    }
+                    ,click: function(event, data) {
+                        var node = data.node,
+                            $tdList = $(node.tr).find(">td");
+                        Admin.Model.Organization.Tree.setParentNode(node.title);
                     }
                 }); //end fancytree
 
-                $s.delegate("button[id=removeAdHocGroup]", "click", function(e) {
+                $s.delegate("button[id=removeItem]", "click", function(e) {
                     var node = $.ui.fancytree.getNode(e),
                         $input = $(e.target);
                     e.stopPropagation();
-                    Admin.View.Organization.Tree.onClickBtnRemoveAdHocGroup(node);
+                    Admin.View.Organization.Tree.onClickBtnRemoveItem(node);
+                });
+
+                $s.delegate("button[id=addNewItem]", "click", function(e) {
+                    var node = $.ui.fancytree.getNode(e),
+                        $input = $(e.target);
+                    e.stopPropagation();
+                    Admin.Model.Organization.Tree.setParentNode(node.title);
+                    Admin.View.Organization.Tree.onClickBtnAddSubgroup(node);
+                });
+
+                $s.delegate("button[id=addMembers]", "click", function(e) {
+                    var node = $.ui.fancytree.getNode(e),
+                        $input = $(e.target);
+                    e.stopPropagation();
+                    Admin.Model.Organization.Tree.setParentNode(node.title);
+                    Admin.View.Organization.Tree.onClickBtnAddMembers(node);
                 });
 
                 $s.contextmenu({

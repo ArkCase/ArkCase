@@ -170,9 +170,9 @@
 
                                                     <table id="treeOrganization">
                                                             <thead>
-                                                            <tr>  <th></th> <th></th><th>Name </th> <th> Type </th> <th>Supervisor Name</th> <th>Location</th></tr>
+                                                            <tr>  <th></th> <th></th><th>Name </th> <th> Type </th> <th>Supervisor Name</th> <th>Location</th><th>   Actions </th></tr>
 
-                                                            <tr> <th> </th> <th></th> <th></th> <th></th> <th></th> <th></th></tr>
+                                                            <tr> <th> </th> <th></th> <th></th> <th></th> <th></th> <th></th><th>  </th></tr>
                                                             </thead>
                                                             <tbody>
                                                             </tbody>
@@ -238,12 +238,13 @@
     </jsp:body>
 </t:layout>
 
-<div class="modal fade" id="createAdHoc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="createAdHoc" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add Ad-Hoc Group to [PARENT GROUP]</h4>
+                <h4 class="modal-title" id="modalLabel" >Add Ad-Hoc Group</h4>
+
             </div>
             <div class="modal-body">
                 <section class="panel panel-default">
@@ -255,13 +256,13 @@
 
                         <div class="col-sm-12">
                             <label>Description</label>
-                            <textarea class="form-control" placeholder="Enter description" disabled></textarea>
+                            <textarea class="form-control" id='groupDescription' placeholder="Enter description"></textarea>
                         </div>
 
                         <div class="col-sm-12">
                             <label>Add people to group</label>
                             <div class="input-group">
-                                <input type="text" class="input-sm form-control" placeholder="Search people.." disabled>
+                                <input type="text" class="input-sm form-control" placeholder="Search people.." >
                                   <span class="input-group-btn">
                                     <button class="btn btn-sm btn-default" type="button"><i class="fa fa-search"></i></button>
                                   </span>
@@ -273,16 +274,16 @@
                             <div id="additionalFields" class="collapse in">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Title" disabled>
+                                        <input type="text" class="input-sm form-control" placeholder="Title" >
                                     </div>
                                     <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Location" disabled>
+                                        <input type="text" class="input-sm form-control" placeholder="Location" >
                                     </div>
                                     <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Phone Number" disabled>
+                                        <input type="text" class="input-sm form-control" placeholder="Phone Number" >
                                     </div>
                                     <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Email Address" disabled>
+                                        <input type="text" class="input-sm form-control" placeholder="Email Address" >
                                     </div>
                                 </div>
                             </div>
@@ -343,6 +344,110 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" id="addAdHocGroup">Add Ad-Hoc Group</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="addPeople" tabindex="-1" role="dialog" aria-labelledby="modalLabelPeople" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="modalLabelPeople" ></h4>
+
+            </div>
+            <div class="modal-body">
+                <section class="panel panel-default">
+
+                    <div class="row wrapper">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="text" class="input-sm form-control" placeholder="Search people.." >
+                                  <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-default" type="button"><i class="fa fa-search"></i></button>
+                                  </span>
+                            </div>
+                        </div>
+                        <%--<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Simple collapsible</button>--%>
+                        <div class="col-sm-12">
+                            <label></label>
+                            <div id="additionalFieldsPeople" class="collapse in">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <input type="text" class="input-sm form-control" placeholder="Title" >
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="input-sm form-control" placeholder="Location" >
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="input-sm form-control" placeholder="Phone Number" >
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="input-sm form-control" placeholder="Email Address" >
+                                    </div>
+                                </div>
+                            </div>
+                            <a id="lnkHideAdditionalFieldsPeople" href="#" data-toggle="collapse" data-target="#additionalFieldsPeople">
+                                <small class="text-muted inline m-t-sm m-b-sm">
+                                    <u>Hide Additional Fields</u>
+                                </small>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section class="panel panel-default">
+                    <div class="table-responsive">
+                        <table class="table table-striped b-t b-light">
+                            <thead>
+                            <tr>
+                                <th width="20"></th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Location</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><label class="checkbox m-n">
+                                    <input type="checkbox" name="post[]">
+                                    <i></i></label></td>
+                                <td>[First Name]</td>
+                                <td>[Last Name]</td>
+                                <td>[Location]</td>
+                                <td>[Phone]</td>
+                                <td>[Email]</td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <%--<footer class="panel-footer">
+                        <div class="row">
+                            <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 20-30 of 50 items</small> </div>
+                            <div class="col-sm-6 text-right text-center-xs">
+                                <ul class="pagination pagination-sm m-t-none m-b-none">
+                                    <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+                                    <li><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </footer>--%>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="addMembers" >Add People</button>
             </div>
         </div>
     </div>

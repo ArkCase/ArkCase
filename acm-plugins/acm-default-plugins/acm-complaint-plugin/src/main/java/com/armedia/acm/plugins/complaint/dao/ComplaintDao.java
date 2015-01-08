@@ -4,7 +4,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.TimePeriod;
-import com.armedia.acm.services.users.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;

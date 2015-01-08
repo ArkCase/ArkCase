@@ -18,7 +18,7 @@ import com.armedia.acm.form.changecasestatus.model.ChangeCaseStatusFormEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
-import com.armedia.acm.services.users.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 
 /**
  * @author riste.tutureski

@@ -32,6 +32,7 @@
         <module>acm-service-history</module>
         <module>acm-service-correspondence</module>
         <module>acm-service-milestone</module>
+        <module>acm-service-participants</module>
     </modules>
 
 

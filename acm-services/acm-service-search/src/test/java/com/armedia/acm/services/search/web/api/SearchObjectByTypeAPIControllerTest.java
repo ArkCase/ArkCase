@@ -111,6 +111,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         headers.put("firstRow", firstRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
+        headers.put("acmUser", mockAuthentication);
         
         Capture<ApplicationSearchEvent> capturedEvent = new Capture<>();
       
@@ -164,6 +165,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         headers.put("firstRow", firstRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
+        headers.put("acmUser", mockAuthentication);
       
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
