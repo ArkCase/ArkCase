@@ -27,25 +27,25 @@ public class FacetedSearchAPIController {
 
     private MuleClient muleClient;
 
-    @RequestMapping(value = "/facetedSearch/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/facetedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String mainNotFilteredFacetedSerach(
-            @PathVariable("objectType") String objectType,
+            @RequestParam(value = "q", required = true) String q,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            @RequestParam(value = "n", required = false, defaultValue = "100") int maxRows,
             Authentication authentication,
             HttpServletResponse httpResponse
-    ) throws MuleException, Exception {
+    ) throws MuleException {
 
         if ( log.isDebugEnabled() ) {
-            log.debug("User '" + authentication.getName() + "' is performing facet search for objects of type: '" + objectType + "' ");
+            log.debug("User '" + authentication.getName() + "' is performing facet search for the query: '" + q + "' ");
         }
 
-        String q = URLEncoder.encode("*:*")+"&fq=object_type_s:"+URLEncoder.encode(objectType)+"&facet=true&facet.field=object_type_s";
+        String query = URLEncoder.encode(q)+"&facet=true&facet.field=object_type_s";
         String sort= "";
 
         Map<String, Object> headers = new HashMap<>();
-        headers.put("query", q);
+        headers.put("query", query);
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
@@ -54,8 +54,7 @@ public class FacetedSearchAPIController {
 
         log.debug("Response type: " + response.getPayload().getClass());
 
-        if ( response.getPayload() instanceof String )
-        {
+        if ( response.getPayload() instanceof String ) {
             httpResponse.addHeader("X-JSON", response.getPayload().toString());
             return (String) response.getPayload();
         }

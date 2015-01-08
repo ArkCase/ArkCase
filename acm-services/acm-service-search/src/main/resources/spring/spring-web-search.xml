@@ -46,5 +46,9 @@
     <bean id="advancedSearchAPIController" class="com.armedia.acm.services.search.web.api.AdvancedSearchAPIController">
         <property name="muleClient" ref="muleClient"/>
     </bean>
+    <bean id="getAllFacetedFiltersAPIController" class="com.armedia.acm.services.search.web.api.GetAllFacetedFiltersAPIController">
+        <property name="pluginSearch" ref="pluginSearch"/>
+        <property name="solrFilterDao" ref="solrFilterDao"/>
+    </bean>
 </beans>
 
