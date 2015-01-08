@@ -214,7 +214,14 @@ public class AcmTask implements AcmObject
     @JsonIgnore
     public String getObjectType()
     {
-        return "Task";
+        return "TASK";
+    }
+
+    @Override
+    @JsonIgnore
+    public Long getId()
+    {
+        return taskId;
     }
 
 	public String getOwner() {

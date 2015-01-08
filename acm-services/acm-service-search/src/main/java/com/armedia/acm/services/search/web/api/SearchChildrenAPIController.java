@@ -55,6 +55,7 @@ public class SearchChildrenAPIController
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
+        headers.put("acmUser", authentication);
 
         MuleMessage response = getMuleClient().send("vm://quickSearchQuery.in", "", headers);
 

@@ -49,11 +49,31 @@ Admin.Model = Admin.Model || {
 
     ,Organization: {
         create : function() {
+            this.cacheAllGroups = new Acm.Model.CacheFifo(4);
             this.cacheGroup = new Acm.Model.CacheFifo(4);
+            this.cacheGroups = new Acm.Model.CacheFifo(4);
+            this.cacheSubgroups = new Acm.Model.CacheFifo(4);
             this.cacheGroupMembers = new Acm.Model.CacheFifo(4);
-            //Admin.Service.Organization.retrieveGroup("Armedia");
+            this.cacheAllUsers = new Acm.Model.CacheFifo(4);
+
+            //Admin.Service.Organization.retrieveUsers();
+            Admin.Service.Organization.retrieveGroups();
+
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP_MEMBER, this.onModelModifiedGroupData);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CREATED_ADHOC_GROUP, this.onModelModifiedGroupData);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_MEMBER, this.onModelModifiedGroupData);
         }
         ,onInitialized: function() {
+        }
+
+        ,Tree:{
+            _parentNode: null
+            ,getParentNode : function() {
+                return this._parentNode;
+            }
+            ,setParentNode : function(parentNode) {
+                this._parentNode = parentNode;
+            }
         }
 
         ,validateGroup: function(group) {
@@ -61,6 +81,10 @@ Admin.Model = Admin.Model || {
                 return false;
             }
             return true;
+        }
+
+        ,onModelModifiedGroupData: function(){
+            Admin.Service.Organization.retrieveGroups();
         }
     }
 

@@ -7,7 +7,7 @@ import com.armedia.acm.plugins.complaint.model.complaint.ParticipantItem;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.services.users.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -92,7 +92,8 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         headers.put("firstRow", 0);
         headers.put("maxRows", 10);
         headers.put("sort", "");
-    	
+        headers.put("acmUser", mockAuthentication);
+
         Long taskId = 500L;
         String ipAddress = "ipAddress";
 
@@ -176,6 +177,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         headers.put("firstRow", 0);
         headers.put("maxRows", 10);
         headers.put("sort", "");
+        headers.put("acmUser", mockAuthentication);
         
         String ipAddress = "ipAddress";
 
