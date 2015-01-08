@@ -118,12 +118,18 @@ CaseFile.Service = {
             var filter = treeInfo.filter;
             var q      = treeInfo.q;
 
-            sort = sort ? sort : "name desc";
-
             var url = App.getContextPath() + this.API_RETRIEVE_CASE_FILE_LIST;
-            url += "?start=" + treeInfo.start;
-            url += "&n=" + treeInfo.n;
-            url += "&s=" + sort;
+            if (0 <= treeInfo.start) {
+                url += "?start=" + treeInfo.start;
+            }
+            if (0 < treeInfo.n) {
+                url += "&n=" + treeInfo.n;
+            }
+            if (Acm.isNotEmpty(treeInfo.sort)) {
+                url += "&s=" + treeInfo.sort;
+            } else {
+                url += "&s=name desc";
+            }
 
             Acm.Service.asyncGet(
                 function(response) {
