@@ -72,6 +72,19 @@ CaseFile.View = CaseFile.View || {
             this.$tree     = $("#tree");
             this._createTree(this.$tree);
 
+            AcmEx.Object.TreeModifier.buildFilter(this.$ulFilter
+                , CaseFile.View.MicroData.treeFilter
+                , function(value) {
+                    CaseFile.Controller.viewChangedTreeFilter(value);
+                }
+            );
+            AcmEx.Object.TreeModifier.buildSort(this.$ulSort
+                , CaseFile.View.MicroData.treeSort
+                , function(value) {
+                    CaseFile.Controller.viewChangedTreeSort(value);
+                }
+            );
+
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE_LIST, this.onModelRetrievedCaseFileList);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE       , this.onViewChangedCaseTitle);
@@ -80,18 +93,6 @@ CaseFile.View = CaseFile.View || {
             }
         }
         ,onInitialized: function() {
-            AcmEx.Object.TreeModifier.buildFilter(CaseFile.View.Tree.$ulFilter
-                , CaseFile.View.MicroData.treeFilter
-                , function(value) {
-                    CaseFile.Controller.viewChangedTreeFilter(value);
-                }
-            );
-            AcmEx.Object.TreeModifier.buildSort(CaseFile.View.Tree.$ulSort
-                , CaseFile.View.MicroData.treeSort
-                , function(value) {
-                    CaseFile.Controller.viewChangedTreeSort(value);
-                }
-            );
         }
 
         ,onModelRetrievedCaseFileList: function(key) {
