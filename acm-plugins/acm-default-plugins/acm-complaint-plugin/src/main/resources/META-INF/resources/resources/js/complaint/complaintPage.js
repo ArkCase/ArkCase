@@ -18,6 +18,8 @@ Complaint.Page = {
     ,fillReportSelection: function() {
         var html = "<span>"
             + "<select class='input-sm form-control input-s-sm inline v-middle'>"
+            + "<option value=''>Document Type</option>"
+            + "<option value='electronic_communication'>Electronic Communication</option>"
             + "<option value='roi'>Report of Investigation</option>"
             + "</select>"
             + "</span>";

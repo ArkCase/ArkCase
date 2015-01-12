@@ -92,6 +92,7 @@ Complaint.Object = {
         formUrls["roi"] = $('#roiFormUrl').val();
         formUrls["close_complaint"] = $('#closeComplaintFormUrl').val();
         formUrls["edit_close_complaint"] = $('#editCloseComplaintFormUrl').val();
+        formUrls["electronic_communication"] = $('#electronicCommunicationFormUrl').val();
         this.setFormUrls(formUrls);
     }
 

@@ -15,17 +15,21 @@
  */
 Acm.Dispatcher = {
     create: function() {
+    }
 
-    },
+    ,PRIORITY_LOW    : 1
+    ,PRIORITY_NORMAL : 2
+    ,PRIORITY_HIGH   : 3
 
-    // events mapped to listeners
-    events:[],
+    // events mappedto listeners
+    ,events:[],
 
+    addEventListener: function(event,callback, priority) {
+        priority = priority || this.PRIORITY_NORMAL;
 
-    addEventListener: function(event,callback) {
         this.events[event] = this.events[event] || [];
         if ( this.events[event] ) {
-            this.events[event].push(callback);
+            this.events[event].push({callback:callback, priority:priority});
         }
     },
 
@@ -33,7 +37,7 @@ Acm.Dispatcher = {
         if ( this.events[event] ) {
             var listeners = this.events[event];
             for ( var i = listeners.length-1; i>=0; --i ){
-                if ( listeners[i] === callback ) {
+                if ( listeners[i].callback === callback ) {
                     listeners.splice( i, 1 );
                     return true;
                 }
@@ -42,17 +46,19 @@ Acm.Dispatcher = {
         return false;
     },
 
+    //phase out triggerEvent, use fireEvent instead
     triggerEvent:function(event, data) {
         if ( this.events[event] ) {
             var listeners = this.events[event], len = listeners.length;
             while ( len-- ) {
-                listeners[len](this, data);
+                listeners[len].callback(this, data);
             }
         }
     },
 
-    //gradually phase out triggerEvent
     fireEvent:function(event) {
+        var responseCount = 0;
+
         if (!event) {
             return;
         }
@@ -62,11 +68,38 @@ Acm.Dispatcher = {
         args.shift();
 
         if ( this.events[event] ) {
-            var listeners = this.events[event], len = listeners.length;
+            var listeners = this.events[event];
+            var len = listeners.length;
             while ( len-- ) {
-                listeners[len].apply(this, args);
+                var a = this.PRIORITY_HIGH;
+                var b = Acm.Dispatcher.PRIORITY_HIGH;
+                var c = listeners[len];
+
+                if (this.PRIORITY_HIGH == listeners[len].priority) {
+                    if (listeners[len].callback.apply(this, args)) {
+                        responseCount++;
+                    }
+                }
+            }
+            var len = listeners.length;
+            while ( len-- ) {
+                if (this.PRIORITY_NORMAL == listeners[len].priority) {
+                    if (listeners[len].callback.apply(this, args)) {
+                        responseCount++;
+                    }
+                }
+            }
+            var len = listeners.length;
+            while ( len-- ) {
+                if (this.PRIORITY_LOW == listeners[len].priority) {
+                    if (listeners[len].callback.apply(this, args)) {
+                        responseCount++;
+                    }
+                }
             }
         }
+
+        return responseCount;
     },
 
     numOfListeners: function(event) {
@@ -80,7 +113,7 @@ Acm.Dispatcher = {
         if ( this.events[event] ) {
             var listeners = this.events[event];
             for ( var i = listeners.length-1; i>=0; --i ){
-                if ( listeners[i] === callback ) {
+                if ( listeners[i].callback === callback ) {
                     return true;
                 }
             }

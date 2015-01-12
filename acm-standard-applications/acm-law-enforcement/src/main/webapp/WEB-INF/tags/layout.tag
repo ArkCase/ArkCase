@@ -54,12 +54,6 @@
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarView.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarController.js"></script>
 
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarObject.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarEvent.js"></script>
-<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarPage.js"></script>--%>
-<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarRule.js"></script>--%>
-<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/sidebar/sidebarCallback.js"></script>--%>
-
 <script type="text/javascript">
     if ("undefined" != typeof App) {
         App.create();

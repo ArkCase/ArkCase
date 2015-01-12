@@ -52,6 +52,8 @@ Topbar.Controller = {
         ,VIEW_CHANGED_ASN_ACTION                  : "topbar-view-changed-asn-action"                     //param: asnId, action
         ,VIEW_CHANGED_ASN_STATUS                  : "topbar-view-changed-asn-status"                     //param: asnId, status
         ,VIEW_DELETED_ASN                         : "topbar-view-deleted-asn"                            //param: asnId
+        ,VIEW_SET_ASN_DATA                        : "topbar-view-set-asn-data"                           //param: asnData
+
 
         ,modelRetrievedAsnList: function(asnList) {
             Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_ASN_LIST, asnList);
@@ -79,7 +81,9 @@ Topbar.Controller = {
         ,viewDeletedAsn: function(asnId) {
             Acm.Dispatcher.fireEvent(this.VIEW_DELETED_ASN, asnId);
         }
-
+        ,viewSetAsnData: function(asnData) {
+            return Acm.Dispatcher.fireEvent(this.VIEW_SET_ASN_DATA, asnData);
+        }
 
     }
 

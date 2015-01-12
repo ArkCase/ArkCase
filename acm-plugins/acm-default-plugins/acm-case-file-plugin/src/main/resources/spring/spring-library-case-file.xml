@@ -33,8 +33,10 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
+
     <bean id="acmCasePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ACM Case Files"/>
+        <property name="pluginProperties" ref="caseFilePluginProperties"/>
         <property name="privileges">
             <list>
                 <ref bean="caseFileListPrivilege"/>
