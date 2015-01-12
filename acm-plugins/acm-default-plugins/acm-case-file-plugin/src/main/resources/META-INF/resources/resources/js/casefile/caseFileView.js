@@ -46,6 +46,7 @@ CaseFile.View = CaseFile.View || {
             this.formUrls["edit_case_file"]            = Acm.Object.MicroData.get("urlEditCaseFileForm");
             this.formUrls["reinvestigate_case_file"]   = Acm.Object.MicroData.get("urlReinvestigateCaseFileForm");
             this.formUrls["roi"]                       = Acm.Object.MicroData.get("urlRoiForm");
+            this.formUrls["electronic_communication"]  = Acm.Object.MicroData.get("urlElectronicCommunicationForm");
             this.formUrls["enable_frevvo_form_engine"] = Acm.Object.MicroData.get("enableFrevvoFormEngine");
             this.formUrls["change_case_status"]        = Acm.Object.MicroData.get("urlChangeCaseStatusForm");
             this.formUrls["edit_change_case_status"]   = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
@@ -1871,7 +1872,7 @@ CaseFile.View = CaseFile.View || {
             var report = CaseFile.View.Documents.getSelectReport();
             var reportext = CaseFile.View.Documents.getSelectReportText();
 
-            if(report == "roi"){
+            if(report == "roi" || report == "electronic_communication"){
                 var token = CaseFile.View.MicroData.getToken();
 
                 var caseFileId = AcmEx.Object.Tree.getActiveObjId();
@@ -1903,6 +1904,8 @@ CaseFile.View = CaseFile.View || {
         ,fillReportSelection: function() {
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
+                + "<option value=''>Document Type</option>"
+                + "<option value='electronic_communication'>Electronic Communication</option>"
                 + "<option value='roi'>Report of Investigation</option>"
                 + "<option value='mr'>Medical Release</option>"
                 + "<option value='gr'>General Release</option>"
