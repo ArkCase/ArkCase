@@ -185,13 +185,13 @@
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmAjax.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDispatcher.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmObject.js"></script>
-<%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmEvent.js"></script>--%>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmValidator.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmModel.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmService.js"></script>
 
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmEx.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmExObject.js"></script>
+<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmExModel.js"></script>
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmExService.js"></script>
 
 <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.js" ></script>

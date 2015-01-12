@@ -4,7 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="caseFileUiController" class="com.armedia.acm.plugins.casefile.web.CaseFileUiController">
-		<property name="formUrl" ref="formResource" />	
+        <property name="plugin" ref="acmCasePlugin"/>
+		<property name="formUrl" ref="formResource" />
     </bean>
         
 </beans>

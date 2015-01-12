@@ -4,7 +4,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
-import com.armedia.acm.services.users.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

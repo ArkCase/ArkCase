@@ -1,9 +1,6 @@
 /**
  * App.Object
  *
- * common function for screen object management
- * Argument $s must be a valid jQuery selector
- *
  * @author jwu
  */
 App.Object = {

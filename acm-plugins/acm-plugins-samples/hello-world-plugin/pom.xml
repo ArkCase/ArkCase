@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-plugins-samples</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.0.18</version>
+        <version>3.0.19</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

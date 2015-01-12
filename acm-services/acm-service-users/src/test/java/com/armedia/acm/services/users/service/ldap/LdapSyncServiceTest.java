@@ -59,6 +59,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
         List<AcmUser> users = new ArrayList<>();
         Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
         Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
+        Map<String, String> childParentPairs = new HashMap<String, String>();
 
         String userDnOne = "dn1";
         String userDnTwo = "dn2";
@@ -83,7 +84,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
 
         replayAll();
 
-        unit.queryLdapUsers(config, directoryName, roles, users, usersByApplicationRole, usersByLdapGroup);
+        unit.queryLdapUsers(config, directoryName, roles, users, usersByApplicationRole, usersByLdapGroup, childParentPairs);
 
         verifyAll();
 
@@ -107,6 +108,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
         List<AcmUser> users = new ArrayList<>();
         Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
         Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
+        Map<String, String> childParentPairs = new HashMap<String, String>();
 
         String userDistinguishedName = "dn1";
         String groupDistinguishedName = "dn2";
@@ -156,7 +158,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
 
         replayAll();
 
-        unit.queryLdapUsers(config, directoryName, roles, users, usersByApplicationRole, usersByLdapGroup);
+        unit.queryLdapUsers(config, directoryName, roles, users, usersByApplicationRole, usersByLdapGroup, childParentPairs);
 
         verifyAll();
 
