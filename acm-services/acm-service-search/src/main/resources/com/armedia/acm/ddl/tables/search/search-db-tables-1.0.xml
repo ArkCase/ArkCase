@@ -4,34 +4,34 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="solr-search-01-tables" author="marst">
-        <createTable tableName="acm_solr_filter">
-            <column name="cm_filter_id" type="NUMBER(32,0)">
-                <constraints primaryKey="true" primaryKeyName="pk_acm_solr_filter"/>
-            </column>
-            <column name="cm_filter_type" type="VARCHAR(512)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_filter_name" type="VARCHAR(512)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_filter_title" type="VARCHAR(512)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_filter_created" type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_filter_creator" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_filter_modified" type="TIMESTAMP WITH TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_filter_modifier" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
+    <!--<changeSet id="solr-search-01-tables" author="marst">-->
+        <!--<createTable tableName="acm_solr_filter">-->
+            <!--<column name="cm_filter_id" type="NUMBER(32,0)">-->
+                <!--<constraints primaryKey="true" primaryKeyName="pk_acm_solr_filter"/>-->
+            <!--</column>-->
+            <!--<column name="cm_filter_type" type="VARCHAR(512)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="cm_filter_name" type="VARCHAR(512)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="cm_filter_title" type="VARCHAR(512)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="cm_filter_created" type="TIMESTAMP WITH TIME ZONE">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="cm_filter_creator" type="VARCHAR(1024)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="cm_filter_modified" type="TIMESTAMP WITH TIME ZONE">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+            <!--<column name="cm_filter_modifier" type="VARCHAR(1024)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
+        <!--</createTable>-->
+    <!--</changeSet>-->
 
 </databaseChangeLog>
 
