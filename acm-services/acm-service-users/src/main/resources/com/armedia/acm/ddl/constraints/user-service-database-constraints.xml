@@ -28,10 +28,4 @@
                                  initiallyDeferred="true"/>
     </changeSet>
 
-    <changeSet id="04-user-service-participant-rule" author="dmiller">
-        <comment>Only one unique participant per id.</comment>
-        <addUniqueConstraint tableName="acm_participant"
-                             columnNames="cm_object_type, cm_object_id, cm_participant_type, cm_participant_ldap_id"
-                             constraintName="uk_participant_rule"/>
-    </changeSet>
 </databaseChangeLog>

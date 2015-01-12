@@ -101,6 +101,7 @@ var Application = Application || {
 
         sessionStorage.setItem("AcmQuickSearchTerm", null);
         sessionStorage.setItem("AcmAsnList", null);
+        sessionStorage.setItem("AcmAsnData", null);
         sessionStorage.setItem("AcmCaseFileTreeInfo", null);
         sessionStorage.setItem("AcmComplaintTreeInfo", null);
         sessionStorage.setItem("AcmAdminTreeInfo", null);

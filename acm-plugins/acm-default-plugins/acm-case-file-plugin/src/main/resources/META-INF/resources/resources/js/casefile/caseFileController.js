@@ -72,6 +72,8 @@ CaseFile.Controller = CaseFile.Controller || {
     ,VIEW_CHANGED_DUE_DATE                 : "case-view-changed-due-date"              //param: caseFileId, dueDate
     ,VIEW_CHANGED_DETAIL                   : "case-viewl-changed-detai"                //param: caseFileId, details
 
+    ,VIEW_CHANGED_TREE_FILTER              : "case-view-changed-tree-filter"           //param: filter
+    ,VIEW_CHANGED_TREE_SORT                : "case-view-changed-tree-sort"             //param: sort
     ,VIEW_CLOSED_CASE_FILE                 : "case-view-closed-case"                   //param: caseFileId
     ,VIEW_ADDED_DOCUMENT                   : "case-view-added-document"                //param: caseFileId
     ,VIEW_CLICKED_ADD_CORRESPONDENCE       : "case-model-clicked-add-correspondence"   //param: caseFileId, templateName
@@ -267,6 +269,12 @@ CaseFile.Controller = CaseFile.Controller || {
     }
     ,viewChangedDetail: function(caseFileId, details) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DETAIL, caseFileId, details);
+    }
+    ,viewChangedTreeFilter: function(filter) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_TREE_FILTER, filter);
+    }
+    ,viewChangedTreeSort: function(sort) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_TREE_SORT, sort);
     }
     ,viewClosedCaseFile: function(caseFileId) {
         Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_CASE_FILE, caseFileId);

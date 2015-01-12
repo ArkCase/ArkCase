@@ -71,8 +71,60 @@ public class SearchObjectByTypeAPIController {
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
+        headers.put("acmUser", authentication);
 
         MuleMessage response = getMuleClient().send("vm://quickSearchQuery.in", "", headers);
+
+        log.debug("Response type: " + response.getPayload().getClass());
+
+        if ( response.getPayload() instanceof String )
+        {
+            String responsePayload = (String) response.getPayload();
+           
+            publishSearchEvent(authentication, httpSession, true, responsePayload);
+          
+            return responsePayload;
+        }
+
+        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+    }
+    
+    @RequestMapping(value = "/advanced/{objectType}", method  = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String searchAdvancedObjectByType(
+    		@PathVariable("objectType") String objectType,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            @RequestParam(value = "assignee", required = false, defaultValue = "") String assignee,
+            @RequestParam(value = "activeOnly", required = false, defaultValue = "true") boolean activeOnly,
+            Authentication authentication,
+            HttpSession httpSession
+    ) throws MuleException, Exception
+    {
+        String query = "object_type_s:" + objectType;  
+        
+        if (!StringUtils.isBlank(assignee)) {
+            query += " AND assignee_s:" + assignee;
+        }
+
+        if ( activeOnly )
+        {
+            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
+        }
+        
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Advanced Search: User '" + authentication.getName() + "' is searching for '" + query + "'");
+        }
+     
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("query", query);
+        headers.put("firstRow", startRow);
+        headers.put("maxRows", maxRows);
+        headers.put("sort", sort);
+
+        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
 
         log.debug("Response type: " + response.getPayload().getClass());
 

@@ -7,9 +7,10 @@
  */
 Search.Object = {
     create : function() {
-        var items = $(document).items();
-        var searchExStr = items.properties("searchEx").itemValue();
-        this.searchEx = $.parseJSON(searchExStr);
+//        var items = $(document).items();
+//        var searchExStr = items.properties("searchEx").itemValue();
+//        this.searchEx = $.parseJSON(searchExStr);
+        this.searchEx   = Acm.Object.MicroData.getJson("searchEx");
         this.$divSearchQuery = $("#searchQuery").parent();
         Search.Page.buildPanel(this.searchEx);
         this.useSwitches();

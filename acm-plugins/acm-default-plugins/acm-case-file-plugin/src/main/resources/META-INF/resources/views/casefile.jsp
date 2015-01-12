@@ -7,11 +7,15 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="caseFile.page.title" text="Case Files | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="caseFileId">${caseId}</span>
+        <span itemprop="objId">${objId}</span>
         <span itemprop="token">${token}</span>
+        <span itemprop="treeFilter">${treeFilter}</span>
+        <span itemprop="treeSort">${treeSort}</span>
+
         <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
         <span itemprop="urlReinvestigateCaseFileForm">${reinvestigateCaseFileFormUrl}</span>
         <span itemprop="urlRoiForm">${roiFormUrl}</span>
+        <span itemprop="urlElectronicCommunicationForm">${electronicCommunicationFormUrl}</span>
         <span itemprop="urlChangeCaseStatusForm">${changeCaseStatusFormUrl}</span>
         <span itemprop="urlEditChangeCaseStatusForm">${editChangeCaseStatusFormUrl}</span>
         <span itemprop="enableFrevvoFormEngine">${enableFrevvoFormEngine}</span>
@@ -90,26 +94,27 @@
                                 <div class="btn-group inline select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
 
-                                    <ul class="dropdown-menu text-left text-sm">
-                                        <li><a href="#">Sort Date Ascending</a></li>
-                                        <li><a href="#">Sort Date Descending</a></li>
-                                        <li><a href="#">Sort Case ID Ascending</a></li>
-                                        <li><a href="#">Sort Case ID Ascending</a></li>
+                                    <ul class="dropdown-menu text-left text-sm" id="ulSort">
+                                        <%--<li><a href="#">Sort Date Ascending</a></li>--%>
+                                        <%--<li><a href="#">Sort Date Descending</a></li>--%>
+                                        <%--<li><a href="#">Sort Case ID Ascending</a></li>--%>
+                                        <%--<li><a href="#">Sort Case ID Ascending</a></li>--%>
                                     </ul>
                                 </div>
 
                                 <div class="btn-group select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
-                                    <ul class="dropdown-menu text-left text-sm">
-                                        <li><a href="#">All Open Cases</a></li>
+                                    <ul class="dropdown-menu text-left text-sm" id="ulFilter">
+                                        <%--<li><a href="#">All Open Cases</a></li>--%>
+                                        <%--<li><a href="#">All Closed</a></li>--%>
+                                        <%--<li><a href="#">All Inactive</a></li>--%>
+
                                         <%--<li><a href="#">Cases I've Opened</a></li>--%>
                                         <%--<li><a href="#">Unapproved Cases</a></li>--%>
                                         <%--<li><a href="#">Approved Cases</a></li>--%>
                                         <%--<li><a href="#">Cases From Group</a></li>--%>
                                         <%--<li><a href="#">Closed or Expired Cases</a></li>--%>
                                         <%--<li><a href="#">New Cases</a></li>--%>
-                                        <li><a href="#">All Closed</a></li>
-                                        <li><a href="#">All Inactive</a></li>
                                         <%--<li><a href="#">All Destroyed</a></li>--%>
                                         <%--<li><a href="#">All Archived</a></li>--%>
                                     </ul>

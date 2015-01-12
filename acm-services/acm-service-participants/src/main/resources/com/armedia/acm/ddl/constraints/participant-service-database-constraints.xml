@@ -1,0 +1,25 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- copied this change set from the users service when we moved participants from user into its own module -->
+    <changeSet id="04-user-service-participant-rule" author="dmiller" logicalFilePath="/com/armedia/acm/ddl/constraints/user-service-database-constraints.xml">
+        <comment>Only one unique participant per id.</comment>
+        <addUniqueConstraint tableName="acm_participant"
+                             columnNames="cm_object_type, cm_object_id, cm_participant_type, cm_participant_ldap_id"
+                             constraintName="uk_participant_rule"/>
+    </changeSet>
+
+    <changeSet id="participant-constraint-01-privilege_participant_id" author="dmiller">
+        <addForeignKeyConstraint
+                baseTableName="acm_participant_privilege"
+                baseColumnNames="cm_participant_id"
+                constraintName="fk_part_priv_participant_id"
+                referencedTableName="acm_participant"
+                referencedColumnNames="cm_participant_id"
+                deferrable="true"
+                initiallyDeferred="true"/>
+    </changeSet>
+</databaseChangeLog>

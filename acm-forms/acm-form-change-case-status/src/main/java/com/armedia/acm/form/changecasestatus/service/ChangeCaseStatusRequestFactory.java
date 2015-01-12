@@ -13,8 +13,7 @@ import org.springframework.security.core.Authentication;
 import com.armedia.acm.form.changecasestatus.model.ChangeCaseStatusForm;
 import com.armedia.acm.form.config.Item;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
-import com.armedia.acm.plugins.casefile.model.Disposition;
-import com.armedia.acm.services.users.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 
 /**
  * @author riste.tutureski

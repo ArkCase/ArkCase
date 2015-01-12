@@ -82,4 +82,17 @@
 
     <bean id="protectedObjectUpdateListener" class="com.armedia.acm.services.dataaccess.service.impl.ProtectedObjectUpdateListener"/>
 
+    <bean id="acmAssignmentBusinessRule" class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule">
+        <property name="ruleSpreadsheetFilename" value="drools-assignment-rules.xlsx"/>
+    </bean>
+
+    <bean id="acmDataAccessControlBusinessRule" class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule">
+        <property name="ruleSpreadsheetFilename" value="drools-access-control-rules.xlsx"/>
+    </bean>
+
+    <bean id="dataAccessPrivilegeListener" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener">
+        <property name="assignmentBusinessRule" ref="acmAssignmentBusinessRule"/>
+        <property name="accessControlBusinessRule" ref="acmDataAccessControlBusinessRule"/>
+    </bean>
+
 </beans>

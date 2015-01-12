@@ -77,6 +77,7 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         headers.put("firstRow", 0);
         headers.put("maxRows", 10);
         headers.put("sort", "");
+        headers.put("acmUser", mockAuthentication);
        
 
         // MVC test classes must call getName() somehow
@@ -125,6 +126,7 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         headers.put("sort", "");
         headers.put("firstRow", 0);
         headers.put("maxRows", 10);
+        headers.put("acmUser", mockAuthentication);
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();

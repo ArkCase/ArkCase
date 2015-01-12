@@ -39,6 +39,7 @@ public class ComplaintUiController
         // Frevvo form URLs
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         retval.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
+        retval.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
         
         if (null != request && "successful".equals(request.getParameter("frevvoFormSubmit_status")))
         {
@@ -74,6 +75,7 @@ public class ComplaintUiController
         // Frevvo form URLs
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         retval.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
+        retval.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
         
         log.debug("Security token: " + token);
         return retval;

@@ -1,18 +1,15 @@
-
-/**
- * 
- */
 package com.armedia.acm.plugins.complaint.model.complaint;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 
-import com.armedia.acm.form.config.Item;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 
 
@@ -47,20 +44,13 @@ public class Complaint {
     private String cmisFolderId;
     
     @XmlElements({
-		@XmlElement(name="owners"),
-		@XmlElement(name="ownersItem")
+		@XmlElement(name="participants"),
+		@XmlElement(name="participantsItem")
 		
 	})
-    private List<Item> owners;
-    private List<String> ownersOptions;
-    
-    @XmlElements({
-		@XmlElement(name="followers"),
-		@XmlElement(name="followersItem")
-		
-	})
-    private List<Item> followers;
-    private List<String> followersOptions;
+    private List<ParticipantItem> participants;
+    private Map<String, Strings> participantsOptions = new HashMap<>();
+    private List<String> participantsTypeOptions;
 
     /**
 	 * @return the complaintId
@@ -282,60 +272,28 @@ public class Complaint {
         this.cmisFolderId = cmisFolderId;
     }
 
-	/**
-	 * @return the owners
-	 */
-	public List<Item> getOwners() {
-		return owners;
+	public List<ParticipantItem> getParticipants() {
+		return participants;
 	}
 
-	/**
-	 * @param owners the owners to set
-	 */
-	public void setOwners(List<Item> owners) {
-		this.owners = owners;
+	public void setParticipants(List<ParticipantItem> participants) {
+		this.participants = participants;
 	}
 
-	/**
-	 * @return the ownersOptions
-	 */
-	public List<String> getOwnersOptions() {
-		return ownersOptions;
+	public Map<String, Strings> getParticipantsOptions() {
+		return participantsOptions;
 	}
 
-	/**
-	 * @param ownersOptions the ownersOptions to set
-	 */
-	public void setOwnersOptions(List<String> ownersOptions) {
-		this.ownersOptions = ownersOptions;
+	public void setParticipantsOptions(Map<String, Strings> participantsOptions) {
+		this.participantsOptions = participantsOptions;
 	}
 
-	/**
-	 * @return the followers
-	 */
-	public List<Item> getFollowers() {
-		return followers;
+	public List<String> getParticipantsTypeOptions() {
+		return participantsTypeOptions;
 	}
 
-	/**
-	 * @param followers the followers to set
-	 */
-	public void setFollowers(List<Item> followers) {
-		this.followers = followers;
-	}
-
-	/**
-	 * @return the followersOptions
-	 */
-	public List<String> getFollowersOptions() {
-		return followersOptions;
-	}
-
-	/**
-	 * @param followersOptions the followersOptions to set
-	 */
-	public void setFollowersOptions(List<String> followersOptions) {
-		this.followersOptions = followersOptions;
+	public void setParticipantsTypeOptions(List<String> participantsTypeOptions) {
+		this.participantsTypeOptions = participantsTypeOptions;
 	}
 
 }

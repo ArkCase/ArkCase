@@ -12,7 +12,6 @@
         order="178"/>
 
 
-    <!-- keeping this bean for now even though we are not using any properties yet.  -->
     <bean id="taskPluginProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring

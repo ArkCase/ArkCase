@@ -10,7 +10,11 @@ var Acm = Acm || {
         Acm.Ajax.create();
         Acm.Object.create();
         Acm.Validator.create();
-        Acm.Model.create();
+
+        if (Acm.Model.create) {Acm.Model.create();}
+    }
+    ,onInitialized: function() {
+        if (Acm.Model.onInitialized) {Acm.Model.onInitialized();}
     }
 
     ,__FixMe__getUserFullName: function(user) {
@@ -357,7 +361,6 @@ var Acm = Acm || {
         }
         return true;
     }
-
 
     ,Timer: {
         _worker: null
