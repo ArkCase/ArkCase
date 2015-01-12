@@ -71,9 +71,10 @@ Topbar.Model = {
         create : function() {
             this._asnListData = new Acm.Model.SessionData("AcmAsnList");
 
-            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_ACTION,this.onViewChangedAsnAction);
-            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_STATUS,this.onViewChangedAsnStatus);
-            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_DELETED_ASN       ,this.onViewDeletedAsn);
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_RETRIEVED_ASN_LIST     ,this.onModelRetrievedAsnList);
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_ACTION      ,this.onViewChangedAsnAction);
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_CHANGED_ASN_STATUS      ,this.onViewChangedAsnStatus);
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_DELETED_ASN             ,this.onViewDeletedAsn);
         }
         ,onInitialized: function() {
             var asnList = Topbar.Model.Asn.getAsnList();
@@ -82,13 +83,27 @@ Topbar.Model = {
             }
 
             Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
-//            Acm.Timer.registerListener("AsnWatch"
-//                ,16
-//                ,function() {
-//                    Topbar.Service.Asn.retrieveAsnList(App.getUserName());
-//                    return true;
-//                }
-//            );
+            Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+        }
+
+        ,_pullInterval: 16
+        ,_pull: function(interval) {
+            Acm.Timer.registerListener("AsnWatch"
+                ,interval
+                ,function() {
+                    Topbar.Service.Asn.retrieveAsnList(App.getUserName());
+                    return true;
+                }
+            );
+        }
+        ,onModelRetrievedAsnList: function(asnList) {
+            if (asnList.hasError) {
+                Topbar.Model.Asn._pullInterval *= 2;
+                Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+            } else {
+                Topbar.Model.Asn._pullInterval = 16;
+                Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+            }
         }
 
         ,STATUS_AUTO     : "Auto"
@@ -160,7 +175,6 @@ Topbar.Model = {
             }
             return true;
         }
-
         ,validateAsn: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;

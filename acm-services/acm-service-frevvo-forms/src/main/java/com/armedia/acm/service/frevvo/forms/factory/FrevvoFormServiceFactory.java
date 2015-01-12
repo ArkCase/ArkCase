@@ -6,6 +6,7 @@ package com.armedia.acm.service.frevvo.forms.factory;
 import com.armedia.acm.form.casefile.service.CaseFileService;
 import com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusService;
 import com.armedia.acm.form.closecomplaint.service.CloseComplaintService;
+import com.armedia.acm.form.electroniccommunication.service.ElectronicCommunicationService;
 import com.armedia.acm.forms.roi.service.ROIService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
@@ -142,6 +143,27 @@ public class FrevvoFormServiceFactory {
             service.setPersonIdentificationDao(frevvoFormController.getPersonIdentificationDao());
             service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
             service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
+            
+            return service;
+		}
+		
+		if (FrevvoFormName.ELECTRONIC_COMMUNICATION.equals(name))
+        {
+            String contextPath = request.getServletContext().getContextPath();
+
+            ElectronicCommunicationService service = new ElectronicCommunicationService();
+
+            service.setEcmFileService(frevvoFormController.getEcmFileService());
+            service.setServletContextPath(contextPath);
+            service.setProperties(frevvoFormController.getProperties());
+            service.setRequest(request);
+            service.setAuthentication(authentication);
+            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
+            service.setUserDao(frevvoFormController.getUserDao());
+            service.setUserActionDao(frevvoFormController.getUserActionDao());
+            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
+            service.setComplaintDao(frevvoFormController.getComplaintDao());
+            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             
             return service;
 		}

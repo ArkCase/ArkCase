@@ -221,6 +221,7 @@
                                             <section class="panel b-a">
                                                 <div id="divDocuments" style="width:100%"></div>
                                                 <input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />
+                                                <input id="electronicCommunicationFormUrl" type="hidden" value="${electronicCommunicationFormUrl}" />
                                             </section>
                                         </div>
                                     </div>
