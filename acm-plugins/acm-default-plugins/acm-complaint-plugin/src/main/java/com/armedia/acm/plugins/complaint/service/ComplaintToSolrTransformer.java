@@ -66,7 +66,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         {
             solr.setAssignee_first_name_lcs(assignee.getFirstName());
             solr.setAssignee_last_name_lcs(assignee.getLastName());
-            solr.setAssignee_full_name_lcs(assignee.getFullName());
+            solr.setAssignee_full_name_lcs(assignee.getFirstName()+" "+assignee.getLastName());
         }
 
         return solr;
