@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.casefile.web;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +27,7 @@ public class CaseFileUiController
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmPlugin plugin;
 	private FormUrl formUrl;
-
+	private Map<String, Object> formProperties;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openComplaints(Authentication auth) {
@@ -72,6 +73,7 @@ public class CaseFileUiController
         mv.addObject("enableFrevvoFormEngine", formUrl.enableFrevvoFormEngine(FrevvoFormName.ROI));
         mv.addObject("editCaseFileFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE));
         mv.addObject("reinvestigateCaseFileFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE));
+        mv.addObject("formDocuments", getFormProperties().get("form.documents"));
         return mv;
     }
 
@@ -103,4 +105,12 @@ public class CaseFileUiController
     public void setPlugin(AcmPlugin plugin) {
         this.plugin = plugin;
     }
+
+	public Map<String, Object> getFormProperties() {
+		return formProperties;
+	}
+
+	public void setFormProperties(Map<String, Object> formProperties) {
+		this.formProperties = formProperties;
+	}
 }

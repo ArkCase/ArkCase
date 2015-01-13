@@ -222,6 +222,7 @@
                                                 <div id="divDocuments" style="width:100%"></div>
                                                 <input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />
                                                 <input id="electronicCommunicationFormUrl" type="hidden" value="${electronicCommunicationFormUrl}" />
+                                            	<input id="formDocuments" type="hidden" value='${formDocuments}' />
                                             </section>
                                         </div>
                                     </div>
