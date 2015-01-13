@@ -5,6 +5,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,7 +19,7 @@ import java.util.*;
 @Entity
 @Table(name="acm_case_file")
 @XmlRootElement(name = "caseFile")
-public class CaseFile implements Serializable, AcmObject, AcmEntity
+public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
@@ -356,6 +357,7 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
         this.incidentDate = incidentDate;
     }
 
+    @Override
     public List<AcmParticipant> getParticipants() {
         return participants;
     }
@@ -475,7 +477,7 @@ public class CaseFile implements Serializable, AcmObject, AcmEntity
     @JsonIgnore
     public String getObjectType()
     {
-        return "caseFile";
+        return "CASE_FILE";
     }
 
     @Override
