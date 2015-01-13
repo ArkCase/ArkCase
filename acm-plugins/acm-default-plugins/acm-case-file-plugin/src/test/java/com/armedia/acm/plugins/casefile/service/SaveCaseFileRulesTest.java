@@ -70,33 +70,6 @@ public class SaveCaseFileRulesTest
     }
 
     @Test
-    public void nullAssignee() throws Exception
-    {
-        CaseFile caseFile = new CaseFile();
-        caseFile.setId(12345L);
-
-        workingMemory.execute(caseFile);
-
-        assertNotNull(caseFile.getAssignee());
-
-        assertEquals("ann-acm", caseFile.getAssignee());
-    }
-
-    @Test
-    public void existingAssignee_shouldNotBeOverwritten() throws Exception
-    {
-        CaseFile caseFile = new CaseFile();
-        caseFile.setId(12345L);
-        caseFile.setAssignee("samuel-acm");
-
-        workingMemory.execute(caseFile);
-
-        assertNotNull(caseFile.getAssignee());
-
-        assertEquals("samuel-acm", caseFile.getAssignee());
-    }
-
-    @Test
     public void nullDueDate() throws Exception
     {
         CaseFile caseFile = new CaseFile();
