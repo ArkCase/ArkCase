@@ -39,6 +39,21 @@
         </property>
     </bean>
 
+    <!-- keeping this bean for now even though we are not using any properties yet.  -->
+    <bean id="searchProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/searchPlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
+
     <bean id="sendDocumentsToSolr" class="com.armedia.acm.services.search.service.SendDocumentsToSolr">
         <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
@@ -68,9 +83,78 @@
 
     <!-- event publishers -->
     <bean id="acmSearchEventPublisher" class="com.armedia.acm.services.search.service.SearchEventPublisher"/>
-    
+
+    <bean id="pluginSearch" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="Search Plugin"/>
+        <property name="pluginProperties" ref="searchProperties"/>
+        <property name="privileges">
+            <list>
+                <ref bean="searchPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="searchUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/search"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="quickSearchUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/quickSearch"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="ChildrenUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/children"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="objectTypeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/{objectType}"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="ComplaintsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/complaintsSearch"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="CaseFilesUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/caseFilesSearch"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="CaseFilesByDueDateUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/caseFilesSearch/byTimeInterval"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="ComplaintsUrlByCreatedDate" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/complaintsSearch/byTimeInterval"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="ComplaintsUrlByCreatedDate" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/facetedSearch/{objectType}"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="advancedSearchUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/advancedSearch"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="getAvailableFiltersUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/getAvailableFilters"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+            </list>
+        </property>
+
+    </bean>
     <bean id="searchPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
-         <property name="pluginName" value="Search Plugin"/>
+        <property name="pluginName" value="Search Plugin"/>
         <property name="pluginProperties" ref="searchPluginProperties"/>
         <property name="privileges">
             <list>
@@ -122,6 +206,16 @@
                 <bean id="ComplaintsUrlByCreatedDate" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/search/facetedSearch/{objectType}"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="advancedSearchUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/advancedSearch"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="getAvailableFiltersUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/search/getAvailableFilters"/>
                     <property name="requiredPrivilege" ref="searchPrivilege"/>
                 </bean>
             </list>
@@ -340,4 +434,5 @@
         <property name="respondPredicate" ref="eventSucceededPredicate"/>
     </bean>
 
+   <!--<bean name="solrFilterDao" class="com.armedia.acm.services.search.dao.SolrFilterDao"/>-->
 </beans>

@@ -3,7 +3,7 @@
 <mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
       version="CE-3.5.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
@@ -12,7 +12,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
 
     <http:endpoint name="http.advancedSearchQuery"
-                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.searchHandler}?q=#[message.inboundProperties['query']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;indent=true"
+                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.searchHandler}?q=#[message.inboundProperties['query']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;indent=true&amp;facet=true&amp;#[message.inboundProperties['rowQueryParametars']]"
                    contentType="application/json; charset=UTF-8"
                    mimeType="application/json"
                    encoding="UTF-8"
@@ -31,6 +31,8 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
         <timer-interceptor/>
 
         <logger category="com.armedia.acm.plugins.search" level="DEBUG" />
+        <logger category="com.armedia.acm.plugins.search" level="DEBUG"
+                message="Folder Id: http.advancedSearchQuery"/>
 
         <http:outbound-endpoint ref="http.advancedSearchQuery">
             <response>

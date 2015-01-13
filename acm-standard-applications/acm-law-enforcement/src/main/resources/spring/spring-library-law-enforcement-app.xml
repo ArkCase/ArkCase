@@ -50,6 +50,7 @@
 						<property name="reconfigurableBeans">
 							<list>
 								<ref bean="acm-reports-properties"/>
+								<ref bean="acm-forms-properties"/>
 							</list>
 						</property>
 					</bean>

@@ -8,46 +8,40 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by marjan.stefanoski on 18.12.2014.
+ * Created by marjan.stefanoski on 19.12.2014.
  */
+
 @Controller
 @RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
-public class FacetedPersonSearchAPIController {
+public class AdvancedSearchAPIController {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private MuleClient muleClient;
 
-    @RequestMapping(value = "/facetedPersonSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/advancedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String facetedPersonSerach (
-            @RequestParam(value = "createDate", required = false) Date createDate,
-            @RequestParam(value = "modifyDate", required = false) Date modifyDate,
-            @RequestParam(value = "fullName", required = false) String fullName,
-            @RequestParam(value = "creator", required = false) String creator,
-            @RequestParam(value = "modifier", required = false) String modifier,
+    public String advancedSearch(
+            @RequestParam(value = "q", required = true) String query,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-            Authentication authentication,
-            HttpServletResponse httpResponse
-    ) throws MuleException, Exception {
+            Authentication authentication
+    ) throws MuleException {
         if ( log.isDebugEnabled() ) {
-            log.debug("User '" + authentication.getName() + "' is performing faceted search for objects of type: Person");
+            log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
         }
 
-        String q = URLEncoder.encode("*:*")+"&fq=object_type_s:PERSON&facet=true&facet.field=object_type_s";
-        String sort= "";
-
         Map<String, Object> headers = new HashMap<>();
-        headers.put("query", q);
+        headers.put("query", query);
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
@@ -57,19 +51,19 @@ public class FacetedPersonSearchAPIController {
         log.debug("Response type: " + response.getPayload().getClass());
 
         if ( response.getPayload() instanceof String ) {
-            httpResponse.addHeader("X-JSON", response.getPayload().toString());
             return (String) response.getPayload();
         }
 
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
-
     }
 
-    public MuleClient getMuleClient() {
+    public MuleClient getMuleClient()
+    {
         return muleClient;
     }
 
-    public void setMuleClient(MuleClient muleClient) {
+    public void setMuleClient(MuleClient muleClient)
+    {
         this.muleClient = muleClient;
     }
 }

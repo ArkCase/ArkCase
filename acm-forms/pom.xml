@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.19-SNAPSHOT</version>
+        <version>3.0.20-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,6 +17,7 @@
     	<module>acm-form-change-case-status</module>
     	<module>acm-form-close-complaint</module>
     	<module>acm-form-case-file</module>
+    	<module>acm-form-electronic-communication</module>
   </modules>
 
 </project>
