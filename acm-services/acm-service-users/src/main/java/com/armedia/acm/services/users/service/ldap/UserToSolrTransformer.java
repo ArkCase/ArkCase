@@ -68,7 +68,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType) {
 
-        boolean objectNotNull = acmObjectType != null;
+        boolean  objectNotNull = acmObjectType != null;
         String ourClassName = AcmUser.class.getName();
         String theirClassName = acmObjectType.getName();
         boolean classNames = theirClassName.equals(ourClassName);

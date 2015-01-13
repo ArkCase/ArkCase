@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.complaint.web;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -27,6 +29,7 @@ public class ComplaintUiController
     private AuthenticationTokenService authenticationTokenService;
 	private FormUrl formUrl;
 	private UserActionDao userActionDao;
+	private Map<String, Object> formProperties;
 	
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openComplaints(Authentication auth, HttpServletRequest request) {
@@ -39,6 +42,8 @@ public class ComplaintUiController
         // Frevvo form URLs
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         retval.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
+        retval.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
+        retval.addObject("formDocuments", getFormProperties().get("form.documents"));
         
         if (null != request && "successful".equals(request.getParameter("frevvoFormSubmit_status")))
         {
@@ -74,6 +79,8 @@ public class ComplaintUiController
         // Frevvo form URLs
         retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         retval.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
+        retval.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
+        retval.addObject("formDocuments", getFormProperties().get("form.documents"));
         
         log.debug("Security token: " + token);
         return retval;
@@ -142,6 +149,14 @@ public class ComplaintUiController
 
 	public void setUserActionDao(UserActionDao userActionDao) {
 		this.userActionDao = userActionDao;
+	}
+
+	public Map<String, Object> getFormProperties() {
+		return formProperties;
+	}
+
+	public void setFormProperties(Map<String, Object> formProperties) {
+		this.formProperties = formProperties;
 	}
 
 }

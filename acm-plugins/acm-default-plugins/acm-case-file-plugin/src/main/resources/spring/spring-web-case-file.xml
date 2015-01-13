@@ -6,6 +6,7 @@
     <bean id="caseFileUiController" class="com.armedia.acm.plugins.casefile.web.CaseFileUiController">
         <property name="plugin" ref="acmCasePlugin"/>
 		<property name="formUrl" ref="formResource" />
+		<property name="formProperties" ref="acm-forms-properties" />
     </bean>
         
 </beans>

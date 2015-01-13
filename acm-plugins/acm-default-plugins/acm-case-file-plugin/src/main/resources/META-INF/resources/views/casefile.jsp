@@ -15,9 +15,11 @@
         <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
         <span itemprop="urlReinvestigateCaseFileForm">${reinvestigateCaseFileFormUrl}</span>
         <span itemprop="urlRoiForm">${roiFormUrl}</span>
+        <span itemprop="urlElectronicCommunicationForm">${electronicCommunicationFormUrl}</span>
         <span itemprop="urlChangeCaseStatusForm">${changeCaseStatusFormUrl}</span>
         <span itemprop="urlEditChangeCaseStatusForm">${editChangeCaseStatusFormUrl}</span>
         <span itemprop="enableFrevvoFormEngine">${enableFrevvoFormEngine}</span>
+        <span itemprop="formDocuments">${formDocuments}</span>
     </div>
 </jsp:attribute>
 
