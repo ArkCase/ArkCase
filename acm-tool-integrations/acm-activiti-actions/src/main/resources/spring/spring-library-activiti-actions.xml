@@ -15,26 +15,6 @@
 
     </bean>
 
-    <bean id="sendQuickSearchTaskRecordsToSolrAction" class="com.armedia.acm.event.AcmAction">
-        <property name="actionId" value="SEND_QUICKSEARCH_RECORDS_TO_SOLR"/>
-        <property name="actionName" value="Send Quick Search Records to SOLR"/>
-        <property name="targetMuleEndpoint" value="jms://solrTaskToQuickSearch.in"/>
-        <property name="parameters">
-            <list/>
-        </property>
-
-    </bean>
-
-    <bean id="sendAdvancedSearchTaskRecordsToSolrAction" class="com.armedia.acm.event.AcmAction">
-        <property name="actionId" value="SEND_ADVANCED_SEARCH_RECORDS_TO_SOLR"/>
-        <property name="actionName" value="Send Advanced Search Records to SOLR"/>
-        <property name="targetMuleEndpoint" value="jms://solrTaskToAdvancedSearch.in"/>
-        <property name="parameters">
-            <list/>
-        </property>
-
-    </bean>
-
     <bean id="startBusinessProcessImpl" class="com.armedia.acm.activiti.StartBusinessProcess">
         <property name="runtimeService" ref="activitiRuntimeService"/>
     </bean>
