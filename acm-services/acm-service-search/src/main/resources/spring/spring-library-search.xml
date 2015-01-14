@@ -434,5 +434,7 @@
         <property name="respondPredicate" ref="eventSucceededPredicate"/>
     </bean>
 
-   <!--<bean name="solrFilterDao" class="com.armedia.acm.services.search.dao.SolrFilterDao"/>-->
+   <bean id="searchAccessControlFields" class="com.armedia.acm.services.search.service.SearchAccessControlFields">
+       <property name="participantAccessChecker" ref="participantAccessChecker"/>
+   </bean>
 </beans>
