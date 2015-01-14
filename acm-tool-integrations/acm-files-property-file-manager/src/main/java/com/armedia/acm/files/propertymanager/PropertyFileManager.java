@@ -51,18 +51,21 @@ public class PropertyFileManager
         }
     }
     
-    public void storeMultiple(Map<String, String> propertiesMap, String fileName)
+    public void storeMultiple(Map<String, String> propertiesMap, String fileName, boolean clean)
     {
     	if (propertiesMap != null && propertiesMap.size() > 0)
     	{
     		FileInputStream in = null;
     		FileOutputStream out = null;
     		try
-    		{
-    			in = new FileInputStream(fileName);
-    			
+    		{    			
     			Properties p = new Properties();
-    			p.load(in);
+    		
+    			if (clean == false)
+    			{
+	    			in = new FileInputStream(fileName);
+	    			p.load(in);
+    			}
     			
     			out = new FileOutputStream(fileName);
     			
