@@ -24,14 +24,14 @@ public class GetApplicationRolesAPIController {
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	private FunctionalAccessService functionalAccessService;
 	
-	@RequestMapping(value="/roles/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<String> getApplicationRoles(Authentication auth)
     {
-		LOG.info("Taking application roles ...");
+		LOG.debug("Taking application roles ...");
 		
 		List<String> retval = getFunctionalAccessService().getApplicationRoles();
-		LOG.info("Application roles: " + retval.toString());
+		LOG.debug("Application roles: " + retval.toString());
 		
 		return retval;
     }

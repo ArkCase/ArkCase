@@ -61,7 +61,7 @@ public class PropertyFileManager
     		{    			
     			Properties p = new Properties();
     		
-    			if (clean == false)
+    			if (!clean)
     			{
 	    			in = new FileInputStream(fileName);
 	    			p.load(in);

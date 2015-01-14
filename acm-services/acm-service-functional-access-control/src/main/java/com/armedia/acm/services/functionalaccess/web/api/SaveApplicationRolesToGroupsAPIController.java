@@ -26,14 +26,14 @@ public class SaveApplicationRolesToGroupsAPIController {
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	private FunctionalAccessService functionalAccessService;
 	
-	@RequestMapping(value="/rolestogroups/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/rolestogroups", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public boolean saveApplicationRolesToGroups(@RequestBody Map<String, List<String>> applicationRolesToGroups, Authentication auth)
     {
-		LOG.info("Saving application roles to groups ...");
+		LOG.debug("Saving application roles to groups ...");
 		
-		boolean retval = getFunctionalAccessService().saveApplicationRolesToGroups(applicationRolesToGroups);
-		LOG.info("Successfuly save ? " + retval);
+		boolean retval = getFunctionalAccessService().saveApplicationRolesToGroups(applicationRolesToGroups, auth);
+		LOG.debug("Successfuly save ? " + retval);
 		
 		return retval;
     }

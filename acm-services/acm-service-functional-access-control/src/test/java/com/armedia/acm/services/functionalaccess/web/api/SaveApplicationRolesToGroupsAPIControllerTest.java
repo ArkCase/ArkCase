@@ -79,14 +79,15 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		String content = objectMapper.writeValueAsString(input);
 		
 		Capture<Map<String, List<String>>> found = new Capture<Map<String, List<String>>>();
+		Capture<Authentication> auth = new Capture<Authentication>();
 		
-		expect(getFunctionalAccessServiceTest().saveApplicationRolesToGroups(capture(found))).andReturn(true);
+		expect(getFunctionalAccessServiceTest().saveApplicationRolesToGroups(capture(found), capture(auth))).andReturn(true);
 		expect(getMockAuthentication().getName()).andReturn("user");
 		
 		replayAll();
 		
 		MvcResult result = getMockMvc().perform(
-	            post("/api/v1/functionalaccess/rolestogroups/save")
+	            post("/api/v1/functionalaccess/rolestogroups")
                     .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .principal(getMockAuthentication())
