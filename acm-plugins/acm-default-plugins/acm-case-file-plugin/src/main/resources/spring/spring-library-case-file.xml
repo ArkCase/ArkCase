@@ -32,6 +32,7 @@
     <bean id="caseFileToSolrTransformer" class="com.armedia.acm.plugins.casefile.service.CaseFileToSolrTransformer">
         <property name="userDao" ref="userJpaDao"/>
         <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
 
     <bean id="acmCasePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">

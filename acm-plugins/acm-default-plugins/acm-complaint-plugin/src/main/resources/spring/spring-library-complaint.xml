@@ -123,6 +123,7 @@
     <bean id="complaintToSolrTransformer" class="com.armedia.acm.plugins.complaint.service.ComplaintToSolrTransformer">
         <property name="userDao" ref="userJpaDao"/>
         <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
     
     <bean id="complaintPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
