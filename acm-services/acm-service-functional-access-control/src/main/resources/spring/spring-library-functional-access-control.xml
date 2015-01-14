@@ -13,6 +13,8 @@
 		<property name="properties" ref="acm-roles-properties"/>
 	</bean>
 	
+	<bean id="functionalAccessEventPublisher" class="com.armedia.acm.services.functionalaccess.service.FunctionalAccessEventPublisher" />
+	
 	<bean id="functionalAccessService" class="com.armedia.acm.services.functionalaccess.service.FunctionalAccessServiceImpl">
 		<property name="applicationRolesProperties" ref="acm-roles-properties"/>
 		<property name="applicationRolesToGroupsProperties" ref="applicationRoleToUserGroupProperties" />
@@ -20,6 +22,7 @@
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
         <property name="rolesToGroupsPropertyFileLocation" value="${user.home}/.acm/applicationRoleToUserGroup.properties"/>
+        <property name="eventPublisher" ref="functionalAccessEventPublisher" />
 	</bean>
 	
     

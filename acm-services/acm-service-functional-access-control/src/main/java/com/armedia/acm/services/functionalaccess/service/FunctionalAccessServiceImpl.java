@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 
@@ -25,6 +26,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 	Map<String, String> applicationRolesToGroupsProperties;
 	private PropertyFileManager propertyFileManager;
 	private String rolesToGroupsPropertyFileLocation;
+	private FunctionalAccessEventPublisher eventPublisher;
 	
 	@Override
 	public List<String> getApplicationRoles() 
@@ -52,7 +54,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 	}
 
 	@Override
-	public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups) 
+	public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth) 
 	{
 		boolean success = false;
 		try 
@@ -64,6 +66,11 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 		{
 			LOG.error("Cannot save roles to groups mapping.", e);
 			success = false;
+		}
+		
+		if (success)
+		{
+			getEventPublisher().publishFunctionalAccessUpdateEvent(rolesToGroups, auth);
 		}
 		
 		return success;
@@ -138,6 +145,16 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 			String rolesToGroupsPropertyFileLocation) 
 	{
 		this.rolesToGroupsPropertyFileLocation = rolesToGroupsPropertyFileLocation;
+	}
+
+	public FunctionalAccessEventPublisher getEventPublisher() 
+	{
+		return eventPublisher;
+	}
+
+	public void setEventPublisher(FunctionalAccessEventPublisher eventPublisher) 
+	{
+		this.eventPublisher = eventPublisher;
 	}
 
 }

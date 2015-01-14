@@ -25,14 +25,14 @@ public class GetApplicationRolesToGroupsAPIController {
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	private FunctionalAccessService functionalAccessService;
 	
-	@RequestMapping(value="/rolestogroups/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/rolestogroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, List<String>> getApplicationRolesToGroups(Authentication auth)
     {
-		LOG.info("Taking application roles to groups ...");
+		LOG.debug("Taking application roles to groups ...");
 		
 		Map<String, List<String>> retval = getFunctionalAccessService().getApplicationRolesToGroups();
-		LOG.info("Application roles to groups: " + retval.toString());
+		LOG.debug("Application roles to groups: " + retval.toString());
 		
 		return retval;
     }

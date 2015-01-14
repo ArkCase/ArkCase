@@ -76,7 +76,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		replayAll();
 		
 		MvcResult result = getMockMvc().perform(
-	            get("/api/v1/functionalaccess/rolestogroups/get")
+	            get("/api/v1/functionalaccess/rolestogroups")
                     .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .principal(getMockAuthentication()))
