@@ -65,7 +65,7 @@ public class ParticipantDaoIT
 
         entityManager.flush();
 
-        List<AcmParticipant> found = dao.findParticipantsForObjectId(objectId);
+        List<AcmParticipant> found = dao.findParticipantsForObject(objectType, objectId);
 
         assertNotNull(found);
         assertEquals(participantList.size(), found.size());
@@ -91,7 +91,7 @@ public class ParticipantDaoIT
 
         entityManager.flush();
 
-        List<AcmParticipant> secondRound = dao.findParticipantsForObjectId(objectId);
+        List<AcmParticipant> secondRound = dao.findParticipantsForObject(objectType, objectId);
 
         entityManager.flush();
 
@@ -121,7 +121,7 @@ public class ParticipantDaoIT
 
         found.remove(0);
 
-        int removed = dao.removeAllOtherParticipantsForObjectId(objectId, found);
+        int removed = dao.removeAllOtherParticipantsForObject(objectType, objectId, found);
 
         entityManager.flush();
 
@@ -133,7 +133,7 @@ public class ParticipantDaoIT
 
         entityManager.flush();
 
-        List<AcmParticipant> thirdRound = dao.findParticipantsForObjectId(objectId);
+        List<AcmParticipant> thirdRound = dao.findParticipantsForObject(objectType, objectId);
 
         entityManager.flush();
 

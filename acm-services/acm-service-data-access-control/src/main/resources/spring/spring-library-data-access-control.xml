@@ -78,10 +78,6 @@
         <property name="accessControlEntryDao" ref="acmAccessControlEntryDao"/>
     </bean>
 
-    <bean id="protectedObjectInsertListener" class="com.armedia.acm.services.dataaccess.service.impl.ProtectedObjectInsertListener"/>
-
-    <bean id="protectedObjectUpdateListener" class="com.armedia.acm.services.dataaccess.service.impl.ProtectedObjectUpdateListener"/>
-
     <bean id="acmAssignmentBusinessRule" class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-assignment-rules.xlsx"/>
     </bean>

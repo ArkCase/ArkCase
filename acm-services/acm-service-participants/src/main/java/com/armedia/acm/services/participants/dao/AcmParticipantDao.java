@@ -29,20 +29,24 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         }
     }
 
-    public List<AcmParticipant> findParticipantsForObjectId(Long objectId)
+    public List<AcmParticipant> findParticipantsForObject(String objectType, Long objectId)
     {
 
-        String jpql = "SELECT ap FROM AcmParticipant ap WHERE ap.objectId = :objectId";
+        String jpql = "SELECT ap " +
+                "FROM AcmParticipant ap " +
+                "WHERE ap.objectId = :objectId " +
+                "AND ap.objectType = :objectType";
 
         Query query = getEm().createQuery(jpql);
         query.setParameter("objectId", objectId);
+        query.setParameter("objectType", objectType);
 
         List<AcmParticipant> retval = query.getResultList();
 
         return retval;
     }
 
-    public int removeAllOtherParticipantsForObjectId(Long objectId, List<AcmParticipant> keepTheseParticipants)
+    public int removeAllOtherParticipantsForObject(String objectType, Long objectId, List<AcmParticipant> keepTheseParticipants)
     {
         // a simple delete query will not cascade deletes to related objects.  So we need to delete
         // one by one :-(
@@ -53,7 +57,7 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
             keepTheseIds.add(keep.getId());
         }
 
-        List<AcmParticipant> current = findParticipantsForObjectId(objectId);
+        List<AcmParticipant> current = findParticipantsForObject(objectType, objectId);
 
         int deleted = 0;
 
