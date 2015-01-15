@@ -101,6 +101,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         int firstRow = 0;
         int maxRows = 10;
         String sort = "";
+        String params = "";
         
         String query = "object_type_s:" + objectType + " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
                    
@@ -112,6 +113,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
         headers.put("acmUser", mockAuthentication);
+        headers.put("rowQueryParametars",params);
         
         Capture<ApplicationSearchEvent> capturedEvent = new Capture<>();
       
@@ -123,14 +125,14 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
 
         replayAll();
         
-//		// To see details on the HTTP calls, change .andReturn() to .andDo(print())	
+		// To see details on the HTTP calls, change .andReturn() to .andDo(print())
 //		ResultActions resultAction = mockMvc.perform(
-//                get("/api/v1/plugin/search/{objectType}", objectType)  
+//                get("/api/v1/plugin/search/{objectType}", objectType)
 //                .principal(mockAuthentication)).andDo(print());
-		
+//
 		
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/search/{objectType}", objectType) 
+                get("/api/v1/plugin/search/{objectType}", objectType)
                 .session(mockHttpSession)
                 .principal(mockAuthentication))
                 .andExpect(status().isOk())
@@ -155,6 +157,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         int firstRow = 0;
         int maxRows = 10;
         String sort = "";
+        String params = "";
         
         String query = "object_type_s:" + objectType + " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
                    
@@ -166,6 +169,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
         headers.put("acmUser", mockAuthentication);
+        headers.put("rowQueryParametars",params);
       
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
