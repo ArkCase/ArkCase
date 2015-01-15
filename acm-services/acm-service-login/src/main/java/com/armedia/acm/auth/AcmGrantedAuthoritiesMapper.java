@@ -154,10 +154,10 @@ public class AcmGrantedAuthoritiesMapper
         for ( Entry<Object, Object> entry : getApplicationRoleToUserGroupProperties().entrySet() )
         {
             String role = (String) entry.getKey();
-            String group = (String) entry.getValue();
+            String groups = (String) entry.getValue();
             
             if ( role == null || role.trim().isEmpty() || 
-                    group == null || group.trim().isEmpty() ) 
+                    groups == null || groups.trim().isEmpty() ) 
             {
                 continue;
             }
@@ -167,18 +167,28 @@ public class AcmGrantedAuthoritiesMapper
             {
                 role = "ROLE_" + role;
             }
-            group = group.trim().toUpperCase();
             
-            if ( groupsToRoles.containsKey(group) )
+            // Groups for each role are comma separated in the property file. Go through all groups for each role
+            String[] groupsArray = groups.split(",");
+            
+            if (groupsArray != null && groupsArray.length > 0)
             {
-                List<String> roles = groupsToRoles.get(group);
-                roles.add(role);
-            }
-            else
-            {
-                List<String> roles = new ArrayList<>();
-                roles.add(role);
-                groupsToRoles.put(group, roles);
+            	for (String group : groupsArray)
+            	{
+		            group = group.trim().toUpperCase();
+		            
+		            if ( groupsToRoles.containsKey(group) )
+		            {
+		                List<String> roles = groupsToRoles.get(group);
+		                roles.add(role);
+		            }
+		            else
+		            {
+		                List<String> roles = new ArrayList<>();
+		                roles.add(role);
+		                groupsToRoles.put(group, roles);
+		            }
+            	}
             }
         }
         return groupsToRoles;
