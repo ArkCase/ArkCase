@@ -294,6 +294,8 @@
         <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
         <property name="activitiHistoryService" ref="activitiHistoryService"/>
         <property name="userDao" ref="userJpaDao" />
+        <property name="participantDao" ref="acmParticipantDao"/>
+        <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>
         <property name="priorityLevelToNumberMap">
             <map>
                 <entry key="Low" value="10"/>
