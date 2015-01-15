@@ -14,7 +14,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
     <http:endpoint name="http.quickSearchQuery"
-                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.quicksearch.core}/${solr.searchHandler}?q=#[message.inboundProperties['query']]&amp;fq=#[message.outboundProperties['dataAccessFilter']]&amp;fq=#[message.outboundProperties['denyAccessFilter']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;indent=true"
+                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.quicksearch.core}/${solr.searchHandler}?q=#[message.inboundProperties['query']]&amp;fq=#[message.outboundProperties['dataAccessFilter']]&amp;fq=#[message.outboundProperties['denyAccessFilter']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;#[message.inboundProperties['rowQueryParametars']]&amp;indent=true"
                    contentType="application/json; charset=UTF-8"
                    mimeType="application/json"
                    encoding="UTF-8"
