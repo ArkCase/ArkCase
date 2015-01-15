@@ -95,4 +95,6 @@
         <property name="accessControlBusinessRule" ref="acmDataAccessControlBusinessRule"/>
     </bean>
 
+    <bean id="participantAccessChecker" class="com.armedia.acm.services.dataaccess.service.ParticipantAccessChecker"/>
+
 </beans>

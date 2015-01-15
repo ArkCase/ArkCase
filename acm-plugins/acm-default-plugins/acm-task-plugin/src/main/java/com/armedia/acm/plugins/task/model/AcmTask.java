@@ -3,14 +3,19 @@ package com.armedia.acm.plugins.task.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AcmTask implements AcmObject
+public class AcmTask implements AcmAssignedObject, Serializable
 {
+    private static final long serialVersionUID = 8087833770464474147L;
+
     private Long taskId;
     private String priority;
     private String title;
@@ -41,6 +46,7 @@ public class AcmTask implements AcmObject
     private String outcomeName;
     private List<TaskOutcome> availableOutcomes = new ArrayList<>();
     private TaskOutcome taskOutcome;
+    private List<AcmParticipant> participants;
 
     public Long getTaskId()
     {
@@ -378,5 +384,16 @@ public class AcmTask implements AcmObject
     public void setTaskOutcome(TaskOutcome taskOutcome)
     {
         this.taskOutcome = taskOutcome;
+    }
+
+    @Override
+    public List<AcmParticipant> getParticipants()
+    {
+        return participants;
+    }
+
+    public void setParticipants(List<AcmParticipant> participants)
+    {
+        this.participants = participants;
     }
 }
