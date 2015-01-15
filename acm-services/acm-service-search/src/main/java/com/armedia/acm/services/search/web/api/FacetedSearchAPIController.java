@@ -123,8 +123,6 @@ public class FacetedSearchAPIController {
                         if(filterSplitByQ[1].equals(e.getValue()) && e.getKey().contains("facet.")){
                             substitutionName = e.getKey().split("facet.")[1];
                             try {
-                                String logString = "&fq="+URLEncoder.encode("{!term f="+substitutionName+"}","UTF-8")+URLEncoder.encode(filterSplitByDots[1],"UTF-8");
-                                System.out.println("1 ONE   :"+logString);
                                 queryBuilder.append("&fq="+URLEncoder.encode("{!term f="+substitutionName+"}","UTF-8")+URLEncoder.encode(filterSplitByDots[1],"UTF-8"));
                             } catch (UnsupportedEncodingException e1) {
                                 log.error("Encoding problem occur while building SOLR query", e1);
@@ -139,8 +137,6 @@ public class FacetedSearchAPIController {
                     if(filterSplitByQ[1].equals(e.getValue()) && e.getKey().contains("facet.")){
                         substitutionName = e.getKey().split("facet.")[1];
                         try {
-                            String logString = "&fq="+URLEncoder.encode("{!term f="+substitutionName+"}","UTF-8")+URLEncoder.encode(filterSplitByDots[1],"UTF-8");
-                            System.out.println("2 TWO   : "+logString);
                             queryBuilder.append("&fq="+URLEncoder.encode("{!term f="+substitutionName+"}","UTF-8")+URLEncoder.encode(filterSplitByDots[1],"UTF-8"));
                         } catch (UnsupportedEncodingException e1) {
                             log.error("Encoding problem occur while building SOLR query", e1);
