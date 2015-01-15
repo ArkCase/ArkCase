@@ -28,6 +28,7 @@ public class SolrDocument implements SolrBaseDocument {
     
     private List<String> deny_acl_ss;
     private List<String> allow_acl_ss;
+    private Long parent_object_id_i;
 
     @Override
     public String getId() {
@@ -184,5 +185,15 @@ public class SolrDocument implements SolrBaseDocument {
                 ", deny_acl_ss=" + deny_acl_ss +
                 ", allow_acl_ss=" + allow_acl_ss +
                 '}';
+    }
+
+    public void setParent_object_id_i(Long parent_object_id_i)
+    {
+        this.parent_object_id_i = parent_object_id_i;
+    }
+
+    public Long getParent_object_id_i()
+    {
+        return parent_object_id_i;
     }
 }

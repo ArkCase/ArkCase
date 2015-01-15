@@ -10,8 +10,4 @@ public interface SearchConstants
      */
     String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-    String QUICK_SEARCH_JMS_QUEUE_NAME = "jms://solrQuickSearch.in";
-
-    String SOLR_OBJECT_TYPE_FIELD_NAME = "object_type_s";
-
 }
