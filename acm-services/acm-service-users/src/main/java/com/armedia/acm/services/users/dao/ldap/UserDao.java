@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -28,6 +29,29 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public AcmUser findByUserId(String userId)
     {
         return getEntityManager().find(AcmUser.class, userId);
+    }
+
+    public AcmUser quietFindByUserId(String userId)
+    {
+        if ( userId == null || userId.trim().isEmpty() )
+        {
+            return null;
+        }
+
+        try
+        {
+            AcmUser user = findByUserId(userId);
+            if (user != null)
+            {
+                return user;
+            }
+        }
+        catch (PersistenceException pe)
+        {
+            log.error("Could not find user record: " + pe.getMessage(), pe);
+        }
+
+        return null;
     }
 
     public List<AcmRole> findAllRoles()

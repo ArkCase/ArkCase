@@ -819,4 +819,26 @@ class ActivitiTaskDao implements TaskDao
 	{
 		this.userDao = userDao;
 	}
+
+    @Override
+    public List<AcmTask> getTasksModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        List<AcmTask> retval = new ArrayList<>();
+
+        List<HistoricTaskInstance> tasks = getActivitiHistoryService().
+                createHistoricTaskInstanceQuery().
+                includeProcessVariables().
+                includeTaskLocalVariables().
+                taskCreatedAfter(lastModified).
+                orderByTaskId().
+                asc().listPage(start, pageSize);
+        for ( HistoricTaskInstance task : tasks )
+        {
+            AcmTask active = acmTaskFromHistoricActivitiTask(task);
+            retval.add(active);
+        }
+
+        return retval;
+
+    }
 }
