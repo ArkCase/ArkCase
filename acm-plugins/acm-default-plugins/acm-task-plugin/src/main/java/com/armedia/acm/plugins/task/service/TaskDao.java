@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -73,4 +74,6 @@ public interface TaskDao
         throws AcmTaskException;
     
     List<WorkflowHistoryInstance> getWorkflowHistory(String id, boolean adhoc);
+
+    List<AcmTask> getTasksModifiedSince(Date lastModified, int start, int pageSize);
 }
