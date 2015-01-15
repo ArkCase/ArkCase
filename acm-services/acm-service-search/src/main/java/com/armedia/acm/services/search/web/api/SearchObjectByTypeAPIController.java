@@ -54,8 +54,8 @@ public class SearchObjectByTypeAPIController {
             HttpSession httpSession
     ) throws MuleException, Exception {
         String[] f = null;
-        String sortParams = null;
-        String params = null;
+        String sortParams = "";
+        String params = "";
         String query = "object_type_s:" + objectType;
         if (StringUtils.isBlank(filters)) {
             if (!StringUtils.isBlank(assignee)) {
