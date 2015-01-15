@@ -68,6 +68,7 @@ Complaint.Object = {
         this.$divPeople         = $("#divPeople");
         Complaint.JTable.createJTablePeople(this.$divPeople);
 
+        this.setFormDocuments($('#formDocuments').val());
         this.$divDocuments      = $("#divDocuments");
         Complaint.JTable.createJTableDocuments(this.$divDocuments);
         this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
@@ -104,6 +105,14 @@ Complaint.Object = {
     }
     ,setFormUrls: function(formUrls) {
         this._formUrls = formUrls;
+    }
+    
+    ,_formDocuments: null
+    ,getFormDocuments: function() {
+    	return this._formDocuments;
+    }
+    ,setFormDocuments: function(formDocuments) {
+    	this._formDocuments = formDocuments;
     }
 
     ,_token: ""

@@ -16,13 +16,11 @@
 
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/search/Search.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchCallback.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/search.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchController.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
@@ -33,23 +31,27 @@
 
 <jsp:body>
 <section id="content">
+    <div class="wrapper b-b header">Advanced Search</div>
+
     <section class="hbox stretch">
         <aside class="aside-md bg-light dker b-r" id="subNav">
             <section class="vbox">
                 <!--scroll bar -->
                 <section class="scrollable">
 
-                    <div class="wrapper b-b header">Advanced Search</div>
+                    <%--<div class="wrapper b-b header">Advanced Search</div>--%>
 
                         <div class="wrapper">
-
-                            <div class="input-group">
-                                <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
-                                    <span class="input-group-btn">
-                                      <button class="btn btn-sm btn-default" type="button">Go!</button>
-                                    </span>
-
+                            <div class="input-group" id="divFacet">
                             </div>
+
+                            <%--<div class="input-group">--%>
+                                <%--<input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">--%>
+                                    <%--<span class="input-group-btn">--%>
+                                      <%--<button class="btn btn-sm btn-default" type="button">Go!</button>--%>
+                                    <%--</span>--%>
+
+                            <%--</div>--%>
 
 <!-- ================================================ -->
                             <%--<div class="line line-dashed b-b line-lg pull-in"></div>--%>
@@ -287,17 +289,23 @@
                     <div class="row m-t-sm">
                         <div class="col-sm-12 m-b-xs">
                             <%--<a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default active"><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>--%>
-                            <a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default "><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
-                                <button type="button" class="btn btn-sm btn-default" title="Filter" data-toggle="dropdown"><i class="fa fa-filter"></i> <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Filter 1</a></li>
-                                    <li><a href="#">Filter 2</a></li>
-                                    <li><a href="#">Filter 3</a></li>
-                                </ul>
-                            </div>
+                            <%--<a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default "><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>--%>
+                            <%--<div class="btn-group">--%>
+                                <%--<button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>--%>
+                                <%--<button type="button" class="btn btn-sm btn-default" title="Filter" data-toggle="dropdown"><i class="fa fa-filter"></i> <span class="caret"></span></button>--%>
+                                <%--<ul class="dropdown-menu">--%>
+                                    <%--<li><a href="#">Filter 1</a></li>--%>
+                                    <%--<li><a href="#">Filter 2</a></li>--%>
+                                    <%--<li><a href="#">Filter 3</a></li>--%>
+                                <%--</ul>--%>
+                            <%--</div>--%>
 
+                            <div class="input-group">
+                                <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Type in search query">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                </span>
+                            </div>
                         </div>
 
                     </div>

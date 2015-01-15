@@ -1,8 +1,8 @@
 // frevvo custom JavaScript
 
 // Import Rich TextArea plugin
-document.writeln('<script type="text/javascript" src="/frevvo/js-24702/libs/rich-textarea-plugin-v2.1/tinymce/tinymce.min.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-24702/libs/rich-textarea-plugin-v2.1/richtextarea.plugin.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/rich-textarea-plugin-v2.1/tinymce/tinymce.min.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/rich-textarea-plugin-v2.1/richtextarea.plugin.js"></script>');
 
 
 var CustomEventHandlers = {

@@ -5,15 +5,16 @@
  */
 var Search = Search || {
     create: function() {
-        Search.Object.create();
-        Search.Event.create();
-        Search.Page.create();
-        Search.Rule.create();
-        Search.Service.create();
-        Search.Callback.create();
-
-        Acm.deferred(Search.Event.onPostInit);
+        if (Search.Model.create)      {Search.Model.create();}
+        if (Search.Service.create)    {Search.Service.create();}
+        if (Search.View.create)       {Search.View.create();}
+        if (Search.Controller.create) {Search.Controller.create();}
     }
-
+    ,onInitialized: function() {
+        if (Search.Model.onInitialized)      {Search.Model.onInitialized();}
+        if (Search.Service.onInitialized)    {Search.Service.onInitialized();}
+        if (Search.View.onInitialized)       {Search.View.onInitialized();}
+        if (Search.Controller.onInitialized) {Search.Controller.onInitialized();}
+    }
 };
 

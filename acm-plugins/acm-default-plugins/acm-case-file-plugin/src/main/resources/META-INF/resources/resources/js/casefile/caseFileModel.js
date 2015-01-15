@@ -25,6 +25,13 @@ CaseFile.Model = CaseFile.Model || {
         AcmEx.Model.Tree.Key.setNodeTypeMap(CaseFile.Model.Tree.Key.nodeTypeMap);
         AcmEx.Model.Tree.Config.setName("/plugin/casefile");
         var treeInfo = AcmEx.Model.Tree.Config.getTreeInfo();
+        if (AcmEx.Object.TreeModifier.defaultFilter) {
+            treeInfo.filter = AcmEx.Object.TreeModifier.defaultFilter;
+        }
+        if (AcmEx.Object.TreeModifier.defaultSort) {
+            treeInfo.sort = AcmEx.Object.TreeModifier.defaultSort;
+        }
+
         CaseFile.Model.retrieveData(treeInfo);
 
         if (CaseFile.Model.Lookup.onInitialized)     {CaseFile.Model.Lookup.onInitialized();}
