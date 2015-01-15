@@ -46,6 +46,11 @@
                 <ref bean="caseFileCreatePrivilege"/>
             </list>
         </property>
+        <property name="suportedObjectTypesNames">
+            <list>
+                <value>CASE_FILE</value>
+            </list>
+        </property>
         <property name="urlPrivileges">
             <list>
                 <bean id="caseTypes" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
