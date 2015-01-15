@@ -81,6 +81,9 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String supervisor_id_s;
     private List<String> child_id_ss;
     private List<String> member_id_ss;
+    private boolean adhocTask_b;
+    private String owner_lcs;
+    private String business_process_name_lcs;
 
 
     @Override
@@ -481,4 +484,34 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
 	public void setMember_id_ss(List<String> member_id_ss) {
 		this.member_id_ss = member_id_ss;
 	}
+
+    public void setAdhocTask_b(boolean adhocTask_b)
+    {
+        this.adhocTask_b = adhocTask_b;
+    }
+
+    public boolean isAdhocTask_b()
+    {
+        return adhocTask_b;
+    }
+
+    public void setOwner_lcs(String owner_lcs)
+    {
+        this.owner_lcs = owner_lcs;
+    }
+
+    public String getOwner_lcs()
+    {
+        return owner_lcs;
+    }
+
+    public void setBusiness_process_name_lcs(String business_process_name_lcs)
+    {
+        this.business_process_name_lcs = business_process_name_lcs;
+    }
+
+    public String getBusiness_process_name_lcs()
+    {
+        return business_process_name_lcs;
+    }
 }

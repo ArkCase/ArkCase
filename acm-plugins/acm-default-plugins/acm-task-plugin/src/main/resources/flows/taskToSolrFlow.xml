@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+
+
+    <flow name="jmsSendTaskToSolr"
+          doc:name="Send Tasks to SOLR"
+          doc:description="Send tasks to the SOLR quick search and Advanced Search collections.  Payload must be an AcmTaskEvent pojo.">
+
+        <jms:inbound-endpoint
+                queue="taskToSolr.in"
+                exchange-pattern="one-way"
+                connector-ref="ActiveMQ-ACM"
+                doc:name="JMS" />
+
+        <timer-interceptor/>
+
+        <echo-component doc:name="Echo"/>
+
+        <component doc:name="Get an ACM Task">
+            <spring-object bean="extractAcmTaskFromEvent"/>
+        </component>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Got ACM task"/>
+
+        <set-variable variableName="advancedSearchDoc" value="#[app.registry.taskToSolrTransformer.toSolrAdvancedSearch(message.payload)]"/>
+        <set-variable variableName="quickSearchDoc" value="#[app.registry.taskToSolrTransformer.toSolrQuickSearch(message.payload)]"/>
+        <set-variable variableName="advancedSearchJson" value="#[app.registry.sendDocumentsToSolr.asJsonArray(advancedSearchDoc)]"/>
+        <set-variable variableName="quickSearchJson" value="#[app.registry.sendDocumentsToSolr.asJsonArray(quickSearchDoc)]"/>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Got quick search json"/>
+
+        <set-payload value="#[advancedSearchJson]"/>
+        <http:outbound-endpoint ref="submitAdvancedSearchDocuments" />
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Sent to SOLR advanced search"/>
+
+        <set-payload value="#[quickSearchJson]"/>
+        <http:outbound-endpoint ref="submitQuicksearchDocuments" />
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Sent to SOLR quick search"/>
+    </flow>
+
+</mule>
