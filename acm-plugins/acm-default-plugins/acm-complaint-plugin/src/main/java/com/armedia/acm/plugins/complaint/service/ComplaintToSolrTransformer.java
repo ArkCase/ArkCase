@@ -60,7 +60,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         String assigneeUserId = findAssigneeUserId(in);
         solr.setAssignee_id_lcs(assigneeUserId);
 
-        AcmUser assignee = findAssignee(assigneeUserId);
+        AcmUser assignee = getUserDao().quietFindByUserId(assigneeUserId);
 
         if ( assignee != null )
         {
@@ -96,32 +96,6 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setAssignee_s(assigneeUserId);
 
         return solr;
-    }
-
-
-
-    private AcmUser findAssignee(String assigneeUserId)
-    {
-        if ( assigneeUserId == null || assigneeUserId.trim().isEmpty() )
-        {
-            return null;
-        }
-
-        try
-        {
-            AcmUser user = getUserDao().findByUserId(assigneeUserId);
-            if (user != null)
-            {
-                return user;
-            }
-        }
-        catch (PersistenceException pe)
-        {
-            log.error("Could not find user record: " + pe.getMessage(), pe);
-        }
-
-
-        return null;
     }
 
     private String findAssigneeUserId(Complaint in)
