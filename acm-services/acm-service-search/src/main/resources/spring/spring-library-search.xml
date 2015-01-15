@@ -239,8 +239,5 @@
    <bean id="searchAccessControlFields" class="com.armedia.acm.services.search.service.SearchAccessControlFields">
        <property name="participantAccessChecker" ref="participantAccessChecker"/>
    </bean>
-   
-    <bean id="acmPluginManager" class="com.armedia.acm.pluginmanager.service.AcmPluginManager"/>
-
 
 </beans>
