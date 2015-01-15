@@ -73,6 +73,19 @@ CaseFile.View = CaseFile.View || {
             this.$tree     = $("#tree");
             this._createTree(this.$tree);
 
+            AcmEx.Object.TreeModifier.buildFilter(this.$ulFilter
+                , CaseFile.View.MicroData.treeFilter
+                , function(value) {
+                    CaseFile.Controller.viewChangedTreeFilter(value);
+                }
+            );
+            AcmEx.Object.TreeModifier.buildSort(this.$ulSort
+                , CaseFile.View.MicroData.treeSort
+                , function(value) {
+                    CaseFile.Controller.viewChangedTreeSort(value);
+                }
+            );
+
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE_LIST, this.onModelRetrievedCaseFileList);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE       , this.onViewChangedCaseTitle);
@@ -81,18 +94,6 @@ CaseFile.View = CaseFile.View || {
             }
         }
         ,onInitialized: function() {
-            AcmEx.Object.TreeModifier.buildFilter(CaseFile.View.Tree.$ulFilter
-                , CaseFile.View.MicroData.treeFilter
-                , function(value) {
-                    CaseFile.Controller.viewChangedTreeFilter(value);
-                }
-            );
-            AcmEx.Object.TreeModifier.buildSort(CaseFile.View.Tree.$ulSort
-                , CaseFile.View.MicroData.treeSort
-                , function(value) {
-                    CaseFile.Controller.viewChangedTreeSort(value);
-                }
-            );
         }
 
         ,onModelRetrievedCaseFileList: function(key) {
@@ -1883,6 +1884,7 @@ CaseFile.View = CaseFile.View || {
                         url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
                             + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
                             + "',caseTitle:'" + Acm.goodValue(caseFile.title)
+                            + "',casePriority:'" + Acm.goodValue(caseFile.priority)
                             + "',");
 
                         Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30
@@ -1893,7 +1895,7 @@ CaseFile.View = CaseFile.View || {
                     }
                 }
             }
-            else{
+            else if(report && report != ""){
                 CaseFile.View.Documents.$btnAddDocument.click();
             }
         }
@@ -1902,12 +1904,24 @@ CaseFile.View = CaseFile.View || {
     + "</form>"*/
 
         ,fillReportSelection: function() {
+        	var formDocuments = null;
+        	try {
+        		formDocuments = JSON.parse(Acm.Object.MicroData.get("formDocuments"));
+        	}catch(e) {
+        		
+        	}
+        	
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
-                + "<option value=''>Document Type</option>"
-                + "<option value='electronic_communication'>Electronic Communication</option>"
-                + "<option value='roi'>Report of Investigation</option>"
-                + "<option value='mr'>Medical Release</option>"
+                + "<option value=''>Document Type</option>";
+
+            if (formDocuments != null && formDocuments.length > 0) {
+            	for (var i = 0; i < formDocuments.length; i ++) {
+            		html += "<option value='" + formDocuments[i]["value"] + "'>" + formDocuments[i]["label"] + "</option>"
+            	}
+            }
+                
+            html += "<option value='mr'>Medical Release</option>"
                 + "<option value='gr'>General Release</option>"
                 + "<option value='ev'>eDelivery</option>"
                 + "<option value='sig'>SF86 Signature</option>"

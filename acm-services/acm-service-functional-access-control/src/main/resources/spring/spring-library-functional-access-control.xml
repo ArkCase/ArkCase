@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+        
+    <bean id="acm-roles-properties" class="net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryBean">
+		<property name="location" value="file:${user.home}/.acm/applicationRoles.properties"/>
+	</bean>
+	
+	<bean id="rolesPropertyConfigurer" class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
+		<property name="properties" ref="acm-roles-properties"/>
+	</bean>
+	
+	<bean id="functionalAccessEventPublisher" class="com.armedia.acm.services.functionalaccess.service.FunctionalAccessEventPublisher" />
+	
+	<bean id="functionalAccessService" class="com.armedia.acm.services.functionalaccess.service.FunctionalAccessServiceImpl">
+		<property name="applicationRolesProperties" ref="acm-roles-properties"/>
+		<property name="applicationRolesToGroupsProperties" ref="applicationRoleToUserGroupProperties" />
+		<property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+        <property name="rolesToGroupsPropertyFileLocation" value="${user.home}/.acm/applicationRoleToUserGroup.properties"/>
+        <property name="eventPublisher" ref="functionalAccessEventPublisher" />
+	</bean>
+	
+    
+</beans>
