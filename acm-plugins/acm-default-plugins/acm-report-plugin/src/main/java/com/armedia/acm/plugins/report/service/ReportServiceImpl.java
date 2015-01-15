@@ -103,7 +103,7 @@ public class ReportServiceImpl implements ReportService{
 				}
 			}
 			
-			getPropertyFileManager().storeMultiple(propertiesToUpdate, getReportsPropertyFileLocation());
+			getPropertyFileManager().storeMultiple(propertiesToUpdate, getReportsPropertyFileLocation(), false);
 			getPropertyFileManager().removeMultiple(propertiesToDelete, getReportsPropertyFileLocation());
 		}
 		
