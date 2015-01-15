@@ -434,5 +434,6 @@
         <property name="respondPredicate" ref="eventSucceededPredicate"/>
     </bean>
 
+    <bean id="acmPluginManager" class="com.armedia.acm.pluginmanager.service.AcmPluginManager"/>
    <!--<bean name="solrFilterDao" class="com.armedia.acm.services.search.dao.SolrFilterDao"/>-->
 </beans>

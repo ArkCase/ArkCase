@@ -41,12 +41,11 @@ public class FacetedSearchAPIController {
             Authentication authentication,
             HttpServletResponse httpResponse
     ) throws MuleException {
-
         if ( log.isDebugEnabled() ) {
             log.debug("User '" + authentication.getName() + "' is performing facet search for the query: '" + q + "' ");
         }
 
-        String rowQueryParametars = buildSolrQuery(filters).replace(" ", "+");
+        String rowQueryParametars = buildSolrQuery(filters);
         String sort= "";
 
         Map<String, Object> headers = new HashMap<>();

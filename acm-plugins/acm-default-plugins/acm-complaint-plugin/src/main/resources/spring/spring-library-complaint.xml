@@ -136,6 +136,11 @@
                 <ref bean="acmComplaintApprovePrivilege"/>
             </list>
         </property>
+        <property name="suportedObjectTypesNames">
+            <list>
+                <value>COMPLAINTS</value>
+            </list>
+        </property>
         <property name="urlPrivileges">
             <list>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
