@@ -141,7 +141,7 @@ class ActivitiTaskDao implements TaskDao
             // the rules (or the user) may have removed some participants.  We want to delete all participants other
             // than the ones we just now validated.
             getParticipantDao().removeAllOtherParticipantsForObject("TASK", in.getTaskId(), in.getParticipants());
-            getParticipantDao().saveParticipants(in.getParticipants());
+            in.setParticipants(getParticipantDao().saveParticipants(in.getParticipants()));
 
             return in;
         }
@@ -151,7 +151,8 @@ class ActivitiTaskDao implements TaskDao
         }
     }
 
-    private void ensureCorrectAssigneeInParticipants(AcmTask in)
+    @Override
+    public void ensureCorrectAssigneeInParticipants(AcmTask in)
     {
         boolean assigneeFound = false;
 

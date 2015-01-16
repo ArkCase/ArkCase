@@ -15,6 +15,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,8 +23,10 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_file")
-public class EcmFile implements AcmEntity
+public class EcmFile implements AcmEntity, Serializable
 {
+    private static final long serialVersionUID = -5177153023458655846L;
+
     @Id
     @Column(name = "cm_file_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
