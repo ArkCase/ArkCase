@@ -176,11 +176,13 @@ public class AcmUser implements Serializable, AcmLdapEntity
     }
     
     @Override
+    @JsonIgnore
     public int hashCode() {
         return getUserId().hashCode();
     }
 
     @Override
+    @JsonIgnore
     public boolean equals(Object obj) {
         if (!(obj instanceof AcmUser)) 
         {
@@ -188,6 +190,11 @@ public class AcmUser implements Serializable, AcmLdapEntity
         }
         
         AcmUser user = (AcmUser)obj;
+        
+        if (user.getUserId() == null && getUserId() == null)
+    	{
+    		return true;
+    	}
         
         return user.getUserId().equals(getUserId());
     }
