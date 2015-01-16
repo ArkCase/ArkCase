@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -127,9 +128,17 @@ public class RemoveMembersToGroupAPIControllerTest extends EasyMockSupport {
 		
 		AcmGroup resultGroup = objectMapper.readValue(result.getResponse().getContentAsString(), AcmGroup.class);
 		
-		AcmUser first = members.iterator().next();
+		AcmUser expected = members.iterator().next();
+		Iterator<AcmUser> iterator = members.iterator();
+		
+		for (int i = 0; iterator.hasNext(); i++)
+		{
+			expected = iterator.next();
+			if (i == 1) break;
+		}
+		
 		assertEquals(1, resultGroup.getMembers().size());
-		assertEquals(members.iterator().next().getUserId(), resultGroup.getMembers().iterator().next().getUserId());
+		assertEquals(expected.getUserId(), resultGroup.getMembers().iterator().next().getUserId());
 		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
 
