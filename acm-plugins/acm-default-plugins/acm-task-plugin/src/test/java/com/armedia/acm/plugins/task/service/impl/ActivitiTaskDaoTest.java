@@ -165,8 +165,11 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         Capture<List<AcmParticipant>> keepThese = new Capture<>();
         Capture<List<AcmParticipant>> saved = new Capture<>();
 
+        List<AcmParticipant> merged = new ArrayList<>();
+        merged.add(new AcmParticipant());
+
         expect(mockParticipantDao.removeAllOtherParticipantsForObject(eq("TASK"), eq(in.getTaskId()), capture(keepThese))).andReturn(0);
-        mockParticipantDao.saveParticipants(capture(saved));
+        expect(mockParticipantDao.saveParticipants(capture(saved))).andReturn(merged);
 
         replayAll();
 
