@@ -178,7 +178,14 @@ public class AcmUser implements Serializable, AcmLdapEntity
     @Override
     @JsonIgnore
     public int hashCode() {
-        return getUserId().hashCode();
+    	if (getUserId() == null)
+    	{
+    		return 0;
+    	}
+    	else
+    	{
+    		return getUserId().hashCode();
+    	}
     }
 
     @Override
@@ -195,6 +202,11 @@ public class AcmUser implements Serializable, AcmLdapEntity
     	{
     		return true;
     	}
+        
+        if (user.getUserId() == null && getUserId() != null)
+        {
+        	return false;
+        }
         
         return user.getUserId().equals(getUserId());
     }
