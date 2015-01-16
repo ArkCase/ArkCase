@@ -108,36 +108,17 @@ public class AcmAuthenticationManager implements AuthenticationManager
     	// All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
     	List<AcmGroup> groups = getGroupDao().findByUserMember(user);
     	
-    	if (groups != null && groups.size() > 0)
+    	if (groups != null)
     	{
     		for (AcmGroup group : groups)
     		{
-    			// For each group create authority starting from the group to top parent group (recursion)
-    			authGroups = getAuthGroupsToTop(group, authGroups);
+    			// For each group create authority
+    			AcmGrantedAuthority authority = new AcmGrantedAuthority(group.getName());
+    			authGroups.add(authority);
     		}
     	}
     	
     	return authGroups;
-    }
-    
-    private Set<AcmGrantedAuthority> getAuthGroupsToTop(AcmGroup group, Set<AcmGrantedAuthority> authorities)
-    {
-    	if (group != null)
-    	{
-    		// Create authority for the group name
-			AcmGrantedAuthority authority = new AcmGrantedAuthority(group.getName());
-			authorities.add(authority);
-    		
-    		// If the group has parent, continue with recursion, if not, return filled map
-    		if (group.getParentGroup() != null)
-    		{
-		    	AcmGroup parent = getGroupDao().findByName(group.getParentGroup().getName());
-
-		    	return getAuthGroupsToTop(parent, authorities);
-    		}
-    	}
-    	
-    	return authorities;
     }
 
     public SpringContextHolder getSpringContextHolder()

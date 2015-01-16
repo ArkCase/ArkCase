@@ -6,6 +6,7 @@ package com.armedia.acm.services.users.model.group;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -87,7 +88,7 @@ public class AcmGroup implements Serializable, AcmEntity, AcmLdapEntity{
 				name = "acm_group_member",
 				joinColumns = { @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name") },
 				inverseJoinColumns = { @JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id") })
-	private List<AcmUser> members;
+	private Set<AcmUser> members;
 	
 	@Transient
     private String distinguishedName;
@@ -238,11 +239,11 @@ public class AcmGroup implements Serializable, AcmEntity, AcmLdapEntity{
 		this.supervisor = supervisor;
 	}
 
-	public List<AcmUser> getMembers() {
+	public Set<AcmUser> getMembers() {
 		return members;
 	}
 
-	public void setMembers(List<AcmUser> members) {
+	public void setMembers(Set<AcmUser> members) {
 		this.members = members;
 	}
 

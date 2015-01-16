@@ -3,8 +3,9 @@
  */
 package com.armedia.acm.services.users.web.api.group;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,21 +37,26 @@ public class RemoveMembersFromGroupAPIController {
 	
 	@RequestMapping(value="/group/{groupId}/members/remove", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup removeSupervisorsFromGroup(@RequestBody List<AcmUser> members,
+    public AcmGroup removeSupervisorsFromGroup(@RequestBody Set<AcmUser> members,
 								    		   @PathVariable("groupId") String groupId, 
 											   Authentication auth) throws AcmUserActionFailedException
     {		
 		if (LOG.isInfoEnabled()) 
 		{
-			LOG.info("Removing members to the group with ID = " + groupId);
+			LOG.info("Removing members from the group with ID = " + groupId);
 		}
 		
 		try
 		{
 			AcmGroup group = getGroupDao().findByName(groupId);
 
-			List<AcmUser> cleanedMembers = cleanMembers(group.getMembers(), members);
+			Set<AcmUser> cleanedMembers = cleanMembers(group.getMembers(), members);
 			group.setMembers(cleanedMembers);
+			
+			// Remove members from all child groups
+			List<AcmGroup> children = group.getChildGroups();
+			// Recursion (I couldn't find batter solution for going deep through list of lists)
+			removeMembersFromChilds(children, members);
 			
 			AcmGroup saved = getGroupDao().save(group);
 			
@@ -63,11 +69,11 @@ public class RemoveMembersFromGroupAPIController {
 		}
     }
 	
-	private List<AcmUser> cleanMembers(List<AcmUser> members, List<AcmUser> toRemoveArray)
+	private Set<AcmUser> cleanMembers(Set<AcmUser> members, Set<AcmUser> toRemoveArray)
 	{
-		List<AcmUser> result = new ArrayList<AcmUser>();
+		Set<AcmUser> result = new HashSet<AcmUser>();
 		
-		if (toRemoveArray != null && toRemoveArray.size() > 0 && members != null && members.size() > 0)
+		if (toRemoveArray != null && members != null)
 		{
 			for (AcmUser member : members)
 			{
@@ -89,6 +95,25 @@ public class RemoveMembersFromGroupAPIController {
 		}
 		
 		return result;
+	}
+	
+	private void removeMembersFromChilds(List<AcmGroup> childs, Set<AcmUser> membersToRemove)
+	{
+		if (childs != null)
+		{
+			for (AcmGroup child : childs)
+			{
+				Set<AcmUser> cleanedMembers = cleanMembers(child.getMembers(), membersToRemove);
+				child.setMembers(cleanedMembers);
+				
+				getGroupDao().save(child);
+				
+				if (child.getChildGroups() != null)
+				{
+					removeMembersFromChilds(child.getChildGroups(), membersToRemove);
+				}
+			}
+		}
 	}
 	
 
