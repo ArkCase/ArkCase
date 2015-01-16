@@ -9,7 +9,9 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
@@ -83,7 +85,7 @@ public class SaveMembersToGroupAPIControllerTest extends EasyMockSupport {
 		user.setFirstName("First Name");
 		user.setLastName("Last Name");
 		
-		List<AcmUser> members = new ArrayList<AcmUser>();
+		Set<AcmUser> members = new HashSet<AcmUser>();
 		members.add(user);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -113,7 +115,7 @@ public class SaveMembersToGroupAPIControllerTest extends EasyMockSupport {
 		
 		AcmGroup resultGroup = objectMapper.readValue(result.getResponse().getContentAsString(), AcmGroup.class);
 		
-		assertEquals(members.get(0).getUserId(), resultGroup.getMembers().get(0).getUserId());
+		assertEquals(members.iterator().next().getUserId(), resultGroup.getMembers().iterator().next().getUserId());
 		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
 
