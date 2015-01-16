@@ -174,4 +174,21 @@ public class AcmUser implements Serializable, AcmLdapEntity
     {
         return false;
     }
+    
+    @Override
+    public int hashCode() {
+        return getUserId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof AcmUser)) 
+        {
+            return false;
+        }
+        
+        AcmUser user = (AcmUser)obj;
+        
+        return user.getUserId().equals(getUserId());
+    }
 }
