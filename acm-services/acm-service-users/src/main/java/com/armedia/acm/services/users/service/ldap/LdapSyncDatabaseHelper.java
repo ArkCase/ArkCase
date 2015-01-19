@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,7 +64,7 @@ public class LdapSyncDatabaseHelper
     {
         List<AcmUserRole> retval = new ArrayList<>(savedUsers.size());
 
-        List<AcmUser> users = new ArrayList<AcmUser>();
+        Set<AcmUser> users = new HashSet<AcmUser>();
         boolean debug = log.isDebugEnabled();
 
         for ( AcmUser user : savedUsers )
