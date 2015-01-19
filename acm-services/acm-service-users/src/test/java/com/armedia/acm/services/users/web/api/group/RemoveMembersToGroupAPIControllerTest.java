@@ -9,7 +9,10 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
@@ -90,12 +93,12 @@ public class RemoveMembersToGroupAPIControllerTest extends EasyMockSupport {
 		user2.setFirstName("First Name 2");
 		user2.setLastName("Last Name 2");
 		
-		List<AcmUser> members = new ArrayList<AcmUser>();
+		Set<AcmUser> members = new HashSet<AcmUser>();
 		members.add(user1);
 		members.add(user2);
 		group.setMembers(members);
 		
-		List<AcmUser> membersToRemove = new ArrayList<AcmUser>();
+		Set<AcmUser> membersToRemove = new HashSet<AcmUser>();
 		membersToRemove.add(user1);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -125,8 +128,17 @@ public class RemoveMembersToGroupAPIControllerTest extends EasyMockSupport {
 		
 		AcmGroup resultGroup = objectMapper.readValue(result.getResponse().getContentAsString(), AcmGroup.class);
 		
+		AcmUser expected = members.iterator().next();
+		Iterator<AcmUser> iterator = members.iterator();
+		
+		for (int i = 0; iterator.hasNext(); i++)
+		{
+			expected = iterator.next();
+			if (i == 1) break;
+		}
+		
 		assertEquals(1, resultGroup.getMembers().size());
-		assertEquals(members.get(1).getUserId(), resultGroup.getMembers().get(0).getUserId());
+		assertEquals(expected.getUserId(), resultGroup.getMembers().iterator().next().getUserId());
 		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
 

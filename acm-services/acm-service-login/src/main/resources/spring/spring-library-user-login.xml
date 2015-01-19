@@ -50,6 +50,8 @@
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="authoritiesMapper" ref="acmAuthoritiesMapper"/>
         <property name="authenticationEventPublisher" ref="ssAuthenticationEventPublisher"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="groupDao" ref="groupDao"/>
     </bean>
 
     <bean id="acmAuthenticationDetailsFactory" class="com.armedia.acm.auth.AcmAuthenticationDetailsFactory"/>
