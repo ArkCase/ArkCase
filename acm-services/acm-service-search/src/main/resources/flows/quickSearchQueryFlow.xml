@@ -29,6 +29,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 exchange-pattern="request-response"
                 doc:name="VM"/>
 
+        <timer-interceptor/>
 
         <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
         <scripting:transformer name="dataAccessControlFilters">
@@ -72,7 +73,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         </scripting:transformer>
 
-        <timer-interceptor/>
+
 
         <logger category="com.armedia.acm.plugins.search" level="DEBUG" />
 
