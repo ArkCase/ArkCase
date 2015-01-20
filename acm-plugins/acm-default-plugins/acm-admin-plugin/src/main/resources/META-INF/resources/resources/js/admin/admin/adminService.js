@@ -330,5 +330,96 @@ Admin.Service = {
             )
         }
     }
+    
+    ,FunctionalAccessControl : {
+
+        create: function() {
+        }
+    
+        ,onInitialized: function() {
+        }
+        
+        ,API_RETRIEVE_APPLICATION_ROLES: 			"/api/latest/functionalaccess/roles"
+        ,API_RETRIEVE_GROUPS: 						"/api/latest/users/groups/get"
+        ,API_RETRIEVE_APPLICATION_ROLES_TO_GROUPS:  "/api/latest/functionalaccess/rolestogroups"
+        ,API_SAVE_APPLICATION_ROLES_TO_GROUPS:      "/api/latest/functionalaccess/rolestogroups"
+     
+    	,retrieveApplicationRoles : function() {
+            var url = App.getContextPath() + Admin.Service.FunctionalAccessControl.API_RETRIEVE_APPLICATION_ROLES;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                    	var errorMsg = "Failed to retrieve application roles:" + response.errorMsg;
+                    	
+                    	Admin.Controller.modelErrorRetrievingFunctionalAccessControlApplicationRoles(errorMsg);
+                    } else {
+                        if (Admin.Model.FunctionalAccessControl.validateApplicationRoles(response)) {
+                            var roles = response;
+                            Admin.Model.FunctionalAccessControl.cacheApplicationRoles.put(0, roles);
+                            Admin.Controller.modelRetrievedFunctionalAccessControlApplicationRoles(roles);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+        
+        ,retrieveGroups : function() {
+            var url = App.getContextPath() + Admin.Service.FunctionalAccessControl.API_RETRIEVE_GROUPS;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                    	var errorMsg = "Failed to retrieve groups:" + response.errorMsg;
+                    	 
+                    	Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                    } else {
+                        if (Admin.Model.FunctionalAccessControl.validateGroups(response)) {
+                            var groups = response.response.docs;
+                            
+                            Admin.Model.FunctionalAccessControl.cacheGroups.put(0, groups);
+                            Admin.Controller.modelRetrievedFunctionalAccessControlGroups(groups);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+        
+        ,retrieveApplicationRolesToGroups : function() {
+            var url = App.getContextPath() + Admin.Service.FunctionalAccessControl.API_RETRIEVE_APPLICATION_ROLES_TO_GROUPS;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                    	var errorMsg = "Failed to retrieve application roles to groups mapping:" + response.errorMsg;
+                    	
+                    	Admin.Controller.modelErrorRetrievingFunctionalAccessControlApplicationRolesToGroups(errorMsg);
+                    } else {
+                        if (Admin.Model.FunctionalAccessControl.validateApplicationRolesToGroups(response)) {
+                            var rolesToGroups = response;
+                            
+                            Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.put(0, rolesToGroups);                            	
+                            Admin.Controller.modelRetrievedFunctionalAccessControlApplicationRolesToGroups(rolesToGroups);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+        
+        ,saveApplicationRolesToGroups : function(applicationRolesToGroups){
+            var url = App.getContextPath() + Admin.Service.FunctionalAccessControl.API_SAVE_APPLICATION_ROLES_TO_GROUPS;
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response !== true) {
+                    	var errorMsg = "Failed to save application roles to groups mapping.";
+                    	
+                    	Admin.Controller.modelErrorSavingFunctionalAccessControlApplicationRolesToGroups(errorMsg);
+                    }
+                }
+                ,url
+                ,JSON.stringify(applicationRolesToGroups)
+            )
+        }
+    }
 };
 
