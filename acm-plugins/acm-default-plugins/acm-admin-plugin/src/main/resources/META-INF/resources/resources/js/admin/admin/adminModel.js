@@ -112,8 +112,6 @@ Admin.Model = Admin.Model || {
         	this.cacheApplicationRoles = new Acm.Model.CacheFifo(1);
         	this.cacheGroups = new Acm.Model.CacheFifo(1);
         	this.cacheApplicationRolesToGroups = new Acm.Model.CacheFifo(1);
-        	this.cacheNotAuthorizedGroups = new Acm.Model.CacheFifo(1);
-        	this.cacheAuthorizedGroups = new Acm.Model.CacheFifo(1);
         	
         	Admin.Service.FunctionalAccessControl.retrieveApplicationRoles();
         	Admin.Service.FunctionalAccessControl.retrieveGroups();
