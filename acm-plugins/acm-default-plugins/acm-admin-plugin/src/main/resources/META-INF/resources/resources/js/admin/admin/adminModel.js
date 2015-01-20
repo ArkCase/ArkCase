@@ -7,15 +7,17 @@ Admin.Model = Admin.Model || {
         if (Admin.Model.AccessControl.create)           {Admin.Model.AccessControl.create();}
         if (Admin.Model.Correspondence.create)          {Admin.Model.Correspondence.create();}
         if (Admin.Model.Organization.create)            {Admin.Model.Organization.create();}
+        if (Admin.Model.FunctionalAccessControl.create) {Admin.Model.FunctionalAccessControl.create();}
 
         if (Admin.Model.Tree.create)                    {Admin.Model.Tree.create();}
     }
     ,onInitialized: function() {
-        if (Admin.Model.AccessControl.onInitialized)          {Admin.Model.AccessControl.onInitialized();}
-        if (Admin.Model.Correspondence.onInitialized)         {Admin.Model.Correspondence.onInitialized();}
-        if (Admin.Model.Organization.onInitialized)           {Admin.Model.Organization.onInitialized();}
+        if (Admin.Model.AccessControl.onInitialized)            {Admin.Model.AccessControl.onInitialized();}
+        if (Admin.Model.Correspondence.onInitialized)           {Admin.Model.Correspondence.onInitialized();}
+        if (Admin.Model.Organization.onInitialized)             {Admin.Model.Organization.onInitialized();}
+        if (Admin.Model.FunctionalAccessControl.onInitialized) {Admin.Model.Organization.onInitialized();}
 
-        if (Admin.Model.Tree.onInitialized)                   {Admin.Model.Tree.onInitialized();}
+        if (Admin.Model.Tree.onInitialized)                     {Admin.Model.Tree.onInitialized();}
     }
 
     ,_totalCount: 0
@@ -104,6 +106,43 @@ Admin.Model = Admin.Model || {
             return true;
         }
     }
+    
+    ,FunctionalAccessControl:{
+        create : function() {
+        	this.cacheApplicationRoles = new Acm.Model.CacheFifo(1);
+        	this.cacheGroups = new Acm.Model.CacheFifo(1);
+        	this.cacheApplicationRolesToGroups = new Acm.Model.CacheFifo(1);
+        	this.cacheNotAuthorizedGroups = new Acm.Model.CacheFifo(1);
+        	this.cacheAuthorizedGroups = new Acm.Model.CacheFifo(1);
+        	
+        	Admin.Service.FunctionalAccessControl.retrieveApplicationRoles();
+        	Admin.Service.FunctionalAccessControl.retrieveGroups();
+        	Admin.Service.FunctionalAccessControl.retrieveApplicationRolesToGroups();
+        }
+        ,onInitialized: function() {
+        }
+        
+        ,validateApplicationRoles: function(roles) {
+            if (Acm.isEmpty(roles) || !Acm.isArray(roles)) {
+                return false;
+            }
+            return true;
+        }
+        
+        ,validateGroups: function(groups) {
+            if (Acm.isEmpty(groups)) {
+                return false;
+            }
+            return true;
+        }
+        
+        ,validateApplicationRolesToGroups: function(rolesToGroups) {
+            if (Acm.isEmpty(rolesToGroups)) {
+                return false;
+            }
+            return true;
+        }
+    }
 
 
     ,Tree: {
@@ -138,6 +177,7 @@ Admin.Model = Admin.Model || {
             ,NODE_TYPE_PART_BRANCH_CORRESPONDENCE:   "cm"
             ,NODE_TYPE_PART_BRANCH_TEMPLATES:        "ct"
             ,NODE_TYPE_PART_BRANCH_ORGANIZATION:     "og"
+            ,NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL:"fac"
 
 
             ,_mapNodeType: [
@@ -151,6 +191,7 @@ Admin.Model = Admin.Model || {
                 ,{nodeType: "cm"      ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
                 ,{nodeType: "ct"      ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
                 ,{nodeType: "og"      ,icon: "",tabIds: ["tOrganization"]}
+                ,{nodeType: "fac"      ,icon: "",tabIds: ["tabFunctoinalAccessControl"]}
             ]
 
             ,getTabIdsByKey: function(key) {
@@ -201,7 +242,9 @@ Admin.Model = Admin.Model || {
                     return this.NODE_TYPE_PART_BRANCH_TEMPLATES;
                 }else if (key == this.NODE_TYPE_PART_BRANCH_ORGANIZATION) {
                     return this.NODE_TYPE_PART_BRANCH_ORGANIZATION;
-                }
+                }else if (key == this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL) {
+	                return this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL;
+	            }
                 return null;
             }
         }
