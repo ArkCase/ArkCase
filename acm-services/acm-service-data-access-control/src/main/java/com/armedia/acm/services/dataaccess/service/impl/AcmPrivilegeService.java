@@ -12,6 +12,14 @@ import org.slf4j.LoggerFactory;
 public class AcmPrivilegeService
 {
 
+    public static final String ACCESS_MANDATORY = "mandatory";
+    public static final String ACCESS_GRANT = "grant";
+    public static final String ACCESS_DENY = "deny";
+    public static final String ACCESS_LEVEL_PARTICIPANT_TYPE_SEPARATOR = "to";
+    public static final String ACCESS_REASON_POLICY = "policy";
+    public static final String DEFAULT_ACCESSOR = "*";
+    public static final String ACCESS_LEVEL_READ = "read";
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
@@ -26,8 +34,11 @@ public class AcmPrivilegeService
      * <p/>
      * "*" is a special participant type; the access granted to "*" is the access granted to anyone who is not a
      * participant on this object.
+     *
+     * NOTE This code is used from Drools rules engine via a rules spreadsheet. Don't believe IDEA when it says
+     * this method is not used.
      * @param obj
-     * @param accessSpec
+     * @param accessSpec Must follow the pattern '[grant|deny|mandatory deny] [access level] to [participant type]'
      */
     public void setPrivileges(AcmAssignedObject obj, String accessSpec)
     {
@@ -38,7 +49,7 @@ public class AcmPrivilegeService
 
         int idx = 0;
         String mode = parts[idx];
-        if ("mandatory".equals(mode))
+        if (ACCESS_MANDATORY.equals(mode))
         {
             idx++;
             mode += " " + parts[idx];
@@ -47,7 +58,7 @@ public class AcmPrivilegeService
         idx++;
         String action = parts[idx];
         idx++;
-        while (!parts[idx].equals("to") && idx < parts.length)
+        while (!parts[idx].equals(ACCESS_LEVEL_PARTICIPANT_TYPE_SEPARATOR) && idx < parts.length)
         {
             action += " " + parts[idx];
             idx++;
@@ -76,7 +87,7 @@ public class AcmPrivilegeService
                     {
                         found = true;
                         priv.setAccessType(mode);
-                        priv.setAccessReason("policy");
+                        priv.setAccessReason(ACCESS_REASON_POLICY);
                         break;
                     }
                 }
@@ -85,7 +96,7 @@ public class AcmPrivilegeService
                 {
                     AcmParticipantPrivilege priv = new AcmParticipantPrivilege();
                     priv.setAccessType(mode);
-                    priv.setAccessReason("policy");
+                    priv.setAccessReason(ACCESS_REASON_POLICY);
                     priv.setObjectAction(action);
                     ap.getPrivileges().add(priv);
                 }

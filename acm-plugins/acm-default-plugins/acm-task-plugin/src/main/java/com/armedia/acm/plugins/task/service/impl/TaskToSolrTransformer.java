@@ -31,7 +31,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmTask in)
     {
-        log.debug("converting to advanced search doc: " + in.getId());
+        log.trace("converting to advanced search doc: " + in.getId());
         SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
 
         doc.setId(in.getId() + "-TASK");
@@ -70,7 +70,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setOwner_lcs(in.getOwner());
         doc.setBusiness_process_name_lcs(in.getBusinessProcessName());
 
-        log.debug("returning an advanced search doc");
+        log.trace("returning an advanced search doc");
 
         return doc;
     }
@@ -78,7 +78,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     @Override
     public SolrDocument toSolrQuickSearch(AcmTask in)
     {
-        log.debug("converting to quick search doc: " + in.getId());
+        log.trace("converting to quick search doc: " + in.getId());
         SolrDocument doc = new SolrDocument();
 
         doc.setTitle_t(in.getTitle());
@@ -98,7 +98,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setAuthor_s(in.getOwner());
         doc.setLast_modified(new Date());
 
-        log.debug("returning a quick search doc");
+        log.trace("returning a quick search doc");
 
         return doc;
     }
