@@ -214,11 +214,11 @@ public class SearchObjectByTypeAPIController {
                             JSONObject jObj = jsonArray.getJSONObject(i);
                             if(jObj.getString("name").equals(s)){
                                 if(isFirstSortArgument) {
-                                    stringBuilder.append(jObj.getString("value"));
+                                    stringBuilder.append(jObj.getString("value").trim());
                                     isFirstSortArgument = false;
                                 } else {
                                     stringBuilder.append(", ");
-                                    stringBuilder.append(jObj.getString("value"));
+                                    stringBuilder.append(jObj.getString("value").trim());
                                 }
                             }
                         }
@@ -248,7 +248,7 @@ public class SearchObjectByTypeAPIController {
                          for( int i=0;i< jsonArray.length(); i++) {
                               JSONObject jObj = jsonArray.getJSONObject(i);
                               if(jObj.getString("name").equals(filterName)){
-                                filters.add(jObj.getString("value"));
+                                filters.add(jObj.getString("value").trim());
                               }
                          }
                     }
