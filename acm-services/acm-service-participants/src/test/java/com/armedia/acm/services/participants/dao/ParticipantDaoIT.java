@@ -85,7 +85,14 @@ public class ParticipantDaoIT
 
         found.add(third);
 
-        found.get(1).setParticipantType("approver");
+        for ( AcmParticipant p : found )
+        {
+            if ( p.getParticipantLdapId().equals("second") )
+            {
+                p.setParticipantType("approver");
+            }
+        }
+
 
         dao.saveParticipants(found);
 
