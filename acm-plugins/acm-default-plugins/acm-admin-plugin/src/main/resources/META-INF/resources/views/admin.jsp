@@ -163,6 +163,41 @@
 
                                                     <%--JTable - Access Control Policy Tree--%>
 
+											<%--   Functional Access controls    --%>
+ 											<div class="row" id="tabFunctoinalAccessControl" style="display:none;">
+				                                <%--Title--%>
+				                                <section class="row m-b-md">
+				                                    <div class="col-sm-12">
+				                                        <h3 class="m-b-xs text-black"><spring:message code="adminFunctionalAccess.page.descShort" text="Functional Access Configuration" /></h3>
+				                                    </div>
+				                                </section>
+				
+				                                <section class="panel panel-default">
+				                                    <div class="wrapper">
+				                                        <div class="row">
+				                                            <div class="col-xs-12">
+				                                                <div class="col-xs-3 b-r"><label>Choose Application Role</label>
+				                                                    <select id="selectRoles" size="10" class="form-control">
+				                                                    </select>
+				                                                </div>
+				                                                <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnGo" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
+				                                                <div class="col-xs-3 b-r"><label>Not Authorized</label>
+				                                                    <select id="selectNotAuthorized" size="10" multiple class="form-control">
+				                                                    </select>
+				                                                </div>
+				                                                <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
+				                                                    <button id="btnMoveRight" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right"> <i class="fa fa-angle-double-right"></i></button> <br/>
+				                                                    <button id="btnMoveLeft" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
+				                                                 </div>
+				                                                <div class="col-xs-4 b-r"><label>Authorized</label>
+				                                                    <select id="selectAuthorized" size="10" multiple  class="form-control">
+				                                                    </select>
+				                                                </div>
+				                                            </div>
+				                                        </div>
+				                                    </div>
+				                                </section>
+											</div>
 
                                             <div class="row" id="tOrganization" style="display:none;">
                                                 <%--<div class="col-md-12">
