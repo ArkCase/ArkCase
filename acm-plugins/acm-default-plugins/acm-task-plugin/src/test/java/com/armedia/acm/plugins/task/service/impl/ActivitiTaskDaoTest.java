@@ -3,6 +3,9 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskOutcome;
+import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener;
+import com.armedia.acm.services.participants.dao.AcmParticipantDao;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.Process;
 import org.activiti.engine.HistoryService;
@@ -14,11 +17,13 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
+import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,6 +49,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private HistoryService mockHistoryService;
     private HistoricTaskInstance mockHistoricTaskInstance;
     private HistoricTaskInstanceQuery mockHistoricTaskInstanceQuery;
+    private AcmParticipantDao mockParticipantDao;
+    private DataAccessPrivilegeListener mockDataAccessPrivilegeListener;
 
     private ActivitiTaskDao unit;
     private BpmnModel mockBpmnModel;
@@ -70,6 +77,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockFlowElement = createMock(UserTask.class);
         mockFormProperty = createMock(FormProperty.class);
         mockFormValue = createMock(FormValue.class);
+        mockParticipantDao = createMock(AcmParticipantDao.class);
+        mockDataAccessPrivilegeListener = createMock(DataAccessPrivilegeListener.class);
 
 
         unit = new ActivitiTaskDao();
@@ -81,6 +90,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         unit.setActivitiTaskService(mockTaskService);
         unit.setActivitiRepositoryService(mockRepositoryService);
         unit.setActivitiHistoryService(mockHistoryService);
+        unit.setParticipantDao(mockParticipantDao);
+        unit.setDataAccessPrivilegeListener(mockDataAccessPrivilegeListener);
         unit.setPriorityLevelToNumberMap(acmPriorityToActivitiPriority);
         unit.setRequiredFieldsPerOutcomeMap(new HashMap<String, List<String>>());
     }
@@ -148,11 +159,28 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService.setVariable(taskId.toString(), "REWORK_INSTRUCTIONS", in.getReworkInstructions());
         mockTaskService.setVariableLocal(taskId.toString(), "outcome", in.getTaskOutcome().getName());
 
+        // data access and assignment rules
+        mockDataAccessPrivilegeListener.applyAssignmentAndAccessRules(in);
+
+        Capture<List<AcmParticipant>> keepThese = new Capture<>();
+        Capture<List<AcmParticipant>> saved = new Capture<>();
+
+        List<AcmParticipant> merged = new ArrayList<>();
+        merged.add(new AcmParticipant());
+
+        expect(mockParticipantDao.removeAllOtherParticipantsForObject(eq("TASK"), eq(in.getTaskId()), capture(keepThese))).andReturn(0);
+        expect(mockParticipantDao.saveParticipants(capture(saved))).andReturn(merged);
+
         replayAll();
 
         unit.save(in);
 
         verifyAll();
+
+        // should have been one participant sent in the "keep" list (the assignee)
+        assertEquals(1, keepThese.getValue().size());
+        // should have been one participant saved
+        assertEquals(1, saved.getValue().size());
     }
 
     @Test
@@ -183,6 +211,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         taskLocalVars.put("TASK_STATUS", "taskStatus");
         taskLocalVars.put("PERCENT_COMPLETE", 75);
         taskLocalVars.put("DETAILS", "task details");
+
+        List<AcmParticipant> partList = new ArrayList<>();
+        partList.add(new AcmParticipant());
 
         expect(mockAuthentication.getName()).andReturn(user);
 
@@ -232,6 +263,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
 
         replayAll();
 
@@ -248,6 +280,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals("taskStatus", completed.getStatus());
         assertEquals("task details", completed.getDetails());
         assertEquals(Integer.valueOf(75), completed.getPercentComplete());
+
+        assertEquals(partList, completed.getParticipants());
     }
 
     @Test
@@ -276,6 +310,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         taskLocalVars.put("TASK_STATUS", "taskStatus");
         taskLocalVars.put("PERCENT_COMPLETE", 75);
         taskLocalVars.put("DETAILS", "task details");
+
+        List<AcmParticipant> partList = new ArrayList<>();
+        partList.add(new AcmParticipant());
 
         expect(mockAuthentication.getName()).andReturn(user);
 
@@ -325,6 +362,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
 
         replayAll();
         AcmTask deleted = unit.deleteTask(mockAuthentication, taskId);
@@ -340,6 +378,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals("taskStatus", deleted.getStatus());
         assertEquals("task details", deleted.getDetails());
         assertEquals(Integer.valueOf(75), deleted.getPercentComplete());
+
+        assertEquals(partList, deleted.getParticipants());
     }
 
     @Test
@@ -369,6 +409,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         taskLocalVars.put("TASK_STATUS", "taskStatus");
         taskLocalVars.put("PERCENT_COMPLETE", 50);
         taskLocalVars.put("DETAILS", "task details");
+
+        List<AcmParticipant> partList = new ArrayList<>();
+        partList.add(new AcmParticipant());
 
         expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
         expect(mockTaskQuery.taskId(String.valueOf(taskId))).andReturn(mockTaskQuery);
@@ -405,6 +448,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
 
         replayAll();
 
@@ -428,6 +472,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals("taskStatus", task.getStatus());
         assertEquals("task details", task.getDetails());
         assertEquals(Integer.valueOf(50), task.getPercentComplete());
+
+        assertEquals(partList, task.getParticipants());
     }
 
     @Test
@@ -477,6 +523,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         taskLocalVars.put("DETAILS", "details");
         taskLocalVars.put("outcome", "formValueId");
 
+        List<AcmParticipant> partList = new ArrayList<>();
+        partList.add(new AcmParticipant());
+
         expect(mockHistoricTaskInstance.getId()).andReturn(taskId.toString());
         expect(mockHistoricTaskInstance.getDueDate()).andReturn(dueDate);
         expect(mockHistoricTaskInstance.getPriority()).andReturn(activitiPriority);
@@ -505,6 +554,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
 
         replayAll();
 
@@ -531,6 +581,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         assertNotNull(task.getTaskOutcome());
         assertEquals("formValueId", task.getTaskOutcome().getName());
+
+        assertEquals(partList, task.getParticipants());
     }
 
     @Test
@@ -595,6 +647,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         taskLocalVars.put("PERCENT_COMPLETE", 25);
         taskLocalVars.put("DETAILS", "details");
 
+        List<AcmParticipant> partList = new ArrayList<>();
+        partList.add(new AcmParticipant());
+
         expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
         expect(mockTaskQuery.taskAssignee(user)).andReturn(mockTaskQuery);
         expect(mockTaskQuery.includeProcessVariables()).andReturn(mockTaskQuery);
@@ -632,6 +687,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
 
         replayAll();
 
@@ -665,6 +721,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         assertEquals("formValueId", taskOutcome.getName());
         assertEquals("formValueName", taskOutcome.getDescription());
+
+        assertEquals(partList, found.getParticipants());
 
 
     }
