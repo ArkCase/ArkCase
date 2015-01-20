@@ -85,7 +85,7 @@ public class ParticipantDaoIT
 
         found.add(third);
 
-        second.setParticipantType("approver");
+        found.get(1).setParticipantType("approver");
 
         dao.saveParticipants(found);
 
@@ -117,19 +117,27 @@ public class ParticipantDaoIT
 
         }
 
-        Long deletedId = found.get(0).getId();
+        Long deletedId = secondRound.get(0).getId();
 
-        found.remove(0);
+        assertEquals(3, secondRound.size());
 
-        int removed = dao.removeAllOtherParticipantsForObject(objectType, objectId, found);
+        secondRound.remove(0);
+        log.debug("Should be removed: " + deletedId);
+
+        for ( AcmParticipant f : secondRound )
+        {
+            log.debug("should be kept: " + f.getId());
+        }
+
+        int removed = dao.removeAllOtherParticipantsForObject(objectType, objectId, secondRound);
 
         entityManager.flush();
 
         assertEquals(1, removed);
 
-        assertEquals(2, found.size());
+        assertEquals(2, secondRound.size());
 
-        dao.saveParticipants(found);
+        dao.saveParticipants(secondRound);
 
         entityManager.flush();
 
