@@ -5,18 +5,20 @@
 
 Admin.View = Admin.View || {
     create: function() {
-        if (Admin.View.AccessControl.create)        {Admin.View.AccessControl.create();}
-        if (Admin.View.Correspondence.create)       {Admin.View.Correspondence.create();}
-        if (Admin.View.Organization.create)         {Admin.View.Organization.create();}
+        if (Admin.View.AccessControl.create)        	{Admin.View.AccessControl.create();}
+        if (Admin.View.Correspondence.create)       	{Admin.View.Correspondence.create();}
+        if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
+        if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
 
-        if (Admin.View.Tree.create)                 {Admin.View.Tree.create();}
+        if (Admin.View.Tree.create)                 	{Admin.View.Tree.create();}
     }
     ,onInitialized: function() {
-        if (Admin.View.AccessControl.onInitialized)        {Admin.View.AccessControl.onInitialized();}
-        if (Admin.View.Correspondence.onInitialized)       {Admin.View.Correspondence.onInitialized();}
-        if (Admin.View.Organization.onInitialized)         {Admin.View.Organization.onInitialized();}
+        if (Admin.View.AccessControl.onInitialized)        		{Admin.View.AccessControl.onInitialized();}
+        if (Admin.View.Correspondence.onInitialized)       		{Admin.View.Correspondence.onInitialized();}
+        if (Admin.View.Organization.onInitialized)         		{Admin.View.Organization.onInitialized();}
+        if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
 
-        if (Admin.View.Tree.onInitialized)                 {Admin.View.Tree.onInitialized();}
+        if (Admin.View.Tree.onInitialized)                 		{Admin.View.Tree.onInitialized();}
     }
 
     ,Organization:{
@@ -551,6 +553,187 @@ Admin.View = Admin.View || {
                 }
             });
             $s.jtable('load');
+        }
+    }
+    
+    ,FunctionalAccessControl:{
+        create: function () {
+        	// Initialize select HTML elements for roles, not authorized and authorized groups
+        	this.$selectRoles = $("#selectRoles");
+        	this.$selectNotAuthorized = $("#selectNotAuthorized");
+        	this.$selectAuthorized = $("#selectAuthorized");
+        	
+        	// Initialize buttons
+        	this.$btnGo = $("#btnGo");
+        	this.$btnMoveRight = $("#btnMoveRight");
+        	this.$btnMoveLeft = $("#btnMoveLeft");
+        	
+        	// Add listeners for buttons and roles select element
+        	this.$btnGo.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnGo(e, this);});
+        	this.$btnMoveRight.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnMoveRight(e, this);});
+        	this.$btnMoveLeft.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnMoveLeft(e, this);});
+        	this.$selectRoles.on("change", function(e) {Admin.View.FunctionalAccessControl.onChangeSelectRoles(e, this);});
+
+        	// Add listeners for retriving information like roles, groups and roles to groups mapping
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, this.onModelRetrievedFunctionalAccessControlApplicationRoles);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS, this.onModelRetrievedFunctionalAccessControlGroups);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelRetrievedFunctionalAccessControlApplicationRolesToGroups);
+        }
+        , onInitialized: function () {
+            
+        }
+        
+        ,onClickBtnGo: function(e) {
+        	// When "Go" button is clicked, just refresh the not authorized and authorized groups for selected role
+        	Admin.View.FunctionalAccessControl.refresh();
+        }
+        
+        ,onClickBtnMoveRight: function(e) {
+        	// Get selected role and selected groups from not authorized section
+        	var selectedRole = Admin.View.FunctionalAccessControl.$selectRoles.val();
+        	var selectedGroups = Admin.View.FunctionalAccessControl.$selectNotAuthorized.val();
+        	
+        	if (selectedRole && selectedGroups && selectedGroups.length > 0) {
+        		// Get authorized groups from the cached data
+        		var authGroups = [];
+        		if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
+        			Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole]) {
+        			authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole];        			
+        		}
+        		
+        		// Update authorized groups in the cached data (add selected groups)
+        		authGroups = authGroups.concat(selectedGroups);
+        		Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole] = authGroups;
+        		
+        		// Save authorized groups changes on ACM side
+        		Admin.Service.FunctionalAccessControl.saveApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
+
+        		// Refresh not authorized and authorized groups on the screen
+        		Admin.View.FunctionalAccessControl.refresh();
+        	}
+        }
+        
+        ,onClickBtnMoveLeft: function(e) {
+        	// Get selected role and selected groups from authorized section
+        	var selectedRole = Admin.View.FunctionalAccessControl.$selectRoles.val();
+        	var selectedGroups = Admin.View.FunctionalAccessControl.$selectAuthorized.val();
+        	
+        	if (selectedRole && selectedGroups && selectedGroups.length > 0) {
+        		// Get authorized groups from the cached data
+        		var authGroups = [];
+        		if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
+        			Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole]) {
+        			authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole];        			
+        		}
+        		
+        		// Update authorized groups in the cached data (remove selected groups)
+        		authGroups = Admin.View.FunctionalAccessControl.removeElements(authGroups, selectedGroups);
+        		Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole] = authGroups;
+        		
+        		// Save authorized groups changes on ACM side
+        		Admin.Service.FunctionalAccessControl.saveApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
+
+        		// Refresh not authorized and authorized groups on the screen
+        		Admin.View.FunctionalAccessControl.refresh();
+        	}
+        }
+        
+        ,onChangeSelectRoles: function(e) {
+        	// Remove data from not authorized and authorized section when role is changed
+        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, []);
+        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, []);
+        }
+        
+        ,onModelRetrievedFunctionalAccessControlApplicationRoles: function() {
+        	// Get roles from cached data
+        	var roles = Admin.Model.FunctionalAccessControl.cacheApplicationRoles.get(0);
+        	
+        	// Show roles on the view
+        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectRoles, roles);
+        }
+        
+        ,onModelRetrievedFunctionalAccessControlGroups: function() {
+        	// Do nothing
+        }
+        
+        ,onModelRetrievedFunctionalAccessControlApplicationRolesToGroups: function() {
+        	// Do nothing
+        }
+        
+        ,refresh: function() {
+        	// Initialize authorized and not authorized groups to empty arrays
+        	var authGroups = [];
+        	var notAuthGroups = [];
+        	
+        	// Get selected role
+        	var selected = Admin.View.FunctionalAccessControl.$selectRoles.val();
+        	
+        	if (selected && selected != '') {
+        		// Get all groups
+        		var groups = Admin.Model.FunctionalAccessControl.cacheGroups.get(0);
+        		
+        		// Get authorized groups for given role
+        		if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
+        			Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected]) {
+        			authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected];        			
+        		}
+        		
+        		// Get not authorized groups
+        		if (groups) {
+        			for (var i = 0; i < groups.length; i++) {
+        				var found = false;
+        				for (var j = 0; j < authGroups.length; j++) {
+        					if (groups[i].name === authGroups[j]) {
+        						found = true;
+        						break;
+        					}
+        				}
+        				
+        				if (!found) {
+        					notAuthGroups.push(groups[i].name);
+        				}
+        			}
+        		}
+        	}
+        	
+        	// Show authorized and not authorized groups on the screen
+        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, authGroups);
+        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, notAuthGroups);
+        }
+        
+        ,createOptions: function(element, optionsArray) {
+        	var options = '';
+        	if (optionsArray) {
+        		for (var i = 0; i < optionsArray.length; i++) {
+        		   options += '<option value="' + optionsArray[i] + '">' + optionsArray[i] + '</option>';
+        		} 
+        	}
+        	element.html(options);        		
+        }
+        
+        ,removeElements: function(elements, elementsToRemove) {
+        	var output = [];
+        	
+        	if (elements) {
+        		if (elementsToRemove) {
+        			for (var i = 0; i < elements.length; i++) {
+        				var found = false;
+        				for (var j = 0; j < elementsToRemove.length; j++) {
+        					if (elements[i] === elementsToRemove[j]) {
+        						found = true;
+        						break;
+        					}
+        				}
+        				if (!found) {
+        					output.push(elements[i]);
+        				}
+        			}
+        		}else{
+        			return elements;
+        		}
+        	}
+        	
+        	return output;
         }
     }
 

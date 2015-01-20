@@ -28,6 +28,12 @@ Admin.Controller = Admin.Controller || {
 
     ,MODEL_RETRIEVED_USERS                                    : "organization-hierarchy-all-users-retrieved"                //param : allUsers
 
+    ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES : "functional-access-control-application-roles" 			  // param : roles
+    	
+    ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS 		  : "functional-access-control-groups" 			  // param : groups
+    	
+    ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS : "functional-access-control-application-roles-to-groups" // param : rolesToGroups
+    	
     ,modelRetrievedCorrespondenceTemplates : function(templatesList) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES, templatesList);
     }
@@ -66,5 +72,17 @@ Admin.Controller = Admin.Controller || {
 
     ,modelRetrievedUsers : function(allUsers){
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_USERS, allUsers);
+    }
+    
+    ,modelRetrievedFunctionalAccessControlApplicationRoles : function(roles) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, roles);
+    }
+    
+    ,modelRetrievedFunctionalAccessControlGroups : function(groups) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS, groups);
+    }
+    
+    ,modelRetrievedFunctionalAccessControlApplicationRolesToGroups : function(rolesToGroups) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, rolesToGroups);
     }
 }
