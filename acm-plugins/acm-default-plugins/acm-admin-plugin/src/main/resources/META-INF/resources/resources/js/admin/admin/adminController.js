@@ -30,9 +30,19 @@ Admin.Controller = Admin.Controller || {
 
     ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES : "functional-access-control-application-roles" 			  // param : roles
     	
+    ,MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES : "error-functional-access-control-application-roles" // errorMsg
+    	
     ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS 		  : "functional-access-control-groups" 			  // param : groups
     	
+    ,MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_GROUPS 		  : "error-functional-access-control-groups" 			  // param : errorMsg
+    	
     ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS : "functional-access-control-application-roles-to-groups" // param : rolesToGroups
+    	
+    ,MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS : "error-functional-access-control-application-roles-to-groups" // param : rolesToGroups
+    	
+    ,MODEL_SAVE_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS: "save-functional-access-control-application-roles-to-groups" // param: errorMsg
+    	
+    ,MODEL_ERROR_SAVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS: "error-save-functional-access-control-application-roles-to-groups" // param: errorMsg
     	
     ,modelRetrievedCorrespondenceTemplates : function(templatesList) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES, templatesList);
@@ -78,11 +88,31 @@ Admin.Controller = Admin.Controller || {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, roles);
     }
     
+    ,modelErrorRetrievingFunctionalAccessControlApplicationRoles : function(errorMsg) {
+        Acm.Dispatcher.fireEvent(this.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, errorMsg);
+    }
+    
     ,modelRetrievedFunctionalAccessControlGroups : function(groups) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS, groups);
     }
     
+    ,modelErrorRetrievingFunctionalAccessControlGroups : function(errorMsg) {
+        Acm.Dispatcher.fireEvent(this.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_GROUPS, errorMsg);
+    }
+    
     ,modelRetrievedFunctionalAccessControlApplicationRolesToGroups : function(rolesToGroups) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, rolesToGroups);
+    }
+    
+    ,modelErrorRetrievingFunctionalAccessControlApplicationRolesToGroups : function(errorMsg) {
+        Acm.Dispatcher.fireEvent(this.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, errorMsg);
+    }
+    
+    ,modelSaveFunctionalAccessControlApplicationRolesToGroups : function(applicationRolesToGroups) {
+    	Acm.Dispatcher.fireEvent(this.MODEL_SAVE_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, applicationRolesToGroups);
+    }
+    
+    ,modelErrorSavingFunctionalAccessControlApplicationRolesToGroups : function(errorMsg) {
+    	Acm.Dispatcher.fireEvent(this.MODEL_ERROR_SAVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, errorMsg);
     }
 }
