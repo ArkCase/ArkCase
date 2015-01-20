@@ -116,6 +116,8 @@ Admin.Model = Admin.Model || {
         	Admin.Service.FunctionalAccessControl.retrieveApplicationRoles();
         	Admin.Service.FunctionalAccessControl.retrieveGroups();
         	Admin.Service.FunctionalAccessControl.retrieveApplicationRolesToGroups();
+        	
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_SAVE_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onSaveFunctionalAccessControlApplicationRolesToGroups);
         }
         ,onInitialized: function() {
         }
@@ -139,6 +141,10 @@ Admin.Model = Admin.Model || {
                 return false;
             }
             return true;
+        }
+        
+        ,onSaveFunctionalAccessControlApplicationRolesToGroups: function(applicationRolesToGroups) {
+        	Admin.Service.FunctionalAccessControl.saveApplicationRolesToGroups(applicationRolesToGroups);
         }
     }
 

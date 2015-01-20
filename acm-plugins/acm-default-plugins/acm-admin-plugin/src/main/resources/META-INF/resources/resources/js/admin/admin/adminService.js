@@ -349,7 +349,9 @@ Admin.Service = {
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                    	Acm.Dialog.error("Failed to retrieve application roles:" + response.errorMsg);
+                    	var errorMsg = "Failed to retrieve application roles:" + response.errorMsg;
+                    	
+                    	Admin.Controller.modelErrorRetrievingFunctionalAccessControlApplicationRoles(errorMsg);
                     } else {
                         if (Admin.Model.FunctionalAccessControl.validateApplicationRoles(response)) {
                             var roles = response;
@@ -367,7 +369,9 @@ Admin.Service = {
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                    	Acm.Dialog.error("Failed to retrieve groups:" + response.errorMsg);
+                    	var errorMsg = "Failed to retrieve groups:" + response.errorMsg;
+                    	 
+                    	Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
                     } else {
                         if (Admin.Model.FunctionalAccessControl.validateGroups(response)) {
                             var groups = response.response.docs;
@@ -386,7 +390,9 @@ Admin.Service = {
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                    	Acm.Dialog.error("Failed to retrieve application roles to groups mapping:" + response.errorMsg);
+                    	var errorMsg = "Failed to retrieve application roles to groups mapping:" + response.errorMsg;
+                    	
+                    	Admin.Controller.modelErrorRetrievingFunctionalAccessControlApplicationRolesToGroups(errorMsg);
                     } else {
                         if (Admin.Model.FunctionalAccessControl.validateApplicationRolesToGroups(response)) {
                             var rolesToGroups = response;
@@ -405,7 +411,9 @@ Admin.Service = {
             Acm.Service.asyncPost(
                 function(response) {
                     if (response !== true) {
-                    	Acm.Dialog.error("Failed to save application roles to groups mapping.");
+                    	var errorMsg = "Failed to save application roles to groups mapping.";
+                    	
+                    	Admin.Controller.modelErrorSavingFunctionalAccessControlApplicationRolesToGroups(errorMsg);
                     }
                 }
                 ,url

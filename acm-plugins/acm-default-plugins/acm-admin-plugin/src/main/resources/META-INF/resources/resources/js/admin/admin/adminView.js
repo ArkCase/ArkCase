@@ -576,8 +576,12 @@ Admin.View = Admin.View || {
 
         	// Add listeners for retriving information like roles, groups and roles to groups mapping
         	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, this.onModelRetrievedFunctionalAccessControlApplicationRoles);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, this.onModelError);
         	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS, this.onModelRetrievedFunctionalAccessControlGroups);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_GROUPS, this.onModelError);
         	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelRetrievedFunctionalAccessControlApplicationRolesToGroups);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelError);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_SAVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelError);
         }
         , onInitialized: function () {
             
@@ -606,7 +610,7 @@ Admin.View = Admin.View || {
         		Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole] = authGroups;
         		
         		// Save authorized groups changes on ACM side
-        		Admin.Service.FunctionalAccessControl.saveApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
+        		Admin.Controller.modelSaveFunctionalAccessControlApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
 
         		// Refresh not authorized and authorized groups on the screen
         		Admin.View.FunctionalAccessControl.refresh();
@@ -631,7 +635,7 @@ Admin.View = Admin.View || {
         		Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole] = authGroups;
         		
         		// Save authorized groups changes on ACM side
-        		Admin.Service.FunctionalAccessControl.saveApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
+        		Admin.Controller.modelSaveFunctionalAccessControlApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
 
         		// Refresh not authorized and authorized groups on the screen
         		Admin.View.FunctionalAccessControl.refresh();
@@ -658,6 +662,10 @@ Admin.View = Admin.View || {
         
         ,onModelRetrievedFunctionalAccessControlApplicationRolesToGroups: function() {
         	// Do nothing
+        }
+        
+        ,onModelError: function(errorMsg) {
+        	Acm.Dialog.error(errorMsg);
         }
         
         ,refresh: function() {
