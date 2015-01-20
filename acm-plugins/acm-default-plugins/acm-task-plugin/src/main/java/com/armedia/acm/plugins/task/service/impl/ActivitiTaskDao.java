@@ -333,6 +333,8 @@ class ActivitiTaskDao implements TaskDao
             log.info("Finding all tasks for user '" + user + "'");
         }
 
+        List<AcmTask> retval = new ArrayList<>();
+
         List<Task> activitiTasks = getActivitiTaskService().
                 createTaskQuery().
                 taskAssignee(user).
@@ -341,19 +343,22 @@ class ActivitiTaskDao implements TaskDao
                 orderByDueDate().desc().
                 list();
 
-        if ( log.isDebugEnabled() )
+        if ( activitiTasks != null )
         {
-            log.debug("Found '" + activitiTasks.size() + "' tasks for user '" + user + "'");
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("Found '" + activitiTasks.size() + "' tasks for user '" + user + "'");
+            }
+
+            for ( Task activitiTask : activitiTasks )
+            {
+                AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
+
+                retval.add(acmTask);
+            }
         }
 
-        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
 
-        for ( Task activitiTask : activitiTasks )
-        {
-            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
-
-            retval.add(acmTask);
-        }
 
         return retval;
     }
@@ -363,6 +368,9 @@ class ActivitiTaskDao implements TaskDao
         {
             log.info("Finding all tasks for all users '");
         }
+
+        List<AcmTask> retval = new ArrayList<>();
+
         List<Task> activitiTasks = getActivitiTaskService().
                 createTaskQuery().
                 includeProcessVariables().
@@ -370,19 +378,21 @@ class ActivitiTaskDao implements TaskDao
                 orderByDueDate().desc().
                 list();
 
-        if ( log.isDebugEnabled() )
+        if ( activitiTasks != null )
         {
-            log.debug("Found '" + activitiTasks.size() + "' tasks for all users");
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("Found '" + activitiTasks.size() + "' tasks for all users");
+            }
+
+            for ( Task activitiTask : activitiTasks )
+            {
+                AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
+
+                retval.add(acmTask);
+            }
         }
 
-        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
-
-        for ( Task activitiTask : activitiTasks )
-        {
-            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
-
-            retval.add(acmTask);
-        }
         return retval;
     }
 
@@ -392,6 +402,9 @@ class ActivitiTaskDao implements TaskDao
         {
             log.info("Finding all tasks for all users that due date was before today");
         }
+
+        List<AcmTask> retval = new ArrayList<>();
+
         List<Task> activitiTasks = getActivitiTaskService().
                 createTaskQuery().
                 includeProcessVariables().
@@ -399,19 +412,21 @@ class ActivitiTaskDao implements TaskDao
                 dueBefore(new Date()).
                 list();
 
-        if ( log.isDebugEnabled() )
+        if ( activitiTasks != null )
         {
-            log.debug("Found '" + activitiTasks.size() + "' tasks for all users with past due date");
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("Found '" + activitiTasks.size() + "' tasks for all users with past due date");
+            }
+
+            for ( Task activitiTask : activitiTasks )
+            {
+                AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
+
+                retval.add(acmTask);
+            }
         }
 
-        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
-
-        for ( Task activitiTask : activitiTasks )
-        {
-            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
-
-            retval.add(acmTask);
-        }
         return retval;
     }
 
@@ -422,6 +437,8 @@ class ActivitiTaskDao implements TaskDao
             log.info(String.format("Finding all tasks for all users which due date is until %s from today", numberOfDaysFromToday.getnDays()));
         }
 
+        List<AcmTask> retval = new ArrayList<>();
+
         List<Task> activitiTasks = getActivitiTaskService().
                 createTaskQuery().
                 includeProcessVariables().
@@ -430,18 +447,20 @@ class ActivitiTaskDao implements TaskDao
                 dueBefore(shiftDateFromToday(numberOfDaysFromToday.getNumOfDays())).
                 list();
 
-        if (log.isDebugEnabled())
+        if ( activitiTasks != null )
         {
-            log.debug("Found '" + activitiTasks.size() + "' tasks for all users which due date is between today and " + numberOfDaysFromToday.getnDays() + " from today");
+            if (log.isDebugEnabled())
+            {
+                log.debug("Found '" + activitiTasks.size() + "' tasks for all users which due date is between today and " + numberOfDaysFromToday.getnDays() + " from today");
+            }
+
+            for (Task activitiTask : activitiTasks)
+            {
+                AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
+                retval.add(acmTask);
+            }
         }
 
-        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
-
-        for (Task activitiTask : activitiTasks)
-        {
-            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
-            retval.add(acmTask);
-        }
         return retval;
     }
 
@@ -571,10 +590,14 @@ class ActivitiTaskDao implements TaskDao
                 taskCreatedAfter(lastModified).
                 orderByTaskId().
                 asc().listPage(start, pageSize);
-        for ( HistoricTaskInstance task : tasks )
+
+        if ( tasks != null )
         {
-            AcmTask active = acmTaskFromHistoricActivitiTask(task);
-            retval.add(active);
+            for ( HistoricTaskInstance task : tasks )
+            {
+                AcmTask active = acmTaskFromHistoricActivitiTask(task);
+                retval.add(active);
+            }
         }
 
         return retval;
