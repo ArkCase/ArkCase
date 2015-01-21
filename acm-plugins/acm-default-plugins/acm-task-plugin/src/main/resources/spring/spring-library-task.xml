@@ -342,6 +342,7 @@
     <bean id="taskToSolrTransformer" class="com.armedia.acm.plugins.task.service.impl.TaskToSolrTransformer">
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
 
 
