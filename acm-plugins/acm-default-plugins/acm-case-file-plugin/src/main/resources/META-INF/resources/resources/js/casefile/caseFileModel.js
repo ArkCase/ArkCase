@@ -479,7 +479,7 @@ CaseFile.Model = CaseFile.Model || {
                     if (c) {
                         var cid = parseInt(Acm.goodValue(c.object_id_s, 0));
                         if (cid == caseFileId) {
-                            c.title_t = title;
+                            c.title_parseable = title;
                             CaseFile.Model.List.cachePage.put(pageId, caseFiles);
                             break;
                         }

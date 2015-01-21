@@ -32,7 +32,7 @@ TaskList.Page = {
                     + "<strong class='block' id='titleName" + taskId +"'>"
                     + t.name + "</strong>"
                     + "<small>"
-                    + "Created Date: " + Acm.getDateFromDatetime(t.create_dt)
+                    + "Created Date: " + Acm.getDateFromDatetime(t.create_tdt)
                     + "</small></br>" 
                     + "<small>"
                     + "Created By: " + t.owner_s + "</small>"

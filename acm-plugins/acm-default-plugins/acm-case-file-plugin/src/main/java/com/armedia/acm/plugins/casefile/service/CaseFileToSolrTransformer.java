@@ -42,6 +42,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s("CASE_FILE");
         solr.setTitle_parseable(in.getTitle());
+        //solr.setDescription_parseable(in.getDetails());
         solr.setName(in.getCaseNumber());
 
         solr.setCreate_date_tdt(in.getCreated());
@@ -83,12 +84,15 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         solr.setId(in.getId() + "-CASE_FILE");
 
         solr.setAuthor(in.getCreator());
-        solr.setCreate_dt(in.getCreated());
+        solr.setCreate_tdt(in.getCreated());
         solr.setModifier_s(in.getModifier());
-        solr.setLast_modified(in.getModified());
+        solr.setLast_modified_tdt(in.getModified());
 
-        solr.setTitle_t(in.getTitle());
+        //solr.setTitle_t(in.getTitle());
         solr.setStatus_s(in.getStatus());
+
+        //solr.setDescription_parseable(in.getDetails());
+        solr.setTitle_parseable(in.getTitle());
 
         String assigneeUserId = findAssigneeUserId(in);
         solr.setAssignee_s(assigneeUserId);

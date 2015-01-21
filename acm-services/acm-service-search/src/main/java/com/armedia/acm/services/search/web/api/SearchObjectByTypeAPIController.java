@@ -240,12 +240,12 @@ public class SearchObjectByTypeAPIController {
             } else {
                 continue;
             }
-            for ( String objectTypeName:suportedObjectTypes){
+            for ( String objectTypeName:suportedObjectTypes ) {
                 if ( objectType.equals(objectTypeName) ) {
                     for ( String filterName: filterNames) {
                           String jsonString = (String) plugin.getPluginProperties().get("search.tree.filter");
                           JSONArray jsonArray = new JSONArray(jsonString);
-                         for( int i=0;i< jsonArray.length(); i++) {
+                         for( int i=0;i< jsonArray.length(); i++ ) {
                               JSONObject jObj = jsonArray.getJSONObject(i);
                               if(jObj.getString("name").equals(filterName)){
                                 filters.add(jObj.getString("value").trim());
