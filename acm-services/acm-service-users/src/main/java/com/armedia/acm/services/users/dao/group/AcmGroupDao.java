@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 /**
@@ -104,6 +105,17 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>{
 				 save(group);
 			 }
 		 }
+	}
+	
+	@Transactional
+	public List<AcmGroup> findByUserMember(AcmUser user)
+	{		
+		Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.members = :user");
+		query.setParameter("user", user);
+		
+		List<AcmGroup> groups =  query.getResultList();
+		
+		return groups;
 	}
 	
 	@Override

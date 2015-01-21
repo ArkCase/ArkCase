@@ -12,6 +12,7 @@ import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,6 +27,15 @@ public class SendDocumentsToSolr
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final ObjectMapper mapper = new ObjectMapperFactory().createObjectMapper();
+
+    public String asJsonArray(SolrBaseDocument document) throws JsonProcessingException
+    {
+        log.debug("Converting a document to a JSON array");
+        List<SolrBaseDocument> docs = Collections.singletonList(document);
+        String json = mapper.writeValueAsString(docs);
+        log.debug("returning: " + json);
+        return json;
+    }
 
     public void sendSolrAdvancedSearchDocuments(List<SolrAdvancedSearchDocument> solrDocuments)
     {

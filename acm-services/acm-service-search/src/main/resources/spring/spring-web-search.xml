@@ -15,6 +15,7 @@
     </bean>
     <bean id="searchObjectByTypeAPIController" class="com.armedia.acm.services.search.web.api.SearchObjectByTypeAPIController">
         <property name="muleClient" ref="muleClient"/>
+        <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="searchEventPublisher" ref="acmSearchEventPublisher" />
     </bean>
 
