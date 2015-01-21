@@ -12,12 +12,15 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "acm_object_association")
-public class ObjectAssociation implements AcmEntity
+public class ObjectAssociation implements AcmEntity, Serializable
 {
+
+    private static final long serialVersionUID = -7218267489007339202L;
 
     @Id
     @Column(name = "cm_association_id")

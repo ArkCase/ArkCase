@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.search.service.SearchAccessControlFields;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -22,6 +23,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
     private UserDao userDao;
     private CaseFileDao caseFileDao;
+    private SearchAccessControlFields searchAccessControlFields;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -35,6 +37,8 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(CaseFile in)
     {
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+
+        getSearchAccessControlFields().setAccessControlFields(solr, in);
 
         solr.setId(in.getId() + "-CASE_FILE");
         solr.setObject_id_s(in.getId() + "");
@@ -72,6 +76,9 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     public SolrDocument toSolrQuickSearch(CaseFile in)
     {
         SolrDocument solr = new SolrDocument();
+
+        getSearchAccessControlFields().setAccessControlFields(solr, in);
+
         solr.setName(in.getCaseNumber());
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s("CASE_FILE");
@@ -158,5 +165,15 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
     public void setCaseFileDao(CaseFileDao caseFileDao) {
         this.caseFileDao = caseFileDao;
+    }
+
+    public SearchAccessControlFields getSearchAccessControlFields()
+    {
+        return searchAccessControlFields;
+    }
+
+    public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
+    {
+        this.searchAccessControlFields = searchAccessControlFields;
     }
 }

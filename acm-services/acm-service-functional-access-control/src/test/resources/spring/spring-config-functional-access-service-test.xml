@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+    
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
+    
+    <bean id="applicationRolesTestData" class="java.util.HashMap">
+    	<constructor-arg>
+	    	<map key-type="java.lang.String" value-type="java.lang.String">
+	    		<entry key="application.roles" value="ROLE_INVESTIGATOR,ROLE_INVESTIGATOR_SUPERVISOR,ROLE_ANALYST,ROLE_CALLCENTER,ROLE_ADMINISTRATOR" />
+	    	</map>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="applicationRolesToGroupsTestData" class="java.util.HashMap">
+    	<constructor-arg>
+	    	<map key-type="java.lang.String" value-type="java.lang.String">
+	    		<entry key="ROLE_ANALYST" value="acm_analyst_dev" />
+	    		<entry key="ROLE_INVESTIGATOR" value="acm_investigator_dev,acm_administrator_dev" />
+	    		<entry key="ROLE_ADMINISTRATOR" value="acm_administrator_dev" />
+	    		<entry key="ROLE_CALLCENTER" value="acm_callcenter_dev" />
+	    		<entry key="ROLE_INVESTIGATOR_SUPERVISOR" value="acm_supervisor_dev" />
+	    	</map>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="functionalAccessServiceTest" class="com.armedia.acm.services.functionalaccess.service.FunctionalAccessServiceImpl">
+    	<property name="applicationRolesProperties" ref="applicationRolesTestData" />
+    	<property name="applicationRolesToGroupsProperties" ref="applicationRolesToGroupsTestData" />
+    </bean>
+
+</beans>

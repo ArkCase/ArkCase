@@ -19,6 +19,13 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private Date modified_date_tdt;
     private String modifier_lcs;
 
+    // access control fields
+    private boolean public_doc_b;
+    private boolean protected_object_b;
+
+    private List<String> deny_acl_ss;
+    private List<String> allow_acl_ss;
+
     /////////////////// for complaints, case files, other objects with a title or description ////////////
     private String title_parseable;
     private String description_parseable;
@@ -81,6 +88,9 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String supervisor_id_s;
     private List<String> child_id_ss;
     private List<String> member_id_ss;
+    private boolean adhocTask_b;
+    private String owner_lcs;
+    private String business_process_name_lcs;
 
 
     @Override
@@ -481,4 +491,78 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
 	public void setMember_id_ss(List<String> member_id_ss) {
 		this.member_id_ss = member_id_ss;
 	}
+
+    public void setAdhocTask_b(boolean adhocTask_b)
+    {
+        this.adhocTask_b = adhocTask_b;
+    }
+
+    public boolean isAdhocTask_b()
+    {
+        return adhocTask_b;
+    }
+
+    public void setOwner_lcs(String owner_lcs)
+    {
+        this.owner_lcs = owner_lcs;
+    }
+
+    public String getOwner_lcs()
+    {
+        return owner_lcs;
+    }
+
+    public void setBusiness_process_name_lcs(String business_process_name_lcs)
+    {
+        this.business_process_name_lcs = business_process_name_lcs;
+    }
+
+    public String getBusiness_process_name_lcs()
+    {
+        return business_process_name_lcs;
+    }
+
+    public boolean isPublic_doc_b()
+    {
+        return public_doc_b;
+    }
+
+    @Override
+    public void setPublic_doc_b(boolean public_doc_b)
+    {
+        this.public_doc_b = public_doc_b;
+    }
+
+    public boolean isProtected_object_b()
+    {
+        return protected_object_b;
+    }
+
+    @Override
+    public void setProtected_object_b(boolean protected_object_b)
+    {
+        this.protected_object_b = protected_object_b;
+    }
+
+    public List<String> getDeny_acl_ss()
+    {
+        return deny_acl_ss;
+    }
+
+    @Override
+    public void setDeny_acl_ss(List<String> deny_acl_ss)
+    {
+        this.deny_acl_ss = deny_acl_ss;
+    }
+
+    public List<String> getAllow_acl_ss()
+    {
+        return allow_acl_ss;
+    }
+
+    @Override
+    public void setAllow_acl_ss(List<String> allow_acl_ss)
+    {
+        this.allow_acl_ss = allow_acl_ss;
+    }
 }

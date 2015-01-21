@@ -1,13 +1,16 @@
 package com.armedia.acm.plugins.task.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by armdev on 11/10/14.
  */
-public class TaskOutcome
+public class TaskOutcome implements Serializable
 {
+    private static final long serialVersionUID = 9212550688270421016L;
+
     private String name;
     private String description;
     private List<String> fieldsRequiredWhenOutcomeIsChosen = new ArrayList<>();

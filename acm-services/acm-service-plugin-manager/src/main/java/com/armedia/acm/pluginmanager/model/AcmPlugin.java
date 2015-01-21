@@ -1,6 +1,8 @@
 package com.armedia.acm.pluginmanager.model;
 
 
+import com.armedia.acm.core.AcmObjectType;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +26,11 @@ public class AcmPlugin implements Serializable
      * Privileges supported by the plugin.  Each plugin may have its own set of unique privileges.
      */
     private List<AcmPluginPrivilege> privileges;
+
+    /**
+     * ObjectTypes supported by the plugin. Each plugin may support one or more  Object Types
+     */
+    private List<String> suportedObjectTypesNames;
 
     /**
      * The privilege required to execute each URL exported by this plugin.  Each Spring MVC request mapping needs an
@@ -70,5 +77,13 @@ public class AcmPlugin implements Serializable
     public void setUrlPrivileges(List<AcmPluginUrlPrivilege> urlPrivileges)
     {
         this.urlPrivileges = urlPrivileges;
+    }
+
+    public List<String> getSuportedObjectTypesNames() {
+        return suportedObjectTypesNames;
+    }
+
+    public void setSuportedObjectTypesNames(List<String> suportedObjectTypesNames) {
+        this.suportedObjectTypesNames = suportedObjectTypesNames;
     }
 }

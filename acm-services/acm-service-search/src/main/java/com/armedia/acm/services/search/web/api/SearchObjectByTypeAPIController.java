@@ -1,12 +1,14 @@
 package com.armedia.acm.services.search.web.api;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpSession;
 
+import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -36,42 +38,68 @@ public class SearchObjectByTypeAPIController {
 
     private MuleClient muleClient;
     private SearchEventPublisher searchEventPublisher;
+    private AcmPluginManager acmPluginManager;
 
     @RequestMapping(value = "/{objectType}", method  = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String searchObjectByType(
     		@PathVariable("objectType") String objectType,
-            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            @RequestParam(value = "s", required = false, defaultValue = "") String s,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             @RequestParam(value = "assignee", required = false, defaultValue = "") String assignee,
             @RequestParam(value = "activeOnly", required = false, defaultValue = "true") boolean activeOnly,
+            @RequestParam(value = "filters", required = false, defaultValue = "") String filters,
             Authentication authentication,
             HttpSession httpSession
-    ) throws MuleException, Exception
-    {
-        String query = "object_type_s:" + objectType;  
-        
-        if (!StringUtils.isBlank(assignee)) {
-            query += " AND assignee_s:" + assignee;
-        }
+    ) throws MuleException, Exception {
+        String[] f = null;
+        String sortParams = "";
+        String params = "";
+        String query = "object_type_s:" + objectType;
+        if (StringUtils.isBlank(filters)) {
+            if (!StringUtils.isBlank(assignee)) {
+                query += " AND assignee_s:" + assignee;
+            }
 
-        if ( activeOnly )
-        {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
+            if (activeOnly) {
+                query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
+            }
+        } else {
+                f = filters.split(",");
+                List<String> testFilters = null;
+                if (f != null) {
+                    testFilters = findFilters(objectType, f);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    int i =0;
+                    for( String filter:testFilters ) {
+                        if( i>0 ) {
+                            stringBuilder.append("&");
+                            stringBuilder.append(filter);
+                        } else {
+                            stringBuilder.append(filter);
+                        }
+                        i++;
+                    }
+                    params=stringBuilder.toString();
+                }
+            }
+
+        if (!StringUtils.isBlank(s)){
+          sortParams = findSortValuesAndCreateSotrString(objectType,s);
         }
-        
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
-        }
-     
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
+        headers.put("sort", sortParams);
         headers.put("acmUser", authentication);
+        headers.put("rowQueryParametars",params);
+
+
 
         MuleMessage response = getMuleClient().send("vm://quickSearchQuery.in", "", headers);
 
@@ -123,6 +151,7 @@ public class SearchObjectByTypeAPIController {
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
+        headers.put("acmUser", authentication);
 
         MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
 
@@ -164,7 +193,80 @@ public class SearchObjectByTypeAPIController {
             }
         }
     }
-    
+
+    private String findSortValuesAndCreateSotrString(String objectType,String sort){
+        String[] srt = sort.split(",");
+        Collection<AcmPlugin> plugins = getAcmPluginManager().getAcmPlugins();
+        List<String> suportedObjectTypes = null;
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean isFirstSortArgument = true;
+        for( AcmPlugin plugin: plugins ) {
+            if( plugin.getSuportedObjectTypesNames()!=null ) {
+                suportedObjectTypes = plugin.getSuportedObjectTypesNames();
+            } else {
+                continue;
+            }
+            for ( String objectTypeName:suportedObjectTypes) {
+                if ( objectType.equals(objectTypeName) ) {
+                    for( String s:srt ){
+                        String jsonString = (String) plugin.getPluginProperties().get("search.tree.sort");
+                        JSONArray jsonArray = new JSONArray(jsonString);
+                        for( int i=0;i< jsonArray.length(); i++) {
+                            JSONObject jObj = jsonArray.getJSONObject(i);
+                            if(jObj.getString("name").equals(s)){
+                                if(isFirstSortArgument) {
+                                    stringBuilder.append(jObj.getString("value").trim());
+                                    isFirstSortArgument = false;
+                                } else {
+                                    stringBuilder.append(", ");
+                                    stringBuilder.append(jObj.getString("value").trim());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    private List<String> findFilters(String objectType, String[] filterNames) {
+        Collection<AcmPlugin> plugins = getAcmPluginManager().getAcmPlugins();
+        List<String> suportedObjectTypes = null;
+        JSONObject objectFromProperty = null;
+        List<String> filters = new ArrayList<>();
+        for( AcmPlugin plugin: plugins ) {
+            if( plugin.getSuportedObjectTypesNames()!=null ) {
+                suportedObjectTypes = plugin.getSuportedObjectTypesNames();
+            } else {
+                continue;
+            }
+            for ( String objectTypeName:suportedObjectTypes){
+                if ( objectType.equals(objectTypeName) ) {
+                    for ( String filterName: filterNames) {
+                          String jsonString = (String) plugin.getPluginProperties().get("search.tree.filter");
+                          JSONArray jsonArray = new JSONArray(jsonString);
+                         for( int i=0;i< jsonArray.length(); i++) {
+                              JSONObject jObj = jsonArray.getJSONObject(i);
+                              if(jObj.getString("name").equals(filterName)){
+                                filters.add(jObj.getString("value").trim());
+                              }
+                         }
+                    }
+                }
+            }
+        }
+        return filters;
+    }
+
+    public AcmPluginManager getAcmPluginManager() {
+        return acmPluginManager;
+    }
+
+    public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
+        this.acmPluginManager = acmPluginManager;
+    }
+
     public MuleClient getMuleClient()
     {
         return muleClient;

@@ -14,7 +14,7 @@
             order="18492"/>
 
     <bean id="applicationRoleToUserGroupProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -34,6 +34,10 @@
             </props>
         </property>
     </bean>
+    
+    <bean id="applicationRoleToUserGroupPropertyConfigurer" class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
+		<property name="properties" ref="applicationRoleToUserGroupProperties"/>
+	</bean>
 
     <bean
             id="acmAuthoritiesMapper"
@@ -46,6 +50,8 @@
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="authoritiesMapper" ref="acmAuthoritiesMapper"/>
         <property name="authenticationEventPublisher" ref="ssAuthenticationEventPublisher"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="groupDao" ref="groupDao"/>
     </bean>
 
     <bean id="acmAuthenticationDetailsFactory" class="com.armedia.acm.auth.AcmAuthenticationDetailsFactory"/>

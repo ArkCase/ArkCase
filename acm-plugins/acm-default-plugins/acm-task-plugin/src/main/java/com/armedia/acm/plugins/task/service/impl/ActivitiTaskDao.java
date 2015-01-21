@@ -7,6 +7,9 @@ import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.model.TaskOutcome;
 import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
 import com.armedia.acm.plugins.task.service.TaskDao;
+import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener;
+import com.armedia.acm.services.participants.dao.AcmParticipantDao;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -38,6 +41,8 @@ class ActivitiTaskDao implements TaskDao
     private Map<String, Integer> priorityLevelToNumberMap;
     private Map<String, List<String>> requiredFieldsPerOutcomeMap;
     private UserDao userDao;
+    private AcmParticipantDao participantDao;
+    private DataAccessPrivilegeListener dataAccessPrivilegeListener;
 
 
 
@@ -117,11 +122,69 @@ class ActivitiTaskDao implements TaskDao
 
             in.setTaskId(Long.valueOf(activitiTask.getId()));
             in.setCreateDate(activitiTask.getCreateTime());
+
+            // make sure an assignee participant is there, so the right data access can be set on the assignee...
+            // activiti has to control the assignee, not the assignment rules.
+            ensureCorrectAssigneeInParticipants(in);
+
+            // to ensure that the participants for new and updated ad-hoc tasks are visible to the client right away, we
+            // have to apply the assignment and data access control rules right here, inline with the save operation.
+            // Tasks generated or updated by the Activiti engine will have participants set by a specialized
+            // Mule flow.
+            getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(in);
+
+            // Now we have to check the assignee again, to be sure the Activiti task assignee is the "assignee"
+            // participant.  I know we're calling the same method twice!, to overwrite any changes the rules make to the
+            // assignee... In short, Activiti controls the task assignee, not the assignment rules.
+            ensureCorrectAssigneeInParticipants(in);   // there's a good reason we call this again, see above
+
+            // the rules (or the user) may have removed some participants.  We want to delete all participants other
+            // than the ones we just now validated.
+            getParticipantDao().removeAllOtherParticipantsForObject("TASK", in.getTaskId(), in.getParticipants());
+            in.setParticipants(getParticipantDao().saveParticipants(in.getParticipants()));
+
             return in;
         }
         catch (ActivitiException e)
         {
             throw new AcmTaskException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void ensureCorrectAssigneeInParticipants(AcmTask in)
+    {
+        boolean assigneeFound = false;
+
+        if ( in.getParticipants() != null )
+        {
+            for ( AcmParticipant ap : in.getParticipants() )
+            {
+                if ( "assignee".equals(ap.getParticipantType()) )
+                {
+                    assigneeFound = true;
+                    if ( ap.getParticipantLdapId() == null || !ap.getParticipantLdapId().equalsIgnoreCase(in.getAssignee()) )
+                    {
+                        ap.setParticipantLdapId(in.getAssignee());
+                        break;
+                    }
+                }
+            }
+        }
+
+        if ( ! assigneeFound )
+        {
+            AcmParticipant assignee = new AcmParticipant();
+            assignee.setParticipantLdapId(in.getAssignee());
+            assignee.setParticipantType("assignee");
+            assignee.setObjectId(in.getTaskId());
+            assignee.setObjectType("TASK");
+
+            if ( in.getParticipants() == null )
+            {
+                in.setParticipants(new ArrayList<AcmParticipant>());
+            }
+            in.getParticipants().add(assignee);
         }
     }
 
@@ -270,6 +333,8 @@ class ActivitiTaskDao implements TaskDao
             log.info("Finding all tasks for user '" + user + "'");
         }
 
+        List<AcmTask> retval = new ArrayList<>();
+
         List<Task> activitiTasks = getActivitiTaskService().
                 createTaskQuery().
                 taskAssignee(user).
@@ -278,19 +343,22 @@ class ActivitiTaskDao implements TaskDao
                 orderByDueDate().desc().
                 list();
 
-        if ( log.isDebugEnabled() )
+        if ( activitiTasks != null )
         {
-            log.debug("Found '" + activitiTasks.size() + "' tasks for user '" + user + "'");
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("Found '" + activitiTasks.size() + "' tasks for user '" + user + "'");
+            }
+
+            for ( Task activitiTask : activitiTasks )
+            {
+                AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
+
+                retval.add(acmTask);
+            }
         }
 
-        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
 
-        for ( Task activitiTask : activitiTasks )
-        {
-            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
-
-            retval.add(acmTask);
-        }
 
         return retval;
     }
@@ -300,6 +368,9 @@ class ActivitiTaskDao implements TaskDao
         {
             log.info("Finding all tasks for all users '");
         }
+
+        List<AcmTask> retval = new ArrayList<>();
+
         List<Task> activitiTasks = getActivitiTaskService().
                 createTaskQuery().
                 includeProcessVariables().
@@ -307,19 +378,21 @@ class ActivitiTaskDao implements TaskDao
                 orderByDueDate().desc().
                 list();
 
-        if ( log.isDebugEnabled() )
+        if ( activitiTasks != null )
         {
-            log.debug("Found '" + activitiTasks.size() + "' tasks for all users");
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("Found '" + activitiTasks.size() + "' tasks for all users");
+            }
+
+            for ( Task activitiTask : activitiTasks )
+            {
+                AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
+
+                retval.add(acmTask);
+            }
         }
 
-        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
-
-        for ( Task activitiTask : activitiTasks )
-        {
-            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
-
-            retval.add(acmTask);
-        }
         return retval;
     }
 
@@ -329,6 +402,9 @@ class ActivitiTaskDao implements TaskDao
         {
             log.info("Finding all tasks for all users that due date was before today");
         }
+
+        List<AcmTask> retval = new ArrayList<>();
+
         List<Task> activitiTasks = getActivitiTaskService().
                 createTaskQuery().
                 includeProcessVariables().
@@ -336,19 +412,21 @@ class ActivitiTaskDao implements TaskDao
                 dueBefore(new Date()).
                 list();
 
-        if ( log.isDebugEnabled() )
+        if ( activitiTasks != null )
         {
-            log.debug("Found '" + activitiTasks.size() + "' tasks for all users with past due date");
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("Found '" + activitiTasks.size() + "' tasks for all users with past due date");
+            }
+
+            for ( Task activitiTask : activitiTasks )
+            {
+                AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
+
+                retval.add(acmTask);
+            }
         }
 
-        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
-
-        for ( Task activitiTask : activitiTasks )
-        {
-            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
-
-            retval.add(acmTask);
-        }
         return retval;
     }
 
@@ -359,6 +437,8 @@ class ActivitiTaskDao implements TaskDao
             log.info(String.format("Finding all tasks for all users which due date is until %s from today", numberOfDaysFromToday.getnDays()));
         }
 
+        List<AcmTask> retval = new ArrayList<>();
+
         List<Task> activitiTasks = getActivitiTaskService().
                 createTaskQuery().
                 includeProcessVariables().
@@ -367,18 +447,20 @@ class ActivitiTaskDao implements TaskDao
                 dueBefore(shiftDateFromToday(numberOfDaysFromToday.getNumOfDays())).
                 list();
 
-        if (log.isDebugEnabled())
+        if ( activitiTasks != null )
         {
-            log.debug("Found '" + activitiTasks.size() + "' tasks for all users which due date is between today and " + numberOfDaysFromToday.getnDays() + " from today");
+            if (log.isDebugEnabled())
+            {
+                log.debug("Found '" + activitiTasks.size() + "' tasks for all users which due date is between today and " + numberOfDaysFromToday.getnDays() + " from today");
+            }
+
+            for (Task activitiTask : activitiTasks)
+            {
+                AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
+                retval.add(acmTask);
+            }
         }
 
-        List<AcmTask> retval = new ArrayList<>(activitiTasks.size());
-
-        for (Task activitiTask : activitiTasks)
-        {
-            AcmTask acmTask = acmTaskFromActivitiTask(activitiTask);
-            retval.add(acmTask);
-        }
         return retval;
     }
 
@@ -496,6 +578,32 @@ class ActivitiTaskDao implements TaskDao
 		return retval;
 	}
 
+    @Override
+    public List<AcmTask> getTasksModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        List<AcmTask> retval = new ArrayList<>();
+
+        List<HistoricTaskInstance> tasks = getActivitiHistoryService().
+                createHistoricTaskInstanceQuery().
+                includeProcessVariables().
+                includeTaskLocalVariables().
+                taskCreatedAfter(lastModified).
+                orderByTaskId().
+                asc().listPage(start, pageSize);
+
+        if ( tasks != null )
+        {
+            for ( HistoricTaskInstance task : tasks )
+            {
+                AcmTask active = acmTaskFromHistoricActivitiTask(task);
+                retval.add(active);
+            }
+        }
+
+        return retval;
+
+    }
+
     protected AcmTask acmTaskFromHistoricActivitiTask(HistoricTaskInstance hti)
     {
         AcmTask retval;
@@ -544,6 +652,9 @@ class ActivitiTaskDao implements TaskDao
         {
             retval.setAdhocTask(true);
         }
+
+        List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", retval.getTaskId());
+        retval.setParticipants(participants);
 
         if ( log.isTraceEnabled() )
         {
@@ -729,6 +840,9 @@ class ActivitiTaskDao implements TaskDao
                     + "'");
         }
 
+        List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", acmTask.getTaskId());
+        acmTask.setParticipants(participants);
+
         return acmTask;
     }
 
@@ -819,4 +933,24 @@ class ActivitiTaskDao implements TaskDao
 	{
 		this.userDao = userDao;
 	}
+
+    public AcmParticipantDao getParticipantDao()
+    {
+        return participantDao;
+    }
+
+    public void setParticipantDao(AcmParticipantDao participantDao)
+    {
+        this.participantDao = participantDao;
+    }
+
+    public DataAccessPrivilegeListener getDataAccessPrivilegeListener()
+    {
+        return dataAccessPrivilegeListener;
+    }
+
+    public void setDataAccessPrivilegeListener(DataAccessPrivilegeListener dataAccessPrivilegeListener)
+    {
+        this.dataAccessPrivilegeListener = dataAccessPrivilegeListener;
+    }
 }
