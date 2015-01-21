@@ -7,6 +7,13 @@ Admin.Controller = Admin.Controller || {
     }
     ,onInitialized: function() {
     }
+    ,VIEW_CREATED_AD_HOC_GROUP                                : "admin-view-created-adhoc-group"                              //param : group,parentId
+
+    ,VIEW_REMOVED_GROUP_MEMBER                                : "admin-view-removed-group-member"                              //param : members, parentGroupId
+
+    ,VIEW_REMOVED_GROUP                                       : "admin-view-removed-group"                                      //param : groupId
+
+    ,VIEW_SEARCHED_MEMBERS                                    : "admin-view-searched--members"                                      //param : term
 
     ,MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES                 : "admin-model-retrieved-correspondence-templates"              //param : templatesList
 
@@ -43,7 +50,24 @@ Admin.Controller = Admin.Controller || {
     ,MODEL_SAVE_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS: "save-functional-access-control-application-roles-to-groups" // param: errorMsg
     	
     ,MODEL_ERROR_SAVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS: "error-save-functional-access-control-application-roles-to-groups" // param: errorMsg
-    	
+
+    ,viewCreatedAdHocGroup: function(group,parentId){
+        Acm.Dispatcher.fireEvent(this.VIEW_CREATED_AD_HOC_GROUP, group,parentId);
+    }
+
+    ,viewMemberSearch: function(term){
+        Acm.Dispatcher.fireEvent(this.VIEW_SEARCHED_MEMBERS, term);
+
+    }
+
+    ,viewRemovedGroupMember: function(members, parentGroupId){
+        Acm.Dispatcher.fireEvent(this.VIEW_REMOVED_GROUP_MEMBER, members, parentGroupId);
+    }
+
+    ,viewRemovedGroup: function(groupId){
+        Acm.Dispatcher.fireEvent(this.VIEW_REMOVED_GROUP, groupId);
+    }
+
     ,modelRetrievedCorrespondenceTemplates : function(templatesList) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES, templatesList);
     }
