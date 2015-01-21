@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.search.service.SearchAccessControlFields;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
@@ -20,6 +21,8 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
 {
     private UserDao userDao;
     private TaskDao taskDao;
+    private SearchAccessControlFields searchAccessControlFields;
+
     private final transient Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -33,6 +36,8 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     {
         log.trace("converting to advanced search doc: " + in.getId());
         SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
+
+        getSearchAccessControlFields().setAccessControlFields(doc, in);
 
         doc.setId(in.getId() + "-TASK");
         doc.setTitle_parseable(in.getTitle());
@@ -80,6 +85,8 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     {
         log.trace("converting to quick search doc: " + in.getId());
         SolrDocument doc = new SolrDocument();
+
+        getSearchAccessControlFields().setAccessControlFields(doc, in);
 
         doc.setTitle_t(in.getTitle());
         doc.setObject_id_s(Long.toString(in.getId()));
@@ -130,5 +137,15 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     public void setTaskDao(TaskDao taskDao)
     {
         this.taskDao = taskDao;
+    }
+
+    public SearchAccessControlFields getSearchAccessControlFields()
+    {
+        return searchAccessControlFields;
+    }
+
+    public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
+    {
+        this.searchAccessControlFields = searchAccessControlFields;
     }
 }
