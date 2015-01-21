@@ -74,6 +74,7 @@ public class FacetedSearchAPIController {
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
         headers.put("rowQueryParametars",rowQueryParametars);
+        headers.put("acmUser", authentication);
 
         MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
 

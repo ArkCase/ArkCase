@@ -2,6 +2,7 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.services.dataaccess.service.ParticipantAccessChecker;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class SearchAccessControlFields
 {
     private ParticipantAccessChecker participantAccessChecker;
 
-    public void setAccessControlFields(SolrDocument doc, AcmAssignedObject object)
+    public void setAccessControlFields(SolrBaseDocument doc, AcmAssignedObject object)
     {
         // all protected objects must have protected_object_b
         doc.setProtected_object_b(true);
