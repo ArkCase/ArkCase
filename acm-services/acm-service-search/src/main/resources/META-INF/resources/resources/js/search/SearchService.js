@@ -12,40 +12,58 @@ Search.Service = {
     }
 
     ,API_QUICK_SEARCH_       : "/api/v1/plugin/search/quickSearch?q="
-    ,API_FACET_SEARCH_       : "/api/v1/plugin/search/quickSearch?q="
-    ,facetSearchDeferred : function(term, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+    ,API_FACET_SEARCH_       : "/api/v1/plugin/search/facetedSearch?q="
+
+    ,facetSearchDeferred : function(searchInfo, postData, jtParams, sortMap, callbackSuccess, callbackError) {
         return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
             ,function() {
                 var url;
                 url =  App.getContextPath() + Search.Service.API_FACET_SEARCH_;
-                url += term;
+                url += searchInfo.q;
 
                 //for test
-                //url = App.getContextPath() + "/api/latest/plugin/search/CASE_FILE";
+                //url = App.getContextPath() + "/resources/facetSearch.json?q=xyz";
+
+                if (Acm.isArray(searchInfo.filter)) {
+                    if (0 < searchInfo.filter.length) {
+                        for (var i = 0; i < searchInfo.filter.length; i++) {
+                            if (0 == i) {
+                                url += '&filters="';
+                            } else {
+                                url += '&';
+                            }
+
+                            url += 'fq="' + Acm.goodValue(searchInfo.filter[i].name) + '":' + Acm.goodValue(searchInfo.filter[i].value);
+
+                            if (searchInfo.filter.length - 1 == i) {
+                                url += '"';
+                            }
+                        }
+                    }
+                }
 
                 return url;
             }
             ,function(data) {
                 var jtData = null
-                if (Search.Model.validateSearchData(data)) {
-                    var header = data.responseHeader;
-                    var facet = data.facet_counts;
-                    if (0 == header.status) {
+                if (Search.Model.validateFacetSearchData(data)) {
+                    if (0 == data.responseHeader.status) {
                         //response.start should match to jtParams.jtStartIndex
                         //response.docs.length should be <= jtParams.jtPageSize
 
+                        searchInfo.total = data.response.numFound;
+
                         var result = data.response;
-                        var page = Acm.goodValue(jtParams.jtStartIndex, 0);
-                        Search.Model.cacheResult.put(page, result);
+                        //var page = Acm.goodValue(jtParams.jtStartIndex, 0);
+                        //Search.Model.cacheResult.put(page, result);
+                        Search.Model.putCachedResult(searchInfo, result);
                         jtData = callbackSuccess(result);
                         Search.Controller.modelChangedResult(Acm.Service.responseWrapper(data, result));
 
-                        var prev = Search.Model.getTermPrev();
-                        if (term != prev) {
-                            Search.Model.setHeader(header);
-                            Search.Model.setFacet(facet);
+                        if (!Search.Model.isFacetUpToDate()) {
+                            var facet = Search.Model.makeFacet(data);
                             Search.Controller.modeChangedFacet(Acm.Service.responseWrapper(data, facet));
-                            Search.Model.setTermPrev(prev);
+                            Search.Model.setFacetUpToDate(true);
                         }
                     } else {
                         if (Acm.isNotEmpty(data.error)) {
