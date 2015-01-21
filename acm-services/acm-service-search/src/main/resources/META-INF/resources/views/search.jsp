@@ -42,7 +42,31 @@
                     <%--<div class="wrapper b-b header">Advanced Search</div>--%>
 
                         <div class="wrapper">
-                            <div class="input-group" id="divFacet">
+                            <div class="form-group" id="divFacet">
+                                <%--<div name="facet_fields">--%>
+                                    <%--<div name="Object Type">--%>
+                                    <%--&lt;%&ndash;<div class="col-sm-12" id="complaintFields">&ndash;%&gt;--%>
+                                        <%--<label class="label">Object Type</label>--%>
+                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="USER">USER <span>(33)</span></input>--%>
+                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="CASE_FILE" checked>CASE_FILE <span>(20)</span></input>--%>
+                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="COMPLAINT">COMPLAINT <span>(40)</span></input>--%>
+                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="DOCUMENT">DOCUMENT <span>(5)</span></input>--%>
+                                    <%--</div>--%>
+                                    <%--<div name="Status">--%>
+                                        <%--<label class="label">Status</label>--%>
+                                        <%--</br><input type="checkbox"  value="valid">valid (33)</input>--%>
+                                        <%--</br><input type="checkbox"  value="active">active (20)</input>--%>
+                                        <%--</br><input type="checkbox"  value="draft">draft (40)</input>--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
+                                <%--<div name="facet_queries">--%>
+                                    <%--<div name="Incident Date">--%>
+                                        <%--<label class="label">Incident Date</label>--%>
+                                        <%--</br><input type="checkbox" facet='query' value="Previous Week">Previous Week (33)</input>--%>
+                                        <%--</br><input type="checkbox" facet='query' value="Previous Month">Previous Month (20)</input>--%>
+                                        <%--</br><input type="checkbox" facet='query' value="Previous Week">Previous Week (40)</input>--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
                             </div>
 
                             <%--<div class="input-group">--%>
@@ -300,19 +324,34 @@
                                 <%--</ul>--%>
                             <%--</div>--%>
 
-                            <div class="input-group">
-                                <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Type in search query">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-sm btn-default" type="button">Go!</button>
-                                </span>
-                            </div>
+                            <%--<form id="formSearch">--%>
+                                <div class="input-group">
+                                    <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Type in search query">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                    </span>
+                                </div>
+                            <%--</form>--%>
+
+                                <%--<form class="navbar-form navbar-right input-s-lg m-t m-l-n-xs hidden-xs" role="search">--%>
+                                    <%--<div class="form-group">--%>
+                                        <%--<div class="input-group"> <span class="input-group-btn">--%>
+                                              <%--<button type="submit" class="btn btn-sm bg-white b-white btn-icon"><i class="fa fa-search"></i></button>--%>
+                                              <%--</span>--%>
+                                            <%--<input id="searchQuery" type="text" class="form-control input-sm no-border typeahead" autocomplete="off" data-provide="typeahead" placeholder="Type in search query">--%>
+                                            <%--<input type="hidden" class="span1" title="ctrId" id="ctrId" value="" />--%>
+                                        <%--</div>--%>
+                                    <%--</div>--%>
+                                <%--</form>--%>
+
+
                         </div>
 
                     </div>
                 </header>
                 <section class="scrollable wrapper w-f">
                     <section class="panel panel-default">
-                        <div id="divResults" style="width:98%"></div>
+                        <div id="divResults" style="width:100%"></div>
                         <!--
                         </br></br>
                         <div class="table-responsive">
