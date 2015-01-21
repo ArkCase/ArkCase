@@ -97,9 +97,9 @@ Topbar.View = {
                         }
 
                         html += '<div class="icontype">' + icon + '</div>'
-                            + '<div class="title">' + Acm.goodValue(ctr.title_t) + '</div>'
+                            + '<div class="title">' + Acm.goodValue(ctr.title_parseable) + '</div>'
                             + '<div class="identifier">' + Acm.goodValue(ctr.name) + ' ('+ Acm.goodValue(ctr.object_type_s) + ')' + '</div>'
-                            + '<div class="author">By ' + ctr.author  + ' on '+ Acm.getDateTimeFromDatetime(ctr.last_modified) + '</div>'
+                            + '<div class="author">By ' + ctr.author_s  + ' on '+ Acm.getDateTimeFromDatetime(ctr.last_modified_tdt) + '</div>'
                         html += '</div>';
                     }
                     return html;

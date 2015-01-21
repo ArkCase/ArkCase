@@ -563,8 +563,8 @@ TaskList.Object = {
             //&& task.due_dt != null
             //
             var taskBranchTitle;
-            if(taskSolr.name != null && taskSolr.priority_s != null && taskSolr.due_dt != null){
-                taskBranchTitle = Acm.getDateFromDatetime(taskSolr.due_dt) + "," + taskSolr.priority_s +","+ taskSolr.name;
+            if(taskSolr.name != null && taskSolr.priority_s != null && taskSolr.due_tdt != null){
+                taskBranchTitle = Acm.getDateFromDatetime(taskSolr.due_tdt) + "," + taskSolr.priority_s +","+ taskSolr.name;
             }
             else if(taskSolr.name != null && taskSolr.priority_s != null){
                 taskBranchTitle = taskSolr.priority_s +","+ taskSolr.name;

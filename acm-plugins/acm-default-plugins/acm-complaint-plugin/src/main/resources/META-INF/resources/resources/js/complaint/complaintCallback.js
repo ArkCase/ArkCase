@@ -87,15 +87,15 @@ Complaint.Callback = {
                     var complaintSolr = {};
                     complaintSolr.author = complaint.creator;
                     complaintSolr.author_s = complaint.creator;
-                    complaintSolr.create_dt = complaint.created;
-                    complaintSolr.last_modified = complaint.modified;
+                    complaintSolr.create_tdt = complaint.created;
+                    complaintSolr.last_modified_tdt = complaint.modified;
                     complaintSolr.modifier_s = complaint.modifier;
                     complaintSolr.name = complaint.complaintNumber;
                     complaintSolr.object_id_s = complaint.complaintId;
                     complaintSolr.object_type_s = App.OBJTYPE_COMPLAINT;
                     complaintSolr.owner_s = complaint.creator;
                     complaintSolr.status_s = complaint.status;
-                    complaintSolr.title_t = complaint.complaintTitle;
+                    complaintSolr.title_parseable = complaint.complaintTitle;
 
 
 
