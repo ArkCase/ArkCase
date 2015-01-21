@@ -55,21 +55,40 @@ Admin.Model = Admin.Model || {
             this.cacheGroup = new Acm.Model.CacheFifo(4);
             this.cacheGroups = new Acm.Model.CacheFifo(4);
             this.cacheSubgroups = new Acm.Model.CacheFifo(4);
-            this.cacheGroupMembers = new Acm.Model.CacheFifo(4);
+            this.cacheTreeSource = new Acm.Model.CacheFifo(4);
             this.cacheAllUsers = new Acm.Model.CacheFifo(4);
 
             //Admin.Service.Organization.retrieveUsers();
             Admin.Service.Organization.retrieveGroups();
 
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP_MEMBER, this.onModelModifiedGroupData);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUPS, this.onModelRetrievedGroups);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_CREATED_AD_HOC_GROUP, this.onViewCreatedAdHocGroup);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_REMOVED_GROUP_MEMBER, this.onViewRemovedGroupMember);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_REMOVED_GROUP, this.onViewRemovedGroup);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_SEARCHED_MEMBERS, this.onViewSearchedMembers);
+
+
+
+            /*Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP_MEMBER, this.onModelModifiedGroupData);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CREATED_ADHOC_GROUP, this.onModelModifiedGroupData);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_MEMBER, this.onModelModifiedGroupData);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP, this.onModelModifiedGroupData);*/
+
         }
         ,onInitialized: function() {
         }
-
+        ,fn: function() {
+            setTimeout(Admin.Service.Organization.retrieveGroups(),10000);
+        }
         ,Tree:{
-            _parentNode: null
+            _sourceLoaded: false
+            ,isSourceLoaded : function() {
+                return this._sourceLoaded;
+            }
+            ,sourceLoaded : function(sourceLoaded) {
+                this._sourceLoaded = sourceLoaded;
+            }
+            ,_parentNode: null
             ,getParentNode : function() {
                 return this._parentNode;
             }
@@ -84,9 +103,20 @@ Admin.Model = Admin.Model || {
             }
             return true;
         }
-
-        ,onModelModifiedGroupData: function(){
-            Admin.Service.Organization.retrieveGroups();
+        ,onViewSearchedMembers: function(term){
+            Admin.Service.Organization.retrieveGroupMembers(term);
+        }
+        ,onViewRemovedGroup: function(groupId){
+            Admin.Service.Organization.removeGroup(groupId);
+        }
+        ,onViewCreatedAdHocGroup: function(group,parentId){
+            Admin.Service.Organization.createAdHocGroup(group,parentId);
+        }
+        ,onViewRemovedGroupMember: function(members, parentGroupId){
+            Admin.Service.Organization.removeGroupMember(members, parentGroupId);
+        }
+        ,onModelRetrievedGroups: function() {
+            Admin.Service.Organization.retrieveUsers();
         }
     }
 
