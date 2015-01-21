@@ -39,6 +39,8 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     {
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
+        getSearchAccessControlFields().setAccessControlFields(solr, in);
+
         solr.setId(in.getComplaintId() + "-COMPLAINT");
         solr.setObject_id_s(in.getComplaintId() + "");
         solr.setObject_type_s("COMPLAINT");
