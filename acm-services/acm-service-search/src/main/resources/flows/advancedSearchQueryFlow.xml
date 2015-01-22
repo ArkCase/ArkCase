@@ -37,7 +37,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             <scripting:script engine="groovy" file="scripts/dataAccessFilter.groovy"/>
         </scripting:transformer>
 
-        <set-payload value="q=#[message.inboundProperties['query']]&amp;fq=#[message.outboundProperties['dataAccessFilter']]&amp;fq=#[message.outboundProperties['denyAccessFilter']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;indent=true&amp;facet=true&amp;#[message.inboundProperties['rowQueryParametars']]"/>
+        <set-payload value="q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;indent=true&amp;facet=true&amp;#[message.inboundProperties['rowQueryParametars']]"/>
 
         <logger category="com.armedia.acm.plugins.search" level="DEBUG" />
 
