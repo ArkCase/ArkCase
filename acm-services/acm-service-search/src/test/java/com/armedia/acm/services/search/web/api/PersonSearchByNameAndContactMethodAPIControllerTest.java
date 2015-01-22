@@ -83,6 +83,7 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         headers.put("sort", sort);
         headers.put("firstRow", 0);
         headers.put("maxRows", 10);
+        headers.put("acmUser", mockAuthentication);
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
@@ -129,6 +130,7 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         headers.put("sort", sort);
         headers.put("firstRow", 0);
         headers.put("maxRows", 10);
+        headers.put("acmUser", mockAuthentication);
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();

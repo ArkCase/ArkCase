@@ -65,7 +65,7 @@ public class ParticipantDaoIT
 
         entityManager.flush();
 
-        List<AcmParticipant> found = dao.findParticipantsForObjectId(objectId);
+        List<AcmParticipant> found = dao.findParticipantsForObject(objectType, objectId);
 
         assertNotNull(found);
         assertEquals(participantList.size(), found.size());
@@ -85,13 +85,20 @@ public class ParticipantDaoIT
 
         found.add(third);
 
-        second.setParticipantType("approver");
+        for ( AcmParticipant p : found )
+        {
+            if ( p.getParticipantLdapId().equals("second") )
+            {
+                p.setParticipantType("approver");
+            }
+        }
+
 
         dao.saveParticipants(found);
 
         entityManager.flush();
 
-        List<AcmParticipant> secondRound = dao.findParticipantsForObjectId(objectId);
+        List<AcmParticipant> secondRound = dao.findParticipantsForObject(objectType, objectId);
 
         entityManager.flush();
 
@@ -117,23 +124,31 @@ public class ParticipantDaoIT
 
         }
 
-        Long deletedId = found.get(0).getId();
+        Long deletedId = secondRound.get(0).getId();
 
-        found.remove(0);
+        assertEquals(3, secondRound.size());
 
-        int removed = dao.removeAllOtherParticipantsForObjectId(objectId, found);
+        secondRound.remove(0);
+        log.debug("Should be removed: " + deletedId);
+
+        for ( AcmParticipant f : secondRound )
+        {
+            log.debug("should be kept: " + f.getId());
+        }
+
+        int removed = dao.removeAllOtherParticipantsForObject(objectType, objectId, secondRound);
 
         entityManager.flush();
 
         assertEquals(1, removed);
 
-        assertEquals(2, found.size());
+        assertEquals(2, secondRound.size());
 
-        dao.saveParticipants(found);
+        dao.saveParticipants(secondRound);
 
         entityManager.flush();
 
-        List<AcmParticipant> thirdRound = dao.findParticipantsForObjectId(objectId);
+        List<AcmParticipant> thirdRound = dao.findParticipantsForObject(objectType, objectId);
 
         entityManager.flush();
 

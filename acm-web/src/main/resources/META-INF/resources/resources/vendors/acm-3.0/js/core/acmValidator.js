@@ -32,6 +32,13 @@ Acm.Validator = {
 //            if (0 != responseHeader.status) {
 //                return false;
 //            }
+        if (Acm.isEmpty(data.responseHeader.params)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.responseHeader.params.q)) {
+            return false;
+        }
+
         if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start)) {
             return false;
         }
