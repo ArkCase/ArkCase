@@ -33,7 +33,7 @@ public class AcmUser implements Serializable, AcmLdapEntity
     @Column(name = "cm_last_name")
     private String lastName;
 
-    @Column(name = "cm_user_directory_name")
+    @Column(name = "cm_user_directory_name", updatable = false)
     private String userDirectoryName;
 
     @Column(name = "cm_user_created", insertable = true, updatable = false)
