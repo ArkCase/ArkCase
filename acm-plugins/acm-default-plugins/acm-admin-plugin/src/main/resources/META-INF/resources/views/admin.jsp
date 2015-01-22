@@ -6,6 +6,9 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title><spring:message code="admin.page.title" text="Admin | ACM | Armedia Case Management" /></title>
+    <%--<div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="helpUrl">${helpUrl}</span>
+    </div>--%>
 </jsp:attribute>
 
 
@@ -55,7 +58,7 @@
 
     <style>
 
-        #sectionFacets{
+        #divFacets{
             overflow-y:auto;
             overflow-x:hidden;
             width: 20%;
@@ -65,7 +68,7 @@
             min-height:100px;
         }
 
-        #sectionMembers
+        #divMembersResults
         {
             float:left;
             width:80%;
@@ -427,11 +430,12 @@
                                   </span>
                             </div>
                         <br>
-                        <div id="sectionFacets">
-                            Facets placeholder<br />
+
+                        <div class="form-group" id="divFacets">Available Facets
+                        <br />
                         </div>
 
-                        <div id="sectionMembers">
+                        <div id="divMembersResults">
                             <%--JTable - People Picker--%>
                             <div class="row" id="tabMembers">
                                 <div class="col-md-12">
@@ -448,7 +452,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="addMembers" >Add People</button>
+                <button type="button" class="btn btn-primary" id="btnAddMembers" >Add People</button>
             </div>
         </div>
     </div>

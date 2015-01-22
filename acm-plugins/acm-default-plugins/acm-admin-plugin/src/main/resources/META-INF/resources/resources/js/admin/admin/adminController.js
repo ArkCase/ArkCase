@@ -9,11 +9,21 @@ Admin.Controller = Admin.Controller || {
     }
     ,VIEW_CREATED_AD_HOC_GROUP                                : "admin-view-created-adhoc-group"                              //param : group,parentId
 
-    ,VIEW_REMOVED_GROUP_MEMBER                                : "admin-view-removed-group-member"                              //param : members, parentGroupId
+    ,VIEW_REMOVED_GROUP_MEMBER                                : "admin-view-removed-group-member"                             //param : removedMembers, parentGroupId
 
-    ,VIEW_REMOVED_GROUP                                       : "admin-view-removed-group"                                      //param : groupId
+    ,VIEW_REMOVED_GROUP                                       : "admin-view-removed-group"                                    //param : groupId
 
-    ,VIEW_SEARCHED_MEMBERS                                    : "admin-view-searched--members"                                      //param : term
+    ,VIEW_ADDED_GROUP_MEMBERS                                 : "admin-view-added-members"                                    //param : addedMembers,parentGroupId
+
+    ,VIEW_SEARCHED_MEMBERS                                    : "admin-view-searched--members"                                //param : term
+
+    ,VIEW_CHANGED_FACET_SELECTION                             : "search-view-changed-facet-selection"                         //param: selected
+
+    ,VIEW_SUBMITTED_QUERY                                     : "search-view-submitted-query"                                 //param: term
+
+    ,MODEL_CHANGED_RESULT                                     : "search-changed-result"                                     //param: result
+
+    ,MODEL_CHANGED_FACET                                      : "search-changed-facet"                                      //param: facet
 
     ,MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES                 : "admin-model-retrieved-correspondence-templates"              //param : templatesList
 
@@ -31,15 +41,15 @@ Admin.Controller = Admin.Controller || {
 
     ,MODEL_ADDED_GROUP_MEMBER                                 : "organization-hierarchy-group-members-added"                  //param : addedMember
 
-    ,MODEL_REMOVED_GROUP_MEMBER                               : "organization-hierarchy-group-member-removed"                //param : removedMember
+    ,MODEL_REMOVED_GROUP_MEMBER                               : "organization-hierarchy-group-member-removed"                 //param : removedMember
 
-    ,MODEL_RETRIEVED_USERS                                    : "organization-hierarchy-all-users-retrieved"                //param : allUsers
+    ,MODEL_RETRIEVED_USERS                                    : "organization-hierarchy-all-users-retrieved"                  //param : allUsers
 
     ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES : "functional-access-control-application-roles" 			  // param : roles
     	
     ,MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES : "error-functional-access-control-application-roles" // errorMsg
     	
-    ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS 		  : "functional-access-control-groups" 			  // param : groups
+    ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS 		  : "functional-access-control-groups" 			                  // param : groups
     	
     ,MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_GROUPS 		  : "error-functional-access-control-groups" 			  // param : errorMsg
     	
@@ -57,15 +67,33 @@ Admin.Controller = Admin.Controller || {
 
     ,viewMemberSearch: function(term){
         Acm.Dispatcher.fireEvent(this.VIEW_SEARCHED_MEMBERS, term);
-
     }
 
-    ,viewRemovedGroupMember: function(members, parentGroupId){
-        Acm.Dispatcher.fireEvent(this.VIEW_REMOVED_GROUP_MEMBER, members, parentGroupId);
+    ,viewRemovedGroupMember: function(removedMembers, parentGroupId){
+        Acm.Dispatcher.fireEvent(this.VIEW_REMOVED_GROUP_MEMBER, removedMembers, parentGroupId);
     }
 
     ,viewRemovedGroup: function(groupId){
         Acm.Dispatcher.fireEvent(this.VIEW_REMOVED_GROUP, groupId);
+    }
+
+    ,viewChangedFacetSelection: function(selected) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_FACET_SELECTION, selected);
+    }
+
+    ,viewSubmittedQuery: function(term) {
+        Acm.Dispatcher.fireEvent(this.VIEW_SUBMITTED_QUERY, term);
+    }
+
+    ,viewAddedMembers: function(addedMembers,parentGroupId){
+        Acm.Dispatcher.fireEvent(this.VIEW_ADDED_GROUP_MEMBERS, addedMembers,parentGroupId);
+    }
+
+    ,modelChangedResult: function(result) {
+        Acm.Dispatcher.fireEvent(this.MODEL_CHANGED_RESULT, result);
+    }
+    ,modeChangedFacet: function(facet) {
+        Acm.Dispatcher.fireEvent(this.MODEL_CHANGED_FACET, facet);
     }
 
     ,modelRetrievedCorrespondenceTemplates : function(templatesList) {
@@ -96,8 +124,8 @@ Admin.Controller = Admin.Controller || {
         Acm.Dispatcher.fireEvent(this.MODEL_REMOVED_GROUP_MEMBER, removedMember);
     }
 
-    ,modelAddedGroupMember: function(addedMember){
-        Acm.Dispatcher.fireEvent(this.MODEL_ADDED_GROUP_MEMBER, addedMember);
+    ,modelAddedGroupMember: function(addedMembers){
+        Acm.Dispatcher.fireEvent(this.MODEL_ADDED_GROUP_MEMBER, addedMembers);
     }
 
     ,modelUpdatedAccessControl : function(accessControlList){
