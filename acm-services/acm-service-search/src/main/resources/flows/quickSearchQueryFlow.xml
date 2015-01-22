@@ -15,10 +15,10 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
     <http:endpoint name="http.quickSearchQuery"
                    address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.quicksearch.core}/${solr.searchHandler}?q=#[message.inboundProperties['query']]&amp;fq=#[message.outboundProperties['dataAccessFilter']]&amp;fq=#[message.outboundProperties['denyAccessFilter']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;#[message.inboundProperties['rowQueryParametars']]&amp;indent=true"
-                   contentType="application/json; charset=UTF-8"
+                   contentType="application/x-www-form-urlencoded; charset=UTF-8"
                    mimeType="application/json"
                    encoding="UTF-8"
-                   method="GET"
+                   method="POST"
                    exchange-pattern="request-response"
                    doc:name="Issue a quick search request to SOLR">
     </http:endpoint>
