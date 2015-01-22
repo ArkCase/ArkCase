@@ -45,8 +45,8 @@ public class SearchUsersAPIController {
     ) throws MuleException
     {
 		
-		MuleMessage response = getUsers(startRow, maxRows, searchKeyword, sortDirection, exclude);
-		MuleMessage responseOwner = getOwner(0, 1, exclude);
+		MuleMessage response = getUsers(startRow, maxRows, searchKeyword, sortDirection, exclude, authentication);
+		MuleMessage responseOwner = getOwner(0, 1, exclude, authentication);
 		
         if ( response.getPayload() instanceof String && responseOwner.getPayload() instanceof String)
         {
@@ -64,7 +64,7 @@ public class SearchUsersAPIController {
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 	
-	private MuleMessage getOwner(int startRow, int maxRows, String owner) throws MuleException
+	private MuleMessage getOwner(int startRow, int maxRows, String owner, Authentication authentication) throws MuleException
 	{
 		String query = "object_type_s:USER AND object_id_s:" + owner + " AND status_lcs:VALID";
 		String sort = "first_name_lcs ASC";
@@ -78,6 +78,7 @@ public class SearchUsersAPIController {
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
+		headers.put("acmUser", authentication);
         
         MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
         
@@ -86,7 +87,8 @@ public class SearchUsersAPIController {
         return response;
 	}
 	
-	private MuleMessage getUsers(int startRow, int maxRows, String searchKeyword, String sortDirection, String exclude) throws MuleException 
+	private MuleMessage getUsers(int startRow, int maxRows, String searchKeyword, String sortDirection, String exclude,
+								 Authentication authentication) throws MuleException
 	{
 		String searchQuery = "";
 		if (StringUtils.isNotEmpty(searchKeyword))
@@ -106,6 +108,7 @@ public class SearchUsersAPIController {
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
+		headers.put("acmUser", authentication);
         
         MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
         

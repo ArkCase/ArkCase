@@ -38,6 +38,8 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     {
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
+        getSearchAccessControlFields().setAccessControlFields(solr, in);
+
         solr.setId(in.getId() + "-CASE_FILE");
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s("CASE_FILE");

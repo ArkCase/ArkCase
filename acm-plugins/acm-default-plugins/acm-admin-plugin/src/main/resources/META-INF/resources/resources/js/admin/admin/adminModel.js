@@ -7,15 +7,17 @@ Admin.Model = Admin.Model || {
         if (Admin.Model.AccessControl.create)           {Admin.Model.AccessControl.create();}
         if (Admin.Model.Correspondence.create)          {Admin.Model.Correspondence.create();}
         if (Admin.Model.Organization.create)            {Admin.Model.Organization.create();}
+        if (Admin.Model.FunctionalAccessControl.create) {Admin.Model.FunctionalAccessControl.create();}
 
         if (Admin.Model.Tree.create)                    {Admin.Model.Tree.create();}
     }
     ,onInitialized: function() {
-        if (Admin.Model.AccessControl.onInitialized)          {Admin.Model.AccessControl.onInitialized();}
-        if (Admin.Model.Correspondence.onInitialized)         {Admin.Model.Correspondence.onInitialized();}
-        if (Admin.Model.Organization.onInitialized)           {Admin.Model.Organization.onInitialized();}
+        if (Admin.Model.AccessControl.onInitialized)            {Admin.Model.AccessControl.onInitialized();}
+        if (Admin.Model.Correspondence.onInitialized)           {Admin.Model.Correspondence.onInitialized();}
+        if (Admin.Model.Organization.onInitialized)             {Admin.Model.Organization.onInitialized();}
+        if (Admin.Model.FunctionalAccessControl.onInitialized) {Admin.Model.Organization.onInitialized();}
 
-        if (Admin.Model.Tree.onInitialized)                   {Admin.Model.Tree.onInitialized();}
+        if (Admin.Model.Tree.onInitialized)                     {Admin.Model.Tree.onInitialized();}
     }
 
     ,_totalCount: 0
@@ -53,21 +55,40 @@ Admin.Model = Admin.Model || {
             this.cacheGroup = new Acm.Model.CacheFifo(4);
             this.cacheGroups = new Acm.Model.CacheFifo(4);
             this.cacheSubgroups = new Acm.Model.CacheFifo(4);
-            this.cacheGroupMembers = new Acm.Model.CacheFifo(4);
+            this.cacheTreeSource = new Acm.Model.CacheFifo(4);
             this.cacheAllUsers = new Acm.Model.CacheFifo(4);
 
             //Admin.Service.Organization.retrieveUsers();
             Admin.Service.Organization.retrieveGroups();
 
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP_MEMBER, this.onModelModifiedGroupData);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUPS, this.onModelRetrievedGroups);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_CREATED_AD_HOC_GROUP, this.onViewCreatedAdHocGroup);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_REMOVED_GROUP_MEMBER, this.onViewRemovedGroupMember);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_REMOVED_GROUP, this.onViewRemovedGroup);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_SEARCHED_MEMBERS, this.onViewSearchedMembers);
+
+
+
+            /*Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP_MEMBER, this.onModelModifiedGroupData);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CREATED_ADHOC_GROUP, this.onModelModifiedGroupData);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_MEMBER, this.onModelModifiedGroupData);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP, this.onModelModifiedGroupData);*/
+
         }
         ,onInitialized: function() {
         }
-
+        ,fn: function() {
+            setTimeout(Admin.Service.Organization.retrieveGroups(),10000);
+        }
         ,Tree:{
-            _parentNode: null
+            _sourceLoaded: false
+            ,isSourceLoaded : function() {
+                return this._sourceLoaded;
+            }
+            ,sourceLoaded : function(sourceLoaded) {
+                this._sourceLoaded = sourceLoaded;
+            }
+            ,_parentNode: null
             ,getParentNode : function() {
                 return this._parentNode;
             }
@@ -82,9 +103,20 @@ Admin.Model = Admin.Model || {
             }
             return true;
         }
-
-        ,onModelModifiedGroupData: function(){
-            Admin.Service.Organization.retrieveGroups();
+        ,onViewSearchedMembers: function(term){
+            Admin.Service.Organization.retrieveGroupMembers(term);
+        }
+        ,onViewRemovedGroup: function(groupId){
+            Admin.Service.Organization.removeGroup(groupId);
+        }
+        ,onViewCreatedAdHocGroup: function(group,parentId){
+            Admin.Service.Organization.createAdHocGroup(group,parentId);
+        }
+        ,onViewRemovedGroupMember: function(members, parentGroupId){
+            Admin.Service.Organization.removeGroupMember(members, parentGroupId);
+        }
+        ,onModelRetrievedGroups: function() {
+            Admin.Service.Organization.retrieveUsers();
         }
     }
 
@@ -102,6 +134,47 @@ Admin.Model = Admin.Model || {
                 return false;
             }
             return true;
+        }
+    }
+    
+    ,FunctionalAccessControl:{
+        create : function() {
+        	this.cacheApplicationRoles = new Acm.Model.CacheFifo(1);
+        	this.cacheGroups = new Acm.Model.CacheFifo(1);
+        	this.cacheApplicationRolesToGroups = new Acm.Model.CacheFifo(1);
+        	
+        	Admin.Service.FunctionalAccessControl.retrieveApplicationRoles();
+        	Admin.Service.FunctionalAccessControl.retrieveGroups();
+        	Admin.Service.FunctionalAccessControl.retrieveApplicationRolesToGroups();
+        	
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_SAVE_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onSaveFunctionalAccessControlApplicationRolesToGroups);
+        }
+        ,onInitialized: function() {
+        }
+        
+        ,validateApplicationRoles: function(roles) {
+            if (Acm.isEmpty(roles) || !Acm.isArray(roles)) {
+                return false;
+            }
+            return true;
+        }
+        
+        ,validateGroups: function(groups) {
+            if (Acm.isEmpty(groups)) {
+                return false;
+            }
+            return true;
+        }
+        
+        ,validateApplicationRolesToGroups: function(rolesToGroups) {
+            if (Acm.isEmpty(rolesToGroups)) {
+                return false;
+            }
+            return true;
+        }
+        
+        ,onSaveFunctionalAccessControlApplicationRolesToGroups: function(applicationRolesToGroups) {
+        	Admin.Service.FunctionalAccessControl.saveApplicationRolesToGroups(applicationRolesToGroups);
         }
     }
 
@@ -138,6 +211,7 @@ Admin.Model = Admin.Model || {
             ,NODE_TYPE_PART_BRANCH_CORRESPONDENCE:   "cm"
             ,NODE_TYPE_PART_BRANCH_TEMPLATES:        "ct"
             ,NODE_TYPE_PART_BRANCH_ORGANIZATION:     "og"
+            ,NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL:"fac"
 
 
             ,_mapNodeType: [
@@ -151,6 +225,7 @@ Admin.Model = Admin.Model || {
                 ,{nodeType: "cm"      ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
                 ,{nodeType: "ct"      ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
                 ,{nodeType: "og"      ,icon: "",tabIds: ["tOrganization"]}
+                ,{nodeType: "fac"      ,icon: "",tabIds: ["tabFunctoinalAccessControl"]}
             ]
 
             ,getTabIdsByKey: function(key) {
@@ -201,7 +276,9 @@ Admin.Model = Admin.Model || {
                     return this.NODE_TYPE_PART_BRANCH_TEMPLATES;
                 }else if (key == this.NODE_TYPE_PART_BRANCH_ORGANIZATION) {
                     return this.NODE_TYPE_PART_BRANCH_ORGANIZATION;
-                }
+                }else if (key == this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL) {
+	                return this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL;
+	            }
                 return null;
             }
         }

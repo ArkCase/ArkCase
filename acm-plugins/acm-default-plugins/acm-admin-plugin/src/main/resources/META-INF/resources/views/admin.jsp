@@ -52,6 +52,27 @@
             border: 0px;
         }
     </style>
+
+    <style>
+
+        #sectionFacets{
+            overflow-y:auto;
+            overflow-x:hidden;
+            width: 20%;
+            float:left;
+
+
+            min-height:100px;
+        }
+
+        #sectionMembers
+        {
+            float:left;
+            width:80%;
+            min-height:100px;
+        }
+
+    </style>
     //////////////////////////////////////////////////////////////////////
 </jsp:attribute>
 
@@ -163,6 +184,41 @@
 
                                                     <%--JTable - Access Control Policy Tree--%>
 
+											<%--   Functional Access controls    --%>
+ 											<div class="row" id="tabFunctoinalAccessControl" style="display:none;">
+				                                <%--Title--%>
+				                                <section class="row m-b-md">
+				                                    <div class="col-sm-12">
+				                                        <h3 class="m-b-xs text-black"><spring:message code="adminFunctionalAccess.page.descShort" text="Functional Access Configuration" /></h3>
+				                                    </div>
+				                                </section>
+				
+				                                <section class="panel panel-default">
+				                                    <div class="wrapper">
+				                                        <div class="row">
+				                                            <div class="col-xs-12">
+				                                                <div class="col-xs-3 b-r"><label>Choose Application Role</label>
+				                                                    <select id="selectRoles" size="10" class="form-control">
+				                                                    </select>
+				                                                </div>
+				                                                <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnGo" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
+				                                                <div class="col-xs-3 b-r"><label>Not Authorized</label>
+				                                                    <select id="selectNotAuthorized" size="10" multiple class="form-control">
+				                                                    </select>
+				                                                </div>
+				                                                <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
+				                                                    <button id="btnMoveRight" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right"> <i class="fa fa-angle-double-right"></i></button> <br/>
+				                                                    <button id="btnMoveLeft" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
+				                                                 </div>
+				                                                <div class="col-xs-4 b-r"><label>Authorized</label>
+				                                                    <select id="selectAuthorized" size="10" multiple  class="form-control">
+				                                                    </select>
+				                                                </div>
+				                                            </div>
+				                                        </div>
+				                                    </div>
+				                                </section>
+											</div>
 
                                             <div class="row" id="tOrganization" style="display:none;">
                                                 <%--<div class="col-md-12">
@@ -170,7 +226,7 @@
 
                                                     <table id="treeOrganization">
                                                             <thead>
-                                                            <tr>  <th></th> <th></th><th>Name </th> <th> Type </th> <th>Supervisor Name</th> <th>Location</th><th>   Actions </th></tr>
+                                                            <tr>  <th></th> <th></th><th>Name </th> <th> Type </th> <th>Supervisor Name</th> <th></th><th>   Actions </th></tr>
 
                                                             <tr> <th> </th> <th></th> <th></th> <th></th> <th></th> <th></th><th>  </th></tr>
                                                             </thead>
@@ -178,7 +234,7 @@
                                                             </tbody>
                                                         </table>
 
-                                                        <%--<div id="divTreeOrganization" style="width:100%"></div>
+                                                        <%--<div id="divTreeOrganization" style="width:100%"></div><th>Location</th>
                                                     </section>
                                                 </div>--%>
                                             </div>
@@ -238,12 +294,12 @@
     </jsp:body>
 </t:layout>
 
-<div class="modal fade" id="createAdHoc" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+<div class="modal fade" id="createAdHoc" tabindex="-1" role="dialog" aria-labelledby="modalLabelCreateAdHoc" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="modalLabel" >Add Ad-Hoc Group</h4>
+                <h4 class="modal-title" id="modalLabelCreateAdHoc" >Add Ad-Hoc Group</h4>
 
             </div>
             <div class="modal-body">
@@ -343,7 +399,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="addAdHocGroup">Add Ad-Hoc Group</button>
+                <button type="button" class="btn btn-primary" id="btnAddAdHocGroup">Add Ad-Hoc Group</button>
             </div>
         </div>
     </div>
@@ -352,97 +408,42 @@
 
 
 <div class="modal fade" id="addPeople" tabindex="-1" role="dialog" aria-labelledby="modalLabelPeople" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog"  style="height:540px; width:1030px;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="modalLabelPeople" ></h4>
 
             </div>
+
             <div class="modal-body">
                 <section class="panel panel-default">
-
                     <div class="row wrapper">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="text" class="input-sm form-control" placeholder="Search people.." >
+                                <input type="text" class="input-sm form-control" id="findMember" placeholder="Search people.." >
                                   <span class="input-group-btn">
-                                    <button class="btn btn-sm btn-default" type="button"><i class="fa fa-search"></i></button>
+                                    <button class="btn btn-sm btn-default" id="btnFindMembers" type="button"><i class="fa fa-search"></i></button>
                                   </span>
                             </div>
+                        <br>
+                        <div id="sectionFacets">
+                            Facets placeholder<br />
                         </div>
-                        <%--<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Simple collapsible</button>--%>
-                        <div class="col-sm-12">
-                            <label></label>
-                            <div id="additionalFieldsPeople" class="collapse in">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Title" >
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Location" >
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Phone Number" >
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Email Address" >
-                                    </div>
+
+                        <div id="sectionMembers">
+                            <%--JTable - People Picker--%>
+                            <div class="row" id="tabMembers">
+                                <div class="col-md-12">
+                                    <%--<section class="panel panel-default">--%>
+                                        <div id="divMembers" style="width:100%"></div>
+                                    <%--</section>--%>
                                 </div>
                             </div>
-                            <a id="lnkHideAdditionalFieldsPeople" href="#" data-toggle="collapse" data-target="#additionalFieldsPeople">
-                                <small class="text-muted inline m-t-sm m-b-sm">
-                                    <u>Hide Additional Fields</u>
-                                </small>
-                            </a>
                         </div>
                     </div>
-                </section>
-
-
-                <section class="panel panel-default">
-                    <div class="table-responsive">
-                        <table class="table table-striped b-t b-light">
-                            <thead>
-                            <tr>
-                                <th width="20"></th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Location</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td><label class="checkbox m-n">
-                                    <input type="checkbox" name="post[]">
-                                    <i></i></label></td>
-                                <td>[First Name]</td>
-                                <td>[Last Name]</td>
-                                <td>[Location]</td>
-                                <td>[Phone]</td>
-                                <td>[Email]</td>
-
-                            </tr>
-                            </tbody>
-                        </table>
                     </div>
-                    <%--<footer class="panel-footer">
-                        <div class="row">
-                            <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 20-30 of 50 items</small> </div>
-                            <div class="col-sm-6 text-right text-center-xs">
-                                <ul class="pagination pagination-sm m-t-none m-b-none">
-                                    <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </footer>--%>
+
                 </section>
             </div>
             <div class="modal-footer">
@@ -452,5 +453,7 @@
         </div>
     </div>
 </div>
+
+
 
 
