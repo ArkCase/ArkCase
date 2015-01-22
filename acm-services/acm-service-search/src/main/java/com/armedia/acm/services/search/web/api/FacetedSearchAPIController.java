@@ -198,13 +198,22 @@ public class FacetedSearchAPIController {
                         if( allORFilters==null ) {
                             String returnedDateANDSubString = createDateANDQuerySubString(jsonArray,e.getKey(),filterSplitByDots[1].trim());
                             queryBuilder.append(returnedDateANDSubString);
+                            break;
                         } else {
                             String returnedDateORSubString = createDateORQuerySubString(allORFilters,jsonArray,e.getKey());
                             queryBuilder.append(returnedDateORSubString);
+                            break;
                         }
                     } else {
-                        String returnedRegularANDQuerySubString = createRegularANDQuerySubString(e.getKey(),filterSplitByDots[1].trim());
-                        queryBuilder.append(returnedRegularANDQuerySubString);
+                        if( allORFilters==null ) {
+                            String returnedRegularANDQuerySubString = createRegularANDQuerySubString(e.getKey(), filterSplitByDots[1].trim());
+                            queryBuilder.append(returnedRegularANDQuerySubString);
+                            break;
+                        } else {
+                            String returnedRegularORSubstring = createRegularORQuerySubString(allORFilters,e.getKey());
+                            queryBuilder.append(returnedRegularORSubstring);
+                            break;
+                        }
                     }
                 }
             }
