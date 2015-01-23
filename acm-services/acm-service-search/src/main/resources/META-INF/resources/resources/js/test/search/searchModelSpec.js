@@ -212,17 +212,46 @@ describe("Search.Model", function() {
 
     });
 
-    it("Search.Model: add/remove/find filter", function() {
+    it("Search.Model: add/remove/find filte, makeFilterParamr", function() {
         var si = Search.Model.getSearchInfo();
-        expect(Search.Model.findFilter(si, k, v)).toEqual(null);
+        var k;
+        var v;
 
-        var k = "Create Date";
-        var v = "Previous Year";
+        expect(Search.Model.findFilter(si, k, v)).toEqual(false);
+        expect(Search.Model.makeFilterParam(si)).toEqual('');
+
+        k = "Create Date";
+        v = "Previous Year";
         Search.Model.addFilter(si, k, v);
-        expect(Search.Model.findFilter(si, k, v)).not.toEqual(null);
+        expect(Search.Model.findFilter(si, k, v)).toEqual(true);
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters="fq="Create Date":Previous Year"');
 
         Search.Model.removeFilter(si, k, v);
-        expect(Search.Model.findFilter(si, k, v)).toEqual(null);
+        expect(Search.Model.findFilter(si, k, v)).toEqual(false);
+        expect(Search.Model.makeFilterParam(si)).toEqual('');
+
+        Search.Model.addFilter(si, k, v);
+        expect(Search.Model.findFilter(si, k, v)).toEqual(true);
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters="fq="Create Date":Previous Year"');
+
+        k = "Create Date";
+        v = "Previous Month";
+        Search.Model.addFilter(si, k, v);
+        expect(Search.Model.findFilter(si, k, v)).toEqual(true);
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters="fq="Create Date":Previous Year|Previous Month"');
+
+        k = "Object Type";
+        v = "CASE_FILE";
+        Search.Model.addFilter(si, k, v);
+        expect(Search.Model.findFilter(si, k, v)).toEqual(true);
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters="fq="Create Date":Previous Year|Previous Month&fq="Object Type":CASE_FILE"');
+
+        k = "Create Date";
+        v = "Previous Year";
+        Search.Model.removeFilter(si, k, v);
+        expect(Search.Model.findFilter(si, k, v)).toEqual(false);
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters="fq="Create Date":Previous Month&fq="Object Type":CASE_FILE"');
+
     });
 
 });
