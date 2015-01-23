@@ -96,6 +96,7 @@ Search.View = {
         }
         ,buildFacetPanel: function(facet) {
             var html = "";
+            var si = Search.Model.getSearchInfo();
 
             if (Search.Model.validateSearchFacet(facet)) {
                 if (0 < Search.Model.getCountFacetFields(facet)){
@@ -108,8 +109,11 @@ Search.View = {
                                 html += "<label class='label'>" + display + "</label>";
                                 for (var j = 0; j < facet.facet_fields[i].values.length; j++) {
                                     if (0 < Acm.goodValue(facet.facet_fields[i].values[j].count, 0)) {
-                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name)
-                                            + "'>" + Acm.goodValue(facet.facet_fields[i].values[j].name)
+                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name) + "'";
+                                        if (Search.Model.findFilter(si, display, Acm.goodValue(facet.facet_fields[i].values[j].name))) {
+                                            html += " checked";
+                                        }
+                                        html += ">" + Acm.goodValue(facet.facet_fields[i].values[j].name)
                                             + "(<span>" + facet.facet_fields[i].values[j].count + "</span>)</input>";
                                     }
                                 }
@@ -131,8 +135,11 @@ Search.View = {
                                 html += "<label class='label'>" + display + "</label>";
                                 for (var j = 0; j < facet.facet_queries[i].values.length; j++) {
                                     if (0 < Acm.goodValue(facet.facet_queries[i].values[j].count, 0)) {
-                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name)
-                                            + "'>" + Acm.goodValue(facet.facet_queries[i].values[j].name)
+                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name) + "'";
+                                        if (Search.Model.findFilter(si, display, Acm.goodValue(facet.facet_queries[i].values[j].name))) {
+                                            html += " checked";
+                                        }
+                                        html += ">" + Acm.goodValue(facet.facet_queries[i].values[j].name)
                                             + "(<span>" + facet.facet_queries[i].values[j].count + "</span>)</input>";
                                     }
                                 }
@@ -154,8 +161,11 @@ Search.View = {
                                 html += "<label class='label'>" + display + "</label>";
                                 for (var j = 0; j < facet.facet_dates[i].values.length; j++) {
                                     if (0 < Acm.goodValue(facet.facet_dates[i].values[j].count, 0)) {
-                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name)
-                                            + "'>" + Acm.goodValue(facet.facet_dates[i].values[j].name)
+                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name) + "'";
+                                        if (Search.Model.findFilter(si, display, Acm.goodValue(facet.facet_dates[i].values[j].name))) {
+                                            html += " checked";
+                                        }
+                                        html += ">" + Acm.goodValue(facet.facet_dates[i].values[j].name)
                                             + "(<span>" + facet.facet_dates[i].values[j].count + "</span>)</input>";
                                     }
                                 }
@@ -254,9 +264,14 @@ Search.View = {
                                 ,sortMap
                                 ,function(data) {
                                     var result = data;
+
+                                    var title = si.total + ' results of "' + si.q + '"';
+                                    AcmEx.Object.JTable.setTitle($jt, title);
+
                                     return Search.View.Results._makeJtData(result);
                                 }
                                 ,function(error) {
+                                    AcmEx.Object.JTable.setTitle($jt, "Error occurred");
                                 }
                             );
 
