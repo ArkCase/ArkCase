@@ -61,6 +61,7 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
 
     }
 
+    //  No implementation needed  because we don't want PostalAddress indexed in the SolrQuickSearch
     @Override
     public SolrDocument toSolrQuickSearch(PostalAddress in)
     {

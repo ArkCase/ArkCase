@@ -208,9 +208,9 @@ Search.View = {
                     Record.id = result.docs[i].object_id_s;
                     Record.name    = Acm.goodValue(result.docs[i].name);
                     Record.type    = Acm.goodValue(result.docs[i].object_type_s);
-                    Record.title   = Acm.goodValue(result.docs[i].title_t);
+                    Record.title   = Acm.goodValue(result.docs[i].title_parseable);
                     Record.owner   = Acm.goodValue(result.docs[i].owner_s);
-                    Record.created = Acm.goodValue(result.docs[i].create_dt);
+                    Record.created = Acm.goodValue(result.docs[i].create_tdt);
                     jtData.Records.push(Record);
                 }
 
@@ -220,7 +220,7 @@ Search.View = {
         }
         ,useJTable: function($jt) {
             var sortMap = {};
-            sortMap["title"] = "title_t";
+            sortMap["title"] = "title_parseable";
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{

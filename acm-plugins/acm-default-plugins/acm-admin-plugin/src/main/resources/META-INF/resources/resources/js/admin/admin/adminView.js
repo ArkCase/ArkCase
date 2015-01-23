@@ -27,6 +27,8 @@ Admin.View = Admin.View || {
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CREATED_ADHOC_GROUP, this.onModelRetrievedHierarchy);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP, this.onModelRetrievedHierarchy);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_USERS, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_MEMBER, this.onModelRetrievedHierarchy);
+
 
            if (Admin.View.Organization.ModalDialog.create)         {Admin.View.Organization.ModalDialog.create();}
         }
@@ -50,17 +52,32 @@ Admin.View = Admin.View || {
                 }
             }
         }
-        ,findMembers: function(memberId){
-            var allUsers = Admin.Model.Organization.cacheAllUsers.get("allUsers");
-            if(allUsers != null){
-                for(var i = 0; i < allUsers.length; i++){
-                    if(allUsers[i].object_id_s == memberId){
+        ,findMembers: function(memberId, users){
+            if(users != null){
+                for(var i = 0; i < users.length; i++){
+                    if(users[i].object_id_s == memberId){
                         var member = {};
-                        member = allUsers[i];
+                        member = users[i];
                         return member;
                     }
                 }
             }
+        }
+        ,makeAcmUser: function(selectedMember){
+            var acmUsersFromSolr = Admin.Model.Organization.cacheAcmUsersFromSolr.get("acmUsersFromSolr");
+            var userFound = Admin.View.Organization.findMembers(selectedMember,acmUsersFromSolr);
+            var acmUser = {};
+            acmUser.userId=userFound.object_id_s;
+            acmUser.fullName=userFound.name;
+            acmUser.firstName=userFound.first_name_lcs;
+            acmUser.lastName=userFound.last_name_lcs;
+            acmUser.userDirectoryName=userFound.userDirectoryName;
+            acmUser.userCreated=userFound.create_date_tdt;
+            acmUser.userModified=userFound.modified_date_tdt;
+            acmUser.userState=userFound.status_lcs;
+            acmUser.mail=userFound.email_lcs;
+            acmUser.distinguishedName=userFound.distinguishedName;
+            return acmUser;
         }
         ,ModalDialog:{
             create: function () {
@@ -81,22 +98,13 @@ Admin.View = Admin.View || {
 
 
                 this.$modalAddPeople = $("#addPeople");
-
                 this.$modalLabelPeople = $("#modalLabelPeople");
-                this.$txtFindMembers = $("#findMember");
-                this.$modalBtnFindMembers = $("#btnFindMembers");
-                this.$modalBtnFindMembers.on("click", function(e) {Admin.View.Organization.ModalDialog.onClickBtnFindMembers(e, this);});
+                this.$btnAddMembers = $("#btnAddMembers");
+                this.$btnAddMembers.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.onClickBtnAddMembers(e, this);});
 
             }
             , onInitialized: function () {
                 if (Admin.View.Organization.ModalDialog.Members.onInitialized)         {Admin.View.Organization.ModalDialog.Members.onInitialized();}
-
-            }
-            ,onClickBtnFindMembers: function(event,ctrl){
-                event.preventDefault();
-                var findMember = Admin.View.Organization.ModalDialog.getTextFindMember();
-                alert(findMember);
-                Admin.Controller.viewMemberSearch(findMember);
 
             }
             ,onClickBtnCreateAdHocGroup:function(event, ctrl){
@@ -127,9 +135,6 @@ Admin.View = Admin.View || {
             ,hideCreateAdHocGroupModal: function() {
                 this.$modalCreateAdHocGroup.modal('hide');
             }
-            ,getTextFindMember: function(){
-                return Acm.Object.getValue(this.$txtFindMembers);
-            }
             ,getTextGroupName: function() {
                 return Acm.Object.getValue(this.$txtGroupName);
             }
@@ -138,51 +143,377 @@ Admin.View = Admin.View || {
             }
             ,Members : {
                 create: function () {
+                    if (Admin.View.Organization.ModalDialog.Members.Results.create)         {Admin.View.Organization.ModalDialog.Members.Results.create();}
+                    if (Admin.View.Organization.ModalDialog.Members.Facets.create)         {Admin.View.Organization.ModalDialog.Members.Facets.create();}
+                    if (Admin.View.Organization.ModalDialog.Members.Query.create)         {Admin.View.Organization.ModalDialog.Members.Query.create();}
 
-                    this.$divMembers = $("#divMembers");
-                    this.createJTableMembers(this.$divMembers);
                 }
                 , onInitialized: function () {
                 }
                 , onModelRetrievedMembers: function () {
-                    AcmEx.Object.JTable.load(Admin.View.Correspondence.$divCorrespondenceTemplates);
+                    AcmEx.Object.JTable.load(Admin.View.Organization.ModalDialog.Members.Results.$divResults);
                 }
-                ,createJTableMembers: function ($s) {
-                    $s.jtable({
-                        title: 'Members'
-                        ,checkbox: true
-                        , actions: {
-                            listAction: function (postData, jtParams) {
-                                var rc = AcmEx.Object.jTableGetEmptyRecords();
-                                return rc;
+                ,onClickBtnAddMembers: function(){
+                    var selectedMembers = Admin.Model.Organization.cacheSelectedMembers.get("selectedMembers");
+                    if(selectedMembers != null){
+                     var groupMembers = [];
+                     var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
+                     var parentGroupId = Admin.Model.Organization.Tree.getParentNode();
+
+                     for(var i = 0 ; i < selectedMembers.length; i++){
+                     var selectedMember = selectedMembers[i];
+                     var acmUser = Admin.View.Organization.makeAcmUser(selectedMember);
+                     groupMembers.push(acmUser);
+                     }
+                     Admin.Controller.viewAddedMembers(groupMembers,parentGroupId);
+                     }
+                    //Admin.View.Organization.ModalDialog.$modalAddPeople.empty();
+
+                    Admin.View.Organization.ModalDialog.$modalAddPeople.modal('hide');
+                                    }
+                ,Query: {
+                    create: function() {
+                        this.$txtFindMembers = $("#findMember");
+                        this.$modalBtnFindMembers = $("#btnFindMembers");
+                        this.$modalBtnFindMembers.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Query.onClickBtnFindMembers(e, this);});
+
+                    }
+                    ,onInitialized: function() {
+                    }
+                    ,onClickBtnFindMembers: function(event,ctrl){
+                        event.preventDefault();
+                        var term = Admin.View.Organization.ModalDialog.Members.Query.getTextFindMember();
+                        Admin.Controller.viewSubmittedQuery(term);
+                    }
+                    ,getTextFindMember: function(){
+                        return Acm.Object.getValue(this.$txtFindMembers);
+                    }
+
+                }
+                ,Facets: {
+                    create: function(){
+                        this.$divFacets = $("#divFacets");
+                        /*var facet = Admin.Model.Organization.Facets.makeFacet();
+                        Admin.View.Organization.ModalDialog.Members.Facets.buildFacetPanel(facet);*/
+
+                        Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
+
+                    }
+                    ,onInitialized: function(){}
+                    ,onClickCheckBox: function(event, ctrl) {
+                        var selected = [];
+                        var $checked = Admin.View.Organization.ModalDialog.Members.Facets.$divFacets.find("input:checked");
+                        $checked.each(function(){
+                            var s = {};
+                            s.value = $(this).val();
+                            s.name = $(this).parent().attr("name");
+                            s.type = $(this).parent().parent().attr("name");
+                            selected.push(s);
+                        });
+
+                        Admin.Controller.viewChangedFacetSelection(selected);
+                    }
+
+                    ,onModelChangedFacet: function(facet) {
+                        if (facet.hasError) {
+                            //alert("View: onModelChangedFacet, hasError, errorMsg:" + facet.errorMsg);
+                        }
+                        Admin.View.Organization.ModalDialog.Members.Facets.buildFacetPanel(facet);
+                    }
+
+                    ,_getFacetDisplay: function(label, key) {
+                        if (Acm.isNotEmpty(label)) {
+                            return Acm.goodValue(label);
+                        } else {
+                            return Acm.goodValue(key);
+                        }
+                    }
+                    ,buildFacetPanel: function(facet) {
+                        //
+
+                        var html = "";
+
+                        if (Admin.Model.Organization.Facets.validateSearchFacet(facet)) {
+                            if (0 < Admin.Model.Organization.Facets.getCountFacetFields(facet)){
+                                html += "<div name='facet_fields'>";
+                                for(var i = 0; i < facet.facet_fields.length; i++) {
+                                    if (0 < Acm.goodValue(facet.facet_fields[i].count, 0)) {
+                                        if (Acm.isArray(facet.facet_fields[i].values)) {
+                                            var display = this._getFacetDisplay(facet.facet_fields[i].label, facet.facet_fields[i].key);
+                                            html += "<div name='" + display + "'>";
+                                            html += "<label class='label'>" + display + "</label>";
+                                            for (var j = 0; j < facet.facet_fields[i].values.length; j++) {
+                                                if (0 < Acm.goodValue(facet.facet_fields[i].values[j].count, 0)) {
+                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name)
+                                                    + "'>" + Acm.goodValue(facet.facet_fields[i].values[j].name)
+                                                    + "(<span>" + facet.facet_fields[i].values[j].count + "</span>)</input>";
+                                                }
+                                            }
+                                            html += "</div>";
+                                        }
+                                    }
+                                }
+                                html += "</div>";
+                            }
+
+
+                            if (0 < Admin.Model.Organization.Facets.getCountFacetQueries(facet)){
+                                html += "<div name='facet_queries'>";
+                                for(var i = 0; i < facet.facet_queries.length; i++) {
+                                    if (0 < Acm.goodValue(facet.facet_queries[i].count, 0)) {
+                                        if (Acm.isArray(facet.facet_queries[i].values)) {
+                                            var display = this._getFacetDisplay(facet.facet_queries[i].label, facet.facet_queries[i].key);
+                                            html += "<div name='" + display + "'>";
+                                            html += "<label class='label'>" + display + "</label>";
+                                            for (var j = 0; j < facet.facet_queries[i].values.length; j++) {
+                                                if (0 < Acm.goodValue(facet.facet_queries[i].values[j].count, 0)) {
+                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name)
+                                                    + "'>" + Acm.goodValue(facet.facet_queries[i].values[j].name)
+                                                    + "(<span>" + facet.facet_queries[i].values[j].count + "</span>)</input>";
+                                                }
+                                            }
+                                            html += "</div>";
+                                        }
+                                    }
+                                }
+                                html += "</div>";
+                            }
+
+
+                            if (0 < Admin.Model.Organization.Facets.getCountFacetDates(facet)){
+                                html += "<div name='facet_dates'>";
+                                for(var i = 0; i < facet.facet_dates.length; i++) {
+                                    if (0 < Acm.goodValue(facet.facet_dates[i].count, 0)) {
+                                        if (Acm.isArray(facet.facet_dates[i].values)) {
+                                            var display = this._getFacetDisplay(facet.facet_dates[i].label, facet.facet_dates[i].key);
+                                            html += "<div name='" + display + "'>";
+                                            html += "<label class='label'>" + display + "</label>";
+                                            for (var j = 0; j < facet.facet_dates[i].values.length; j++) {
+                                                if (0 < Acm.goodValue(facet.facet_dates[i].values[j].count, 0)) {
+                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name)
+                                                    + "'>" + Acm.goodValue(facet.facet_dates[i].values[j].name)
+                                                    + "(<span>" + facet.facet_dates[i].values[j].count + "</span>)</input>";
+                                                }
+                                            }
+                                            html += "</div>";
+                                        }
+                                    }
+                                }
+                                html += "</div>";
                             }
                         }
-                        , fields: {
-                            id: {
-                                title: 'ID'
-                                , key: true
-                                , list: false
-                                , create: false
-                                , edit: false
-                            }, title: {
-                                title: 'First Name'
-                                , width: '30%'
-                            }, created: {
-                                title: 'Last Name'
-                                , width: '15%'
-                                , edit: false
-                            }, modified: {
-                                title: 'Location'
-                                , width: '15%'
-                                , edit: false
-                            }, creator: {
-                                title: 'Email'
-                                , width: '15%'
-                                , edit: false
+
+                        this.setHtmlDivFacet(html);
+
+                        Admin.View.Organization.ModalDialog.Members.Facets.$divFacets.find("input[type='checkbox']").on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Facets.onClickCheckBox(e, this);});
+                    }
+
+                    ,setHtmlDivFacet: function(val) {
+                        return Acm.Object.setHtml(Admin.View.Organization.ModalDialog.Members.Facets.$divFacets, val);
+                    }
+                }
+
+                ,Results: {
+                    create: function() {
+                        this.$divResults = $("#divMembers");
+                        this.createJTableMembers(this.$divResults);
+
+                        Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_SUBMITTED_QUERY         ,this.onViewSubmittedQuery        ,Acm.Dispatcher.PRIORITY_LOW);
+                        Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_CHANGED_FACET_SELECTION ,this.onViewChangedFacetSelection ,Acm.Dispatcher.PRIORITY_LOW);
+                    }
+                    ,onInitialized: function() {
+                    }
+
+                    ,onViewSubmittedQuery: function(term) {
+                        AcmEx.Object.JTable.load(Admin.View.Organization.ModalDialog.Members.Results.$divResults);
+                    }
+                    ,onViewChangedFacetSelection: function(selected) {
+                        //todo: compare selected with si.filter, do nothing if same
+
+                        AcmEx.Object.JTable.load(Admin.View.Organization.ModalDialog.Members.Results.$divResults);
+                    }
+
+                    ,_makeJtData: function(result) {
+                        var jtData = AcmEx.Object.JTable.getEmptyRecords();
+                        if (result) {
+                            for (var i = 0; i < result.docs.length; i++) {
+                                var Record = {};
+                                Record.id = result.docs[i].object_id_s;
+                                Record.name    = Acm.goodValue(result.docs[i].name);
+                                Record.type    = Acm.goodValue(result.docs[i].object_type_s);
+                                Record.title   = Acm.goodValue(result.docs[i].title_t);
+                                Record.owner   = Acm.goodValue(result.docs[i].owner_s);
+                                Record.created = Acm.goodValue(result.docs[i].create_dt);
+                                jtData.Records.push(Record);
                             }
+
+                            jtData.TotalRecordCount = result.numFound;
                         }
-                    });
-                    $s.jtable('load');
+                        return jtData;
+                    }
+                    ,createJTableMembers: function($jt) {
+                        var sortMap = {};
+                        sortMap["title"] = "title_t";
+
+                        AcmEx.Object.JTable.usePaging($jt
+                            ,{
+                                title: 'Search Results'
+                                ,multiselect: true
+                                ,selecting: true
+                                ,selectingCheckboxes: true
+                                ,paging: true
+                                ,sorting: true
+                                ,actions: {
+/*
+                                    listAction: function (postData, jtParams) {
+                                        var rc = AcmEx.Object.jTableGetEmptyRecords();
+                                        var Record = {};
+                                        var result = {"numFound":2,"start":0,"docs":[
+                                        {
+                                            "id":"ian-acm-USER",
+                                            "object_id_s":"ian-acm",
+                                            "object_type_s":"USER",
+                                            "name":"Ian Investigator",
+                                            "create_date_tdt":"2014-07-23T16:53:57Z",
+                                            "modified_date_tdt":"2015-01-22T11:59:58Z",
+                                            "public_doc_b":false,
+                                            "protected_object_b":false,
+                                            "status_lcs":"VALID",
+                                            "first_name_lcs":"Ian",
+                                            "last_name_lcs":"Investigator",
+                                            "email_lcs":"acm@armedia.com",
+                                            "adhocTask_b":false,
+                                            "_version_":1491018451216498688}
+                                            ,{
+                                                "id":"ian-acm-USER",
+                                                "object_id_s":"ann-acm",
+                                                "object_type_s":"USER",
+                                                "name":"Charlie Investigator",
+                                                "create_date_tdt":"2014-07-23T16:53:57Z",
+                                                "modified_date_tdt":"2015-01-22T11:59:58Z",
+                                                "public_doc_b":false,
+                                                "protected_object_b":false,
+                                                "status_lcs":"VALID",
+                                                "first_name_lcs":"Ian",
+                                                "last_name_lcs":"Investigator",
+                                                "email_lcs":"acm@armedia.com",
+                                                "adhocTask_b":false,
+                                                "_version_":1491018451216498688}
+                                            ,{
+                                                "id": "albert-acm-USER",
+                                                "object_id_s": "albert-acm",
+                                                "object_type_s": "USER",
+                                                "name": "Albert Analyst",
+                                                "create_date_tdt": "2014-07-23T16:53:57Z",
+                                                "modified_date_tdt": "2015-01-22T15:30:02Z",
+                                                "public_doc_b": false,
+                                                "protected_object_b": false,
+                                                "status_lcs": "VALID",
+                                                "first_name_lcs": "Albert",
+                                                "last_name_lcs": "Analyst",
+                                                "email_lcs": "acm@armedia.com",
+                                                "adhocTask_b": false,
+                                                "_version_": 1491031663826698200
+                                            }]
+                                        };
+                                        for (var i = 0; i < result.docs.length; i++) {
+                                            var Record = {};
+                                            Record.id = result.docs[i].object_id_s;
+                                            Record.name    = Acm.goodValue(result.docs[i].name);
+                                            Record.type    = Acm.goodValue(result.docs[i].object_type_s);
+                                            rc.Records.push(Record);
+                                        }
+
+                                        return rc;
+                                    }
+*/
+                                    pagingListAction: function (postData, jtParams, sortMap) {
+                                        var si = Admin.Model.Organization.Facets.getSearchInfo();
+                                        if (Acm.isEmpty(si.q)) {
+                                            return AcmEx.Object.JTable.getEmptyRecords();
+                                        }
+                                        si.start = Acm.goodValue(jtParams.jtStartIndex, 0);
+
+                                        if (Admin.Model.Organization.Facets.isFacetUpToDate()) {
+                                            //var page = si.start;
+                                            //var result = Search.Model.cacheResult.get(page);
+                                            var result = Admin.Model.Organization.Facets.getCachedResult(si);
+                                            if (result) {
+                                                return Admin.View.Organization.ModalDialog.Members.Results._makeJtData(result);
+                                            }
+                                        }
+
+                                        return Admin.Service.Organization.facetSearchDeferred(si
+                                            ,postData
+                                            ,jtParams
+                                            ,sortMap
+                                            ,function(data) {
+                                                var result = data;
+                                                return Admin.View.Organization.ModalDialog.Members.Results._makeJtData(result);
+                                            }
+                                            ,function(error) {
+                                            }
+                                        );
+
+                                    }
+                                }
+
+                                ,fields: {
+                                    id: {
+                                        title: 'ID'
+                                        ,key: true
+                                        ,list: false
+                                        ,create: false
+                                        ,edit: false
+                                        ,sorting: false
+                                    }
+                                    ,name: {
+                                        title: 'Name'
+                                        ,width: '15%'
+                                        ,sorting: false
+                                    }
+                                    ,type: {
+                                        title: 'Type'
+                                        //,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
+                                        ,sorting: false
+                                    }
+                                    ,title: {
+                                        title: 'Title'
+                                        ,width: '30%'
+                                    }
+                                    ,owner: {
+                                        title: 'Owner'
+                                        ,width: '15%'
+                                        ,sorting: false
+                                    }
+                                    ,created: {
+                                        title: 'Created'
+                                        ,type: 'textarea'
+                                        ,width: '20%'
+                                        ,sorting: false
+                                    }
+                                } //end field
+                                //Register to selectionChanged event to hanlde events
+                                ,selectionChanged: function () {
+                                    //Get all selected rows
+                                    var $selectedRows = Admin.View.Organization.ModalDialog.Members.Results.$divResults.jtable('selectedRows');
+                                    if ($selectedRows.length > 0) {
+                                        //Show selected rows
+                                        var selectedMembers = [];
+                                        $selectedRows.each(function () {
+                                            var record = $(this).data('record');
+                                            selectedMembers.push(record.id);
+                                            Admin.Model.Organization.cacheSelectedMembers.put("selectedMembers", selectedMembers);
+                                        });
+                                    }
+                                    else if($selectedRows.length == 0){
+                                        Admin.Model.Organization.cacheSelectedMembers.reset();
+                                    }
+                                }
+                            } //end arg
+                            ,sortMap
+                        );
+                    }
                 }
             }
 
@@ -210,9 +541,10 @@ Admin.View = Admin.View || {
                         if(!subgroup.children){
                             subgroup.children = [];
                         }
+                        var allUsers = Admin.Model.Organization.cacheAllUsers.get("allUsers");
                         for(var j = 0; j < subgroup.members.length ; j++){
                             var subgroupMemberId = subgroup.members[j];
-                            var subgroupMember = Admin.View.Organization.findMembers(subgroupMemberId);
+                            var subgroupMember = Admin.View.Organization.findMembers(subgroupMemberId,allUsers);
                             if(subgroupMember != null){
                                 subgroup.children.push(subgroupMember)
                             }
@@ -354,23 +686,11 @@ Admin.View = Admin.View || {
                     var node = $.ui.fancytree.getNode(e),
                         $input = $(e.target);
                     e.stopPropagation();
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
                     Admin.Model.Organization.Tree.setParentNode(node.title);
                     Admin.View.Organization.Tree.onClickAddMembers(node);
                 });
 
-                /*$s.contextmenu({
-                    //delegate: "span.fancytree-title",
-                    delegate: ".fancytree-title",
-                    beforeOpen: function(event, ui) {
-                        var node = $.ui.fancytree.getNode(ui.target);
-                        node.setActive();
-                    },
-                    select: function(event, ui) {
-                        var node = $.ui.fancytree.getNode(ui.target);
-                        alert("select " + ui.cmd + " on " + node);
-                    }
-                });
-*/
             }
             ,treeSource: function(){
                 if(Admin.Model.Organization.Tree.isSourceLoaded() == false){
@@ -378,8 +698,6 @@ Admin.View = Admin.View || {
 
                     //group details
                     var groups = Admin.Model.Organization.cacheGroups.get("groups");
-                    //var groups = Admin.Model.Organization.cacheAllGroups.get("allGroups");
-
                     for(var i = 0; i < groups.length; i++) {
                         var group = groups[i];
                         var children = [];
@@ -390,13 +708,12 @@ Admin.View = Admin.View || {
 
                             Admin.View.Organization.Tree.allSubgroups(group, group.children);
                         }
-
-
                         //check for group members
                         if(group.members != null){
+                            var allUsers = Admin.Model.Organization.cacheAllUsers.get("allUsers");
                             for(var k = 0; k < group.members.length ; k++){
                                 var groupMemberId = group.members[k];
-                                var groupMember = Admin.View.Organization.findMembers(groupMemberId);
+                                var groupMember = Admin.View.Organization.findMembers(groupMemberId,allUsers);
                                 if(groupMember != null){
                                     group.children.push(groupMember);
                                 }

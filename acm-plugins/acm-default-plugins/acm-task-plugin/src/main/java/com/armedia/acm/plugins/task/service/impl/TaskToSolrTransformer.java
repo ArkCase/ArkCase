@@ -88,9 +88,10 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
 
         getSearchAccessControlFields().setAccessControlFields(doc, in);
 
-        doc.setTitle_t(in.getTitle());
+        //doc.setTitle_t(in.getTitle());
+        doc.setTitle_parseable(in.getTitle());
         doc.setObject_id_s(Long.toString(in.getId()));
-        doc.setCreate_dt(in.getCreateDate());
+        doc.setCreate_tdt(in.getCreateDate());
         doc.setName(in.getTitle());
         doc.setStatus_s(in.getStatus());
         doc.setAssignee_s(in.getAssignee());
@@ -99,11 +100,11 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setPriority_s(in.getPriority());
         doc.setParent_object_type_s(in.getAttachedToObjectType());
         doc.setParent_object_id_i(in.getAttachedToObjectId());
-        doc.setDue_dt(in.getDueDate());
+        doc.setDue_tdt(in.getDueDate());
         doc.setAdhocTask_b(in.isAdhocTask());
         doc.setObject_type_s("TASK");
         doc.setAuthor_s(in.getOwner());
-        doc.setLast_modified(new Date());
+        doc.setLast_modified_tdt(new Date());
 
         log.trace("returning a quick search doc");
 
