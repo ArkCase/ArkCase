@@ -228,6 +228,7 @@ Search.View = {
                     ,multiselect: false
                     ,selecting: false
                     ,selectingCheckboxes: false
+                    ,pageSize: 16
                     ,paging: true
                     ,sorting: true
                     ,actions: {

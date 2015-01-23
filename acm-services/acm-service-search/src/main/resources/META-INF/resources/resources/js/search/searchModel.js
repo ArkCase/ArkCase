@@ -22,10 +22,32 @@ Search.Model = {
         }
     }
     ,onViewChangedFacetSelection: function(selected) {
-        //todo: compare selected with si.filter, do nothing if same
+        //todo: ??? compare selected with si.filter, do nothing if same
 
         var si = Search.Model.getSearchInfo();
-        si.filter = selected;
+        si.filter = [];
+        if (Acm.isArray(selected)) {
+            var cur = {key: null, values: []};
+
+            for (var i = 0; i < selected.length; i++) {
+                var s = selected[i];
+                if (Acm.isNotEmpty(s.name) && Acm.isNotEmpty(s.value)) {
+                    if (s.name == cur.key) {
+                        cur.values.push(s.value);
+                    } else {
+                        if (Acm.isNotEmpty(cur.key)) {
+                            si.filter.push(cur);
+                        }
+                        cur = {};
+                        cur.key = s.name;
+                        cur.values = [s.value];
+                    }
+                }
+            }
+            if (0 < i) {
+                si.filter.push(cur);
+            }
+        }
     }
 
     //
@@ -52,7 +74,7 @@ Search.Model = {
     }
     ,putCachedResult: function(si, result) {
         var page = si.start;
-        Search.Model.cacheResult.get(page, result);
+        //Search.Model.cacheResult.put(page, result);
     }
 
     ,addFilter: function(si, key, value) {
@@ -127,7 +149,7 @@ Search.Model = {
         if (!Acm.isArrayEmpty(si.filter)) {
             for (var i = 0; i < si.filter.length; i++) {
                 if (0 == i) {
-                    param= '&filters="';
+                    param= '&filters=';
                 } else {
                     param += '&';
                 }
@@ -144,11 +166,9 @@ Search.Model = {
                     }
                 }
 
- //               param += 'fq="' + Acm.goodValue(si.filter[i].name) + '":' + Acm.goodValue(si.filter[i].value);
-
-                if (si.filter.length - 1 == i) {
-                    param += '"';
-                }
+//                if (si.filter.length - 1 == i) {
+//                    param += '"';
+//                }
             }
         }
         return param;

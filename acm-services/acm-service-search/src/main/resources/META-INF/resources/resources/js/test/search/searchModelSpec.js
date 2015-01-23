@@ -212,7 +212,7 @@ describe("Search.Model", function() {
 
     });
 
-    it("Search.Model: add/remove/find filte, makeFilterParamr", function() {
+    it("Search.Model: add/remove/find filter, makeFilterParam", function() {
         var si = Search.Model.getSearchInfo();
         var k;
         var v;
@@ -224,7 +224,7 @@ describe("Search.Model", function() {
         v = "Previous Year";
         Search.Model.addFilter(si, k, v);
         expect(Search.Model.findFilter(si, k, v)).toEqual(true);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters="fq="Create Date":Previous Year"');
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year');
 
         Search.Model.removeFilter(si, k, v);
         expect(Search.Model.findFilter(si, k, v)).toEqual(false);
@@ -232,25 +232,61 @@ describe("Search.Model", function() {
 
         Search.Model.addFilter(si, k, v);
         expect(Search.Model.findFilter(si, k, v)).toEqual(true);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters="fq="Create Date":Previous Year"');
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year');
 
         k = "Create Date";
         v = "Previous Month";
         Search.Model.addFilter(si, k, v);
         expect(Search.Model.findFilter(si, k, v)).toEqual(true);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters="fq="Create Date":Previous Year|Previous Month"');
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month');
 
         k = "Object Type";
         v = "CASE_FILE";
         Search.Model.addFilter(si, k, v);
         expect(Search.Model.findFilter(si, k, v)).toEqual(true);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters="fq="Create Date":Previous Year|Previous Month&fq="Object Type":CASE_FILE"');
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month&fq="Object Type":CASE_FILE');
 
         k = "Create Date";
         v = "Previous Year";
         Search.Model.removeFilter(si, k, v);
         expect(Search.Model.findFilter(si, k, v)).toEqual(false);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters="fq="Create Date":Previous Month&fq="Object Type":CASE_FILE"');
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Month&fq="Object Type":CASE_FILE');
+
+    });
+
+
+    it("Search.Model: onViewChangedFacetSelection", function() {
+        var si = Search.Model.getSearchInfo();
+
+        var selected = null;
+        Search.Model.onViewChangedFacetSelection(selected);
+        expect(si.filter).toEqual([]);
+
+        selected = [];
+        Search.Model.onViewChangedFacetSelection(selected);
+        expect(si.filter).toEqual([]);
+
+        si.filter = [];
+        selected = [{type:"facet_fields", name:"Object Type", value:"CASE_FILE"}];
+        Search.Model.onViewChangedFacetSelection(selected);
+        expect(si.filter).toEqual([{key:"Object Type", values:["CASE_FILE"]}]);
+
+        si.filter = [];
+        selected = [{type:"facet_fields", name:"Object Type", value:"CASE_FILE"}
+            ,{type:"facet_fields", name:"Object Type", value:"TASK"}
+        ];
+        Search.Model.onViewChangedFacetSelection(selected);
+        expect(si.filter).toEqual([{key:"Object Type", values:["CASE_FILE","TASK"]}]);
+
+        si.filter = [];
+        selected = [{type:"facet_fields", name:"Object Type", value:"CASE_FILE"}
+            ,{type:"facet_fields", name:"Object Type", value:"TASK"}
+            ,{type:"facet_fields", name:"Status", value:"valid"}
+        ];
+        Search.Model.onViewChangedFacetSelection(selected);
+        expect(si.filter).toEqual([{key:"Object Type", values:["CASE_FILE","TASK"]}
+            ,{key:"Status", values:["valid"]}
+        ]);
 
     });
 
