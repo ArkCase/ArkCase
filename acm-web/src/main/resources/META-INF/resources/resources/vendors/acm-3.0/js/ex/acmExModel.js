@@ -6,9 +6,11 @@
 AcmEx.Model = {
     create : function() {
         if (AcmEx.Model.Tree.create)              {AcmEx.Model.Tree.create();}
+        if (AcmEx.Model.Search.create)            {AcmEx.Model.Search.create();}
     }
     ,onInitialize : function() {
         if (AcmEx.Model.Tree.onInitialized)       {AcmEx.Model.Tree.onInitialized();}
+        if (AcmEx.Model.Search.onInitialized)     {AcmEx.Model.Search.onInitialized();}
     }
 
     ,Tree: {
@@ -279,4 +281,21 @@ AcmEx.Model = {
         }
     }
 
+    ,Search: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        ,getDefaultSearchInfo: function() {
+            return {
+                q: null
+                ,start: 0
+                ,n: 16
+                ,total: 0
+                ,filter: []
+                ,sort: []
+            };
+        }
+    }
 }
