@@ -24,23 +24,8 @@ Search.Service = {
                 //for test
                 //url = App.getContextPath() + "/resources/facetSearch.json?q=xyz";
 
-                if (Acm.isArray(searchInfo.filter)) {
-                    if (0 < searchInfo.filter.length) {
-                        for (var i = 0; i < searchInfo.filter.length; i++) {
-                            if (0 == i) {
-                                url += '&filters="';
-                            } else {
-                                url += '&';
-                            }
-
-                            url += 'fq="' + Acm.goodValue(searchInfo.filter[i].name) + '":' + Acm.goodValue(searchInfo.filter[i].value);
-
-                            if (searchInfo.filter.length - 1 == i) {
-                                url += '"';
-                            }
-                        }
-                    }
-                }
+                var filter = Search.Model.makeFilterParam(searchInfo);
+                url += filter;
 
                 return url;
             }
