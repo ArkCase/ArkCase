@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -100,7 +101,7 @@ public class FacetedSearchAPIController {
         for( Map.Entry<String,Object> e: propertyMap.entrySet() ){
             if( e.getKey().contains(FACET_PRE_KEY) ){
                 String facetKey = e.getKey().split(FACET_PRE_KEY)[1];
-                if(e.getKey().contains(DATE_FACET_PRE_KEY)){
+                if( e.getKey().contains(DATE_FACET_PRE_KEY) ){
                     facetKey = e.getKey().split(DATE_FACET_PRE_KEY)[1];
                     for( int i=0;i<jsonArray.length();i++ ){
                         timePeriodJSONObject = jsonArray.getJSONObject(i);
@@ -137,6 +138,11 @@ public class FacetedSearchAPIController {
         }
 
         if( !StringUtils.isBlank(filters) ) {
+            try {
+                filters = URLDecoder.decode(filters, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                log.error("Decoding problem occur while decoding & in the filters part",e);
+            }
             String solrFiltersSubQuery = createFacetedFiltersSubString(filters);
             queryBuilder.append(solrFiltersSubQuery);
         }
