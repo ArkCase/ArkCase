@@ -22,14 +22,36 @@ Search.Model = {
         }
     }
     ,onViewChangedFacetSelection: function(selected) {
-        //todo: compare selected with si.filter, do nothing if same
+        //todo: ??? compare selected with si.filter, do nothing if same
 
         var si = Search.Model.getSearchInfo();
-        si.filter = selected;
+        si.filter = [];
+        if (Acm.isArray(selected)) {
+            var cur = {key: null, values: []};
+
+            for (var i = 0; i < selected.length; i++) {
+                var s = selected[i];
+                if (Acm.isNotEmpty(s.name) && Acm.isNotEmpty(s.value)) {
+                    if (s.name == cur.key) {
+                        cur.values.push(s.value);
+                    } else {
+                        if (Acm.isNotEmpty(cur.key)) {
+                            si.filter.push(cur);
+                        }
+                        cur = {};
+                        cur.key = s.name;
+                        cur.values = [s.value];
+                    }
+                }
+            }
+            if (0 < i) {
+                si.filter.push(cur);
+            }
+        }
     }
 
     //
-    // filter array json format: [{key, value}, ...]
+    // filter array json format: [{key, values:['v1', 'v2', ...]}, ...]
     //
     ,_searchInfo: {
         q: null
@@ -52,40 +74,104 @@ Search.Model = {
     }
     ,putCachedResult: function(si, result) {
         var page = si.start;
-        Search.Model.cacheResult.get(page, result);
+        //Search.Model.cacheResult.put(page, result);
     }
-    //,selectFilter: function(filterType, filterKey, filterValue, select) {
+
     ,addFilter: function(si, key, value) {
-        var filter = this.findFilter(si, key, value);
-        if (!filter) {
-            filter = {};
-            filter.key = key;
-            filter.value = value;
-            si.filter.push(filter);
+        for (var i = 0; i < si.filter.length; i++) {
+            var f = si.filter[i];
+            if (f.key == key) {
+                //find value first to avoid adding duplicate
+                for (var j = 0; j < f.values.length; j++) {
+                    if (f.values[j] == value) {
+                        return;
+                    }
+                }
+                f.values.push(value);
+                return;
+            }
         }
 
+        //key entry not found, create one
+        var newFilter = {};
+        newFilter.key = key;
+        newFilter.values = [];
+        newFilter.values.push(value);
+        si.filter.push(newFilter);
 
-        //also, in View, jQuery selector for select
+
+
+//        var filter = this.findFilter(si, key, value);
+//        if (!filter) {
+//            filter = {};
+//            filter.key = key;
+//            filter.value = value;
+//            si.filter.push(filter);
+//        }
+
+
     }
     ,removeFilter: function(si, key, value) {
         for (var i = 0; i < si.filter.length; i++) {
             var f = si.filter[i];
-            if (f.key == key && f.value == value) {
-                si.filter.splice(i, 1);
-                break;
+            if (f.key == key) {
+                for (var j = 0; j < f.values.length; j++) {
+                    if (f.values[j] == value) {
+                        si.filter[i].values.splice(j, 1);
+                        break;
+                    }
+                }
+                if (0 >= f.values.length) {
+                    si.filter.splice(i, 1);
+                }
             }
         }
     }
     ,findFilter: function(si, key, value) {
-        var found = null;
-        for (var i = 0; i < si.filter.length; i++) {
-            var f = si.filter[i];
-            if (f.key == key && f.value == value) {
-                found = f;
-                break;
+        if (!Acm.isArrayEmpty(si.filter)) {
+            for (var i = 0; i < si.filter.length; i++) {
+                var f = si.filter[i];
+                if (f.key == key) {
+                    if (!Acm.isArrayEmpty(f.values)) {
+                        for (var j = 0; j < f.values.length; j++) {
+                            if (f.values[j] == value) {
+                                return true;
+                            }
+                        }
+                    }
+                }
             }
         }
-        return found;
+        return false;
+    }
+    ,makeFilterParam: function(si) {
+        var param = "";
+        if (!Acm.isArrayEmpty(si.filter)) {
+            for (var i = 0; i < si.filter.length; i++) {
+                if (0 == i) {
+                    param= '&filters=';
+                } else {
+                    param += '&';
+                }
+
+                if (!Acm.isArrayEmpty(si.filter[i].values)) {
+                    for (var j = 0; j < si.filter[i].values.length; j++) {
+                        if (0 == j) {
+                            param += 'fq="' + Acm.goodValue(si.filter[i].key) + '":';
+                        } else {
+                            param += '|';
+                        }
+                        param += Acm.goodValue(si.filter[i].values[j]);
+
+                    }
+                }
+
+//                if (si.filter.length - 1 == i) {
+//                    param += '"';
+//                }
+            }
+        }
+        return param;
     }
 
     ,_facetUpToDate: true
