@@ -25,23 +25,35 @@ Search.View = {
                     Search.View.Query.$btnSearch.click();
                 }
             });
+
+            if ("undefined" != typeof Topbar) {
+                Acm.Dispatcher.addEventListener(Topbar.Controller.QuickSearch.VIEW_CHANGED_QUICK_SEARCH_TERM ,this.onTopbarViewChangedQuickSearchTerm);
+            }
         }
         ,onInitialized: function() {
+            if ("undefined" != typeof Topbar) {
+                var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
+                Topbar.Model.QuickSearch.setQuickSearchTerm(null);
+                Search.View.Query._submit(term);
+            }
         }
-//        ,onPostInit: function() {
-//            var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
-//            if (Acm.isNotEmpty(term)) {
-//                Search.Object.reloadJTableResults();
-//            }
-//        }
 
         ,onClickBtnSearch : function(event, ctrl) {
             event.preventDefault();
 
             var term = Search.View.Query.getValueEdtSearch();
-            Search.Controller.viewSubmittedQuery(term);
+            Search.View.Query._submit(term);
         }
 
+        ,onTopbarViewChangedQuickSearchTerm: function(term) {
+            Search.View.Query._submit(term);
+            return true;
+        }
+        ,_submit: function(term) {
+            if (Acm.isNotEmpty(term)) {
+                Search.Controller.viewSubmittedQuery(term);
+            }
+        }
         ,getValueEdtSearch: function() {
             return Acm.Object.getPlaceHolderInput(this.$edtSearch);
         }
@@ -51,16 +63,6 @@ Search.View = {
         create: function() {
             this.$divFacet = $("#divFacet");
 
-//            this.$imgPicLoading    = $("#picLoading");
-//            this.$lnkChangePicture = $("#lnkChangePicture");
-//            this.$formPicture      = $("#formPicture");
-//            this.$fileInput        = $("#file");
-//
-//            this.$lnkChangePicture.on("click", function(e) {Search.View.Picture.onClickLnkChangePicture(e, this);});
-//            this.$fileInput.on("change", function(e) {Search.View.Picture.onChangeFileInput(e, this);});
-//            this.$formPicture.submit(function(e) {Search.View.Picture.onSubmitFormPicture(e, this);});
-//
-//
             Acm.Dispatcher.addEventListener(Search.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
         }
         ,onInitialized: function() {
@@ -180,9 +182,6 @@ Search.View = {
             this.setHtmlDivFacet(html);
 
             this.$divFacet.find("input[type='checkbox']").on("click", function(e) {Search.View.Facet.onClickCheckBox(e, this);});
-
-//            $( "#x" ).prop( "checked", true );
-//            $( "#x" ).prop( "checked", false );
         }
 
         ,setHtmlDivFacet: function(val) {
