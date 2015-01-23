@@ -43,8 +43,8 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         //TODO find a way to add Application Title
         //TODO find a way to add Location
         //TODO find a way to add Groups
-        return solr;
 
+        return solr;
     }
 
     @Override
@@ -56,8 +56,8 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         solr.setObject_type_s("USER");
         solr.setId(in.getUserId() + "-USER");
 
-        solr.setCreate_dt(in.getUserCreated());
-        solr.setLast_modified(in.getUserModified());
+        solr.setCreate_tdt(in.getUserCreated());
+        solr.setLast_modified_tdt(in.getUserModified());
 
 
         solr.setStatus_s(in.getUserState());

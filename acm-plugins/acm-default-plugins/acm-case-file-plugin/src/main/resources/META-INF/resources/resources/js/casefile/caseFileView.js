@@ -159,14 +159,14 @@ CaseFile.View = CaseFile.View || {
                         ,function(treeInfo, obj) {
                             var title = "";
                             if (obj) {
-                                title = Acm.goodValue(obj.title_t) + " (" + Acm.goodValue(obj.name) + ")";
+                                title = Acm.goodValue(obj.title_parseable) + " (" + Acm.goodValue(obj.name) + ")";
                             }
                             return title;
                         }
                         ,function(treeInfo, obj) {
                             var toolTip = "";
                             if (obj) {
-                                toolTip = Acm.goodValue(obj.title_t);
+                                toolTip = Acm.goodValue(obj.title_parseable);
                             }
                             return toolTip;
                         }
@@ -2561,7 +2561,7 @@ CaseFile.View = CaseFile.View || {
         }
         ,createJTableTasks: function($jt) {
             var sortMap = {};
-            sortMap["title"] = "title_t";
+            sortMap["title"] = "title_parseable";
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{

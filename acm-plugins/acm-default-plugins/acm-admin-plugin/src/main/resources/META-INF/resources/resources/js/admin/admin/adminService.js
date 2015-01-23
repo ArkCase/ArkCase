@@ -16,7 +16,7 @@ Admin.Service = {
         ,API_GROUP                  : "/api/latest/users/group/"
         ,API_RETRIEVE_GROUPS        : "/api/latest/users/groups/get?n=50&s=create_date_tdt desc"
         ,API_RETRIEVE_USERS         : "/api/v1/plugin/search/advanced/USER"
-        ,API_FACET_SEARCH_          : "/api/v1/plugin/search/quickSearch?q="
+        ,API_FACET_SEARCH_       : "/api/v1/plugin/search/facetedSearch?q="
 
 
         ,createAdHocGroup: function(group,parentId){
@@ -106,21 +106,36 @@ Admin.Service = {
                 ,JSON.stringify(group)
             )
         }
-        ,addGroupMember : function(groupMember,parentGroupId){
+        ,addGroupMembers : function(groupMembers,parentGroupId){
             var url = App.getContextPath()+ Admin.Service.Organization.API_GROUP + parentGroupId + "/members/save" ;
             Acm.Service.asyncPost(
                 function(response) {
                     if (response.hasError) {
-                        var addedMember = response;
-                        Admin.Controller.modelAddedGroupMember(addedMember);
+                        var addedMembers = response;
+                        //Admin.Controller.modelAddedGroupMember(addedMembers);
 
                     } else {
-                        var addedMember = response;
-                        Admin.Controller.modelAddedGroupMember(addedMember);
+                        if(response.members != null){
+                            var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
+                            if(currentGroup){
+                                if(!currentGroup.members){
+                                    currentGroup.members = [];
+                                }
+                                else if(currentGroup.members){
+                                    currentGroup.members.splice(0,currentGroup.members.length);
+                                }
+                                for(var i = 0; i < response.members.length; i++){
+                                    var member = response.members[i];
+                                    currentGroup.members.push(member.userId);
+                                }
+                                Admin.Model.Organization.Tree.sourceLoaded(false);
+                                Admin.Controller.modelAddedGroupMember(currentGroup.members,parentGroupId);
+                            }
+                        }
                     }
                 }
                 ,url
-                ,JSON.stringify(groupMember)
+                ,JSON.stringify(groupMembers)
             )
         }
         ,retrieveGroup : function(groupId){
@@ -143,7 +158,7 @@ Admin.Service = {
             )
         }
 
-        ,retrieveGroups : function(groupId){
+        ,retrieveGroups : function(){
             var url = App.getContextPath() + Admin.Service.Organization.API_RETRIEVE_GROUPS;
             Acm.Service.asyncGet(
                 function(response) {
@@ -205,16 +220,17 @@ Admin.Service = {
 
                     } else {
                         if (Admin.Model.Organization.validateGroup(response)) {
-                            var users = response.response.docs;
+                            var acmUsersFromSolr = response.response.docs;
                             var allUsers = [];
-                            for(var i = 0; i < users.length; i++){
+                            for(var i = 0; i < acmUsersFromSolr.length; i++){
                                 var user = {};
-                                user.title = users[i].name;
-                                user.lastname = users[i].last_name_lcs;
-                                user.object_id_s = users[i].object_id_s;
+                                user.title = acmUsersFromSolr[i].name;
+                                user.lastname = acmUsersFromSolr[i].last_name_lcs;
+                                user.object_id_s = acmUsersFromSolr[i].object_id_s;
                                 user.isMember = true;
                                 allUsers.push(user);
                             }
+                            Admin.Model.Organization.cacheAcmUsersFromSolr.put("acmUsersFromSolr", acmUsersFromSolr);
                             Admin.Model.Organization.cacheAllUsers.put("allUsers", allUsers);
                             Admin.Controller.modelRetrievedUsers(allUsers);
                         }
@@ -224,9 +240,71 @@ Admin.Service = {
             )
         }
 
+        ,facetSearchDeferred : function(searchInfo, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + Admin.Service.Organization.API_FACET_SEARCH_;
+                    url += searchInfo.q + '&filters="fq="Object Type":USER"';
+
+                    //for test
+                    //url = App.getContextPath() + "/resources/facetSearch.json?q=xyz";
+
+                    if (Acm.isArray(searchInfo.filter)) {
+                        if (0 < searchInfo.filter.length) {
+                            for (var i = 0; i < searchInfo.filter.length; i++) {
+                                if (0 == i) {
+                                    url += '&filters="';
+                                } else {
+                                    url += '&';
+                                }
+
+                                url += 'fq="' + Acm.goodValue(searchInfo.filter[i].name) + '":' + Acm.goodValue(searchInfo.filter[i].value);
+
+                                if (searchInfo.filter.length - 1 == i) {
+                                    url += '"';
+                                }
+                            }
+                        }
+                    }
+
+                    return url;
+                }
+                ,function(data) {
+                    var jtData = null
+                    if (Admin.Model.Organization.Facets.validateFacetSearchData(data)) {
+                        if (0 == data.responseHeader.status) {
+                            //response.start should match to jtParams.jtStartIndex
+                            //response.docs.length should be <= jtParams.jtPageSize
+
+                            searchInfo.total = data.response.numFound;
+
+
+                            var result = data.response;
+                            //var page = Acm.goodValue(jtParams.jtStartIndex, 0);
+                            //Search.Model.cacheResult.put(page, result);
+                            Admin.Model.Organization.Facets.putCachedResult(searchInfo, result);
+                            jtData = callbackSuccess(result);
+                            Admin.Controller.modelChangedResult(Acm.Service.responseWrapper(data, result));
+
+                            if (!Admin.Model.Organization.Facets.isFacetUpToDate()) {
+                                var facet = Admin.Model.Organization.Facets.makeFacet(data);
+                                Admin.Controller.modeChangedFacet(Acm.Service.responseWrapper(data, facet));
+                                Admin.Model.Organization.Facets.setFacetUpToDate(true);
+                            }
+                        } else {
+                            if (Acm.isNotEmpty(data.error)) {
+                                //todo: report error to controller. data.error.msg + "(" + data.error.code + ")";
+                            }
+                        }
+                    }
+                    return jtData;
+                }
+            );
+        }
         ,retrieveGroupMembers : function(term){
 
-            var url = App.getContextPath()+ Admin.Service.Organization.API_FACET_SEARCH_;
+            /*var url = App.getContextPath()+ Admin.Service.Organization.API_FACET_SEARCH_;
             if(term !=null){
                 url += term;
             }
@@ -234,19 +312,19 @@ Admin.Service = {
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                        /*var groupMembers = response;
-                        Admin.Controller.modelRetrievedGroup(groupMembers);*/
+                        *//*var groupMembers = response;
+                        Admin.Controller.modelRetrievedGroup(groupMembers);*//*
 
                     } else {
-                        /*if (Admin.Model.Organization.validateGroup(response)) {
+                        *//*if (Admin.Model.Organization.validateGroup(response)) {
                             var groupMembers = response;
                             Admin.Model.Organization.cacheGroupMembers.put(groupId, groupMembers);
                             Admin.Controller.modelRetrievedGroupMembers(groupMembers);
-                        }*/
+                        }*//*
                     }
                 }
                 ,url
-            )
+            )*/
         }
 
         ,removeGroupMember : function(groupMember,parentGroupId){
