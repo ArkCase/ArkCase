@@ -21,33 +21,38 @@ Topbar.View = {
             this.$edtSearch = this.$formSearch.find("input.typeahead");
             this.$btnSearch = this.$formSearch.find("button[type='submit']");
 
-            this.$formSearch.on("submit", function() {Topbar.View.QuickSearch.onSubmitFormSearch(this);});
+            //this.$formSearch.on("submit", function() {Topbar.View.QuickSearch.onSubmitFormSearch(this);});
             this.$btnSearch .on("click", function(e) {Topbar.View.QuickSearch.onClickBtnSearch(e, this);});
 
             this.$formSearch.attr("method", "get");
-            var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
-            this.setActionFormSearch(term);
+//            var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
+//            this.setActionFormSearch(term);
+            this.setActionFormSearch();
         }
         ,onInitialized: function() {
         }
 
         ,onClickBtnSearch : function(event, ctrl) {
             var term = this.getValueEdtSearch();
-            this.setActionFormSearch(term);
-            //event.preventDefault();
-        }
-
-        ,onSubmitFormSearch : function(ctrl) {
-            var term = this.getValueEdtSearch();
-            Topbar.Controller.QuickSearch.viewChangedQuickSearchTerm(term);
-            return false;
-        }
-
-        ,setActionFormSearch: function(term) {
-            var url = App.getContextPath() + "/plugin/search"
-            if (Acm.isNotEmpty(term)) {
-                url += "?q=" + term;
+            if (0 < Topbar.Controller.QuickSearch.viewChangedQuickSearchTerm(term)) {
+                event.preventDefault();
+            } else {
+//                this.setActionFormSearch(term);
             }
+        }
+
+//        ,onSubmitFormSearch : function(ctrl) {
+//            var term = this.getValueEdtSearch();
+//            Topbar.Controller.QuickSearch.viewChangedQuickSearchTerm(term);
+//            return false;
+//        }
+
+        ,setActionFormSearch: function() {
+//        ,setActionFormSearch: function(term) {
+            var url = App.getContextPath() + "/plugin/search"
+//            if (Acm.isNotEmpty(term)) {
+//                url += "?q=" + term;
+//            }
             this.$formSearch.attr("action", url);
         }
         ,getValueEdtSearch: function() {

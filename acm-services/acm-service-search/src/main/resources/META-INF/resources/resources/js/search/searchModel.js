@@ -6,6 +6,7 @@
 Search.Model = {
     create : function() {
         this.cacheResult = new Acm.Model.CacheFifo(8);
+        this.setSearchInfo(AcmEx.Model.Search.getDefaultSearchInfo());
 
         Acm.Dispatcher.addEventListener(Search.Controller.VIEW_SUBMITTED_QUERY          ,this.onViewSubmittedQuery);
         Acm.Dispatcher.addEventListener(Search.Controller.VIEW_CHANGED_FACET_SELECTION  ,this.onViewChangedFacetSelection);
@@ -18,11 +19,14 @@ Search.Model = {
         var si = Search.Model.getSearchInfo();
         if (!Acm.compare(term, si.q)) {
             si.q = term;
+            si.filter = [];
             Search.Model.setFacetUpToDate(false);
         }
     }
     ,onViewChangedFacetSelection: function(selected) {
-        //todo: ??? compare selected with si.filter, do nothing if same
+        //todo: ??? compare selected with si.filter; if same, do nothing and return
+
+        Search.Model.setFacetUpToDate(false);
 
         var si = Search.Model.getSearchInfo();
         si.filter = [];
@@ -53,14 +57,7 @@ Search.Model = {
     //
     // filter array json format: [{key, values:['v1', 'v2', ...]}, ...]
     //
-    ,_searchInfo: {
-        q: null
-        ,start: 0
-        ,n: 16
-        ,total: 0
-        ,filter: []
-        ,sort: []
-    }
+    ,_searchInfo: null
     ,getSearchInfo: function() {
         return this._searchInfo;
     }
@@ -98,18 +95,6 @@ Search.Model = {
         newFilter.values = [];
         newFilter.values.push(value);
         si.filter.push(newFilter);
-
-
-
-//        var filter = this.findFilter(si, key, value);
-//        if (!filter) {
-//            filter = {};
-//            filter.key = key;
-//            filter.value = value;
-//            si.filter.push(filter);
-//        }
-
-
     }
     ,removeFilter: function(si, key, value) {
         for (var i = 0; i < si.filter.length; i++) {
@@ -183,7 +168,7 @@ Search.Model = {
     }
 
     //
-    // Facet array JSON format: [{label, key, count, values:[{name, count, def, selected}, ...]}, ...]
+    // Facet array JSON format: [{label, key, count, values:[{name, count, def}, ...]}, ...]
     //
     ,_facet: {
         facet_queries: []

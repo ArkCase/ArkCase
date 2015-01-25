@@ -520,10 +520,8 @@ AcmEx.Object = {
                 });
             }
         }
-
-
-
     }
+
     ,TreeModifier: {
         defaultFilter: null
         ,buildFilter: function($ulFilter, treeFilter, onFilterChanged) {
