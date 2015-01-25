@@ -16,22 +16,22 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.Tasks.create)           {CaseFile.View.Tasks.create();}
         if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
         if (CaseFile.View.Events.create)          {CaseFile.View.Events.create();}
-        if (CaseFile.View.Correspondence.create)        {CaseFile.View.Correspondence.create();}
+        if (CaseFile.View.Correspondence.create)  {CaseFile.View.Correspondence.create();}
 
     }
     ,onInitialized: function() {
-        if (CaseFile.View.MicroData.onInitialized)   {CaseFile.View.MicroData.onInitialized();}
-        if (CaseFile.View.Tree.onInitialized)        {CaseFile.View.Tree.onInitialized();}
-        if (CaseFile.View.Action.onInitialized)      {CaseFile.View.Action.onInitialized();}
-        if (CaseFile.View.Detail.onInitialized)      {CaseFile.View.Detail.onInitialized();}
-        if (CaseFile.View.People.onInitialized)	  {CaseFile.View.People.onInitialized();}
-        if (CaseFile.View.Documents.onInitialized)   {CaseFile.View.Documents.onInitialized();}
-        if (CaseFile.View.Participants.onInitialized){CaseFile.View.Participants.onInitialized();}
-        if (CaseFile.View.Notes.onInitialized)       {CaseFile.View.Notes.onInitialized();}
-        if (CaseFile.View.Tasks.onInitialized)       {CaseFile.View.Tasks.onInitialized();}
-        if (CaseFile.View.References.onInitialized)  {CaseFile.View.References.onInitialized();}
-        if (CaseFile.View.Events.onInitialized)      {CaseFile.View.Events.onInitialized();}
-        if (CaseFile.View.Correspondence.onInitialized)        {CaseFile.View.Correspondence.onInitialized();}
+        if (CaseFile.View.MicroData.onInitialized)      {CaseFile.View.MicroData.onInitialized();}
+        if (CaseFile.View.Tree.onInitialized)           {CaseFile.View.Tree.onInitialized();}
+        if (CaseFile.View.Action.onInitialized)         {CaseFile.View.Action.onInitialized();}
+        if (CaseFile.View.Detail.onInitialized)         {CaseFile.View.Detail.onInitialized();}
+        if (CaseFile.View.People.onInitialized)         {CaseFile.View.People.onInitialized();}
+        if (CaseFile.View.Documents.onInitialized)      {CaseFile.View.Documents.onInitialized();}
+        if (CaseFile.View.Participants.onInitialized)   {CaseFile.View.Participants.onInitialized();}
+        if (CaseFile.View.Notes.onInitialized)          {CaseFile.View.Notes.onInitialized();}
+        if (CaseFile.View.Tasks.onInitialized)          {CaseFile.View.Tasks.onInitialized();}
+        if (CaseFile.View.References.onInitialized)     {CaseFile.View.References.onInitialized();}
+        if (CaseFile.View.Events.onInitialized)         {CaseFile.View.Events.onInitialized();}
+        if (CaseFile.View.Correspondence.onInitialized) {CaseFile.View.Correspondence.onInitialized();}
 
     }
 

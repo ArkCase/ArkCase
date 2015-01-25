@@ -22,7 +22,7 @@ for ( GrantedAuthority granted : authentication.getAuthorities() )
     // include records where current user is in a group on allow_acl_ss
     dataAccessFilter += ", termfreq(allow_acl_ss, '" + authName + "')";
     // exclude records where current user is in a locked-out group
-    denyAccessFilter += " AND -deny_acl_ss:" + authName;
+    denyAccessFilter += " AND -deny_acl_ss:\"" + authName + "\"";
 }
 
 dataAccessFilter += ")";

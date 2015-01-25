@@ -1,6 +1,7 @@
 package com.armedia.acm.services.search.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
@@ -10,10 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -32,7 +37,7 @@ public class AdvancedSearchQueryFlowIT
     @Test
     public void largeRequest() throws Exception
     {
-        String query = "gratefuldead&fq=%7B%21frange+l%3D1%7Dsum%28if%28exists%28protected_object_b%29%2C+0%2C+1%29%2C+if" +
+        String query = "COMPLAINT&fq=%7B%21frange+l%3D1%7Dsum%28if%28exists%28protected_object_b%29%2C+0%2C+1%29%2C+if" +
                 "%28protected_object_b%2C+0%2C+1%29%2C+if%28public_doc_b%2C+1%2C+0%29%2C+termfreq%28allow_acl_ss%2C+" +
                 "%27ann-acm%27%29%2C+termfreq%28allow_acl_ss%2C+%27ROLE_ADMINISTRATOR%27%29%2C+termfreq%28allow_acl_ss" +
                 "%2C+%27ACM_ADMINISTRATOR_DEV%27%29%29&fq=-deny_acl_ss%3Aann-acm+AND+-deny_acl_ss%3AROLE_ADMINISTRATOR+" +
@@ -62,7 +67,10 @@ public class AdvancedSearchQueryFlowIT
 
         log.debug("query length: " + query.length());
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken("jerry", "garcia");
+        List<SimpleGrantedAuthority> groups = new ArrayList<>();
+        groups.add(new SimpleGrantedAuthority("GROUP1"));
+        groups.add(new SimpleGrantedAuthority("GROUP WITH SPACE"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken("jerry", "garcia", groups);
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
@@ -78,6 +86,13 @@ public class AdvancedSearchQueryFlowIT
         assertNull(response.getExceptionPayload());
 
         log.debug("response: " + response.getPayloadAsString());
+
+        JSONObject json = new JSONObject(response.getPayloadAsString());
+        JSONObject jsonResponse = json.getJSONObject("response");
+        int numFound = jsonResponse.getInt("numFound");
+        assertTrue(numFound > 0);
+
+        log.debug("num found: " + numFound);
 
 
     }

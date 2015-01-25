@@ -25,23 +25,35 @@ Search.View = {
                     Search.View.Query.$btnSearch.click();
                 }
             });
+
+            if ("undefined" != typeof Topbar) {
+                Acm.Dispatcher.addEventListener(Topbar.Controller.QuickSearch.VIEW_CHANGED_QUICK_SEARCH_TERM ,this.onTopbarViewChangedQuickSearchTerm);
+            }
         }
         ,onInitialized: function() {
+            if ("undefined" != typeof Topbar) {
+                var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
+                Topbar.Model.QuickSearch.setQuickSearchTerm(null);
+                Search.View.Query._submit(term);
+            }
         }
-//        ,onPostInit: function() {
-//            var term = Topbar.Model.QuickSearch.getQuickSearchTerm();
-//            if (Acm.isNotEmpty(term)) {
-//                Search.Object.reloadJTableResults();
-//            }
-//        }
 
         ,onClickBtnSearch : function(event, ctrl) {
             event.preventDefault();
 
             var term = Search.View.Query.getValueEdtSearch();
-            Search.Controller.viewSubmittedQuery(term);
+            Search.View.Query._submit(term);
         }
 
+        ,onTopbarViewChangedQuickSearchTerm: function(term) {
+            Search.View.Query._submit(term);
+            return true;
+        }
+        ,_submit: function(term) {
+            if (Acm.isNotEmpty(term)) {
+                Search.Controller.viewSubmittedQuery(term);
+            }
+        }
         ,getValueEdtSearch: function() {
             return Acm.Object.getPlaceHolderInput(this.$edtSearch);
         }
@@ -51,16 +63,6 @@ Search.View = {
         create: function() {
             this.$divFacet = $("#divFacet");
 
-//            this.$imgPicLoading    = $("#picLoading");
-//            this.$lnkChangePicture = $("#lnkChangePicture");
-//            this.$formPicture      = $("#formPicture");
-//            this.$fileInput        = $("#file");
-//
-//            this.$lnkChangePicture.on("click", function(e) {Search.View.Picture.onClickLnkChangePicture(e, this);});
-//            this.$fileInput.on("change", function(e) {Search.View.Picture.onChangeFileInput(e, this);});
-//            this.$formPicture.submit(function(e) {Search.View.Picture.onSubmitFormPicture(e, this);});
-//
-//
             Acm.Dispatcher.addEventListener(Search.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
         }
         ,onInitialized: function() {
@@ -96,6 +98,7 @@ Search.View = {
         }
         ,buildFacetPanel: function(facet) {
             var html = "";
+            var si = Search.Model.getSearchInfo();
 
             if (Search.Model.validateSearchFacet(facet)) {
                 if (0 < Search.Model.getCountFacetFields(facet)){
@@ -108,8 +111,11 @@ Search.View = {
                                 html += "<label class='label'>" + display + "</label>";
                                 for (var j = 0; j < facet.facet_fields[i].values.length; j++) {
                                     if (0 < Acm.goodValue(facet.facet_fields[i].values[j].count, 0)) {
-                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name)
-                                            + "'>" + Acm.goodValue(facet.facet_fields[i].values[j].name)
+                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name) + "'";
+                                        if (Search.Model.findFilter(si, display, Acm.goodValue(facet.facet_fields[i].values[j].name))) {
+                                            html += " checked";
+                                        }
+                                        html += ">" + Acm.goodValue(facet.facet_fields[i].values[j].name)
                                             + "(<span>" + facet.facet_fields[i].values[j].count + "</span>)</input>";
                                     }
                                 }
@@ -131,8 +137,11 @@ Search.View = {
                                 html += "<label class='label'>" + display + "</label>";
                                 for (var j = 0; j < facet.facet_queries[i].values.length; j++) {
                                     if (0 < Acm.goodValue(facet.facet_queries[i].values[j].count, 0)) {
-                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name)
-                                            + "'>" + Acm.goodValue(facet.facet_queries[i].values[j].name)
+                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name) + "'";
+                                        if (Search.Model.findFilter(si, display, Acm.goodValue(facet.facet_queries[i].values[j].name))) {
+                                            html += " checked";
+                                        }
+                                        html += ">" + Acm.goodValue(facet.facet_queries[i].values[j].name)
                                             + "(<span>" + facet.facet_queries[i].values[j].count + "</span>)</input>";
                                     }
                                 }
@@ -154,8 +163,11 @@ Search.View = {
                                 html += "<label class='label'>" + display + "</label>";
                                 for (var j = 0; j < facet.facet_dates[i].values.length; j++) {
                                     if (0 < Acm.goodValue(facet.facet_dates[i].values[j].count, 0)) {
-                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name)
-                                            + "'>" + Acm.goodValue(facet.facet_dates[i].values[j].name)
+                                        html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name) + "'";
+                                        if (Search.Model.findFilter(si, display, Acm.goodValue(facet.facet_dates[i].values[j].name))) {
+                                            html += " checked";
+                                        }
+                                        html += ">" + Acm.goodValue(facet.facet_dates[i].values[j].name)
                                             + "(<span>" + facet.facet_dates[i].values[j].count + "</span>)</input>";
                                     }
                                 }
@@ -170,9 +182,6 @@ Search.View = {
             this.setHtmlDivFacet(html);
 
             this.$divFacet.find("input[type='checkbox']").on("click", function(e) {Search.View.Facet.onClickCheckBox(e, this);});
-
-//            $( "#x" ).prop( "checked", true );
-//            $( "#x" ).prop( "checked", false );
         }
 
         ,setHtmlDivFacet: function(val) {
@@ -254,9 +263,14 @@ Search.View = {
                                 ,sortMap
                                 ,function(data) {
                                     var result = data;
+
+                                    var title = si.total + ' results of "' + si.q + '"';
+                                    AcmEx.Object.JTable.setTitle($jt, title);
+
                                     return Search.View.Results._makeJtData(result);
                                 }
                                 ,function(error) {
+                                    AcmEx.Object.JTable.setTitle($jt, "Error occurred");
                                 }
                             );
 
