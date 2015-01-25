@@ -318,7 +318,7 @@
                             <textarea class="form-control" id='groupDescription' placeholder="Enter description"></textarea>
                         </div>
 
-                        <div class="col-sm-12">
+                        <%--<div class="col-sm-12">
                             <label>Add people to group</label>
                             <div class="input-group">
                                 <input type="text" class="input-sm form-control" placeholder="Search people.." >
@@ -326,8 +326,9 @@
                                     <button class="btn btn-sm btn-default" type="button"><i class="fa fa-search"></i></button>
                                   </span>
                             </div>
-                        </div>
+                        </div>--%>
                             <%--<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Simple collapsible</button>--%>
+<%--
                         <div class="col-sm-12">
                             <label></label>
                             <div id="additionalFields" class="collapse in">
@@ -352,9 +353,11 @@
                                 </small>
                             </a>
                         </div>
+--%>
                     </div>
                 </section>
 
+<%--
                 <section class="panel panel-default">
                     <div class="table-responsive">
                         <table class="table table-striped b-t b-light">
@@ -384,7 +387,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <%--<footer class="panel-footer">
+                    &lt;%&ndash;<footer class="panel-footer">
                         <div class="row">
                             <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 20-30 of 50 items</small> </div>
                             <div class="col-sm-6 text-right text-center-xs">
@@ -397,8 +400,9 @@
                                 </ul>
                             </div>
                         </div>
-                    </footer>--%>
+                    </footer>&ndash;%&gt;
                 </section>
+--%>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -435,6 +439,8 @@
                         <br />
                         </div>
 
+
+
                         <div id="divMembersResults">
                             <%--JTable - People Picker--%>
                             <div class="row" id="tabMembers">
@@ -452,7 +458,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="btnAddMembers" >Add People</button>
+                <button type="button" class="btn btn-primary" id="btnAddPeople" >Add</button>
             </div>
         </div>
     </div>

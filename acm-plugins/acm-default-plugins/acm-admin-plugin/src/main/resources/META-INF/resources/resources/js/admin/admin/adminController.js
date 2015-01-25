@@ -7,23 +7,25 @@ Admin.Controller = Admin.Controller || {
     }
     ,onInitialized: function() {
     }
-    ,VIEW_CREATED_AD_HOC_GROUP                                : "admin-view-created-adhoc-group"                              //param : group,parentId
+    ,VIEW_CREATED_AD_HOC_GROUP                                : "organization-hierarchy-view-created-adhoc-group"                              //param : group,parentId
 
-    ,VIEW_REMOVED_GROUP_MEMBER                                : "admin-view-removed-group-member"                             //param : removedMembers, parentGroupId
+    ,VIEW_REMOVED_GROUP_MEMBER                                : "organization-hierarchy-view-removed-group-member"                             //param : removedMembers, parentGroupId
 
-    ,VIEW_REMOVED_GROUP                                       : "admin-view-removed-group"                                    //param : groupId
+    ,VIEW_REMOVED_GROUP                                       : "organization-hierarchy-view-removed-group"                                    //param : groupId
 
-    ,VIEW_ADDED_GROUP_MEMBERS                                 : "admin-view-added-members"                                    //param : addedMembers,parentGroupId
+    ,VIEW_ADDED_GROUP_MEMBERS                                 : "organization-hierarchy-view-added-members"                                    //param : addedMembers,parentGroupId
 
-    ,VIEW_SEARCHED_MEMBERS                                    : "admin-view-searched--members"                                //param : term
+    ,VIEW_ADDED_GROUP_SUPERVISOR                              : "organization-hierarchy-view-added-supervisor"                                  //param : addedSupervisor,parentGroupId
 
-    ,VIEW_CHANGED_FACET_SELECTION                             : "search-view-changed-facet-selection"                         //param: selected
+    ,VIEW_SEARCHED_MEMBERS                                    : "organization-hierarchy-view-searched--members"                                //param : term
 
-    ,VIEW_SUBMITTED_QUERY                                     : "search-view-submitted-query"                                 //param: term
+    ,VIEW_CHANGED_FACET_SELECTION                             : "organization-hierarchy-search-view-changed-facet-selection"                         //param: selected
 
-    ,MODEL_CHANGED_RESULT                                     : "search-changed-result"                                     //param: result
+    ,VIEW_SUBMITTED_QUERY                                     : "organization-hierarchy-search-view-submitted-query"                                 //param: term
 
-    ,MODEL_CHANGED_FACET                                      : "search-changed-facet"                                      //param: facet
+    ,MODEL_CHANGED_RESULT                                     : "organization-hierarchy-search-changed-result"                                     //param: result
+
+    ,MODEL_CHANGED_FACET                                      : "organization-hierarchy-search-changed-facet"                                      //param: facet
 
     ,MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES                 : "admin-model-retrieved-correspondence-templates"              //param : templatesList
 
@@ -40,6 +42,8 @@ Admin.Controller = Admin.Controller || {
     ,MODEL_RETRIEVED_GROUP_MEMBERS                            : "organization-hierarchy-group-members-retrieved"              //param : groupMembers
 
     ,MODEL_ADDED_GROUP_MEMBER                                 : "organization-hierarchy-group-members-added"                  //param : addedMember
+
+    ,MODEL_ADDED_GROUP_SUPERVISOR                             : "organization-hierarchy-group-supervisor-added"                  //param : addedMember
 
     ,MODEL_REMOVED_GROUP_MEMBER                               : "organization-hierarchy-group-member-removed"                 //param : removedMember
 
@@ -89,6 +93,10 @@ Admin.Controller = Admin.Controller || {
         Acm.Dispatcher.fireEvent(this.VIEW_ADDED_GROUP_MEMBERS, addedMembers,parentGroupId);
     }
 
+    ,viewAddedSupervisor: function(addedSupervisor,parentGroupId){
+        Acm.Dispatcher.fireEvent(this.VIEW_ADDED_GROUP_SUPERVISOR, addedSupervisor,parentGroupId);
+    }
+
     ,modelChangedResult: function(result) {
         Acm.Dispatcher.fireEvent(this.MODEL_CHANGED_RESULT, result);
     }
@@ -126,6 +134,10 @@ Admin.Controller = Admin.Controller || {
 
     ,modelAddedGroupMember: function(addedMembers){
         Acm.Dispatcher.fireEvent(this.MODEL_ADDED_GROUP_MEMBER, addedMembers);
+    }
+
+    ,modelAddedGroupSupervisor: function(addedSupervisor){
+        Acm.Dispatcher.fireEvent(this.MODEL_ADDED_GROUP_SUPERVISOR, addedSupervisor);
     }
 
     ,modelUpdatedAccessControl : function(accessControlList){
