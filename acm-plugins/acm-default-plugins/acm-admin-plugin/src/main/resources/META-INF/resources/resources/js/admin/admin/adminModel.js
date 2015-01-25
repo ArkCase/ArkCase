@@ -51,7 +51,6 @@ Admin.Model = Admin.Model || {
 
     ,Organization: {
         create : function() {
-            this.cacheAllGroups = new Acm.Model.CacheFifo(4);
             this.cacheGroup = new Acm.Model.CacheFifo(4);
             this.cacheGroups = new Acm.Model.CacheFifo(4);
             this.cacheSubgroups = new Acm.Model.CacheFifo(4);
@@ -61,7 +60,6 @@ Admin.Model = Admin.Model || {
             this.cacheAcmUsersFromSolr = new Acm.Model.CacheFifo(4);
             this.cacheResult = new Acm.Model.CacheFifo(4);
 
-            //Admin.Service.Organization.retrieveUsers();
             Admin.Service.Organization.retrieveGroups();
 
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUPS, this.onModelRetrievedGroups);
@@ -72,12 +70,7 @@ Admin.Model = Admin.Model || {
             Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_SEARCHED_MEMBERS, this.onViewSearchedMembers);
             Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_SUBMITTED_QUERY          ,Admin.Model.Organization.Facets.onViewSubmittedQuery);
             Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_CHANGED_FACET_SELECTION  ,Admin.Model.Organization.Facets.onViewChangedFacetSelection);
-
-
-            /*Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP_MEMBER, this.onModelModifiedGroupData);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CREATED_ADHOC_GROUP, this.onModelModifiedGroupData);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_MEMBER, this.onModelModifiedGroupData);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP, this.onModelModifiedGroupData);*/
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ADDED_GROUP_SUPERVISOR, this.onViewAddedSupervisor);
 
         }
         ,onInitialized: function() {
@@ -699,8 +692,8 @@ Admin.Model = Admin.Model || {
             }
             ,setCurrentGroup : function(groupName) {
                 var groups = Admin.Model.Organization.cacheGroups.get("groups");
-                var subGroups = Admin.Model.Organization.cacheGroups.get("subGroups");
-                var foundInGroup;
+                var subGroups = Admin.Model.Organization.cacheSubgroups.get("subgroups");
+                var foundInGroup = false;
                 for(var i = 0; i < groups.length; i++){
                     if(groupName == groups[i].title){
                         this._currentGroup = groups[i];
@@ -710,8 +703,8 @@ Admin.Model = Admin.Model || {
                 }
                 if(foundInGroup == false){
                     for(var j = 0; j < subGroups.length; j++){
-                        if(groupName == subGroups[i].title){
-                            this._currentGroup = subGroups[i];
+                        if(groupName == subGroups[j].title){
+                            this._currentGroup = subGroups[j];
                             break;
                         }
                     }
@@ -741,9 +734,13 @@ Admin.Model = Admin.Model || {
         ,onViewAddedMembers: function(addedMembers, parentGroupId){
             Admin.Service.Organization.addGroupMembers(addedMembers, parentGroupId);
         }
+        ,onViewAddedSupervisor: function(addedSupervisor, parentGroupId){
+            Admin.Service.Organization.addGroupSupervisor(addedSupervisor, parentGroupId);
+        }
         ,onModelRetrievedGroups: function() {
             Admin.Service.Organization.retrieveUsers();
         }
+
     }
 
     ,Correspondence:{

@@ -28,6 +28,7 @@ Admin.View = Admin.View || {
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP, this.onModelRetrievedHierarchy);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_USERS, this.onModelRetrievedHierarchy);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_MEMBER, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_SUPERVISOR, this.onModelRetrievedHierarchy);
 
 
            if (Admin.View.Organization.ModalDialog.create)         {Admin.View.Organization.ModalDialog.create();}
@@ -99,8 +100,8 @@ Admin.View = Admin.View || {
 
                 this.$modalAddPeople = $("#addPeople");
                 this.$modalLabelPeople = $("#modalLabelPeople");
-                this.$btnAddMembers = $("#btnAddMembers");
-                this.$btnAddMembers.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.onClickBtnAddMembers(e, this);});
+                this.$btnAddPeople = $("#btnAddPeople");
+                this.$btnAddPeople.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.onClickBtnAddPeople(e, this);});
 
             }
             , onInitialized: function () {
@@ -150,27 +151,39 @@ Admin.View = Admin.View || {
                 }
                 , onInitialized: function () {
                 }
-                , onModelRetrievedMembers: function () {
-                    AcmEx.Object.JTable.load(Admin.View.Organization.ModalDialog.Members.Results.$divResults);
-                }
-                ,onClickBtnAddMembers: function(){
-                    var selectedMembers = Admin.Model.Organization.cacheSelectedMembers.get("selectedMembers");
-                    if(selectedMembers != null){
-                     var groupMembers = [];
-                     var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
-                     var parentGroupId = Admin.Model.Organization.Tree.getParentNode();
+                ,onClickBtnAddPeople: function(){
+                    var selectedPeople = Admin.Model.Organization.cacheSelectedMembers.get("selectedPeople");
 
-                     for(var i = 0 ; i < selectedMembers.length; i++){
-                     var selectedMember = selectedMembers[i];
-                     var acmUser = Admin.View.Organization.makeAcmUser(selectedMember);
-                     groupMembers.push(acmUser);
-                     }
-                     Admin.Controller.viewAddedMembers(groupMembers,parentGroupId);
-                     }
-                    //Admin.View.Organization.ModalDialog.$modalAddPeople.empty();
+                    if(selectedPeople != null){
+                        var people = [];
+                        var parentGroupId = Admin.Model.Organization.Tree.getParentNode();
 
+                        for(var i = 0 ; i < selectedPeople.length; i++){
+                            var selectedPerson = selectedPeople[i];
+                            var acmUser = Admin.View.Organization.makeAcmUser(selectedPerson);
+                            people.push(acmUser);
+                        }
+
+                        if(Admin.View.Organization.ModalDialog.$modalLabelPeople){
+                            var label = Admin.View.Organization.ModalDialog.$modalLabelPeople[0].innerText;
+                            if(label.indexOf("Supervisor") > -1){
+                                if(people.length > 1){
+                                    Acm.Dialog.info("Please select one supervisor");
+                                }
+                                else{
+                                    Admin.Controller.viewAddedSupervisor(people[0],parentGroupId);
+                                }
+                                //alert("Supervisor");
+                            }
+                            else if(label.indexOf("Members") > -1){
+                                //alert("Members ");
+                                Admin.Controller.viewAddedMembers(people,parentGroupId);
+                            }
+                        }
+                        //Admin.Controller.viewAddedMembers(people,parentGroupId);
+                    }
                     Admin.View.Organization.ModalDialog.$modalAddPeople.modal('hide');
-                                    }
+                }
                 ,Query: {
                     create: function() {
                         this.$txtFindMembers = $("#findMember");
@@ -229,8 +242,6 @@ Admin.View = Admin.View || {
                         }
                     }
                     ,buildFacetPanel: function(facet) {
-                        //
-
                         var html = "";
 
                         if (Admin.Model.Organization.Facets.validateSearchFacet(facet)) {
@@ -364,69 +375,6 @@ Admin.View = Admin.View || {
                                 ,paging: true
                                 ,sorting: true
                                 ,actions: {
-/*
-                                    listAction: function (postData, jtParams) {
-                                        var rc = AcmEx.Object.jTableGetEmptyRecords();
-                                        var Record = {};
-                                        var result = {"numFound":2,"start":0,"docs":[
-                                        {
-                                            "id":"ian-acm-USER",
-                                            "object_id_s":"ian-acm",
-                                            "object_type_s":"USER",
-                                            "name":"Ian Investigator",
-                                            "create_date_tdt":"2014-07-23T16:53:57Z",
-                                            "modified_date_tdt":"2015-01-22T11:59:58Z",
-                                            "public_doc_b":false,
-                                            "protected_object_b":false,
-                                            "status_lcs":"VALID",
-                                            "first_name_lcs":"Ian",
-                                            "last_name_lcs":"Investigator",
-                                            "email_lcs":"acm@armedia.com",
-                                            "adhocTask_b":false,
-                                            "_version_":1491018451216498688}
-                                            ,{
-                                                "id":"ian-acm-USER",
-                                                "object_id_s":"ann-acm",
-                                                "object_type_s":"USER",
-                                                "name":"Charlie Investigator",
-                                                "create_date_tdt":"2014-07-23T16:53:57Z",
-                                                "modified_date_tdt":"2015-01-22T11:59:58Z",
-                                                "public_doc_b":false,
-                                                "protected_object_b":false,
-                                                "status_lcs":"VALID",
-                                                "first_name_lcs":"Ian",
-                                                "last_name_lcs":"Investigator",
-                                                "email_lcs":"acm@armedia.com",
-                                                "adhocTask_b":false,
-                                                "_version_":1491018451216498688}
-                                            ,{
-                                                "id": "albert-acm-USER",
-                                                "object_id_s": "albert-acm",
-                                                "object_type_s": "USER",
-                                                "name": "Albert Analyst",
-                                                "create_date_tdt": "2014-07-23T16:53:57Z",
-                                                "modified_date_tdt": "2015-01-22T15:30:02Z",
-                                                "public_doc_b": false,
-                                                "protected_object_b": false,
-                                                "status_lcs": "VALID",
-                                                "first_name_lcs": "Albert",
-                                                "last_name_lcs": "Analyst",
-                                                "email_lcs": "acm@armedia.com",
-                                                "adhocTask_b": false,
-                                                "_version_": 1491031663826698200
-                                            }]
-                                        };
-                                        for (var i = 0; i < result.docs.length; i++) {
-                                            var Record = {};
-                                            Record.id = result.docs[i].object_id_s;
-                                            Record.name    = Acm.goodValue(result.docs[i].name);
-                                            Record.type    = Acm.goodValue(result.docs[i].object_type_s);
-                                            rc.Records.push(Record);
-                                        }
-
-                                        return rc;
-                                    }
-*/
                                     pagingListAction: function (postData, jtParams, sortMap) {
                                         var si = Admin.Model.Organization.Facets.getSearchInfo();
                                         if (Acm.isEmpty(si.q)) {
@@ -474,7 +422,6 @@ Admin.View = Admin.View || {
                                     }
                                     ,type: {
                                         title: 'Type'
-                                        //,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
                                         ,sorting: false
                                     }
                                     ,title: {
@@ -499,11 +446,11 @@ Admin.View = Admin.View || {
                                     var $selectedRows = Admin.View.Organization.ModalDialog.Members.Results.$divResults.jtable('selectedRows');
                                     if ($selectedRows.length > 0) {
                                         //Show selected rows
-                                        var selectedMembers = [];
+                                        var selectedPeople = [];
                                         $selectedRows.each(function () {
                                             var record = $(this).data('record');
-                                            selectedMembers.push(record.id);
-                                            Admin.Model.Organization.cacheSelectedMembers.put("selectedMembers", selectedMembers);
+                                            selectedPeople.push(record.id);
+                                            Admin.Model.Organization.cacheSelectedMembers.put("selectedPeople", selectedPeople);
                                         });
                                     }
                                     else if($selectedRows.length == 0){
@@ -521,55 +468,47 @@ Admin.View = Admin.View || {
         ,Tree:{
             create: function () {
                 this.$treeOrganization = $("#treeOrganization");
-                //this.$treeOrganization[0].empty();
                 this._useFancyTree(this.$treeOrganization);
-                //this._useFancyTree(Admin.View.Organization.$treeOrganization);
             }
             , onInitialized: function () {
             }
             ,allSubgroups: function(group, children){
-                for (var i = 0; i < group.subgroups.length; i++) {
-                    var subgroupName = group.subgroups[i];
-                    var subgroup = Admin.View.Organization.findSubgroup(subgroupName);
-                    if(subgroup != null) {
-                        subgroup.folder = true;
-                        children.push(subgroup);
-                    }
-
-                    //check for subgroup members
-                    if(subgroup != null && subgroup.members != null){
-                        if(!subgroup.children){
-                            subgroup.children = [];
-                        }
-                        var allUsers = Admin.Model.Organization.cacheAllUsers.get("allUsers");
-                        for(var j = 0; j < subgroup.members.length ; j++){
-                            var subgroupMemberId = subgroup.members[j];
-                            var subgroupMember = Admin.View.Organization.findMembers(subgroupMemberId,allUsers);
-                            if(subgroupMember != null){
-                                subgroup.children.push(subgroupMember)
+                //this one is recursive
+                if(group.subgroups && group.subgroups !=null){
+                    for (var i = 0; i < group.subgroups.length; i++) {
+                        var subgroupName = group.subgroups[i];
+                        var subgroup = Admin.View.Organization.findSubgroup(subgroupName);
+                        if(subgroup != null) {
+                            subgroup.folder = true;
+                            children.push(subgroup);
+                            if(!subgroup.children){
+                                subgroup.children = [];
                             }
+                            else if(subgroup.children){
+                                subgroup.children.splice(0,subgroup.children.length);
+                            }
+                            Admin.View.Organization.Tree.allSubgroups(subgroup,subgroup.children);
+                            Admin.View.Organization.Tree.findPeopleInvolvedInGroup(subgroup);
                         }
-                    }
-
-                    if(subgroup != null && subgroup.subgroups != null){
-                        if(!subgroup.children){
-                            subgroup.children = [];
-                        }
-                        Admin.View.Organization.Tree.allSubgroups(subgroup,subgroup.children);
                     }
                 }
             }
-            ,allMembers: function(group, children){
-                for (var i = 0; i < group.subgroups.length; i++) {
-                    var subgroupName = group.subgroups[i];
-                    var subgroup = Admin.View.Organization.findSubgroup(subgroupName);
-                    if(subgroup != null) {
-                        subgroup.folder = true;
-                        children.push(subgroup);
+            ,findPeopleInvolvedInGroup: function(group){
+                //check for subgroup members and supervisors
+                var allUsers = Admin.Model.Organization.cacheAllUsers.get("allUsers");
+                if(group.members && group.members !=null){
+                    for(var j = 0; j < group.members.length ; j++){
+                        var groupMemberId = group.members[j];
+                        var groupMember = Admin.View.Organization.findMembers(groupMemberId,allUsers);
+                        if(groupMember != null){
+                            group.children.push(groupMember)
+                        }
                     }
-                    if(subgroup != null && subgroup.subgroups != null){
-                        subgroup.children = [];
-                        Admin.View.Organization.Tree.allSubgroups(subgroup,subgroup.children);
+                }
+                if(group.supervisor && group.supervisor !=null){
+                    var supervisor = Admin.View.Organization.findMembers(group.supervisor,allUsers);
+                    if(supervisor){
+                        group.supervisor = supervisor.title;
                     }
                 }
             }
@@ -603,6 +542,11 @@ Admin.View = Admin.View || {
             ,onClickAddSupervisors: function(node){
                 Admin.View.Organization.ModalDialog.$modalLabelPeople.text("Add Supervisor to " + "'" + node.title + "'");
                 Admin.View.Organization.ModalDialog.$modalAddPeople.modal('show');
+            }
+            ,onClickButtonsCancelEventBubble: function (e) {
+                var evt = e ? e:window.event;
+                if (evt.stopPropagation)    evt.stopPropagation();
+                if (evt.cancelBubble!=null) evt.cancelBubble = true;
             }
 
             ,_useFancyTree: function($s) {
@@ -646,46 +590,68 @@ Admin.View = Admin.View || {
                     }
                 }); //end fancytree
 
-                $("button[name='addSupervisor']").off("click").on("click",function(e) {
+                $s.delegate("button[name=addSupervisor]", "click", function(e){
+
+                //$("button[name='addSupervisor']").off("click").on("click",function(e) {
                     var node = $.ui.fancytree.getNode(e),
                             $input = $(e.target);
-                        e.stopPropagation();
-                        Admin.Model.Organization.Tree.setParentNode(node.title);
-                        Admin.View.Organization.Tree.onClickAddSupervisors(node);
+                        //e.stopPropagation();
+                    e.stopImmediatePropagation();
+
+                    //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
+                    Admin.Model.Organization.Tree.setParentNode(node.title);
+                    Admin.View.Organization.Tree.onClickAddSupervisors(node);
                 });
 
 
 
                 //$s.undelegate("click").delegate("button[name=removeGroup]", "click", function(e) {
                 //$("button[name='removeGroup']").one("click",function(e){
-                //$s.delegate("button[name=removeGroup]", "click", function(e){
-                $("button[name='removeGroup']").off("click").on("click",function(e) {
+                $s.delegate("button[name=removeGroup]", "click", function(e){
+                //$("button[name='removeGroup']").off("click").on("click",function(e) {
                     var node = $.ui.fancytree.getNode(e),
                         $input = $(e.target);
-                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
+                    Admin.Model.Organization.Tree.setParentNode(node.title);
                     Admin.View.Organization.Tree.onClickRemoveGroup(node);
                 });
 
-                $("button[name='removeMember']").off("click").on("click",function(e) {
+                $s.delegate("button[name=removeMember]", "click", function(e){
+
+                    //$("button[name='removeMember']").off("click").on("click",function(e) {
                     var node = $.ui.fancytree.getNode(e),
                         $input = $(e.target);
-                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.parent.title);
+                    Admin.Model.Organization.Tree.setParentNode(node.parent.title);
                     Admin.View.Organization.Tree.onClickRemoveMember(node);
                 });
 
+                $s.delegate("button[name=addSubgroup]", "click", function(e){
 
-                $("button[name='addSubgroup']").off("click").on("click",function(e) {
+                //$("button[name='addSubgroup']").off("click").on("click",function(e) {
                     var node = $.ui.fancytree.getNode(e),
                         $input = $(e.target);
-                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
                     Admin.Model.Organization.Tree.setParentNode(node.title);
                     Admin.View.Organization.Tree.onClickAddSubgroup(node);
                 });
 
-                $("button[name='addMembers']").off("click").on("click",function(e) {
+
+                //$("button[name='addMembers']").off("click").on("click",function(e) {
+                $s.delegate("button[name=addMembers]", "click", function(e){
+
+                    //$("button[name='addMembers']").off("click").on("click",function(e) {
                     var node = $.ui.fancytree.getNode(e),
                         $input = $(e.target);
-                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
                     Admin.Model.Organization.Tree.setCurrentGroup(node.title);
                     Admin.Model.Organization.Tree.setParentNode(node.title);
                     Admin.View.Organization.Tree.onClickAddMembers(node);
@@ -705,21 +671,11 @@ Admin.View = Admin.View || {
                         group.folder = true;
                         group.children = [];
                         if(group.subgroups != null) {
-
                             Admin.View.Organization.Tree.allSubgroups(group, group.children);
                         }
-                        //check for group members
-                        if(group.members != null){
-                            var allUsers = Admin.Model.Organization.cacheAllUsers.get("allUsers");
-                            for(var k = 0; k < group.members.length ; k++){
-                                var groupMemberId = group.members[k];
-                                var groupMember = Admin.View.Organization.findMembers(groupMemberId,allUsers);
-                                if(groupMember != null){
-                                    group.children.push(groupMember);
-                                }
-                            }
-                        }
 
+                        //check for group members and supervisor
+                        Admin.View.Organization.Tree.findPeopleInvolvedInGroup(group);
                         source.push(group);
                     }
                     Admin.Model.Organization.cacheTreeSource.put("source", source);

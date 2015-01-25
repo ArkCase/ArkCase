@@ -16,7 +16,7 @@ Admin.Service = {
         ,API_GROUP                  : "/api/latest/users/group/"
         ,API_RETRIEVE_GROUPS        : "/api/latest/users/groups/get?n=50&s=create_date_tdt desc"
         ,API_RETRIEVE_USERS         : "/api/v1/plugin/search/advanced/USER"
-        ,API_FACET_SEARCH_       : "/api/v1/plugin/search/facetedSearch?q="
+        ,API_FACET_SEARCH_          : "/api/v1/plugin/search/facetedSearch?q="
 
 
         ,createAdHocGroup: function(group,parentId){
@@ -32,38 +32,21 @@ Admin.Service = {
                     } else {
                         if (Admin.Model.Organization.validateGroup(response)) {
                             if(parentId != null && parentId != ""){
+                                var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
+                                if(currentGroup){
+                                    if(currentGroup.children != null){
+                                        var children = currentGroup.children;
+                                        currentGroup.children.splice(0,children.length);
+                                    }
+                                    if(currentGroup.subgroups){
+                                        currentGroup.subgroups.unshift(response.name);
+                                    }
+                                    else{
+                                        currentGroup.subgroups = [];
+                                        currentGroup.subgroups.unshift(response.name);
+                                    }
+                                }
                                 var subGroups = Admin.Model.Organization.cacheSubgroups.get("subgroups");
-
-                                var groups = Admin.Model.Organization.cacheGroups.get("groups");
-
-                                for(var i = 0; i < groups.length; i++){
-                                    if (parentId == groups[i].title){
-
-                                        if(groups[i].subgroups){
-                                            groups[i].subgroups.unshift(response.name);
-                                        }
-                                        else{
-                                            groups[i].subgroups = [];
-                                            groups[i].subgroups.unshift(response.name);
-                                        }
-                                    }
-                                }
-                                Admin.Model.Organization.cacheGroups.put("groups",groups);
-
-                                for(var i = 0; i < subGroups.length; i++){
-                                    if (parentId == subGroups[i].title){
-
-                                        if(subGroups[i].subgroups){
-                                            subGroups[i].subgroups.unshift(response.name);
-                                        }
-                                        else{
-                                            subGroups[i].subgroups = [];
-                                            subGroups[i].subgroups.unshift(response.name);
-                                        }
-                                    }
-                                }
-                                //Admin.Model.Organization.cacheSubgroups.put("subgroups",subGroups);
-
                                 var subgroup = {};
                                 subgroup.title = response.name;
                                 subgroup.type = response.type;
@@ -74,15 +57,8 @@ Admin.Service = {
                                 subGroups.unshift(subgroup);
 
                                 Admin.Model.Organization.cacheSubgroups.put("subgroups",subGroups);
-
-                                /*subGroup.title = response.name;
-                                subGroup.type = response.type;
-                                subGroup.supervisor = response.supervisor;
-                                //group.location = groups[i].location;
-                                subGroup.expanded = true;
-                                subGroup.folder = true;*/
                                 Admin.Model.Organization.Tree.sourceLoaded(false);
-                                Admin.Controller.modelCreatedAdHocGroup(group);
+                                Admin.Controller.modelCreatedAdHocGroup(subgroup);
                             }
                             else{
                                 var groups = Admin.Model.Organization.cacheGroups.get("groups");
@@ -118,10 +94,15 @@ Admin.Service = {
                         if(response.members != null){
                             var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
                             if(currentGroup){
+                                if(currentGroup.children != null){
+                                    var children = currentGroup.children;
+                                    currentGroup.children.splice(0,children.length);
+                                }
                                 if(!currentGroup.members){
                                     currentGroup.members = [];
                                 }
                                 else if(currentGroup.members){
+                                    //response contains all members, so have to clear the members from the cache to prevent duplicates
                                     currentGroup.members.splice(0,currentGroup.members.length);
                                 }
                                 for(var i = 0; i < response.members.length; i++){
@@ -138,23 +119,37 @@ Admin.Service = {
                 ,JSON.stringify(groupMembers)
             )
         }
-        ,retrieveGroup : function(groupId){
-            var url = App.getContextPath() + Admin.Service.Organization.API_GROUP + groupId + "/get";
-            Acm.Service.asyncGet(
+        ,addGroupSupervisor : function(supervisor,parentGroupId){
+            var url = App.getContextPath()+ Admin.Service.Organization.API_GROUP + parentGroupId + "/supervisor/save/false" ;
+            Acm.Service.asyncPost(
                 function(response) {
                     if (response.hasError) {
-                        var group = response.response.docs[0];
-                        Admin.Controller.modelRetrievedGroup(group);
+                        var supervisor = response.supervisor;
+                        //Admin.Controller.modelAddedGroupMember(addedMembers);
 
                     } else {
-                        if (Admin.Model.Organization.validateGroup(response)) {
-                            var group = response.response.docs[0];
-                            Admin.Model.Organization.cacheGroup.put(group.name, group);
-                            Admin.Controller.modelRetrievedGroup(group);
+                        if(response.supervisor != null){
+                            var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
+                            if(currentGroup){
+                                if(currentGroup.children != null){
+                                    var children = currentGroup.children;
+                                    currentGroup.children.splice(0,children.length);
+                                }
+                                if(!currentGroup.supervisor){
+                                    currentGroup.supervisor = {};
+                                }
+                                else if(currentGroup.supervisor){
+                                    //response contains all members, so have to clear the members from the cache to prevent duplicates
+                                    currentGroup.supervisor = response.supervisor.userId;
+                                }
+                                Admin.Model.Organization.Tree.sourceLoaded(false);
+                                Admin.Controller.modelAddedGroupSupervisor(currentGroup.supervisor,parentGroupId);
+                            }
                         }
                     }
                 }
                 ,url
+                ,JSON.stringify(supervisor)
             )
         }
 
@@ -169,10 +164,12 @@ Admin.Service = {
                     } else {
                         if (Admin.Model.Organization.validateGroup(response)) {
                             var allGroups = response.response.docs;
-                            Admin.Model.Organization.cacheAllGroups.put("allGroups", allGroups);
+                            //Admin.Model.Organization.cacheAllGroups.put("allGroups", allGroups);
+
+                            //create arrays to make fancytree structure
                             var subgroups = [];
                             var groups = [];
-                            for(var i = 0; i<allGroups.length; i++){
+                            for(var i = 0; i < allGroups.length; i++){
                                 var selGroup = allGroups[i];
                                 if(selGroup.parent_type_s != null || selGroup.parent_type_s == "GROUP"){
                                     var subgroup = {}
@@ -181,7 +178,7 @@ Admin.Service = {
                                     subgroup.parentId = selGroup.parent_id_s;
                                     subgroup.subgroups = selGroup.child_id_ss;
                                     subgroup.members = selGroup.member_id_ss;
-                                    subgroup.supervisor = selGroup.supervisor_id_ss;
+                                    subgroup.supervisor = selGroup.supervisor_id_s;
                                     subgroups.push(subgroup);
                                 }
                                 else{
@@ -190,17 +187,16 @@ Admin.Service = {
                                     group.type = selGroup.object_sub_type_s;
                                     group.subgroups = selGroup.child_id_ss;
                                     group.members = selGroup.member_id_ss;
-                                    group.supervisor = selGroup.supervisor_id_ss;
+                                    group.supervisor = selGroup.supervisor_id_s;
                                     groups.push(group);
                                 }
                             }
-                            if(subgroups !=null){
+                            if(subgroups != null){
                                 Admin.Model.Organization.cacheSubgroups.put("subgroups", subgroups);
                             }
-                            if(groups !=null){
+                            if(groups != null){
                                 Admin.Model.Organization.cacheGroups.put("groups", groups);
                             }
-                            //Admin.Model.Organization.cacheGroups.put("groups", groups);
                             Admin.Model.Organization.Tree.sourceLoaded(false);
                             Admin.Controller.modelRetrievedGroups(groups);
                         }
@@ -302,30 +298,6 @@ Admin.Service = {
                 }
             );
         }
-        ,retrieveGroupMembers : function(term){
-
-            /*var url = App.getContextPath()+ Admin.Service.Organization.API_FACET_SEARCH_;
-            if(term !=null){
-                url += term;
-            }
-            //var url = App.getContextPath()+ Admin.Service.Organization.API_GROUP + groupId + "/get/members" ;
-            Acm.Service.asyncGet(
-                function(response) {
-                    if (response.hasError) {
-                        *//*var groupMembers = response;
-                        Admin.Controller.modelRetrievedGroup(groupMembers);*//*
-
-                    } else {
-                        *//*if (Admin.Model.Organization.validateGroup(response)) {
-                            var groupMembers = response;
-                            Admin.Model.Organization.cacheGroupMembers.put(groupId, groupMembers);
-                            Admin.Controller.modelRetrievedGroupMembers(groupMembers);
-                        }*//*
-                    }
-                }
-                ,url
-            )*/
-        }
 
         ,removeGroupMember : function(groupMember,parentGroupId){
             var url = App.getContextPath()+ Admin.Service.Organization.API_GROUP + parentGroupId + "/members/remove" ;
@@ -337,51 +309,25 @@ Admin.Service = {
                     }
                     else{
                         var removedMember = groupMember[0].userId;
-
-                        var groups = Admin.Model.Organization.cacheGroups.get("groups");
-                        var subGroups = Admin.Model.Organization.cacheSubgroups.get("subgroups");
-
-                        //first check in groups to remove the object manually from cache
-                        for(var i = 0; i < groups.length; i++){
-                            if(groups[i].children != null){
-                                var children = groups[i].children;
-                                groups[i].children.splice(0,children.length);
-                            }
-                            if(groups[i].title == parentGroupId){
-                                if(groups[i].members != null){
-                                    var members = groups[i].members;
+                        var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
+                        if(currentGroup){
+                            if(currentGroup.title == parentGroupId){
+                                if(currentGroup.children != null){
+                                    var children = currentGroup.children;
+                                    currentGroup.children.splice(0,children.length);
+                                }
+                                if(currentGroup.members != null){
+                                    var members = currentGroup.members;
                                     for(var j = 0; j < members.length; j++){
                                         if(members[j] == removedMember){
-                                            groups[i].members.splice(j,1);
+                                            currentGroup.members.splice(j,1);
                                             break;
                                         }
                                     }
                                 }
                             }
                         }
-                        Admin.Model.Organization.cacheGroups.put("groups",groups);
-
-                        //then check in subgroups to remove the object manually from cache
-                        for(var k = 0; k < subGroups.length; k++) {
-                            if (subGroups[k].children != null) {
-                                var children = subGroups[k].children;
-                                subGroups[k].children.splice(0,children.length);
-                            }
-                            if(subGroups[k].title == parentGroupId) {
-                                if (subGroups[k].members != null) {
-                                    var members = subGroups[k].members;
-                                    for (var l = 0; l < members.length; l++) {
-                                        if (members[l] == removedMember) {
-                                            subGroups[k].members.splice(l, 1);
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        Admin.Model.Organization.cacheSubgroups.put("subgroups",subGroups);
                         Admin.Model.Organization.Tree.sourceLoaded(false);
-
                         Admin.Controller.modelRemovedGroupMember(removedMember);
                     }
                 }
