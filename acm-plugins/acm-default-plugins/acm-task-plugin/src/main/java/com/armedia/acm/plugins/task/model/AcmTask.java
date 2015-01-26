@@ -178,6 +178,7 @@ public class AcmTask implements AcmAssignedObject, Serializable
         this.taskDurationInMillis = taskDurationInMillis;
     }
 
+    @Override
     public String getStatus()
     {
         return status;

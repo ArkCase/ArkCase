@@ -10,4 +10,6 @@ import java.util.List;
 public interface AcmAssignedObject extends AcmObject
 {
     List<AcmParticipant> getParticipants();
+
+    String getStatus();
 }

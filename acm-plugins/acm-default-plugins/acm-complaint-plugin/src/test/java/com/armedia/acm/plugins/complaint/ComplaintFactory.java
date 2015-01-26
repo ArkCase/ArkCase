@@ -11,6 +11,7 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,6 +108,12 @@ public class ComplaintFactory
 
         complaint.addChildObject(oa);
         complaint.setPersonAssociations(listPersonAssoc);
+
+        AcmParticipant assignee = new AcmParticipant();
+        assignee.setParticipantType("assignee");
+        assignee.setParticipantLdapId("ann-acm");
+
+        complaint.getParticipants().add(assignee);
 
         return complaint;
     }

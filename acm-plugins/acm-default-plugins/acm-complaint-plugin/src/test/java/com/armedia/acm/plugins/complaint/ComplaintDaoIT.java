@@ -4,6 +4,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +59,7 @@ public class ComplaintDaoIT
 
     @Test
     @Transactional
-    public void saveComplaint()
+    public void saveComplaint() throws Exception
     {
 
         Complaint complaint = complaintFactory.complaint();
@@ -80,6 +81,9 @@ public class ComplaintDaoIT
                 assertNotNull(oa.getAssociationId());
             }
         }
+
+        ObjectMapper om = new ObjectMapper();
+        log.debug("JSON: " + om.writeValueAsString(complaint));
     }
 
 }
