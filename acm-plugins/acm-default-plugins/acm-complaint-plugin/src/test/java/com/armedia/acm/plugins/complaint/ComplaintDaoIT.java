@@ -4,7 +4,6 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,9 +51,12 @@ public class ComplaintDaoIT
     private ComplaintFactory complaintFactory = new ComplaintFactory();
 
     @Before
-    public void setUp()
+    public void setUp() throws Exception
     {
         auditAdapter.setUserId("auditUser");
+
+        // stupid Drools throws a null pointer exception if we don't wait long enough here.  What bad software.
+        Thread.sleep(1000);
     }
 
     @Test
@@ -66,7 +68,7 @@ public class ComplaintDaoIT
 
         complaint = complaintDao.save(complaint);
 
-        entityManager.flush();
+
 
         log.info("Complaint ID: " + complaint.getComplaintId());
         log.info("Complaint originator object ID: " + complaint.getOriginator().getId());
@@ -82,8 +84,9 @@ public class ComplaintDaoIT
             }
         }
 
-        ObjectMapper om = new ObjectMapper();
-        log.debug("JSON: " + om.writeValueAsString(complaint));
+        entityManager.flush();
+
+
     }
 
 }
