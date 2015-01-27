@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +18,8 @@ public interface TaskDao
 {
     @Transactional
     AcmTask createAdHocTask(AcmTask in) throws AcmTaskException;
+
+    void ensureCorrectAssigneeInParticipants(AcmTask in);
 
     /**
      * Complete a task on behalf of the given user.  Returns an AcmTask including historical information
@@ -73,4 +76,6 @@ public interface TaskDao
         throws AcmTaskException;
     
     List<WorkflowHistoryInstance> getWorkflowHistory(String id, boolean adhoc);
+
+    List<AcmTask> getTasksModifiedSince(Date lastModified, int start, int pageSize);
 }

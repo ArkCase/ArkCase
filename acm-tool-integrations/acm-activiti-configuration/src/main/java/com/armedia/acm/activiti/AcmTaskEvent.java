@@ -34,7 +34,6 @@ public interface AcmTaskEvent extends Serializable
 
     String getOwner();
 
+    String getBusinessProcessName();
 
-
-    String getBuisenesProcessName();
 }

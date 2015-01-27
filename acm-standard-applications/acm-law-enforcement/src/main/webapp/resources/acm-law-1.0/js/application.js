@@ -105,5 +105,8 @@ var Application = Application || {
         sessionStorage.setItem("AcmCaseFileTreeInfo", null);
         sessionStorage.setItem("AcmComplaintTreeInfo", null);
         sessionStorage.setItem("AcmAdminTreeInfo", null);
+
+        sessionStorage.setItem("AcmTaskAssignees", null);
+
     }
 }

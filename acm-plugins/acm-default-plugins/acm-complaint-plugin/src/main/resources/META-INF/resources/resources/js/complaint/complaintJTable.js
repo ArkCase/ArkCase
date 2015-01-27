@@ -2104,7 +2104,7 @@ Complaint.JTable = {
 
     ,createJTableTasks: function($jt) {
         var sortMap = {};
-        sortMap["title"] = "title_t";
+        sortMap["title"] = "title_parseable";
 
 
         AcmEx.Object.jTableCreatePaging($jt
@@ -2138,10 +2138,10 @@ Complaint.JTable = {
                                         for (var i = 0; i < response.docs.length; i++) {
                                             var Record = {};
                                             Record.id = response.docs[i].object_id_s;
-                                            Record.title = Acm.goodValue(response.docs[i].name); //title_t ?
-                                            Record.created = Acm.getDateFromDatetime(response.docs[i].create_dt);
+                                            Record.title = Acm.goodValue(response.docs[i].name); //title_parseable? //title_t ?
+                                            Record.created = Acm.getDateFromDatetime(response.docs[i].create_tdt);
                                             Record.priority = response.docs[i].priority_s;
-                                            Record.dueDate = Acm.getDateFromDatetime(response.docs[i].due_dt);
+                                            Record.dueDate = Acm.getDateFromDatetime(response.docs[i].due_tdt);
                                             Record.status = Acm.goodValue(response.docs[i].status_s);
                                             Record.assignee = response.docs[i].assignee_s;
                                             rc.jtData.Records.push(Record);

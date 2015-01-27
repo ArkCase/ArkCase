@@ -19,9 +19,20 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private Date modified_date_tdt;
     private String modifier_lcs;
 
+    // access control fields
+    private boolean public_doc_b;
+    private boolean protected_object_b;
+
+    private List<String> deny_acl_ss;
+    private List<String> allow_acl_ss;
+
     /////////////////// for complaints, case files, other objects with a title or description ////////////
     private String title_parseable;
     private String description_parseable;
+
+    /////////////////// for complaints, case files, tasks we introduce description and for personAssociation we introduce notes ////////////
+    private String description_no_html_tags_parseable;
+    private String notes_no_html_tags_parseable;
 
     /////////////////// for docs with an incident date ////////////
     private Date incident_date_tdt;
@@ -81,6 +92,9 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String supervisor_id_s;
     private List<String> child_id_ss;
     private List<String> member_id_ss;
+    private boolean adhocTask_b;
+    private String owner_lcs;
+    private String business_process_name_lcs;
 
 
     @Override
@@ -346,14 +360,20 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
         return parent_type_s;
     }
 
-    public void setDescription_parseable(String description_parseable)
-    {
-        this.description_parseable = description_parseable;
+    public String getDescription_no_html_tags_parseable() {
+        return description_no_html_tags_parseable;
     }
 
-    public String getDescription_parseable()
-    {
-        return description_parseable;
+    public void setDescription_no_html_tags_parseable(String description_no_html_tags_parseable) {
+        this.description_no_html_tags_parseable = description_no_html_tags_parseable;
+    }
+
+    public String getNotes_no_html_tags_parseable() {
+        return notes_no_html_tags_parseable;
+    }
+
+    public void setNotes_no_html_tags_parseable(String notes_no_html_tags_parseable) {
+        this.notes_no_html_tags_parseable = notes_no_html_tags_parseable;
     }
 
     public List<String> getOrganization_id_ss()
@@ -438,6 +458,14 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
         return dueDate_tdt;
     }
 
+    public String getDescription_parseable() {
+        return description_parseable;
+    }
+
+    public void setDescription_parseable(String description_parseable) {
+        this.description_parseable = description_parseable;
+    }
+
     public void setDueDate_tdt(Date dueDate_tdt) {
         this.dueDate_tdt = dueDate_tdt;
     }
@@ -481,4 +509,134 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
 	public void setMember_id_ss(List<String> member_id_ss) {
 		this.member_id_ss = member_id_ss;
 	}
+
+    public void setAdhocTask_b(boolean adhocTask_b)
+    {
+        this.adhocTask_b = adhocTask_b;
+    }
+
+    public boolean isAdhocTask_b()
+    {
+        return adhocTask_b;
+    }
+
+    public void setOwner_lcs(String owner_lcs)
+    {
+        this.owner_lcs = owner_lcs;
+    }
+
+    public String getOwner_lcs()
+    {
+        return owner_lcs;
+    }
+
+    public void setBusiness_process_name_lcs(String business_process_name_lcs)
+    {
+        this.business_process_name_lcs = business_process_name_lcs;
+    }
+
+    public String getBusiness_process_name_lcs()
+    {
+        return business_process_name_lcs;
+    }
+
+    public boolean isPublic_doc_b()
+    {
+        return public_doc_b;
+    }
+
+    @Override
+    public void setPublic_doc_b(boolean public_doc_b)
+    {
+        this.public_doc_b = public_doc_b;
+    }
+
+    public boolean isProtected_object_b()
+    {
+        return protected_object_b;
+    }
+
+    @Override
+    public void setProtected_object_b(boolean protected_object_b)
+    {
+        this.protected_object_b = protected_object_b;
+    }
+
+    public List<String> getDeny_acl_ss()
+    {
+        return deny_acl_ss;
+    }
+
+    @Override
+    public void setDeny_acl_ss(List<String> deny_acl_ss)
+    {
+        this.deny_acl_ss = deny_acl_ss;
+    }
+
+    public List<String> getAllow_acl_ss()
+    {
+        return allow_acl_ss;
+    }
+
+    @Override
+    public void setAllow_acl_ss(List<String> allow_acl_ss)
+    {
+        this.allow_acl_ss = allow_acl_ss;
+    }
+
+    @Override
+    public String toString() {
+        return "SolrAdvancedSearchDocument{" +
+                "id='" + id + '\'' +
+                ", object_id_s='" + object_id_s + '\'' +
+                ", object_type_s='" + object_type_s + '\'' +
+                ", object_sub_type_s='" + object_sub_type_s + '\'' +
+                ", name='" + name + '\'' +
+                ", create_date_tdt=" + create_date_tdt +
+                ", creator_lcs='" + creator_lcs + '\'' +
+                ", modified_date_tdt=" + modified_date_tdt +
+                ", modifier_lcs='" + modifier_lcs + '\'' +
+                ", public_doc_b=" + public_doc_b +
+                ", protected_object_b=" + protected_object_b +
+                ", deny_acl_ss=" + deny_acl_ss +
+                ", allow_acl_ss=" + allow_acl_ss +
+                ", title_parseable='" + title_parseable + '\'' +
+                ", description_parseable='" + description_parseable + '\'' +
+                ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\'' +
+                ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\'' +
+                ", incident_date_tdt=" + incident_date_tdt +
+                ", dueDate_tdt=" + dueDate_tdt +
+                ", priority_lcs='" + priority_lcs + '\'' +
+                ", assignee_id_lcs='" + assignee_id_lcs + '\'' +
+                ", assignee_first_name_lcs='" + assignee_first_name_lcs + '\'' +
+                ", assignee_last_name_lcs='" + assignee_last_name_lcs + '\'' +
+                ", assignee_full_name_lcs='" + assignee_full_name_lcs + '\'' +
+                ", incident_type_lcs='" + incident_type_lcs + '\'' +
+                ", status_lcs='" + status_lcs + '\'' +
+                ", person_title_lcs='" + person_title_lcs + '\'' +
+                ", first_name_lcs='" + first_name_lcs + '\'' +
+                ", last_name_lcs='" + last_name_lcs + '\'' +
+                ", full_name_lcs='" + full_name_lcs + '\'' +
+                ", email_lcs='" + email_lcs + '\'' +
+                ", type_lcs='" + type_lcs + '\'' +
+                ", value_parseable='" + value_parseable + '\'' +
+                ", location_street_address_lcs='" + location_street_address_lcs + '\'' +
+                ", location_city_lcs='" + location_city_lcs + '\'' +
+                ", location_state_lcs='" + location_state_lcs + '\'' +
+                ", location_postal_code_sdo='" + location_postal_code_sdo + '\'' +
+                ", child_id_s='" + child_id_s + '\'' +
+                ", child_type_s='" + child_type_s + '\'' +
+                ", parent_id_s='" + parent_id_s + '\'' +
+                ", parent_type_s='" + parent_type_s + '\'' +
+                ", organization_id_ss=" + organization_id_ss +
+                ", postal_address_id_ss=" + postal_address_id_ss +
+                ", contact_method_ss=" + contact_method_ss +
+                ", supervisor_id_s='" + supervisor_id_s + '\'' +
+                ", child_id_ss=" + child_id_ss +
+                ", member_id_ss=" + member_id_ss +
+                ", adhocTask_b=" + adhocTask_b +
+                ", owner_lcs='" + owner_lcs + '\'' +
+                ", business_process_name_lcs='" + business_process_name_lcs + '\'' +
+                '}';
+    }
 }

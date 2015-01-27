@@ -16,22 +16,22 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.Tasks.create)           {CaseFile.View.Tasks.create();}
         if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
         if (CaseFile.View.Events.create)          {CaseFile.View.Events.create();}
-        if (CaseFile.View.Correspondence.create)        {CaseFile.View.Correspondence.create();}
+        if (CaseFile.View.Correspondence.create)  {CaseFile.View.Correspondence.create();}
 
     }
     ,onInitialized: function() {
-        if (CaseFile.View.MicroData.onInitialized)   {CaseFile.View.MicroData.onInitialized();}
-        if (CaseFile.View.Tree.onInitialized)        {CaseFile.View.Tree.onInitialized();}
-        if (CaseFile.View.Action.onInitialized)      {CaseFile.View.Action.onInitialized();}
-        if (CaseFile.View.Detail.onInitialized)      {CaseFile.View.Detail.onInitialized();}
-        if (CaseFile.View.People.onInitialized)	  {CaseFile.View.People.onInitialized();}
-        if (CaseFile.View.Documents.onInitialized)   {CaseFile.View.Documents.onInitialized();}
-        if (CaseFile.View.Participants.onInitialized){CaseFile.View.Participants.onInitialized();}
-        if (CaseFile.View.Notes.onInitialized)       {CaseFile.View.Notes.onInitialized();}
-        if (CaseFile.View.Tasks.onInitialized)       {CaseFile.View.Tasks.onInitialized();}
-        if (CaseFile.View.References.onInitialized)  {CaseFile.View.References.onInitialized();}
-        if (CaseFile.View.Events.onInitialized)      {CaseFile.View.Events.onInitialized();}
-        if (CaseFile.View.Correspondence.onInitialized)        {CaseFile.View.Correspondence.onInitialized();}
+        if (CaseFile.View.MicroData.onInitialized)      {CaseFile.View.MicroData.onInitialized();}
+        if (CaseFile.View.Tree.onInitialized)           {CaseFile.View.Tree.onInitialized();}
+        if (CaseFile.View.Action.onInitialized)         {CaseFile.View.Action.onInitialized();}
+        if (CaseFile.View.Detail.onInitialized)         {CaseFile.View.Detail.onInitialized();}
+        if (CaseFile.View.People.onInitialized)         {CaseFile.View.People.onInitialized();}
+        if (CaseFile.View.Documents.onInitialized)      {CaseFile.View.Documents.onInitialized();}
+        if (CaseFile.View.Participants.onInitialized)   {CaseFile.View.Participants.onInitialized();}
+        if (CaseFile.View.Notes.onInitialized)          {CaseFile.View.Notes.onInitialized();}
+        if (CaseFile.View.Tasks.onInitialized)          {CaseFile.View.Tasks.onInitialized();}
+        if (CaseFile.View.References.onInitialized)     {CaseFile.View.References.onInitialized();}
+        if (CaseFile.View.Events.onInitialized)         {CaseFile.View.Events.onInitialized();}
+        if (CaseFile.View.Correspondence.onInitialized) {CaseFile.View.Correspondence.onInitialized();}
 
     }
 
@@ -73,6 +73,19 @@ CaseFile.View = CaseFile.View || {
             this.$tree     = $("#tree");
             this._createTree(this.$tree);
 
+            AcmEx.Object.TreeModifier.buildFilter(this.$ulFilter
+                , CaseFile.View.MicroData.treeFilter
+                , function(value) {
+                    CaseFile.Controller.viewChangedTreeFilter(value);
+                }
+            );
+            AcmEx.Object.TreeModifier.buildSort(this.$ulSort
+                , CaseFile.View.MicroData.treeSort
+                , function(value) {
+                    CaseFile.Controller.viewChangedTreeSort(value);
+                }
+            );
+
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE_LIST, this.onModelRetrievedCaseFileList);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE       , this.onViewChangedCaseTitle);
@@ -81,18 +94,6 @@ CaseFile.View = CaseFile.View || {
             }
         }
         ,onInitialized: function() {
-            AcmEx.Object.TreeModifier.buildFilter(CaseFile.View.Tree.$ulFilter
-                , CaseFile.View.MicroData.treeFilter
-                , function(value) {
-                    CaseFile.Controller.viewChangedTreeFilter(value);
-                }
-            );
-            AcmEx.Object.TreeModifier.buildSort(CaseFile.View.Tree.$ulSort
-                , CaseFile.View.MicroData.treeSort
-                , function(value) {
-                    CaseFile.Controller.viewChangedTreeSort(value);
-                }
-            );
         }
 
         ,onModelRetrievedCaseFileList: function(key) {
@@ -158,14 +159,14 @@ CaseFile.View = CaseFile.View || {
                         ,function(treeInfo, obj) {
                             var title = "";
                             if (obj) {
-                                title = Acm.goodValue(obj.title_t) + " (" + Acm.goodValue(obj.name) + ")";
+                                title = Acm.goodValue(obj.title_parseable) + " (" + Acm.goodValue(obj.name) + ")";
                             }
                             return title;
                         }
                         ,function(treeInfo, obj) {
                             var toolTip = "";
                             if (obj) {
-                                toolTip = Acm.goodValue(obj.title_t);
+                                toolTip = Acm.goodValue(obj.title_parseable);
                             }
                             return toolTip;
                         }
@@ -1883,6 +1884,7 @@ CaseFile.View = CaseFile.View || {
                         url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
                             + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
                             + "',caseTitle:'" + Acm.goodValue(caseFile.title)
+                            + "',casePriority:'" + Acm.goodValue(caseFile.priority)
                             + "',");
 
                         Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30
@@ -1893,7 +1895,7 @@ CaseFile.View = CaseFile.View || {
                     }
                 }
             }
-            else{
+            else if(report && report != ""){
                 CaseFile.View.Documents.$btnAddDocument.click();
             }
         }
@@ -1902,12 +1904,24 @@ CaseFile.View = CaseFile.View || {
     + "</form>"*/
 
         ,fillReportSelection: function() {
+        	var formDocuments = null;
+        	try {
+        		formDocuments = JSON.parse(Acm.Object.MicroData.get("formDocuments"));
+        	}catch(e) {
+        		
+        	}
+        	
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
-                + "<option value=''>Document Type</option>"
-                + "<option value='electronic_communication'>Electronic Communication</option>"
-                + "<option value='roi'>Report of Investigation</option>"
-                + "<option value='mr'>Medical Release</option>"
+                + "<option value=''>Document Type</option>";
+
+            if (formDocuments != null && formDocuments.length > 0) {
+            	for (var i = 0; i < formDocuments.length; i ++) {
+            		html += "<option value='" + formDocuments[i]["value"] + "'>" + formDocuments[i]["label"] + "</option>"
+            	}
+            }
+                
+            html += "<option value='mr'>Medical Release</option>"
                 + "<option value='gr'>General Release</option>"
                 + "<option value='ev'>eDelivery</option>"
                 + "<option value='sig'>SF86 Signature</option>"
@@ -2547,7 +2561,7 @@ CaseFile.View = CaseFile.View || {
         }
         ,createJTableTasks: function($jt) {
             var sortMap = {};
-            sortMap["title"] = "title_t";
+            sortMap["title"] = "title_parseable";
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{

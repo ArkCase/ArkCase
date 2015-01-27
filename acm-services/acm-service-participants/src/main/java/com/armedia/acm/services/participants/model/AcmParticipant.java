@@ -196,4 +196,21 @@ public class AcmParticipant implements Serializable, AcmEntity
     {
         this.privileges = privileges;
     }
+
+    @Override
+    public String toString()
+    {
+        return "AcmParticipant{" +
+                "id=" + id +
+                ", objectType='" + objectType + '\'' +
+                ", objectId=" + objectId +
+                ", participantType='" + participantType + '\'' +
+                ", participantLdapId='" + participantLdapId + '\'' +
+                ", created=" + created +
+                ", creator='" + creator + '\'' +
+                ", modified=" + modified +
+                ", modifier='" + modifier + '\'' +
+                ", privileges=" + privileges +
+                '}';
+    }
 }

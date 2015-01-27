@@ -23,7 +23,7 @@ Topbar.Controller = {
 
         ,VIEW_CHANGED_QUICK_SEARCH_TERM        : "topbar-view-changed-quick-serach-term"       //param: term
         ,viewChangedQuickSearchTerm: function(term) {
-            Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_QUICK_SEARCH_TERM, term);
+            return Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_QUICK_SEARCH_TERM, term);
         }
     }
 
