@@ -45,6 +45,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setObject_id_s(in.getComplaintId() + "");
         solr.setObject_type_s("COMPLAINT");
         solr.setTitle_parseable(in.getComplaintTitle());
+        solr.setDescription_no_html_tags_parseable(in.getDetails());
         solr.setName(in.getComplaintNumber());
 
         solr.setCreate_date_tdt(in.getCreated());
@@ -92,6 +93,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setLast_modified_tdt(in.getModified());
 
         solr.setTitle_parseable(in.getComplaintTitle());
+        solr.setDescription_no_html_tags_parseable(in.getDetails());
         solr.setStatus_s(in.getStatus());
 
         String assigneeUserId = findAssigneeUserId(in);
