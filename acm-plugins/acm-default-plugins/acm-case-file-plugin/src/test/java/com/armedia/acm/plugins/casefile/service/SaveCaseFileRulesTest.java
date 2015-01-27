@@ -1,22 +1,23 @@
 package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
-import org.drools.compiler.compiler.PackageBuilder;
-import org.drools.core.RuleBase;
-import org.drools.core.RuleBaseFactory;
-import org.drools.core.StatelessSession;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
 import org.junit.Test;
+import org.kie.api.io.ResourceType;
+import org.kie.internal.builder.DecisionTableConfiguration;
+import org.kie.internal.builder.DecisionTableInputType;
+import org.kie.internal.builder.KnowledgeBuilder;
+import org.kie.internal.builder.KnowledgeBuilderError;
+import org.kie.internal.builder.KnowledgeBuilderFactory;
+import org.kie.internal.io.ResourceFactory;
+import org.kie.internal.runtime.StatelessKnowledgeSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import java.io.StringReader;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -29,7 +30,7 @@ public class SaveCaseFileRulesTest
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    private StatelessSession workingMemory;
+    private StatelessKnowledgeSession workingMemory;
 
     @Before
     public void setUp() throws Exception
@@ -42,16 +43,22 @@ public class SaveCaseFileRulesTest
         String drl = sc.compile(xls.getInputStream(), InputType.XLS);
         log.info("DRL: " + drl);
 
-        PackageBuilder builder = new PackageBuilder();
-        builder.addPackageFromDrl(new StringReader(drl));
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+        DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
+        dtconf.setInputType(DecisionTableInputType.XLS);
+        kbuilder.add(ResourceFactory.newInputStreamResource(xls.getInputStream()), ResourceType.DTABLE, dtconf);
 
-        RuleBase ruleBase = RuleBaseFactory.newRuleBase();
+        if ( kbuilder.hasErrors() )
+        {
+            for (KnowledgeBuilderError error : kbuilder.getErrors() )
+            {
+                log.error("Error building rules: " + error);
+            }
 
-        assertNotNull(builder.getPackage());
+            throw new RuntimeException("Could not build rules from " + xls.getFile().getAbsolutePath());
+        }
 
-        ruleBase.addPackage(builder.getPackage());
-
-        workingMemory = ruleBase.newStatelessSession();
+        workingMemory = kbuilder.newKnowledgeBase().newStatelessKnowledgeSession();
 
         assertNotNull(workingMemory);
     }

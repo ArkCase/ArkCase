@@ -50,6 +50,11 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.mvel</groupId>
+            <artifactId>mvel2</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>junit</groupId>

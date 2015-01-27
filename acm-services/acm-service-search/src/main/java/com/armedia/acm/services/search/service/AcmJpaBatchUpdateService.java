@@ -1,6 +1,7 @@
 package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.data.AcmObjectChangelist;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
@@ -40,6 +41,7 @@ public class AcmJpaBatchUpdateService
     private SpringContextHolder springContextHolder;
     private JpaObjectsToSearchService objectsToSearchService;
     private int batchSize;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     public void jpaBatchUpdate()
     {
@@ -52,6 +54,8 @@ public class AcmJpaBatchUpdateService
         {
             return;
         }
+
+        getAuditPropertyEntityAdapter().setUserId("SOLR-BATCH-UPDATE");
 
         String lastRunDate = getPropertyFileManager().load(
                 getLastBatchUpdatePropertyFileLocation(),
@@ -120,7 +124,7 @@ public class AcmJpaBatchUpdateService
 
         if ( debug )
         {
-            log.debug("Handling transformer type: " + transformer.getClass().getName());
+            log.debug("Handling transformer type: " + transformer.getClass().getName() + "; last mod date: " + lastUpdate);
         }
 
         int current = 0;
@@ -133,7 +137,7 @@ public class AcmJpaBatchUpdateService
             updatedObjects = transformer.getObjectsModifiedSince(lastUpdate, current, batchSize);
             if ( debug )
             {
-                log.debug("Number of objects: " + updatedObjects.size());
+                log.debug("Number of objects for " + transformer.getClass().getName() + ": " + updatedObjects.size());
             }
 
             if ( !updatedObjects.isEmpty() )
@@ -208,5 +212,15 @@ public class AcmJpaBatchUpdateService
     public void setObjectsToSearchService(JpaObjectsToSearchService objectsToSearchService)
     {
         this.objectsToSearchService = objectsToSearchService;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
