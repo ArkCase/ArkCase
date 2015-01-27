@@ -19,10 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +28,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by armdev on 7/28/14.
  */
-@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "acm_person_alias")
 public class PersonAlias implements Serializable, AcmEntity
@@ -49,43 +45,19 @@ public class PersonAlias implements Serializable, AcmEntity
     @JoinColumn(name="cm_person_id", nullable = false) 
     private Person person;
 
-    @XmlElements({
-		@XmlElement(name="aliasType"),
-		@XmlElement(name="initiatorAliasType"),
-		@XmlElement(name="peopleAliasType")
-		
-	})
     @Column(name = "cm_person_alias_type")
     private String aliasType;
     
     @Transient
     private List<String> aliasTypes;
 
-    @XmlElements({
-		@XmlElement(name="aliasValue"),
-		@XmlElement(name="initiatorAliasValue"),
-		@XmlElement(name="peopleAliasValue")
-		
-	})
     @Column(name = "cm_person_alias_value")
     private String aliasValue;
 
-    @XmlElements({
-		@XmlElement(name="created"),
-		@XmlElement(name="initiatorAliasDate"),
-		@XmlElement(name="peopleAliasDate")
-		
-	})
     @Column(name = "cm_person_alias_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @XmlElements({
-		@XmlElement(name="creator"),
-		@XmlElement(name="initiatorAliasAddedBy"),
-		@XmlElement(name="peopleAliasAddedBy")
-		
-	})
     @Column(name = "cm_person_alias_creator", insertable = true, updatable = false)
     private String creator;
 
@@ -96,6 +68,7 @@ public class PersonAlias implements Serializable, AcmEntity
     @Column(name = "cm_person_alias_modifier")
     private String modifier;
 
+    @XmlTransient
     public Long getId()
     {
         return id;
@@ -106,6 +79,7 @@ public class PersonAlias implements Serializable, AcmEntity
         this.id = id;
     }
 
+    @XmlTransient
     public Person getPerson() {
         return person;
     }
@@ -114,7 +88,7 @@ public class PersonAlias implements Serializable, AcmEntity
         this.person = person;
     }
 
-
+    @XmlTransient
     public String getAliasType() {
         return aliasType;
     }
@@ -123,6 +97,7 @@ public class PersonAlias implements Serializable, AcmEntity
         this.aliasType = aliasType;
     }
     
+    @XmlTransient
 	public List<String> getAliasTypes() {
 		return aliasTypes;
 	}
@@ -131,6 +106,7 @@ public class PersonAlias implements Serializable, AcmEntity
 		this.aliasTypes = aliasTypes;
 	}
 
+	@XmlTransient
 	public String getAliasValue() 
     {
         return aliasValue;
@@ -141,6 +117,7 @@ public class PersonAlias implements Serializable, AcmEntity
         this.aliasValue = aliasValue;
     }
 
+    @XmlTransient
     @Override
     public Date getCreated()
     {
@@ -153,6 +130,7 @@ public class PersonAlias implements Serializable, AcmEntity
         this.created = created;
     }
 
+    @XmlTransient
     @Override
     public String getCreator() 
     {
@@ -165,6 +143,7 @@ public class PersonAlias implements Serializable, AcmEntity
         this.creator = creator;
     }
 
+    @XmlTransient
     @Override
     public Date getModified() {
         return modified;
@@ -176,6 +155,7 @@ public class PersonAlias implements Serializable, AcmEntity
         this.modified = modified;
     }
 
+    @XmlTransient
     @Override
     public String getModifier() 
     {
@@ -188,5 +168,8 @@ public class PersonAlias implements Serializable, AcmEntity
         this.modifier = modifier;
     }
 
+    public PersonAlias returnBase() {
+    	return this;
+    }
     
-    }   
+}

@@ -28,6 +28,7 @@
         <module>acm-spring-data-source</module>
         <module>acm-form-configuration</module>
         <module>acm-report-configuration</module>
-    </modules>
+    	<module>acm-object-converter</module>
+  </modules>
 
 </project>

@@ -3,7 +3,9 @@ package com.armedia.acm.plugins.person.model;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.service.history.model.AcmHistory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,10 +27,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 
 /**
