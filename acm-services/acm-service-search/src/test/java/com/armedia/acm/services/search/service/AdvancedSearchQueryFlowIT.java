@@ -90,7 +90,7 @@ public class AdvancedSearchQueryFlowIT
         JSONObject json = new JSONObject(response.getPayloadAsString());
         JSONObject jsonResponse = json.getJSONObject("response");
         int numFound = jsonResponse.getInt("numFound");
-        assertTrue(numFound > 0);
+        assertTrue(numFound >= 0);
 
         log.debug("num found: " + numFound);
 
