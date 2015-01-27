@@ -51,6 +51,8 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
 
         solrDoc.setDescription_parseable(personAssociation.getPersonDescription());
 
+        solrDoc.setNotes_no_html_tags_parseable(personAssociation.getNotes());
+
         return solrDoc;
     }
 
