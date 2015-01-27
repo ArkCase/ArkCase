@@ -746,6 +746,10 @@ body.container {
   .app .hbox.stretch {
     height: 100%;
   }
+  
+   .app .hbox.stretchSearch {
+    height: 94% !important;
+  }
   .app .vbox > section,
   .app .vbox > footer {
     position: absolute;
