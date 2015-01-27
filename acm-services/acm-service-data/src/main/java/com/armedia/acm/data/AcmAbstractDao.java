@@ -55,7 +55,8 @@ public abstract class AcmAbstractDao<T>
         Query sinceWhen = getEm().createQuery(
                 "SELECT e " +
                 "FROM " + getPersistenceClass().getSimpleName() + " e " +
-                "WHERE e.modified >= :lastModified");
+                "WHERE e.modified >= :lastModified " +
+                "ORDER BY e.created");
         sinceWhen.setParameter("lastModified", lastModified);
         sinceWhen.setFirstResult(startRow);
         sinceWhen.setMaxResults(pageSize);

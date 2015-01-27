@@ -312,6 +312,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         this.modifier = modifier;
     }
 
+    @Override
     public String getStatus()
     {
         return status;
@@ -464,5 +465,36 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     public void setDisposition(Disposition disposition)
     {
         this.disposition = disposition;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Complaint{" +
+                "complaintId=" + complaintId +
+                ", complaintNumber='" + complaintNumber + '\'' +
+                ", complaintType='" + complaintType + '\'' +
+                ", priority='" + priority + '\'' +
+                ", complaintTitle='" + complaintTitle + '\'' +
+                ", details='" + details + '\'' +
+                ", incidentDate=" + incidentDate +
+                ", created=" + created +
+                ", creator='" + creator + '\'' +
+                ", modified=" + modified +
+                ", modifier='" + modifier + '\'' +
+                ", status='" + status + '\'' +
+                ", originator=" + originator +
+                ", ecmFolderPath='" + ecmFolderPath + '\'' +
+                ", ecmFolderId='" + ecmFolderId + '\'' +
+                ", childObjects=" + childObjects +
+                ", approvers=" + approvers +
+                ", personAssociations=" + personAssociations +
+                ", participants=" + participants +
+                ", dueDate=" + dueDate +
+                ", tag='" + tag + '\'' +
+                ", frequency='" + frequency + '\'' +
+                ", location=" + location +
+                ", disposition=" + disposition +
+                '}';
     }
 }
