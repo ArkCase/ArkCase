@@ -38,11 +38,11 @@ public class AcmUser implements Serializable, AcmLdapEntity
 
     @Column(name = "cm_user_created", insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date userCreated;
+    private Date created;
 
     @Column(name = "cm_user_modified")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date userModified;
+    private Date modified;
 
     @Column(name = "cm_user_state")
     private String userState;
@@ -56,15 +56,15 @@ public class AcmUser implements Serializable, AcmLdapEntity
     @PrePersist
     public void preInsert()
     {
-        setUserCreated(new Date());
-        setUserModified(new Date());
+        setCreated(new Date());
+        setModified(new Date());
         setUserState("VALID");
     }
 
     @PreUpdate
     public void preUpdate()
     {
-        setUserModified(new Date());
+        setModified(new Date());
     }
 
 
@@ -98,24 +98,24 @@ public class AcmUser implements Serializable, AcmLdapEntity
         this.userDirectoryName = userDirectoryName;
     }
 
-    public Date getUserCreated()
+    public Date getCreated()
     {
-        return userCreated;
+        return created;
     }
 
-    public void setUserCreated(Date userCreated)
+    public void setCreated(Date created)
     {
-        this.userCreated = userCreated;
+        this.created = created;
     }
 
-    public Date getUserModified()
+    public Date getModified()
     {
-        return userModified;
+        return modified;
     }
 
-    public void setUserModified(Date userModified)
+    public void setModified(Date modified)
     {
-        this.userModified = userModified;
+        this.modified = modified;
     }
 
     public String getUserState()

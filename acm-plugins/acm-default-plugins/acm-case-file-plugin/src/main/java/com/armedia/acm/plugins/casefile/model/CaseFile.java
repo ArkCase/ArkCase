@@ -234,6 +234,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         this.title = title;
     }
 
+    @Override
     public String getStatus()
     {
         return status;
