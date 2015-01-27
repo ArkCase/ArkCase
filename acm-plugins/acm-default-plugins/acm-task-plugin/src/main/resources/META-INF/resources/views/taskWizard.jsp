@@ -152,9 +152,10 @@
                     <div class="col-sm-6">
                         <label  class="label">Assign To</label>
 
-                        <select data-placeholder="Choose Assignees..." id="assignee" class="choose-approvers form-control" multiple style="width:350px;" >
-                            <option value=""></option>
-                            <option value="albert-acm">Albert Acm</option>
+                        <%--<select data-placeholder="Choose Assignees..." id="assignee" class="form-control" multiple style="width:350px;" >--%>
+                        <select class="input-sm form-control inline v-middle" id="assignee">
+                            <option value="null">Select Assignee</option>
+                            <%--<option value="albert-acm">Albert Acm</option>
                             <option value="ann-acm">Ann Acm</option>
                             <option value="AJ McClary">AJ McClary</option>
                             <option value="charles-acm">Charles Acm</option>
@@ -165,7 +166,7 @@
                             <option value="Judy Hsu">Judy Hsu</option>
                             <option value="Ronda Ringo">Ronda Ringo</option>
                             <option value="sally-acm">Sally Acm</option>
-                            <option value="samuel-acm">Samuel Acm</option>
+                            <option value="samuel-acm">Samuel Acm</option>--%>
                         </select>
                     </div>
 
