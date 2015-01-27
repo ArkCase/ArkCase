@@ -2,8 +2,11 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,7 @@ public class CreateComplaintAPIController
 
     private SaveComplaintTransaction complaintTransaction;
     private ComplaintEventPublisher eventPublisher;
+    private ComplaintService complaintService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -44,6 +48,10 @@ public class CreateComplaintAPIController
         try
         {
             Complaint saved = getComplaintTransaction().saveComplaint(in, auth);
+  
+            // Update Frevvo XML file
+            getComplaintService().setAuthentication(auth);
+            getComplaintService().updateXML(saved);
 
             getEventPublisher().publishComplaintEvent(saved, auth, isInsert, true);
 
@@ -84,4 +92,11 @@ public class CreateComplaintAPIController
         this.eventPublisher = eventPublisher;
     }
 
+	public ComplaintService getComplaintService() {
+		return complaintService;
+	}
+
+	public void setComplaintService(ComplaintService complaintService) {
+		this.complaintService = complaintService;
+	}
 }

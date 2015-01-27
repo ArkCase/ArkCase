@@ -272,4 +272,10 @@
             </list>
         </property>
     </bean>
+    
+    <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService">
+    	<property name="objectAssociationDao" ref="objectAssociationDao" />
+    	<property name="ecmFileDao" ref="ecmFileDao" />
+    	<property name="ecmFileService" ref="ecmFileService" />
+    </bean>
 </beans>
