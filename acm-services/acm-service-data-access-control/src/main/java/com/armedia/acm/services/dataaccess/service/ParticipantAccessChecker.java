@@ -43,10 +43,13 @@ public class ParticipantAccessChecker
 
     public boolean defaultUserHasRead(AcmAssignedObject in)
     {
+        boolean defaultAccessorFound = false;
+
         for ( AcmParticipant ap : in.getParticipants() )
         {
             if ( AcmPrivilegeService.DEFAULT_ACCESSOR.equals(ap.getParticipantLdapId()) )
             {
+                defaultAccessorFound = true;
                 for ( AcmParticipantPrivilege priv : ap.getPrivileges() )
                 {
                     if ( AcmPrivilegeService.ACCESS_LEVEL_READ.equals(priv.getObjectAction()) &&
@@ -58,7 +61,9 @@ public class ParticipantAccessChecker
             }
         }
 
-        return false;
+        // if there was no default accessor entry at all, then we return true (global read by default).
+        // if there was a default accessor entry, but we got here, then we return false.
+        return ! defaultAccessorFound;
     }
 
 }

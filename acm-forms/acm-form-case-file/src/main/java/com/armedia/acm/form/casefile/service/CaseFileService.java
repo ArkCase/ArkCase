@@ -16,7 +16,6 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 import org.activiti.engine.RuntimeService;
-import org.drools.core.RuntimeDroolsException;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -194,7 +193,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
         {
 			caseFile = getSaveCaseService().saveCase(caseFile, getAuthentication(), ipAddress);
         }
-		catch (MuleException | PersistenceException | RuntimeDroolsException e)
+		catch (MuleException | PersistenceException e)
         {
             throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
         }

@@ -38,6 +38,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- expression language -->
+        <dependency>
+            <groupId>org.mvel</groupId>
+            <artifactId>mvel2</artifactId>
+        </dependency>
+
 
         <!-- testing -->
         <dependency>
