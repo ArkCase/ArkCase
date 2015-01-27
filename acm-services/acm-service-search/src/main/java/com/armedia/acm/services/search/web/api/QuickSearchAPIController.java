@@ -27,6 +27,7 @@ public class QuickSearchAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private MuleClient muleClient;
+    private static final String catchAll = "catch_all:";
 
     @RequestMapping(value = "/quickSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -43,8 +44,10 @@ public class QuickSearchAPIController
             log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
         }
 
+        String q=catchAll+query;
+
         Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
+        headers.put("query", q);
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);

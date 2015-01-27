@@ -43,7 +43,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setTitle_parseable(in.getTitle());
         doc.setCreate_date_tdt(in.getCreateDate());
         doc.setCreator_lcs(in.getOwner());
-        doc.setDescription_parseable(in.getDetails());
+        doc.setDescription_no_html_tags_parseable(in.getDetails());
         doc.setDueDate_tdt(in.getDueDate());
         doc.setModified_date_tdt(new Date());  // theoretically it's being indexed b/c it just changed
                                                // activiti does not keep a last modified field
@@ -88,8 +88,8 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
 
         getSearchAccessControlFields().setAccessControlFields(doc, in);
 
-        //doc.setTitle_t(in.getTitle());
         doc.setTitle_parseable(in.getTitle());
+        doc.setDescription_no_html_tags_parseable(in.getDetails());
         doc.setObject_id_s(Long.toString(in.getId()));
         doc.setCreate_tdt(in.getCreateDate());
         doc.setName(in.getTitle());
