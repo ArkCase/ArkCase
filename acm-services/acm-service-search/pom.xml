@@ -182,7 +182,7 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-spring-context-holder</artifactId>
-            <version>3.0.18-SNAPSHOT</version>
+            <version>${acm.version}</version>
         </dependency>
     </dependencies>
 
