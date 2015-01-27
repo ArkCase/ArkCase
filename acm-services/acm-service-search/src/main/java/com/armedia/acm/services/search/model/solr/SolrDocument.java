@@ -9,10 +9,7 @@ public class SolrDocument implements SolrBaseDocument {
     private String author;
     private String author_s;
     private String modifier_s;
-   //private Date last_modified;
     private Date last_modified_tdt;
-//    private Date create_dt;
-//    private Date due_dt;
     private Date create_tdt;
     private Date due_tdt;
     private String title_t;
@@ -32,6 +29,10 @@ public class SolrDocument implements SolrBaseDocument {
     /////////////////// for complaints, case files, other objects with a title or description ////////////
     private String title_parseable;
     private String description_parseable;
+
+    /////////////////// for complaints, case files, tasks we introduce description and for personAssociation we introduce notes ////////////
+    private String description_no_html_tags_parseable;
+    private String notes_no_html_tags_parseable;
 
     private List<String> deny_acl_ss;
     private List<String> allow_acl_ss;
@@ -70,21 +71,6 @@ public class SolrDocument implements SolrBaseDocument {
     public void setModifier_s(String modifier_s) {
         this.modifier_s = modifier_s;
     }
-//    public Date getLast_modified() {
-//        return last_modified;
-//    }
-//    public void setLast_modified(Date last_modified) {
-//        this.last_modified = last_modified;
-//    }
-//    public Date getCreate_dt() {
-//        return create_dt;
-//    }
-//    public void setCreate_dt(Date create_dt) {
-//        this.create_dt = create_dt;
-//    }
-//    public Date getDue_dt() {return due_dt;}
-//    public void setDue_dt(Date due_dt) {this.due_dt = due_dt;}
-
     public String getTitle_t() {
         return title_t;
     }
@@ -148,6 +134,14 @@ public class SolrDocument implements SolrBaseDocument {
     public String getPriority_s() {return priority_s;}
     public void setPriority_s(String priority_s) {this.priority_s = priority_s;}
 
+    public String getDescription_parseable() {
+        return description_parseable;
+    }
+
+    public void setDescription_parseable(String description_parseable) {
+        this.description_parseable = description_parseable;
+    }
+
     public boolean isPublic_doc_b()
     {
         return public_doc_b;
@@ -202,12 +196,30 @@ public class SolrDocument implements SolrBaseDocument {
         this.title_parseable = title_parseable;
     }
 
-    public String getDescription_parseable() {
-        return description_parseable;
+    public String getDescription_no_html_tags_parseable() {
+        return description_no_html_tags_parseable;
     }
 
-    public void setDescription_parseable(String description_parseable) {
-        this.description_parseable = description_parseable;
+    public void setDescription_no_html_tags_parseable(String description_no_html_tags_parseable) {
+        this.description_no_html_tags_parseable = description_no_html_tags_parseable;
+    }
+
+    public String getNotes_no_html_tags_parseable() {
+        return notes_no_html_tags_parseable;
+    }
+
+    public void setNotes_no_html_tags_parseable(String notes_no_html_tags_parseable) {
+        this.notes_no_html_tags_parseable = notes_no_html_tags_parseable;
+    }
+
+    public void setParent_object_id_i(Long parent_object_id_i)
+    {
+        this.parent_object_id_i = parent_object_id_i;
+    }
+
+    public Long getParent_object_id_i()
+    {
+        return parent_object_id_i;
     }
 
     @Override
@@ -235,19 +247,11 @@ public class SolrDocument implements SolrBaseDocument {
                 ", protected_object_b=" + protected_object_b +
                 ", title_parseable='" + title_parseable + '\'' +
                 ", description_parseable='" + description_parseable + '\'' +
+                ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\'' +
+                ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\'' +
                 ", deny_acl_ss=" + deny_acl_ss +
                 ", allow_acl_ss=" + allow_acl_ss +
                 ", parent_object_id_i=" + parent_object_id_i +
                 '}';
-    }
-
-    public void setParent_object_id_i(Long parent_object_id_i)
-    {
-        this.parent_object_id_i = parent_object_id_i;
-    }
-
-    public Long getParent_object_id_i()
-    {
-        return parent_object_id_i;
     }
 }
