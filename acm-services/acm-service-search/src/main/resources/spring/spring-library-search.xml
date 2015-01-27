@@ -79,6 +79,7 @@
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="batchSize" value="${solr.batchUpdateBatchSize}"/>
         <property name="objectsToSearchService" ref="jpaObjectsToSearchService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <!-- event publishers -->

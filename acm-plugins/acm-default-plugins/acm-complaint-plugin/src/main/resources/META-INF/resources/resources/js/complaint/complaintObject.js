@@ -583,8 +583,7 @@ Complaint.Object = {
                     var complaintId = parseInt(c.object_id_s);
 
                     builder.addBranch({key: pageId + "." + complaintId                      //level 1: /Complaint
-                        ,title: c.title_t
-                        //,title: c.title_parseable
+                        ,title: c.title_parseable
                         ,tooltip: c.name
                         ,expanded: false
                         ,acmIcon: "<i class='i i-notice'></i>" //"i-notice icon";
