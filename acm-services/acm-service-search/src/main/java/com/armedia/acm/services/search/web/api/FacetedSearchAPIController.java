@@ -33,6 +33,8 @@ public class FacetedSearchAPIController {
     private MuleClient muleClient;
     private AcmPlugin pluginSearch;
 
+    private static final String catchAll = "catch_all:";
+
     private static final String DATE_FACET_PRE_KEY = "facet.date.";
     private static final String FACET_PRE_KEY = "facet.";
 
@@ -70,9 +72,9 @@ public class FacetedSearchAPIController {
 
         String rowQueryParametars = buildSolrQuery(filters);
         String sort= "";
-
+        String query=catchAll+q;
         Map<String, Object> headers = new HashMap<>();
-        headers.put("query", URLEncoder.encode(q));
+        headers.put("query", URLEncoder.encode(query));
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
