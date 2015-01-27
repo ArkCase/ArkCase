@@ -80,7 +80,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
     @Test
     public void jsonPayload() throws Exception {
         // there are docs
-        String jsonPayload = "{\"responseHeader\":{\"status\":0,\"QTime\":3,\"params\":{\"sort\":\"\",\"indent\":\"true\",\"start\":\"0\",\"q\":\"object_type_s:Complaint\",\"wt\":\"json\",\"rows\":\"10\"}},\"response\":{\"numFound\":5,\"start\":0,\"docs\":[{\"id\":\"142-Complaint\",\"status_s\":\"DRAFT\",\"author\":\"tester\",\"author_s\":\"tester\",\"modifier_s\":\"testModifier\",\"last_modified\":\"2014-08-15T17:13:55Z\",\"create_dt\":\"2014-08-15T17:13:55Z\",\"title_t\":\"testTitle\",\"name\":\"20140815_142\",\"object_id_s\":\"142\",\"owner_s\":\"tester\",\"object_type_s\":\"Complaint\",\"_version_\":1477062417430085632},{\"id\":\"159-Complaint\",\"status_s\":\"DRAFT\",\"author\":\"tester\",\"author_s\":\"tester\",\"modifier_s\":\"testModifier\",\"last_modified\":\"2014-08-18T11:51:09Z\",\"create_dt\":\"2014-08-18T11:51:09Z\",\"title_t\":\"testTitle\",\"name\":\"20140818_159\",\"object_id_s\":\"159\",\"owner_s\":\"tester\",\"object_type_s\":\"Complaint\",\"_version_\":1477062417682792448},{\"status_s\":\"DRAFT\",\"create_dt\":\"2014-08-22T09:27:41Z\",\"title_t\":\"First Complaint\",\"object_id_s\":\"130\",\"owner_s\":\"ann-acm\",\"deny_acl_ss\":[\"TEST-DENY-ACL\"],\"object_type_s\":\"Complaint\",\"allow_acl_ss\":[\"TEST-ALLOW-ACL\"],\"id\":\"130-Complaint\",\"modifier_s\":\"ann-acm\",\"author\":\"ann-acm\",\"author_s\":\"ann-acm\",\"last_modified\":\"2014-08-22T09:27:41Z\",\"name\":\"20140822_130\",\"_version_\":1478712820530937856},{\"status_s\":\"DRAFT\",\"create_dt\":\"2014-09-15T09:16:04Z\",\"title_t\":\"Monday Sept 15\",\"object_id_s\":\"270\",\"owner_s\":\"ann-acm\",\"deny_acl_ss\":[\"TEST-DENY-ACL\"],\"object_type_s\":\"Complaint\",\"allow_acl_ss\":[\"TEST-ALLOW-ACL\"],\"id\":\"270-Complaint\",\"modifier_s\":\"ann-acm\",\"author\":\"ann-acm\",\"author_s\":\"ann-acm\",\"last_modified\":\"2014-09-15T09:16:04Z\",\"name\":\"20140905_001\",\"_version_\":1479317404993454080},{\"status_s\":\"DRAFT\",\"create_dt\":\"2014-09-15T09:33:01Z\",\"title_t\":\"Monday Sept 15 2\",\"object_id_s\":\"275\",\"owner_s\":\"ann-acm\",\"deny_acl_ss\":[\"TEST-DENY-ACL\"],\"object_type_s\":\"Complaint\",\"allow_acl_ss\":[\"TEST-ALLOW-ACL\"],\"id\":\"275-Complaint\",\"modifier_s\":\"ann-acm\",\"author\":\"ann-acm\",\"author_s\":\"ann-acm\",\"last_modified\":\"2014-09-15T09:33:01Z\",\"name\":\"20140905_002\",\"_version_\":1479318645547991040}]}}";
+        String jsonPayload = "{\"responseHeader\":{\"status\":0,\"QTime\":3,\"params\":{\"sort\":\"\",\"indent\":\"true\",\"start\":\"0\",\"q\":\"object_type_s:Complaint\",\"wt\":\"json\",\"rows\":\"10\"}},\"response\":{\"numFound\":5,\"start\":0,\"docs\":[{\"id\":\"142-Complaint\",\"status_s\":\"DRAFT\",\"author\":\"tester\",\"author_s\":\"tester\",\"modifier_s\":\"testModifier\",\"last_modified\":\"2014-08-15T17:13:55Z\",\"create_tdt\":\"2014-08-15T17:13:55Z\",\"title_t\":\"testTitle\",\"name\":\"20140815_142\",\"object_id_s\":\"142\",\"owner_s\":\"tester\",\"object_type_s\":\"Complaint\",\"_version_\":1477062417430085632},{\"id\":\"159-Complaint\",\"status_s\":\"DRAFT\",\"author\":\"tester\",\"author_s\":\"tester\",\"modifier_s\":\"testModifier\",\"last_modified\":\"2014-08-18T11:51:09Z\",\"create_tdt\":\"2014-08-18T11:51:09Z\",\"title_t\":\"testTitle\",\"name\":\"20140818_159\",\"object_id_s\":\"159\",\"owner_s\":\"tester\",\"object_type_s\":\"Complaint\",\"_version_\":1477062417682792448},{\"status_s\":\"DRAFT\",\"create_tdt\":\"2014-08-22T09:27:41Z\",\"title_t\":\"First Complaint\",\"object_id_s\":\"130\",\"owner_s\":\"ann-acm\",\"deny_acl_ss\":[\"TEST-DENY-ACL\"],\"object_type_s\":\"Complaint\",\"allow_acl_ss\":[\"TEST-ALLOW-ACL\"],\"id\":\"130-Complaint\",\"modifier_s\":\"ann-acm\",\"author\":\"ann-acm\",\"author_s\":\"ann-acm\",\"last_modified\":\"2014-08-22T09:27:41Z\",\"name\":\"20140822_130\",\"_version_\":1478712820530937856},{\"status_s\":\"DRAFT\",\"create_tdt\":\"2014-09-15T09:16:04Z\",\"title_t\":\"Monday Sept 15\",\"object_id_s\":\"270\",\"owner_s\":\"ann-acm\",\"deny_acl_ss\":[\"TEST-DENY-ACL\"],\"object_type_s\":\"Complaint\",\"allow_acl_ss\":[\"TEST-ALLOW-ACL\"],\"id\":\"270-Complaint\",\"modifier_s\":\"ann-acm\",\"author\":\"ann-acm\",\"author_s\":\"ann-acm\",\"last_modified\":\"2014-09-15T09:16:04Z\",\"name\":\"20140905_001\",\"_version_\":1479317404993454080},{\"status_s\":\"DRAFT\",\"create_tdt\":\"2014-09-15T09:33:01Z\",\"title_t\":\"Monday Sept 15 2\",\"object_id_s\":\"275\",\"owner_s\":\"ann-acm\",\"deny_acl_ss\":[\"TEST-DENY-ACL\"],\"object_type_s\":\"Complaint\",\"allow_acl_ss\":[\"TEST-ALLOW-ACL\"],\"id\":\"275-Complaint\",\"modifier_s\":\"ann-acm\",\"author\":\"ann-acm\",\"author_s\":\"ann-acm\",\"last_modified\":\"2014-09-15T09:33:01Z\",\"name\":\"20140905_002\",\"_version_\":1479318645547991040}]}}";
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         SolrResponse solrResponse = gson.fromJson(jsonPayload, SolrResponse.class);
        
@@ -101,10 +101,11 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         int firstRow = 0;
         int maxRows = 10;
         String sort = "";
+        String params = "";
         
         String query = "object_type_s:" + objectType + " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
                    
-        String solrResponse = "{\"responseHeader\":{\"status\":0,\"QTime\":3,\"params\":{\"sort\":\"\",\"indent\":\"true\",\"start\":\"0\",\"q\":\"object_type_s:Complaint\",\"wt\":\"json\",\"rows\":\"10\"}},\"response\":{\"numFound\":5,\"start\":0,\"docs\":[{\"id\":\"142-Complaint\",\"status_s\":\"DRAFT\",\"author\":\"tester\",\"author_s\":\"tester\",\"modifier_s\":\"testModifier\",\"last_modified\":\"2014-08-15T17:13:55Z\",\"create_dt\":\"2014-08-15T17:13:55Z\",\"title_t\":\"testTitle\",\"name\":\"20140815_142\",\"object_id_s\":\"142\",\"owner_s\":\"tester\",\"object_type_s\":\"Complaint\",\"_version_\":1477062417430085632}]}}";
+        String solrResponse = "{\"responseHeader\":{\"status\":0,\"QTime\":3,\"params\":{\"sort\":\"\",\"indent\":\"true\",\"start\":\"0\",\"q\":\"object_type_s:Complaint\",\"wt\":\"json\",\"rows\":\"10\"}},\"response\":{\"numFound\":5,\"start\":0,\"docs\":[{\"id\":\"142-Complaint\",\"status_s\":\"DRAFT\",\"author\":\"tester\",\"author_s\":\"tester\",\"modifier_s\":\"testModifier\",\"last_modified\":\"2014-08-15T17:13:55Z\",\"create_tdt\":\"2014-08-15T17:13:55Z\",\"title_t\":\"testTitle\",\"name\":\"20140815_142\",\"object_id_s\":\"142\",\"owner_s\":\"tester\",\"object_type_s\":\"Complaint\",\"_version_\":1477062417430085632}]}}";
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
@@ -112,6 +113,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
         headers.put("acmUser", mockAuthentication);
+        headers.put("rowQueryParametars",params);
         
         Capture<ApplicationSearchEvent> capturedEvent = new Capture<>();
       
@@ -123,14 +125,14 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
 
         replayAll();
         
-//		// To see details on the HTTP calls, change .andReturn() to .andDo(print())	
+		// To see details on the HTTP calls, change .andReturn() to .andDo(print())
 //		ResultActions resultAction = mockMvc.perform(
-//                get("/api/v1/plugin/search/{objectType}", objectType)  
+//                get("/api/v1/plugin/search/{objectType}", objectType)
 //                .principal(mockAuthentication)).andDo(print());
-		
+//
 		
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/search/{objectType}", objectType) 
+                get("/api/v1/plugin/search/{objectType}", objectType)
                 .session(mockHttpSession)
                 .principal(mockAuthentication))
                 .andExpect(status().isOk())
@@ -155,6 +157,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         int firstRow = 0;
         int maxRows = 10;
         String sort = "";
+        String params = "";
         
         String query = "object_type_s:" + objectType + " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
                    
@@ -166,6 +169,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
         headers.put("acmUser", mockAuthentication);
+        headers.put("rowQueryParametars",params);
       
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();

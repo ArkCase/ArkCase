@@ -520,33 +520,17 @@ AcmEx.Object = {
                 });
             }
         }
-
-
-
     }
+
     ,TreeModifier: {
-        validateFilter: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (!Acm.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
-        ,validateSort: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (!Acm.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
+        defaultFilter: null
         ,buildFilter: function($ulFilter, treeFilter, onFilterChanged) {
             var html = "";
             if (this.validateFilter(treeFilter)) {
                 for (var i = 0; i < treeFilter.length; i++) {
+                    if (treeFilter[i].default) {
+                        this.defaultFilter = Acm.goodValue(treeFilter[i].value);
+                    }
                     html += "<li value='" + Acm.goodValue(treeFilter[i].value)
                         +  "'><a href='#'>" + Acm.goodValue(treeFilter[i].desc) + "</a></li>";
                 }
@@ -560,10 +544,24 @@ AcmEx.Object = {
                 });
             }
         }
+        ,validateFilter: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+
+        ,defaultSort: null
         ,buildSort: function($ulSort, treeSort, onSortChanged) {
             var html = "";
             if (this.validateSort(treeSort)) {
                 for (var i = 0; i < treeSort.length; i++) {
+                    if (treeSort[i].default) {
+                        this.defaultSort = Acm.goodValue(treeSort[i].value);
+                    }
                     html += "<li value='" + Acm.goodValue(treeSort[i].value)
                         +  "'><a href='#'>" + Acm.goodValue(treeSort[i].desc) + "</a></li>";
                 }
@@ -576,6 +574,15 @@ AcmEx.Object = {
                     onSortChanged(value);
                 });
             }
+        }
+        ,validateSort: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
         }
     }
 

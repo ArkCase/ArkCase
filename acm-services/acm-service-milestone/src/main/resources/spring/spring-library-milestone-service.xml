@@ -16,6 +16,7 @@
                 <ref bean="listMilestonesGroupedByDate"/>
             </list>
         </property>
+
         <property name="urlPrivileges">
             <list>
                 <bean id="downloadUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

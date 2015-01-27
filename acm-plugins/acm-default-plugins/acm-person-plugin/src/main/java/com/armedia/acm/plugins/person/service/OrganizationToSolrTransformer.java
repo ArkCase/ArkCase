@@ -45,6 +45,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return orgDoc;
     }
 
+    //  No implementation needed  because we don't want Organization indexed in the SolrQuickSearch
     @Override
     public SolrDocument toSolrQuickSearch(Organization in)
     {

@@ -16,13 +16,11 @@
 
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/search/Search.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/SearchCallback.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/search.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchController.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
 
@@ -33,23 +31,51 @@
 
 <jsp:body>
 <section id="content">
+    <div class="wrapper b-b header">Advanced Search</div>
+
     <section class="hbox stretch">
         <aside class="aside-md bg-light dker b-r" id="subNav">
             <section class="vbox">
                 <!--scroll bar -->
                 <section class="scrollable">
 
-                    <div class="wrapper b-b header">Advanced Search</div>
+                    <%--<div class="wrapper b-b header">Advanced Search</div>--%>
 
                         <div class="wrapper">
-
-                            <div class="input-group">
-                                <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
-                                    <span class="input-group-btn">
-                                      <button class="btn btn-sm btn-default" type="button">Go!</button>
-                                    </span>
-
+                            <div class="form-group" id="divFacet">
+                                <%--<div name="facet_fields">--%>
+                                    <%--<div name="Object Type">--%>
+                                    <%--&lt;%&ndash;<div class="col-sm-12" id="complaintFields">&ndash;%&gt;--%>
+                                        <%--<label class="label">Object Type</label>--%>
+                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="USER">USER <span>(33)</span></input>--%>
+                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="CASE_FILE" checked>CASE_FILE <span>(20)</span></input>--%>
+                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="COMPLAINT">COMPLAINT <span>(40)</span></input>--%>
+                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="DOCUMENT">DOCUMENT <span>(5)</span></input>--%>
+                                    <%--</div>--%>
+                                    <%--<div name="Status">--%>
+                                        <%--<label class="label">Status</label>--%>
+                                        <%--</br><input type="checkbox"  value="valid">valid (33)</input>--%>
+                                        <%--</br><input type="checkbox"  value="active">active (20)</input>--%>
+                                        <%--</br><input type="checkbox"  value="draft">draft (40)</input>--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
+                                <%--<div name="facet_queries">--%>
+                                    <%--<div name="Incident Date">--%>
+                                        <%--<label class="label">Incident Date</label>--%>
+                                        <%--</br><input type="checkbox" facet='query' value="Previous Week">Previous Week (33)</input>--%>
+                                        <%--</br><input type="checkbox" facet='query' value="Previous Month">Previous Month (20)</input>--%>
+                                        <%--</br><input type="checkbox" facet='query' value="Previous Week">Previous Week (40)</input>--%>
+                                    <%--</div>--%>
+                                <%--</div>--%>
                             </div>
+
+                            <%--<div class="input-group">--%>
+                                <%--<input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">--%>
+                                    <%--<span class="input-group-btn">--%>
+                                      <%--<button class="btn btn-sm btn-default" type="button">Go!</button>--%>
+                                    <%--</span>--%>
+
+                            <%--</div>--%>
 
 <!-- ================================================ -->
                             <%--<div class="line line-dashed b-b line-lg pull-in"></div>--%>
@@ -287,16 +313,37 @@
                     <div class="row m-t-sm">
                         <div class="col-sm-12 m-b-xs">
                             <%--<a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default active"><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>--%>
-                            <a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default "><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>
-                                <button type="button" class="btn btn-sm btn-default" title="Filter" data-toggle="dropdown"><i class="fa fa-filter"></i> <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Filter 1</a></li>
-                                    <li><a href="#">Filter 2</a></li>
-                                    <li><a href="#">Filter 3</a></li>
-                                </ul>
-                            </div>
+                            <%--<a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default "><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>--%>
+                            <%--<div class="btn-group">--%>
+                                <%--<button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>--%>
+                                <%--<button type="button" class="btn btn-sm btn-default" title="Filter" data-toggle="dropdown"><i class="fa fa-filter"></i> <span class="caret"></span></button>--%>
+                                <%--<ul class="dropdown-menu">--%>
+                                    <%--<li><a href="#">Filter 1</a></li>--%>
+                                    <%--<li><a href="#">Filter 2</a></li>--%>
+                                    <%--<li><a href="#">Filter 3</a></li>--%>
+                                <%--</ul>--%>
+                            <%--</div>--%>
+
+                            <%--<form id="formSearch">--%>
+                                <div class="input-group">
+                                    <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Type in search query">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                    </span>
+                                </div>
+                            <%--</form>--%>
+
+                                <%--<form class="navbar-form navbar-right input-s-lg m-t m-l-n-xs hidden-xs" role="search">--%>
+                                    <%--<div class="form-group">--%>
+                                        <%--<div class="input-group"> <span class="input-group-btn">--%>
+                                              <%--<button type="submit" class="btn btn-sm bg-white b-white btn-icon"><i class="fa fa-search"></i></button>--%>
+                                              <%--</span>--%>
+                                            <%--<input id="searchQuery" type="text" class="form-control input-sm no-border typeahead" autocomplete="off" data-provide="typeahead" placeholder="Type in search query">--%>
+                                            <%--<input type="hidden" class="span1" title="ctrId" id="ctrId" value="" />--%>
+                                        <%--</div>--%>
+                                    <%--</div>--%>
+                                <%--</form>--%>
+
 
                         </div>
 
@@ -304,7 +351,7 @@
                 </header>
                 <section class="scrollable wrapper w-f">
                     <section class="panel panel-default">
-                        <div id="divResults" style="width:98%"></div>
+                        <div id="divResults" style="width:100%"></div>
                         <!--
                         </br></br>
                         <div class="table-responsive">

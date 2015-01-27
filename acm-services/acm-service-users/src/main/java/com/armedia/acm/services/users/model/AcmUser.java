@@ -33,16 +33,16 @@ public class AcmUser implements Serializable, AcmLdapEntity
     @Column(name = "cm_last_name")
     private String lastName;
 
-    @Column(name = "cm_user_directory_name")
+    @Column(name = "cm_user_directory_name", updatable = false)
     private String userDirectoryName;
 
     @Column(name = "cm_user_created", insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date userCreated;
+    private Date created;
 
     @Column(name = "cm_user_modified")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date userModified;
+    private Date modified;
 
     @Column(name = "cm_user_state")
     private String userState;
@@ -56,15 +56,15 @@ public class AcmUser implements Serializable, AcmLdapEntity
     @PrePersist
     public void preInsert()
     {
-        setUserCreated(new Date());
-        setUserModified(new Date());
+        setCreated(new Date());
+        setModified(new Date());
         setUserState("VALID");
     }
 
     @PreUpdate
     public void preUpdate()
     {
-        setUserModified(new Date());
+        setModified(new Date());
     }
 
 
@@ -98,24 +98,24 @@ public class AcmUser implements Serializable, AcmLdapEntity
         this.userDirectoryName = userDirectoryName;
     }
 
-    public Date getUserCreated()
+    public Date getCreated()
     {
-        return userCreated;
+        return created;
     }
 
-    public void setUserCreated(Date userCreated)
+    public void setCreated(Date created)
     {
-        this.userCreated = userCreated;
+        this.created = created;
     }
 
-    public Date getUserModified()
+    public Date getModified()
     {
-        return userModified;
+        return modified;
     }
 
-    public void setUserModified(Date userModified)
+    public void setModified(Date modified)
     {
-        this.userModified = userModified;
+        this.modified = modified;
     }
 
     public String getUserState()
@@ -173,5 +173,41 @@ public class AcmUser implements Serializable, AcmLdapEntity
     public boolean isGroup()
     {
         return false;
+    }
+    
+    @Override
+    @JsonIgnore
+    public int hashCode() {
+    	if (getUserId() == null)
+    	{
+    		return 0;
+    	}
+    	else
+    	{
+    		return getUserId().hashCode();
+    	}
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean equals(Object obj) {
+        if (!(obj instanceof AcmUser)) 
+        {
+            return false;
+        }
+        
+        AcmUser user = (AcmUser)obj;
+        
+        if (user.getUserId() == null && getUserId() == null)
+    	{
+    		return true;
+    	}
+        
+        if (user.getUserId() == null && getUserId() != null)
+        {
+        	return false;
+        }
+        
+        return user.getUserId().equals(getUserId());
     }
 }

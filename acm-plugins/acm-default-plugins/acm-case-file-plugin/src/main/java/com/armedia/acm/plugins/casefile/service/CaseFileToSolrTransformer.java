@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.search.service.SearchAccessControlFields;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -22,6 +23,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
     private UserDao userDao;
     private CaseFileDao caseFileDao;
+    private SearchAccessControlFields searchAccessControlFields;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -36,10 +38,13 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     {
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
+        getSearchAccessControlFields().setAccessControlFields(solr, in);
+
         solr.setId(in.getId() + "-CASE_FILE");
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s("CASE_FILE");
         solr.setTitle_parseable(in.getTitle());
+        solr.setDescription_no_html_tags_parseable(in.getDetails());
         solr.setName(in.getCaseNumber());
 
         solr.setCreate_date_tdt(in.getCreated());
@@ -72,18 +77,23 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     public SolrDocument toSolrQuickSearch(CaseFile in)
     {
         SolrDocument solr = new SolrDocument();
+
+        getSearchAccessControlFields().setAccessControlFields(solr, in);
+
         solr.setName(in.getCaseNumber());
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s("CASE_FILE");
         solr.setId(in.getId() + "-CASE_FILE");
 
         solr.setAuthor(in.getCreator());
-        solr.setCreate_dt(in.getCreated());
+        solr.setCreate_tdt(in.getCreated());
         solr.setModifier_s(in.getModifier());
-        solr.setLast_modified(in.getModified());
+        solr.setLast_modified_tdt(in.getModified());
 
-        solr.setTitle_t(in.getTitle());
         solr.setStatus_s(in.getStatus());
+
+        solr.setDescription_no_html_tags_parseable(in.getDetails());
+        solr.setTitle_parseable(in.getTitle());
 
         String assigneeUserId = findAssigneeUserId(in);
         solr.setAssignee_s(assigneeUserId);
@@ -158,5 +168,15 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
     public void setCaseFileDao(CaseFileDao caseFileDao) {
         this.caseFileDao = caseFileDao;
+    }
+
+    public SearchAccessControlFields getSearchAccessControlFields()
+    {
+        return searchAccessControlFields;
+    }
+
+    public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
+    {
+        this.searchAccessControlFields = searchAccessControlFields;
     }
 }

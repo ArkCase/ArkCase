@@ -3,7 +3,8 @@
  */
 package com.armedia.acm.services.users.web.api.group;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class SaveMembersToGroupAPIController {
 	
 	@RequestMapping(value="/group/{groupId}/members/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup saveSupervisorsToGroup(@RequestBody List<AcmUser> members,
+    public AcmGroup saveSupervisorsToGroup(@RequestBody Set<AcmUser> members,
 								    		   @PathVariable("groupId") String groupId, 
 											   Authentication auth) throws AcmUserActionFailedException
     {		
@@ -48,7 +49,27 @@ public class SaveMembersToGroupAPIController {
 		{
 			AcmGroup group = getGroupDao().findByName(groupId);
 			
-			group.setMembers(members);
+			if (group.getMembers() == null)
+			{
+				group.setMembers(new HashSet<AcmUser>());
+			}
+			
+			group.getMembers().addAll(members);
+			
+			// Add members for all parent groups
+			AcmGroup parent = group.getParentGroup();
+			while (parent != null)
+			{
+				if (parent.getMembers() == null)
+				{
+					parent.setMembers(new HashSet<AcmUser>());
+				}
+				
+				parent.getMembers().addAll(members);
+				getGroupDao().save(parent);
+				
+				parent = parent.getParentGroup();
+			}
 			
 			AcmGroup saved = getGroupDao().save(group);
 			

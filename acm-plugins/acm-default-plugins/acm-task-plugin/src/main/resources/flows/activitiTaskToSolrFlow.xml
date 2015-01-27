@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+    <!-- we handle the assignment rules and data access rules for tasks from Activiti events in this flow.. since
+         Activiti may raise events totally independently of the webapp.  So there is no way to apply the rules via
+         the Activiti task DAO, the way we do for webapp-generated task events.  Everything has to happen in this
+         flow.    -->
+
+    <!-- Due to the nature of async concurrent event handling, and how Activiti can raise multiple events based on
+         the same user action, we can easily process the same task via several events (e.g. the webapp task created
+         event, the Activiti task created event, and the Activiti task assigned event when an ad-hoc task is created
+         via the webapp; another example: the ACM task completed event and the Activiti task completed and task
+         deleted events when a task is completed from the webapp.
+
+         This can cause a variety of concurrency-related errors: one handler may try to read the task from the db
+         before Activiti has committed it; or two handlers may both try to set assignees at the same time, resulting in
+         a unique key exception for one of them.
+
+         The best way I found to handle it is to have a rollback error handling that retries up to 15 times.  After
+         15 times there must be something else going on.  But this seems to work well for most issues I've seen -->
+    <rollback-exception-strategy name="taskToSolrRollbackStrategy" maxRedeliveryAttempts="15">
+        <logger level="INFO" category="com.armedia.acm.plugins.task.service" message="Retrying activiti task to SOLR (#[exception.getClass().getName()]"/>
+        <on-redelivery-attempts-exceeded>
+            <logger level="ERROR" category="com.armedia.acm.plugins.task.service" message="could not deliver"/>
+        </on-redelivery-attempts-exceeded>
+    </rollback-exception-strategy>
+
+    <configuration defaultExceptionStrategy-ref="taskToSolrRollbackStrategy"/>
+
+    <flow name="jmsSendActivitiTaskToSolr"
+          doc:name="Send Activiti Tasks to SOLR"
+          doc:description="Send Activiti tasks to the SOLR quick search and Advanced Search collections.  Payload must be an AcmTaskEvent pojo.">
+
+        <jms:inbound-endpoint
+                queue="activitiTaskToSolr.in"
+                exchange-pattern="one-way"
+                connector-ref="ActiveMQ-ACM"
+                doc:name="JMS" />
+
+        <timer-interceptor/>
+
+        <echo-component doc:name="Echo"/>
+
+        <component doc:name="Get an Activiti Task">
+            <spring-object bean="extractAcmTaskFromEvent"/>
+        </component>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Got ACM task"/>
+
+
+        <!-- setup the task assignees and data access rules, and save the participants to the database -->
+        <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
+        <scripting:transformer name="activitiTaskParticipantsAndAccessControls">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+
+                    // ensure we set the right modifier and creator for any objects we end up inserting or updating
+                    registry.auditPropertyEntityAdapter.setUserId(message.getInboundProperty("ACM_USER"));
+
+                    registry.acmTaskDao.ensureCorrectAssigneeInParticipants(message.payload);
+
+                    registry.dataAccessPrivilegeListener.applyAssignmentAndAccessRules(message.payload);
+
+                    // gotta check the assignee again to be sure the assignment rules didn't mess with it
+                    registry.acmTaskDao.ensureCorrectAssigneeInParticipants(message.payload);
+
+                    registry.acmParticipantDao.removeAllOtherParticipantsForObject("TASK", message.payload.getTaskId(), message.payload.getParticipants());
+
+                    payload.setParticipants(registry.acmParticipantDao.saveParticipants(message.payload.getParticipants()));
+
+                    return payload;
+                    ]]>
+                </scripting:text>
+            </scripting:script>
+
+        </scripting:transformer>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Populated task assignees"/>
+
+        <set-variable variableName="advancedSearchDoc" value="#[app.registry.taskToSolrTransformer.toSolrAdvancedSearch(message.payload)]"/>
+        <set-variable variableName="quickSearchDoc" value="#[app.registry.taskToSolrTransformer.toSolrQuickSearch(message.payload)]"/>
+        <set-variable variableName="advancedSearchJson" value="#[app.registry.sendDocumentsToSolr.asJsonArray(advancedSearchDoc)]"/>
+        <set-variable variableName="quickSearchJson" value="#[app.registry.sendDocumentsToSolr.asJsonArray(quickSearchDoc)]"/>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Got quick search json"/>
+
+        <set-payload value="#[advancedSearchJson]"/>
+        <http:outbound-endpoint ref="submitAdvancedSearchDocuments" />
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Sent to SOLR advanced search"/>
+
+        <set-payload value="#[quickSearchJson]"/>
+        <http:outbound-endpoint ref="submitQuicksearchDocuments" />
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Sent to SOLR quick search"/>
+    </flow>
+
+</mule>

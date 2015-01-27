@@ -4,7 +4,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.0.19</version>
+        <version>3.0.20</version>
     </parent>
 
 	<groupId>com.armedia.acm.acm-services</groupId>

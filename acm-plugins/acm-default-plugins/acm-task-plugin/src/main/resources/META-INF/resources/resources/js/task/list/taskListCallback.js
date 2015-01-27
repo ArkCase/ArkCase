@@ -106,8 +106,8 @@ TaskList.Callback = {
 
                     var pageId = treeInfo.start;
                     var taskSolr = {};
-                    taskSolr.due_dt = task.dueDate;
-                    taskSolr.title_t = task.title;
+                    taskSolr.due_tdt = task.dueDate;
+                    taskSolr.title_parseable = task.title;
                     taskSolr.priority_s = task.priority;
                     taskSolr.object_id_s = task.taskId;
                     taskSolr.parent_object_id_i = task.attachedToObjectId;

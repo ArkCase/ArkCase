@@ -5,83 +5,107 @@
 
 Admin.View = Admin.View || {
     create: function() {
-        if (Admin.View.AccessControl.create)        {Admin.View.AccessControl.create();}
-        if (Admin.View.Correspondence.create)       {Admin.View.Correspondence.create();}
-        if (Admin.View.Organization.create)         {Admin.View.Organization.create();}
+        if (Admin.View.AccessControl.create)        	{Admin.View.AccessControl.create();}
+        if (Admin.View.Correspondence.create)       	{Admin.View.Correspondence.create();}
+        if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
+        if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
 
-        if (Admin.View.Tree.create)                 {Admin.View.Tree.create();}
+        if (Admin.View.Tree.create)                 	{Admin.View.Tree.create();}
     }
     ,onInitialized: function() {
-        if (Admin.View.AccessControl.onInitialized)        {Admin.View.AccessControl.onInitialized();}
-        if (Admin.View.Correspondence.onInitialized)       {Admin.View.Correspondence.onInitialized();}
-        if (Admin.View.Organization.onInitialized)         {Admin.View.Organization.onInitialized();}
+        if (Admin.View.AccessControl.onInitialized)        		{Admin.View.AccessControl.onInitialized();}
+        if (Admin.View.Correspondence.onInitialized)       		{Admin.View.Correspondence.onInitialized();}
+        if (Admin.View.Organization.onInitialized)         		{Admin.View.Organization.onInitialized();}
+        if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
 
-        if (Admin.View.Tree.onInitialized)                 {Admin.View.Tree.onInitialized();}
+        if (Admin.View.Tree.onInitialized)                 		{Admin.View.Tree.onInitialized();}
     }
 
     ,Organization:{
         create: function () {
-            //if (Admin.View.Organization.Tree.create)        {Admin.View.Organization.Tree.create();}
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUPS, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP_MEMBER, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CREATED_ADHOC_GROUP, this.onModelRetrievedHierarchy);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_USERS, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_MEMBER, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_SUPERVISOR, this.onModelRetrievedHierarchy);
 
-            if (Admin.View.Organization.ModalDialog.create)         {Admin.View.Organization.ModalDialog.create();}
 
-            /*Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUP, this.onModelRetrievedHierarchy);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUP_MEMBERS, this.onModelRetrievedHierarchy);*/
+           if (Admin.View.Organization.ModalDialog.create)         {Admin.View.Organization.ModalDialog.create();}
         }
         , onInitialized: function () {
             if (Admin.View.Organization.ModalDialog.onInitialized)         {Admin.View.Organization.ModalDialog.onInitialized();}
         }
         ,onModelRetrievedHierarchy: function(){
             if (Admin.View.Organization.Tree.create)        {Admin.View.Organization.Tree.create();}
+            if (Admin.View.Organization.Tree.onInitialized)        {Admin.View.Organization.Tree.onInitialized();}
+
         }
-        ,findSubgroupDetails: function(subgroupName){
+        ,findSubgroup: function(subgroupName){
             var subgroups = Admin.Model.Organization.cacheSubgroups.get("subgroups");
-            var subgroup = {};
-            for(var i = 0; i < subgroups.length; i++){
-                if(subgroups[i].name == subgroupName){
-                    subgroup = subgroups[i];
-                    break;
+            if(subgroups != null){
+                for(var i = 0; i < subgroups.length; i++){
+                    if(subgroups[i].title == subgroupName){
+                        var subgroup = {};
+                        subgroup = subgroups[i];
+                        return subgroup;
+                    }
                 }
             }
-            return subgroup;
         }
-        ,findMembers: function(group){
-            var members = [];
-            if(group.member_id_ss !=null){
-                var memberIds = group.member_id_ss;
-                for(var j = 0; j< memberIds.length; j++){
-                    var member = {};
-                    member.title = memberIds[j];
-                    /*member.firstName = group.object_sub_type_s;
-                    member.lastName = group.supervisor_id_ss;
-                    member.jobTitle = group.location;
-                    member.groupRole = group.role;*/
-                    //member.parentId = group.parent_id_s;
-                    member.parentGroupType = group.object_sub_type_s;
-                    member.isMember = true;
-                    member.folder = false;
-                    member.children = [];
-                    members.push(member);
+        ,findMembers: function(memberId, users){
+            if(users != null){
+                for(var i = 0; i < users.length; i++){
+                    if(users[i].object_id_s == memberId){
+                        var member = {};
+                        member = users[i];
+                        return member;
+                    }
                 }
             }
-            return members;
+        }
+        ,makeAcmUser: function(selectedMember){
+            var acmUsersFromSolr = Admin.Model.Organization.cacheAcmUsersFromSolr.get("acmUsersFromSolr");
+            var userFound = Admin.View.Organization.findMembers(selectedMember,acmUsersFromSolr);
+            var acmUser = {};
+            acmUser.userId=userFound.object_id_s;
+            acmUser.fullName=userFound.name;
+            acmUser.firstName=userFound.first_name_lcs;
+            acmUser.lastName=userFound.last_name_lcs;
+            acmUser.userDirectoryName=userFound.userDirectoryName;
+            acmUser.userCreated=userFound.create_date_tdt;
+            acmUser.userModified=userFound.modified_date_tdt;
+            acmUser.userState=userFound.status_lcs;
+            acmUser.mail=userFound.email_lcs;
+            acmUser.distinguishedName=userFound.distinguishedName;
+            return acmUser;
         }
         ,ModalDialog:{
             create: function () {
+                if (Admin.View.Organization.ModalDialog.Members.create)         {Admin.View.Organization.ModalDialog.Members.create();}
+
+
                 this.$modalCreateAdHocGroup = $("#createAdHoc");
-                this.$modalCreateAdHocGroup.on("hidden.bs.modal", function(e) {Admin.View.Organization.ModalDialog.$modalLabel.text("Add Ad-Hoc Group");});
+                //clear existing fields after modal dialog is closed or hidden
+                this.$modalLabelCreateAdHocGroup = $("#modalLabelCreateAdHoc");
+                this.$modalCreateAdHocGroup.on("hidden.bs.modal", function(e) {Admin.View.Organization.ModalDialog.$modalLabelCreateAdHocGroup.text("Add Ad-Hoc Group");
+                    Admin.View.Organization.ModalDialog.clearModalContents();
+                });
                 this.$txtGroupName = $("#groupName");
                 this.$txtGroupDescription = $("#groupDescription");
-                this.$adHocGroup = $("#addAdHocGroup");
-                this.$adHocGroup.on("click", function(e) {Admin.View.Organization.ModalDialog.onClickBtnCreateAdHocGroup(e, this);});
-                this.$modalLabel = $("#modalLabel");
+                this.$btnAddAdHocGroup = $("#btnAddAdHocGroup");
+                this.$btnAddAdHocGroup.on("click", function(e) {Admin.View.Organization.ModalDialog.onClickBtnCreateAdHocGroup(e, this);});
+
+
+
                 this.$modalAddPeople = $("#addPeople");
                 this.$modalLabelPeople = $("#modalLabelPeople");
+                this.$btnAddPeople = $("#btnAddPeople");
+                this.$btnAddPeople.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.onClickBtnAddPeople(e, this);});
 
             }
             , onInitialized: function () {
+                if (Admin.View.Organization.ModalDialog.Members.onInitialized)         {Admin.View.Organization.ModalDialog.Members.onInitialized();}
 
             }
             ,onClickBtnCreateAdHocGroup:function(event, ctrl){
@@ -97,7 +121,7 @@ Admin.View = Admin.View || {
                     }
                     Admin.View.Organization.ModalDialog.hideCreateAdHocGroupModal();
                     Admin.View.Organization.ModalDialog.clearModalContents();
-                    Admin.Service.Organization.createAdHocGroup(group,parentId);
+                    Admin.Controller.viewCreatedAdHocGroup(group,parentId);
                     //reset the saved parent node in preparation of next addition
                     Admin.Model.Organization.Tree.setParentNode(null);
                 }
@@ -105,11 +129,9 @@ Admin.View = Admin.View || {
                     Acm.Dialog.info("Please enter group name.");
                 };
             }
-
             ,clearModalContents: function(){
                 Admin.View.Organization.ModalDialog.$txtGroupName.val('');
                 Admin.View.Organization.ModalDialog.$txtGroupDescription.val('');
-                //Admin.View.Organization.ModalDialog.$modalLabel[0].textContent.reset();
             }
             ,hideCreateAdHocGroupModal: function() {
                 this.$modalCreateAdHocGroup.modal('hide');
@@ -120,6 +142,327 @@ Admin.View = Admin.View || {
             ,getTextGroupDescription: function() {
                 return Acm.Object.getValue(this.$txtGroupDescription);
             }
+            ,Members : {
+                create: function () {
+                    if (Admin.View.Organization.ModalDialog.Members.Results.create)         {Admin.View.Organization.ModalDialog.Members.Results.create();}
+                    if (Admin.View.Organization.ModalDialog.Members.Facets.create)         {Admin.View.Organization.ModalDialog.Members.Facets.create();}
+                    if (Admin.View.Organization.ModalDialog.Members.Query.create)         {Admin.View.Organization.ModalDialog.Members.Query.create();}
+
+                }
+                , onInitialized: function () {
+                }
+                ,onClickBtnAddPeople: function(){
+                    var selectedPeople = Admin.Model.Organization.cacheSelectedMembers.get("selectedPeople");
+
+                    if(selectedPeople != null){
+                        var people = [];
+                        var parentGroupId = Admin.Model.Organization.Tree.getParentNode();
+
+                        for(var i = 0 ; i < selectedPeople.length; i++){
+                            var selectedPerson = selectedPeople[i];
+                            var acmUser = Admin.View.Organization.makeAcmUser(selectedPerson);
+                            people.push(acmUser);
+                        }
+
+                        if(Admin.View.Organization.ModalDialog.$modalLabelPeople){
+                            var label = Admin.View.Organization.ModalDialog.$modalLabelPeople[0].innerText;
+                            if(label.indexOf("Supervisor") > -1){
+                                if(people.length > 1){
+                                    Acm.Dialog.info("Please select one supervisor");
+                                }
+                                else{
+                                    Admin.Controller.viewAddedSupervisor(people[0],parentGroupId);
+                                }
+                                //alert("Supervisor");
+                            }
+                            else if(label.indexOf("Members") > -1){
+                                //alert("Members ");
+                                Admin.Controller.viewAddedMembers(people,parentGroupId);
+                            }
+                        }
+                        //Admin.Controller.viewAddedMembers(people,parentGroupId);
+                    }
+                    Admin.View.Organization.ModalDialog.$modalAddPeople.modal('hide');
+                }
+                ,Query: {
+                    create: function() {
+                        this.$txtFindMembers = $("#findMember");
+                        this.$modalBtnFindMembers = $("#btnFindMembers");
+                        this.$modalBtnFindMembers.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Query.onClickBtnFindMembers(e, this);});
+
+                    }
+                    ,onInitialized: function() {
+                    }
+                    ,onClickBtnFindMembers: function(event,ctrl){
+                        event.preventDefault();
+                        var term = Admin.View.Organization.ModalDialog.Members.Query.getTextFindMember();
+                        Admin.Controller.viewSubmittedQuery(term);
+                    }
+                    ,getTextFindMember: function(){
+                        return Acm.Object.getValue(this.$txtFindMembers);
+                    }
+
+                }
+                ,Facets: {
+                    create: function(){
+                        this.$divFacets = $("#divFacets");
+                        /*var facet = Admin.Model.Organization.Facets.makeFacet();
+                        Admin.View.Organization.ModalDialog.Members.Facets.buildFacetPanel(facet);*/
+
+                        Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
+
+                    }
+                    ,onInitialized: function(){}
+                    ,onClickCheckBox: function(event, ctrl) {
+                        var selected = [];
+                        var $checked = Admin.View.Organization.ModalDialog.Members.Facets.$divFacets.find("input:checked");
+                        $checked.each(function(){
+                            var s = {};
+                            s.value = $(this).val();
+                            s.name = $(this).parent().attr("name");
+                            s.type = $(this).parent().parent().attr("name");
+                            selected.push(s);
+                        });
+
+                        Admin.Controller.viewChangedFacetSelection(selected);
+                    }
+
+                    ,onModelChangedFacet: function(facet) {
+                        if (facet.hasError) {
+                            //alert("View: onModelChangedFacet, hasError, errorMsg:" + facet.errorMsg);
+                        }
+                        Admin.View.Organization.ModalDialog.Members.Facets.buildFacetPanel(facet);
+                    }
+
+                    ,_getFacetDisplay: function(label, key) {
+                        if (Acm.isNotEmpty(label)) {
+                            return Acm.goodValue(label);
+                        } else {
+                            return Acm.goodValue(key);
+                        }
+                    }
+                    ,buildFacetPanel: function(facet) {
+                        var html = "";
+
+                        if (Admin.Model.Organization.Facets.validateSearchFacet(facet)) {
+                            if (0 < Admin.Model.Organization.Facets.getCountFacetFields(facet)){
+                                html += "<div name='facet_fields'>";
+                                for(var i = 0; i < facet.facet_fields.length; i++) {
+                                    if (0 < Acm.goodValue(facet.facet_fields[i].count, 0)) {
+                                        if (Acm.isArray(facet.facet_fields[i].values)) {
+                                            var display = this._getFacetDisplay(facet.facet_fields[i].label, facet.facet_fields[i].key);
+                                            html += "<div name='" + display + "'>";
+                                            html += "<label class='label'>" + display + "</label>";
+                                            for (var j = 0; j < facet.facet_fields[i].values.length; j++) {
+                                                if (0 < Acm.goodValue(facet.facet_fields[i].values[j].count, 0)) {
+                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name)
+                                                    + "'>" + Acm.goodValue(facet.facet_fields[i].values[j].name)
+                                                    + "(<span>" + facet.facet_fields[i].values[j].count + "</span>)</input>";
+                                                }
+                                            }
+                                            html += "</div>";
+                                        }
+                                    }
+                                }
+                                html += "</div>";
+                            }
+
+
+                            if (0 < Admin.Model.Organization.Facets.getCountFacetQueries(facet)){
+                                html += "<div name='facet_queries'>";
+                                for(var i = 0; i < facet.facet_queries.length; i++) {
+                                    if (0 < Acm.goodValue(facet.facet_queries[i].count, 0)) {
+                                        if (Acm.isArray(facet.facet_queries[i].values)) {
+                                            var display = this._getFacetDisplay(facet.facet_queries[i].label, facet.facet_queries[i].key);
+                                            html += "<div name='" + display + "'>";
+                                            html += "<label class='label'>" + display + "</label>";
+                                            for (var j = 0; j < facet.facet_queries[i].values.length; j++) {
+                                                if (0 < Acm.goodValue(facet.facet_queries[i].values[j].count, 0)) {
+                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name)
+                                                    + "'>" + Acm.goodValue(facet.facet_queries[i].values[j].name)
+                                                    + "(<span>" + facet.facet_queries[i].values[j].count + "</span>)</input>";
+                                                }
+                                            }
+                                            html += "</div>";
+                                        }
+                                    }
+                                }
+                                html += "</div>";
+                            }
+
+
+                            if (0 < Admin.Model.Organization.Facets.getCountFacetDates(facet)){
+                                html += "<div name='facet_dates'>";
+                                for(var i = 0; i < facet.facet_dates.length; i++) {
+                                    if (0 < Acm.goodValue(facet.facet_dates[i].count, 0)) {
+                                        if (Acm.isArray(facet.facet_dates[i].values)) {
+                                            var display = this._getFacetDisplay(facet.facet_dates[i].label, facet.facet_dates[i].key);
+                                            html += "<div name='" + display + "'>";
+                                            html += "<label class='label'>" + display + "</label>";
+                                            for (var j = 0; j < facet.facet_dates[i].values.length; j++) {
+                                                if (0 < Acm.goodValue(facet.facet_dates[i].values[j].count, 0)) {
+                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name)
+                                                    + "'>" + Acm.goodValue(facet.facet_dates[i].values[j].name)
+                                                    + "(<span>" + facet.facet_dates[i].values[j].count + "</span>)</input>";
+                                                }
+                                            }
+                                            html += "</div>";
+                                        }
+                                    }
+                                }
+                                html += "</div>";
+                            }
+                        }
+
+                        this.setHtmlDivFacet(html);
+
+                        Admin.View.Organization.ModalDialog.Members.Facets.$divFacets.find("input[type='checkbox']").on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Facets.onClickCheckBox(e, this);});
+                    }
+
+                    ,setHtmlDivFacet: function(val) {
+                        return Acm.Object.setHtml(Admin.View.Organization.ModalDialog.Members.Facets.$divFacets, val);
+                    }
+                }
+
+                ,Results: {
+                    create: function() {
+                        this.$divResults = $("#divMembers");
+                        this.createJTableMembers(this.$divResults);
+
+                        Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_SUBMITTED_QUERY         ,this.onViewSubmittedQuery        ,Acm.Dispatcher.PRIORITY_LOW);
+                        Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_CHANGED_FACET_SELECTION ,this.onViewChangedFacetSelection ,Acm.Dispatcher.PRIORITY_LOW);
+                    }
+                    ,onInitialized: function() {
+                    }
+
+                    ,onViewSubmittedQuery: function(term) {
+                        AcmEx.Object.JTable.load(Admin.View.Organization.ModalDialog.Members.Results.$divResults);
+                    }
+                    ,onViewChangedFacetSelection: function(selected) {
+                        //todo: compare selected with si.filter, do nothing if same
+
+                        AcmEx.Object.JTable.load(Admin.View.Organization.ModalDialog.Members.Results.$divResults);
+                    }
+
+                    ,_makeJtData: function(result) {
+                        var jtData = AcmEx.Object.JTable.getEmptyRecords();
+                        if (result) {
+                            for (var i = 0; i < result.docs.length; i++) {
+                                var Record = {};
+                                Record.id = result.docs[i].object_id_s;
+                                Record.name    = Acm.goodValue(result.docs[i].name);
+                                Record.type    = Acm.goodValue(result.docs[i].object_type_s);
+                                Record.title   = Acm.goodValue(result.docs[i].title_t);
+                                Record.owner   = Acm.goodValue(result.docs[i].owner_s);
+                                Record.created = Acm.goodValue(result.docs[i].create_dt);
+                                jtData.Records.push(Record);
+                            }
+
+                            jtData.TotalRecordCount = result.numFound;
+                        }
+                        return jtData;
+                    }
+                    ,createJTableMembers: function($jt) {
+                        var sortMap = {};
+                        sortMap["title"] = "title_t";
+
+                        AcmEx.Object.JTable.usePaging($jt
+                            ,{
+                                title: 'Search Results'
+                                ,multiselect: true
+                                ,selecting: true
+                                ,selectingCheckboxes: true
+                                ,paging: true
+                                ,sorting: true
+                                ,actions: {
+                                    pagingListAction: function (postData, jtParams, sortMap) {
+                                        var si = Admin.Model.Organization.Facets.getSearchInfo();
+                                        if (Acm.isEmpty(si.q)) {
+                                            return AcmEx.Object.JTable.getEmptyRecords();
+                                        }
+                                        si.start = Acm.goodValue(jtParams.jtStartIndex, 0);
+
+                                        if (Admin.Model.Organization.Facets.isFacetUpToDate()) {
+                                            //var page = si.start;
+                                            //var result = Search.Model.cacheResult.get(page);
+                                            var result = Admin.Model.Organization.Facets.getCachedResult(si);
+                                            if (result) {
+                                                return Admin.View.Organization.ModalDialog.Members.Results._makeJtData(result);
+                                            }
+                                        }
+
+                                        return Admin.Service.Organization.facetSearchDeferred(si
+                                            ,postData
+                                            ,jtParams
+                                            ,sortMap
+                                            ,function(data) {
+                                                var result = data;
+                                                return Admin.View.Organization.ModalDialog.Members.Results._makeJtData(result);
+                                            }
+                                            ,function(error) {
+                                            }
+                                        );
+
+                                    }
+                                }
+
+                                ,fields: {
+                                    id: {
+                                        title: 'ID'
+                                        ,key: true
+                                        ,list: false
+                                        ,create: false
+                                        ,edit: false
+                                        ,sorting: false
+                                    }
+                                    ,name: {
+                                        title: 'Name'
+                                        ,width: '15%'
+                                        ,sorting: false
+                                    }
+                                    ,type: {
+                                        title: 'Type'
+                                        ,sorting: false
+                                    }
+                                    ,title: {
+                                        title: 'Title'
+                                        ,width: '30%'
+                                    }
+                                    ,owner: {
+                                        title: 'Owner'
+                                        ,width: '15%'
+                                        ,sorting: false
+                                    }
+                                    ,created: {
+                                        title: 'Created'
+                                        ,type: 'textarea'
+                                        ,width: '20%'
+                                        ,sorting: false
+                                    }
+                                } //end field
+                                //Register to selectionChanged event to hanlde events
+                                ,selectionChanged: function () {
+                                    //Get all selected rows
+                                    var $selectedRows = Admin.View.Organization.ModalDialog.Members.Results.$divResults.jtable('selectedRows');
+                                    if ($selectedRows.length > 0) {
+                                        //Show selected rows
+                                        var selectedPeople = [];
+                                        $selectedRows.each(function () {
+                                            var record = $(this).data('record');
+                                            selectedPeople.push(record.id);
+                                            Admin.Model.Organization.cacheSelectedMembers.put("selectedPeople", selectedPeople);
+                                        });
+                                    }
+                                    else if($selectedRows.length == 0){
+                                        Admin.Model.Organization.cacheSelectedMembers.reset();
+                                    }
+                                }
+                            } //end arg
+                            ,sortMap
+                        );
+                    }
+                }
+            }
 
         }
         ,Tree:{
@@ -129,48 +472,83 @@ Admin.View = Admin.View || {
             }
             , onInitialized: function () {
             }
-            ,onClickBtnRemoveItem: function(node){
-                event.preventDefault();
-                if(node.title != "" && node.title != null){
-                    if(node.data.isMember == true){
-                        var member = {};
-                        member.userId = node.title;
-                        var parentGroupId = node.parent.title;
-                        //data should be sth like this : [{"userId":"ann-acm"}]
-                        Admin.Service.Organization.removeGroupMember([member], parentGroupId);
-
-                        /*Acm.Dialog.confirm("<b> Are you sure you want to remove  " + "'" + node.title + "'" + " from " + "'" + node.parent.title + "'" + " ? </b>"
-                            ,function(result) {
-                                if (result == true) {
-                                    Admin.Service.Organization.removeGroupMember([member], parentGroupId);
-                                }
+            ,allSubgroups: function(group, children){
+                //this one is recursive
+                if(group.subgroups && group.subgroups !=null){
+                    for (var i = 0; i < group.subgroups.length; i++) {
+                        var subgroupName = group.subgroups[i];
+                        var subgroup = Admin.View.Organization.findSubgroup(subgroupName);
+                        if(subgroup != null) {
+                            subgroup.folder = true;
+                            children.push(subgroup);
+                            if(!subgroup.children){
+                                subgroup.children = [];
                             }
-                        );*/
-                    }
-                    else{
-                        var groupId = node.title;
-                        Admin.Service.Organization.removeGroup(groupId);
-                        /*Acm.Dialog.confirm("<b> Are you sure you want to remove  " + "'" + node.title + "'" + " and all its subgroups/members ? </b>"
-                            ,function(result) {
-                                if (result == true) {
-                                    var groupId = node.title;
-                                    Admin.Service.Organization.removeGroup(groupId);
-                                }
+                            else if(subgroup.children){
+                                subgroup.children.splice(0,subgroup.children.length);
                             }
-                        );*/
+                            Admin.View.Organization.Tree.allSubgroups(subgroup,subgroup.children);
+                            Admin.View.Organization.Tree.findPeopleInvolvedInGroup(subgroup);
+                        }
                     }
                 }
             }
-            ,onClickBtnAddSubgroup: function(node){
-                event.preventDefault();
-                Admin.View.Organization.ModalDialog.$modalLabel.text("Add Subgroup to " + "'" + node.title + "'");
+            ,findPeopleInvolvedInGroup: function(group){
+                //check for subgroup members and supervisors
+                var allUsers = Admin.Model.Organization.cacheAllUsers.get("allUsers");
+                if(group.members && group.members !=null){
+                    for(var j = 0; j < group.members.length ; j++){
+                        var groupMemberId = group.members[j];
+                        var groupMember = Admin.View.Organization.findMembers(groupMemberId,allUsers);
+                        if(groupMember != null){
+                            group.children.push(groupMember)
+                        }
+                    }
+                }
+                if(group.supervisor && group.supervisor !=null){
+                    var supervisor = Admin.View.Organization.findMembers(group.supervisor,allUsers);
+                    if(supervisor){
+                        group.supervisor = supervisor.title;
+                    }
+                }
+            }
+            ,onClickRemoveGroup: function(node){
+                if(node.title != "" && node.title != null){
+                    var groupId = node.title;
+                    Admin.Controller.viewRemovedGroup(groupId);
+                }
+            }
+            ,onClickRemoveMember: function(node){
+                if(node.title != "" && node.title != null){
+                    if(node.data.isMember == true){
+                        var member = {};
+                        //member.userId = node.title;
+                        member.userId = node.data.object_id_s;
+                        var parentGroupId = node.parent.title;
+                        //data should be sth like this : [{"userId":"ann-acm"}]
+                        var members = [member];
+                        Admin.Controller.viewRemovedGroupMember(members, parentGroupId);
+                    }
+                }
+            }
+            ,onClickAddSubgroup: function(node){
+                Admin.View.Organization.ModalDialog.$modalLabelCreateAdHocGroup.text("Add Subgroup to " + "'" + node.title + "'");
                 Admin.View.Organization.ModalDialog.$modalCreateAdHocGroup.modal('show');
             }
-            ,onClickBtnAddMembers: function(node){
-                event.preventDefault();
+            ,onClickAddMembers: function(node){
                 Admin.View.Organization.ModalDialog.$modalLabelPeople.text("Add Members to " + "'" + node.title + "'");
                 Admin.View.Organization.ModalDialog.$modalAddPeople.modal('show');
             }
+            ,onClickAddSupervisors: function(node){
+                Admin.View.Organization.ModalDialog.$modalLabelPeople.text("Add Supervisor to " + "'" + node.title + "'");
+                Admin.View.Organization.ModalDialog.$modalAddPeople.modal('show');
+            }
+            ,onClickButtonsCancelEventBubble: function (e) {
+                var evt = e ? e:window.event;
+                if (evt.stopPropagation)    evt.stopPropagation();
+                if (evt.cancelBubble!=null) evt.cancelBubble = true;
+            }
+
             ,_useFancyTree: function($s) {
                 $s.fancytree({
                     extensions: ["table"],
@@ -181,57 +559,9 @@ Admin.View = Admin.View || {
                         checkboxColumnIdx: null  // render the checkboxes into the 1st column
                     }
                     ,source: function() {
-
-                        //group details
-                        var groups = Admin.Model.Organization.cacheGroups.get("groups");
-                        var source = [];
-                        for(var i = 0; i < groups.length; i++) {
-                            var group = {};
-                            var subgroups = [];
-                            group.title = groups[i].name;
-                            group.type = groups[i].object_sub_type_s;
-                            group.supervisor = groups[i].supervisor_id_ss;
-                            group.location = groups[i].location;
-                            group.expanded = true;
-                            group.folder = true;
-                            //find group members
-                            var members = Admin.View.Organization.findMembers(groups[i]);
-                            if (members.length > 0) {
-                                for (var k = 0; k < members.length; k++) {
-                                    subgroups.push(members[k]);
-                                }
-                            }
-
-                            //subgroups details
-                            if (groups[i].child_id_ss != null) {
-                                var children = groups[i].child_id_ss;
-                                for (var j = 0; j < children.length; j++) {
-                                    var subGroupM = [];
-                                    var child = {};
-                                    var subgroup = Admin.View.Organization.findSubgroupDetails(children[j]);
-                                    child.title = children[j];
-                                    child.type = subgroup.object_sub_type_s;
-                                    child.parentId = subgroup.parent_id_s;
-                                    child.supervisor = subgroup.supervisor_id_ss;
-                                    child.location = subgroup.location;
-                                    child.folder = true;
-
-                                    //find subgroup members
-                                    var subGroupMembers = Admin.View.Organization.findMembers(subgroup);
-                                    /*if (subGroupMembers.length > 0) {
-                                        for (var l = 0; l < subGroupMembers.length; l++) {
-                                            subGroupM.push(subGroupMembers[l]);
-                                        }
-                                    }*/
-                                    child.children = subGroupMembers;
-                                    subgroups.push(child);
-                                }
-                            }
-                            group.children = subgroups;
-                            source.push(group);
-                        }
-                        return source;
+                        return Admin.View.Organization.Tree.treeSource();
                     } //end source
+
                     ,renderColumns: function(event, data) {
                         var groups = Admin.Model.Organization.cacheGroups.get("groups");
                         var node = data.node,
@@ -240,60 +570,119 @@ Admin.View = Admin.View || {
                             //$tdList.eq(1).text(node.getIndexHier()).addClass("alignRight");
                             // (index #2 is rendered by fancytree)
 
-                        $tdList.eq(3).text(node.data.type);
-                        $tdList.eq(4).text(node.data.supervisor);
-                        $tdList.eq(5).text(node.data.location);
+                        if(node.data.type != null){
+                            $tdList.eq(3).text(node.data.type);
+                        }
+                        if(node.data.supervisor != null){
+                            $tdList.eq(4).text(node.data.supervisor);
+                        }
                         if(node.data.type == "ADHOC_GROUP"){
-                            $tdList.eq(6).html("<button class='btn btn-link btn-xs' type='button' id='addNewItem' title='Add Subgroup'><i class='fa fa-users'></i></button>" +
-                            "<button class='btn btn-link btn-xs' type='button' id='addMembers' title='Add Members'><i class='fa fa-user'></i></button>"
+
+                            $tdList.eq(6).html("<button class='btn btn-link btn-xs pull-left' type='button' name='addSupervisor' title='Add/Edit Supervisor'><i class='fa fa-edit'></i></button>" +
+                                "<button class='btn btn-link btn-xs' type='button' name='addSubgroup' title='Add Subgroup'><i class='fa fa-users'></i></button>" +
+                            "<button class='btn btn-link btn-xs' type='button' name='addMembers' title='Add Members'><i class='fa fa-user'></i></button>" +
+                            "<button class='btn btn-link btn-xs' type='button' name='removeGroup' title='Remove Group'><i class='fa fa-trash-o'></i></button>"
                             );
                         }
-                        if(node.data.type == "ADHOC_GROUP" || node.data.parentGroupType == "ADHOC_GROUP"){
-                            $tdList.eq(6).append("<button class='btn btn-link btn-xs' type='button' id='removeItem' title='Remove'><i class='fa fa-trash-o'></i></button>");
+                        if(node.data.isMember == true && node.parent.data.type == "ADHOC_GROUP"){
+                            $tdList.eq(6).append("<button class='btn btn-link btn-xs' type='button' name='removeMember' title='Remove Member'><i class='fa fa-trash-o'></i></button>");
                         }
-                    }
-                    ,click: function(event, data) {
-                        var node = data.node,
-                            $tdList = $(node.tr).find(">td");
-                        Admin.Model.Organization.Tree.setParentNode(node.title);
                     }
                 }); //end fancytree
 
-                $s.delegate("button[id=removeItem]", "click", function(e) {
-                    var node = $.ui.fancytree.getNode(e),
-                        $input = $(e.target);
-                    e.stopPropagation();
-                    Admin.View.Organization.Tree.onClickBtnRemoveItem(node);
-                });
+                $s.delegate("button[name=addSupervisor]", "click", function(e){
 
-                $s.delegate("button[id=addNewItem]", "click", function(e) {
+                //$("button[name='addSupervisor']").off("click").on("click",function(e) {
                     var node = $.ui.fancytree.getNode(e),
-                        $input = $(e.target);
-                    e.stopPropagation();
+                            $input = $(e.target);
+                        //e.stopPropagation();
+                    e.stopImmediatePropagation();
+
+                    //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
                     Admin.Model.Organization.Tree.setParentNode(node.title);
-                    Admin.View.Organization.Tree.onClickBtnAddSubgroup(node);
+                    Admin.View.Organization.Tree.onClickAddSupervisors(node);
                 });
 
-                $s.delegate("button[id=addMembers]", "click", function(e) {
+
+
+                //$s.undelegate("click").delegate("button[name=removeGroup]", "click", function(e) {
+                //$("button[name='removeGroup']").one("click",function(e){
+                $s.delegate("button[name=removeGroup]", "click", function(e){
+                //$("button[name='removeGroup']").off("click").on("click",function(e) {
                     var node = $.ui.fancytree.getNode(e),
                         $input = $(e.target);
-                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
                     Admin.Model.Organization.Tree.setParentNode(node.title);
-                    Admin.View.Organization.Tree.onClickBtnAddMembers(node);
+                    Admin.View.Organization.Tree.onClickRemoveGroup(node);
                 });
 
-                $s.contextmenu({
-                    //delegate: "span.fancytree-title",
-                    delegate: ".fancytree-title",
-                    beforeOpen: function(event, ui) {
-                        var node = $.ui.fancytree.getNode(ui.target);
-                        node.setActive();
-                    },
-                    select: function(event, ui) {
-                        var node = $.ui.fancytree.getNode(ui.target);
-                        alert("select " + ui.cmd + " on " + node);
+                $s.delegate("button[name=removeMember]", "click", function(e){
+
+                    //$("button[name='removeMember']").off("click").on("click",function(e) {
+                    var node = $.ui.fancytree.getNode(e),
+                        $input = $(e.target);
+                    e.stopImmediatePropagation();
+                    Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.parent.title);
+                    Admin.Model.Organization.Tree.setParentNode(node.parent.title);
+                    Admin.View.Organization.Tree.onClickRemoveMember(node);
+                });
+
+                $s.delegate("button[name=addSubgroup]", "click", function(e){
+
+                //$("button[name='addSubgroup']").off("click").on("click",function(e) {
+                    var node = $.ui.fancytree.getNode(e),
+                        $input = $(e.target);
+                    e.stopImmediatePropagation();
+                    //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
+                    Admin.Model.Organization.Tree.setParentNode(node.title);
+                    Admin.View.Organization.Tree.onClickAddSubgroup(node);
+                });
+
+
+                //$("button[name='addMembers']").off("click").on("click",function(e) {
+                $s.delegate("button[name=addMembers]", "click", function(e){
+
+                    //$("button[name='addMembers']").off("click").on("click",function(e) {
+                    var node = $.ui.fancytree.getNode(e),
+                        $input = $(e.target);
+                    e.stopImmediatePropagation();
+                    //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
+                    Admin.Model.Organization.Tree.setParentNode(node.title);
+                    Admin.View.Organization.Tree.onClickAddMembers(node);
+                });
+
+            }
+            ,treeSource: function(){
+                if(Admin.Model.Organization.Tree.isSourceLoaded() == false){
+                    var source = [];
+
+                    //group details
+                    var groups = Admin.Model.Organization.cacheGroups.get("groups");
+                    for(var i = 0; i < groups.length; i++) {
+                        var group = groups[i];
+                        var children = [];
+                        group.expanded = true;
+                        group.folder = true;
+                        group.children = [];
+                        if(group.subgroups != null) {
+                            Admin.View.Organization.Tree.allSubgroups(group, group.children);
+                        }
+
+                        //check for group members and supervisor
+                        Admin.View.Organization.Tree.findPeopleInvolvedInGroup(group);
+                        source.push(group);
                     }
-                });
+                    Admin.Model.Organization.cacheTreeSource.put("source", source);
+                    Admin.Model.Organization.Tree.sourceLoaded(true);
+                }
+
+                return Admin.Model.Organization.cacheTreeSource.get("source");
 
             }
         }
@@ -553,6 +942,195 @@ Admin.View = Admin.View || {
             $s.jtable('load');
         }
     }
+    
+    ,FunctionalAccessControl:{
+        create: function () {
+        	// Initialize select HTML elements for roles, not authorized and authorized groups
+        	this.$selectRoles = $("#selectRoles");
+        	this.$selectNotAuthorized = $("#selectNotAuthorized");
+        	this.$selectAuthorized = $("#selectAuthorized");
+        	
+        	// Initialize buttons
+        	this.$btnGo = $("#btnGo");
+        	this.$btnMoveRight = $("#btnMoveRight");
+        	this.$btnMoveLeft = $("#btnMoveLeft");
+        	
+        	// Add listeners for buttons and roles select element
+        	this.$btnGo.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnGo(e, this);});
+        	this.$btnMoveRight.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnMoveRight(e, this);});
+        	this.$btnMoveLeft.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnMoveLeft(e, this);});
+        	this.$selectRoles.on("change", function(e) {Admin.View.FunctionalAccessControl.onChangeSelectRoles(e, this);});
+
+        	// Add listeners for retriving information like roles, groups and roles to groups mapping
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, this.onModelRetrievedFunctionalAccessControlApplicationRoles);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, this.onModelError);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS, this.onModelRetrievedFunctionalAccessControlGroups);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_GROUPS, this.onModelError);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelRetrievedFunctionalAccessControlApplicationRolesToGroups);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelError);
+        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_SAVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelError);
+        }
+        , onInitialized: function () {
+            
+        }
+        
+        ,onClickBtnGo: function(e) {
+        	// When "Go" button is clicked, just refresh the not authorized and authorized groups for selected role
+        	Admin.View.FunctionalAccessControl.refresh();
+        }
+        
+        ,onClickBtnMoveRight: function(e) {
+        	// Get selected role and selected groups from not authorized section
+        	var selectedRole = Admin.View.FunctionalAccessControl.$selectRoles.val();
+        	var selectedGroups = Admin.View.FunctionalAccessControl.$selectNotAuthorized.val();
+        	
+        	if (selectedRole && selectedGroups && selectedGroups.length > 0) {
+        		// Get authorized groups from the cached data
+        		var authGroups = [];
+        		if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
+        			Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole]) {
+        			authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole];        			
+        		}
+        		
+        		// Update authorized groups in the cached data (add selected groups)
+        		authGroups = authGroups.concat(selectedGroups);
+        		Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole] = authGroups;
+        		
+        		// Save authorized groups changes on ACM side
+        		Admin.Controller.modelSaveFunctionalAccessControlApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
+
+        		// Refresh not authorized and authorized groups on the screen
+        		Admin.View.FunctionalAccessControl.refresh();
+        	}
+        }
+        
+        ,onClickBtnMoveLeft: function(e) {
+        	// Get selected role and selected groups from authorized section
+        	var selectedRole = Admin.View.FunctionalAccessControl.$selectRoles.val();
+        	var selectedGroups = Admin.View.FunctionalAccessControl.$selectAuthorized.val();
+        	
+        	if (selectedRole && selectedGroups && selectedGroups.length > 0) {
+        		// Get authorized groups from the cached data
+        		var authGroups = [];
+        		if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
+        			Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole]) {
+        			authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole];        			
+        		}
+        		
+        		// Update authorized groups in the cached data (remove selected groups)
+        		authGroups = Admin.View.FunctionalAccessControl.removeElements(authGroups, selectedGroups);
+        		Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole] = authGroups;
+        		
+        		// Save authorized groups changes on ACM side
+        		Admin.Controller.modelSaveFunctionalAccessControlApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
+
+        		// Refresh not authorized and authorized groups on the screen
+        		Admin.View.FunctionalAccessControl.refresh();
+        	}
+        }
+        
+        ,onChangeSelectRoles: function(e) {
+        	// Remove data from not authorized and authorized section when role is changed
+        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, []);
+        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, []);
+        }
+        
+        ,onModelRetrievedFunctionalAccessControlApplicationRoles: function() {
+        	// Get roles from cached data
+        	var roles = Admin.Model.FunctionalAccessControl.cacheApplicationRoles.get(0);
+        	
+        	// Show roles on the view
+        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectRoles, roles);
+        }
+        
+        ,onModelRetrievedFunctionalAccessControlGroups: function() {
+        	// Do nothing
+        }
+        
+        ,onModelRetrievedFunctionalAccessControlApplicationRolesToGroups: function() {
+        	// Do nothing
+        }
+        
+        ,onModelError: function(errorMsg) {
+        	Acm.Dialog.error(errorMsg);
+        }
+        
+        ,refresh: function() {
+        	// Initialize authorized and not authorized groups to empty arrays
+        	var authGroups = [];
+        	var notAuthGroups = [];
+        	
+        	// Get selected role
+        	var selected = Admin.View.FunctionalAccessControl.$selectRoles.val();
+        	
+        	if (selected && selected != '') {
+        		// Get all groups
+        		var groups = Admin.Model.FunctionalAccessControl.cacheGroups.get(0);
+        		
+        		// Get authorized groups for given role
+        		if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
+        			Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected]) {
+        			authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected];        			
+        		}
+        		
+        		// Get not authorized groups
+        		if (groups) {
+        			for (var i = 0; i < groups.length; i++) {
+        				var found = false;
+        				for (var j = 0; j < authGroups.length; j++) {
+        					if (groups[i].name === authGroups[j]) {
+        						found = true;
+        						break;
+        					}
+        				}
+        				
+        				if (!found) {
+        					notAuthGroups.push(groups[i].name);
+        				}
+        			}
+        		}
+        	}
+        	
+        	// Show authorized and not authorized groups on the screen
+        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, authGroups);
+        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, notAuthGroups);
+        }
+        
+        ,createOptions: function(element, optionsArray) {
+        	var options = '';
+        	if (optionsArray) {
+        		for (var i = 0; i < optionsArray.length; i++) {
+        		   options += '<option value="' + optionsArray[i] + '">' + optionsArray[i] + '</option>';
+        		} 
+        	}
+        	element.html(options);        		
+        }
+        
+        ,removeElements: function(elements, elementsToRemove) {
+        	var output = [];
+        	
+        	if (elements) {
+        		if (elementsToRemove) {
+        			for (var i = 0; i < elements.length; i++) {
+        				var found = false;
+        				for (var j = 0; j < elementsToRemove.length; j++) {
+        					if (elements[i] === elementsToRemove[j]) {
+        						found = true;
+        						break;
+        					}
+        				}
+        				if (!found) {
+        					output.push(elements[i]);
+        				}
+        			}
+        		}else{
+        			return elements;
+        		}
+        	}
+        	
+        	return output;
+        }
+    }
 
     ,Tree:{
         create: function () {
@@ -570,8 +1148,9 @@ Admin.View = Admin.View || {
                 Acm.Object.show($("#" + tabIds[i]), show);
                 if(show == true && tabIdsToShow == "tOrganization"){
                     this.$btnCreateAdHocGroup.show();
+                    //break;
                 }
-                else{
+                else if(tabIdsToShow != "tOrganization"){
                     this.$btnCreateAdHocGroup.hide();
                 }
             }

@@ -67,9 +67,9 @@ public class DocumentToSolrTrasnformer implements AcmObjectToSolrDocTransformer<
 
 
         solr.setAuthor(in.getCreator());
-        solr.setCreate_dt(in.getCreated());
+        solr.setCreate_tdt(in.getCreated());
         solr.setModifier_s(in.getModifier());
-        solr.setLast_modified(in.getModified());
+        solr.setLast_modified_tdt(in.getModified());
 
         solr.setStatus_s(in.getStatus());
 

@@ -118,12 +118,18 @@ CaseFile.Service = {
             var filter = treeInfo.filter;
             var q      = treeInfo.q;
 
-            sort = sort ? sort : "name desc";
-
             var url = App.getContextPath() + this.API_RETRIEVE_CASE_FILE_LIST;
-            url += "?start=" + treeInfo.start;
-            url += "&n=" + treeInfo.n;
-            url += "&s=" + sort;
+            if (0 <= treeInfo.start) {
+                url += "?start=" + treeInfo.start;
+            }
+            if (0 < treeInfo.n) {
+                url += "&n=" + treeInfo.n;
+            }
+            if (Acm.isNotEmpty(treeInfo.sort)) {
+                url += "&s=" + treeInfo.sort;
+            } else {
+                url += "&s=name desc";
+            }
 
             Acm.Service.asyncGet(
                 function(response) {
@@ -222,15 +228,15 @@ CaseFile.Service = {
                                 var caseFilSolr = {};
                                 caseFilSolr.author = caseFile.creator;
                                 caseFilSolr.author_s = caseFile.creator;
-                                caseFilSolr.create_dt = caseFile.created;
-                                caseFilSolr.last_modified = caseFile.modified;
+                                caseFilSolr.create_tdt = caseFile.created;
+                                caseFilSolr.last_modified_tdt = caseFile.modified;
                                 caseFilSolr.modifier_s = caseFile.modifier;
                                 caseFilSolr.name = caseFile.caseNumber;
                                 caseFilSolr.object_id_s = caseFile.id;
                                 caseFilSolr.object_type_s = CaseFile.Model.getObjectType();
                                 caseFilSolr.owner_s = caseFile.creator;
                                 caseFilSolr.status_s = caseFile.status;
-                                caseFilSolr.title_t = caseFile.title;
+                                caseFilSolr.title_parseable = caseFile.title;
 
                                 var caseFiles = [caseFilSolr];
                                 CaseFile.Model.List.cachePage.put(pageId, caseFiles);
@@ -1416,10 +1422,10 @@ CaseFile.Service = {
                                 var doc = response.docs[i];
                                 var task = {};
                                 task.id = doc.object_id_s;
-                                task.title = Acm.goodValue(response.docs[i].name); //title_t ?
-                                task.created = Acm.getDateFromDatetime(doc.create_dt);
+                                task.title = Acm.goodValue(response.docs[i].name); //title_parseable ?? //title_t ?
+                                task.created = Acm.getDateFromDatetime(doc.create_tdt);
                                 task.priority = Acm.goodValue(doc.priority_s);
-                                task.dueDate = Acm.getDateFromDatetime(doc.due_dt);
+                                task.dueDate = Acm.getDateFromDatetime(doc.due_tdt); // from date_td to date_tdt
                                 task.status = Acm.goodValue(doc.status_s);
                                 task.assignee = Acm.goodValue(doc.assignee_s);
                                 taskList.push(task);

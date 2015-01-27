@@ -50,6 +50,9 @@
 						<property name="reconfigurableBeans">
 							<list>
 								<ref bean="acm-reports-properties"/>
+								<ref bean="acm-forms-properties"/>
+								<ref bean="acm-roles-properties"/>
+								<ref bean="applicationRoleToUserGroupProperties"/>
 							</list>
 						</property>
 					</bean>

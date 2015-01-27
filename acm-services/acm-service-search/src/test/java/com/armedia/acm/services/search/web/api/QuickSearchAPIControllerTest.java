@@ -67,9 +67,10 @@ public class QuickSearchAPIControllerTest extends EasyMockSupport
 
         String query = "query";
         String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
+        String q= "catch_all:"+query;
 
         Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
+        headers.put("query", q);
         headers.put("sort", "");
         headers.put("firstRow", 0);
         headers.put("maxRows", 10);
@@ -106,9 +107,10 @@ public class QuickSearchAPIControllerTest extends EasyMockSupport
     {
 
         String query = "query";
+        String q= "catch_all:"+query;
 
         Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
+        headers.put("query", q);
         headers.put("sort", "");
         headers.put("firstRow", 0);
         headers.put("maxRows", 10);

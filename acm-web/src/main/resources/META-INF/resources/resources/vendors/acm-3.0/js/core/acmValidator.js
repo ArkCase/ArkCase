@@ -20,6 +20,9 @@ Acm.Validator = {
 
 
     ,validateSolrData: function(data) {
+        if (!data) {
+            return false;
+        }
         if (Acm.isEmpty(data.responseHeader) || Acm.isEmpty(data.response)) {
             return false;
         }
@@ -29,7 +32,17 @@ Acm.Validator = {
 //            if (0 != responseHeader.status) {
 //                return false;
 //            }
-        if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start) || Acm.isEmpty(data.response.docs)) {
+        if (Acm.isEmpty(data.responseHeader.params)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.responseHeader.params.q)) {
+            return false;
+        }
+
+        if (Acm.isEmpty(data.response.numFound) || Acm.isEmpty(data.response.start)) {
+            return false;
+        }
+        if (!Acm.isArray(data.response.docs)) {
             return false;
         }
         return true;

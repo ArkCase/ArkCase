@@ -16,12 +16,23 @@ Complaint.Page = {
 
 
     ,fillReportSelection: function() {
+    	var formDocuments = null;
+    	try {
+    		formDocuments = JSON.parse(Complaint.Object.getFormDocuments());
+    	}catch(e) {
+    		
+    	}
         var html = "<span>"
             + "<select class='input-sm form-control input-s-sm inline v-middle'>"
-            + "<option value=''>Document Type</option>"
-            + "<option value='electronic_communication'>Electronic Communication</option>"
-            + "<option value='roi'>Report of Investigation</option>"
-            + "</select>"
+            + "<option value=''>Document Type</option>";
+        
+        if (formDocuments != null && formDocuments.length > 0) {
+        	for (var i = 0; i < formDocuments.length; i ++) {
+        		html += "<option value='" + formDocuments[i]["value"] + "'>" + formDocuments[i]["label"] + "</option>"
+        	}
+        }
+        
+        html += "</select>"
             + "</span>";
         Complaint.Object.beforeSpanAddDocument(html);
     }

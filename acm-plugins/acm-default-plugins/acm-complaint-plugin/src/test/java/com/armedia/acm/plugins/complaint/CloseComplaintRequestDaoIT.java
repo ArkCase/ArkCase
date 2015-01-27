@@ -29,7 +29,9 @@ import static org.junit.Assert.*;
         "/spring/spring-library-activiti-actions.xml",
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-context-holder.xml"
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-search.xml"
         })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class CloseComplaintRequestDaoIT

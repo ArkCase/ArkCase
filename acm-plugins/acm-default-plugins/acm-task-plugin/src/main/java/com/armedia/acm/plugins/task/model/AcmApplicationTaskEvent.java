@@ -23,14 +23,14 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     private boolean adhocTask;
     private String owner;
 //    private String assigneeFullName;
-    private String buisenesProcessName;
-
-
+    private String businessProcessName;
+    private AcmTask acmTask;
 
 
     public AcmApplicationTaskEvent(AcmTask source, String taskEvent, String eventUser, boolean succeeded, String ipAddress)
     {
         super(source);
+        setAcmTask(source);
 
         setSucceeded(succeeded);
         setIpAddress(ipAddress);
@@ -53,7 +53,7 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
         setAdhocTask(source.isAdhocTask());
         setOwner(source.getOwner());
 
-        setBuisenesProcessName(source.getBusinessProcessName());
+        setBusinessProcessName(source.getBusinessProcessName());
 
     }
 
@@ -183,11 +183,21 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
 //    }
 
     @Override
-    public String getBuisenesProcessName() {
-        return buisenesProcessName;
+    public String getBusinessProcessName() {
+        return businessProcessName;
     }
 
-    public void setBuisenesProcessName(String buisenesProcessName) {
-        this.buisenesProcessName = buisenesProcessName;
+    public void setBusinessProcessName(String businessProcessName) {
+        this.businessProcessName = businessProcessName;
+    }
+
+    public AcmTask getAcmTask()
+    {
+        return acmTask;
+    }
+
+    public void setAcmTask(AcmTask acmTask)
+    {
+        this.acmTask = acmTask;
     }
 }
