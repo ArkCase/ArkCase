@@ -17,11 +17,15 @@ TaskWizard.Event = {
 
 
     ,onPostInit: function() {
+        var data = TaskWizard.getAssignees();
+        if (Acm.isEmpty(data)) {
+            TaskWizard.Service.getAssignees();
+        }
         Acm.keepTrying(TaskWizard.Event._tryInitOwners, 8, 200);
     }
 
     ,_tryInitOwners: function() {
-        var data = App.Object.getApprovers();
+        var data = TaskWizard.getAssignees();
         if (Acm.isNotEmpty(data)) {
             TaskWizard.Object.initOwners(data);
             return true;

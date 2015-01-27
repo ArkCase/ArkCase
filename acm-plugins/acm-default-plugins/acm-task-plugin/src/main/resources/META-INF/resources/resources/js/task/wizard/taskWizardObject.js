@@ -53,7 +53,7 @@ TaskWizard.Object = {
 
 	,initOwners: function(data) {
 	    $.each(data, function(idx, val) {
-	        Acm.Object.appendSelect(TaskWizard.Object.$selOwners, val.userId, val.fullName);
+            Acm.Object.appendSelect(TaskWizard.Object.$selOwners, val.object_id_s, val.name);
 	    });
 	}
 
