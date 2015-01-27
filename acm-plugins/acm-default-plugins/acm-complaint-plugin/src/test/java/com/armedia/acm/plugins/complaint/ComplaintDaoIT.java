@@ -51,21 +51,24 @@ public class ComplaintDaoIT
     private ComplaintFactory complaintFactory = new ComplaintFactory();
 
     @Before
-    public void setUp()
+    public void setUp() throws Exception
     {
         auditAdapter.setUserId("auditUser");
+
+        // stupid Drools throws a null pointer exception if we don't wait long enough here.  What bad software.
+        Thread.sleep(1000);
     }
 
     @Test
     @Transactional
-    public void saveComplaint()
+    public void saveComplaint() throws Exception
     {
 
         Complaint complaint = complaintFactory.complaint();
 
         complaint = complaintDao.save(complaint);
 
-        entityManager.flush();
+
 
         log.info("Complaint ID: " + complaint.getComplaintId());
         log.info("Complaint originator object ID: " + complaint.getOriginator().getId());
@@ -80,6 +83,10 @@ public class ComplaintDaoIT
                 assertNotNull(oa.getAssociationId());
             }
         }
+
+        entityManager.flush();
+
+
     }
 
 }

@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.casefile.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
-import org.drools.core.RuntimeDroolsException;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,7 @@ public class SaveCaseFileAPIController
 
             return saved;
         }
-        catch (MuleException | PersistenceException | RuntimeDroolsException e)
+        catch (MuleException | PersistenceException e)
         {
             throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
         }
