@@ -44,7 +44,7 @@ public class SearchObjectByTypeAPIController {
     @ResponseBody
     public String searchObjectByType(
     		@PathVariable("objectType") String objectType,
-            @RequestParam(value = "s", required = false, defaultValue = "") String s,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             @RequestParam(value = "assignee", required = false, defaultValue = "") String assignee,
@@ -52,9 +52,9 @@ public class SearchObjectByTypeAPIController {
             @RequestParam(value = "filters", required = false, defaultValue = "") String filters,
             Authentication authentication,
             HttpSession httpSession
-    ) throws MuleException, Exception {
+    ) throws Exception {
         String[] f = null;
-        String sortParams = "";
+        String sortParams = null;
         String params = "";
         String query = "object_type_s:" + objectType;
         if (StringUtils.isBlank(filters)) {
@@ -88,9 +88,13 @@ public class SearchObjectByTypeAPIController {
                 }
             }
 
-        if (!StringUtils.isBlank(s)){
-          sortParams = findSortValuesAndCreateSotrString(objectType,s);
+        if (!StringUtils.isBlank(sort)){
+          sortParams = findSortValuesAndCreateSotrString(objectType, sort);
         }
+
+        // try what the user sent, if no sort properties were found
+        sortParams = StringUtils.isBlank(sortParams) ? sort : sortParams;
+
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
         headers.put("firstRow", startRow);
