@@ -43,6 +43,7 @@ public class LdapSyncService
     private LdapSyncDatabaseHelper ldapSyncDatabaseHelper;
     private AcmLdapSyncConfig ldapSyncConfig;
     private String directoryName;
+    private boolean syncEnabled = true;
 
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -51,6 +52,12 @@ public class LdapSyncService
     // folder ($HOME/.acm).
     public void ldapSync()
     {
+        if ( !isSyncEnabled() )
+        {
+            log.debug("Sync is disabled - stopping now.");
+            return;
+        }
+
         if ( log.isInfoEnabled() )
         {
             log.info("Starting sync of directory: " + getDirectoryName() + "; ldap URL: " +
@@ -300,5 +307,15 @@ public class LdapSyncService
     public void setDirectoryName(String directoryName)
     {
         this.directoryName = directoryName;
+    }
+
+    public boolean isSyncEnabled()
+    {
+        return syncEnabled;
+    }
+
+    public void setSyncEnabled(boolean syncEnabled)
+    {
+        this.syncEnabled = syncEnabled;
     }
 }

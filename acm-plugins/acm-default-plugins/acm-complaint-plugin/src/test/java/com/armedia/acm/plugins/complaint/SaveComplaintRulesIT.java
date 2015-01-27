@@ -1,20 +1,23 @@
 package com.armedia.acm.plugins.complaint;
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import org.drools.compiler.compiler.PackageBuilder;
-import org.drools.core.RuleBase;
-import org.drools.core.RuleBaseFactory;
-import org.drools.core.StatelessSession;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
 import org.junit.Test;
+import org.kie.api.io.ResourceType;
+import org.kie.internal.builder.DecisionTableConfiguration;
+import org.kie.internal.builder.DecisionTableInputType;
+import org.kie.internal.builder.KnowledgeBuilder;
+import org.kie.internal.builder.KnowledgeBuilderError;
+import org.kie.internal.builder.KnowledgeBuilderFactory;
+import org.kie.internal.io.ResourceFactory;
+import org.kie.internal.runtime.StatelessKnowledgeSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import java.io.StringReader;
 
 import static org.junit.Assert.*;
 
@@ -25,7 +28,7 @@ public class SaveComplaintRulesIT
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    private StatelessSession workingMemory;
+    private StatelessKnowledgeSession workingMemory;
 
     @Before
     public void nullEcmFolderId() throws Exception
@@ -38,13 +41,22 @@ public class SaveComplaintRulesIT
         String drl = sc.compile(xls.getInputStream(), InputType.XLS);
         log.info("DRL: " + drl);
 
-        PackageBuilder builder = new PackageBuilder();
-        builder.addPackageFromDrl(new StringReader(drl));
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+        DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
+        dtconf.setInputType(DecisionTableInputType.XLS);
+        kbuilder.add(ResourceFactory.newInputStreamResource(xls.getInputStream()), ResourceType.DTABLE, dtconf);
 
-        RuleBase ruleBase = RuleBaseFactory.newRuleBase();
-        ruleBase.addPackage(builder.getPackage());
+        if ( kbuilder.hasErrors() )
+        {
+            for (KnowledgeBuilderError error : kbuilder.getErrors() )
+            {
+                log.error("Error building rules: " + error);
+            }
 
-        workingMemory = ruleBase.newStatelessSession();
+            throw new RuntimeException("Could not build rules from " + xls.getFile().getAbsolutePath());
+        }
+
+        workingMemory = kbuilder.newKnowledgeBase().newStatelessKnowledgeSession();
     }
 
     @Test
