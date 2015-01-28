@@ -429,9 +429,12 @@
                         <div class="col-sm-12">
                             <div class="input-group">
                                 <input type="text" class="input-sm form-control" id="findMember" placeholder="Search people.." >
-                                  <span class="input-group-btn">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-default" id="btnFindMembers" type="button">Go!</button>
+                                </span>
+                                <%--<span class="input-group-btn">
                                     <button class="btn btn-sm btn-default" id="btnFindMembers" type="button"><i class="fa fa-search"></i></button>
-                                  </span>
+                                  </span>--%>
                             </div>
                         <br>
 
