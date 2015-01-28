@@ -21,7 +21,7 @@ Admin.Service = {
 
         ,createAdHocGroup: function(group,parentId){
             var url = App.getContextPath() + Admin.Service.Organization.API_GROUP + "save";
-            if(parentId != null && parentId != ""){
+            if(Acm.isNotEmpty(parentId)){
                 url += "/" + parentId;
             }
             Acm.Service.asyncPost(
@@ -30,7 +30,7 @@ Admin.Service = {
                         Admin.Controller.modelRetrievedError(response.errorMsg);
                     } else {
                         if (Admin.Model.Organization.validateGroup(response)) {
-                            if(parentId != null && parentId != ""){
+                            if(Acm.isNotEmpty(parentId)){
                                 var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
                                 if(currentGroup){
                                     if(currentGroup.children != null){
@@ -79,26 +79,26 @@ Admin.Service = {
                         Admin.Controller.modelRetrievedError(response.errorMsg);
                     }
                     else {
-                        if(response.members != null){
+                        if (Admin.Model.Organization.validateUsers(response)) {
                             var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
-                            if(currentGroup){
-                                if(currentGroup.children != null){
+                            if (currentGroup) {
+                                if (currentGroup.children != null) {
                                     var children = currentGroup.children;
-                                    currentGroup.children.splice(0,children.length);
+                                    currentGroup.children.splice(0, children.length);
                                 }
-                                if(!currentGroup.members){
+                                if (!currentGroup.members) {
                                     currentGroup.members = [];
                                 }
-                                else if(currentGroup.members){
+                                else if (currentGroup.members) {
                                     //response contains all members, so have to clear the members from the cache to prevent duplicates
-                                    currentGroup.members.splice(0,currentGroup.members.length);
+                                    currentGroup.members.splice(0, currentGroup.members.length);
                                 }
-                                for(var i = 0; i < response.members.length; i++){
+                                for (var i = 0; i < response.members.length; i++) {
                                     var member = response.members[i];
                                     currentGroup.members.push(member.userId);
                                 }
                                 Admin.Model.Organization.Tree.sourceLoaded(false);
-                                Admin.Controller.modelAddedGroupMember(currentGroup.members,parentGroupId);
+                                Admin.Controller.modelAddedGroupMember(currentGroup.members, parentGroupId);
                             }
                         }
                     }
@@ -115,7 +115,7 @@ Admin.Service = {
                         Admin.Controller.modelRetrievedError(response.errorMsg);
                     }
                     else {
-                        if(response.supervisor != null){
+                        if(Acm.isNotEmpty(response.supervisor)){
                             var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
                             if(currentGroup){
                                 if(currentGroup.children != null){
@@ -215,7 +215,7 @@ Admin.Service = {
                 ,function() {
                     var url;
                     url =  App.getContextPath() + Admin.Service.Organization.API_FACET_SEARCH_;
-                    url += searchInfo.q + '&filters="fq="Object Type":USER"';
+                    url += searchInfo.q + '&filters=fq="Object Type":USER';
                     //url += searchInfo.q ;
 
                     //for test

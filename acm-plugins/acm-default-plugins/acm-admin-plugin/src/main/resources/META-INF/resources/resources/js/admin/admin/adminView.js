@@ -1002,12 +1002,12 @@ Admin.View = Admin.View || {
 
         }
 
-        ,onClickBtnGo: function(e) {
+        ,onClickBtnGo: function(event, ctrl) {
             // When "Go" button is clicked, just refresh the not authorized and authorized groups for selected role
             Admin.View.FunctionalAccessControl.refresh();
         }
 
-        ,onClickBtnMoveRight: function(e) {
+        ,onClickBtnMoveRight: function(event, ctrl) {
             // Get selected role and selected groups from not authorized section
             var selectedRole = Admin.View.FunctionalAccessControl.$selectRoles.val();
             var selectedGroups = Admin.View.FunctionalAccessControl.$selectNotAuthorized.val();
@@ -1032,7 +1032,7 @@ Admin.View = Admin.View || {
             }
         }
 
-        ,onClickBtnMoveLeft: function(e) {
+        ,onClickBtnMoveLeft: function(event, ctrl) {
             // Get selected role and selected groups from authorized section
             var selectedRole = Admin.View.FunctionalAccessControl.$selectRoles.val();
             var selectedGroups = Admin.View.FunctionalAccessControl.$selectAuthorized.val();
@@ -1057,7 +1057,7 @@ Admin.View = Admin.View || {
             }
         }
 
-        ,onChangeSelectRoles: function(e) {
+        ,onChangeSelectRoles: function(event, ctrl) {
             // Remove data from not authorized and authorized section when role is changed
             Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, []);
             Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, []);
