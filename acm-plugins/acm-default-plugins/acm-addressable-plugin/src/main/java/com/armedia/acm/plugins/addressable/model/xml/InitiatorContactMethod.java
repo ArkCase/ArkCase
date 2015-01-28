@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal;
+package com.armedia.acm.plugins.addressable.model.xml;
 
 import java.util.Date;
 

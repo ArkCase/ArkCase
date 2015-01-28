@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.plugins.person.model.frevvoxmlmarshal;
+package com.armedia.acm.plugins.person.model.xml;
 
 import java.util.Date;
 

@@ -8,10 +8,10 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import com.armedia.acm.form.casefile.model.frevvoxmlmarshal.EmployeeReference;
+import com.armedia.acm.form.casefile.model.xml.EmployeeReference;
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal.GeneralPostalAddress;
+import com.armedia.acm.plugins.addressable.model.xml.GeneralPostalAddress;
 
 /**
  * @author riste.tutureski

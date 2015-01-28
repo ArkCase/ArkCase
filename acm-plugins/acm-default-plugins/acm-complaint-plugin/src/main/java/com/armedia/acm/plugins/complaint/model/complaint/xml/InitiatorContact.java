@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.plugins.complaint.model.complaint.frevvoxmlmarshal;
+package com.armedia.acm.plugins.complaint.model.complaint.xml;
 
 import java.util.List;
 
@@ -9,15 +9,15 @@ import javax.xml.bind.annotation.XmlElement;
 
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal.InitiatorContactMethod;
-import com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal.InitiatorPostalAddress;
+import com.armedia.acm.plugins.addressable.model.xml.InitiatorContactMethod;
+import com.armedia.acm.plugins.addressable.model.xml.InitiatorPostalAddress;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
 import com.armedia.acm.plugins.complaint.model.complaint.SearchResult;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.PersonAlias;
-import com.armedia.acm.plugins.person.model.frevvoxmlmarshal.InitiatorOrganization;
-import com.armedia.acm.plugins.person.model.frevvoxmlmarshal.InitiatorPersonAlias;
+import com.armedia.acm.plugins.person.model.xml.InitiatorOrganization;
+import com.armedia.acm.plugins.person.model.xml.InitiatorPersonAlias;
 
 /**
  * @author riste.tutureski
