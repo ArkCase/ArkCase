@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 
 /**
  * @author riste.tutureski
@@ -90,10 +91,28 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>{
     } 
 	
 	@Transactional
+	public AcmGroup markGroupDelete(String name)
+	{
+		 Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name = :name");
+		 query.setParameter("name", name); 
+     
+		 AcmGroup group = (AcmGroup) query.getSingleResult();
+		 
+		 if (group != null)
+		 {
+			 group.setStatus(AcmGroupStatus.DELETE);
+			 group = save(group);
+		 }
+		 
+		 return group;
+	}
+	
+	@Transactional
 	public void markAllGroupsInactive(String groupType)
 	{
-		 Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.type = :groupType");
-		 query.setParameter("groupType", groupType); 
+		 Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.type = :groupType AND group.status != :groupStatus");
+		 query.setParameter("groupType", groupType);
+		 query.setParameter("groupStatus", AcmGroupStatus.DELETE);
      
 		 List<AcmGroup> groups =  query.getResultList();
 		 
@@ -101,7 +120,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>{
 		 {
 			 for (AcmGroup group : groups)
 			 {
-				 group.setStatus("INACTIVE");
+				 group.setStatus(AcmGroupStatus.INACTIVE);
 				 save(group);
 			 }
 		 }
