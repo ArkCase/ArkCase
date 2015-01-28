@@ -109,10 +109,8 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         Capture<Complaint> found = new Capture<>();
 
-        mockComplaintService.setAuthentication(mockAuthentication);
-        expectLastCall().times(1);
-        mockComplaintService.updateXML(capture(found));
-        expectLastCall().times(1);
+        mockComplaintService.updateXML(capture(found), eq(mockAuthentication));
+        expectLastCall().anyTimes();
         expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication))).andReturn(saved);
         mockEventPublisher.publishComplaintEvent(capture(found), eq(mockAuthentication), eq(false), eq(true));
 

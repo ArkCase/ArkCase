@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,7 +36,6 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
-import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
 import com.armedia.acm.plugins.person.model.Organization;
@@ -52,11 +52,10 @@ import com.google.gson.GsonBuilder;
 public class CaseFileService extends FrevvoFormAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
-	private CaseFileFactory caseFileFactory = new CaseFileFactory();
+	private CaseFileFactory caseFileFactory;
 	private SaveCaseService saveCaseService;
 	private AcmHistoryDao acmHistoryDao;
 	private CaseFileDao caseFileDao;
-	private ObjectAssociationDao objectAssociationDao;
 	private PersonIdentificationDao personIdentificationDao;
 	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
@@ -113,29 +112,9 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		form = saveReference(form);
 		
 		// Create Frevvo form from CaseFile
-		getCaseFileFactory().setMuleClient(getMuleClient());
-		getCaseFileFactory().setEcmFileDao(getEcmFileDao());
-		getCaseFileFactory().setObjectAssociationDao(getObjectAssociationDao());
-		getCaseFileFactory().setAcmHistoryDao(getAcmHistoryDao());
 		form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), form);
 		
-		String updatedXmlFile = convertFromObjectToXML(form);
-        if (updatedXmlFile != null && attachments.containsKey("form_" + FrevvoFormName.CASE_FILE))
-        {
-        	List<MultipartFile> files = attachments.get("form_" + FrevvoFormName.CASE_FILE);
-        	if (files != null && files.size() == 1)
-        	{
-        		MultipartFile originalXml = files.get(0);
-        		InputStream updatedXmlContent = new ByteArrayInputStream(updatedXmlFile.getBytes());
-        		AcmMultipartFile updatedXml = new AcmMultipartFile(originalXml.getName(), originalXml.getOriginalFilename(), originalXml.getContentType(), originalXml.isEmpty(), originalXml.getSize(), originalXml.getBytes(), updatedXmlContent, false);
-        		
-        		// Remove old XML file
-        		attachments.remove("form_" + FrevvoFormName.CASE_FILE);
-        		
-        		// Add updated XML file
-        		attachments.add("form_" + FrevvoFormName.CASE_FILE, updatedXml);
-        	}
-        }
+		updateXMLAttachment(attachments, FrevvoFormName.CASE_FILE, form);
 		
 		// Save Attachments
 		FrevvoUploadedFiles frevvoFiles = saveAttachments(attachments, form.getCmisFolderId(),
@@ -371,21 +350,16 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		return form;
 	}
 	
-	public void updateXML(CaseFile caseFile)
+	public void updateXML(CaseFile caseFile, Authentication auth)
     {
     	if (caseFile != null)
-    	{
-    		getCaseFileFactory().setMuleClient(getMuleClient());
-    		getCaseFileFactory().setEcmFileDao(getEcmFileDao());
-    		getCaseFileFactory().setObjectAssociationDao(getObjectAssociationDao());
-    		getCaseFileFactory().setAcmHistoryDao(getAcmHistoryDao());
-    		
+    	{    		
     		CaseFileForm form = getCaseFileFactory().asFrevvoCaseFile(caseFile, null);
     		
     		if (form != null)
     		{
     			String xml = convertFromObjectToXML(form);
-    			updateXML(xml, FrevvoFormName.CASE_FILE.toUpperCase(), caseFile.getId());		
+    			updateXML(xml, FrevvoFormName.CASE_FILE.toUpperCase(), caseFile.getId(), auth);		
     		}
     	}
     }
@@ -474,14 +448,6 @@ public class CaseFileService extends FrevvoFormAbstractService {
 
 	public void setCaseFileDao(CaseFileDao caseFileDao) {
 		this.caseFileDao = caseFileDao;
-	}
-
-	public ObjectAssociationDao getObjectAssociationDao() {
-		return objectAssociationDao;
-	}
-
-	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
-		this.objectAssociationDao = objectAssociationDao;
 	}
 
 	public PersonIdentificationDao getPersonIdentificationDao() {

@@ -42,6 +42,7 @@ public class CaseFileForm {
 		this.id = id;
 	}
 
+	@XmlTransient
 	public String getNumber() 
 	{
 		return number;
@@ -74,6 +75,7 @@ public class CaseFileForm {
 		this.type = type;
 	}
 
+	@XmlTransient
 	public List<String> getTypes() 
 	{
 		return types;
