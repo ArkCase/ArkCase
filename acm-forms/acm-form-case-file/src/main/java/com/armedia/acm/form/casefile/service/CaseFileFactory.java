@@ -3,20 +3,13 @@
  */
 package com.armedia.acm.form.casefile.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.commons.io.IOUtils;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,22 +17,22 @@ import com.armedia.acm.form.casefile.model.AddressHistory;
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.form.casefile.model.EmploymentHistory;
 import com.armedia.acm.form.casefile.model.Subject;
-import com.armedia.acm.form.casefile.model.frevvoxmlmarshal.Employee;
+import com.armedia.acm.form.casefile.model.xml.Employee;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal.GeneralPostalAddress;
+import com.armedia.acm.plugins.addressable.model.xml.GeneralPostalAddress;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonIdentification;
-import com.armedia.acm.plugins.person.model.frevvoxmlmarshal.GeneralOrganization;
+import com.armedia.acm.plugins.person.model.xml.GeneralOrganization;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.service.history.model.AcmHistory;
 
@@ -54,11 +47,13 @@ public class CaseFileFactory
 	public static final String PERSON_TYPE = "Subject";
 	public static final String PERSON_IDENTIFICATION_EMPLOYEE_ID = "EMPLOYEE_ID";
 	public static final String PERSON_IDENTIFICATION_SSN = "SSN";
+	public static final String OBJECT_TYPE_POSTAL_ADDRESS = "POSTAL_ADDRESS";
+	public static final String OBJECT_TYPE_ORGANIZATION = "ORGANIZATION";
 	
-	private MuleClient muleClient;
 	private ObjectAssociationDao objectAssociationDao;
 	private EcmFileDao ecmFileDao;
 	private AcmHistoryDao acmHistoryDao;
+	private EcmFileService ecmFileService;
 
 	public CaseFile asAcmCaseFile(CaseFileForm form, CaseFile caseFile)
 	{
@@ -187,31 +182,31 @@ public class CaseFileFactory
 	@SuppressWarnings("unchecked")
 	public CaseFileForm asFrevvoCaseFile(CaseFile caseFile, CaseFileForm form)
 	{		
+		CaseFileForm retval = new CaseFileForm();
+		
 		if (caseFile != null)
 		{
 			CaseFileForm oldForm = populateFrevvoOldCaseFile(caseFile, form);
-
-			form = new CaseFileForm();
 			
-			form.setId(caseFile.getId());
-			form.setNumber(caseFile.getCaseNumber());
-			form.setTitle(caseFile.getTitle());
-			form.setType(caseFile.getCaseType());
-			form.setCmisFolderId(caseFile.getEcmFolderId());
+			retval.setId(caseFile.getId());
+			retval.setNumber(caseFile.getCaseNumber());
+			retval.setTitle(caseFile.getTitle());
+			retval.setType(caseFile.getCaseType());
+			retval.setCmisFolderId(caseFile.getEcmFolderId());
 			
 			if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
 			{
 				Subject subject = populateFrevvoSubject(caseFile.getOriginator().getPerson(), oldForm);
-				form.setSubject(subject);
+				retval.setSubject(subject);
 				
 				Map<String, List<?>> historyArray = populateFrevvoHistory(caseFile.getOriginator().getPerson(), oldForm);
 				
-				form.setAddressHistory((List<AddressHistory>) historyArray.get("addressHistory"));
-				form.setEmploymentHistory((List<EmploymentHistory>) historyArray.get("employmentHistory"));
+				retval.setAddressHistory((List<AddressHistory>) historyArray.get("addressHistory"));
+				retval.setEmploymentHistory((List<EmploymentHistory>) historyArray.get("employmentHistory"));
 			}
 		}
 		
-		return form;
+		return retval;
 	}
 	
 	private CaseFileForm populateFrevvoOldCaseFile(CaseFile caseFile, CaseFileForm form)
@@ -223,20 +218,13 @@ public class CaseFileFactory
 			ObjectAssociation association = getObjectAssociationDao().findFrevvoXMLAssociation(FrevvoFormName.CASE_FILE.toUpperCase(), caseFile.getId(), FrevvoFormName.CASE_FILE.toLowerCase() + "_xml");
 			
 			if (association != null)
-			{
-				EcmFile ecmFile = getEcmFileDao().find(association.getTargetId());
-				
+			{				
 				try 
 				{
-					MuleMessage message = getMuleClient().send("vm://downloadFileFlow.in", ecmFile.getEcmFileId(), null);
+					String xml = getEcmFileService().download(association.getTargetId());
 					
-					if (null != message && message.getPayload() instanceof ContentStream)
-					{
-						String result = getContent((ContentStream) message.getPayload());
-						
-						AcmUnmarshaller unmarshaller = ObjectConverter.createXMLUnmarshaller();
-						oldForm = (CaseFileForm) unmarshaller.unmarshall(result, CaseFileForm.class);
-					}
+					AcmUnmarshaller unmarshaller = ObjectConverter.createXMLUnmarshaller();
+					oldForm = (CaseFileForm) unmarshaller.unmarshall(xml, CaseFileForm.class);
 				} 
 				catch (MuleException e) 
 				{
@@ -310,85 +298,13 @@ public class CaseFileFactory
 		{
 			for (AcmHistory history : historyArray)
 			{
-				if ("POSTAL_ADDRESS".equals(history.getObjectType()))
+				if (OBJECT_TYPE_POSTAL_ADDRESS.equals(history.getObjectType()))
 				{
-					AddressHistory addressHistory = new AddressHistory();
-					
-					addressHistory.setId(history.getId());
-					addressHistory.setStartDate(history.getStartDate());
-					addressHistory.setEndDate(history.getEndDate());
-					
-					List<PostalAddress> addresses = person.getAddresses();
-					if (addresses != null)
-					{
-						for (PostalAddress address : addresses)
-						{
-							if (address.getId().equals(history.getObjectId()))
-							{
-								addressHistory.setLocation(new GeneralPostalAddress(address));
-								break;
-							}
-						}
-					}
-					
-					if (oldForm != null && oldForm.getAddressHistory() != null)
-					{
-						for (AddressHistory oldAddressHistory: oldForm.getAddressHistory())
-						{
-							if (oldAddressHistory.getId() != null &&  oldAddressHistory.getId().equals(history.getId()))
-							{
-								addressHistory.setReference(oldAddressHistory.getReference());
-							}
-						}
-					}
-					
-					if (addressHistoryArray == null)
-					{
-						addressHistoryArray = new ArrayList<AddressHistory>();
-					}
-					
-					addressHistoryArray.add(addressHistory);					
+					addressHistoryArray = addToAddressHistoryArray(history, person, oldForm, addressHistoryArray);					
 				}
-				else if ("ORGANIZATION".equals(history.getObjectType()))
+				else if (OBJECT_TYPE_ORGANIZATION.equals(history.getObjectType()))
 				{
-					EmploymentHistory employmentHistory = new EmploymentHistory();
-					
-					employmentHistory.setId(history.getId());
-					employmentHistory.setStartDate(history.getStartDate());
-					employmentHistory.setEndDate(history.getEndDate());
-					employmentHistory.setType(history.getPersonType());
-					
-					List<Organization> organizations = person.getOrganizations();
-					if (organizations != null && history.getObjectId() != null)
-					{
-						for (Organization organization: organizations)
-						{
-							if (organization.getOrganizationId().equals(history.getObjectId()))
-							{
-								employmentHistory.setOrganization(new GeneralOrganization(organization));
-								break;
-							}
-						}
-					}
-					
-					if (oldForm != null && oldForm.getEmploymentHistory() != null)
-					{
-						for (EmploymentHistory oldEmploymentHistory: oldForm.getEmploymentHistory())
-						{
-							if (oldEmploymentHistory.getId() != null &&  oldEmploymentHistory.getId().equals(history.getId()))
-							{
-								employmentHistory.setReference(oldEmploymentHistory.getReference());
-								employmentHistory.setSupervisor(oldEmploymentHistory.getSupervisor());
-							}
-						}
-					}
-					
-					if (employmentHistoryArray == null)
-					{
-						employmentHistoryArray = new ArrayList<EmploymentHistory>();
-					}
-					
-					employmentHistoryArray.add(employmentHistory);
+					employmentHistoryArray = addToEmploymentHistoryArray(history, person, oldForm, employmentHistoryArray);
 				}	
 			}
 		}
@@ -399,46 +315,90 @@ public class CaseFileFactory
 		return historyMap;
 	}
 	
-	private String getContent(ContentStream contentStream)
+	private List<AddressHistory> addToAddressHistoryArray(AcmHistory history, Person person, CaseFileForm oldForm, List<AddressHistory> addressHistoryArray)
 	{
-		String content = "";
-		InputStream inputStream = null;
+		AddressHistory addressHistory = new AddressHistory();
 		
-		try
-        {
-			inputStream = contentStream.getStream();
-			StringWriter writer = new StringWriter();
-			IOUtils.copy(inputStream, writer);
-			content = writer.toString();
-        } 
-		catch (IOException e) 
+		addressHistory.setId(history.getId());
+		addressHistory.setStartDate(history.getStartDate());
+		addressHistory.setEndDate(history.getEndDate());
+		
+		List<PostalAddress> addresses = person.getAddresses();
+		if (addresses != null)
 		{
-        	LOG.error("Could not copy input stream to the writer: " + e.getMessage(), e);
+			for (PostalAddress address : addresses)
+			{
+				if (address.getId().equals(history.getObjectId()))
+				{
+					addressHistory.setLocation(new GeneralPostalAddress(address));
+					break;
+				}
+			}
 		}
-		finally
-        {
-            if ( inputStream != null )
-            {
-                try
-                {
-                	inputStream.close();
-                }
-                catch (IOException e)
-                {
-                    LOG.error("Could not close CMIS content stream: " + e.getMessage(), e);
-                }
-            }
-        }
 		
-		return content;
+		if (oldForm != null && oldForm.getAddressHistory() != null)
+		{
+			for (AddressHistory oldAddressHistory: oldForm.getAddressHistory())
+			{
+				if (oldAddressHistory.getId() != null &&  oldAddressHistory.getId().equals(history.getId()))
+				{
+					addressHistory.setReference(oldAddressHistory.getReference());
+				}
+			}
+		}
+		
+		if (addressHistoryArray == null)
+		{
+			addressHistoryArray = new ArrayList<AddressHistory>();
+		}
+		
+		addressHistoryArray.add(addressHistory);
+		
+		return addressHistoryArray;
 	}
-
-	public MuleClient getMuleClient() {
-		return muleClient;
-	}
-
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
+	
+	private List<EmploymentHistory> addToEmploymentHistoryArray(AcmHistory history, Person person, CaseFileForm oldForm, List<EmploymentHistory> employmentHistoryArray)
+	{
+		EmploymentHistory employmentHistory = new EmploymentHistory();
+		
+		employmentHistory.setId(history.getId());
+		employmentHistory.setStartDate(history.getStartDate());
+		employmentHistory.setEndDate(history.getEndDate());
+		employmentHistory.setType(history.getPersonType());
+		
+		List<Organization> organizations = person.getOrganizations();
+		if (organizations != null && history.getObjectId() != null)
+		{
+			for (Organization organization: organizations)
+			{
+				if (organization.getOrganizationId().equals(history.getObjectId()))
+				{
+					employmentHistory.setOrganization(new GeneralOrganization(organization));
+					break;
+				}
+			}
+		}
+		
+		if (oldForm != null && oldForm.getEmploymentHistory() != null)
+		{
+			for (EmploymentHistory oldEmploymentHistory: oldForm.getEmploymentHistory())
+			{
+				if (oldEmploymentHistory.getId() != null &&  oldEmploymentHistory.getId().equals(history.getId()))
+				{
+					employmentHistory.setReference(oldEmploymentHistory.getReference());
+					employmentHistory.setSupervisor(oldEmploymentHistory.getSupervisor());
+				}
+			}
+		}
+		
+		if (employmentHistoryArray == null)
+		{
+			employmentHistoryArray = new ArrayList<EmploymentHistory>();
+		}
+		
+		employmentHistoryArray.add(employmentHistory);
+		
+		return employmentHistoryArray;
 	}
 
 	public ObjectAssociationDao getObjectAssociationDao() {
@@ -463,6 +423,14 @@ public class CaseFileFactory
 
 	public void setAcmHistoryDao(AcmHistoryDao acmHistoryDao) {
 		this.acmHistoryDao = acmHistoryDao;
+	}
+
+	public EcmFileService getEcmFileService() {
+		return ecmFileService;
+	}
+
+	public void setEcmFileService(EcmFileService ecmFileService) {
+		this.ecmFileService = ecmFileService;
 	}
 	
 }

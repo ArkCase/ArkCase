@@ -9,8 +9,8 @@ import javax.xml.bind.annotation.XmlElement;
 
 import com.armedia.acm.form.config.ResolveInformation;
 import com.armedia.acm.form.config.Item;
-import com.armedia.acm.form.config.frevvoxmlmarshal.ApproverItem;
-import com.armedia.acm.form.config.frevvoxmlmarshal.CaseResolveInformation;
+import com.armedia.acm.form.config.xml.ApproverItem;
+import com.armedia.acm.form.config.xml.CaseResolveInformation;
 
 /**
  * @author riste.tutureski

@@ -25,7 +25,7 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent> {
 		{
 			LOG.debug("Updating Frevvo XML file ...");
 			
-			getCaseFileService().updateXML(event.getCaseFile());
+			getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser());
 		}
 	}
 

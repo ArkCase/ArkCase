@@ -41,4 +41,6 @@ public interface EcmFileTransaction
                 EcmFile ecmFile,
                 InputStream fileInputStream)
                 throws MuleException;
+        
+        String downloadFileTransaction(EcmFile ecmFile) throws MuleException;
 }
