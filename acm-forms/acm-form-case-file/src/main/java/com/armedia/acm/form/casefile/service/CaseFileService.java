@@ -3,6 +3,8 @@
  */
 package com.armedia.acm.form.casefile.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 import org.activiti.engine.RuntimeService;
@@ -21,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.file.AcmMultipartFile;
 import com.armedia.acm.form.casefile.model.AddressHistory;
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.form.casefile.model.EmploymentHistory;
@@ -108,7 +112,32 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		// Save Reference (Reinvestigation)
 		form = saveReference(form);
 		
-		// Cave Attachments
+		// Create Frevvo form from CaseFile
+		getCaseFileFactory().setMuleClient(getMuleClient());
+		getCaseFileFactory().setEcmFileDao(getEcmFileDao());
+		getCaseFileFactory().setObjectAssociationDao(getObjectAssociationDao());
+		getCaseFileFactory().setAcmHistoryDao(getAcmHistoryDao());
+		form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), form);
+		
+		String updatedXmlFile = convertFromObjectToXML(form);
+        if (updatedXmlFile != null && attachments.containsKey("form_" + FrevvoFormName.CASE_FILE))
+        {
+        	List<MultipartFile> files = attachments.get("form_" + FrevvoFormName.CASE_FILE);
+        	if (files != null && files.size() == 1)
+        	{
+        		MultipartFile originalXml = files.get(0);
+        		InputStream updatedXmlContent = new ByteArrayInputStream(updatedXmlFile.getBytes());
+        		AcmMultipartFile updatedXml = new AcmMultipartFile(originalXml.getName(), originalXml.getOriginalFilename(), originalXml.getContentType(), originalXml.isEmpty(), originalXml.getSize(), originalXml.getBytes(), updatedXmlContent, false);
+        		
+        		// Remove old XML file
+        		attachments.remove("form_" + FrevvoFormName.CASE_FILE);
+        		
+        		// Add updated XML file
+        		attachments.add("form_" + FrevvoFormName.CASE_FILE, updatedXml);
+        	}
+        }
+		
+		// Save Attachments
 		FrevvoUploadedFiles frevvoFiles = saveAttachments(attachments, form.getCmisFolderId(),
 				FrevvoFormName.CASE_FILE.toUpperCase(), form.getId(), form.getNumber());
 		
@@ -245,7 +274,9 @@ public class CaseFileService extends FrevvoFormAbstractService {
 				acmHistory.setStartDate(addressHistory.getStartDate());
 				acmHistory.setEndDate(addressHistory.getEndDate());
 				
-				getAcmHistoryDao().save(acmHistory);
+				acmHistory = getAcmHistoryDao().save(acmHistory);
+				
+				addressHistory.setId(acmHistory.getId());
 			}
 		}
 		
@@ -286,7 +317,8 @@ public class CaseFileService extends FrevvoFormAbstractService {
 				acmHistory.setStartDate(employmentHistory.getStartDate());
 				acmHistory.setEndDate(employmentHistory.getEndDate());
 				
-				getAcmHistoryDao().save(acmHistory);
+				acmHistory = getAcmHistoryDao().save(acmHistory);
+				employmentHistory.setId(acmHistory.getId());
 			}
 		}
 		
@@ -339,6 +371,25 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		return form;
 	}
 	
+	public void updateXML(CaseFile caseFile)
+    {
+    	if (caseFile != null)
+    	{
+    		getCaseFileFactory().setMuleClient(getMuleClient());
+    		getCaseFileFactory().setEcmFileDao(getEcmFileDao());
+    		getCaseFileFactory().setObjectAssociationDao(getObjectAssociationDao());
+    		getCaseFileFactory().setAcmHistoryDao(getAcmHistoryDao());
+    		
+    		CaseFileForm form = getCaseFileFactory().asFrevvoCaseFile(caseFile, null);
+    		
+    		if (form != null)
+    		{
+    			String xml = convertFromObjectToXML(form);
+    			updateXML(xml, FrevvoFormName.CASE_FILE.toUpperCase(), caseFile.getId());		
+    		}
+    	}
+    }
+	
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#getFormName()
 	 */
@@ -379,7 +430,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		caseFileForm.setAddressHistory(addressHistoryList);
 		caseFileForm.setEmploymentHistory(employmentHistoryList);
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(caseFileForm);
 		
 		JSONObject json = new JSONObject(jsonString);

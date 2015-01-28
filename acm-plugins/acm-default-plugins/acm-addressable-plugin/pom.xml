@@ -15,6 +15,13 @@
     </description>
 
     <dependencies>
+    	<!-- acm -->
+    	<dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-object-converter</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+    	
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>

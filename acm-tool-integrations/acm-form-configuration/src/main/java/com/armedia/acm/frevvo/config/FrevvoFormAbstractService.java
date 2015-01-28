@@ -14,13 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.objectonverter.AcmMarshaller;
+import com.armedia.acm.objectonverter.AcmUnmarshaller;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
@@ -33,12 +31,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.file.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
@@ -64,6 +62,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     private EcmFileDao ecmFileDao;
     private AcmUserActionExecutor userActionExecutor;
     private MuleClient muleClient;
+    private ObjectAssociationDao objectAssociationDao;
 
     @Override
 	public Object init() {
@@ -180,23 +179,41 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
         this.servletContextPath = servletContextPath;
     }
 	
-	public Object convertFromXMLToObject(String xml, Class<?> c) {
-		Object obj = null;
-		try{
-			InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-	        DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-	        Document document = documentBuilder.parse(inputStream);
-	        Element element = document.getDocumentElement();
-	        JAXBContext context = JAXBContext.newInstance(c);
-	        Unmarshaller unmarshaller = context.createUnmarshaller();
-	        JAXBElement<?> jaxbElement = unmarshaller.unmarshal(element, c);
-	        obj = jaxbElement.getValue();
-		}
-        catch(Exception e) {
-        	LOG.error("Error while creating Object from XML. " + e);
-        }
-		
+	public Object convertFromXMLToObject(String xml, Class<?> c) 
+	{
+		AcmUnmarshaller unmarshaller = ObjectConverter.createXMLUnmarshaller();
+		Object obj = unmarshaller.unmarshall(xml, c);
+			
 		return obj;
+	}
+	
+	public String convertFromObjectToXML(Object obj) 
+	{
+		AcmMarshaller marshaller = ObjectConverter.createXMLMarshaller();
+		String xml = marshaller.marshal(obj);
+		
+		return xml;
+	}
+	
+	protected void updateXML(String xml, String formName, Long id)
+	{
+		ObjectAssociation association = getObjectAssociationDao().findFrevvoXMLAssociation(formName.toUpperCase(), id, formName.toLowerCase() + "_xml");
+		
+		if (association != null)
+		{
+			EcmFile ecmFile = getEcmFileDao().find(association.getTargetId());
+			AcmMultipartFile file = new AcmMultipartFile();
+			file.setInputStream(new ByteArrayInputStream(xml.getBytes()));
+			
+			try 
+			{
+				getEcmFileService().update(ecmFile, file, getAuthentication());
+			} 
+			catch (AcmCreateObjectFailedException e) 
+			{
+				LOG.error("Failed to update XML file.", e);
+			}    				
+		}
 	}
 	
 	public FrevvoUploadedFiles saveAttachments(
@@ -465,5 +482,13 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	public void setMuleClient(MuleClient muleClient) {
 		this.muleClient = muleClient;
 	}	
+	
+	public ObjectAssociationDao getObjectAssociationDao() {
+		return objectAssociationDao;
+	}
+
+	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
+		this.objectAssociationDao = objectAssociationDao;
+	}
 	
 }
