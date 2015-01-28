@@ -27,8 +27,7 @@ Admin.Service = {
             Acm.Service.asyncPost(
                 function(response) {
                     if (response.hasError) {
-                        //Admin.Controller.modelCreatedAdHocGroup(response);
-
+                        Admin.Controller.modelRetrievedError(response.errorMsg);
                     } else {
                         if (Admin.Model.Organization.validateGroup(response)) {
                             if(parentId != null && parentId != ""){
@@ -47,13 +46,8 @@ Admin.Service = {
                                     }
                                 }
                                 var subGroups = Admin.Model.Organization.cacheSubgroups.get("subgroups");
-                                var subgroup = {};
-                                subgroup.title = response.name;
-                                subgroup.type = response.type;
-                                subgroup.parentId = parentId;
-                                subgroup.subgroups = response.child_id_ss;
-                                subgroup.members = response.members;
-                                subgroup.supervisor = response.supervisor;
+                                var subgroup = Admin.Model.Organization.makeGroupData(response);
+                                subgroup.isInGroupCache = false;
                                 subGroups.unshift(subgroup);
 
                                 Admin.Model.Organization.cacheSubgroups.put("subgroups",subGroups);
@@ -62,13 +56,8 @@ Admin.Service = {
                             }
                             else{
                                 var groups = Admin.Model.Organization.cacheGroups.get("groups");
-                                var group = {};
-                                group.title = response.name;
-                                group.type = response.type;
-                                group.parentId = response.parentId;
-                                group.subgroups = response.child_id_ss;
-                                group.members = response.members;
-                                group.supervisor = response.supervisor;
+                                var group = Admin.Model.Organization.makeGroupData(response);
+                                group.isInGroupCache = true;
                                 groups.unshift(group);
                                 Admin.Model.Organization.cacheGroups.put("groups",groups);
                                 Admin.Model.Organization.Tree.sourceLoaded(false);
@@ -87,10 +76,9 @@ Admin.Service = {
             Acm.Service.asyncPost(
                 function(response) {
                     if (response.hasError) {
-                        var addedMembers = response;
-                        //Admin.Controller.modelAddedGroupMember(addedMembers);
-
-                    } else {
+                        Admin.Controller.modelRetrievedError(response.errorMsg);
+                    }
+                    else {
                         if(response.members != null){
                             var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
                             if(currentGroup){
@@ -124,10 +112,9 @@ Admin.Service = {
             Acm.Service.asyncPost(
                 function(response) {
                     if (response.hasError) {
-                        var supervisor = response.supervisor;
-                        //Admin.Controller.modelAddedGroupMember(addedMembers);
-
-                    } else {
+                        Admin.Controller.modelRetrievedError(response.errorMsg);
+                    }
+                    else {
                         if(response.supervisor != null){
                             var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
                             if(currentGroup){
@@ -158,36 +145,24 @@ Admin.Service = {
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                        var allGroups = response.response.docs;
-                        //Admin.Controller.modelRetrievedGroups(allGroups);
-
-                    } else {
+                        Admin.Controller.modelRetrievedError(response.errorMsg);
+                    }
+                    else {
                         if (Admin.Model.Organization.validateGroup(response)) {
                             var allGroups = response.response.docs;
-                            //Admin.Model.Organization.cacheAllGroups.put("allGroups", allGroups);
-
                             //create arrays to make fancytree structure
                             var subgroups = [];
                             var groups = [];
                             for(var i = 0; i < allGroups.length; i++){
                                 var selGroup = allGroups[i];
                                 if(selGroup.parent_type_s != null || selGroup.parent_type_s == "GROUP"){
-                                    var subgroup = {}
-                                    subgroup.title = selGroup.name;
-                                    subgroup.type = selGroup.object_sub_type_s;
-                                    subgroup.parentId = selGroup.parent_id_s;
-                                    subgroup.subgroups = selGroup.child_id_ss;
-                                    subgroup.members = selGroup.member_id_ss;
-                                    subgroup.supervisor = selGroup.supervisor_id_s;
+                                    var subgroup = Admin.Model.Organization.makeGroupDataFromSolrResponse(selGroup);
+                                    subgroup.isInGroupCache = false;
                                     subgroups.push(subgroup);
                                 }
                                 else{
-                                    var group = {}
-                                    group.title = selGroup.name;
-                                    group.type = selGroup.object_sub_type_s;
-                                    group.subgroups = selGroup.child_id_ss;
-                                    group.members = selGroup.member_id_ss;
-                                    group.supervisor = selGroup.supervisor_id_s;
+                                    var group = Admin.Model.Organization.makeGroupDataFromSolrResponse(selGroup);
+                                    group.isInGroupCache = true;
                                     groups.push(group);
                                 }
                             }
@@ -206,29 +181,28 @@ Admin.Service = {
             )
         }
 
-        ,retrieveUsers : function(groupId){
+        ,retrieveUsers : function(){
             var url = App.getContextPath() + Admin.Service.Organization.API_RETRIEVE_USERS;
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                        var allUsers = response.response.docs;
-                        Admin.Controller.modelRetrievedUsers(allUsers);
-
-                    } else {
+                        Admin.Controller.modelRetrievedError(response.errorMsg);
+                    }
+                    else {
                         if (Admin.Model.Organization.validateGroup(response)) {
                             var acmUsersFromSolr = response.response.docs;
-                            var allUsers = [];
+                            var membersForTree = [];
                             for(var i = 0; i < acmUsersFromSolr.length; i++){
                                 var user = {};
                                 user.title = acmUsersFromSolr[i].name;
                                 user.lastname = acmUsersFromSolr[i].last_name_lcs;
                                 user.object_id_s = acmUsersFromSolr[i].object_id_s;
                                 user.isMember = true;
-                                allUsers.push(user);
+                                membersForTree.push(user);
                             }
                             Admin.Model.Organization.cacheAcmUsersFromSolr.put("acmUsersFromSolr", acmUsersFromSolr);
-                            Admin.Model.Organization.cacheAllUsers.put("allUsers", allUsers);
-                            Admin.Controller.modelRetrievedUsers(allUsers);
+                            Admin.Model.Organization.cacheMembersForTree.put("membersForTree", membersForTree);
+                            Admin.Controller.modelRetrievedUsers(membersForTree);
                         }
                     }
                 }
@@ -242,33 +216,20 @@ Admin.Service = {
                     var url;
                     url =  App.getContextPath() + Admin.Service.Organization.API_FACET_SEARCH_;
                     url += searchInfo.q + '&filters="fq="Object Type":USER"';
+                    //url += searchInfo.q ;
 
                     //for test
                     //url = App.getContextPath() + "/resources/facetSearch.json?q=xyz";
 
-                    if (Acm.isArray(searchInfo.filter)) {
-                        if (0 < searchInfo.filter.length) {
-                            for (var i = 0; i < searchInfo.filter.length; i++) {
-                                if (0 == i) {
-                                    url += '&filters="';
-                                } else {
-                                    url += '&';
-                                }
 
-                                url += 'fq="' + Acm.goodValue(searchInfo.filter[i].name) + '":' + Acm.goodValue(searchInfo.filter[i].value);
-
-                                if (searchInfo.filter.length - 1 == i) {
-                                    url += '"';
-                                }
-                            }
-                        }
-                    }
+                    var filter = Admin.Model.Organization.ModalDialog.Members.Facets.makeFilterParam(searchInfo);
+                    url += filter;
 
                     return url;
                 }
                 ,function(data) {
                     var jtData = null
-                    if (Admin.Model.Organization.Facets.validateFacetSearchData(data)) {
+                    if (Admin.Model.Organization.ModalDialog.Members.Facets.validateFacetSearchData(data)) {
                         if (0 == data.responseHeader.status) {
                             //response.start should match to jtParams.jtStartIndex
                             //response.docs.length should be <= jtParams.jtPageSize
@@ -279,14 +240,14 @@ Admin.Service = {
                             var result = data.response;
                             //var page = Acm.goodValue(jtParams.jtStartIndex, 0);
                             //Search.Model.cacheResult.put(page, result);
-                            Admin.Model.Organization.Facets.putCachedResult(searchInfo, result);
+                            Admin.Model.Organization.ModalDialog.Members.Facets.putCachedResult(searchInfo, result);
                             jtData = callbackSuccess(result);
                             Admin.Controller.modelChangedResult(Acm.Service.responseWrapper(data, result));
 
-                            if (!Admin.Model.Organization.Facets.isFacetUpToDate()) {
-                                var facet = Admin.Model.Organization.Facets.makeFacet(data);
-                                Admin.Controller.modeChangedFacet(Acm.Service.responseWrapper(data, facet));
-                                Admin.Model.Organization.Facets.setFacetUpToDate(true);
+                            if (!Admin.Model.Organization.ModalDialog.Members.Facets.isFacetUpToDate()) {
+                                var facet = Admin.Model.Organization.ModalDialog.Members.Facets.makeFacet(data);
+                                Admin.Controller.modelChangedFacet(Acm.Service.responseWrapper(data, facet));
+                                Admin.Model.Organization.ModalDialog.Members.Facets.setFacetUpToDate(true);
                             }
                         } else {
                             if (Acm.isNotEmpty(data.error)) {
@@ -304,8 +265,7 @@ Admin.Service = {
             Acm.Service.asyncPost(
                 function(response) {
                     if (response.hasError) {
-                        //var removedMember = response;
-                        var removedMember = groupMember[0].userId;
+                        Admin.Controller.modelRetrievedError(response.errorMsg);
                     }
                     else{
                         var removedMember = groupMember[0].userId;
@@ -341,9 +301,7 @@ Admin.Service = {
             Acm.Service.asyncDelete(
                 function(response) {
                     if (response.hasError) {
-                        var removedGroup = response;
-                        //Admin.Controller.modelRemovedGroup(removedGroup);
-
+                        Admin.Controller.modelRetrievedError(response.errorMsg);
                     } else {
                         if (Admin.Model.Organization.validateGroup(response)) {
                             var removedGroup = response;
@@ -498,28 +456,28 @@ Admin.Service = {
             )
         }
     }
-    
+
     ,FunctionalAccessControl : {
 
         create: function() {
         }
-    
+
         ,onInitialized: function() {
         }
-        
+
         ,API_RETRIEVE_APPLICATION_ROLES: 			"/api/latest/functionalaccess/roles"
         ,API_RETRIEVE_GROUPS: 						"/api/latest/users/groups/get"
         ,API_RETRIEVE_APPLICATION_ROLES_TO_GROUPS:  "/api/latest/functionalaccess/rolestogroups"
         ,API_SAVE_APPLICATION_ROLES_TO_GROUPS:      "/api/latest/functionalaccess/rolestogroups"
-     
-    	,retrieveApplicationRoles : function() {
+
+        ,retrieveApplicationRoles : function() {
             var url = App.getContextPath() + Admin.Service.FunctionalAccessControl.API_RETRIEVE_APPLICATION_ROLES;
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                    	var errorMsg = "Failed to retrieve application roles:" + response.errorMsg;
-                    	
-                    	Admin.Controller.modelErrorRetrievingFunctionalAccessControlApplicationRoles(errorMsg);
+                        var errorMsg = "Failed to retrieve application roles:" + response.errorMsg;
+
+                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlApplicationRoles(errorMsg);
                     } else {
                         if (Admin.Model.FunctionalAccessControl.validateApplicationRoles(response)) {
                             var roles = response;
@@ -531,19 +489,19 @@ Admin.Service = {
                 ,url
             )
         }
-        
+
         ,retrieveGroups : function() {
             var url = App.getContextPath() + Admin.Service.FunctionalAccessControl.API_RETRIEVE_GROUPS;
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                    	var errorMsg = "Failed to retrieve groups:" + response.errorMsg;
-                    	 
-                    	Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                        var errorMsg = "Failed to retrieve groups:" + response.errorMsg;
+
+                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
                     } else {
                         if (Admin.Model.FunctionalAccessControl.validateGroups(response)) {
                             var groups = response.response.docs;
-                            
+
                             Admin.Model.FunctionalAccessControl.cacheGroups.put(0, groups);
                             Admin.Controller.modelRetrievedFunctionalAccessControlGroups(groups);
                         }
@@ -552,20 +510,20 @@ Admin.Service = {
                 ,url
             )
         }
-        
+
         ,retrieveApplicationRolesToGroups : function() {
             var url = App.getContextPath() + Admin.Service.FunctionalAccessControl.API_RETRIEVE_APPLICATION_ROLES_TO_GROUPS;
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                    	var errorMsg = "Failed to retrieve application roles to groups mapping:" + response.errorMsg;
-                    	
-                    	Admin.Controller.modelErrorRetrievingFunctionalAccessControlApplicationRolesToGroups(errorMsg);
+                        var errorMsg = "Failed to retrieve application roles to groups mapping:" + response.errorMsg;
+
+                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlApplicationRolesToGroups(errorMsg);
                     } else {
                         if (Admin.Model.FunctionalAccessControl.validateApplicationRolesToGroups(response)) {
                             var rolesToGroups = response;
-                            
-                            Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.put(0, rolesToGroups);                            	
+
+                            Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.put(0, rolesToGroups);
                             Admin.Controller.modelRetrievedFunctionalAccessControlApplicationRolesToGroups(rolesToGroups);
                         }
                     }
@@ -573,15 +531,15 @@ Admin.Service = {
                 ,url
             )
         }
-        
+
         ,saveApplicationRolesToGroups : function(applicationRolesToGroups){
             var url = App.getContextPath() + Admin.Service.FunctionalAccessControl.API_SAVE_APPLICATION_ROLES_TO_GROUPS;
             Acm.Service.asyncPost(
                 function(response) {
                     if (response !== true) {
-                    	var errorMsg = "Failed to save application roles to groups mapping.";
-                    	
-                    	Admin.Controller.modelErrorSavingFunctionalAccessControlApplicationRolesToGroups(errorMsg);
+                        var errorMsg = "Failed to save application roles to groups mapping.";
+
+                        Admin.Controller.modelErrorSavingFunctionalAccessControlApplicationRolesToGroups(errorMsg);
                     }
                 }
                 ,url
