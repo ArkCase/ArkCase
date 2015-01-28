@@ -179,7 +179,7 @@
    <field name="payloads" type="payloads" indexed="true" stored="true"/>
 
    <!--ACM filed used for search purposes-->
-   <field name="catch_all" type="text_en" indexed="true" stored="false" multiValued="true"/>
+   <field name="catch_all" type="text_no_html_tags_parseable" indexed="true" stored="false" multiValued="true"/>
 
    <!--
      Some fields such as popularity and manu_exact could be modified to
