@@ -11,8 +11,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -120,26 +118,46 @@ public class AcmGroup implements Serializable, AcmEntity, AcmLdapEntity{
 		
 		if (StringUtils.isEmpty(getType())) 
 		{
-			setType("ADHOC_GROUP");
+			setType(AcmGroupType.ADHOC_GROUP);
 		}
 		
 		if (StringUtils.isEmpty(getStatus())) 
 		{
-			setStatus("ACTIVE");
+			setStatus(AcmGroupStatus.ACTIVE);
 		}
     }
 
     @PreUpdate
     public void beforeUpdate()
     {
-    	if (getModified() == null)
+    	if (getCreated() == null)
+		{
+			setCreated(new Date());
+		}
+		
+		if (getModified() == null)
 		{
 			setModified(new Date());
 		}
-    	
+		
+		if (getCreator() == null)
+		{
+			setCreator("ACM3");
+		}
+		
 		if (getModifier()== null)
 		{
 			setModifier("ACM3");
+		}
+		
+		if (StringUtils.isEmpty(getType())) 
+		{
+			setType(AcmGroupType.ADHOC_GROUP);
+		}
+		
+		if (StringUtils.isEmpty(getStatus())) 
+		{
+			setStatus(AcmGroupStatus.ACTIVE);
 		}
     }
 	
