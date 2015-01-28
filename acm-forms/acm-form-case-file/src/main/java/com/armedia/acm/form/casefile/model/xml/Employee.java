@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.form.casefile.model.frevvoxmlmarshal;
+package com.armedia.acm.form.casefile.model.xml;
 
 import java.util.Date;
 

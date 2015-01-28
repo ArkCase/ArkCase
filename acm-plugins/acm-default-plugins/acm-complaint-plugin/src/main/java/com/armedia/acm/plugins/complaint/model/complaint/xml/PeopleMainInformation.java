@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.plugins.complaint.model.complaint.frevvoxmlmarshal;
+package com.armedia.acm.plugins.complaint.model.complaint.xml;
 
 import javax.xml.bind.annotation.XmlElement;
 

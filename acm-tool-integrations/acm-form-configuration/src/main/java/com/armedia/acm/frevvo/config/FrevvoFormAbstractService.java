@@ -7,7 +7,6 @@ package com.armedia.acm.frevvo.config;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,9 +21,6 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.commons.io.IOUtils;
-import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,15 +71,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		{
 			try{
 				Long id = Long.parseLong(xmlId);
-				EcmFile file = getEcmFileDao().find(id);
-				
-				MuleMessage message = getMuleClient().send("vm://downloadFileFlow.in", file.getEcmFileId(), null);
-				
-				if (null != message && message.getPayload() instanceof ContentStream)
-				{
-					result = getContent((ContentStream) message.getPayload());
-				}
-				
+				result = getEcmFileService().download(id);				
 			}
 			catch(Exception e)
 			{
@@ -195,7 +183,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		return xml;
 	}
 	
-	protected void updateXML(String xml, String formName, Long id)
+	protected void updateXML(String xml, String formName, Long id, Authentication auth)
 	{
 		ObjectAssociation association = getObjectAssociationDao().findFrevvoXMLAssociation(formName.toUpperCase(), id, formName.toLowerCase() + "_xml");
 		
@@ -207,13 +195,34 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			
 			try 
 			{
-				getEcmFileService().update(ecmFile, file, getAuthentication());
+				getEcmFileService().update(ecmFile, file, auth);
 			} 
 			catch (AcmCreateObjectFailedException e) 
 			{
 				LOG.error("Failed to update XML file.", e);
 			}    				
 		}
+	}
+	
+	public void updateXMLAttachment(MultiValueMap<String, MultipartFile> attachments, String formName, Object form) throws Exception
+	{
+		String updatedXmlFile = convertFromObjectToXML(form);
+        if (updatedXmlFile != null && attachments.containsKey("form_" + formName))
+        {
+        	List<MultipartFile> files = attachments.get("form_" + formName);
+        	if (files != null && files.size() == 1)
+        	{
+        		MultipartFile originalXml = files.get(0);
+        		InputStream updatedXmlContent = new ByteArrayInputStream(updatedXmlFile.getBytes());
+        		AcmMultipartFile updatedXml = new AcmMultipartFile(originalXml.getName(), originalXml.getOriginalFilename(), originalXml.getContentType(), originalXml.isEmpty(), originalXml.getSize(), originalXml.getBytes(), updatedXmlContent, false);
+        		
+        		// Remove old XML file
+        		attachments.remove("form_" + formName);
+        		
+        		// Add updated XML file
+        		attachments.add("form_" + formName, updatedXml);
+        	}
+        }
 	}
 	
 	public FrevvoUploadedFiles saveAttachments(
@@ -399,40 +408,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		}
 		
 		return null;
-	}
-	
-	private String getContent(ContentStream contentStream)
-	{
-		String content = "";
-		InputStream inputStream = null;
-		
-		try
-        {
-			inputStream = contentStream.getStream();
-			StringWriter writer = new StringWriter();
-			IOUtils.copy(inputStream, writer);
-			content = writer.toString();
-        } 
-		catch (IOException e) 
-		{
-        	LOG.error("Could not copy input stream to the writer: " + e.getMessage(), e);
-		}
-		finally
-        {
-            if ( inputStream != null )
-            {
-                try
-                {
-                	inputStream.close();
-                }
-                catch (IOException e)
-                {
-                    LOG.error("Could not close CMIS content stream: " + e.getMessage(), e);
-                }
-            }
-        }
-		
-		return content;
 	}
 
     @Override

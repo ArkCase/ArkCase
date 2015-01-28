@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal;
+package com.armedia.acm.plugins.addressable.model.xml;
 
 import java.util.Date;
 
@@ -15,16 +15,16 @@ import com.armedia.acm.plugins.addressable.model.ContactMethod;
  * @author riste.tutureski
  *
  */
-public class GeneralContactMethod extends ContactMethod {
+public class PeopleContactMethod extends ContactMethod {
+	
+	private static final long serialVersionUID = -2743783024031491580L;
 
-	private static final long serialVersionUID = -8234723166918261682L;
-
-	public GeneralContactMethod()
+	public PeopleContactMethod()
 	{
 		
 	}
 	
-	public GeneralContactMethod(ContactMethod contactMethod)
+	public PeopleContactMethod(ContactMethod contactMethod)
 	{
 		setId(contactMethod.getId());
 		setCreated(contactMethod.getCreated());
@@ -33,7 +33,7 @@ public class GeneralContactMethod extends ContactMethod {
 		setValue(contactMethod.getValue());
 	}
 	
-	@XmlElement(name="contactId")
+	@XmlElement(name="peopleDeviceId")
 	@Override
 	public Long getId(){
         return super.getId();
@@ -44,7 +44,7 @@ public class GeneralContactMethod extends ContactMethod {
         super.setId(id);
     }
 	
-	@XmlElement(name="contactDate")
+	@XmlElement(name="peopleDeviceDate")
 	@XmlJavaTypeAdapter(value=DateFrevvoAdapter.class)
 	@Override
 	public Date getCreated() {
@@ -56,18 +56,18 @@ public class GeneralContactMethod extends ContactMethod {
 		super.setCreated(created);
 	}
 
-	@XmlElement(name="contactAddedBy")
+	@XmlElement(name="peopleDeviceAddedBy")
 	@Override
 	public String getCreator() {
 		return super.getCreator();
 	}
-
+	
 	@Override
 	public void setCreator(String creator) {
 		super.setCreator(creator);
 	}
-	
-	@XmlElement(name="contactType")
+
+	@XmlElement(name="peopleDeviceType")
 	@Override
 	public String getType() {
 		return super.getType();
@@ -78,7 +78,7 @@ public class GeneralContactMethod extends ContactMethod {
 		super.setType(type);
 	}
 
-	@XmlElement(name="contactValue")
+	@XmlElement(name="peopleDeviceValue")
 	@Override
 	public String getValue() {
 		return super.getValue();
@@ -92,7 +92,7 @@ public class GeneralContactMethod extends ContactMethod {
 	@Override
 	public ContactMethod returnBase() {
 		ContactMethod base = new ContactMethod();
-		
+
 		base.setId(getId());
 		base.setCreated(getCreated());
 		base.setCreator(getCreator());

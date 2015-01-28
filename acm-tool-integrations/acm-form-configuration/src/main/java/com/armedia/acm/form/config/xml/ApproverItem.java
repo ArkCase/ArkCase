@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.form.config.frevvoxmlmarshal;
+package com.armedia.acm.form.config.xml;
 
 import javax.xml.bind.annotation.XmlElement;
 

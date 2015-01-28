@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.armedia.acm.form.casefile.model.frevvoxmlmarshal.Employee;
+import com.armedia.acm.form.casefile.model.xml.Employee;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
 
@@ -42,6 +42,7 @@ public class CaseFileForm {
 		this.id = id;
 	}
 
+	@XmlTransient
 	public String getNumber() 
 	{
 		return number;
@@ -74,6 +75,7 @@ public class CaseFileForm {
 		this.type = type;
 	}
 
+	@XmlTransient
 	public List<String> getTypes() 
 	{
 		return types;

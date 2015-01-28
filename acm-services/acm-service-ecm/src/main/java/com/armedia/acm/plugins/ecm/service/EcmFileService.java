@@ -1,7 +1,10 @@
 package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+
+import org.mule.api.MuleException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
@@ -98,4 +101,12 @@ public interface EcmFileService
     		EcmFile ecmFile,
             MultipartFile file,
             Authentication authentication) throws AcmCreateObjectFailedException;
+    
+    /**
+     * 
+     * @param id - id of EcmFile
+     * @return
+     * @throws AcmObjectNotFoundException
+     */
+    String download(Long id) throws MuleException;
 }

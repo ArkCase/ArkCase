@@ -6,12 +6,13 @@
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
 
     <bean id="ecmFileTransaction" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileTransactionImpl">
-        <property name="muleClient" ref="muleClient"/>
+        <lookup-method name="getMuleClient" bean="muleClient"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="ecmFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl">
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
     <bean id="documentToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.DocumentToSolrTrasnformer">

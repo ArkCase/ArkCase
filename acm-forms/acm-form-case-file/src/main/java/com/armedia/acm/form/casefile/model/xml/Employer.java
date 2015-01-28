@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.form.casefile.model.frevvoxmlmarshal;
+package com.armedia.acm.form.casefile.model.xml;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -11,9 +11,9 @@ import com.armedia.acm.form.casefile.model.Subject;
  * @author riste.tutureski
  *
  */
-public class EmployerReference extends Subject{
+public class Employer extends Subject {
 
-	@XmlElement(name="employerReferenceFirstName")
+	@XmlElement(name="employerFirstName")
 	@Override
 	public String getFirstName() {
 		return super.getFirstName();
@@ -24,7 +24,7 @@ public class EmployerReference extends Subject{
 		super.setFirstName(firstName);
 	}
 
-	@XmlElement(name="employerReferenceLastName")
+	@XmlElement(name="employerLastName")
 	@Override
 	public String getLastName() {
 		return super.getLastName();
@@ -35,7 +35,7 @@ public class EmployerReference extends Subject{
 		super.setLastName(lastName);
 	}
 
-	@XmlElement(name="employerReferencePhoneNumber")
+	@XmlElement(name="employerPhoneNumber")
 	@Override
 	public String getPhoneNumber() {
 		return super.getPhoneNumber();
