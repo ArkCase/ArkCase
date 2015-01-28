@@ -138,14 +138,20 @@ Admin.Model = Admin.Model || {
         ,onModelRetrievedGroups: function() {
             Admin.Service.Organization.retrieveUsers();
         }
-        ,validateGroup: function(group) {
-            if (Acm.isEmpty(group)) {
+        ,validateGroup: function(response) {
+            if (Acm.isEmpty(response.response.docs)) {
                 return false;
             }
             //add more checks in the future
             return true;
         }
-
+        ,validateUsers: function(response) {
+            if (Acm.isEmpty(response.members)) {
+                return false;
+            }
+            //add more checks in the future
+            return true;
+        }
         ,Tree:{
             create: function() {
             }
@@ -326,6 +332,9 @@ Admin.Model = Admin.Model || {
                                             }
                                         }
                                     }
+                                }
+                                if (0 >= f.values.length) {
+                                    si.filter.splice(i, 1);
                                 }
                             }
                         }
