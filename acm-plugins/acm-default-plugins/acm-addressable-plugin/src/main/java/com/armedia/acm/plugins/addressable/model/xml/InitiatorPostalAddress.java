@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal;
+package com.armedia.acm.plugins.addressable.model.xml;
 
 import java.util.Date;
 
@@ -15,16 +15,16 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
  * @author riste.tutureski
  *
  */
-public class PeoplePostalAddress extends PostalAddress{
+public class InitiatorPostalAddress extends PostalAddress{
 
-	private static final long serialVersionUID = -6951542994453465548L;
+	private static final long serialVersionUID = -656234510581648369L;
 
-	public PeoplePostalAddress()
+	public InitiatorPostalAddress()
 	{
 		
 	}
 	
-	public PeoplePostalAddress(PostalAddress postalAddress)
+	public InitiatorPostalAddress(PostalAddress postalAddress)
 	{
 		setId(postalAddress.getId());
 		setCreated(postalAddress.getCreated());
@@ -36,7 +36,7 @@ public class PeoplePostalAddress extends PostalAddress{
 		setZip(postalAddress.getZip());
 	}
 	
-	@XmlElement(name="peopleLocationId")
+	@XmlElement(name="initiatorLocationId")
     public Long getId() {
         return super.getId();
     }
@@ -46,7 +46,7 @@ public class PeoplePostalAddress extends PostalAddress{
         super.setId(id);
     }
 	
-	@XmlElement(name="peopleLocationDate")
+	@XmlElement(name="initiatorLocationDate")
 	@XmlJavaTypeAdapter(value=DateFrevvoAdapter.class)
 	@Override
 	public Date getCreated() {
@@ -58,7 +58,7 @@ public class PeoplePostalAddress extends PostalAddress{
 		super.setCreated(created);
 	}
 
-	@XmlElement(name="peopleLocationAddedBy")
+	@XmlElement(name="initiatorLocationAddedBy")
 	@Override
 	public String getCreator() {
 		return super.getCreator();
@@ -69,18 +69,18 @@ public class PeoplePostalAddress extends PostalAddress{
 		super.setCreator(creator);
 	}
 
-	@XmlElement(name="peopleLocationType")
+	@XmlElement(name="initiatorLocationType")
 	@Override
 	public String getType() {
 		return super.getType();
 	}
-	
+
 	@Override
 	public void setType(String type) {
 		super.setType(type);
 	}
-
-	@XmlElement(name="peopleLocationAddress")
+	
+	@XmlElement(name="initiatorLocationAddress")
 	@Override
 	public String getStreetAddress() {
 		return super.getStreetAddress();
@@ -91,7 +91,7 @@ public class PeoplePostalAddress extends PostalAddress{
 		super.setStreetAddress(streetAddress);
 	}
 
-	@XmlElement(name="peopleLocationCity")
+	@XmlElement(name="initiatorLocationCity")
 	@Override
 	public String getCity() {
 		return super.getCity();
@@ -102,18 +102,18 @@ public class PeoplePostalAddress extends PostalAddress{
 		super.setCity(city);
 	}
 
-	@XmlElement(name="peopleLocationState")
+	@XmlElement(name="initiatorLocationState")
 	@Override
 	public String getState() {
 		return super.getState();
 	}
-	
+
 	@Override
 	public void setState(String state) {
 		super.setState(state);
 	}
-
-	@XmlElement(name="peopleLocationZip")
+	
+	@XmlElement(name="initiatorLocationZip")
 	@Override
 	public String getZip() {
 		return super.getZip();
@@ -139,5 +139,5 @@ public class PeoplePostalAddress extends PostalAddress{
 		
 		return base;
 	}
-	
+
 }

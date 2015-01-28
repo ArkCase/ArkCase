@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.form.casefile.model.frevvoxmlmarshal;
+package com.armedia.acm.form.casefile.model.xml;
 
 import javax.xml.bind.annotation.XmlElement;
 

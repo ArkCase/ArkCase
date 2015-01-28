@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.plugins.complaint.model.complaint.frevvoxmlmarshal;
+package com.armedia.acm.plugins.complaint.model.complaint.xml;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -11,9 +11,9 @@ import com.armedia.acm.plugins.complaint.model.complaint.SearchResult;
  * @author riste.tutureski
  *
  */
-public class PeopleSearchResult extends SearchResult {
+public class InitiatorSearchResult extends SearchResult {
 
-	@XmlElement(name="existingPeopleResult")
+	@XmlElement(name="existingInitiatorResult")
 	@Override
 	public Long getId() {
 		return super.getId();

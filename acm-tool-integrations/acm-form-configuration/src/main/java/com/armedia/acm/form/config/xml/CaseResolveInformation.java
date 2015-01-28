@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.form.config.frevvoxmlmarshal;
+package com.armedia.acm.form.config.xml;
 
 import java.util.Date;
 
@@ -15,9 +15,9 @@ import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
  * @author riste.tutureski
  *
  */
-public class ComplaintResolveInformation extends ResolveInformation {
+public class CaseResolveInformation extends ResolveInformation {
 
-	@XmlElement(name="complaintId")
+	@XmlElement(name="caseId")
 	@Override
 	public Long getId() {
 		return super.getId();
@@ -28,7 +28,7 @@ public class ComplaintResolveInformation extends ResolveInformation {
 		super.setId(id);
 	}
 
-	@XmlElement(name="complaintNumber")
+	@XmlElement(name="caseNumber")
 	@Override
 	public String getNumber() {
 		return super.getNumber();
@@ -39,7 +39,7 @@ public class ComplaintResolveInformation extends ResolveInformation {
 		super.setNumber(number);
 	}
 
-	@XmlElement(name="closeDate")
+	@XmlElement(name="changeDate")
 	@XmlJavaTypeAdapter(value=DateFrevvoAdapter.class)
 	@Override
 	public Date getDate() {
@@ -51,7 +51,7 @@ public class ComplaintResolveInformation extends ResolveInformation {
 		super.setDate(date);
 	}
 
-	@XmlElement(name="disposition")
+	@XmlElement(name="status")
 	@Override
 	public String getOption() {
 		return super.getOption();
