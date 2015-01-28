@@ -215,7 +215,7 @@ Admin.Service = {
                 ,function() {
                     var url;
                     url =  App.getContextPath() + Admin.Service.Organization.API_FACET_SEARCH_;
-                    url += searchInfo.q + '&filters="fq="Object Type":USER"';
+                    url += searchInfo.q + '&filters=fq="Object Type":USER';
                     //url += searchInfo.q ;
 
                     //for test
