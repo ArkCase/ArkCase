@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -122,23 +123,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         complaint = saveComplaint(complaint);
 
         // Update Frevvo XML (with object ids) after saving the object 
-        String updatedXmlFile = convertFromObjectToXML(complaint);
-        if (updatedXmlFile != null && attachments.containsKey("form_" + FrevvoFormName.COMPLAINT))
-        {
-        	List<MultipartFile> files = attachments.get("form_" + FrevvoFormName.COMPLAINT);
-        	if (files != null && files.size() == 1)
-        	{
-        		MultipartFile originalXml = files.get(0);
-        		InputStream updatedXmlContent = new ByteArrayInputStream(updatedXmlFile.getBytes());
-        		AcmMultipartFile updatedXml = new AcmMultipartFile(originalXml.getName(), originalXml.getOriginalFilename(), originalXml.getContentType(), originalXml.isEmpty(), originalXml.getSize(), originalXml.getBytes(), updatedXmlContent, false);
-        		
-        		// Remove old XML file
-        		attachments.remove("form_" + FrevvoFormName.COMPLAINT);
-        		
-        		// Add updated XML file
-        		attachments.add("form_" + FrevvoFormName.COMPLAINT, updatedXml);
-        	}
-        }
+        updateXMLAttachment(attachments, FrevvoFormName.COMPLAINT, complaint);
         
 		saveAttachments(attachments, complaint.getCmisFolderId(), FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), complaint.getComplaintNumber());
 
@@ -162,7 +147,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         return complaint;
     }
     
-    public void updateXML(Complaint complaint)
+    public void updateXML(Complaint complaint, Authentication auth)
     {
     	if (complaint != null)
     	{
@@ -171,7 +156,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     		if (form != null)
     		{
     			String xml = convertFromObjectToXML(form);
-    			updateXML(xml, FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId());		
+    			updateXML(xml, FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), auth);		
     		}
     	}
     }
