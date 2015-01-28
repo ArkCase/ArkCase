@@ -4,12 +4,15 @@ package com.armedia.acm.plugins.complaint.web.api;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
+import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +50,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
     private SaveComplaintTransaction mockSaveTransaction;
     private ComplaintEventPublisher mockEventPublisher;
     private Authentication mockAuthentication;
+    private ComplaintService mockComplaintService;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -62,9 +66,11 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
         mockSaveTransaction = createMock(SaveComplaintTransaction.class);
         mockEventPublisher = createMock(ComplaintEventPublisher.class);
         mockAuthentication = createMock(Authentication.class);
+        mockComplaintService = createMock(ComplaintService.class);
 
         unit.setComplaintTransaction(mockSaveTransaction);
         unit.setEventPublisher(mockEventPublisher);
+        unit.setComplaintService(mockComplaintService);
     }
 
     @Test
@@ -103,6 +109,10 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         Capture<Complaint> found = new Capture<>();
 
+        mockComplaintService.setAuthentication(mockAuthentication);
+        expectLastCall().times(1);
+        mockComplaintService.updateXML(capture(found));
+        expectLastCall().times(1);
         expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication))).andReturn(saved);
         mockEventPublisher.publishComplaintEvent(capture(found), eq(mockAuthentication), eq(false), eq(true));
 

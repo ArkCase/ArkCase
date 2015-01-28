@@ -6,6 +6,7 @@
     <bean id="createComplaintAPIController" class="com.armedia.acm.plugins.complaint.web.api.CreateComplaintAPIController">
         <property name="complaintTransaction" ref="saveComplaintTransaction"/>
         <property name="eventPublisher" ref="complaintEventPublisher"/>
+        <property name="complaintService" ref="complaintService"></property>
     </bean>
 
     <bean id="getComplaintTypesAPIController" class="com.armedia.acm.plugins.complaint.web.api.GetComplaintListOfValuesAPIController">
