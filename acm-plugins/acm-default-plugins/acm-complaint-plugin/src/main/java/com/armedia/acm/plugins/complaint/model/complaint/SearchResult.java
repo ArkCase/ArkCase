@@ -5,25 +5,15 @@ package com.armedia.acm.plugins.complaint.model.complaint;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * @author riste.tutureski
  *
  */
-@XmlAccessorType(XmlAccessType.FIELD)
 public class SearchResult {
 
 	private List<String> result;
-	@XmlElements({
-		@XmlElement(name="id"),
-		@XmlElement(name="existingInitiatorResult"),
-		@XmlElement(name="existingPeopleResult")
-		
-	})
 	private Long id;
 	private Long page;
 	private Long size;
@@ -32,6 +22,7 @@ public class SearchResult {
 	/**
 	 * @return the result
 	 */
+	@XmlTransient
 	public List<String> getResult() {
 		return result;
 	}
@@ -46,6 +37,7 @@ public class SearchResult {
 	/**
 	 * @return the id
 	 */
+	@XmlTransient
 	public Long getId() {
 		return id;
 	}
@@ -60,6 +52,7 @@ public class SearchResult {
 	/**
 	 * @return the page
 	 */
+	@XmlTransient
 	public Long getPage() {
 		return page;
 	}
@@ -74,6 +67,7 @@ public class SearchResult {
 	/**
 	 * @return the size
 	 */
+	@XmlTransient
 	public Long getSize() {
 		return size;
 	}
@@ -88,6 +82,7 @@ public class SearchResult {
 	/**
 	 * @return the information
 	 */
+	@XmlTransient
 	public String getInformation() {
 		return information;
 	}

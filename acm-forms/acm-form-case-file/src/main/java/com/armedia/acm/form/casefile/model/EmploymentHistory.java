@@ -5,56 +5,40 @@ package com.armedia.acm.form.casefile.model;
 
 import java.util.Date;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.armedia.acm.form.casefile.model.frevvoxmlmarshal.EmployerReference;
+import com.armedia.acm.form.casefile.model.frevvoxmlmarshal.EmployerSupervisor;
+import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.frevvoxmlmarshal.GeneralOrganization;
 
 /**
  * @author riste.tutureski
  *
  */
-@XmlAccessorType(XmlAccessType.FIELD)
 public class EmploymentHistory {
 
-	@XmlElements({
-		@XmlElement(name="startDate"),
-		@XmlElement(name="employmentStartDate")
-	})
+	private Long id;
 	private Date startDate;
-	
-	@XmlElements({
-		@XmlElement(name="endDate"),
-		@XmlElement(name="employmentEndDate")
-	})
 	private Date endDate;
-	
-	@XmlElements({
-		@XmlElement(name="type"),
-		@XmlElement(name="employerType")
-	})
 	private String type;
-	
-	@XmlElements({
-		@XmlElement(name="organization"),
-		@XmlElement(name="employmentOrganizationSection")
-	})
     private Organization organization;
-	
-	@XmlElements({
-		@XmlElement(name="supervisor"),
-		@XmlElement(name="employmentSupervisorSection")
-	})
 	private Subject supervisor;
-	
-	@XmlElements({
-		@XmlElement(name="reference"),
-		@XmlElement(name="employmentReferenceSection")
-	})
 	private Subject reference;
 	
+	@XmlElement(name="employmentId")
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@XmlElement(name="employmentStartDate")
+	@XmlJavaTypeAdapter(value=DateFrevvoAdapter.class)
 	public Date getStartDate() 
 	{
 		return startDate;
@@ -65,6 +49,8 @@ public class EmploymentHistory {
 		this.startDate = startDate;
 	}
 
+	@XmlElement(name="employmentEndDate")
+	@XmlJavaTypeAdapter(value=DateFrevvoAdapter.class)
 	public Date getEndDate() {
 		return endDate;
 	}
@@ -73,6 +59,7 @@ public class EmploymentHistory {
 		this.endDate = endDate;
 	}
 	
+	@XmlElement(name="employerType")
 	public String getType() {
 		return type;
 	}
@@ -81,6 +68,7 @@ public class EmploymentHistory {
 		this.type = type;
 	}
 
+	@XmlElement(name="employmentOrganizationSection", type=GeneralOrganization.class)
 	public Organization getOrganization() {
 		return organization;
 	}
@@ -89,6 +77,7 @@ public class EmploymentHistory {
 		this.organization = organization;
 	}
 
+	@XmlElement(name="employmentSupervisorSection", type=EmployerSupervisor.class)
 	public Subject getSupervisor() 
 	{
 		return supervisor;
@@ -99,6 +88,7 @@ public class EmploymentHistory {
 		this.supervisor = supervisor;
 	}
 	
+	@XmlElement(name="employmentReferenceSection", type=EmployerReference.class)
 	public Subject getReference() 
 	{
 		return reference;

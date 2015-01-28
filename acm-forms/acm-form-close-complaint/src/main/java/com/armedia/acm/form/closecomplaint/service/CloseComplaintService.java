@@ -3,23 +3,17 @@
  */
 package com.armedia.acm.form.closecomplaint.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintFormEvent;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,7 +31,6 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 import com.google.gson.Gson;
@@ -206,7 +199,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		closeComplaint.setApproverOptions(approverOptions);
 		closeComplaint.setReferExternal(referExternal);
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(closeComplaint);
 		
 		JSONObject json = new JSONObject(jsonString);
@@ -237,7 +230,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		
 		closeComplaint.setApproverOptions(approverOptions);
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(closeComplaint);
 		
 		JSONObject json = new JSONObject(jsonString);
@@ -266,7 +259,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		
 		closeComplaint.setExistingCase(existingCase);
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(closeComplaint);
 		
 		JSONObject json = new JSONObject(jsonString);
