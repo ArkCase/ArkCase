@@ -52,7 +52,7 @@ public class GetGroupAPIController {
 			LOG.info("Taking all groups and subgroups from Solr.");
 		}
 		
-		String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED";
+		String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 		
 		if ( LOG.isDebugEnabled() )
         {
@@ -95,7 +95,7 @@ public class GetGroupAPIController {
 			LOG.info("Taking group from Solr with ID = " + groupId);
 		}
 		
-		String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED";
+		String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 		
 		if ( LOG.isDebugEnabled() )
         {
@@ -182,7 +182,7 @@ public class GetGroupAPIController {
 			LOG.info("Taking all top level groups from Solr.");
 		}
 		
-		String query = "object_type_s:GROUP AND -parent_id_s:* AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
+		String query = "object_type_s:GROUP AND -parent_id_s:* AND -status_s:COMPLETE AND -status_s:DELETE AND -status_lcs:INACTIVE AND -status_s:CLOSED";
 		
 		if ( LOG.isDebugEnabled() )
         {
@@ -213,7 +213,7 @@ public class GetGroupAPIController {
 	
 	private String getGroup(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
 	{
-		String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED";
+		String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 		
 		if ( LOG.isDebugEnabled() )
         {
@@ -259,7 +259,7 @@ public class GetGroupAPIController {
 				}
 			}
 			
-			query += " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED";
+			query += " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 			
 			if ( LOG.isDebugEnabled() )
 	        {
