@@ -136,7 +136,7 @@ Search.Model = {
                 if (0 == i) {
                     param= '&filters=';
                 } else {
-                    param += '&';
+                    param += '%26';
                 }
 
                 if (!Acm.isArrayEmpty(si.filter[i].values)) {
