@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/complaint", "/api/latest/plugin/complaint" })
 public class GetComplaintListOfValuesAPIController
 {
-    private ListOfValuesService listOfValuesService;
 
-    private LookupTableDescriptor priorityDescriptor;
-    private LookupTableDescriptor typesDescriptor;
+    private Properties complaintProperties;
 
     @RequestMapping(
             value = "priorities",
@@ -27,15 +27,11 @@ public class GetComplaintListOfValuesAPIController
             produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
     public @ResponseBody List<String> getComplaintPriorities() throws AcmListObjectsFailedException
     {
-        try
-        {
-            List<String> priorities = getListOfValuesService().lookupListOfStringValues(getPriorityDescriptor());
-            return priorities;
-        }
-        catch (DataAccessException e)
-        {
-            throw new AcmListObjectsFailedException("complaint priorities", e.getMessage(), e);
-        }
+        String commaSeparated = getComplaintProperties().getProperty("complaint.priorities");
+
+        String[] retval = commaSeparated.split(",");
+
+        return Arrays.asList(retval);
     }
 
     @RequestMapping(
@@ -44,45 +40,22 @@ public class GetComplaintListOfValuesAPIController
             produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody List<String> getComplaintTypes() throws AcmListObjectsFailedException
     {
-        try
-        {
-            List<String> types = getListOfValuesService().lookupListOfStringValues(getTypesDescriptor());
-            return types;
-        }
-        catch (DataAccessException e)
-        {
-            throw new AcmListObjectsFailedException("complaint types", e.getMessage(), e);
-        }
+
+        String commaSeparated = getComplaintProperties().getProperty("complaint.complaint-types");
+
+        String[] retval = commaSeparated.split(",");
+
+        return Arrays.asList(retval);
+
     }
 
-
-    public ListOfValuesService getListOfValuesService()
+    public Properties getComplaintProperties()
     {
-        return listOfValuesService;
+        return complaintProperties;
     }
 
-    public void setListOfValuesService(ListOfValuesService listOfValuesService)
+    public void setComplaintProperties(Properties complaintProperties)
     {
-        this.listOfValuesService = listOfValuesService;
-    }
-
-    public LookupTableDescriptor getPriorityDescriptor()
-    {
-        return priorityDescriptor;
-    }
-
-    public void setPriorityDescriptor(LookupTableDescriptor priorityDescriptor)
-    {
-        this.priorityDescriptor = priorityDescriptor;
-    }
-
-    public LookupTableDescriptor getTypesDescriptor()
-    {
-        return typesDescriptor;
-    }
-
-    public void setTypesDescriptor(LookupTableDescriptor typesDescriptor)
-    {
-        this.typesDescriptor = typesDescriptor;
+        this.complaintProperties = complaintProperties;
     }
 }
