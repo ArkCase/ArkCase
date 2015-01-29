@@ -415,7 +415,10 @@ TaskList.Callback = {
     
     ,onWorkflowHistoryRetrieved : function(Callback, response) {
         if (response.hasError) {
-            Acm.Dialog.error("Failed to retrieve workflow history.");
+            //ignore all warnings for now
+
+            //Acm.Dialog.error("Failed to retrieve workflow history.");
+
         } else {
         	/*var task = TaskList.getTask();
         	task.workflowHistory = response;

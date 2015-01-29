@@ -8,11 +8,11 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import com.armedia.acm.form.casefile.model.frevvoxmlmarshal.EmployerReference;
-import com.armedia.acm.form.casefile.model.frevvoxmlmarshal.EmployerSupervisor;
+import com.armedia.acm.form.casefile.model.xml.EmployerReference;
+import com.armedia.acm.form.casefile.model.xml.EmployerSupervisor;
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
 import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.plugins.person.model.frevvoxmlmarshal.GeneralOrganization;
+import com.armedia.acm.plugins.person.model.xml.GeneralOrganization;
 
 /**
  * @author riste.tutureski

@@ -143,6 +143,7 @@ public class FrevvoFormServiceFactory {
             service.setPersonIdentificationDao(frevvoFormController.getPersonIdentificationDao());
             service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
             service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
+            service.setCaseFileFactory(frevvoFormController.getCaseFileFactory());
             
             return service;
 		}
