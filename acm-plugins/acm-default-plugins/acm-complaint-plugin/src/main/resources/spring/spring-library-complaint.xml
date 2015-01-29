@@ -28,6 +28,8 @@
                 <prop key="complaint.workflow.trigger.eventName">com.armedia.acm.complaint.submittedForReview</prop>
                 <prop key="complaint.workflow.activiti.inApproval.stateName">IN APPROVAL</prop>
                 <prop key="complaint.workflow.activiti.approved.stateName">ACTIVE</prop>
+                <prop key="complaint.complaint-types">Agricultural,Arson,Better Business Dispute,Domestic Dispute,Government,Local,Pollution</prop>
+                <prop key="complaint.priorities">Low,Medium,High,Expedite</prop>
             </props>
         </property>
     </bean>
