@@ -61,7 +61,7 @@ Search.View = {
 
     ,Facet: {
         create: function() {
-            this.$divFacet = $("#divFacet");
+            this.$divFacet = $(".facets");
 
             Acm.Dispatcher.addEventListener(Search.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
         }
@@ -74,8 +74,8 @@ Search.View = {
             $checked.each(function(){
                 var s = {};
                 s.value = $(this).val();
-                s.name = $(this).parent().attr("name");
-                s.type = $(this).parent().parent().attr("name");
+                s.name = $(this).parent().parent().attr("name");
+                s.type = $(this).parent().parent().parent().attr("name");
                 selected.push(s);
             });
 
@@ -101,6 +101,85 @@ Search.View = {
             var si = Search.Model.getSearchInfo();
 
             if (Search.Model.validateSearchFacet(facet)) {
+
+                if (0 < Search.Model.getCountFacetFields(facet)){
+                    html += "<div name='facet_fields'>";
+                    for(var i = 0; i < facet.facet_fields.length; i++) {
+                        if (0 < Acm.goodValue(facet.facet_fields[i].count, 0)) {
+                            if (Acm.isArray(facet.facet_fields[i].values)) {
+                                var display = this._getFacetDisplay(facet.facet_fields[i].label, facet.facet_fields[i].key);
+                                html += "<h6>" + display + "</h6>";
+                                html += "<div class='list-group auto' name='" + display + "'>";
+                                for (var j = 0; j < facet.facet_fields[i].values.length; j++) {
+                                    if (0 < Acm.goodValue(facet.facet_fields[i].values[j].count, 0)) {
+                                        html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name) + "'";
+                                        if (Search.Model.findFilter(si, display, Acm.goodValue(facet.facet_fields[i].values[j].name))) {
+                                            html += " checked";
+                                        }
+                                        html += " /><span class='badge bg-info'>" + facet.facet_fields[i].values[j].count
+                                            + "</span>" + Acm.goodValue(facet.facet_fields[i].values[j].name)
+                                            + "</label>";
+                                    }
+                                }
+                                html += "</div>";
+                            }
+                        }
+                    }
+                    html += "</div>";
+                }
+
+                if (0 < Search.Model.getCountFacetQueries(facet)){
+                    html += "<div name='facet_queries'>";
+                    for(var i = 0; i < facet.facet_queries.length; i++) {
+                        if (0 < Acm.goodValue(facet.facet_queries[i].count, 0)) {
+                            if (Acm.isArray(facet.facet_queries[i].values)) {
+                                var display = this._getFacetDisplay(facet.facet_queries[i].label, facet.facet_queries[i].key);
+                                html += "<h6>" + display + "</h6>";
+                                html += "<div class='list-group auto' name='" + display + "'>";
+                                for (var j = 0; j < facet.facet_queries[i].values.length; j++) {
+                                    if (0 < Acm.goodValue(facet.facet_queries[i].values[j].count, 0)) {
+                                        html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name) + "'";
+                                        if (Search.Model.findFilter(si, display, Acm.goodValue(facet.facet_queries[i].values[j].name))) {
+                                            html += " checked";
+                                        }
+                                        html += " /><span class='badge bg-info'>" + facet.facet_queries[i].values[j].count
+                                            + "</span>" + Acm.goodValue(facet.facet_queries[i].values[j].name)
+                                            + "</label>";
+                                    }
+                                }
+                                html += "</div>";
+                            }
+                        }
+                    }
+                    html += "</div>";
+                }
+
+                if (0 < Search.Model.getCountFacetDates(facet)){
+                    html += "<div name='facet_dates'>";
+                    for(var i = 0; i < facet.facet_dates.length; i++) {
+                        if (0 < Acm.goodValue(facet.facet_dates[i].count, 0)) {
+                            if (Acm.isArray(facet.facet_dates[i].values)) {
+                                var display = this._getFacetDisplay(facet.facet_dates[i].label, facet.facet_dates[i].key);
+                                html += "<h6>" + display + "</h6>";
+                                html += "<div class='list-group auto' name='" + display + "'>";
+                                for (var j = 0; j < facet.facet_dates[i].values.length; j++) {
+                                    if (0 < Acm.goodValue(facet.facet_dates[i].values[j].count, 0)) {
+                                        html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name) + "'";
+                                        if (Search.Model.findFilter(si, display, Acm.goodValue(facet.facet_dates[i].values[j].name))) {
+                                            html += " checked";
+                                        }
+                                        html += " /><span class='badge bg-info'>" + facet.facet_dates[i].values[j].count
+                                            + "</span>" + Acm.goodValue(facet.facet_dates[i].values[j].name)
+                                            + "</label>";
+                                    }
+                                }
+                                html += "</div>";
+                            }
+                        }
+                    }
+                    html += "</div>";
+                }
+/*
                 if (0 < Search.Model.getCountFacetFields(facet)){
                     html += "<div name='facet_fields'>";
                     for(var i = 0; i < facet.facet_fields.length; i++) {
@@ -177,6 +256,7 @@ Search.View = {
                     }
                     html += "</div>";
                 }
+*/
             }
 
             this.setHtmlDivFacet(html);
@@ -218,8 +298,8 @@ Search.View = {
                     Record.name    = Acm.goodValue(result.docs[i].name);
                     Record.type    = Acm.goodValue(result.docs[i].object_type_s);
                     Record.title   = Acm.goodValue(result.docs[i].title_parseable);
-                    Record.owner   = Acm.goodValue(result.docs[i].owner_s);
-                    Record.created = Acm.goodValue(result.docs[i].create_tdt);
+                    Record.owner   = Acm.goodValue(result.docs[i].assignee_full_name_lcs); //owner_s
+                    Record.created = Acm.goodValue(result.docs[i].modified_date_tdt); //create_tdt
                     jtData.Records.push(Record);
                 }
 
@@ -321,12 +401,12 @@ Search.View = {
                             ,width: '30%'
                         }
                         ,owner: {
-                            title: 'Owner'
+                            title: 'Assignee'
                             ,width: '15%'
                             ,sorting: false
                         }
                         ,created: {
-                            title: 'Created'
+                            title: 'Modified'
                             ,type: 'textarea'
                             ,width: '20%'
                             ,sorting: false

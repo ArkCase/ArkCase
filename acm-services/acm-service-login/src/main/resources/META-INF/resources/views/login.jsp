@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <%@include file="/WEB-INF/tagf/global.tagf" %>
-    <title><spring:message code="login.page.title" text="ACM | Armedia Case Management" /></title>
+    <title><spring:message code="login.page.title" text="ACM | ArkCase" /></title>
 </head>
 <body>
     <section id="content" class="m-t-lg wrapper-md animated fadeInUp">
