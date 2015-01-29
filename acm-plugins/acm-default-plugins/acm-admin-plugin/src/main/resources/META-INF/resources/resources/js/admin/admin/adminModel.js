@@ -138,14 +138,24 @@ Admin.Model = Admin.Model || {
         ,onModelRetrievedGroups: function() {
             Admin.Service.Organization.retrieveUsers();
         }
-        ,validateGroup: function(response) {
-            if (Acm.isEmpty(response.response.docs)) {
+        ,validateSolrResponse: function(response) {
+            if (!Acm.Validator.validateSolrData(response)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateGroup: function(response){
+            if (Acm.isEmpty(response)) {
                 return false;
             }
             //add more checks in the future
             return true;
         }
+
         ,validateUsers: function(response) {
+            if (Acm.isEmpty(response)) {
+                return false;
+            }
             if (Acm.isEmpty(response.members)) {
                 return false;
             }
