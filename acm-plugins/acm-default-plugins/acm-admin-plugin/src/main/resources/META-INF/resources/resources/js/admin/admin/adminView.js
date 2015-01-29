@@ -172,9 +172,16 @@ Admin.View = Admin.View || {
                 }
                 ,Query: {
                     create: function() {
-                        this.$txtFindMembers = $("#findMember");
-                        this.$modalBtnFindMembers = $("#btnFindMembers");
-                        this.$modalBtnFindMembers.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Query.onClickBtnFindMembers(e, this);});
+                        this.$edtFindMembers = $("#findMember");
+                        this.$btnSearch = this.$edtFindMembers.next().find("button");
+                        this.$btnSearch.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Query.onClickBtnFindMembers(e, this);});
+                        this.$edtFindMembers.keyup(function(event){
+                            if(13 == event.keyCode){
+                                Admin.View.Organization.ModalDialog.Members.Query.$btnSearch.click();
+                            }
+                        });
+                        /*this.$modalBtnFindMembers = $("#btnFindMembers");
+                        this.$modalBtnFindMembers.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Query.onClickBtnFindMembers(e, this);});*/
                     }
                     ,onInitialized: function() {
                     }
@@ -185,7 +192,7 @@ Admin.View = Admin.View || {
                         Admin.Controller.viewSubmittedQuery(term);
                     }
                     ,getTextFindMember: function(){
-                        return Acm.Object.getValue(this.$txtFindMembers);
+                        return Acm.Object.getValue(this.$edtFindMembers);
                     }
 
                 }

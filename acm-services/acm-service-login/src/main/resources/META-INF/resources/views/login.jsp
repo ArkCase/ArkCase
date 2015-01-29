@@ -50,7 +50,7 @@
     <footer id="footer">
         <div class="text-center padder">
             <p>
-                <small><spring:message code="login.footer" text="ArkCase 3.0 <br>&copy; 2014, 2015" /></small>
+                <small><spring:message code="login.footer" text="ArkCase <br>&copy; 2014, 2015" /></small>
             </p>
         </div>
     </footer>

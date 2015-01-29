@@ -25,6 +25,7 @@ import javax.persistence.TemporalType;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author riste.tutureski
@@ -175,6 +176,7 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
         this.modifier = modifier;
     }
 
+    @JsonIgnore
 	@Override
 	public String getObjectType() 
 	{
