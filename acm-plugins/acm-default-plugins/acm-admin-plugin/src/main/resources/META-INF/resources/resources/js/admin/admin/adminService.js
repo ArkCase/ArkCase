@@ -29,7 +29,7 @@ Admin.Service = {
                     if (response.hasError) {
                         Admin.Controller.modelRetrievedError(response.errorMsg);
                     } else {
-                        if (Admin.Model.Organization.validateGroup(response,false)) {
+                        if (Admin.Model.Organization.validateGroup(response)) {
                             if(Acm.isNotEmpty(parentId)){
                                 var currentGroup = Admin.Model.Organization.Tree.getCurrentGroup();
                                 if(currentGroup){
@@ -148,7 +148,7 @@ Admin.Service = {
                         Admin.Controller.modelRetrievedError(response.errorMsg);
                     }
                     else {
-                        if (Admin.Model.Organization.validateGroup(response,true)) {
+                        if (Admin.Model.Organization.validateSolrResponse(response)) {
                             var allGroups = response.response.docs;
                             //create arrays to make fancytree structure
                             var subgroups = [];
@@ -189,7 +189,7 @@ Admin.Service = {
                         Admin.Controller.modelRetrievedError(response.errorMsg);
                     }
                     else {
-                        if (Admin.Model.Organization.validateGroup(response, false)) {
+                        if (Admin.Model.Organization.validateSolrResponse(response)) {
                             var acmUsersFromSolr = response.response.docs;
                             var membersForTree = [];
                             for(var i = 0; i < acmUsersFromSolr.length; i++){
@@ -303,7 +303,7 @@ Admin.Service = {
                     if (response.hasError) {
                         Admin.Controller.modelRetrievedError(response.errorMsg);
                     } else {
-                        if (Admin.Model.Organization.validateGroup(response, false)) {
+                        if (Admin.Model.Organization.validateGroup(response)) {
                             var removedGroup = response;
                             var groups = Admin.Model.Organization.cacheGroups.get("groups");
                             var subGroups = Admin.Model.Organization.cacheSubgroups.get("subgroups");
