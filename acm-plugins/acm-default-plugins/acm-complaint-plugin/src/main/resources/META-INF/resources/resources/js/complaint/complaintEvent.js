@@ -124,8 +124,8 @@ Complaint.Event = {
     }
     ,onSaveComplaintType: function(value) {
         var c = Complaint.getComplaint();
-        //c.complaintType = value;            //fix meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-        //Complaint.Service.saveComplaint(c);
+        c.complaintType = value;
+        Complaint.Service.saveComplaint(c);
     }
     ,onClickBtnEditDetails: function(e) {
         Complaint.Object.editDivDetails();
