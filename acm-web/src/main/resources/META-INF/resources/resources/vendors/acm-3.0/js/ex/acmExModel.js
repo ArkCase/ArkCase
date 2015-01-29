@@ -146,24 +146,28 @@ AcmEx.Model = {
             }
 
             ,getTabIdsByKey: function(key) {
-                var nodeType = this.getNodeTypeByKey(key);
-                //var tabIds = ["tabBlank"];
                 var tabIds = [];
-                for (var i = 0; i < this._nodeTypeMap.length; i++) {
-                    if (nodeType == this._nodeTypeMap[i].nodeType) {
-                        tabIds = this._nodeTypeMap[i].tabIds;
-                        break;
+                //var tabIds = ["tabBlank"];
+                if (Acm.isNotEmpty(key)) {
+                    var nodeType = this.getNodeTypeByKey(key);
+                    for (var i = 0; i < this._nodeTypeMap.length; i++) {
+                        if (nodeType == this._nodeTypeMap[i].nodeType) {
+                            tabIds = this._nodeTypeMap[i].tabIds;
+                            break;
+                        }
                     }
                 }
                 return tabIds;
             }
             ,getIconByKey: function(key) {
-                var nodeType = this.getNodeTypeByKey(key);
                 var icon = null;
-                for (var i = 0; i < this._nodeTypeMap.length; i++) {
-                    if (nodeType == this._nodeTypeMap[i].nodeType) {
-                        icon = this._nodeTypeMap[i].icon;
-                        break;
+                if (Acm.isNotEmpty(key)) {
+                    var nodeType = this.getNodeTypeByKey(key);
+                    for (var i = 0; i < this._nodeTypeMap.length; i++) {
+                        if (nodeType == this._nodeTypeMap[i].nodeType) {
+                            icon = this._nodeTypeMap[i].icon;
+                            break;
+                        }
                     }
                 }
                 return icon;

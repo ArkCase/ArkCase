@@ -97,11 +97,10 @@ CaseFile.View = CaseFile.View || {
         }
 
         ,onModelRetrievedCaseFileList: function(key) {
-            if (key.hasError) {
-                alert(key.errorMsg);
-            } else {
-                AcmEx.Object.Tree.refreshTree(key);
+            if (key && key.hasError) {
+                key = null;
             }
+            AcmEx.Object.Tree.refreshTree(key);
         }
         ,onViewChangedCaseTitle: function(caseFileId, title) {
             CaseFile.View.Tree.updateTitle(caseFileId, title);
@@ -112,7 +111,7 @@ CaseFile.View = CaseFile.View || {
                     var treeInfo = AcmEx.Model.Tree.Config.getTreeInfo();
                     if (AcmEx.Model.Tree.Config.sameResultSet(asnData)) {
                         if (asnData.key) {
-                            var key = CaseFile.Model.Tree.Key.getSubKeyWithPage(asnData.start, asnData.key);
+                            var key = CaseFile.Model.Tree.Key.getKeyBySubWithPage(asnData.start, asnData.key);
                             AcmEx.Object.Tree.refreshTree(key);
                         }
                         return true;
@@ -511,18 +510,19 @@ CaseFile.View = CaseFile.View || {
             });
 
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_ASSIGNEES        ,this.onModelFoundAssignees);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES    ,this.onModelFoundSubjectTypes);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PRIORITIES       ,this.onModelFoundPriorities);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
-            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE        ,this.onModelSavedCaseFile);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE       ,this.onModelSavedCaseTitle);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_INCIDENT_DATE    ,this.onModelSavedIncidentDate);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE         ,this.onModelSavedAssignee);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_SUBJECT_TYPE     ,this.onModelSavedSubjectType);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_PRIORITY         ,this.onModelSavedPriority);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE         ,this.onModelSavedDueDate);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DETAIL           ,this.onModelSavedDetail);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_ASSIGNEES          ,this.onModelFoundAssignees);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES      ,this.onModelFoundSubjectTypes);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PRIORITIES         ,this.onModelFoundPriorities);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE_LIST ,this.onModelRetrievedCaseFileList);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE      ,this.onModelRetrievedCaseFile);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE          ,this.onModelSavedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE         ,this.onModelSavedCaseTitle);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_INCIDENT_DATE      ,this.onModelSavedIncidentDate);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE           ,this.onModelSavedAssignee);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_SUBJECT_TYPE       ,this.onModelSavedSubjectType);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_PRIORITY           ,this.onModelSavedPriority);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE           ,this.onModelSavedDueDate);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DETAIL             ,this.onModelSavedDetail);
             //MODEL_ADDED_PARTICIPANT
             //MODEL_UPDATED_PARTICIPANT
             //MODEL_DELETED_PARTICIPANT
@@ -546,8 +546,8 @@ CaseFile.View = CaseFile.View || {
             //MODEL_UPDATED_CONTACT_METHOD
             //MODEL_DELETED_CONTACT_METHOD
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_TREE_NODE     ,this.onViewSelectedTreeNode);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE     ,this.onViewSelectedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_TREE_NODE       ,this.onViewSelectedTreeNode);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE       ,this.onViewSelectedCaseFile);
         }
         ,onInitialized: function() {
         }
@@ -600,6 +600,16 @@ CaseFile.View = CaseFile.View || {
                     CaseFile.Controller.viewChangedPriority(AcmEx.Object.Tree.getActiveObjId(), newValue);
                 }
             });
+        }
+        ,onModelRetrievedCaseFileList: function(key) {
+            if (key && key.hasError) {
+                alert(key.errorMsg);
+                key = null;
+            }
+            if (Acm.isEmpty(key)) {
+                CaseFile.View.Detail.showTopPanel(false);
+                CaseFile.View.Detail.showPanel(null);
+            }
         }
         ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {

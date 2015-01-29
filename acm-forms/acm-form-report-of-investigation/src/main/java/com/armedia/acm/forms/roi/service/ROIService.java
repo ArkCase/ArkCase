@@ -15,6 +15,7 @@ import com.armedia.acm.forms.roi.model.ROIForm;
 import com.armedia.acm.forms.roi.model.ReportInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
@@ -128,7 +129,7 @@ public class ROIService extends FrevvoFormAbstractService {
 		
 		roiForm.setReportInformation(reportInformation);
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(roiForm);
 		
 		JSONObject json = new JSONObject(jsonString);

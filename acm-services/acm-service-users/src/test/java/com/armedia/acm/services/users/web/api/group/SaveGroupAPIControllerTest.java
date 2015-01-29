@@ -80,6 +80,7 @@ public class SaveGroupAPIControllerTest extends EasyMockSupport {
 		
 		Capture<AcmGroup> found = new Capture<AcmGroup>();
 		
+		expect(getMockGroupDao().findByName(group.getName())).andReturn(null);
 		expect(getMockGroupDao().save(capture(found))).andReturn(group);
 		expect(getMockAuthentication().getName()).andReturn("user");
 		
@@ -126,6 +127,7 @@ public class SaveGroupAPIControllerTest extends EasyMockSupport {
 		Capture<AcmGroup> found = new Capture<AcmGroup>();
 		
 		expect(getMockGroupDao().findByName(group.getName())).andReturn(group);
+		expect(getMockGroupDao().findByName(subGroup.getName())).andReturn(null);
 		expect(getMockGroupDao().save(capture(found))).andReturn(subGroup);
 		expect(getMockAuthentication().getName()).andReturn("user");
 		
