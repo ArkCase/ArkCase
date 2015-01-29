@@ -148,7 +148,7 @@ Admin.Service = {
                         Admin.Controller.modelRetrievedError(response.errorMsg);
                     }
                     else {
-                        if (Admin.Model.Organization.validateGroup(response)) {
+                        if (Admin.Model.Organization.validateSolrResponse(response)) {
                             var allGroups = response.response.docs;
                             //create arrays to make fancytree structure
                             var subgroups = [];
@@ -189,7 +189,7 @@ Admin.Service = {
                         Admin.Controller.modelRetrievedError(response.errorMsg);
                     }
                     else {
-                        if (Admin.Model.Organization.validateGroup(response)) {
+                        if (Admin.Model.Organization.validateSolrResponse(response)) {
                             var acmUsersFromSolr = response.response.docs;
                             var membersForTree = [];
                             for(var i = 0; i < acmUsersFromSolr.length; i++){
