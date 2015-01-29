@@ -77,6 +77,8 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String child_type_s;
     private String parent_id_s;
     private String parent_type_s;
+    private String parent_name_t;
+    private String parent_number_lcs;
 
 
     ////////////////// for objects that own organizations, e.g. persons /////////////////////
@@ -360,6 +362,22 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
         return parent_type_s;
     }
 
+    public String getParent_name_t() {
+        return parent_name_t;
+    }
+
+    public void setParent_name_t(String parent_name_t) {
+        this.parent_name_t = parent_name_t;
+    }
+
+    public String getParent_number_lcs() {
+        return parent_number_lcs;
+    }
+
+    public void setParent_number_lcs(String parent_number_lcs) {
+        this.parent_number_lcs = parent_number_lcs;
+    }
+
     public String getDescription_no_html_tags_parseable() {
         return description_no_html_tags_parseable;
     }
@@ -628,6 +646,8 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
                 ", child_type_s='" + child_type_s + '\'' +
                 ", parent_id_s='" + parent_id_s + '\'' +
                 ", parent_type_s='" + parent_type_s + '\'' +
+                ", parent_name_t='" + parent_name_t + '\'' +
+                ", parent_number_lcs='" + parent_number_lcs + '\'' +
                 ", organization_id_ss=" + organization_id_ss +
                 ", postal_address_id_ss=" + postal_address_id_ss +
                 ", contact_method_ss=" + contact_method_ss +

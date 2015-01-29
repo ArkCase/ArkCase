@@ -34,6 +34,7 @@
         <module>acm-service-milestone</module>
         <module>acm-service-participants</module>
     <module>acm-service-functional-access-control</module>
+        <module>acm-service-subscription</module>
   </modules>
 
 
