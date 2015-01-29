@@ -421,7 +421,8 @@ CaseFile.View = CaseFile.View || {
         ,populate: function(caseFile) {
             if (CaseFile.Model.Detail.validateData(caseFile)) {
                 CaseFile.View.Action.showBtnChangeCaseStatus(Acm.goodValue(caseFile.changeCaseStatus, true));
-                CaseFile.View.Action.showMilestone(Acm.goodValue(caseFile.milestones));
+                //Comment out temporarily
+                //CaseFile.View.Action.showMilestone(Acm.goodValue(caseFile.milestones));
             }
         }
         ,showMilestone: function(milestones) {
