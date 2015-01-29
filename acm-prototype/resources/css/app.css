@@ -4257,3 +4257,18 @@ h3.m-b-xs.text-black {
     display: inherit !important;
   }
 }
+
+
+#subNav section.vbox section.scrollable div.wrapper.facets div.list-group label.list-group-item {
+	padding: 6px;
+	background-color: transparent !important;
+	border: 0px;
+}
+
+#subNav section.vbox section.scrollable div.wrapper.facets div.list-group label.list-group-item {
+	padding: 0px !important;
+}
+
+#subNav section.vbox section.scrollable div.wrapper.facets h6 {
+	font-weight: bold;
+}

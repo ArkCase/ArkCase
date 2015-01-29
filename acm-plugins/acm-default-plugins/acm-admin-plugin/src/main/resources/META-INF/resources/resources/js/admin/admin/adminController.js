@@ -23,6 +23,8 @@ Admin.Controller = Admin.Controller || {
 
     ,VIEW_SUBMITTED_QUERY                                     : "organization-hierarchy-search-view-submitted-query"                                 //param: term
 
+    ,MODEL_RETRIEVED_ERROR                                    : "organization-hierarchy-general-error"                                          //param: errorMsg
+
     ,MODEL_CHANGED_RESULT                                     : "organization-hierarchy-search-changed-result"                                     //param: result
 
     ,MODEL_CHANGED_FACET                                      : "organization-hierarchy-search-changed-facet"                                      //param: facet
@@ -100,10 +102,12 @@ Admin.Controller = Admin.Controller || {
     ,modelChangedResult: function(result) {
         Acm.Dispatcher.fireEvent(this.MODEL_CHANGED_RESULT, result);
     }
-    ,modeChangedFacet: function(facet) {
+    ,modelChangedFacet: function(facet) {
         Acm.Dispatcher.fireEvent(this.MODEL_CHANGED_FACET, facet);
     }
-
+    ,modelRetrievedError: function(errorMsg) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_ERROR, errorMsg);
+    }
     ,modelRetrievedCorrespondenceTemplates : function(templatesList) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES, templatesList);
     }

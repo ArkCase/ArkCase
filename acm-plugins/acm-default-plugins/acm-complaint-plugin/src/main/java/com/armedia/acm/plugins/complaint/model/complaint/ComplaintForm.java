@@ -10,14 +10,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import com.armedia.acm.form.config.frevvoxmlmarshal.ParticipantItem;
+import com.armedia.acm.form.config.xml.ParticipantItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal.GeneralPostalAddress;
-import com.armedia.acm.plugins.complaint.model.complaint.frevvoxmlmarshal.InitiatorContact;
-import com.armedia.acm.plugins.complaint.model.complaint.frevvoxmlmarshal.PeopleContact;
+import com.armedia.acm.plugins.addressable.model.xml.GeneralPostalAddress;
+import com.armedia.acm.plugins.complaint.model.complaint.xml.InitiatorContact;
+import com.armedia.acm.plugins.complaint.model.complaint.xml.PeopleContact;
 
 
 /**

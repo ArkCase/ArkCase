@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
-import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,10 +22,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -48,12 +45,11 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
     private GetComplaintListOfValuesAPIController unit;
 
-    private ListOfValuesService mockListOfValuesService;
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private LookupTableDescriptor priorityDescriptor = new LookupTableDescriptor();
-    private LookupTableDescriptor typeDescriptor = new LookupTableDescriptor();
+    private Properties complaintProperties = new Properties();
+
+
 
     @Before
     public void setUp() throws Exception
@@ -62,23 +58,19 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
-        mockListOfValuesService = createMock(ListOfValuesService.class);
         mockAuthentication = createMock(Authentication.class);
 
-        priorityDescriptor.setTableName("priorityTable");
-        typeDescriptor.setTableName("typeTable");
+        complaintProperties.setProperty("complaint.priorities", "1,2,3,4");
+        complaintProperties.setProperty("complaint.complaint-types", "A,B,C,D");
 
-        unit.setListOfValuesService(mockListOfValuesService);
-        unit.setPriorityDescriptor(priorityDescriptor);
-        unit.setTypesDescriptor(typeDescriptor);
+        unit.setComplaintProperties(complaintProperties);
+
     }
 
     @Test
     public void getComplaintTypes() throws Exception
     {
-        List<String> typeList = Arrays.asList("Type 1", "Type 2", "Type 3");
-
-        expect(mockListOfValuesService.lookupListOfStringValues(typeDescriptor)).andReturn(typeList);
+        String[] typeList = { "A", "B", "C", "D" };
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -104,38 +96,17 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         String types[] = objectMapper.readValue(returned, String[].class);
 
-        assertEquals(3, types.length);
+        assertEquals(4, types.length);
+
+        assertArrayEquals(typeList, types);
 
 
-    }
-
-    @Test
-    public void getComplaintTypes_exception() throws Exception
-    {
-        expect(mockListOfValuesService.lookupListOfStringValues(typeDescriptor)).andThrow(new CannotGetJdbcConnectionException(
-                "testException", new SQLException("testException")));
-
-        // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
-
-        replayAll();
-
-        mockMvc.perform(
-                get("/api/latest/plugin/complaint/types")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .principal(mockAuthentication))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
-
-        verifyAll();
     }
 
     @Test
     public void getComplaintPriorities() throws Exception
     {
-        List<String> priorityList = Arrays.asList("Cold", "Medium", "Hot");
-
-        expect(mockListOfValuesService.lookupListOfStringValues(priorityDescriptor)).andReturn(priorityList);
+        String[] priorityList = { "1", "2", "3", "4" };
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -161,7 +132,9 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         String priorities[] = objectMapper.readValue(returned, String[].class);
 
-        assertEquals(3, priorities.length);
+        assertEquals(4, priorities.length);
+
+        assertArrayEquals(priorityList, priorities);
 
 
     }
@@ -183,13 +156,6 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
                 setMessageConverters(xmlConverter).
                 build();
 
-        List<String> priorityList = new ArrayList();
-        priorityList.add("Cold");
-        priorityList.add( "Medium");
-        priorityList.add("Hot");
-
-        expect(mockListOfValuesService.lookupListOfStringValues(priorityDescriptor)).andReturn(priorityList);
-
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
@@ -210,32 +176,6 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
         assertTrue(result.getResponse().getContentType().startsWith(MediaType.TEXT_XML_VALUE));
 
 
-
-
-
-
-
-    }
-
-    @Test
-    public void getComplaintPriorities_exception() throws Exception
-    {
-        expect(mockListOfValuesService.lookupListOfStringValues(priorityDescriptor)).andThrow(new CannotGetJdbcConnectionException(
-                "testException", new SQLException("testException")));
-
-        // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
-
-        replayAll();
-
-        mockMvc.perform(
-                get("/api/latest/plugin/complaint/priorities")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .principal(mockAuthentication))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
-
-        verifyAll();
     }
 
 }

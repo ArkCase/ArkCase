@@ -1,31 +1,31 @@
 package com.armedia.acm.plugins.complaint.service;
 
-import com.armedia.acm.form.config.frevvoxmlmarshal.ParticipantItem;
+import com.armedia.acm.form.config.xml.ParticipantItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal.GeneralPostalAddress;
-import com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal.InitiatorContactMethod;
-import com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal.InitiatorPostalAddress;
-import com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal.PeopleContactMethod;
-import com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal.PeoplePostalAddress;
+import com.armedia.acm.plugins.addressable.model.xml.GeneralPostalAddress;
+import com.armedia.acm.plugins.addressable.model.xml.InitiatorContactMethod;
+import com.armedia.acm.plugins.addressable.model.xml.InitiatorPostalAddress;
+import com.armedia.acm.plugins.addressable.model.xml.PeopleContactMethod;
+import com.armedia.acm.plugins.addressable.model.xml.PeoplePostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
-import com.armedia.acm.plugins.complaint.model.complaint.frevvoxmlmarshal.InitiatorContact;
-import com.armedia.acm.plugins.complaint.model.complaint.frevvoxmlmarshal.InitiatorMainInformation;
-import com.armedia.acm.plugins.complaint.model.complaint.frevvoxmlmarshal.PeopleContact;
-import com.armedia.acm.plugins.complaint.model.complaint.frevvoxmlmarshal.PeopleMainInformation;
+import com.armedia.acm.plugins.complaint.model.complaint.xml.InitiatorContact;
+import com.armedia.acm.plugins.complaint.model.complaint.xml.InitiatorMainInformation;
+import com.armedia.acm.plugins.complaint.model.complaint.xml.PeopleContact;
+import com.armedia.acm.plugins.complaint.model.complaint.xml.PeopleMainInformation;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.plugins.person.model.frevvoxmlmarshal.InitiatorOrganization;
-import com.armedia.acm.plugins.person.model.frevvoxmlmarshal.InitiatorPersonAlias;
-import com.armedia.acm.plugins.person.model.frevvoxmlmarshal.PeopleOrganization;
-import com.armedia.acm.plugins.person.model.frevvoxmlmarshal.PeoplePersonAlias;
+import com.armedia.acm.plugins.person.model.xml.InitiatorOrganization;
+import com.armedia.acm.plugins.person.model.xml.InitiatorPersonAlias;
+import com.armedia.acm.plugins.person.model.xml.PeopleOrganization;
+import com.armedia.acm.plugins.person.model.xml.PeoplePersonAlias;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import java.util.ArrayList;
@@ -35,6 +35,9 @@ import java.util.List;
 
 public class ComplaintFactory
 {
+	private static final String ANONYMOUS = "Anonymous";
+	private static final String DEFAULT_USER = "*";
+	
 	private PersonDao personDao;
 	
     public Complaint asAcmComplaint(ComplaintForm formComplaint)
@@ -161,7 +164,7 @@ public class ComplaintFactory
     		List<ParticipantItem> participants = new ArrayList<ParticipantItem>();
     		for (AcmParticipant participant : complaint.getParticipants())
     		{
-    			if (!"*".equals(participant.getParticipantType()))
+    			if (!DEFAULT_USER.equals(participant.getParticipantType()))
     			{
 	    			ParticipantItem pi = new ParticipantItem();
 	    			pi.setType(participant.getParticipantType());
@@ -185,118 +188,143 @@ public class ComplaintFactory
     		contact.setContactType(personAssociation.getPersonType());
     		contact.setNotes(personAssociation.getNotes());
     		
-    		MainInformation mainInformation = null;
-    		if (contact instanceof InitiatorContact)
-    		{
-    			mainInformation = new InitiatorMainInformation();
-    		} 
-    		else if (contact instanceof PeopleContact)
-    		{
-    			mainInformation = new PeopleMainInformation();
-    		}
-    		
     		// Populate main information
-    		if (mainInformation != null)
-    		{
-	    		mainInformation.setTitle(person.getTitle());
-	    		mainInformation.setFirstName(person.getGivenName());
-	    		mainInformation.setLastName(person.getFamilyName());
-	    		mainInformation.setType(personAssociation.getPersonType());
-	    		mainInformation.setDescription(personAssociation.getPersonDescription());
-	    		if (personAssociation.getTags() != null)
-	    		{
-	    			for (String tag : personAssociation.getTags())
-	    			{
-	    				if ("Anonymous".equals(tag))
-	    				{
-	    					mainInformation.setAnonymous("true");
-	    					break;
-	    				}
-	    			}
-	    		}
-    		}
-    		
-    		contact.setMainInformation(mainInformation);
+    		populateMainInformation(contact, person, personAssociation);
     		
     		// Populate communication devices
-    		if (person.getContactMethods() != null && person.getContactMethods().size() > 0)
-    		{
-    			List<ContactMethod> communicationDevices = new ArrayList<ContactMethod>();
-    			for (ContactMethod contactMethod : person.getContactMethods())
-    			{
-    				if (contact instanceof InitiatorContact)
-    	    		{
-    					ContactMethod c = new InitiatorContactMethod(contactMethod);
-    					communicationDevices.add(c);
-    	    		} 
-    	    		else if (contact instanceof PeopleContact)
-    	    		{
-    	    			ContactMethod c = new PeopleContactMethod(contactMethod);
-    					communicationDevices.add(c);
-    	    		}
-    			}
-    			
-    			contact.setCommunicationDevice(communicationDevices);
-    		}
+    		populateCommunicationDevices(contact, person);
     		
     		// Populate organizations
-    		if (person.getOrganizations() != null && person.getOrganizations().size() > 0)
-    		{
-    			List<Organization> organizations = new ArrayList<Organization>();
-    			for (Organization organization : person.getOrganizations())
-    			{
-    				if (contact instanceof InitiatorContact)
-    	    		{
-    					Organization o = new InitiatorOrganization(organization);
-    					organizations.add(o);
-    	    		} 
-    	    		else if (contact instanceof PeopleContact)
-    	    		{
-    	    			Organization o = new PeopleOrganization(organization);
-    	    			organizations.add(o);
-    	    		}
-    			}
-    			
-    			contact.setOrganization(organizations);
-    		}
+    		populateOrganizations(contact, person);
     		
     		// Populate locations
-    		if (person.getAddresses() != null && person.getAddresses().size() > 0)
-    		{
-    			List<PostalAddress> locations = new ArrayList<PostalAddress>();
-    			for (PostalAddress postalAddress : person.getAddresses())
-    			{
-    				if (contact instanceof InitiatorContact)
-    	    		{
-    					PostalAddress a = new InitiatorPostalAddress(postalAddress);
-    					locations.add(a);
-    	    		} 
-    	    		else if (contact instanceof PeopleContact)
-    	    		{
-    	    			PostalAddress a = new PeoplePostalAddress(postalAddress);
-    	    			locations.add(a);
-    	    		}
-    			}
-    			
-    			contact.setLocation(locations);
-    		}
+    		populateLocations(contact, person);
     		
     		// Populate alias
-    		if (person.getPersonAliases() != null && person.getPersonAliases().size() > 0)
-    		{
-    			PersonAlias personAlias = person.getPersonAliases().get(0);
-				if (contact instanceof InitiatorContact)
-	    		{
-					contact.setAlias(new InitiatorPersonAlias(personAlias));
-	    		} 
-	    		else if (contact instanceof PeopleContact)
-	    		{
-	    			contact.setAlias(new PeoplePersonAlias(personAlias));
-	    		}
-    		}
+    		populateAlias(contact, person);
     	}
     	
     	return contact;
+    }
+    
+    private void populateMainInformation(Contact contact, Person person, PersonAssociation personAssociation)
+    {
+    	MainInformation mainInformation = null;
+		if (contact instanceof InitiatorContact)
+		{
+			mainInformation = new InitiatorMainInformation();
+		} 
+		else if (contact instanceof PeopleContact)
+		{
+			mainInformation = new PeopleMainInformation();
+		}
+		
+    	if (mainInformation != null)
+		{
+    		mainInformation.setTitle(person.getTitle());
+    		mainInformation.setFirstName(person.getGivenName());
+    		mainInformation.setLastName(person.getFamilyName());
+    		mainInformation.setType(personAssociation.getPersonType());
+    		mainInformation.setDescription(personAssociation.getPersonDescription());
+    		if (personAssociation.getTags() != null)
+    		{
+    			for (String tag : personAssociation.getTags())
+    			{
+    				if (ANONYMOUS.equals(tag))
+    				{
+    					mainInformation.setAnonymous("true");
+    					break;
+    				}
+    			}
+    		}
+		}
+		
+		contact.setMainInformation(mainInformation);
+    }
+    
+    private void populateCommunicationDevices(Contact contact, Person person)
+    {
+    	if (person.getContactMethods() != null && person.getContactMethods().size() > 0)
+		{
+			List<ContactMethod> communicationDevices = new ArrayList<ContactMethod>();
+			for (ContactMethod contactMethod : person.getContactMethods())
+			{
+				if (contact instanceof InitiatorContact)
+	    		{
+					ContactMethod c = new InitiatorContactMethod(contactMethod);
+					communicationDevices.add(c);
+	    		} 
+	    		else if (contact instanceof PeopleContact)
+	    		{
+	    			ContactMethod c = new PeopleContactMethod(contactMethod);
+					communicationDevices.add(c);
+	    		}
+			}
+			
+			contact.setCommunicationDevice(communicationDevices);
+		}
+    }
+    
+    private void populateOrganizations(Contact contact, Person person)
+    {
+    	if (person.getOrganizations() != null && person.getOrganizations().size() > 0)
+		{
+			List<Organization> organizations = new ArrayList<Organization>();
+			for (Organization organization : person.getOrganizations())
+			{
+				if (contact instanceof InitiatorContact)
+	    		{
+					Organization o = new InitiatorOrganization(organization);
+					organizations.add(o);
+	    		} 
+	    		else if (contact instanceof PeopleContact)
+	    		{
+	    			Organization o = new PeopleOrganization(organization);
+	    			organizations.add(o);
+	    		}
+			}
+			
+			contact.setOrganization(organizations);
+		}
+    }
+    
+    private void populateLocations(Contact contact, Person person)
+    {
+    	if (person.getAddresses() != null && person.getAddresses().size() > 0)
+		{
+			List<PostalAddress> locations = new ArrayList<PostalAddress>();
+			for (PostalAddress postalAddress : person.getAddresses())
+			{
+				if (contact instanceof InitiatorContact)
+	    		{
+					PostalAddress a = new InitiatorPostalAddress(postalAddress);
+					locations.add(a);
+	    		} 
+	    		else if (contact instanceof PeopleContact)
+	    		{
+	    			PostalAddress a = new PeoplePostalAddress(postalAddress);
+	    			locations.add(a);
+	    		}
+			}
+			
+			contact.setLocation(locations);
+		}
+    }
+    
+    private void populateAlias(Contact contact, Person person)
+    {
+    	if (person.getPersonAliases() != null && person.getPersonAliases().size() > 0)
+		{
+			PersonAlias personAlias = person.getPersonAliases().get(0);
+			if (contact instanceof InitiatorContact)
+    		{
+				contact.setAlias(new InitiatorPersonAlias(personAlias));
+    		} 
+    		else if (contact instanceof PeopleContact)
+    		{
+    			contact.setAlias(new PeoplePersonAlias(personAlias));
+    		}
+		}
     }
 
     private void populatePerson(Contact contact, PersonAssociation pa, Person p)
@@ -353,7 +381,7 @@ public class ComplaintFactory
 
         if ( "true".equalsIgnoreCase(contact.getMainInformation().getAnonymous()) )
         {
-            pa.getTags().add("Anonymous");
+            pa.getTags().add(ANONYMOUS);
         }
     }
     

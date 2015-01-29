@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
-import com.armedia.acm.plugins.addressable.model.frevvoxmlmarshal.GeneralContactMethod;
+import com.armedia.acm.plugins.addressable.model.xml.GeneralContactMethod;
 
 /**
  * @author riste.tutureski
