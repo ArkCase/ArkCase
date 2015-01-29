@@ -5,55 +5,33 @@ package com.armedia.acm.form.casefile.model;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.armedia.acm.form.casefile.model.xml.Employee;
+import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
 
 /**
  * @author riste.tutureski
  *
  */
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name="form_" + FrevvoFormName.CASE_FILE, namespace=FrevvoFormNamespace.CASE_FILE_NAMESPACE)
 public class CaseFileForm {
 
 	private Long id;
 	private String number;
-	
-	@XmlElements({
-		@XmlElement(name="title"),
-		@XmlElement(name="caseTitle")
-	})
 	private String title;
-	
-	@XmlElements({
-		@XmlElement(name="type"),
-		@XmlElement(name="caseType")
-	})
 	private String type;
-	
 	private List<String> types;
-	
-	@XmlElements({
-		@XmlElement(name="subject"),
-		@XmlElement(name="subjectSection")
-	})
 	private Subject subject;
-	
-	@XmlElements({
-		@XmlElement(name="addressHistory"),
-		@XmlElement(name="addressHistorySection")
-	})
 	private List<AddressHistory> addressHistory;
-	
-	@XmlElements({
-		@XmlElement(name="employmentHistory"),
-		@XmlElement(name="employmentHistorySection")
-	})
 	private List<EmploymentHistory> employmentHistory;
 	
 	private String cmisFolderId;
 	
+	@XmlElement(name="caseId")
 	public Long getId() 
 	{
 		return id;
@@ -64,6 +42,7 @@ public class CaseFileForm {
 		this.id = id;
 	}
 
+	@XmlTransient
 	public String getNumber() 
 	{
 		return number;
@@ -74,6 +53,7 @@ public class CaseFileForm {
 		this.number = number;
 	}
 
+	@XmlElement(name="caseTitle")
 	public String getTitle() 
 	{
 		return title;
@@ -84,6 +64,7 @@ public class CaseFileForm {
 		this.title = title;
 	}
 
+	@XmlElement(name="caseType")
 	public String getType() 
 	{
 		return type;
@@ -94,6 +75,7 @@ public class CaseFileForm {
 		this.type = type;
 	}
 
+	@XmlTransient
 	public List<String> getTypes() 
 	{
 		return types;
@@ -104,6 +86,7 @@ public class CaseFileForm {
 		this.types = types;
 	}
 
+	@XmlElement(name="subjectSection", type=Employee.class)
 	public Subject getSubject() 
 	{
 		return subject;
@@ -114,6 +97,7 @@ public class CaseFileForm {
 		this.subject = subject;
 	}
 
+	@XmlElement(name="addressHistorySection")
 	public List<AddressHistory> getAddressHistory() 
 	{
 		return addressHistory;
@@ -124,6 +108,7 @@ public class CaseFileForm {
 		this.addressHistory = addressHistory;
 	}
 
+	@XmlElement(name="employmentHistorySection")
 	public List<EmploymentHistory> getEmploymentHistory() 
 	{
 		return employmentHistory;
@@ -134,6 +119,7 @@ public class CaseFileForm {
 		this.employmentHistory = employmentHistory;
 	}
 
+	@XmlTransient
 	public String getCmisFolderId() {
 		return cmisFolderId;
 	}

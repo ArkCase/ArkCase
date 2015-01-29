@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.20</version>
+        <version>3.0.21-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,6 +28,7 @@
         <module>acm-spring-data-source</module>
         <module>acm-form-configuration</module>
         <module>acm-report-configuration</module>
-    </modules>
+    	<module>acm-object-converter</module>
+  </modules>
 
 </project>

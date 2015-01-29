@@ -7,38 +7,32 @@ package com.armedia.acm.frevvo.config;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.objectonverter.AcmMarshaller;
+import com.armedia.acm.objectonverter.AcmUnmarshaller;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.commons.io.IOUtils;
-import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.file.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
@@ -64,6 +58,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     private EcmFileDao ecmFileDao;
     private AcmUserActionExecutor userActionExecutor;
     private MuleClient muleClient;
+    private ObjectAssociationDao objectAssociationDao;
 
     @Override
 	public Object init() {
@@ -76,15 +71,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		{
 			try{
 				Long id = Long.parseLong(xmlId);
-				EcmFile file = getEcmFileDao().find(id);
-				
-				MuleMessage message = getMuleClient().send("vm://downloadFileFlow.in", file.getEcmFileId(), null);
-				
-				if (null != message && message.getPayload() instanceof ContentStream)
-				{
-					result = getContent((ContentStream) message.getPayload());
-				}
-				
+				result = getEcmFileService().download(id);				
 			}
 			catch(Exception e)
 			{
@@ -180,23 +167,62 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
         this.servletContextPath = servletContextPath;
     }
 	
-	public Object convertFromXMLToObject(String xml, Class<?> c) {
-		Object obj = null;
-		try{
-			InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-	        DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-	        Document document = documentBuilder.parse(inputStream);
-	        Element element = document.getDocumentElement();
-	        JAXBContext context = JAXBContext.newInstance(c);
-	        Unmarshaller unmarshaller = context.createUnmarshaller();
-	        JAXBElement<?> jaxbElement = unmarshaller.unmarshal(element, c);
-	        obj = jaxbElement.getValue();
-		}
-        catch(Exception e) {
-        	LOG.error("Error while creating Object from XML. " + e);
-        }
-		
+	public Object convertFromXMLToObject(String xml, Class<?> c) 
+	{
+		AcmUnmarshaller unmarshaller = ObjectConverter.createXMLUnmarshaller();
+		Object obj = unmarshaller.unmarshall(xml, c);
+			
 		return obj;
+	}
+	
+	public String convertFromObjectToXML(Object obj) 
+	{
+		AcmMarshaller marshaller = ObjectConverter.createXMLMarshaller();
+		String xml = marshaller.marshal(obj);
+		
+		return xml;
+	}
+	
+	protected void updateXML(String xml, String formName, Long id, Authentication auth)
+	{
+		ObjectAssociation association = getObjectAssociationDao().findFrevvoXMLAssociation(formName.toUpperCase(), id, formName.toLowerCase() + "_xml");
+		
+		if (association != null)
+		{
+			EcmFile ecmFile = getEcmFileDao().find(association.getTargetId());
+			AcmMultipartFile file = new AcmMultipartFile();
+			file.setInputStream(new ByteArrayInputStream(xml.getBytes()));
+			
+			try 
+			{
+				getEcmFileService().update(ecmFile, file, auth);
+			} 
+			catch (AcmCreateObjectFailedException e) 
+			{
+				LOG.error("Failed to update XML file.", e);
+			}    				
+		}
+	}
+	
+	public void updateXMLAttachment(MultiValueMap<String, MultipartFile> attachments, String formName, Object form) throws Exception
+	{
+		String updatedXmlFile = convertFromObjectToXML(form);
+        if (updatedXmlFile != null && attachments.containsKey("form_" + formName))
+        {
+        	List<MultipartFile> files = attachments.get("form_" + formName);
+        	if (files != null && files.size() == 1)
+        	{
+        		MultipartFile originalXml = files.get(0);
+        		InputStream updatedXmlContent = new ByteArrayInputStream(updatedXmlFile.getBytes());
+        		AcmMultipartFile updatedXml = new AcmMultipartFile(originalXml.getName(), originalXml.getOriginalFilename(), originalXml.getContentType(), originalXml.isEmpty(), originalXml.getSize(), originalXml.getBytes(), updatedXmlContent, false);
+        		
+        		// Remove old XML file
+        		attachments.remove("form_" + formName);
+        		
+        		// Add updated XML file
+        		attachments.add("form_" + formName, updatedXml);
+        	}
+        }
 	}
 	
 	public FrevvoUploadedFiles saveAttachments(
@@ -383,40 +409,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		
 		return null;
 	}
-	
-	private String getContent(ContentStream contentStream)
-	{
-		String content = "";
-		InputStream inputStream = null;
-		
-		try
-        {
-			inputStream = contentStream.getStream();
-			StringWriter writer = new StringWriter();
-			IOUtils.copy(inputStream, writer);
-			content = writer.toString();
-        } 
-		catch (IOException e) 
-		{
-        	LOG.error("Could not copy input stream to the writer: " + e.getMessage(), e);
-		}
-		finally
-        {
-            if ( inputStream != null )
-            {
-                try
-                {
-                	inputStream.close();
-                }
-                catch (IOException e)
-                {
-                    LOG.error("Could not close CMIS content stream: " + e.getMessage(), e);
-                }
-            }
-        }
-		
-		return content;
-	}
 
     @Override
     public String getUserIpAddress()
@@ -465,5 +457,13 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	public void setMuleClient(MuleClient muleClient) {
 		this.muleClient = muleClient;
 	}	
+	
+	public ObjectAssociationDao getObjectAssociationDao() {
+		return objectAssociationDao;
+	}
+
+	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
+		this.objectAssociationDao = objectAssociationDao;
+	}
 	
 }
