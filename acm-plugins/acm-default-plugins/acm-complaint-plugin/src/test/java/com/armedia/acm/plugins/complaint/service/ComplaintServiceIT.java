@@ -45,7 +45,9 @@ import static org.junit.Assert.assertTrue;
                 "/spring/spring-library-user-service.xml",
                 "/spring/spring-library-context-holder.xml",
                 "/spring/spring-library-data-access-control.xml",
-                "/spring/spring-library-search.xml"
+                "/spring/spring-library-search.xml",
+                "/spring/spring-library-ecm-file.xml",
+                "/spring/spring-library-activemq.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
