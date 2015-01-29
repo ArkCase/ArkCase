@@ -207,6 +207,11 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-subscription</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-form</groupId>
             <artifactId>acm-form-change-case-status</artifactId>
             <version>${acm.version}</version>
