@@ -15,5 +15,8 @@
         <property name="notificationDao" ref="notificationDao"/>
         <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
     </bean>
+
+    <bean id="notificationUiController" class="com.armedia.acm.services.notification.web.NotificationUiController">
+    </bean>
     
 </beans>
