@@ -746,6 +746,10 @@ body.container {
   .app .hbox.stretch {
     height: 100%;
   }
+  
+   .app .hbox.stretchSearch {
+    height: 94% !important;
+  }
   .app .vbox > section,
   .app .vbox > footer {
     position: absolute;
@@ -4252,4 +4256,19 @@ h3.m-b-xs.text-black {
   .hidden-xs.show {
     display: inherit !important;
   }
+}
+
+
+#subNav section.vbox section.scrollable div.wrapper.facets div.list-group label.list-group-item {
+	padding: 6px;
+	background-color: transparent !important;
+	border: 0px;
+}
+
+#subNav section.vbox section.scrollable div.wrapper.facets div.list-group label.list-group-item {
+	padding: 0px !important;
+}
+
+#subNav section.vbox section.scrollable div.wrapper.facets h6 {
+	font-weight: bold;
 }

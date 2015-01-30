@@ -51,7 +51,7 @@
 
 <%--</section>--%>
 <footer class="footer bg-white b-t b-light">
-    <p>Powered by ArkCase 3.0</p>
+    <p>Powered by ArkCase</p>
 </footer>
 </section>
 </section>
