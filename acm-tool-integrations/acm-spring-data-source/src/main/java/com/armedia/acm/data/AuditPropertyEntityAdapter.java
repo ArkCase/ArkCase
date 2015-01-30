@@ -90,7 +90,7 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
         // insert record directly, instead of just modifying the AcmEntity.
         if ( data instanceof AcmEntity )
         {
-            log.debug("Entity type '" + data.getClass() + "' is an AcmEntity, setting update fields.");
+            log.trace("Entity type '" + data.getClass() + "' is an AcmEntity, setting update fields.");
             AcmEntity entity = (AcmEntity) data;
 
             Date today = new Date();
@@ -115,7 +115,7 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
         }
         else
         {
-            log.debug("Entity type '" + data.getClass() + "' is NOT an AcmEntity, NOT setting update fields.");
+            log.trace("Entity type '" + data.getClass() + "' is NOT an AcmEntity, NOT setting update fields.");
         }
     }
 
