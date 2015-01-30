@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication">
+        <property name="applicationName" value="Law Enforcement Application"/>
+        <property name="topbarActions">
+            <list>
+                <ref bean="createComplaintAction"/>
+                <ref bean="createTaskAction"/> 
+            </list>
+        </property>
+        <property name="navigatorTabs">
+            <list>
+                <ref bean="dashboardNavigatorAction"/>
+                <ref bean="complaintNavigatorAction"/>
+                <ref bean="caseFileNavigatorAction"/>
+                <ref bean="taskNavigatorAction"/>
+                <ref bean="searchNavigatorAction"/>
+                <ref bean="adminNavigatorAction"/>
+                <ref bean="reportNavigatorAction"/>
+                <ref bean="auditNavigatorAction"/>
+                <ref bean="notificationNavigatorAction"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- top bar buttons -->
+    <bean id="createTaskAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Task"/>
+        <property name="iconName" value="i-checkmark"/>
+        <property name="url" value="/plugin/task/wizard"/>
+        <property name="requiredPrivilege" value="acm-complaint-create"/>
+    </bean>
+    
+    <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="${create.complaint.button.text}"/>
+        <property name="iconName" value="i-notice"/>
+        <property name="url" value="/plugin/complaint/wizard"/>
+        <property name="requiredPrivilege" value="acm-complaint-create"/>
+    </bean>
+
+    <bean id="createCaseFileAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="${create.casefile.button.text}"/>
+        <property name="iconName" value="i-file2"/>
+        <property name="url" value="/plugin/casefile/wizard"/>
+        <property name="requiredPrivilege" value="case-file-create"/>
+    </bean>
+
+    <!-- end of top bar actions -->
+
+    <!-- navigator tabs -->
+    <bean id="taskNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Tasks"/>
+        <property name="iconName" value="i-checkmark"/>
+        <property name="url" value="/plugin/task"/>
+        <property name="requiredPrivilege" value="acm-complaint-list"/>
+    </bean>
+
+    <bean id="complaintNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="${complaint.navigator.tab.text}"/>
+        <property name="iconName" value="i-notice"/>
+        <property name="url" value="/plugin/complaint"/>
+        <property name="requiredPrivilege" value="acm-complaint-list"/>
+    </bean>
+
+    <bean id="searchNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Search"/>
+        <property name="iconName" value="i-search2"/>
+        <property name="url" value="/plugin/search"/>
+        <property name="requiredPrivilege" value="acm-search"/>
+    </bean>
+
+    <bean id="caseFileNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Case Files"/>
+        <property name="iconName" value="i-folder"/>
+        <property name="url" value="/plugin/casefile"/>
+        <property name="requiredPrivilege" value="case-file-list"/>
+    </bean>
+
+    <bean id="dashboardNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Dashboard"/>
+        <property name="iconName" value="i-statistics"/>
+        <property name="url" value="/plugin/dashboard"/>
+        <property name="requiredPrivilege" value="acm-dashboard"/>
+    </bean>
+
+    <bean id="adminNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Administration"/>
+        <!--<property name="iconName" value="i-settings"/>-->
+
+        <property name="iconName" value="fa-wrench"/>
+
+        <property name="url" value="/plugin/admin"/>
+        <property name="requiredPrivilege" value="acm-admin"/>
+    </bean>
+
+    <bean id="auditNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Audit"/>
+        <property name="iconName" value="fa-bolt"/>
+        <property name="url" value="/plugin/audit"/>
+        <property name="requiredPrivilege" value="acm-audit"/>
+    </bean>
+
+    <bean id="reportNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Report"/>
+        <property name="iconName" value="i-stats"/>
+        <property name="url" value="/plugin/report"/>
+        <property name="requiredPrivilege" value="acm-report"/>
+    </bean>
+	
+	<bean id="notificationNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Notifications"/>
+        <property name="iconName" value="i-chat3"/>
+        <property name="url" value="/plugin/notification"/>
+        <property name="requiredPrivilege" value="acm-notification"/>
+    </bean>
+    <!-- end of navigator tabs -->
+
+
+</beans>

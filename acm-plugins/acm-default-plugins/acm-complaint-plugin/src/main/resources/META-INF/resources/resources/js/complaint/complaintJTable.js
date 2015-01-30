@@ -64,7 +64,9 @@ Complaint.JTable = {
         argNew.fields.subTables = {
             title: 'Entities'
             ,width: '10%'
-            ,sorting: false
+            ,paging: true //fix me
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,edit: false
             ,create: false
             ,openChildAsAccordion: true
@@ -112,7 +114,8 @@ Complaint.JTable = {
         argNew.fields.subTables = {
             title: 'Entities'
             ,width: '10%'
-            ,sorting: false
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,edit: false
             ,create: false
             ,openChildAsAccordion: true
@@ -175,6 +178,8 @@ Complaint.JTable = {
 
             title: 'Initiator'
             ,paging: false
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -282,7 +287,9 @@ Complaint.JTable = {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
                 title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Device'
                 }
@@ -430,7 +437,9 @@ Complaint.JTable = {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Organization'
                 }
@@ -580,7 +589,9 @@ Complaint.JTable = {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
                 title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Location'
                 }
@@ -761,7 +772,9 @@ Complaint.JTable = {
         $jt.jtable('openChildTable', $row.closest('tr')
             , {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Alias'
                 }
@@ -969,7 +982,8 @@ Complaint.JTable = {
     ,createJTablePeople: function($s) {
         this._createJTable4SubTablePeople($s, {
             title: 'People'
-            ,paging: false
+            ,paging: true //fix me
+            ,sorting: true //fix me
             ,messages: {
                 addNewRecord: 'Add Person'
             }
@@ -1127,7 +1141,11 @@ Complaint.JTable = {
         $t.jtable('openChildTable'
             ,$row.closest('tr')
             , {
-                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES, sorting: true, messages: {
+                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
+                ,messages: {
                     addNewRecord: 'Add Device'
                 }, actions: {
                     listAction: function (postData, jtParams) {
@@ -1319,7 +1337,9 @@ Complaint.JTable = {
             $row.closest('tr'),
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                 addNewRecord: 'Add Organization'
             }
@@ -1527,7 +1547,9 @@ Complaint.JTable = {
             $row.closest('tr'),
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                 addNewRecord: 'Add Location'
             }
@@ -1769,7 +1791,9 @@ Complaint.JTable = {
             $row.closest('tr'),
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                 addNewRecord: 'Add Alias'
             }
@@ -1987,8 +2011,10 @@ Complaint.JTable = {
     ,createJTableDocuments: function($s) {
         $s.jtable({
             title: 'Documents'
-            ,paging: false
-            ,messages: {
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
+                ,messages: {
                 addNewRecord: 'Add Document'
             }
             ,actions: {
@@ -2110,6 +2136,9 @@ Complaint.JTable = {
         AcmEx.Object.jTableCreatePaging($jt
             ,{
                 title: 'Tasks'
+                ,paging: true
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,selecting: true
                 ,multiselect: false
                 ,selectingCheckboxes: false
@@ -2174,7 +2203,7 @@ Complaint.JTable = {
                         ,list: true
                         ,create: false
                         ,edit: false
-                        ,sorting: false
+                        ,sorting: true //fix me
                         ,width: '5%'
                         ,display: function (commData) {
                             var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
@@ -2186,7 +2215,7 @@ Complaint.JTable = {
                     ,title: {
                         title: 'Title'
                         ,width: '30%'
-                        ,sorting: false
+                        ,sorting: true //fix me
                         ,display: function (commData) {
                             var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
                                 + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -2197,27 +2226,27 @@ Complaint.JTable = {
                     ,created: {
                         title: 'Created'
                         ,width: '10%'
-                        ,sorting: false
+                        ,sorting: true //fix me
                     }
                     ,priority: {
                         title: 'Priority'
                         ,width: '10%'
-                        ,sorting: false
+                        ,sorting: true //fix me
                     }
                     ,dueDate: {
                         title: 'Due'
                         ,width: '10%'
-                        ,sorting: true
+                        ,sorting: true //fix me
                     }
                     ,assignee: {
                         title: 'Assignee'
                         ,width: '10%'
-                        ,sorting: true
+                        ,sorting: true //fix me
                     }
                     ,status: {
                         title: 'Status'
                         ,width: '10%'
-                        ,sorting: false
+                        ,sorting: true //fix me
                     }
                     /*,description: {
                      title: 'Action'
@@ -2254,7 +2283,9 @@ Complaint.JTable = {
     ,createJTableLocation: function($s) {
         $s.jtable({
             title: 'Location'
-            ,paging: false
+            ,paging: false //fix me
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,messages: {
                 addNewRecord: 'Add Location'
             }
@@ -2377,7 +2408,9 @@ Complaint.JTable = {
     ,createJTableNotes: function($s) {
         $s.jtable({
             title: 'Notes'
-            ,paging: false
+            ,paging: true //fix me
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,messages: {
                 addNewRecord: 'Add Note'
             }
@@ -2523,7 +2556,9 @@ Complaint.JTable = {
     ,createJTableParticipants: function($s) {
         $s.jtable({
             title: 'Participants'
-            ,paging: false
+            ,paging: true //fix me
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,messages: {
                 addNewRecord: 'Add Participants'
             }
@@ -2624,6 +2659,118 @@ Complaint.JTable = {
     }
     //----------------- end of Participants ----------------------
 
+
+
+    //----------------- References ------------------------------
+
+    ,createJTableReferences: function($s) {
+        $s.jtable({
+            title: 'References'
+            ,paging: true //fix me
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var c = Complaint.getComplaint();
+                    if (c && c.childObjects) {
+                        for (var i = 0; i < c.childObjects.length; i++) {
+                            var childObject = c.childObjects[i];
+                            if("REFERENCE" == childObject.associationType){
+                                var record = {};
+                                record.id = Acm.goodValue(childObject.targetId, 0);
+                                record.title = Acm.goodValue(childObject.targetName);
+                                record.modified = Acm.getDateFromDatetime(childObject.modified);
+                                record.type = Acm.goodValue(childObject.targetType);
+                                record.status = Acm.goodValue(childObject.status);
+                                rc.Records.push(record);
+                            }
+                            rc.TotalRecordCount = rc.Records.length;
+                        }
+                    }
+                    return rc;
+                }
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                    ,defaultvalue : 0
+                }
+                ,title: {
+                    title: 'Title'
+                    ,width: '30%'
+                    ,edit: true
+                    ,create: false
+                    ,display: function(data) {
+                        var url = App.getContextPath() + '/plugin/complaint/' + data.record.id;
+                        var $lnk = $("<a href='" + url + "'>" + data.record.title + "</a>");
+                        return $lnk;
+                    }
+                }
+                ,modified: {
+                    title: 'Modified'
+                    ,width: '14%'
+                    ,edit: false
+                    ,create: false
+                }
+                ,type: {
+                    title: 'Reference Type'
+                    ,width: '14%'
+                    ,edit: false
+                    ,create: false
+                }
+                ,status: {
+                    title: 'Status'
+                    ,width: '14%'
+                    ,edit: false
+                    ,create: false
+                }
+            } //end field
+        });
+
+        $s.jtable('load');
+    }
+    //----------------- end of References ----------------------
+
+
+    //----------------- History ------------------------------
+
+    ,createJTableHistory: function($s) {
+        var sortMap = {};
+        AcmEx.Object.jTableCreatePaging($s
+            , {
+                title: 'History'
+                ,paging: true
+                ,sorting: true
+                ,pageSize: 10 //Set page size (default: 10)
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        var rc = AcmEx.Object.jTableGetEmptyRecords();
+                        return rc;
+                    }
+                }
+                , fields: {
+                    id: {
+                        title: 'ID', key: true, list: false, create: false, edit: false
+                    }, eventType: {
+                        title: 'Event Name', width: '10%'
+                    }, eventDate: {
+                        title: 'Date', width: '12%'
+                    }, userId: {
+                        title: 'User', width: '10%'
+                    }
+                }//end field
+            }
+
+            //end arg
+            //,sortMap
+        );
+    }
+    //----------------- end of history ----------------------
 
 };
 
