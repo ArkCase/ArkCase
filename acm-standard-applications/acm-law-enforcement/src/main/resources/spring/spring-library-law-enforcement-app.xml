@@ -23,19 +23,19 @@
         <property name="location" value="file:${user.home}/.acm/lawEnforcementApp.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
-        <!--<property name="properties">-->
-            <!--<props>-->
-                <!--<prop key="create.complaint.button.text">Complaint</prop>-->
-                <!--<prop key="complaint.navigator.tab.text">Complaints</prop>-->
-                <!--<prop key="complaint.list.page.title">Complaints | ACM | Armedia Case Management</prop>-->
-                <!--<prop key="complaint.list.page.short.text">Complaints</prop>-->
-                <!--<prop key="complaint.list.page.long.text">Complaints</prop>-->
-                <!--<prop key="complaint.wizard.page.title">Complaint | ACM | Armedia Case Management</prop>-->
-                <!--<prop key="complaint.wizard.page.short.text">New Complaint</prop>-->
-                <!--<prop key="complaint.wizard.page.long.text">New Complaint</prop>-->
-                <!--<prop key="create.casefile.button.text">Case File</prop>-->
-            <!--</props>-->
-        <!--</property>-->
+        <property name="properties">
+            <props>
+                <prop key="create.complaint.button.text">Complaint</prop>
+                <prop key="complaint.navigator.tab.text">Complaints</prop>
+                <prop key="complaint.list.page.title">Complaints | ACM | Armedia Case Management</prop>
+                <prop key="complaint.list.page.short.text">Complaints</prop>
+                <prop key="complaint.list.page.long.text">Complaints</prop>
+                <prop key="complaint.wizard.page.title">Complaint | ACM | Armedia Case Management</prop>
+                <prop key="complaint.wizard.page.short.text">New Complaint</prop>
+                <prop key="complaint.wizard.page.long.text">New Complaint</prop>
+                <prop key="create.casefile.button.text">Case File</prop>
+            </props>
+        </property>
     </bean>
 
     <import resource="file:${user.home}/.acm/app-config.xml"/>
