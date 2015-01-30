@@ -841,8 +841,9 @@ CaseFile.View = CaseFile.View || {
                 ]
                 ,{
                     title: 'People'
-                    ,paging: true   //fix me
-                    ,sorting: true  //fix me
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Person'
                     }
@@ -1025,7 +1026,9 @@ CaseFile.View = CaseFile.View || {
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
                     title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_CONTACT_METHODS
-                    ,sorting: true
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Device'
                     }
@@ -1183,7 +1186,9 @@ CaseFile.View = CaseFile.View || {
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
                     title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_SECURITY_TAGS
-                    ,sorting: true
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Device'
                     }
@@ -1333,7 +1338,9 @@ CaseFile.View = CaseFile.View || {
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
                     title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
-                    ,sorting: true
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Organization'
                     }
@@ -1481,7 +1488,9 @@ CaseFile.View = CaseFile.View || {
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
                     title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ADDRESSES
-                    ,sorting: true
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Location'
                     }
@@ -1688,7 +1697,9 @@ CaseFile.View = CaseFile.View || {
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
                     title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ALIASES
-                    ,sorting: true
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Alias'
                     }
@@ -1953,8 +1964,9 @@ CaseFile.View = CaseFile.View || {
         ,createJTableDocuments: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: 'Documents'
-                ,paging: true   //fix me
-                ,sorting: true  //fix me
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Document'
                 }
@@ -2117,8 +2129,9 @@ CaseFile.View = CaseFile.View || {
         ,createJTableParticipants: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: 'Participants'
-                ,paging: true   //fix me
-                ,sorting: true  //fix me
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Participant'
                 }
@@ -2300,6 +2313,9 @@ CaseFile.View = CaseFile.View || {
             AcmEx.Object.JTable.usePaging($jt
                 ,{
                     title: 'Notes'
+                    ,paging: true
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,selecting: true
                     ,multiselect: false
                     ,selectingCheckboxes: false
@@ -2580,8 +2596,9 @@ CaseFile.View = CaseFile.View || {
                     ,multiselect: false
                     ,selecting: false
                     ,selectingCheckboxes: false
-                    ,paging: true   //fix me
-                    ,sorting: true  //fix me
+                    ,paging: true
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Task'
                     }
@@ -2623,7 +2640,6 @@ CaseFile.View = CaseFile.View || {
                             ,list: true
                             ,create: false
                             ,edit: false
-                            ,sorting: false
                             ,display: function (commData) {
                                 var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
                                     + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -2634,7 +2650,6 @@ CaseFile.View = CaseFile.View || {
                         ,title: {
                             title: 'Title'
                             ,width: '30%'
-                            //,sorting: false
                             ,display: function (commData) {
                                 var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
                                     + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -2650,27 +2665,22 @@ CaseFile.View = CaseFile.View || {
                         ,created: {
                             title: 'Created'
                             ,width: '15%'
-                            //,sorting: false
                         }
                         ,priority: {
                             title: 'Priority'
                             ,width: '10%'
-                            //,sorting: false
                         }
                         ,dueDate: {
                             title: 'Due'
                             ,width: '15%'
-                            //,sorting: true
                         }
                         ,status: {
                             title: 'Status'
                             ,width: '10%'
-                            //,sorting: false
                         }
                         ,description: {
                             title: 'Action'
                             ,width: '10%'
-                            //,sorting: false
                             ,edit: false
                             ,create: false
                             ,display: function (commData) {
@@ -2731,8 +2741,9 @@ CaseFile.View = CaseFile.View || {
 
             AcmEx.Object.JTable.useBasic($jt, {
                     title: 'References'
-                    ,paging: true   //fix me
-                    ,sorting: true  //fix me
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Reference'
                     }
@@ -2906,7 +2917,10 @@ CaseFile.View = CaseFile.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'Events'
+                    title: 'History'
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,selecting: true
                     ,multiselect: false
                     ,selectingCheckboxes: false
@@ -3031,8 +3045,9 @@ CaseFile.View = CaseFile.View || {
         , createJTableCorrespondence: function ($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: 'Correspondence'
-                ,paging: true   //fix me
-                ,sorting: true  //fix me
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 , messages: {
                     addNewRecord: 'Add Correspondence'
                 }

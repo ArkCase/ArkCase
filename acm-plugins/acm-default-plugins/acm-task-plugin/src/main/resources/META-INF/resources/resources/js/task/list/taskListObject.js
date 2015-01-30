@@ -583,7 +583,7 @@ TaskList.Object = {
                 })
 
                     .addLeaf({key: pageId + "." + taskBranchID + ".Details"                   //level 2: /Task/Details
-                        , title: "Details"
+                        , title: "Task Details"
                     })
                     .addLeaf({key: pageId + "." + taskBranchID + ".ReworkInstructions"                   //level 2: /Task/Waiver Details
                         , title: "Waiver Details"
