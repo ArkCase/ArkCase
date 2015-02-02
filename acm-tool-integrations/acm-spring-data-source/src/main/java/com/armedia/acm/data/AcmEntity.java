@@ -8,6 +8,11 @@ import java.util.Date;
  */
 public interface AcmEntity
 {
+    String CREATOR_PROPERTY_NAME = "creator";
+    String MODIFIER_PROPERTY_NAME = "modifier";
+    String CREATED_PROPERTY_NAME = "created";
+    String MODIFIED_PROPERTY_NAME = "modified";
+
     String getCreator();
     void setCreator(String creator);
     String getModifier();

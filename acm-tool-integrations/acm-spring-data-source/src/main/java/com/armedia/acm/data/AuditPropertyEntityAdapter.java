@@ -34,26 +34,30 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
         // insert record directly, instead of just modifying the AcmEntity.
         if ( data instanceof AcmEntity )
         {
-            log.trace("Entity type '" + data.getClass() + "' is an AcmEntity, setting insert fields.");
+            if ( log.isTraceEnabled() )
+            {
+                log.trace("Entity type '" + data.getClass() + "' is an AcmEntity, setting insert fields.");
+            }
+
             AcmEntity entity = (AcmEntity) data;
 
             Date today = new Date();
             String user = getUserId();
 
-            String created = getDatabaseColumnName(event, "created");
+            String created = getDatabaseColumnName(event, AcmEntity.CREATED_PROPERTY_NAME);
             record.put(created, today);
 
-            String creator = getDatabaseColumnName(event, "creator");
+            String creator = getDatabaseColumnName(event, AcmEntity.CREATOR_PROPERTY_NAME);
             record.put(creator, getUserId());
 
             // some entities, notably AcmNote, do not support mods, and so they will not have modified or modifier.
-            String modified = getDatabaseColumnName(event, "modified");
+            String modified = getDatabaseColumnName(event, AcmEntity.MODIFIED_PROPERTY_NAME);
             if ( modified != null )
             {
                 record.put(modified, today);
             }
 
-            String modifier = getDatabaseColumnName(event, "modifier");
+            String modifier = getDatabaseColumnName(event, AcmEntity.MODIFIER_PROPERTY_NAME);
             if ( modifier != null )
             {
                 record.put(modifier, getUserId());
@@ -68,7 +72,10 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
         }
         else
         {
-            log.trace("Entity type '" + data.getClass() + "' is NOT an AcmEntity, NOT setting insert fields.");
+            if ( log.isTraceEnabled() )
+            {
+                log.trace("Entity type '" + data.getClass() + "' is NOT an AcmEntity, NOT setting insert fields.");
+            }
         }
     }
 
@@ -90,19 +97,23 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
         // insert record directly, instead of just modifying the AcmEntity.
         if ( data instanceof AcmEntity )
         {
-            log.trace("Entity type '" + data.getClass() + "' is an AcmEntity, setting update fields.");
+            if ( log.isTraceEnabled() )
+            {
+                log.trace("Entity type '" + data.getClass() + "' is an AcmEntity, setting update fields.");
+            }
+
             AcmEntity entity = (AcmEntity) data;
 
             Date today = new Date();
             String user = getUserId();
 
-            String modified = getDatabaseColumnName(event, "modified");
+            String modified = getDatabaseColumnName(event, AcmEntity.MODIFIED_PROPERTY_NAME);
             if ( modified != null )
             {
                 record.put(modified, today);
             }
 
-            String modifier = getDatabaseColumnName(event, "modifier");
+            String modifier = getDatabaseColumnName(event, AcmEntity.MODIFIER_PROPERTY_NAME);
             if ( modifier != null )
             {
                 record.put(modifier, getUserId());
@@ -115,7 +126,10 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
         }
         else
         {
-            log.trace("Entity type '" + data.getClass() + "' is NOT an AcmEntity, NOT setting update fields.");
+            if ( log.isTraceEnabled() )
+            {
+                log.trace("Entity type '" + data.getClass() + "' is NOT an AcmEntity, NOT setting update fields.");
+            }
         }
     }
 
