@@ -613,7 +613,7 @@ Admin.View = Admin.View || {
                         if(node.data.type != null){
                             $tdList.eq(3).text(node.data.type);
                         }
-                        if(node.data.supervisor != null){
+                        if(node.data.supervisor){
                             $tdList.eq(4).text(node.data.supervisor);
                         }
                         if(node.data.type == "ADHOC_GROUP"){
