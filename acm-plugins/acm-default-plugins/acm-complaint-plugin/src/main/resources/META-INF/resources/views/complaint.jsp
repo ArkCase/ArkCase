@@ -255,13 +255,31 @@
                                                 </div>
                                             </div>
 
-
-
-
-
                                             <div class="row" id="tabRefComplaints" style="display:none;">
-                                                    <%--Other Complaints--%>
+                                                <div class="col-md-12">
+                                                    <section class="panel b-a">
+                                                        <div id="divReferences" style="width:100%"></div>
+                                                    </section>
+                                                </div>
                                             </div>
+
+                                            <div class="row" id="tabHistory" style="display:none;">
+                                                <div class="col-md-12">
+                                                    <section class="panel b-a">
+                                                        <div id="divHistory" style="width:100%"></div>
+                                                    </section>
+                                                </div>
+                                            </div>
+
+
+
+
+
+
+
+                                            <%--<div class="row" id="tabRefComplaints" style="display:none;">
+                                                    &lt;%&ndash;Other Complaints&ndash;%&gt;
+                                            </div>--%>
 
                                             <div class="row" id="tabRefCases" style="display:none;">
                                                     <%--Other Cases--%>
