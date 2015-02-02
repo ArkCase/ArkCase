@@ -69,6 +69,12 @@ var Application = Application || {
         if ("undefined" != typeof Profile) {
             acmModules.push(Profile);
         }
+        if ("undefined" != typeof Subscription) {
+            acmModules.push(Subscription);
+        }
+        if ("undefined" != typeof Notification) {
+            acmModules.push(Notification);
+        }
 
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
