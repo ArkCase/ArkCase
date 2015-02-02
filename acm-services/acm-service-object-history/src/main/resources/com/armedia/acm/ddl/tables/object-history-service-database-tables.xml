@@ -1,0 +1,50 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    
+    <changeSet id="01-create-object-history-table" author="riste.tutureski">
+        <createTable tableName="acm_object_history">
+            <column name="cm_id" type="NUMBER(32,0)">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_object_history_id"/>
+            </column>
+            <column name="cm_object_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_string" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_date" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_type" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_object_history" baseColumnNames="cm_user_id"
+                                 constraintName="fk_object_history_user_id"
+                                 referencedTableName="acm_user"
+                                 referencedColumnNames="cm_user_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
+</databaseChangeLog>

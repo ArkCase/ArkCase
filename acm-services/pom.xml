@@ -33,8 +33,10 @@
         <module>acm-service-correspondence</module>
         <module>acm-service-milestone</module>
         <module>acm-service-participants</module>
-    <module>acm-service-functional-access-control</module>
+    	<module>acm-service-functional-access-control</module>
         <module>acm-service-subscription</module>
+        <module>acm-service-object-history</module>
+    <module>acm-service-user-notification</module>
   </modules>
 
 
