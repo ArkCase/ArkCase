@@ -22,11 +22,11 @@
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
     <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css'/>"/>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 
     <!-- Fancy Tree -->
-    <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet'/>">
+    <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_contextmenu}/${js_contextmenu}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/jquery.fancytree.table.js'/>"></script>
