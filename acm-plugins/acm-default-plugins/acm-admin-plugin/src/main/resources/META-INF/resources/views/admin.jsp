@@ -19,28 +19,28 @@
     <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminService.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
     <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 
     <!-- Fancy Tree -->
-    <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
-    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree}"></script>
-    <script src="<c:url value='/'/>resources/vendors/${vd_contextmenu}/${js_contextmenu}"></script>
-    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/jquery.fancytree.table.js"></script>
+    <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_contextmenu}/${js_contextmenu}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/jquery.fancytree.table.js'/>"></script>
 
 
 
     <!-- Dashboard -->
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular-resource.min.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/moment.min.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/ng-table.js"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/angular.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/angular-resource.min.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/moment.min.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/ng-table.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/js/admin/dashboard/angular/dashboardConfigServices.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/js/admin/dashboard/angular/dashboardConfig.js"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/dashboard/angular/dashboardConfigServices.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/dashboard/angular/dashboardConfig.js'/>"></script>
 
 
 
