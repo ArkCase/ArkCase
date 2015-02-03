@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
+		"classpath:/spring/spring-library-object-history.xml",
         "classpath:/spring/spring-library-case-file.xml",
         "classpath:/spring/spring-library-data-source.xml",
         "classpath:/spring/test-case-file-context.xml",

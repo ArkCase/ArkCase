@@ -10,7 +10,7 @@ import com.armedia.acm.service.objecthistory.model.AcmAssigneeChangeEvent;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEventType;
-import com.armedia.acm.service.objecthistory.model.AssigneeChangeInfo;
+import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 
 /**
  * @author riste.tutureski
@@ -30,9 +30,12 @@ public class AcmObjectHistoryEventPublisher implements ApplicationEventPublisher
 		getEventPublisher().publishEvent(event);
 	}
 	
-	public void publishAssigneeChangeEvent(AssigneeChangeInfo source)
+	public void publishAssigneeChangeEvent(AcmAssignment source, String userId, String ipAddress)
 	{
 		AcmAssigneeChangeEvent event = new AcmAssigneeChangeEvent(source);
+		
+		event.setUserId(userId);
+		event.setIpAddress(ipAddress);
 		event.setSucceeded(true);
 		
 		getEventPublisher().publishEvent(event);

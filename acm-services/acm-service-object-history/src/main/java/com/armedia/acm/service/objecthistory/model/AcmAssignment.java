@@ -7,7 +7,7 @@ package com.armedia.acm.service.objecthistory.model;
  * @author riste.tutureski
  *
  */
-public class AssigneeChangeInfo {
+public class AcmAssignment {
 
 	private Long objectId;
 	private String objectType;
@@ -16,11 +16,11 @@ public class AssigneeChangeInfo {
 	private String newAssignee;
 	private String oldAssignee;
 	
-	public AssigneeChangeInfo() {
+	public AcmAssignment() {
 		
 	}
 	
-	public AssigneeChangeInfo(Long objectId, String objectType, String objectNumber, String objectName, String newAssignee, String oldAssignee) {
+	public AcmAssignment(Long objectId, String objectType, String objectNumber, String objectName, String newAssignee, String oldAssignee) {
 		setObjectId(objectId);
 		setObjectType(objectType);
 		setObjectNumber(objectNumber);

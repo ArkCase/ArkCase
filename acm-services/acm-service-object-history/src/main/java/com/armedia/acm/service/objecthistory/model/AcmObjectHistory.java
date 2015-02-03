@@ -11,10 +11,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 
 /**
@@ -23,7 +25,7 @@ import com.armedia.acm.data.AcmEntity;
  */
 @Entity
 @Table(name = "acm_object_history")
-public class AcmObjectHistory implements Serializable, AcmEntity{
+public class AcmObjectHistory implements Serializable, AcmObject, AcmEntity{
 
 	private static final long serialVersionUID = 9140143221014764628L;
 
@@ -38,6 +40,7 @@ public class AcmObjectHistory implements Serializable, AcmEntity{
 	@Column(name = "cm_object_type")
 	private String objectType;
 	
+	@Lob
 	@Column(name = "cm_object_string")
 	private String objectString;
 	

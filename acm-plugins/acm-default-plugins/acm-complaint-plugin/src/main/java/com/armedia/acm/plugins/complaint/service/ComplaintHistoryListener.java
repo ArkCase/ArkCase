@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.service.objecthistory.service;
+package com.armedia.acm.plugins.complaint.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,12 +9,13 @@ import org.springframework.context.ApplicationListener;
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
+import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 
 /**
  * @author riste.tutureski
  *
  */
-public class AcmComplaintHistoryListener implements ApplicationListener<ComplaintPersistenceEvent>{
+public class ComplaintHistoryListener implements ApplicationListener<ComplaintPersistenceEvent>{
 
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	
@@ -27,15 +28,18 @@ public class AcmComplaintHistoryListener implements ApplicationListener<Complain
 	{
 		LOG.debug("Complaint event raised. Start adding it to the object history ...");
 		
-		boolean execute = checkExecution(event.getEventType());
-		
-		if (event != null && execute)
-		{
-			Complaint complaint = (Complaint) event.getSource();
+		if (event != null)
+		{		
+			boolean execute = checkExecution(event.getEventType());
 			
-			getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), complaint, complaint.getComplaintId(), OBJECT_TYPE, event.getEventDate(), event.getIpAddress()); 	
-			
-			LOG.debug("Complain History added to database.");
+			if (execute)
+			{
+				Complaint complaint = (Complaint) event.getSource();
+				
+				getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), complaint, complaint.getComplaintId(), OBJECT_TYPE, event.getEventDate(), event.getIpAddress()); 	
+				
+				LOG.debug("Complain History added to database.");
+			}
 		}
 	}
 	
