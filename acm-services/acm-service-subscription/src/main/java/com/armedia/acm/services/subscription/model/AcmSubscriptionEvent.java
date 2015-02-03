@@ -10,6 +10,8 @@ import java.util.Date;
 /**
  * Created by marjan.stefanoski on 29.01.2015.
  */
+@Entity
+@Table(name = "acm_subscription")
 public class AcmSubscriptionEvent implements AcmObject, AcmEntity {
 
     @Id
@@ -31,7 +33,7 @@ public class AcmSubscriptionEvent implements AcmObject, AcmEntity {
     private Date eventDate;
 
     @Column(name="cm_event_subscription_owner", nullable = false)
-    private String eventSubscriptionOwner;
+    private String subscriptionOwner;
 
     @Column(name="cm_event_type", nullable = false)
     private String eventType;
@@ -136,12 +138,12 @@ public class AcmSubscriptionEvent implements AcmObject, AcmEntity {
         this.eventDate = eventDate;
     }
 
-    public String getEventSubscriptionOwner() {
-        return eventSubscriptionOwner;
+    public String getSubscriptionOwner() {
+        return subscriptionOwner;
     }
 
-    public void setEventSubscriptionOwner(String eventSubscriptionOwner) {
-        this.eventSubscriptionOwner = eventSubscriptionOwner;
+    public void setSubscriptionOwner(String subscriptionOwner) {
+        this.subscriptionOwner = subscriptionOwner;
     }
 
     public String getEventType() {

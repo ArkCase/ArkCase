@@ -3,4 +3,24 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
+    <bean id="createSubscriptionAPIController" class="com.armedia.acm.services.subscription.web.api.CreateSubscriptionAPIController">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="subscriptionDao" ref="subscriptionDao"/>
+        <property name="subscriptionPlugin" ref="subscriptionPlugin"/>
+    </bean>
+
+    <bean id="listSubscriptionByUserAPIController" class="com.armedia.acm.services.subscription.web.api.ListSubscriptionByUserAPIController">
+        <property name="subscriptionPlugin" ref="subscriptionPlugin"/>
+        <property name="subscriptionDao" ref="subscriptionDao"/>
+    </bean>
+
+    <bean id="removingSubscriptionAPIController" class="com.armedia.acm.services.subscription.web.api.RemovingSubscriptionAPIController">
+        <property name="subscriptionDao" ref="subscriptionDao"/>
+        <property name="subscriptionPlugin" ref="subscriptionPlugin"/>
+    </bean>
+
+    <bean class="com.armedia.acm.services.subscription.web.api.GetUserSubscriptionAPIController">
+        <property name="subscriptionDao" ref="subscriptionDao"/>
+    </bean>
+
 </beans>
