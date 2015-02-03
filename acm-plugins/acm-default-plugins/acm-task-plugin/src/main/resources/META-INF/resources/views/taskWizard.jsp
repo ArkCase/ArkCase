@@ -23,18 +23,18 @@
     <script type="text/javascript" src="<c:url value='/resources/js/task/wizard/taskWizardService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/wizard/taskWizardCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_datepicker}/${js_datepicker}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_parsley}/${js_parsley}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_wizard}/${js_wizard_bootstrap}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_wizard}/${js_wizard_demo}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_datepicker}/${js_datepicker}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_parsley}/${js_parsley}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_wizard}/${js_wizard_bootstrap}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_wizard}/${js_wizard_demo}'/>"></script>
 
     <!-- Summernote WYSIWYG -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/${js_summernote}"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_summernote}/summernote.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_summernote}/${js_summernote}'/>"></script>
 
     <!-- Multi-Select Field WYSIWYG -->
-    <script type="text/javascript" charset="utf-8" src="<c:url value='/'/>resources/vendors/${vd_chosen}/${js_chosen}"></script>
+    <script type="text/javascript" charset="utf-8" src="<c:url value='/resources/vendors/${vd_chosen}/${js_chosen}'/>"></script>
 </jsp:attribute>
 
 <jsp:body>
