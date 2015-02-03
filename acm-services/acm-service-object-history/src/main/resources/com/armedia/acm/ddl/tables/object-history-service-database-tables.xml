@@ -47,4 +47,17 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
     </changeSet>
+    
+    <changeSet id="02-create-object-history-index" author="riste.tutureski">
+    	<createIndex tableName="acm_object_history" indexName="idx_object_history_object_id">
+           <column name="cm_object_id"/>
+       </createIndex>
+       <createIndex tableName="acm_object_history" indexName="idx_object_history_object_type">
+           <column name="cm_object_type"/>
+       </createIndex>
+    </changeSet>
+    
+    <changeSet id="03-remove-object-history-foreign-key" author="riste.tutureski">
+  		<dropForeignKeyConstraint baseTableName="acm_object_history" constraintName="fk_object_history_user_id"/>
+    </changeSet>
 </databaseChangeLog>

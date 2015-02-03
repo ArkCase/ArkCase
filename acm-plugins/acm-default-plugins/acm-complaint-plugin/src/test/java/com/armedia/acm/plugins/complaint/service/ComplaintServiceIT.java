@@ -33,6 +33,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations =
         {
+				"/spring/spring-library-object-history.xml",
                 "/spring/spring-library-data-source.xml",
                 "/spring/spring-library-object-association-plugin.xml",
                 "/spring/spring-library-complaint-plugin-test.xml",

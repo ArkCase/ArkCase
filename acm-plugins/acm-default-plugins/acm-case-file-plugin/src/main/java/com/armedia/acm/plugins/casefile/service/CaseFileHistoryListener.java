@@ -1,4 +1,4 @@
-package com.armedia.acm.service.objecthistory.service;
+package com.armedia.acm.plugins.casefile.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,12 +6,13 @@ import org.springframework.context.ApplicationListener;
 
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 
 /**
  * @author riste.tutureski
  *
  */
-public class AcmCaseFileHistoryListener implements ApplicationListener<CaseEvent> {
+public class CaseFileHistoryListener implements ApplicationListener<CaseEvent> {
 
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	

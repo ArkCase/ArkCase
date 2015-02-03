@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.service.objecthistory.model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,13 +17,15 @@ public class AcmAssigneeChangeEvent extends AcmEvent{
 
 	private static final long serialVersionUID = -969356637766220472L;
 	
-	private static final String EVENT_TYPE = "com.armedia.acm.object.assagnee.change";
+	public static final String EVENT_TYPE = "com.armedia.acm.object.assignee.change";
 	
-	public AcmAssigneeChangeEvent(AssigneeChangeInfo source) {
+	public AcmAssigneeChangeEvent(AcmAssignment source) {
 		super(source);
 		
 		setObjectId(source.getObjectId());
 		setObjectType(source.getObjectType());
+		setEventDate(new Date());
+		setEventType(EVENT_TYPE);
 		
 		Map<String, Object> eventProperties = new HashMap<String, Object>();
 		

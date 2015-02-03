@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.service.objecthistory.service;
+package com.armedia.acm.plugins.task.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,12 +9,13 @@ import org.springframework.context.ApplicationListener;
 
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 
 /**
  * @author riste.tutureski
  *
  */
-public class AcmTaskHistoryListener implements ApplicationListener<AcmApplicationTaskEvent> {
+public class TaskHistoryListener implements ApplicationListener<AcmApplicationTaskEvent> {
 
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	
@@ -26,15 +27,18 @@ public class AcmTaskHistoryListener implements ApplicationListener<AcmApplicatio
 	public void onApplicationEvent(AcmApplicationTaskEvent event) {
 		LOG.debug("Task event raised. Start adding it to the object history ...");
 		
-		boolean execute = checkExecution(event.getEventType());
-		
-		if (event != null && execute)
+		if (event != null)
 		{
-			AcmTask task = (AcmTask) event.getSource();
+			boolean execute = checkExecution(event.getEventType());
 			
-			getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), task, task.getId(), OBJECT_TYPE, event.getEventDate(), event.getIpAddress()); 	
-			
-			LOG.debug("Task History added to database.");
+			if (execute)
+			{
+				AcmTask task = (AcmTask) event.getSource();
+				
+				getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), task, task.getId(), OBJECT_TYPE, event.getEventDate(), event.getIpAddress()); 	
+				
+				LOG.debug("Task History added to database.");
+			}
 		}
 	}
 	
