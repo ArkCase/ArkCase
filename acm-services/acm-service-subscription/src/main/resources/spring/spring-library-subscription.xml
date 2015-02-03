@@ -5,13 +5,14 @@
 
     <task:scheduler id="subscriptionEventTaskScheduler" pool-size="1"/>
 
+    
     <bean id="subscriptionDao" class="com.armedia.acm.services.subscription.dao.SubscriptionDao"/>
 
     <bean id="subscriptionEventDao" class="com.armedia.acm.services.subscription.dao.SubscriptionEventDao"/>
 
     <bean id="subscriptionEventToSolrTransformer" class="com.armedia.acm.services.subscription.service.SubscriptionEventToSolrTransformer">
         <property name="subscriptionEventDao" ref="subscriptionEventDao"/>
-        <property name="subscriptionEventPlugin" ref="subscriptionEventPlugin"/>
+        <property name="subscriptionEventPlugin" ref="subscriptionPlugin"/>
     </bean>
 
     <bean id="eventTypeProperties"
@@ -28,9 +29,22 @@
         </property>
     </bean>
 
-    <bean id="subscriptionEventPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
-        <property name="pluginName" value="Search Plugin"/>
-        <property name="pluginProperties" ref="eventTypeProperties"/>
+    <bean id="subscriptionProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/subscriptionPlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="subscriptionPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="Subscription Service Plugin"/>
         <property name="privileges">
             <list>
                 <ref bean="subscribePrivilege"/>
@@ -106,7 +120,13 @@
                     <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
                     <property name="requiredPrivilege" ref="subscribePrivilege"/>
                 </bean>
+                <bean id="subscriptionUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/subscription"/>
+                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
+                </bean>
             </list>
+
         </property>
     </bean>
 

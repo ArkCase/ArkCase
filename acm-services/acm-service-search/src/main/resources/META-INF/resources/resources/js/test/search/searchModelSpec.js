@@ -8,6 +8,8 @@ describe("Search.Model", function() {
     var testData = null;
 
     beforeEach(function() {
+        Search.Model.setSearchInfo(AcmEx.Model.Search.getDefaultSearchInfo());
+
         testData =
         {
             "responseHeader":{
@@ -244,13 +246,13 @@ describe("Search.Model", function() {
         v = "CASE_FILE";
         Search.Model.addFilter(si, k, v);
         expect(Search.Model.findFilter(si, k, v)).toEqual(true);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month&fq="Object Type":CASE_FILE');
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month%26fq="Object Type":CASE_FILE');
 
         k = "Create Date";
         v = "Previous Year";
         Search.Model.removeFilter(si, k, v);
         expect(Search.Model.findFilter(si, k, v)).toEqual(false);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Month&fq="Object Type":CASE_FILE');
+        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Month%26fq="Object Type":CASE_FILE');
 
     });
 

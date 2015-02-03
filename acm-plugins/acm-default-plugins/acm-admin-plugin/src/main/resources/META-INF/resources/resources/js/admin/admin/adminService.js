@@ -122,13 +122,10 @@ Admin.Service = {
                                     var children = currentGroup.children;
                                     currentGroup.children.splice(0,children.length);
                                 }
-                                if(!currentGroup.supervisor){
-                                    currentGroup.supervisor = {};
+                                if(!currentGroup.supervisor) {
+                                    currentGroup.supervisor = null;
                                 }
-                                else if(currentGroup.supervisor){
-                                    //response contains all members, so have to clear the members from the cache to prevent duplicates
-                                    currentGroup.supervisor = response.supervisor.userId;
-                                }
+                                currentGroup.supervisor = response.supervisor.userId;
                                 Admin.Model.Organization.Tree.sourceLoaded(false);
                                 Admin.Controller.modelAddedGroupSupervisor(currentGroup.supervisor,parentGroupId);
                             }
@@ -310,7 +307,7 @@ Admin.Service = {
                             var foundInGroup = false;
                             //first check in groups to remove the object manually from cache
                             for(var i = 0; i < groups.length; i++){
-                                if(removedGroup.id == groups[i].title){
+                                if(removedGroup.name == groups[i].title){
                                     groups.splice(i,1);
                                     Admin.Model.Organization.cacheGroups.put("groups",groups);
                                     foundInGroup = true;
@@ -320,7 +317,7 @@ Admin.Service = {
                             //then check in subgroups to remove the object manually from cache
                             if(foundInGroup == false){
                                 for(var j = 0; j < subGroups.length; j++){
-                                    if(removedGroup.id == subGroups[j].title){
+                                    if(removedGroup.name == subGroups[j].title){
                                         subGroups.splice(j,1);
                                         Admin.Model.Organization.cacheSubgroups.put("subgroups",subGroups);
                                         break;

@@ -61,7 +61,7 @@ Complaint.Object = {
 
         this.$divLocation		= $('#divLocation');
         Complaint.JTable.createJTableLocation(this.$divLocation);
-        
+
         this.$divInitiator      = $("#divInitiator");
         Complaint.JTable.createJTableInitiator(this.$divInitiator);
 
@@ -72,7 +72,7 @@ Complaint.Object = {
         this.$divDocuments      = $("#divDocuments");
         Complaint.JTable.createJTableDocuments(this.$divDocuments);
         this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
-		this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
+        this.$spanAddDocument.unbind("click").on("click", function(e){Complaint.Event.onClickSpanAddDocument(e);});
         Complaint.Page.fillReportSelection();
 
         this.$divTasks          = $("#divTasks");
@@ -83,9 +83,18 @@ Complaint.Object = {
         this.$divNotes = $("#divNotes");
         Complaint.JTable.createJTableNotes(this.$divNotes);
 
+        this.$divParticipants = $("#divParticipants");
+        Complaint.JTable.createJTableParticipants(this.$divParticipants);
+
+        this.$divReferences = $("#divReferences");
+        Complaint.JTable.createJTableReferences(this.$divReferences);
+
+        this.$divHistory = $("#divHistory");
+        Complaint.JTable.createJTableHistory(this.$divHistory);
+
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
-        
+
         this.$lnkComplaintClose = $("#closeComplaint");
         this.$lnkComplaintClose.click(function(e){Complaint.Event.onCloseComplaint(e)});
 
@@ -106,13 +115,13 @@ Complaint.Object = {
     ,setFormUrls: function(formUrls) {
         this._formUrls = formUrls;
     }
-    
+
     ,_formDocuments: null
     ,getFormDocuments: function() {
-    	return this._formDocuments;
+        return this._formDocuments;
     }
     ,setFormDocuments: function(formDocuments) {
-    	this._formDocuments = formDocuments;
+        this._formDocuments = formDocuments;
     }
 
     ,_token: ""
@@ -122,7 +131,7 @@ Complaint.Object = {
     ,setToken: function(token) {
         this._token = token;
     }
-    
+
 
 
     ,beforeSpanAddDocument: function(html) {
@@ -148,6 +157,8 @@ Complaint.Object = {
             ,"tabApprovers"
             ,"tabCollaborators"
             ,"tabWatchers"
+            ,"tabParticipants"
+            ,"tabHistory"
         ];
         var tabIdsToShow = this._getTabIdsByKey(key);
         for (var i = 0; i < tabIds.length; i++) {
@@ -280,11 +291,11 @@ Complaint.Object = {
         this.setTextLnkStatus(c.status);
 
         this.setHtmlDivDetails(c.details);
-        
+
         if (c.status === 'CLOSED' || c.status === 'IN APPROVAL'){
-        	this.$lnkComplaintClose.hide();
+            this.$lnkComplaintClose.hide();
         }else{
-        	this.$lnkComplaintClose.show();
+            this.$lnkComplaintClose.show();
         }
 
         this.refreshJTableLocation();
@@ -293,7 +304,9 @@ Complaint.Object = {
         this.refreshJTableTasks();
         this.refreshJTablePeople();
         this.refreshJTableNotes();
-
+        this.refreshJTableParticipants();
+        this.refreshJTableReferences();
+        this.refreshJTableHistory();
     }
 
 
@@ -381,6 +394,8 @@ Complaint.Object = {
             ,"tabApprovers"
             ,"tabCollaborators"
             ,"tabWatchers"
+            ,"tabParticipants"
+            ,"tabHistory"
         ]
         ,pci: ["tabDetail"
             ,"tabLocation"
@@ -388,12 +403,14 @@ Complaint.Object = {
             ,"tabPeople"
             ,"tabNotes"
         ]
-        ,pcid: ["tabDetail"
-            ,"tabLocation"]
+        ,pcid: ["tabDetail"]
         ,pcii: ["tabInitiator"]
         ,pcip: ["tabPeople"]
         ,pcipc: ["tabPeople"]
         ,pcin: ["tabNotes"]
+        ,pcpn: ["tabParticipants"]
+        ,pcref: ["tabReferences"]
+        ,pcl: ["tabLocation"]
         ,pcd: ["tabDocuments"]
         ,pct: ["tabTasks"]
         ,pch: ["tabHistory"]
@@ -588,11 +605,15 @@ Complaint.Object = {
                         ,expanded: false
                         ,acmIcon: "<i class='i i-notice'></i>" //"i-notice icon";
                     })
-                        .addLeaf({key: pageId + "." + complaintId + ".ii"                //level 3: /Complaint/Incident/Initiator
-                            ,title: "Initiator"
-                        })
+
                         .addLeaf({key: pageId + "." + complaintId + ".id"                //level 3: /Complaint/Incident/Detail
                             ,title: "Details"
+                        })
+                        .addLeaf({key: pageId + "." + complaintId + ".l"                //level 3: /Complaint/Incident/Location
+                            ,title: "Location"
+                        })
+                        .addLeaf({key: pageId + "." + complaintId + ".ii"                //level 3: /Complaint/Incident/Initiator
+                            ,title: "Initiator"
                         })
                         .addLeaf({key: pageId + "." + complaintId + ".ip"                //level 3: /Complaint/Incident/People
                             ,title: "People"
@@ -600,13 +621,13 @@ Complaint.Object = {
                         .addLeaf({key: pageId + "." + complaintId + ".d"                   //level 2: /Complaint/Documents
                             ,title: "Documents"
                         })
+                        .addLeaf({key: pageId + "." + complaintId + ".t"                   //level 2: /Complaint/Tasks
+                            ,title: "Tasks"
+                        })
                         .addLeaf({key: pageId + "." + complaintId + ".in"            //level 3: /Complaint/Incident/Notes
                             ,title: "Notes"
                         })
-                        .addLeaf({key: pageId + "." + complaintId + ".t"                   //level 2: /Complaint/Tasks
-                                ,title: "Tasks"
-                        })
-                        .addLeaf({key: pageId + "." + complaintId + ".p"               //level 2: /Complaint/Participants
+                        .addLeaf({key: pageId + "." + complaintId + ".pn"               //level 2: /Complaint/Participants
                             ,title: "Participants"
                         })
                         .addLeaf({key: pageId + "." + complaintId + ".r"                   //level 2: /Complaint/References
@@ -618,7 +639,7 @@ Complaint.Object = {
                 } //end for i
 
                 if ((0 > treeInfo.total)                                    //unknown size
-                     || (treeInfo.total - treeInfo.n > treeInfo.start)) {   //no more page left
+                    || (treeInfo.total - treeInfo.n > treeInfo.start)) {   //no more page left
                     var title = (0 > treeInfo.total)? "More records..."
                         : (treeInfo.total - treeInfo.start - treeInfo.n) + " more records...";
                     builder.addLeafLast({key: "nextPage"
@@ -675,7 +696,7 @@ Complaint.Object = {
 
 
     ,refreshJTableLocation: function() {
-    	AcmEx.Object.jTableLoad(this.$divLocation);
+        AcmEx.Object.jTableLoad(this.$divLocation);
     }
     ,refreshJTableInitiator: function() {
         AcmEx.Object.jTableLoad(this.$divInitiator);
@@ -691,7 +712,15 @@ Complaint.Object = {
     }
     ,refreshJTableNotes: function(){
         AcmEx.Object.jTableLoad(this.$divNotes);
-
+    }
+    ,refreshJTableParticipants: function(){
+        AcmEx.Object.jTableLoad(this.$divParticipants);
+    }
+    ,refreshJTableReferences: function(){
+        AcmEx.Object.jTableLoad(this.$divReferences);
+    }
+    ,refreshJTableHistory: function(){
+        AcmEx.Object.jTableLoad(this.$divReferences);
     }
 
 };
