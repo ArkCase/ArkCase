@@ -148,54 +148,54 @@
 
 
 <!-- Bootstrap http://getbootstrap.com -->
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_jquery_ui}/css/ui-lightness/jquery-ui-1.10.3.custom.min.css" type="text/css"/>
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_bootstrap}/css/bootstrap.css" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${vd_jquery_ui}/css/ui-lightness/jquery-ui-1.10.3.custom.min.css'/>" type="text/css"/>
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${vd_bootstrap}/css/bootstrap.css'/>" />
 
 
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_font_awesome}/css/font-awesome.min.css" />
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/animate.css" />
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/icon.css" />
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/font.css" />
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${acm_theme}/css/app.css" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${vd_font_awesome}/css/font-awesome.min.css'/>" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${acm_theme}/css/animate.css'/>" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${acm_theme}/css/icon.css'/>" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${acm_theme}/css/font.css'/>" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${acm_theme}/css/app.css'/>" />
 
 <!--[if lt IE 8]>
-<link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_ie}/css/ie.css" />
+<link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${vd_ie}/css/ie.css'/>" />
 <![endif]-->
 
 <!-- from http://getbootstrap.com/getting-started:  -->
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_ie}/js/html5shiv.js" ></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_ie}/js/respond.min.js" ></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_ie}/js/excanvas.js" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_ie}/js/html5shiv.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_ie}/js/respond.min.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_ie}/js/excanvas.js'/>" ></script>
 <![endif]-->
 
 
 <!-- jquery must be first -->
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jquery}/jquery-1.11.0.js" ></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jquery_ui}/js/jquery-ui-1.10.3.custom.min.js" ></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_microdata}/jquery.microdata.js" ></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_bootstrap}/js/bootstrap.js" ></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_issueCollector}/jiraIssueCollector.js" ></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_bootbox}/bootbox.min.js" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery}/jquery-1.11.0.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_ui}/js/jquery-ui-1.10.3.custom.min.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_microdata}/jquery.microdata.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_bootstrap}/js/bootstrap.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_issueCollector}/jiraIssueCollector.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_bootbox}/bootbox.min.js'/>" ></script>
 
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acm.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDialog.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmAjax.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmDispatcher.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmObject.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmValidator.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmModel.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/core/acmService.js"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/core/acm.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/core/acmDialog.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/core/acmAjax.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/core/acmDispatcher.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/core/acmObject.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/core/acmValidator.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/core/acmModel.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/core/acmService.js'/>"></script>
 
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmEx.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmExObject.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmExModel.js"></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/ex/acmExService.js"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/ex/acmEx.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/ex/acmExObject.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/ex/acmExModel.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/ex/acmExService.js'/>"></script>
 
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.js" ></script>
-<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_acm}/js/app.plugin.js" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app.plugin.js'/>" ></script>
 
-<script type="text/javascript" src="<c:url value='/'/>resources/${vd_app}/js/application.js" ></script>
+<script type="text/javascript" src="<c:url value='/resources/${vd_app}/js/application.js'/>" ></script>
 
