@@ -23,4 +23,7 @@
         <property name="subscriptionDao" ref="subscriptionDao"/>
     </bean>
 
+    <bean id="subscriptionUiController" class="com.armedia.acm.services.subscription.web.SubscriptionUiController">
+        <property name="acmPluginManager" ref="acmPluginManager"/>
+    </bean>
 </beans>

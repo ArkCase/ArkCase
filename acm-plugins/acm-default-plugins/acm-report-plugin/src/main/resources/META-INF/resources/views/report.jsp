@@ -19,7 +19,7 @@
     <script type="text/javascript" src="<c:url value='/resources/js/report/reportService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/report/reportCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
 </jsp:attribute>
 

@@ -15,11 +15,11 @@
     <script type="text/javascript" src="<c:url value='/resources/js/audit/auditController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/audit/auditService.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js'/>"></script>
 
     <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 </jsp:attribute>
 
 <jsp:body>
