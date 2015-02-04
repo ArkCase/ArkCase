@@ -388,6 +388,10 @@ Search.View = {
                                 }
                                 var $lnk = $("<a href='" + url + "'>" + data.record.name + "</a>");
                                 //$lnk.click(function(){alert("click" + data.record.id)});
+
+
+                                //var $lnk = $("<p>line1</p><p>line2</p></br><p>line3</p><a href='" + url + "'>" + data.record.name + "</a><div>hello world1</div><div>hello world2</div>");
+
                                 return $lnk;
                             }
                         }
