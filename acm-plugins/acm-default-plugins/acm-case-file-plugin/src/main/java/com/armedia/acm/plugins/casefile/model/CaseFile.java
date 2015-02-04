@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.casefile.model;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanConverter;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -9,6 +9,8 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.Converter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -16,6 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.*;
 
+@Converter(name = "booleanStringConverter", converterClass = BooleanConverter.class)
 @Entity
 @Table(name="acm_case_file")
 @XmlRootElement(name = "caseFile")
@@ -116,6 +119,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     private PersonAssociation originator;
 
     @Column(name = "cm_case_restricted_flag", nullable = false)
+    @Convert("booleanStringConverter")
     private Boolean restricted = Boolean.FALSE;
 
     @PrePersist
