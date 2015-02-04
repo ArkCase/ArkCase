@@ -75,7 +75,8 @@ AcmEx.Model = {
                 var ti = this.getTreeInfo();
                 var tiInit = this._initTreeInfo.get();
                 if (this.validateTreeInfo(tiInit)) {
-                    if (this.getName() == Acm.goodValue(tiInit.name)) {
+                    //if (this.getName() == Acm.goodValue(tiInit.name)) {
+                        ti.name   = Acm.goodValue(tiInit.name);
                         ti.start  = Acm.goodValue(tiInit.start, 0);
                         ti.n      = Acm.goodValue(tiInit.n, 50);
                         ti.sort   = Acm.goodValue(tiInit.sort, null);
@@ -85,7 +86,7 @@ AcmEx.Model = {
                         ti.objId  = Acm.goodValue(tiInit.objId, 0);
 
                         this._initTreeInfo.set(null);
-                    }
+                    //}
                 }
 
                 if (0 == ti.objId && null == ti.key) {
