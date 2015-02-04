@@ -61,6 +61,7 @@ public class CaseFileDaoIT
         caseFile.setCaseType("caseType");
         caseFile.setStatus("status");
         caseFile.setTitle("title");
+        caseFile.setRestricted(true);
 
         CaseFile saved = caseFileDao.save(caseFile);
 
