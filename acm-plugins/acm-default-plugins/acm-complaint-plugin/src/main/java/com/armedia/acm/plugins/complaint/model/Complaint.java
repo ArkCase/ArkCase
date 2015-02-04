@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -9,6 +10,8 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.Converter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -44,6 +47,7 @@ import java.util.List;
 /**
  * Created by armdev on 4/4/14.
  */
+@Converter(name = "booleanStringConverter", converterClass = BooleanConverter.class)
 @Entity
 @Table(name = "acm_complaint")
 public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
@@ -154,6 +158,10 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "cm_disposition_id", insertable = false, updatable = false)
     private Disposition disposition;
+
+    @Column(name = "cm_complaint_restricted_flag", nullable = false)
+    @Convert("booleanStringConverter")
+    private Boolean restricted = false;
         
     @PrePersist
     protected void beforeInsert()
@@ -467,6 +475,16 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         this.disposition = disposition;
     }
 
+    public Boolean getRestricted()
+    {
+        return restricted;
+    }
+
+    public void setRestricted(Boolean restricted)
+    {
+        this.restricted = restricted;
+    }
+
     @Override
     public String toString()
     {
@@ -495,6 +513,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
                 ", frequency='" + frequency + '\'' +
                 ", location=" + location +
                 ", disposition=" + disposition +
+                ", restricted=" + restricted +
                 '}';
     }
 }
