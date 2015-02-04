@@ -65,6 +65,7 @@ public class ComplaintMuleIT
     public void saveComplaintFlow() throws Exception
     {
         Complaint complaint = complaintFactory.complaint();
+        complaint.setRestricted(true);
 
         // complaint number should be set by the flow
         complaint.setComplaintNumber(null);
