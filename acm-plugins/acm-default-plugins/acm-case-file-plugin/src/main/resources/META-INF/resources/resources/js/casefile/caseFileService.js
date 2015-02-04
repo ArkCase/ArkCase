@@ -1094,6 +1094,17 @@ CaseFile.Service = {
                 }
             }
         }
+        ,updateCaseRestriction: function(caseFileId, restriction) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                caseFile.restricted = restriction;
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        CaseFile.Controller.modelSavedRestriction(caseFileId, Acm.Service.responseWrapper(data, data.restricted));
+                    }
+                );
+            }
+        }
 
 
 //        ,closeCaseFile : function(data) {
