@@ -338,5 +338,13 @@
     	</addColumn>
     </changeSet>
 
+    <changeSet id="complaint-16-add-restricted-flag" author="dmiller">
+        <addColumn tableName="acm_complaint">
+            <column name="cm_complaint_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
