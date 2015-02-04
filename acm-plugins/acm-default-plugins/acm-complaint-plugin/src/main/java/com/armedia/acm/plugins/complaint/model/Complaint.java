@@ -154,6 +154,9 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "cm_disposition_id", insertable = false, updatable = false)
     private Disposition disposition;
+
+    @Column(name = "cm_complaint_restricted_flag", nullable = false)
+    private Boolean restricted = Boolean.FALSE;
         
     @PrePersist
     protected void beforeInsert()
@@ -467,6 +470,16 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         this.disposition = disposition;
     }
 
+    public Boolean getRestricted()
+    {
+        return restricted;
+    }
+
+    public void setRestricted(Boolean restricted)
+    {
+        this.restricted = restricted;
+    }
+
     @Override
     public String toString()
     {
@@ -495,6 +508,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
                 ", frequency='" + frequency + '\'' +
                 ", location=" + location +
                 ", disposition=" + disposition +
+                ", restricted=" + restricted +
                 '}';
     }
 }
