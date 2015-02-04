@@ -102,7 +102,9 @@ Admin.Model = Admin.Model || {
             group.parentId = response.parentId;
             group.subgroups = response.child_id_ss;
             group.members = response.members;
-            group.supervisor = response.supervisor.userId;
+            if(response.supervisor && response.supervisor.userId){
+                group.supervisor = response.supervisor.userId;
+            }
             return group;
         }
         //use this method to make group data from

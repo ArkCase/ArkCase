@@ -86,6 +86,12 @@ Complaint.Object = {
         this.$divParticipants = $("#divParticipants");
         Complaint.JTable.createJTableParticipants(this.$divParticipants);
 
+        this.$divReferences = $("#divReferences");
+        Complaint.JTable.createJTableReferences(this.$divReferences);
+
+        this.$divHistory = $("#divHistory");
+        Complaint.JTable.createJTableHistory(this.$divHistory);
+
         this.$tree = $("#tree");
         this._useFancyTree(this.$tree);
 
@@ -152,6 +158,7 @@ Complaint.Object = {
             ,"tabCollaborators"
             ,"tabWatchers"
             ,"tabParticipants"
+            ,"tabHistory"
         ];
         var tabIdsToShow = this._getTabIdsByKey(key);
         for (var i = 0; i < tabIds.length; i++) {
@@ -298,7 +305,8 @@ Complaint.Object = {
         this.refreshJTablePeople();
         this.refreshJTableNotes();
         this.refreshJTableParticipants();
-
+        this.refreshJTableReferences();
+        this.refreshJTableHistory();
     }
 
 
@@ -387,6 +395,7 @@ Complaint.Object = {
             ,"tabCollaborators"
             ,"tabWatchers"
             ,"tabParticipants"
+            ,"tabHistory"
         ]
         ,pci: ["tabDetail"
             ,"tabLocation"
@@ -400,6 +409,7 @@ Complaint.Object = {
         ,pcipc: ["tabPeople"]
         ,pcin: ["tabNotes"]
         ,pcpn: ["tabParticipants"]
+        ,pcref: ["tabReferences"]
         ,pcl: ["tabLocation"]
         ,pcd: ["tabDocuments"]
         ,pct: ["tabTasks"]
@@ -595,26 +605,27 @@ Complaint.Object = {
                         ,expanded: false
                         ,acmIcon: "<i class='i i-notice'></i>" //"i-notice icon";
                     })
-                        .addLeaf({key: pageId + "." + complaintId + ".ii"                //level 3: /Complaint/Incident/Initiator
-                            ,title: "Initiator"
-                        })
+
                         .addLeaf({key: pageId + "." + complaintId + ".id"                //level 3: /Complaint/Incident/Detail
                             ,title: "Details"
-                        })
-                        .addLeaf({key: pageId + "." + complaintId + ".ip"                //level 3: /Complaint/Incident/People
-                            ,title: "People"
                         })
                         .addLeaf({key: pageId + "." + complaintId + ".l"                //level 3: /Complaint/Incident/Location
                             ,title: "Location"
                         })
+                        .addLeaf({key: pageId + "." + complaintId + ".ii"                //level 3: /Complaint/Incident/Initiator
+                            ,title: "Initiator"
+                        })
+                        .addLeaf({key: pageId + "." + complaintId + ".ip"                //level 3: /Complaint/Incident/People
+                            ,title: "People"
+                        })
                         .addLeaf({key: pageId + "." + complaintId + ".d"                   //level 2: /Complaint/Documents
                             ,title: "Documents"
                         })
-                        .addLeaf({key: pageId + "." + complaintId + ".in"            //level 3: /Complaint/Incident/Notes
-                            ,title: "Notes"
-                        })
                         .addLeaf({key: pageId + "." + complaintId + ".t"                   //level 2: /Complaint/Tasks
                             ,title: "Tasks"
+                        })
+                        .addLeaf({key: pageId + "." + complaintId + ".in"            //level 3: /Complaint/Incident/Notes
+                            ,title: "Notes"
                         })
                         .addLeaf({key: pageId + "." + complaintId + ".pn"               //level 2: /Complaint/Participants
                             ,title: "Participants"
@@ -704,6 +715,12 @@ Complaint.Object = {
     }
     ,refreshJTableParticipants: function(){
         AcmEx.Object.jTableLoad(this.$divParticipants);
+    }
+    ,refreshJTableReferences: function(){
+        AcmEx.Object.jTableLoad(this.$divReferences);
+    }
+    ,refreshJTableHistory: function(){
+        AcmEx.Object.jTableLoad(this.$divReferences);
     }
 
 };
