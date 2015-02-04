@@ -1,0 +1,17 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="case-file-constraint-01-restricted-flag" author="dmiller">
+        <addForeignKeyConstraint
+                baseTableName="acm_case_file"
+                baseColumnNames="cm_case_restricted_flag"
+                constraintName="fk_case_file_restricted_flag"
+                referencedTableName="acm_boolean_lu"
+                referencedColumnNames="cm_value"
+                deferrable="true"
+                initiallyDeferred="true"/>
+    </changeSet>
+</databaseChangeLog>

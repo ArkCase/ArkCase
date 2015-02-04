@@ -23,30 +23,30 @@
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintJTable.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
     <!-- File Manager -->
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_knob}/js/${js_knob}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/${js_upload_fileupload}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/${js_upload_iframe}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_knob}/js/${js_knob}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_upload}/js/${js_upload_fileupload}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_upload}/js/${js_upload_iframe}'/>"></script>
 
     <!-- Summernote WYSIWYG -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/${js_summernote}"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_summernote}/summernote.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_summernote}/${js_summernote}'/>"></script>
 
     <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 
     <!-- Fancy Tree -->
-    <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
-    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree}"></script>
-    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree_table}"></script>
-    <script src="<c:url value='/'/>resources/vendors/${vd_contextmenu}/${js_contextmenu}"></script>
+    <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_table}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_contextmenu}/${js_contextmenu}'/>"></script>
 
     <!-- X-Editable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css" type="text/css"/>
-    <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/${js_x_editable}"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
+    <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
 /////////////////////////////////////////////////////////////////////
 <style>
@@ -255,13 +255,31 @@
                                                 </div>
                                             </div>
 
-
-
-
-
                                             <div class="row" id="tabRefComplaints" style="display:none;">
-                                                    <%--Other Complaints--%>
+                                                <div class="col-md-12">
+                                                    <section class="panel b-a">
+                                                        <div id="divReferences" style="width:100%"></div>
+                                                    </section>
+                                                </div>
                                             </div>
+
+                                            <div class="row" id="tabHistory" style="display:none;">
+                                                <div class="col-md-12">
+                                                    <section class="panel b-a">
+                                                        <div id="divHistory" style="width:100%"></div>
+                                                    </section>
+                                                </div>
+                                            </div>
+
+
+
+
+
+
+
+                                            <%--<div class="row" id="tabRefComplaints" style="display:none;">
+                                                    &lt;%&ndash;Other Complaints&ndash;%&gt;
+                                            </div>--%>
 
                                             <div class="row" id="tabRefCases" style="display:none;">
                                                     <%--Other Cases--%>
