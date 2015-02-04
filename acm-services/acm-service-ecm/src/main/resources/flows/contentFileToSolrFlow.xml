@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+
+
+    <http:endpoint name="http.submitContentFiles"
+                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.contentFileHandler}?overwrite=true&amp;literal.id=#[flowVars['docId']]"
+                   encoding="UTF-8"
+                   method="POST"
+                   exchange-pattern="request-response"
+                   contentType="#[flowVars['contentType']]"
+                   doc:name="Send Content File to SOLR">
+    </http:endpoint>
+
+    <flow name="jmsSendContentFileToSolr"
+          doc:name="Send Content File to SOLR"
+          doc:description="Send content files to the SOLR advanced search collection.  Payload must be an EcmFile.">
+
+        <jms:inbound-endpoint
+                queue="solrContentFile.in"
+                exchange-pattern="request-response"
+                connector-ref="ActiveMQ-ACM"
+                doc:name="JMS" />
+
+        <timer-interceptor/>
+
+        <logger category="com.armedia.acm.services.search.service" level="DEBUG"/>
+        
+        <set-variable variableName="docId" value="FILE-#[message.payload.fileId]"/>
+        <set-variable variableName="contentType" value="#[message.payload.fileMimeType]"/>
+
+        <logger category="com.armedia.acm.services.search.service" level="DEBUG" message="Doc ID: #[flowVars['docId']]" />
+
+        <cmis:get-content-stream
+            objectId="#[message.payload.ecmFileId]"/>   
+        
+        <set-payload value="#[message.payload.stream]"/>
+
+        <http:outbound-endpoint ref="http.submitContentFiles">
+            <response>
+                <object-to-string-transformer/>
+            </response>
+        </http:outbound-endpoint>
+    </flow>
+
+</mule>
