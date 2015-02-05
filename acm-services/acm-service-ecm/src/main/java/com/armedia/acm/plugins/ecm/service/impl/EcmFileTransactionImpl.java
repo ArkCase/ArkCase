@@ -123,6 +123,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         messageProps.put("inputStream", fileInputStream);
         messageProps.put("acmUser", authentication);
         messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
+
+
+
+
         MuleMessage received = getMuleClient().send("vm://updateFile.in", ecmFile, messageProps);
         ObjectId objectId = received.getPayload(ObjectId.class);
 
@@ -135,6 +139,16 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         if (null == objectId || !objectId.getId().replaceAll(";.*", "").equals(ecmFile.getEcmFileId()))
         {
         	throw new RuntimeException("Updating of the file " + ecmFile.getFileName() + " failed.");
+        }
+
+        Map<String, Object> headers = new HashMap<>();
+
+        MuleMessage response = getMuleClient().send("jms://solrContentFile.in", ecmFile, headers);
+
+        MuleException exc = response.getInboundProperty("saveException");
+        if ( exc != null )
+        {
+            throw exc;
         }
 
         return ecmFile;
