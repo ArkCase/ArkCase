@@ -309,7 +309,7 @@ or to add multiple fields to the same field for easier/faster searching.  -->
    <copyField source="*_b" dest="catch_all"/>
    <copyField source="*_t" dest="catch_all"/>
    <copyField source="content" dest="catch_all"/>
-   <copyField source="author" dest="catch_all"/>
+   <!--<copyField source="author" dest="catch_all"/>-->
    <copyField source="*_parseable" dest="catch_all"/>
    <copyField source="*_no_html_tags_parseable" dest="catch_all"/>
    
