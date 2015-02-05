@@ -245,13 +245,14 @@ Search.View = {
                 for (var i = 0; i < result.docs.length; i++) {
                     var Record = {};
                     Record.id = result.docs[i].object_id_s;
-                    Record.name    = Acm.goodValue(result.docs[i].name);
-                    Record.type    = Acm.goodValue(result.docs[i].object_type_s);
-                    Record.title   = Acm.goodValue(result.docs[i].title_parseable);
-                    Record.parent  = Acm.goodValue(result.docs[i].name);
-                    Record.parentType = Acm.goodValue(result.docs[i].object_type_s);
-                    Record.owner   = Acm.goodValue(result.docs[i].assignee_full_name_lcs); //owner_s
-                    Record.created = Acm.goodValue(result.docs[i].modified_date_tdt); //create_tdt
+                    Record.name       = Acm.goodValue(result.docs[i].name);
+                    Record.type       = Acm.goodValue(result.docs[i].object_type_s);
+                    Record.title      = Acm.goodValue(result.docs[i].title_parseable);
+                    Record.parentId   = Acm.goodValue(result.docs[i].parent_id_s);
+                    Record.parentName = Acm.goodValue(result.docs[i].parent_number_lcs);
+                    Record.parentType = Acm.goodValue(result.docs[i].parent_type_s);
+                    Record.owner      = Acm.goodValue(result.docs[i].assignee_full_name_lcs); //owner_s
+                    Record.modified   = Acm.goodValue(result.docs[i].modified_date_tdt);
                     jtData.Records.push(Record);
                 }
 
@@ -346,7 +347,7 @@ Search.View = {
 //                                }
 
 
-                                var $lnk = $("<a href='" + url + "'>" + data.record.name + "</a>");
+                                var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.name) + "</a>");
                                 //$lnk.click(function(){alert("click" + data.record.id)});
 
 
@@ -364,7 +365,15 @@ Search.View = {
                             title: 'Title'
                             ,width: '30%'
                         }
-                        ,parent: {
+                        ,parentId: {
+                            title: 'Parent ID'
+                            ,key: false
+                            ,list: false
+                            ,create: false
+                            ,edit: false
+                            ,sorting: false
+                        }
+                        ,parentName: {
                             title: 'Parent'
                             ,width: '15%'
                             ,sorting: false
@@ -372,9 +381,11 @@ Search.View = {
                                 var url = "#";
                                 var objectType = Search.View.MicroData.findObjectType(Acm.goodValue(data.record.parentType));
                                 if (objectType) {
-                                    url = App.getContextPath() + Acm.goodValue(objectType.url) + Acm.goodValue(data.record.id) + Acm.goodValue(objectType.urlEnd);
+                                    url = App.getContextPath() + Acm.goodValue(objectType.url) + Acm.goodValue(data.record.parentId) + Acm.goodValue(objectType.urlEnd);
                                 }
-                                var $lnk = $("<a href='" + url + "'>" + data.record.name + "</a>");
+
+                                var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.parentName, Acm.goodValue(data.record.parentId)) + "</a>");
+                                //var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.parentName) + "</a>");
                                 return $lnk;
                             }
                         }
@@ -388,7 +399,7 @@ Search.View = {
                             ,width: '15%'
                             ,sorting: false
                         }
-                        ,created: {
+                        ,modified: {
                             title: 'Modified'
                             ,type: 'textarea'
                             ,width: '20%'
