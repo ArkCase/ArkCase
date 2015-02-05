@@ -217,6 +217,8 @@ TaskList.Callback = {
 
                 //pack data into parent object
                 var parentObj = {}
+                parentObj.id = complaint.complaintId;
+                parentObj.objectType = "COMPLAINT";
                 parentObj.title = complaint.complaintTitle;
                 parentObj.incidentDate = complaint.created;
                 parentObj.priority =  complaint.priority;
@@ -243,6 +245,8 @@ TaskList.Callback = {
 
                 //pack data into parent object
                 var parentObj = {}
+                parentObj.id = c.id;
+                parentObj.objectType = "CASE_FILE";
                 parentObj.title = c.title;
                 parentObj.incidentDate = c.created;
                 parentObj.priority =  c.priority;
