@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
 
     <http:endpoint name="http.submitContentFiles"
-                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.contentFileHandler}?overwrite=true&amp;literal.id=#[flowVars['docId']]"
+                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.contentFileHandler}?overwrite=true&amp;literal.id=#[flowVars['docId']]&amp;literal.object_type_s=#[flowVars['objectType']]&amp;literal.modified_date_tdt=#[flowVars['modified']]&amp;literal.modifier_lcs=#[flowVars['modifier']]&amp;literal.create_date_tdt=#[flowVars['created']]&amp;literal.creator_lcs=#[flowVars['creator']]&amp;literal.name=#[flowVars['name']]&amp;literal.parent_id_s=#[flowVars['parent'].parentId]&amp;literal.parent_type_s=#[flowVars['parent'].parentType]&amp;literal.parent_number_lcs=#[flowVars['parent'].parentName]"
                    encoding="UTF-8"
                    method="POST"
                    exchange-pattern="request-response"
@@ -39,6 +39,13 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         
         <set-variable variableName="docId" value="FILE-#[message.payload.fileId]"/>
         <set-variable variableName="contentType" value="#[message.payload.fileMimeType]"/>
+        <set-variable variableName="objectType" value="FILE"/>
+        <set-variable variableName="created" value="#[message.payload.created]"/>
+        <set-variable variableName="creator" value="#[message.payload.creator]"/>
+        <set-variable variableName="modified" value="#[message.payload.modified]"/>
+        <set-variable variableName="modifier" value="#[message.payload.modifier]"/>
+        <set-variable variableName="name" value="#[message.payload.fileName]"/>
+        <set-variable variableName="parent" value="#[org.mule.util.CollectionUtils.get(payload.parentObjects, 0)]"/>
 
         <logger category="com.armedia.acm.services.search.service" level="DEBUG" message="Doc ID: #[flowVars['docId']]" />
 

@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -41,10 +43,24 @@ public class ContentFileToSolrFlowIT
     {
         EcmFile testFile = new EcmFile();
 
-        testFile.setEcmFileId("workspace://SpacesStore/b556008e-a682-4e74-bace-3daf79f2fcfc");
-        testFile.setFileName("ClearanceDenied.docx");
+        DateFormat solrDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        String created = solrDateFormat.format(new Date());
+        Date date = solrDateFormat.parse(created);
+
+        ObjectAssociation oa = new ObjectAssociation();
+        oa.setParentId(22222L);
+        oa.setParentName("PARENT-PARENT-PARENT");
+        oa.setParentType("COMPLAINT");
+
+        testFile.setEcmFileId("workspace://SpacesStore/2b697afd-6e7a-474b-bf75-5fadcb29fa84");
+        testFile.setFileName("Clearance Denied 2015130-230216-658.docx");
         testFile.setFileMimeType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        testFile.setFileId(92389238L);
+        testFile.setFileId(4444444L);
+        testFile.setCreated(date);
+        testFile.setModified(date);
+        testFile.setCreator("ann-acm");
+        testFile.setModifier("marjan-acm");
+        testFile.addParentObject(oa);
 
         Map<String, Object> headers = new HashMap<>();
 
@@ -55,8 +71,6 @@ public class ContentFileToSolrFlowIT
         assertNull(response.getExceptionPayload());
 
         log.debug("response: " + response.getPayloadAsString());
-
-
 
 
     }
