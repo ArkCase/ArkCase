@@ -48,8 +48,8 @@ public class ContentFileToSolrFlowIT
         Date date = solrDateFormat.parse(created);
 
         ObjectAssociation oa = new ObjectAssociation();
-        oa.setParentId(111111L);
-        oa.setParentName("PARENT-NAME");
+          oa.setParentId(111111L);
+      oa.setParentName("PARENT-NAME");
         oa.setParentType("CASE_FILE");
 
         testFile.setEcmFileId("workspace://SpacesStore/2b697afd-6e7a-474b-bf75-5fadcb29fa84");
