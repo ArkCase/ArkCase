@@ -71,6 +71,7 @@
                 fixed-delay="${solr.batchUpdateFrequencyInMilliseconds}"/>
     </task:scheduled-tasks>
 
+
     <bean id="acmJpaBatchUpdateService" class="com.armedia.acm.services.search.service.AcmJpaBatchUpdateService">
         <property name="batchUpdateBasedOnLastModifiedEnabled" value="${solr.enableBatchUpdateBasedOnLastModified}"/>
         <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.acm/solrLastBatchUpdate.properties"/>
@@ -81,6 +82,10 @@
         <property name="batchSize" value="${solr.batchUpdateBatchSize}"/>
         <property name="objectsToSearchService" ref="jpaObjectsToSearchService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="executeSolrQuery" class="com.armedia.acm.services.search.service.ExecuteSolrQuery">
+        <property name="muleClient" ref="muleClient"/>
     </bean>
 
     <!-- event publishers -->

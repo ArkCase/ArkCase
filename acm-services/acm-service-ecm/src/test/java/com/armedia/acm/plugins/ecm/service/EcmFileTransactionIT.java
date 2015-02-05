@@ -24,6 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,8 +92,19 @@ public class EcmFileTransactionIT
         InputStream is = uploadFile.getInputStream();
 
         EcmFile ecmFile = new EcmFile();
+
+        DateFormat solrDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        String created = solrDateFormat.format(new Date());
+        Date date = solrDateFormat.parse(created);
+
+
         ecmFile.setFileName("log4j.properties-" + System.currentTimeMillis());
         ecmFile.setFileMimeType("text/plain");
+
+        ecmFile.setCreator("ann-acm");
+        ecmFile.setModifier("marjan-acm");
+        ecmFile.setCreated(date);
+        ecmFile.setModified(date);
 
         ObjectAssociation parent = new ObjectAssociation();
         parent.setParentId(12345L);
@@ -110,10 +124,18 @@ public class EcmFileTransactionIT
 
         EcmFile found = message.getPayload(EcmFile.class);
 
+
+
+        Map<String, Object> headers = new HashMap<>();
+        MuleMessage response = muleClient.send("jms://solrContentFile.in", found, headers);
+
+        assertNotNull(response);
+
         entityManager.flush();
 
         assertNotNull(found.getEcmFileId());
         assertNotNull(found.getCreator());
+
 
         log.debug("upload file id '" + found.getEcmFileId() + "'");
 
