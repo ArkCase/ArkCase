@@ -92,6 +92,17 @@ describe("Acm", function()
         expect(Acm.goodValue(0,    123))     .toBe(0);      //0 is a valid number
     });
 
+    xit("Test Acm.goodValue() with array", function() {
+        var good = {name:"John", child:{name:"Charlie"}};
+        var bad1 = {name:"John", child:{}};
+        var bad2 = {name:"John"};
+
+        expect(Acm.goodValue([good, "child", "name"])).toBe("Charlie");
+        expect(Acm.goodValue([bad1, "child", "name"])).toBe("");
+        expect(Acm.goodValue([bad2, "child", "name"], "BadValue")).toBe("BadValue");
+
+    });
+
     it("Test Acm.makeNoneCacheUrl() function", function() {
         expect(Acm.makeNoneCacheUrl("some.com/some/path")).toBeginWith("some.com/some/path?rand=");
         expect(Acm.makeNoneCacheUrl("some.com/some/path/")).toBeginWith("some.com/some/path/?rand=");
