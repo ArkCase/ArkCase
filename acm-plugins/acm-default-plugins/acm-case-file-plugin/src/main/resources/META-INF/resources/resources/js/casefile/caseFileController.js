@@ -24,6 +24,7 @@ CaseFile.Controller = CaseFile.Controller || {
     ,MODEL_SAVED_PRIORITY                  : "case-model-saved-priority"               //param: caseFileId, priority
     ,MODEL_SAVED_DUE_DATE                  : "case-model-saved-due-date"               //param: caseFileId, dueDate
     ,MODEL_SAVED_DETAIL                    : "case-model-saved-detail"                 //param: caseFileId, details
+    ,MODEL_SAVED_RESTRICTION               : "case-model-saved-restriction"            //param: caseFileId, restriction
     ,MODEL_SAVED_CHILD_OBJECT              : "case-model-saved-childObject"            //param: caseFileId, childObject
     ,MODEL_ADDED_PARTICIPANT               : "case-model-added-participant"            //param: caseFileId, participant
     ,MODEL_UPDATED_PARTICIPANT             : "case-model-updated-participant"          //param: caseFileId, participant
@@ -70,7 +71,8 @@ CaseFile.Controller = CaseFile.Controller || {
     ,VIEW_CHANGED_SUBJECT_TYPE             : "case-view-changed-subject-type"          //param: caseFileId, caseType
     ,VIEW_CHANGED_PRIORITY                 : "case-view-changed-priority"              //param: caseFileId, priority
     ,VIEW_CHANGED_DUE_DATE                 : "case-view-changed-due-date"              //param: caseFileId, dueDate
-    ,VIEW_CHANGED_DETAIL                   : "case-viewl-changed-detai"                //param: caseFileId, details
+    ,VIEW_CHANGED_DETAIL                   : "case-view-changed-detail"                //param: caseFileId, details
+    ,VIEW_CLICKED_RESTRICT_CHECKBOX        : "case-view-clicked-restrict-checkbox"     //param: caseFileId,restriction
 
     ,VIEW_CHANGED_TREE_FILTER              : "case-view-changed-tree-filter"           //param: filter
     ,VIEW_CHANGED_TREE_SORT                : "case-view-changed-tree-sort"             //param: sort
@@ -143,6 +145,9 @@ CaseFile.Controller = CaseFile.Controller || {
     }
     ,modelSavedDetail : function(caseFileId, details) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DETAIL, caseFileId, details);
+    }
+    ,modelSavedRestriction : function(caseFileId, restriction) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_RESTRICTION, caseFileId, restriction);
     }
     ,modelSavedChildObject : function(caseFileId, childObject) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CHILD_OBJECT, caseFileId, childObject);
@@ -269,6 +274,9 @@ CaseFile.Controller = CaseFile.Controller || {
     }
     ,viewChangedDetail: function(caseFileId, details) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DETAIL, caseFileId, details);
+    }
+    ,viewClickedRestrictCheckbox: function(caseFileId, restriction) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLICKED_RESTRICT_CHECKBOX, caseFileId, restriction);
     }
     ,viewChangedTreeFilter: function(filter) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_TREE_FILTER, filter);

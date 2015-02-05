@@ -194,7 +194,7 @@ CaseFile.View = CaseFile.View || {
 
         ,updateTitle: function(caseFileId, caseTitle) {
             var key = CaseFile.Model.Tree.Key.getKeyByObj(caseFileId);
-            var node = this.tree.getNodeByKey(key);
+            var node = AcmEx.Object.Tree.tree.getNodeByKey(key);
             var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
             if (node && caseFile) {
                 var nodeDisplay = Acm.goodValue(caseTitle) + " (" + Acm.goodValue(caseFile.caseNumber) + ")";
@@ -494,6 +494,10 @@ CaseFile.View = CaseFile.View || {
             this.$lnkDueDate      = $("#dueDate");
             this.$lnkStatus       = $("#status");
 
+            this.$chkRestrict     = $("#restrict");
+            this.$chkRestrict.on("click", function(e) {CaseFile.View.Detail.onClickRestrictCheckbox(e, this);});
+
+
             AcmEx.Object.XEditable.useEditable(this.$lnkCaseTitle, {
                 success: function(response, newValue) {
                     CaseFile.Controller.viewChangedCaseTitle(AcmEx.Object.Tree.getActiveObjId(), newValue);
@@ -687,6 +691,10 @@ CaseFile.View = CaseFile.View || {
             CaseFile.Controller.viewChangedDetail(AcmEx.Object.Tree.getActiveObjId(), htmlDetail);
             App.Object.Dirty.clear("Editing case detail");
         }
+        ,onClickRestrictCheckbox: function(event,ctrl){
+            var restriction = ($(ctrl).prop('checked')) ? true : false;
+            CaseFile.Controller.viewClickedRestrictCheckbox(AcmEx.Object.Tree.getActiveObjId(),restriction);
+        }
 
 
         ,showTopPanel: function(show) {
@@ -704,6 +712,7 @@ CaseFile.View = CaseFile.View || {
         ,populateCaseFile: function(c) {
             if (c) {
                 this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
+                this.setPropertyRestricted(Acm.goodValue(c.restricted));
                 this.setTextLnkCaseTitle(Acm.goodValue(c.title));
                 this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));//c.incidentDate
                 this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
@@ -741,6 +750,9 @@ CaseFile.View = CaseFile.View || {
         }
         ,setTextLnkStatus: function(txt) {
             Acm.Object.setText(this.$lnkStatus, txt);
+        }
+        ,setPropertyRestricted: function(restriction){
+            this.$chkRestrict.prop('checked', restriction);
         }
         ,getHtmlDivDetail: function() {
             return AcmEx.Object.SummerNote.get(this.$divDetail);
