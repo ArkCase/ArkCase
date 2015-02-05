@@ -47,6 +47,26 @@ var App = App || {
         sessionStorage.setItem("AcmComplaintTreeInfo", data);
     }
 
+    ,buildObjectUrl : function(objectType, objectId)
+    {
+        var url = App.getContextPath();
+        if (App.OBJTYPE_CASE == objectType) {
+            url += "/plugin/casefile/" + objectId;
+        } else if (App.OBJTYPE_COMPLAINT == objectType) {
+            url += "/plugin/complaint/" + objectId;
+        } else if (App.OBJTYPE_TASK == objectType) {
+            url += "/plugin/task/" + objectId;
+        } else if (App.OBJTYPE_DOCUMENT == objectType) {
+            url += "/plugin/document/" + objectId;
+        } else if (App.OBJTYPE_PEOPLE == objectType) {
+            url += "/plugin/people/" + objectId;
+        }else if (App.OBJTYPE_PERSON == objectType) {
+            url += "/plugin/person/" + objectId;
+        }
+
+        return url;
+    }
+
 
 };
 
