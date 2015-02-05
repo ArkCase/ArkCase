@@ -95,6 +95,16 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             throw e;
         }
 
+        Map<String, Object> headers = new HashMap<>();
+
+        MuleMessage response = muleClient.send("jms://solrContentFile.in", saved, headers);
+
+        MuleException exc = response.getInboundProperty("saveException");
+        if ( exc != null )
+        {
+            throw exc;
+        }
+
         return saved;
     }
     
