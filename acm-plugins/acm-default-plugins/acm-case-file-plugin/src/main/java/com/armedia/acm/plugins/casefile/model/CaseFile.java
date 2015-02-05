@@ -387,7 +387,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
             }
         }
 
-        if ( ! found )
+        if ( ! found && assigneeUserId != null )
         {
             AcmParticipant p = new AcmParticipant();
             p.setParticipantLdapId(assigneeUserId);

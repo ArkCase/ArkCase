@@ -98,6 +98,12 @@ Complaint.Object = {
         this.$lnkComplaintClose = $("#closeComplaint");
         this.$lnkComplaintClose.click(function(e){Complaint.Event.onCloseComplaint(e)});
 
+        this.$chkRestrict = $("#restrict");
+        this.$chkRestrict.on("click", function(e){
+            var restriction = ($(this).prop('checked')) ? true : false;
+            Complaint.Event.onCheckedRestricted(restriction);
+        });
+
         var formUrls = new Object();
         formUrls["roi"] = $('#roiFormUrl').val();
         formUrls["close_complaint"] = $('#closeComplaintFormUrl').val();
@@ -131,6 +137,10 @@ Complaint.Object = {
     ,setToken: function(token) {
         this._token = token;
     }
+    ,setPropertyRestricted: function(restriction){
+        this.$chkRestrict.prop('checked', restriction);
+    }
+
 
 
 
@@ -268,6 +278,7 @@ Complaint.Object = {
 
     ,populateComplaint: function(c) {
         this.setValueLnkTitle(c.complaintTitle);
+        this.setPropertyRestricted(c.restricted);
         //this.setTextH4TitleHeader(" (" + c.complaintNumber + ")");
         this.setValueLnkComplaintNum(c.complaintNumber);
         this.setValueLnkIncident(Acm.getDateFromDatetime(c.incidentDate));

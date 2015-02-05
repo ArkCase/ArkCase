@@ -163,8 +163,20 @@
                                                             <input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />
                                                         </div>
                                                     </div>
+
+                                                    <div class="pull-left inline">
+                                                        <div class="btn-group">
+                                                            <label class="checkbox-inline">
+                                                                <input type="checkbox" id="restrict"> Restrict ?
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                             </div>
+                                            <hr/>
+
+
 
 
                                             <div class="row" id="tabDetail" style="display:none;">

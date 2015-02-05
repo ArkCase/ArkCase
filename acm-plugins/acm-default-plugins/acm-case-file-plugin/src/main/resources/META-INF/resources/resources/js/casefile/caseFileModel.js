@@ -133,7 +133,7 @@ CaseFile.Model = CaseFile.Model || {
             ]
 
             ,getKeyByObj: function(objId) {
-                var pageId = CaseFile.Model.Tree.Config.getPageId();
+                var pageId = AcmEx.Model.Tree.Config.getPageId();
                 return this.getKeyByObjWithPage(pageId, objId);
             }
             ,getKeyByObjWithPage: function(pageId, objId) {
@@ -190,6 +190,7 @@ CaseFile.Model = CaseFile.Model || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_ORGANIZATION          , this.onViewAddedOrganization);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_ORGANIZATION        , this.onViewUpdatedOrganization);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_ORGANIZATION        , this.onViewDeletedOrganization);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_RESTRICT_CHECKBOX        , this.onViewClickedRestrictCheckbox);
 
         }
         ,onInitialized: function() {
@@ -300,6 +301,9 @@ CaseFile.Model = CaseFile.Model || {
         }
         ,onViewDeletedOrganization: function(caseFileId, personAssociationId, organizationId) {
             CaseFile.Service.Detail.deleteOrganization(caseFileId, personAssociationId, organizationId);
+        }
+        ,onViewClickedRestrictCheckbox: function(caseFileId, restriction) {
+            CaseFile.Service.Detail.updateCaseRestriction(caseFileId, restriction);
         }
 
         ,getCaseFile: function(caseFileId) {
