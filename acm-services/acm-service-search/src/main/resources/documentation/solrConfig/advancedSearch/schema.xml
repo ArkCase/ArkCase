@@ -313,8 +313,8 @@ or to add multiple fields to the same field for easier/faster searching.  -->
    <copyField source="*_parseable" dest="catch_all"/>
    <copyField source="*_no_html_tags_parseable" dest="catch_all"/>
    
-   <copyField source="*name" dest="catch_all"/>
-   <copyField source="*id" dest="catch_all"/>
+   <copyField source="name" dest="catch_all"/>
+   <copyField source="id" dest="catch_all"/>
 
 <!--End of ACM copy Fields-->
 
