@@ -161,8 +161,9 @@
         NOTE: This field is not indexed by default, since it is also copied to "text"
         using copyField below. This is to save space. Use this field for returning and
         highlighting document content. Use the "text" field to search the content. -->
-   <field name="content" type="text_general" indexed="false" stored="true" multiValued="true"/>
+<!--   <field name="content" type="text_general" indexed="false" stored="true" multiValued="true"/> -->
    
+	<field name="content" type="text_general" indexed="true" stored="false" multiValued="true"/>
 
    <!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->
@@ -307,11 +308,13 @@ or to add multiple fields to the same field for easier/faster searching.  -->
    <copyField source="*_tdt" dest="catch_all"/>
    <copyField source="*_b" dest="catch_all"/>
    <copyField source="*_t" dest="catch_all"/>
+   <copyField source="content" dest="catch_all"/>
+   <copyField source="author" dest="catch_all"/>
    <copyField source="*_parseable" dest="catch_all"/>
    <copyField source="*_no_html_tags_parseable" dest="catch_all"/>
    
-   <copyField source="*name" dest="catch_all"/>
-   <copyField source="*id" dest="catch_all"/>
+   <copyField source="name" dest="catch_all"/>
+   <copyField source="id" dest="catch_all"/>
 
 <!--End of ACM copy Fields-->
 

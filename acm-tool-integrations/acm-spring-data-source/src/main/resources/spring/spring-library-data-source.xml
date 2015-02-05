@@ -90,30 +90,18 @@
         <property name="testOnConnect" value="true"/>
     </bean>
 
-    <!--<bean id="acmDataSource" class="org.apache.commons.dbcp2.BasicDataSource">-->
-        <!--<property name="driverClassName" value="${acm.driverClassName}"/>-->
-        <!--<property name="url" value="${acm.url}"/>-->
-        <!--<property name="username" value="${acm.username}"/>-->
-        <!--<property name="password" value="${acm.password}"/>-->
-        <!--<property name="initialSize" value="${acm.initialSize}"/>-->
-        <!--<property name="maxTotal" value="${acm.maxActive}"/>-->
-        <!--<property name="minIdle" value="${acm.minIdle}"/>-->
-        <!--<property name="testOnBorrow" value="${acm.testOnBorrow}"/>-->
-        <!--<property name="testOnReturn" value="${acm.testOnReturn}"/>-->
-        <!--<property name="validationQuery" value="${acm.validationQuery}"/>-->
-        <!--<property name="defaultAutoCommit" value="false"/>-->
-        <!--<property name="abandonedUsageTracking" value="true"/>-->
-        <!--<property name="logAbandoned" value="true"/>-->
-        <!--<property name="testWhileIdle" value="true"/>-->
-        <!--<property name="removeAbandonedTimeout" value="5"/>-->
-        <!--<property name="timeBetweenEvictionRunsMillis" value="5000"/>-->
-        <!--<property name="minEvictableIdleTimeMillis" value="5000"/>-->
-        <!--<property name="removeAbandonedOnBorrow" value="true"/>-->
-    <!--</bean>-->
+    <bean id="converterScanPostProcessor" class="com.armedia.acm.data.converter.ConverterScanPostProcessor">
+        <property name="packagesToScan" value="${jpa.model.packages}"/>
+    </bean>
 
     <bean id="acmPersistenceUnitManager" class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
         <property name="defaultDataSource" ref="acmDataSource"/>
         <property name="packagesToScan" value="${jpa.model.packages}"/>
+        <property name="persistenceUnitPostProcessors">
+            <list>
+                <ref bean="converterScanPostProcessor"/>
+            </list>
+        </property>
     </bean>
 
 

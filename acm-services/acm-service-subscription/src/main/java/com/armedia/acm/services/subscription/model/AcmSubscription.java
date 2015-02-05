@@ -10,6 +10,8 @@ import java.util.Date;
 /**
  * Created by marjan.stefanoski on 29.01.2015.
  */
+@Entity
+@Table(name = "acm_subscription")
 public class AcmSubscription implements AcmObject, AcmEntity {
 
     @Id
@@ -24,13 +26,13 @@ public class AcmSubscription implements AcmObject, AcmEntity {
     private Long objectId;
 
     @Column(name = "cm_object_type", nullable = false, insertable = true, updatable = false)
-    private String objectType;
-
-    @Column(name = "cm_object_number", nullable = false)
-    private String objectNumber;
+    private String subscriptionObjectType;
 
     @Column(name = "cm_object_name", nullable = false)
     private String objectName;
+
+    @Column(name = "cm_object_title", nullable = false)
+    private String objectTitle;
 
     @Column(name = "cm_subscription_creator", nullable = false, insertable = true, updatable = false)
     private String creator;
@@ -62,16 +64,12 @@ public class AcmSubscription implements AcmObject, AcmEntity {
         this.objectId = objectId;
     }
 
-    public void setObjectType(String objectType) {
-        this.objectType = objectType;
+    public String getSubscriptionObjectType() {
+        return subscriptionObjectType;
     }
 
-    public String getObjectNumber() {
-        return objectNumber;
-    }
-
-    public void setObjectNumber(String objectNumber) {
-        this.objectNumber = objectNumber;
+    public void setSubscriptionObjectType(String subscriptionObjectType) {
+        this.subscriptionObjectType = subscriptionObjectType;
     }
 
     public String getObjectName() {
@@ -80,6 +78,23 @@ public class AcmSubscription implements AcmObject, AcmEntity {
 
     public void setObjectName(String objectName) {
         this.objectName = objectName;
+    }
+
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getObjectTitle() {
+        return objectTitle;
+    }
+
+    public void setObjectTitle(String objectTitle) {
+        this.objectTitle = objectTitle;
     }
 
     @Override

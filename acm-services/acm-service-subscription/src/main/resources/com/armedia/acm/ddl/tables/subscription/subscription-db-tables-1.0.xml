@@ -88,4 +88,17 @@
 
         </changeSet>
 
+    <changeSet id="02-add-drop-columns-subscription-table-and-index-to-subscription-event-table" author="marst">
+
+        <dropColumn tableName="acm_subscription" columnName="cm_object_number"/>
+
+        <addColumn tableName="acm_subscription">
+            <column name="cm_object_title" type="VARCHAR(2048)"></column>
+        </addColumn>
+
+        <createIndex tableName="acm_subscription_event" indexName="idx_event_modified">
+            <column name="cm_event_modified" type="TIMESTAMP WITH TIME ZONE"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
