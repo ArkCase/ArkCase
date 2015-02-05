@@ -48,14 +48,14 @@ public class ContentFileToSolrFlowIT
         Date date = solrDateFormat.parse(created);
 
         ObjectAssociation oa = new ObjectAssociation();
-          oa.setParentId(111111L);
-      oa.setParentName("PARENT-NAME");
-        oa.setParentType("CASE_FILE");
+        oa.setParentId(22222L);
+        oa.setParentName("PARENT-PARENT-PARENT");
+        oa.setParentType("COMPLAINT");
 
         testFile.setEcmFileId("workspace://SpacesStore/2b697afd-6e7a-474b-bf75-5fadcb29fa84");
         testFile.setFileName("Clearance Denied 2015130-230216-658.docx");
         testFile.setFileMimeType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        testFile.setFileId(999L);
+        testFile.setFileId(4444444L);
         testFile.setCreated(date);
         testFile.setModified(date);
         testFile.setCreator("ann-acm");
