@@ -189,7 +189,7 @@ TaskList.Event = {
         if (clicked == "SEND_FOR_REWORK") {
             var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
             if (reworkInstructions == null || reworkInstructions == "") {
-                Acm.Dialog.error("Invalid rework instructions")
+                Acm.Dialog.info("Must enter rework details")
             }
             else {
                 var task = TaskList.getTask();
