@@ -27,6 +27,19 @@ public class AuditUiController
         String auditReportUri = getAuditProperties().get("AUDIT_REPORT");
         String auditCriteria = getAuditProperties().get("AUDIT_CRITERIA");
 
+        if (pentahoHost == null){
+            log.warn("Property not found in reports property file : PENTAHO_SERVER_URL");
+        }
+        if (pentahoPort == null){
+            log.warn("Property not found in reports property file : PENTAHO_SERVER_PORT");
+        }
+        if (auditReportUri == null){
+            log.warn("Property not found in audit property file : AUDIT_REPORT");
+        }
+        if (auditCriteria == null) {
+            log.warn("Property not found in audit property file : AUDIT_CRITERIA");
+        }
+
         if (pentahoHost != null && pentahoPort != null && auditReportUri != null && auditCriteria != null)
         {
         	String auditReportUrl = pentahoHost + pentahoPort + auditReportUri;

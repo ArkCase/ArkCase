@@ -26,8 +26,8 @@ Audit.View = Audit.View || {
         }
         ,onInitialized: function() {
         }
-        ,openAuditReport: function(event,ctrl){
-            var auditFieldsValues = Audit.View.AuditCriteria.getAuditFieldsValues();
+        ,onClickBtnGenerateReport: function(event,ctrl){
+            var auditFieldsValues = Audit.View.AuditCriteria.getFieldsValues();
             var pageUrl = Audit.View.MicroData.auditReportUrl
                 + "&startDate=" + auditFieldsValues.startDate
                 + "&endDate=" + auditFieldsValues.endDate
@@ -38,18 +38,15 @@ Audit.View = Audit.View || {
     }
     ,AuditCriteria:{
         create: function() {
-            this.$reportSubmitSection = $("#reportSubmitSection");
             this.$btnGenerateReport = $("#generateReport");
-            this.$btnGenerateReport.on("click", function(e){Audit.View.AuditReport.openAuditReport(e,this);});
-
-            this.buildAuditCriteriaPanel(Audit.View.MicroData.auditCriteria);
-
-            this.$objectType = $("#objectType");
-            this.$edtStartDate = $("#startDate");
-            this.$edtEndDate = $("#endDate");
+            this.$btnGenerateReport.on("click", function(e){Audit.View.AuditReport.onClickBtnGenerateReport(e,this);});
         }
-
         ,onInitialized: function() {
+            if(Audit.Model.validateAuditCriteria(Audit.View.MicroData.auditCriteria)){
+                this.buildAuditCriteriaPanel(Audit.View.MicroData.auditCriteria);
+            };
+        }
+        ,setDatePickerDefaultValue: function(){
             //since datepickers are loaded dynamically,
             // we need to initialize datepickers once the markup is ready
             //additionally, set default dates to current date
@@ -57,29 +54,42 @@ Audit.View = Audit.View || {
             this.$datePickers.datepicker();
             this.$datePickers.datepicker("setDate", Acm.getCurrentDay());
         }
-        ,getValueStartDate: function() {
-            var startDate = Acm.Object.getValue(this.$edtStartDate).replace(/\//g, "-");
-            return startDate;
+        ,getDate: function(selector) {
+            var date = Acm.Object.getValue(selector).replace(/\//g, "-");
+            return date;
         }
-        ,getValueEndDate: function() {
-            var endDate = Acm.Object.getValue(this.$edtEndDate).replace(/\//g, "-");
-            return endDate;
+        ,getText: function(selector) {
+            var text = Acm.Object.getPlaceHolderInput(selector);
+            return text;
         }
-        ,getObjectType:function(){
-            return Acm.Object.getValue(this.$objectType);
+        ,getSelectValue:function(selector){
+            return Acm.Object.getValue(selector);
         }
-        ,getAuditFieldsValues: function(){
-            var auditFieldsValues = {};
-            auditFieldsValues.startDate = this.getValueStartDate();
-            auditFieldsValues.endDate = this.getValueEndDate();
-            auditFieldsValues.objectType = this.getObjectType();
-            return auditFieldsValues;
+        ,getFieldsValues: function(){
+            var fieldsValues = {};
+            for (var i = 0; i < Audit.View.MicroData.auditCriteria[0].inputs.length; i++) {
+                var field = Audit.View.MicroData.auditCriteria[0].inputs[i];
+                if (field.name && field.type) {
+                    if("select" == field.type){
+                        fieldsValues.objectType = Audit.View.AuditCriteria.getSelectValue($("#" + field.name));
+                    }
+                    else if("dateRange" == field.type){
+                        if(field.nameStartDate){
+                            fieldsValues.startDate = Audit.View.AuditCriteria.getDate(($("#" + field.nameStartDate)));
+                        }
+                        if(field.nameEndDate){
+                            fieldsValues.endDate = Audit.View.AuditCriteria.getDate(($("#" + field.nameEndDate)));
+                        }
+                    }
+                    else if("text"== field.type){
+                        fieldsValues.info = Audit.View.AuditCriteria.getText(($("#" + field.name)));
+                    }
+                }
+            }
+            return fieldsValues;
         }
-        ,setValueStartDate: function(val) {
-            Acm.Object.setValueDatePicker(this.$edtStartDate, val);
-        }
-        ,setValueEndDate: function(val) {
-            Acm.Object.setValueDatePicker(this.$edtEndDate, val);
+        ,setDate: function(selector,val) {
+            Acm.Object.setValueDatePicker(selector, val);
         }
         ,setHtmlDivAuditCriteria: function(val) {
             this.$btnGenerateReport.before(val);
@@ -161,6 +171,7 @@ Audit.View = Audit.View || {
                 html+="<BR>&nbsp;<BR>";
             }
             this.setHtmlDivAuditCriteria(html);
+            this.setDatePickerDefaultValue();
         }
     }
 };
