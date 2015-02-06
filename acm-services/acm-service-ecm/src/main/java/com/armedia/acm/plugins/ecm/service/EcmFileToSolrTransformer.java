@@ -56,6 +56,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
             solr.setParent_number_lcs(parent.getParentName());
         }
 
+        solr.setEcmFileId(in.getEcmFileId());
+
         return solr;
     }
 

@@ -1,11 +1,14 @@
 package com.armedia.acm.services.search.model.solr;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 import java.util.Date;
 import java.util.List;
 
 /**
  * Property names must be identical to the desired SOLR field names.
  */
+@JsonAutoDetect
 public class SolrAdvancedSearchDocument implements SolrBaseDocument
 {
     /////////////////////  fields for all documents ///////////////////////////
@@ -101,7 +104,15 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
 
     /////////////////////// for content files /////////////////////////////////////////
     private String content_type;
+    private String ecmFileId;
 
+    public String getEcmFileId() {
+        return ecmFileId;
+    }
+
+    public void setEcmFileId(String ecmFileId) {
+        this.ecmFileId = ecmFileId;
+    }
 
     public String getContent_type() {
         return content_type;

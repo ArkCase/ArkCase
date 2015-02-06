@@ -4,14 +4,15 @@
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
-      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis" xmlns:json="http://www.mulesoft.org/schema/mule/json"
       version="CE-3.5.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/3.6/mule-json.xsd">
 
 
     <http:endpoint name="http.submitContentFiles"
@@ -25,13 +26,23 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
     <flow name="jmsSendContentFileToSolr"
           doc:name="Send Content File to SOLR"
-          doc:description="Send content files to the SOLR advanced search collection.  Payload must be an EcmFile.">
+          doc:description="Send documents to the SOLR advanced search collection.  Payload must be a JSON-formatted
+                           string consisting of an array of documents.  Each element of the array must be a JSON
+                           object with property names corresponding to valid SOLR field names.">
 
         <jms:inbound-endpoint
                 queue="solrContentFile.in"
                 exchange-pattern="request-response"
                 connector-ref="ActiveMQ-ACM"
                 doc:name="JMS" />
+
+
+
+        <json:json-to-object-transformer name="ecmFileObject"
+                                         returnClass="java.util.List"/>
+
+        <logger category="com.armedia.acm.services.search.service" level="DEBUG" message="MARJAN: #[ecmFileObject.get(0).id]" />
+        <!--<component class="com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument" />-->
 
         <timer-interceptor/>
 
