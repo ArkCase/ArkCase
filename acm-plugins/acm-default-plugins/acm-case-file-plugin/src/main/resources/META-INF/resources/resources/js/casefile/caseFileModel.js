@@ -52,7 +52,7 @@ CaseFile.Model = CaseFile.Model || {
             if ("/plugin/casefile" == asnData.name) {
                 var treeInfo = AcmEx.Model.Tree.Config.getTreeInfo();
                 var sameResultSet = AcmEx.Model.Tree.Config.sameResultSet(asnData);
-                AcmEx.Model.Tree.Config.readConfig();
+                AcmEx.Model.Tree.Config.readTreeInfo();
 
                 if (!sameResultSet) {
                     CaseFile.Model.retrieveData(treeInfo);

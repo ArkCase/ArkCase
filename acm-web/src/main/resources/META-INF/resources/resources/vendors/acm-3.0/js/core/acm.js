@@ -87,10 +87,33 @@ var Acm = Acm || {
         }
         return left == right;
     }
-	,goodValue: function (val, replacement)  {
-	    var replacedWith = (undefined === replacement) ? "" : replacement;
-	    return this.isEmpty(val) ? replacedWith : val;
-	}
+    //obj can be a simple value or an array.
+    //When it is an array, only last one is treated as value and the the rest subject to non-empty check
+    //ex)To get good value of grandParent.parent.node.name
+    // Acm.goodValue([grandParent, "parent", "node", "name"], "N/A");
+    ,goodValueWantToBe: function (obj, replacement)  {
+        var replacedWith = (undefined === replacement) ? "" : replacement;
+        var val = obj;
+        if (Acm.isArray(obj)) {
+            if (2 > obj.length) {
+                return replacement;
+            }
+
+            val = obj[0];
+            for (var i = 1; i < obj.length; i++) {
+                var name = obj[i];
+                val = val[name];
+                if (this.isEmpty(val)) {
+                    return replacement;
+                }
+            }
+        }
+        return this.isEmpty(val) ? replacedWith : val;
+    }
+    ,goodValue: function (val, replacement)  {
+        var replacedWith = (undefined === replacement) ? "" : replacement;
+        return this.isEmpty(val) ? replacedWith : val;
+    }
 
     //append random parameter after a url to avoid undesired cached session variables
     //This function handles input url in following sample cases:

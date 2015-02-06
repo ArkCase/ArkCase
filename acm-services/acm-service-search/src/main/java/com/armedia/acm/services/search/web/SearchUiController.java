@@ -18,7 +18,8 @@ import java.util.Map;
 public class SearchUiController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private AcmPluginManager acmPluginManager;
+    private AcmPlugin plugin;
+    private AcmPluginManager pluginManager;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView search()
@@ -26,32 +27,57 @@ public class SearchUiController
         ModelAndView retval = new ModelAndView();
         retval.setViewName("search");
 
-        JSONArray arr = new JSONArray();
-        Collection<AcmPlugin> plugins = getAcmPluginManager().getAcmPlugins();
-        for (AcmPlugin plugin : plugins) {
-            Map<String, Object> props = plugin.getPluginProperties();
-            if (null != props) {
-                Object prop = props.get("search.ex");
-                if (null != prop) {
-                    try {
-                        JSONObject searchEx = new JSONObject(prop.toString());
-                        arr.put(searchEx);
-                    } catch (JSONException e) {
-                        log.error(e.getMessage());
-                    }
+        JSONArray objectTypes = null;
+        Map<String, Object> props = props = plugin.getPluginProperties();
+        if (null != props) {
+            Object prop = props.get("object.types");
+            if (null != prop) {
+                try {
+                    objectTypes = new JSONArray(prop.toString());
+                } catch (JSONException e) {
+                    log.error(e.getMessage());
                 }
             }
         }
-        retval.addObject("searchEx", arr);
+        if (null != objectTypes) {
+            retval.addObject("objectTypes", objectTypes);
+        }
+
+
+//        JSONArray arr = new JSONArray();
+//        Collection<AcmPlugin> plugins = getPluginManager().getAcmPlugins();
+//        for (AcmPlugin p : plugins) {
+//            props = p.getPluginProperties();
+//            if (null != props) {
+//                Object prop = props.get("search.ex");
+//                if (null != prop) {
+//                    try {
+//                        JSONObject searchEx = new JSONObject(prop.toString());
+//                        arr.put(searchEx);
+//                    } catch (JSONException e) {
+//                        log.error(e.getMessage());
+//                    }
+//                }
+//            }
+//        }
+//        retval.addObject("searchEx", arr);
 
         return retval;
     }
 
-    public AcmPluginManager getAcmPluginManager() {
-        return acmPluginManager;
+    public AcmPluginManager getPluginManager() {
+        return pluginManager;
     }
 
-    public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
-        this.acmPluginManager = acmPluginManager;
+    public void setPluginManager(AcmPluginManager pluginManager) {
+        this.pluginManager = pluginManager;
+    }
+
+    public AcmPlugin getPlugin() {
+        return plugin;
+    }
+
+    public void setPlugin(AcmPlugin plugin) {
+        this.plugin = plugin;
     }
 }
