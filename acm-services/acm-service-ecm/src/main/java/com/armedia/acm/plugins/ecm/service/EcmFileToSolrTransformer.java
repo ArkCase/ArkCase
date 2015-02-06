@@ -11,38 +11,40 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by marjan.stefanoski on 13.11.2014.
+ * Created by marjan.stefanoski on 05.02.2015.
  */
-public class DocumentToSolrTrasnformer implements AcmObjectToSolrDocTransformer<EcmFile> {
+public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<EcmFile> {
 
     private EcmFileDao ecmFileDao;
 
+
     @Override
     public List<EcmFile> getObjectsModifiedSince(Date lastModified, int start, int pageSize) {
-        return getEcmFileDao().findModifiedSince(lastModified,start,pageSize);
+        return getEcmFileDao().findModifiedSince(lastModified, start, pageSize);
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(EcmFile in) {
+    public SolrAdvancedSearchDocument toContentFileIndex(EcmFile in) {
 
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
-        solr.setId(in.getFileId() + "-DOCUMENT");
-        solr.setObject_id_s(in.getFileId() + "");
-        solr.setObject_type_s("DOCUMENT");
-        solr.setName(in.getFileName());
+        solr.setId(in.getId() + "-" + in.getObjectType());
+        solr.setObject_id_s(in.getId() + "");
+        solr.setObject_type_s(in.getObjectType());
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
 
-        solr.setStatus_lcs(in.getStatus());
+        solr.setName(in.getFileName());
+        solr.setContent_type(in.getFileMimeType());
+
 
         ObjectAssociation parent = null;
 
-        if (in.getParentObjects() != null) {
-            for (ObjectAssociation objectAssociation : in.getParentObjects()) {
+        if ( in.getParentObjects() != null ) {
+            for ( ObjectAssociation objectAssociation : in.getParentObjects() ) {
                 parent = objectAssociation;
                 break;
             }
@@ -51,34 +53,21 @@ public class DocumentToSolrTrasnformer implements AcmObjectToSolrDocTransformer<
         if( parent != null ) {
             solr.setParent_id_s(Long.toString(parent.getParentId()));
             solr.setParent_type_s(parent.getParentType());
+            solr.setParent_number_lcs(parent.getParentName());
         }
 
         return solr;
     }
 
+    //No implementation needed
     @Override
-    public SolrDocument toSolrQuickSearch(EcmFile in) {
-
-        SolrDocument solr = new SolrDocument();
-        solr.setName(in.getFileName());
-        solr.setObject_id_s(in.getFileId() + "");
-        solr.setObject_type_s("DOCUMENT");
-        solr.setId(in.getFileId() + "-DOCUMENT");
-
-
-        solr.setAuthor(in.getCreator());
-        solr.setCreate_tdt(in.getCreated());
-        solr.setModifier_s(in.getModifier());
-        solr.setLast_modified_tdt(in.getModified());
-
-        solr.setStatus_s(in.getStatus());
-
-        return solr;
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(EcmFile in) {
+        return null;
     }
 
+    //No implementation needed
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(EcmFile in) {
-        //No implementation needed
+    public SolrDocument toSolrQuickSearch(EcmFile in) {
         return null;
     }
 
@@ -101,5 +90,4 @@ public class DocumentToSolrTrasnformer implements AcmObjectToSolrDocTransformer<
     public void setEcmFileDao(EcmFileDao ecmFileDao) {
         this.ecmFileDao = ecmFileDao;
     }
-
 }

@@ -66,6 +66,12 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
     }
 
     @Override
+    public SolrAdvancedSearchDocument toContentFileIndex(AcmUser in) {
+        //No implementation needed
+        return null;
+    }
+
+    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType) {
 
         boolean  objectNotNull = acmObjectType != null;

@@ -23,5 +23,7 @@ public interface AcmObjectToSolrDocTransformer<T extends Object>
 
     SolrDocument toSolrQuickSearch(T in);
 
+    SolrAdvancedSearchDocument toContentFileIndex(T in);
+
     boolean isAcmObjectTypeSupported(Class acmObjectType);
 }

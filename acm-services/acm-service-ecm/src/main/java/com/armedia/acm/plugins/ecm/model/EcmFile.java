@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 
@@ -23,7 +24,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_file")
-public class EcmFile implements AcmEntity, Serializable
+public class EcmFile implements AcmEntity, Serializable, AcmObject
 {
     private static final long serialVersionUID = -5177153023458655846L;
 
@@ -200,5 +201,15 @@ public class EcmFile implements AcmEntity, Serializable
         parentObject.setTargetName(getFileName());
         parentObject.setTargetType("FILE");
         parentObject.setTargetId(getFileId());
+    }
+
+    @Override
+    public String getObjectType() {
+        return "FILE";
+    }
+
+    @Override
+    public Long getId() {
+        return fileId;
     }
 }
