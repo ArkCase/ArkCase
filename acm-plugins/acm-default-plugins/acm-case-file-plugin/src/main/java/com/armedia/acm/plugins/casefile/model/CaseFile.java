@@ -22,6 +22,7 @@ import java.util.*;
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
+    public static final String OBJECT_TYPE = "CASE_FILE";
 
     @Id
     @Column(name = "cm_case_id")
@@ -141,7 +142,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         {
             childObject.setParentId(getId());
             childObject.setParentName(getCaseNumber());
-            childObject.setParentType("CASE_FILE");
+            childObject.setParentType(getObjectType());
         }
         for ( PersonAssociation persAssoc : personAssociations)
         {
@@ -150,7 +151,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getId());
-            ap.setObjectType("CASE_FILE");
+            ap.setObjectType(getObjectType());
         }
     }
 
@@ -392,7 +393,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
             AcmParticipant p = new AcmParticipant();
             p.setParticipantLdapId(assigneeUserId);
             p.setParticipantType("assignee");
-            p.setObjectType("CASE_FILE");
+            p.setObjectType(getObjectType());
             p.setObjectId(getId());
             participants.add(p);
         }
@@ -492,7 +493,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @JsonIgnore
     public String getObjectType()
     {
-        return "CASE_FILE";
+        return OBJECT_TYPE;
     }
 
     @Override
