@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -203,11 +204,13 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
         parentObject.setTargetId(getFileId());
     }
 
+    @JsonIgnore
     @Override
     public String getObjectType() {
         return "FILE";
     }
 
+    @JsonIgnore
     @Override
     public Long getId() {
         return fileId;

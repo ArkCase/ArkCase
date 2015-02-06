@@ -2,15 +2,17 @@ package com.armedia.acm.services.search.model.solr;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Property names must be identical to the desired SOLR field names.
  */
-@JsonAutoDetect
-public class SolrAdvancedSearchDocument implements SolrBaseDocument
+public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializable
 {
+    private static final long serialVersionUID = 1L;
+
     /////////////////////  fields for all documents ///////////////////////////
     private String id;
     private String object_id_s;
