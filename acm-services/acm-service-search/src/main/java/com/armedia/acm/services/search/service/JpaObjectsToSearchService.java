@@ -44,15 +44,17 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
         List<SolrAdvancedSearchDocument> deleteFromSolrAdvancedSearch = new ArrayList<>();
         List<SolrDocument> addOrUpdateSolrQuickSearch = new ArrayList<>();
         List<SolrDocument> deleteFromSolrQuickSearch = new ArrayList<>();
+        List<SolrAdvancedSearchDocument> addOrUpdateSolrContentFile = new ArrayList<>();
+        List<SolrAdvancedSearchDocument> deleteFromSolrContentFile = new ArrayList<>();
 
         Collection<AcmObjectToSolrDocTransformer> transformers = getSpringContextHolder().getAllBeansOfType(
                 AcmObjectToSolrDocTransformer.class).values();
 
         for ( AcmObjectToSolrDocTransformer transformer : transformers )
         {
-            toSolrDocuments(transformer, changes.getAddedObjects(), addOrUpdateSolrAdvancedSearch, addOrUpdateSolrQuickSearch);
-            toSolrDocuments(transformer, changes.getUpdatedObjects(), addOrUpdateSolrAdvancedSearch, addOrUpdateSolrQuickSearch);
-            toSolrDocuments(transformer, changes.getDeletedObjects(), deleteFromSolrAdvancedSearch, deleteFromSolrQuickSearch);
+            toSolrDocuments(transformer, changes.getAddedObjects(), addOrUpdateSolrAdvancedSearch, addOrUpdateSolrQuickSearch, addOrUpdateSolrContentFile);
+            toSolrDocuments(transformer, changes.getUpdatedObjects(), addOrUpdateSolrAdvancedSearch, addOrUpdateSolrQuickSearch, addOrUpdateSolrContentFile);
+            toSolrDocuments(transformer, changes.getDeletedObjects(), deleteFromSolrAdvancedSearch, deleteFromSolrQuickSearch, deleteFromSolrContentFile);
         }
 
         if ( !addOrUpdateSolrAdvancedSearch.isEmpty() )
@@ -63,6 +65,10 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
         if ( !addOrUpdateSolrQuickSearch.isEmpty() )
         {
             getSendToSolr().sendSolrQuickSearchDocuments(addOrUpdateSolrQuickSearch);
+        }
+
+        if ( !addOrUpdateSolrContentFile.isEmpty() ) {
+            getSendToSolr().sendSolrContentFileIndexDocuments(addOrUpdateSolrContentFile);
         }
 
         if ( !deleteFromSolrAdvancedSearch.isEmpty() )
@@ -82,6 +88,14 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
             getSendToSolr().sendSolrQuickSearchDeletes(deletes);
         }
 
+        if( !deleteFromSolrContentFile.isEmpty() ) {
+
+            // for delete, we need to send a special request format including only the document ID.  So we copy this
+            // list into a delete request list.
+            List<SolrDeleteDocumentByIdRequest> deletes = copyDeleteDocsToDeleteRequests(deleteFromSolrContentFile);
+            getSendToSolr().sendSolrContentFileIndexDeletes(deletes);
+        }
+
     }
 
     private List<SolrDeleteDocumentByIdRequest> copyDeleteDocsToDeleteRequests(
@@ -99,7 +113,8 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
             AcmObjectToSolrDocTransformer transformer,
             List<Object> jpaObjects,
             List<SolrAdvancedSearchDocument> solrAdvancedSearchDocs,
-            List<SolrDocument> solrQuickSearchDocs)
+            List<SolrDocument> solrQuickSearchDocs,
+            List<SolrAdvancedSearchDocument> solrContentFileDocs)
     {
         for ( Object jpaObject : jpaObjects )
         {
@@ -117,6 +132,12 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                 if ( quickSearchDocument != null )
                 {
                     solrQuickSearchDocs.add(quickSearchDocument);
+                }
+
+                SolrAdvancedSearchDocument contentFileDocument = transformer.toContentFileIndex(jpaObject);
+
+                if ( contentFileDocument != null ) {
+                    solrContentFileDocs.add(contentFileDocument);
                 }
 
             }
