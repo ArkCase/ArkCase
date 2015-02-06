@@ -95,16 +95,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             throw e;
         }
 
-        Map<String, Object> headers = new HashMap<>();
-
-        MuleMessage response = getMuleClient().send("jms://solrContentFile.in", saved, headers);
-
-        MuleException exc = response.getInboundProperty("saveException");
-        if ( exc != null )
-        {
-            throw exc;
-        }
-
         return saved;
     }
     
@@ -139,16 +129,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         if (null == objectId || !objectId.getId().replaceAll(";.*", "").equals(ecmFile.getEcmFileId()))
         {
         	throw new RuntimeException("Updating of the file " + ecmFile.getFileName() + " failed.");
-        }
-
-        Map<String, Object> headers = new HashMap<>();
-
-        MuleMessage response = getMuleClient().send("jms://solrContentFile.in", ecmFile, headers);
-
-        MuleException exc = response.getInboundProperty("saveException");
-        if ( exc != null )
-        {
-            throw exc;
         }
 
         return ecmFile;

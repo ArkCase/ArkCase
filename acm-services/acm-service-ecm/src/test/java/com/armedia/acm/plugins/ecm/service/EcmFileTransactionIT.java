@@ -101,15 +101,15 @@ public class EcmFileTransactionIT
         ecmFile.setFileName("log4j.properties-" + System.currentTimeMillis());
         ecmFile.setFileMimeType("text/plain");
 
-        ecmFile.setCreator("ann-acm");
-        ecmFile.setModifier("marjan-acm");
+        ecmFile.setCreator("ANN-acm");
+        ecmFile.setModifier("MARJAN-ACM");
         ecmFile.setCreated(date);
         ecmFile.setModified(date);
 
         ObjectAssociation parent = new ObjectAssociation();
-        parent.setParentId(12345L);
-        parent.setParentType("COMPLAINT");
-        parent.setParentName("The Parent Name");
+        parent.setParentId(54321L);
+        parent.setParentType("CASE_FILE");
+        parent.setParentName("NAMEEEE");
         ecmFile.addParentObject(parent);
 
         Map<String, Object> messageProperties = new HashMap<>();
@@ -125,11 +125,11 @@ public class EcmFileTransactionIT
         EcmFile found = message.getPayload(EcmFile.class);
 
 
-
-        Map<String, Object> headers = new HashMap<>();
-        MuleMessage response = muleClient.send("jms://solrContentFile.in", found, headers);
-
-        assertNotNull(response);
+//
+//        Map<String, Object> headers = new HashMap<>();
+//        MuleMessage response = muleClient.send("jms://solrContentFile.in", found, headers);
+//
+//        assertNotNull(response);
 
         entityManager.flush();
 
