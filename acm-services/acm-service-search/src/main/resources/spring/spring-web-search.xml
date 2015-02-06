@@ -4,7 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="searchUiController" class="com.armedia.acm.services.search.web.SearchUiController">
-        <property name="acmPluginManager" ref="acmPluginManager"/>
+        <property name="plugin" ref="pluginSearch"/>
+        <property name="pluginManager" ref="acmPluginManager"/>
     </bean>
 
     <bean id="quickSearchAPIController" class="com.armedia.acm.services.search.web.api.QuickSearchAPIController">

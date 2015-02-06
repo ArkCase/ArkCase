@@ -170,6 +170,14 @@
 
 
                                 <div class="wrapper" id="tabTitle" style="display:none;">
+                                    <div class="pull-left inline">
+                                        <div class="btn-group">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" id="restrict"> Restrict ?
+                                            </label>
+                                        </div>
+                                    </div>
+
                                     <div class="pull-right inline">
                                         <div class="btn-group">
                                         	<button class="btn btn-default btn-sm" data-title="Edit Case File"><i class="fa fa-edit"></i> Edit</button>

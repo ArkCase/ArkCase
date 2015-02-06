@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.casefile.model;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -114,6 +114,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_originator_id")
     private PersonAssociation originator;
+
+    @Column(name = "cm_case_restricted_flag", nullable = false)
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean restricted = Boolean.FALSE;
 
     @PrePersist
     protected void beforeInsert()
@@ -383,7 +387,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
             }
         }
 
-        if ( ! found )
+        if ( ! found && assigneeUserId != null )
         {
             AcmParticipant p = new AcmParticipant();
             p.setParticipantLdapId(assigneeUserId);
@@ -474,6 +478,16 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         this.milestones = milestones;
     }
 
+    public Boolean getRestricted()
+    {
+        return restricted;
+    }
+
+    public void setRestricted(Boolean restricted)
+    {
+        this.restricted = restricted;
+    }
+
     @Override
     @JsonIgnore
     public String getObjectType()
@@ -490,14 +504,26 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
                 ", caseType='" + caseType + '\'' +
                 ", title='" + title + '\'' +
                 ", status='" + status + '\'' +
+                ", details='" + details + '\'' +
+                ", incidentDate=" + incidentDate +
                 ", created=" + created +
                 ", creator='" + creator + '\'' +
                 ", modified=" + modified +
                 ", modifier='" + modifier + '\'' +
                 ", closed=" + closed +
                 ", disposition='" + disposition + '\'' +
+                ", priority='" + priority + '\'' +
+                ", participants=" + participants +
+                ", dueDate=" + dueDate +
+                ", changeCaseStatus=" + changeCaseStatus +
+                ", approvers=" + approvers +
                 ", ecmFolderPath='" + ecmFolderPath + '\'' +
+                ", personAssociations=" + personAssociations +
+                ", milestones=" + milestones +
+                ", originator=" + originator +
+                ", restricted=" + restricted +
                 ", ecmFolderId='" + ecmFolderId + '\'' +
+                ", childObjects=" + childObjects +
                 '}';
     }
 }
