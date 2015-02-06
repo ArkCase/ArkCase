@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
 
     <http:endpoint name="http.submitContentFiles"
-                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.contentFileHandler}?overwrite=true&amp;literal.id=#[flowVars['docId']]&amp;literal.object_type_s=#[flowVars['objectType']]&amp;literal.modified_date_tdt=#[flowVars['modified']]&amp;literal.modifier_lcs=#[flowVars['modifier']]&amp;literal.create_date_tdt=#[flowVars['created']]&amp;literal.creator_lcs=#[flowVars['creator']]&amp;literal.name=#[flowVars['name']]&amp;literal.parent_id_s=#[flowVars['parentId']]&amp;literal.parent_type_s=#[flowVars['parentType']]&amp;literal.parent_number_lcs=#[flowVars['parentName']]"
+                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.contentFileHandler}?overwrite=true&amp;literal.id=#[flowVars['docId']]&amp;literal.object_type_s=#[flowVars['objectType']]&amp;literal.object_id_s=#[flowVars['objectId']]&amp;literal.modified_date_tdt=#[flowVars['modified']]&amp;literal.modifier_lcs=#[flowVars['modifier']]&amp;literal.create_date_tdt=#[flowVars['created']]&amp;literal.creator_lcs=#[flowVars['creator']]&amp;literal.name=#[flowVars['name']]&amp;literal.parent_id_s=#[flowVars['parentId']]&amp;literal.parent_type_s=#[flowVars['parentType']]&amp;literal.parent_number_lcs=#[flowVars['parentName']]"
                    encoding="UTF-8"
                    method="POST"
                    exchange-pattern="request-response"
@@ -42,12 +42,13 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <set-variable variableName="docId" value="#[message.payload.id]"/>
         <set-variable variableName="contentType" value="#[message.payload.content_type]"/>
         <set-variable variableName="objectType" value="#[message.payload.object_type_s]"/>
+        <set-variable variableName="objectId" value="#[message.payload.object_id_s]"/>
         <set-variable variableName="created" value="#[message.payload.create_date_tdt]"/>
         <set-variable variableName="creator" value="#[message.payload.creator_lcs]"/>
         <set-variable variableName="modified" value="#[message.payload.modified_date_tdt]"/>
         <set-variable variableName="modifier" value="#[message.payload.modifier_lcs]"/>
-        <!--<set-variable variableName="name" value="#[java.net.URLEncoder(message.payload.name,'UTF-8')]"/>-->
-        <set-variable variableName="name" value="#[message.payload.name]"/>
+        <set-variable variableName="name" value="#[java.net.URLEncoder.encode(message.payload.name,'UTF-8')]"/>
+        <!--<set-variable variableName="name" value="#[message.payload.name]"/>-->
         <set-variable variableName="parentId" value="#[message.payload.parent_id_s]"/>
         <set-variable variableName="parentType" value="#[message.payload.parent_type_s]"/>
         <set-variable variableName="parentName" value="#[message.payload.parent_number_lcs]"/>

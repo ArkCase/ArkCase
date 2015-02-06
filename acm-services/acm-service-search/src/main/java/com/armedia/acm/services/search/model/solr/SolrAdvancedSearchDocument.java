@@ -1,6 +1,7 @@
 package com.armedia.acm.services.search.model.solr;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -108,6 +109,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String content_type;
     private String ecmFileId;
 
+    @JsonIgnore
     public String getEcmFileId() {
         return ecmFileId;
     }
