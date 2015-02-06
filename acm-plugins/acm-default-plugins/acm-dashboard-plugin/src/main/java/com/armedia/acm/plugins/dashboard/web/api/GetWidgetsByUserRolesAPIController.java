@@ -110,7 +110,7 @@ public class GetWidgetsByUserRolesAPIController {
                for(String widgetName : widgetSet) {
 
                     Widget widget = new Widget();
-                    widget.setWidgetName(widgetName);
+                    widget.setWidgetName(widgetName.trim());
                     widget = getWidgetDao().saveWidget(widget);
                     retvalSet.add(widget);
                     if(widget.getWidgetId()!=null) {

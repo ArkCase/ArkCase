@@ -72,6 +72,11 @@ Complaint.Event = {
         }
         Complaint.Object.showTab(node.key);
     }
+    ,onCheckedRestricted: function(restriction){
+        var c = Complaint.getComplaint();
+        c.restricted = restriction;
+        Complaint.Service.saveComplaint(c);
+    }
     ,onSaveTitle: function(value) {
         var c = Complaint.getComplaint();
         c.complaintTitle = value;

@@ -41,6 +41,10 @@ Report.Rule = {
 		{
 			Report.Rule.updateBackgroundInvestigationReportSection();
 		}
+		else if ( reportName === Report.Object.COMPLAINT_DISPOSITION_COUNT )
+		{
+			Report.Rule.updateComplaintDispositionCountSection();
+		}
 		else {
 			Report.Page.toggleBillingReportCriteria(false);    			    			
 			Report.Page.toggleCaseStatusCriteria(true);			
@@ -61,6 +65,13 @@ Report.Rule = {
 	updateBackgroundInvestigationReportSection : function() {
 		Report.Page.toggleBillingReportCriteria(false);
 		Report.Page.toggleCaseStatusCriteria(false);
+		Report.Page.toggleDatepickertCriteria(true);
+		Report.Page.toggleReportButton(true);
+	},
+	
+	updateComplaintDispositionCountSection : function() {
+		Report.Page.toggleCaseStatusCriteria(false);			
+		Report.Page.toggleBillingReportCriteria(false);
 		Report.Page.toggleDatepickertCriteria(true);
 		Report.Page.toggleReportButton(true);
 	}

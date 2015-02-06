@@ -37,14 +37,27 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
 
-        solr.setTitle_parseable((String)getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType()));
+        String title;
+        if( in.getEventType() !=null && getSubscriptionEventPlugin().getPluginProperties().containsKey(in.getEventType()) ){
+            title = (String)getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
+        } else if (in.getEventType() !=null) {
+                title = in.getEventType();
+        } else {
+            title = "";
+        }
+        solr.setTitle_parseable(title);
 
-        solr.setParent_id_s(Long.toString(in.getEventObjectId()));
+        if( in.getEventObjectId()!=null ) {
+            solr.setParent_id_s(Long.toString(in.getEventObjectId()));
+        } else {
+            solr.setParent_id_s("");
+        }
+
         solr.setParent_type_s(in.getEventObjectType());
         solr.setParent_name_t(in.getEventObjectName());
         solr.setParent_number_lcs(in.getEventObjectNumber());
 
-        solr.setOwner_lcs(in.getEventSubscriptionOwner());
+        solr.setOwner_lcs(in.getSubscriptionOwner());
 
         return solr;
     }

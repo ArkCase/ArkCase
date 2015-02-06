@@ -474,7 +474,7 @@ AcmEx.Object = {
                     var parts = key.split(AcmEx.Model.Tree.Key.KEY_SEPARATOR);
                     if (parts && 1 < parts.length) {
                         var parentKey = parts[0];
-                        //exclue page ID, so start from 1; expand parents only, not include self, so length-1
+                        //exclude page ID, so start from 1; expand parents only, not include self, so length-1
                         for (var i = 1; i < parts.length-1; i++) {
                             parentKey += AcmEx.Model.Tree.Key.KEY_SEPARATOR + parts[i];
                             var node = AcmEx.Object.Tree.tree.getNodeByKey(parentKey);

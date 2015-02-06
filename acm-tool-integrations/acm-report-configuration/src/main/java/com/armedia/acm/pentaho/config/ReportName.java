@@ -8,6 +8,7 @@ public enum ReportName {
 	CLOSE_CASE_REPORT("Close Case Report"),
 	OPEN_CASE_REPORT("Open Case Report"),
 	COMPLAINT_REPORT("Complaint Report"),
+	COMPLAINT_DISPOSITION_COUNT("Complaint Disposition Count"),
 	BILLING_REPORT("Billing Report"),
     BACKGROUND_INVESTIGATION_SUMMARY_REPORT("Background Investigations Report");
 

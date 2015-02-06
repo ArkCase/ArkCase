@@ -69,6 +69,7 @@ public class ComplaintDaoIT
     {
 
         Complaint complaint = complaintFactory.complaint();
+        complaint.setRestricted(true);
 
         complaint = complaintDao.save(complaint);
 
