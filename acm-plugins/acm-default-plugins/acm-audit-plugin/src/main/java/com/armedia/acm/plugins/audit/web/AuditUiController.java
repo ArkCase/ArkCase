@@ -25,11 +25,13 @@ public class AuditUiController
         String pentahoHost = getReportsProperties().get("PENTAHO_SERVER_URL");
         String pentahoPort = getReportsProperties().get("PENTAHO_SERVER_PORT");
         String auditReportUri = getAuditProperties().get("AUDIT_REPORT");
-        
-        if (pentahoHost != null && pentahoPort != null && auditReportUri != null)
+        String auditCriteria = getAuditProperties().get("AUDIT_CRITERIA");
+
+        if (pentahoHost != null && pentahoPort != null && auditReportUri != null && auditCriteria != null)
         {
         	String auditReportUrl = pentahoHost + pentahoPort + auditReportUri;
         	retval.addObject("auditReportUrl", auditReportUrl);
+            retval.addObject("auditCriteria", auditCriteria);
         }
         
         return retval;
