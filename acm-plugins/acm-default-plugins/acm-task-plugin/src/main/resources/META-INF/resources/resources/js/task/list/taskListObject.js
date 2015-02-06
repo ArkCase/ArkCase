@@ -585,8 +585,8 @@ TaskList.Object = {
                     .addLeaf({key: pageId + "." + taskBranchID + ".Details"                   //level 2: /Task/Details
                         , title: "Task Details"
                     })
-                    .addLeaf({key: pageId + "." + taskBranchID + ".ReworkInstructions"                   //level 2: /Task/Waiver Details
-                        , title: "Waiver Details"
+                    .addLeaf({key: pageId + "." + taskBranchID + ".ReworkInstructions"                   //level 2: /Task/Rework Details
+                        , title: "Rework Details"
                     })
                     .addLeaf({key: pageId + "." + taskBranchID + ".Documents"                   //level 2: /Task/Documents
                         , title: "Documents Under Review"
