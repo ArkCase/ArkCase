@@ -72,7 +72,7 @@ Report.Rule = {
 	updateComplaintDispositionCountSection : function() {
 		Report.Page.toggleCaseStatusCriteria(false);			
 		Report.Page.toggleBillingReportCriteria(false);
-		Report.Page.toggleDatepickertCriteria(false);
+		Report.Page.toggleDatepickertCriteria(true);
 		Report.Page.toggleReportButton(true);
 	}
 	

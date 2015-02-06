@@ -18,6 +18,11 @@
     <jsp:invoke fragment="endOfHead"/>
 </head>
 <body class="">
+<div>
+    <c:forEach var="bizObj" items="${acm_application.businessObjects}">
+
+    </c:forEach>
+</div>
 <section class="vbox">
     <%@include file="/WEB-INF/tagf/topbar.tagf"%>
 

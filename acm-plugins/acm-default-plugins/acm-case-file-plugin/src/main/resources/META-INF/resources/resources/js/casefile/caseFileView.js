@@ -2812,7 +2812,7 @@ CaseFile.View = CaseFile.View || {
                             ,edit: true
                             ,create: false
                             ,display: function(data) {
-                                var url = App.getContextPath() + '/plugin/casefile/' + data.record.id;
+                                var url = App.buildObjectUrl(data.record.type, data.record.id);
                                 var $lnk = $("<a href='" + url + "'>" + data.record.title + "</a>");
                                 return $lnk;
                             }
