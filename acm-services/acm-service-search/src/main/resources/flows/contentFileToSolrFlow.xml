@@ -11,8 +11,7 @@
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
-http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/3.6/mule-json.xsd">
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
 
 
     <http:endpoint name="http.submitContentFiles"
@@ -36,31 +35,23 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
                 connector-ref="ActiveMQ-ACM"
                 doc:name="JMS" />
 
-
-
-        <json:json-to-object-transformer name="ecmFileObject"
-                                         returnClass="java.util.List"/>
-
-        <logger category="com.armedia.acm.services.search.service" level="DEBUG" message="MARJAN: #[ecmFileObject.get(0).id]" />
-        <!--<component class="com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument" />-->
-
         <timer-interceptor/>
 
         <logger category="com.armedia.acm.services.search.service" level="DEBUG"/>
         
-        <set-variable variableName="docId" value="FILE-#[message.payload.id]"/>
+        <set-variable variableName="docId" value="#[message.payload.id]"/>
         <set-variable variableName="contentType" value="#[message.payload.content_type]"/>
         <set-variable variableName="objectType" value="#[message.payload.object_type_s]"/>
         <set-variable variableName="created" value="#[message.payload.create_date_tdt]"/>
         <set-variable variableName="creator" value="#[message.payload.creator_lcs]"/>
         <set-variable variableName="modified" value="#[message.payload.modified_date_tdt]"/>
         <set-variable variableName="modifier" value="#[message.payload.modifier_lcs]"/>
+        <!--<set-variable variableName="name" value="#[java.net.URLEncoder(message.payload.name,'UTF-8')]"/>-->
         <set-variable variableName="name" value="#[message.payload.name]"/>
-        <set-variable variableName="parentId" value="#[message.payload.parent_id"/>
-        <set-variable variableName="parentType" value="#message.payload.parent_type_s"/>
-        <set-variable variableName="parentName" value="#message.payload.parent_number_lcs"/>
+        <set-variable variableName="parentId" value="#[message.payload.parent_id_s]"/>
+        <set-variable variableName="parentType" value="#[message.payload.parent_type_s]"/>
+        <set-variable variableName="parentName" value="#[message.payload.parent_number_lcs]"/>
 
-        <!--<set-variable variableName="parent" value="#[org.mule.util.CollectionUtils.get(payload.parentObjects, 0)]"/>-->
 
         <logger category="com.armedia.acm.services.search.service" level="DEBUG" message="Doc ID: #[flowVars['docId']]" />
 

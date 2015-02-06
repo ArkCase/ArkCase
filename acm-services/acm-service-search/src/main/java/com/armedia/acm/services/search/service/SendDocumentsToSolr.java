@@ -42,6 +42,8 @@ public class SendDocumentsToSolr
         sendToJmsQueue(solrDocuments, "jms://solrAdvancedSearch.in");
     }
 
+
+
     public void sendSolrQuickSearchDocuments(List<SolrDocument> solrDocuments)
     {
         sendToJmsQueue(solrDocuments, "jms://solrQuickSearch.in");
@@ -49,7 +51,13 @@ public class SendDocumentsToSolr
 
     public void sendSolrContentFileIndexDocuments(List<SolrAdvancedSearchDocument> solrDocuments)
     {
-        sendToJmsQueue(solrDocuments, "jms://solrContentFile.in");
+        if (solrDocuments !=null ) {
+            for (SolrAdvancedSearchDocument doc: solrDocuments ){
+
+                sendToJmsQueue(doc, "jms://solrContentFile.in");
+            }
+
+        }
     }
 
     public void sendSolrContentFileIndexDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
@@ -114,6 +122,18 @@ public class SendDocumentsToSolr
         }
     }
 
+    private void sendToJmsQueue( SolrAdvancedSearchDocument solrDocument, String queueName ) {
+        try {
+            if ( log.isDebugEnabled() ) {
+                log.debug("Sending POJO to SOLR: " + solrDocument);
+            }
+            getMuleClient().dispatch(queueName, solrDocument, null);
+        }
+        catch ( MuleException e ) {
+            log.error("Could not send document to SOLR: " + e.getMessage(), e);
+        }
+    }
+
     private void sendToJmsQueue(List<? extends SolrBaseDocument> solrDocuments, String queueName)
     {
         try
@@ -131,8 +151,6 @@ public class SendDocumentsToSolr
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
     }
-
-
 
 
     public synchronized MuleClient getMuleClient()
