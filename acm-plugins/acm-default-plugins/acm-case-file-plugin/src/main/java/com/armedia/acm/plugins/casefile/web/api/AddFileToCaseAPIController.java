@@ -62,7 +62,7 @@ public class AddFileToCaseAPIController {
 
 
             String folderId = in.getEcmFolderId();
-            String objectType = "CASE";
+            String objectType = in.getObjectType();
             Long objectId = caseId;
             String objectName = in.getCaseNumber();
 
