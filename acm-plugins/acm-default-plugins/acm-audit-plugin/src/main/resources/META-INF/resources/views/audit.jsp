@@ -6,6 +6,10 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title><spring:message code="audit.page.title" text="Audit | ACM | Armedia Case Management" /></title>
+    <div id="auditDetailData" itemscope="true" style="display: none">
+        <span itemprop="auditReportUrl">${auditReportUrl}</span>
+        <span itemprop="auditCriteria">${auditCriteria}</span>
+    </div>
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
@@ -15,62 +19,23 @@
     <script type="text/javascript" src="<c:url value='/resources/js/audit/auditController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/audit/auditService.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
-    <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 </jsp:attribute>
 
 <jsp:body>
     <section id="content">
-        <section class="vbox">
-            <section class="scrollable padder">
-                <section class="row m-b-md">
-                    <div class="col-sm-12">
-                        <h3 class="m-b-xs text-black">Audit</h3>
+        <section class="hbox stretch">
+            <aside class="aside-md bg-light dker b-r" id="subNav">
+                <section class="scrollable">
+                    <div class="wrapper">
+                        <button class='btn btn-default btn-sm center-block' type='button' id='generateReport'>Generate Audit Report</button>
                     </div>
                 </section>
-                <section class="panel panel-default">
-                    <div class="row wrapper">
-                        <div class="col-sm-4 m-b-xs">
-                            <select class="input-sm form-control input-s-sm inline v-middle">
-                                <option value="0">Action</option>
-                                <option value="1">Export to Excel</option>
-                            </select>
-                            <button class="btn btn-sm btn-default" id="btnApply">Apply</button>
-                        </div>
-                        <div class="col-sm-5 m-b-xs">
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-sm btn-default active">
-                                    <input type="radio" name="options" id="option1">
-                                    Today </label>
-                                <label class="btn btn-sm btn-default">
-                                    <input type="radio" name="options" id="option2">
-                                    This Week </label>
-                                <label class="btn btn-sm btn-default">
-                                    <input type="radio" name="options" id="option3">
-                                    This Month </label>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="input-group">
-                                <input type="text" class="input-sm form-control" placeholder="Search">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-sm btn-default" type="button">Go!</button>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="table-responsive">
-                        <section class="panel b-a ">
-                            <div id="divAudit" style="width:100%"></div>
-                        </section>
-                    </div>
-
-                </section>
-            </section>
+            </aside>
+            <aside>
+                <iframe src="" name="audit_iframe" style="width:100%; height:100%;" frameborder="0"></iframe>
+            </aside>
         </section>
     </section>
 
