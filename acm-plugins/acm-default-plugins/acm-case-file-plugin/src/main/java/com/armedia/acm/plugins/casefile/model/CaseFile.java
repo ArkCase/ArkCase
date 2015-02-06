@@ -162,7 +162,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     private void personAssociationResolver (PersonAssociation personAssoc)
     {
         personAssoc.setParentId(getId());
-        personAssoc.setParentType("CASE");
+        personAssoc.setParentType(getObjectType());
 
         personAssoc.getPerson().setPersonAssociations(Arrays.asList(personAssoc));
     }
@@ -185,7 +185,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     {
         childObjects.add(childObject);
         childObject.setParentName(getCaseNumber());
-        childObject.setParentType("CASE");
+        childObject.setParentType(getObjectType());
         childObject.setParentId(getId());
     }
 
