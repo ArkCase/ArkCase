@@ -3046,6 +3046,7 @@ CaseFile.View = CaseFile.View || {
                 + "<option value='MedicalRelease.docx'>Medical Release</option>"
                 + "<option value='ClearanceGranted.docx'>Clearance Granted</option>"
                 + "<option value='ClearanceDenied.docx'>Clearance Denied</option>"
+                + "<option value='NoticeofInvestigation.docx'>Notice of Investigation</option>"
                 + "</select>"
                 + "</span>"
                 ;
