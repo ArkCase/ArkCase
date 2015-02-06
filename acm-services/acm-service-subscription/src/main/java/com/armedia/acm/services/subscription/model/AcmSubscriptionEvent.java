@@ -15,7 +15,7 @@ import java.util.Date;
 public class AcmSubscriptionEvent implements AcmObject, AcmEntity {
 
     @Id
-    @Column(name = "cm_subscription_id")
+    @Column(name = "cm_event_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long subscriptionEventId;
 
@@ -44,17 +44,17 @@ public class AcmSubscriptionEvent implements AcmObject, AcmEntity {
     @Column(name="cm_event_object_number", nullable = false)
     private String eventObjectNumber;
 
-    @Column(name = "cm_subscription_creator", nullable = false, insertable = true, updatable = false)
+    @Column(name = "cm_event_creator", nullable = false, insertable = true, updatable = false)
     private String creator;
 
-    @Column(name = "cm_subscription_modifier", nullable = false, insertable = true, updatable = true)
+    @Column(name = "cm_event_modifier", nullable = false, insertable = true, updatable = true)
     private String modifier;
 
-    @Column(name = "cm_subscription_created", nullable = false, insertable = true, updatable = false)
+    @Column(name = "cm_event_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @Column(name = "cm_subscription_modified", nullable = false, insertable = true, updatable = true)
+    @Column(name = "cm_event_modified", nullable = false, insertable = true, updatable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 

@@ -70,13 +70,17 @@ public class JpaObjectsToSearchServiceTest extends EasyMockSupport
 
         Capture<SolrAdvancedSearchDocument> capturedAdvancedSearch = new Capture<>();
         Capture<SolrDocument> capturedQuickSearch = new Capture<>();
+        Capture<SolrAdvancedSearchDocument> capturedContentFileIndex = new Capture<>();
         Capture<SolrDeleteDocumentByIdRequest> capturedAdvancedDeleteRequest = new Capture<>();
         Capture<SolrDeleteDocumentByIdRequest> capturedQuickDeleteRequest = new Capture<>();
+        Capture<SolrDeleteDocumentByIdRequest> capturedContentFileIndexDeleteRequest = new Capture<>();
 
         mockSendToSolr.sendSolrAdvancedSearchDocuments(Arrays.asList(capture(capturedAdvancedSearch)));
         mockSendToSolr.sendSolrQuickSearchDocuments(Arrays.asList(capture(capturedQuickSearch)));
+        mockSendToSolr.sendSolrContentFileIndexDocuments(Arrays.asList(capture(capturedContentFileIndex)));
         mockSendToSolr.sendSolrAdvancedSearchDeletes(Arrays.asList(capture(capturedAdvancedDeleteRequest)));
         mockSendToSolr.sendSolrQuickSearchDeletes(Arrays.asList(capture(capturedQuickDeleteRequest)));
+        mockSendToSolr.sendSolrContentFileIndexDeletes(Arrays.asList(capture(capturedContentFileIndexDeleteRequest)));
 
         replayAll();
 
@@ -84,7 +88,7 @@ public class JpaObjectsToSearchServiceTest extends EasyMockSupport
 
         verifyAll();
 
-        assertEquals(2, typeOneSolrConverter.getHandledObjectsCount());
+        assertEquals(4, typeOneSolrConverter.getHandledObjectsCount());
         assertEquals(2, typeOneSolrConverter.getHandledQuickSearchCount());
 
         assertNotNull(capturedAdvancedSearch.getValue());
@@ -92,7 +96,6 @@ public class JpaObjectsToSearchServiceTest extends EasyMockSupport
 
         assertNotNull(capturedAdvancedDeleteRequest.getValue());
         assertNotNull(capturedQuickDeleteRequest.getValue());
-
 
 
     }

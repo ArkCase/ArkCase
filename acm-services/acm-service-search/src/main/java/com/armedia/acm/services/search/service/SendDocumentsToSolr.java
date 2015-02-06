@@ -47,6 +47,24 @@ public class SendDocumentsToSolr
         sendToJmsQueue(solrDocuments, "jms://solrQuickSearch.in");
     }
 
+    public void sendSolrContentFileIndexDocuments(List<SolrAdvancedSearchDocument> solrDocuments)
+    {
+        sendToJmsQueue(solrDocuments, "jms://solrContentFile.in");
+    }
+
+    public void sendSolrContentFileIndexDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
+    {
+        // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
+        // queue.
+        if ( deletes != null )
+        {
+            for ( SolrDeleteDocumentByIdRequest doc : deletes )
+            {
+                sendToJmsQueue(doc, "jms://solrContentFile.in");
+            }
+        }
+    }
+
     public void sendSolrQuickSearchDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
     {
         // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the

@@ -99,6 +99,18 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String business_process_name_lcs;
 
 
+    /////////////////////// for content files /////////////////////////////////////////
+    private String content_type;
+
+
+    public String getContent_type() {
+        return content_type;
+    }
+
+    public void setContent_type(String content_type) {
+        this.content_type = content_type;
+    }
+
     @Override
     public String getId()
     {
