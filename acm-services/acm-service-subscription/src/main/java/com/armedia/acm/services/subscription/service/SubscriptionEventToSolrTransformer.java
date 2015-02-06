@@ -62,6 +62,13 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         return solr;
     }
 
+
+    @Override
+    public SolrAdvancedSearchDocument toContentFileIndex(AcmSubscriptionEvent in) {
+        //No implementation needed
+        return null;
+    }
+
     // No implementation needed  because we don't want SubscriptionEvent indexed in the SolrQuickSearch
     @Override
     public SolrDocument toSolrQuickSearch(AcmSubscriptionEvent in) {
