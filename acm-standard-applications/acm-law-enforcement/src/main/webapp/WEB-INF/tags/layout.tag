@@ -12,17 +12,13 @@
     <%@include file="/WEB-INF/tagf/global.tagf" %>
 
     <div id="acmData" itemscope="true" style="display: none">
+        <span itemprop="objectTypes">${acm_application.getObjectTypesAsJson()}</span>
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
         <span itemprop="userName">${sessionScope.acm_username}</span>
     </div>
     <jsp:invoke fragment="endOfHead"/>
 </head>
 <body class="">
-<div>
-    <c:forEach var="bizObj" items="${acm_application.businessObjects}">
-
-    </c:forEach>
-</div>
 <section class="vbox">
     <%@include file="/WEB-INF/tagf/topbar.tagf"%>
 
@@ -42,6 +38,10 @@
 <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/bloodhound.js"></script>--%>
 
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/app.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appModel.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appView.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appController.js'/>"></script>
+
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appObject.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appEvent.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appService.js'/>"></script>
