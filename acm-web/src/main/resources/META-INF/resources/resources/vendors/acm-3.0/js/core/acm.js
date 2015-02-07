@@ -91,7 +91,7 @@ var Acm = Acm || {
     //When it is an array, only last one is treated as value and the the rest subject to non-empty check
     //ex)To get good value of grandParent.parent.node.name
     // Acm.goodValue([grandParent, "parent", "node", "name"], "N/A");
-    ,goodValueWantToBe: function (obj, replacement)  {
+    ,goodValueWantToBe_fixme_: function (obj, replacement)  {
         var replacedWith = (undefined === replacement) ? "" : replacement;
         var val = obj;
         if (Acm.isArray(obj)) {
