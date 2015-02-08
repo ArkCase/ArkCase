@@ -8,7 +8,7 @@
     <title><spring:message code="search.page.title" text="Search | ACM | ArkCase" /></title>
 
     <div id="searchData" itemscope="true" style="display: none">
-        <span itemprop="objectTypes">${objectTypes}</span>
+        <%--<span itemprop="objectTypes">${objectTypes}</span>--%>
     </div>
 </script>
 </jsp:attribute>

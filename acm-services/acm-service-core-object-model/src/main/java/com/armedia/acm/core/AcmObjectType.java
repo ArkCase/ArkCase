@@ -9,8 +9,12 @@ public class AcmObjectType
 {
     private String name;
     private String description;
+    private String url;
+    private String urlEnd;
+    private String iconName;
     private List<AcmObjectState> states;
     private List<AcmParticipantType> participantTypes;
+
 
     public String getName()
     {
@@ -30,6 +34,30 @@ public class AcmObjectType
     public void setDescription(String description)
     {
         this.description = description;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrlEnd() {
+        return urlEnd;
+    }
+
+    public void setUrlEnd(String urlEnd) {
+        this.urlEnd = urlEnd;
+    }
+
+    public String getIconName() {
+        return iconName;
+    }
+
+    public void setIconName(String iconName) {
+        this.iconName = iconName;
     }
 
     public List<AcmObjectState> getStates()
