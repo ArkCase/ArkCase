@@ -3,6 +3,8 @@
  */
 package com.armedia.acm.service.objecthistory.model;
 
+import java.util.Date;
+
 /**
  * @author riste.tutureski
  *
@@ -11,22 +13,24 @@ public class AcmAssignment {
 
 	private Long objectId;
 	private String objectType;
-	private String objectNumber;
+	private String objectTitle;
 	private String objectName;
 	private String newAssignee;
 	private String oldAssignee;
+	private Date date;
 	
 	public AcmAssignment() {
-		
+		setDate(new Date());
 	}
 	
-	public AcmAssignment(Long objectId, String objectType, String objectNumber, String objectName, String newAssignee, String oldAssignee) {
+	public AcmAssignment(Long objectId, String objectType, String objectTitle, String objectName, String newAssignee, String oldAssignee) {
 		setObjectId(objectId);
 		setObjectType(objectType);
-		setObjectNumber(objectNumber);
+		setObjectTitle(objectTitle);
 		setObjectName(objectName);
 		setNewAssignee(newAssignee);
 		setOldAssignee(oldAssignee);
+		setDate(new Date());
 	}
 	
 	public Long getObjectId() {
@@ -45,14 +49,14 @@ public class AcmAssignment {
 		this.objectType = objectType;
 	}
 	
-	public String getObjectNumber() {
-		return objectNumber;
+	public String getObjectTitle() {
+		return objectTitle;
 	}
-	
-	public void setObjectNumber(String objectNumber) {
-		this.objectNumber = objectNumber;
+
+	public void setObjectTitle(String objectTitle) {
+		this.objectTitle = objectTitle;
 	}
-	
+
 	public String getObjectName() {
 		return objectName;
 	}
@@ -75,5 +79,13 @@ public class AcmAssignment {
 	
 	public void setOldAssignee(String oldAssignee) {
 		this.oldAssignee = oldAssignee;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }

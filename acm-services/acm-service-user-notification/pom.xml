@@ -14,4 +14,39 @@
 	<name>ACM Service: User Notification Service</name>
 	<description>Send notification to the user.</description>
 	
+	<dependencies>
+		<!-- acm -->
+		<dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-files-property-file-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-audit</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-object-history</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-data-source</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+	
+		<!-- logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+	</dependencies>
+	
 </project>
