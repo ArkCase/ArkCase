@@ -120,6 +120,11 @@
             <artifactId>acm-service-users</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-object-history</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
 
         <!-- date time -->
