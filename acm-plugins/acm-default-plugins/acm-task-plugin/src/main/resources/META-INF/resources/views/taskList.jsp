@@ -237,7 +237,7 @@
                                     </li>
                                     <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                 </ul>
-                                </span> <a href="#" class="font-bold">Waiver Details</a> </div>
+                                </span> <a href="#" class="font-bold">Rework Details</a> </div>
                             <div class="panel-body">
                                 <div class="taskReworkInstructions" data-field=""></div>
                             </div>

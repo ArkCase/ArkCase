@@ -17,7 +17,24 @@ Audit.Model = Audit.Model || {
     ,setTotalCount: function(totalCount) {
         this._totalCount = totalCount;
     }
+    ,validateAuditCriteria: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (!Acm.isArray(data)) {
+            return false;
+        }
+        for (var i = 0; i < data.length; i++) {
+            if (Acm.isEmpty(data[i].name)) {
+                return false;
+            }
+            if (!Acm.isArray(data[i].inputs)) {
+                return false;
+            }
+        }
 
+        return true;
+    }
     ,validateAudit: function(data) {
         if (Acm.isEmpty(data)) {
             return false;

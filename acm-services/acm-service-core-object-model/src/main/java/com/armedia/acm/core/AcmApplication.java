@@ -1,8 +1,15 @@
 package com.armedia.acm.core;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  *
@@ -10,9 +17,14 @@ import java.util.List;
 public class AcmApplication implements Serializable
 {
     private static final long serialVersionUID = -4533090175042467646L;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     private String applicationName;
     private List<AcmUserAction> topbarActions;
     private List<AcmUserAction> navigatorTabs;
+    private List<AcmObjectType> objectTypes;
+
     private List<AcmObjectType> businessObjects;
 
     public String getApplicationName()
@@ -43,6 +55,25 @@ public class AcmApplication implements Serializable
     public void setNavigatorTabs(List<AcmUserAction> navigatorTabs)
     {
         this.navigatorTabs = navigatorTabs;
+    }
+
+    public List<AcmObjectType> getObjectTypes() {
+        return objectTypes;
+    }
+
+    public void setObjectTypes(List<AcmObjectType> objectTypes) {
+        this.objectTypes = objectTypes;
+    }
+
+    public String getObjectTypesAsJson() {
+        String json = "[]";
+        ObjectMapper om = new ObjectMapper();
+        try {
+            json =  om.writeValueAsString(getObjectTypes());
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        return json;
     }
 
     public List<AcmObjectType> getBusinessObjects()
