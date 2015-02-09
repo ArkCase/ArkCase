@@ -7,6 +7,7 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,14 +44,13 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         ObjectAssociation parent = null;
 
-        if ( in.getParentObjects() != null ) {
-            for ( ObjectAssociation objectAssociation : in.getParentObjects() ) {
-                parent = objectAssociation;
-                break;
-            }
-        }
+        if ( in.getParentObjects() != null && !in.getParentObjects().isEmpty() ) {
 
-        if( parent != null ) {
+            for ( ObjectAssociation objectAssociation : in.getParentObjects() ) {
+                 parent = objectAssociation;
+                 break;
+            }
+
             solr.setParent_id_s(Long.toString(parent.getParentId()));
             solr.setParent_type_s(parent.getParentType());
             solr.setParent_number_lcs(parent.getParentName());

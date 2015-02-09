@@ -25,9 +25,8 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
     <flow name="jmsSendContentFileToSolr"
           doc:name="Send Content File to SOLR"
-          doc:description="Send documents to the SOLR advanced search collection.  Payload must be a JSON-formatted
-                           string consisting of an array of documents.  Each element of the array must be a JSON
-                           object with property names corresponding to valid SOLR field names.">
+          doc:description="Send documents to the SOLR advanced search collection.
+                           Payload must be a POJO - SolrAdvancedSearchDocument.java">
 
         <jms:inbound-endpoint
                 queue="solrContentFile.in"
@@ -48,7 +47,6 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <set-variable variableName="modified" value="#[message.payload.modified_date_tdt]"/>
         <set-variable variableName="modifier" value="#[message.payload.modifier_lcs]"/>
         <set-variable variableName="name" value="#[java.net.URLEncoder.encode(message.payload.name,'UTF-8')]"/>
-        <!--<set-variable variableName="name" value="#[message.payload.name]"/>-->
         <set-variable variableName="parentId" value="#[message.payload.parent_id_s]"/>
         <set-variable variableName="parentType" value="#[message.payload.parent_type_s]"/>
         <set-variable variableName="parentName" value="#[message.payload.parent_number_lcs]"/>
