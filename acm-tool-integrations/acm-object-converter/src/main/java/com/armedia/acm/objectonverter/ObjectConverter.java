@@ -3,6 +3,8 @@
  */
 package com.armedia.acm.objectonverter;
 
+import com.armedia.acm.objectonverter.json.JSONMarshaller;
+import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
 import com.armedia.acm.objectonverter.xml.XMLMarshaller;
 import com.armedia.acm.objectonverter.xml.XMLUnmarshaller;
 
@@ -20,6 +22,16 @@ public class ObjectConverter {
 	public static AcmUnmarshaller createXMLUnmarshaller()
 	{
 		return new XMLUnmarshaller();
+	}
+	
+	public static AcmMarshaller createJSONMarshaller()
+	{
+		return new JSONMarshaller();
+	}
+	
+	public static AcmUnmarshaller createJSONUnmarshaller()
+	{
+		return new JSONUnmarshaller();
 	}
 	
 }

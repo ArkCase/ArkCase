@@ -29,7 +29,7 @@ public class XMLUnmarshaller implements AcmUnmarshaller
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	@Override
-	public Object unmarshall(String source, Class<?> c) 
+	public Object unmarshall(String source, Class<?> c)
 	{
 		Object obj = null;
 		try
@@ -46,7 +46,7 @@ public class XMLUnmarshaller implements AcmUnmarshaller
 		}
         catch(Exception e) 
 		{
-        	LOG.error("Error while creating Object from XML. " + e);
+        	LOG.error("Error while creating Object from XML: " + e.getMessage(), e);
         }
 		
 		return obj;

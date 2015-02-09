@@ -23,7 +23,7 @@ public class XMLMarshaller implements AcmMarshaller{
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 
 	@Override
-	public String marshal(Object obj) 
+	public String marshal(Object obj)
 	{
 		String output = null;
 		try
@@ -39,7 +39,7 @@ public class XMLMarshaller implements AcmMarshaller{
 		}
 		catch(Exception e)
 		{
-			LOG.error("Error while creating XML from Object. " + e);
+			LOG.error("Error while creating XML from Object: " + e.getMessage(), e);
 		}
 		
 		return output;
