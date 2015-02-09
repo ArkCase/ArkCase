@@ -1,5 +1,7 @@
 package com.armedia.acm.core;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import java.util.List;
 
 /**
@@ -60,6 +62,7 @@ public class AcmObjectType
         this.iconName = iconName;
     }
 
+    @JsonIgnore
     public List<AcmObjectState> getStates()
     {
         return states;
@@ -70,6 +73,7 @@ public class AcmObjectType
         this.states = states;
     }
 
+    @JsonIgnore
     public List<AcmParticipantType> getParticipantTypes()
     {
         return participantTypes;
