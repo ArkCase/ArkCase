@@ -65,7 +65,7 @@
         <maven.site.id>acm3-documentation</maven.site.id>
         <maven.site.url>scp://arm-proj-web02.armedia.com/var/www/html/acm3</maven.site.url>
         <maven.taglist.version>2.4</maven.taglist.version>
-        <maven-jgitflow-plugin.version>1.0-m3</maven-jgitflow-plugin.version>
+        <maven-jgitflow-plugin.version>1.0-m4.3</maven-jgitflow-plugin.version>
 
         <mule.version>3.5.0-bighorn</mule.version>
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
@@ -112,17 +112,6 @@
             <timezone>-5</timezone>
         </developer>
         <developer>
-            <name>Chae Kim</name>
-            <email>chae.kim@armedia.com</email>
-            <id>ckim</id>
-            <organization>Armedia LLC</organization>
-            <organizationUrl>http://www.armedia.com</organizationUrl>
-            <roles>
-                <role>Ephesoft Developer</role>
-            </roles>
-            <timezone>-5</timezone>
-        </developer>
-        <developer>
             <name>James Wu</name>
             <email>james.wu@armedia.com</email>
             <id>jwu</id>
@@ -134,9 +123,31 @@
             <timezone>-5</timezone>
         </developer>
         <developer>
-            <name>Tsedalu Gebeyehu</name>
-            <email>tsedalu.gebeyehu@armedia.com</email>
-            <id>tsedalu.gebeyehu</id>
+            <name>Riste Tutureski</name>
+            <email>riste.tutureski@armedia.com</email>
+            <id>riste.tutureski</id>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <name>Marjan Stefanoski</name>
+            <email>marjan.stefanoski@armedia.com</email>
+            <id>marjan.stefanoski</id>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <name>Manoj Dhungana</name>
+            <email>manoj.dhungana@armedia.com</email>
+            <id>manoj.dhungana</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
@@ -144,6 +155,8 @@
             </roles>
             <timezone>-5</timezone>
         </developer>
+
+
     </developers>
 
     <contributors>
@@ -180,7 +193,7 @@
         </contributor>
 
         <contributor>
-            <name>Allison Cotney</name>
+            <name>Allison Collar</name>
             <email>allison.cotney@armedia.com</email>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
@@ -462,6 +475,23 @@
                     <pushReleases>true</pushReleases>
                     <allowUntracked>true</allowUntracked>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>feature-branches</id>
+                        <goals>
+                            <goal>feature-start</goal>
+                        </goals>
+                        <configuration>
+                            <allowSnapshots>true</allowSnapshots>
+                            <allowUntracked>true</allowUntracked>
+                            <enableFeatureVersions>false</enableFeatureVersions>
+                            <flowInitContext>
+                                <featureBranchPrefix>feature-</featureBranchPrefix>
+                            </flowInitContext>
+                            <pushFeatures>true</pushFeatures>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
