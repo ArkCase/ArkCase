@@ -29,7 +29,7 @@ public class AcmAssigneeChangeEvent extends AcmEvent{
 		
 		Map<String, Object> eventProperties = new HashMap<String, Object>();
 		
-		eventProperties.put("objectNumber", source.getObjectNumber());	
+		eventProperties.put("objectTitle", source.getObjectTitle());	
 		eventProperties.put("objectName", source.getObjectName());
 		eventProperties.put("newAssignee", source.getNewAssignee());
 		eventProperties.put("oldAssignee", source.getOldAssignee());
