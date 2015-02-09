@@ -21,7 +21,9 @@ import javax.persistence.PersistenceContext;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
+@ContextConfiguration(locations = {
+		"/spring/spring-library-object-history.xml",
+		"/spring/spring-library-data-source.xml",
         "/spring/spring-library-complaint-plugin-test.xml",
         "/spring/spring-library-complaint-plugin-test-mule.xml",
         "/spring/spring-library-complaint-plugin-test-ecm.xml",
