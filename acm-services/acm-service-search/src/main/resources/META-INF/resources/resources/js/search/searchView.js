@@ -19,24 +19,24 @@ Search.View = {
 
     ,MicroData: {
         create : function() {
-            this.objectTypes = Acm.Object.MicroData.getJson("objectTypes");
+//            this.objectTypes = Acm.Object.MicroData.getJson("objectTypes");
         }
         ,onInitialized: function() {
         }
 
-        ,findObjectType: function(type) {
-            var found = null;
-            if (Acm.isArray(this.objectTypes)) {
-                for (var i = 0; i < this.objectTypes.length; i++) {
-                    var objectType = this.objectTypes[i];
-                    if (Acm.compare(type, objectType.type)) {
-                        found = objectType;
-                        break;
-                    }
-                }
-            }
-            return found;
-        }
+//        ,findObjectType: function(type) {
+//            var found = null;
+//            if (Acm.isArray(this.objectTypes)) {
+//                for (var i = 0; i < this.objectTypes.length; i++) {
+//                    var objectType = this.objectTypes[i];
+//                    if (Acm.compare(type, objectType.type)) {
+//                        found = objectType;
+//                        break;
+//                    }
+//                }
+//            }
+//            return found;
+//        }
     }
 
     ,Query: {
@@ -252,7 +252,7 @@ Search.View = {
                     Record.parentName = Acm.goodValue(result.docs[i].parent_number_lcs);
                     Record.parentType = Acm.goodValue(result.docs[i].parent_type_s);
                     Record.owner      = Acm.goodValue(result.docs[i].assignee_full_name_lcs); //owner_s
-                    Record.modified   = Acm.goodValue(result.docs[i].modified_date_tdt);
+                    Record.modified   = Acm.getDateTimeFromDatetime(result.docs[i].modified_date_tdt);
                     jtData.Records.push(Record);
                 }
 
@@ -325,31 +325,11 @@ Search.View = {
                             ,width: '15%'
                             ,sorting: false
                             ,display: function(data) {
-                                var url = "#";
-                                var objectType = Search.View.MicroData.findObjectType(Acm.goodValue(data.record.type));
-                                if (objectType) {
-                                    url = App.getContextPath() + Acm.goodValue(objectType.url) + Acm.goodValue(data.record.id) + Acm.goodValue(objectType.urlEnd);
-                                }
-
-//                                var url = App.getContextPath();
-//                                if (App.OBJTYPE_CASE == data.record.type) {
-//                                    url += "/plugin/casefile/" + data.record.id;
-//                                } else if (App.OBJTYPE_COMPLAINT == data.record.type) {
-//                                    url += "/plugin/complaint/" + data.record.id;
-//                                } else if (App.OBJTYPE_TASK == data.record.type) {
-//                                    url += "/plugin/task/" + data.record.id;
-//                                } else if (App.OBJTYPE_DOCUMENT == data.record.type) {
-//                                    url += "/plugin/document/" + data.record.id;
-//                                } else if (App.OBJTYPE_PEOPLE == data.record.type) {
-//                                    url += "/plugin/people/" + data.record.id;
-//                                }else if (App.OBJTYPE_PERSON == data.record.type) {
-//                                    url += "/plugin/person/" + data.record.id;
-//                                }
-
-
+                                var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
                                 var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.name) + "</a>");
-                                //$lnk.click(function(){alert("click" + data.record.id)});
 
+
+                                //$lnk.click(function(){alert("click" + data.record.id)});
 
                                 //var $lnk = $("<p>line1</p><p>line2</p></br><p>line3</p><a href='" + url + "'>" + data.record.name + "</a><div>hello world1</div><div>hello world2</div>");
 
@@ -378,14 +358,8 @@ Search.View = {
                             ,width: '15%'
                             ,sorting: false
                             ,display: function(data) {
-                                var url = "#";
-                                var objectType = Search.View.MicroData.findObjectType(Acm.goodValue(data.record.parentType));
-                                if (objectType) {
-                                    url = App.getContextPath() + Acm.goodValue(objectType.url) + Acm.goodValue(data.record.parentId) + Acm.goodValue(objectType.urlEnd);
-                                }
-
+                                var url = App.buildObjectUrl(Acm.goodValue(data.record.parentType), Acm.goodValue(data.record.parentId), "#");
                                 var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.parentName, Acm.goodValue(data.record.parentId)) + "</a>");
-                                //var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.parentName) + "</a>");
                                 return $lnk;
                             }
                         }

@@ -112,6 +112,12 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     }
 
     @Override
+    public SolrAdvancedSearchDocument toContentFileIndex(AcmTask in) {
+        //No implementation needed
+        return null;
+    }
+
+    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         boolean objectNotNull = acmObjectType != null;

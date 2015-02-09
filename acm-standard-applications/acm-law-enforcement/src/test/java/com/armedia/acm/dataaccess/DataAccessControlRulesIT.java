@@ -97,7 +97,7 @@ public class DataAccessControlRulesIT
     }
 
     @Test
-    public void complaint_draft_defaultReadDenied() throws Exception
+    public void complaint_draft_defaultReadPolicy() throws Exception
     {
         assertNotNull(workingMemory);
 
@@ -122,7 +122,7 @@ public class DataAccessControlRulesIT
 
         AcmParticipantPrivilege priv = assignee.getPrivileges().get(0);
 
-        assertEquals(AcmPrivilegeService.ACCESS_DENY, priv.getAccessType());
+        assertEquals(AcmPrivilegeService.ACCESS_GRANT, priv.getAccessType());
         assertEquals(AcmPrivilegeService.ACCESS_LEVEL_READ, priv.getObjectAction());
         assertEquals(AcmPrivilegeService.ACCESS_REASON_POLICY, priv.getAccessReason());
 

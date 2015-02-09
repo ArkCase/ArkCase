@@ -19,6 +19,10 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
+    <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
+
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
     </bean>

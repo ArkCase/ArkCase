@@ -59,6 +59,12 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         return solrDoc;
     }
 
+    @Override
+    public SolrAdvancedSearchDocument toContentFileIndex(Person in) {
+        //No implementation needed
+        return null;
+    }
+
     private void addAddresses(Person person, SolrAdvancedSearchDocument solrDoc)
     {
         List<String> addressIds = new ArrayList<String>();
