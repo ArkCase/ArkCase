@@ -345,5 +345,13 @@
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
 
+	<bean id="taskHistoryListener" class="com.armedia.acm.plugins.task.service.TaskHistoryListener">
+    	<property name="acmObjectHistoryService" ref="acmObjectHistoryService" />
+    </bean>
+    
+    <bean id="taskAssigneeChangeChecker" class="com.armedia.acm.plugins.task.service.TaskAssigneeChangeChecker">
+    	<property name="acmObjectHistoryDao" ref="acmObjectHistoryDao" />
+    	<property name="eventPublisher" ref="acmObjectHistoryEventPublisher" />
+    </bean>
 
 </beans>
