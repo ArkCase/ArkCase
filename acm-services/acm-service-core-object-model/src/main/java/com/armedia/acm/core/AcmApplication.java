@@ -5,12 +5,21 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
  *
  */
 public class AcmApplication implements Serializable
 {
     private static final long serialVersionUID = -4533090175042467646L;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     private String applicationName;
     private List<AcmUserAction> topbarActions;
     private List<AcmUserAction> navigatorTabs;
@@ -56,70 +65,16 @@ public class AcmApplication implements Serializable
         this.objectTypes = objectTypes;
     }
 
-    private boolean isNotEmptyString(String s) {
-        if (null == s) {
-            return false;
-        }
-        if ("".equals(s)) {
-            return false;
-        }
-        return true;
-    }
-
     public String getObjectTypesAsJson() {
-        String json = "[";
-        if (null != objectTypes) {
-            for (AcmObjectType objectType : getObjectTypes()) {
-                if (isNotEmptyString(objectType.getName())) {
-                    if ("[".equals(json)) {
-                        json += "{";
-                    } else {
-                        json += ",{";
-                    }
-
-                    json += "\"name\":\"" + objectType.getName() + "\"";
-
-                    if (isNotEmptyString(objectType.getDescription())) {
-                        json += ",\"description\":\"" + objectType.getDescription() + "\"";
-                    }
-                    if (isNotEmptyString(objectType.getIconName())) {
-                        json += ",\"iconName\":\"" + objectType.getIconName() + "\"";
-                    }
-                    if (isNotEmptyString(objectType.getUrl())) {
-                        json += ",\"url\":\"" + objectType.getUrl() + "\"";
-                    }
-                    if (isNotEmptyString(objectType.getUrlEnd())) {
-                        json += ",\"urlEnd\":\"" + objectType.getUrlEnd() + "\"";
-                    }
-
-                    json += "}";
-                }
-            }
+        String json = "[]";
+        ObjectMapper om = new ObjectMapper();
+        try {
+            json =  om.writeValueAsString(getObjectTypes());
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
         }
-        json += "]";
         return json;
-
-//        JSONArray arr = new JSONArray();
-//        Collection<AcmPlugin> plugins = getAcmPluginManager().getAcmPlugins();
-//        for (AcmPlugin plugin : plugins) {
-//            Map<String, Object> props = plugin.getPluginProperties();
-//            if (null != props) {
-//                Object prop = props.get("search.ex");
-//                if (null != prop) {
-//                    try {
-//                        JSONObject searchEx = new JSONObject(prop.toString());
-//                        arr.put(searchEx);
-//                    } catch (JSONException e) {
-//                        log.error(e.getMessage());
-//                    }
-//                }
-//            }
-//        }
-//
-//        return objectTypes;
     }
-
-
 
     public List<AcmObjectType> getBusinessObjects()
     {
