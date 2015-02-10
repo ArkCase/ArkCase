@@ -72,10 +72,5 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="05-add-index-on-audit-datetime" author="marst">
-        <createIndex tableName="acm_audit_log" indexName="idx_audit_log_audit_date_time">
-            <column name="cm_audit_datetime"></column>
-        </createIndex>
-    </changeSet>
 </databaseChangeLog>
 
