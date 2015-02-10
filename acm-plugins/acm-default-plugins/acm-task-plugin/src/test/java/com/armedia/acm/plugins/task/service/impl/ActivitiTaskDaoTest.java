@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskOutcome;
+import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -17,6 +18,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
+import org.apache.commons.lang.WordUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -153,7 +155,6 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService.setVariableLocal(taskId.toString(), objectType, objectId);
         mockTaskService.setVariableLocal(taskId.toString(), "OBJECT_NAME", objectName);
         mockTaskService.setVariableLocal(taskId.toString(), "START_DATE", start);
-        mockTaskService.setVariableLocal(taskId.toString(), "TASK_STATUS", status);
         mockTaskService.setVariableLocal(taskId.toString(), "PERCENT_COMPLETE", percentComplete);
         mockTaskService.setVariableLocal(taskId.toString(), "DETAILS", details);
         mockTaskService.setVariable(taskId.toString(), "REWORK_INSTRUCTIONS", in.getReworkInstructions());
@@ -208,7 +209,6 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         Map<String, Object> taskLocalVars = new HashMap<>();
         taskLocalVars.put("START_DATE", new Date());
-        taskLocalVars.put("TASK_STATUS", "taskStatus");
         taskLocalVars.put("PERCENT_COMPLETE", 75);
         taskLocalVars.put("DETAILS", "task details");
 
@@ -277,7 +277,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(acmPriority, completed.getPriority());
 
         assertNotNull(completed.getTaskStartDate());
-        assertEquals("taskStatus", completed.getStatus());
+        assertEquals(TaskDao.STATE_ACTIVE, completed.getStatus());
         assertEquals("task details", completed.getDetails());
         assertEquals(Integer.valueOf(75), completed.getPercentComplete());
 
@@ -307,7 +307,6 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         Map<String, Object> taskLocalVars = new HashMap<>();
         taskLocalVars.put("START_DATE", new Date());
-        taskLocalVars.put("TASK_STATUS", "taskStatus");
         taskLocalVars.put("PERCENT_COMPLETE", 75);
         taskLocalVars.put("DETAILS", "task details");
 
@@ -375,7 +374,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(acmPriority, deleted.getPriority());
 
         assertNotNull(deleted.getTaskStartDate());
-        assertEquals("taskStatus", deleted.getStatus());
+        assertEquals(TaskDao.STATE_ACTIVE, deleted.getStatus());
         assertEquals("task details", deleted.getDetails());
         assertEquals(Integer.valueOf(75), deleted.getPercentComplete());
 
@@ -406,7 +405,6 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         Map<String, Object> taskLocalVars = new HashMap<>();
         taskLocalVars.put("START_DATE", new Date());
-        taskLocalVars.put("TASK_STATUS", "taskStatus");
         taskLocalVars.put("PERCENT_COMPLETE", 50);
         taskLocalVars.put("DETAILS", "task details");
 
@@ -469,7 +467,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertFalse(task.isCompleted());
 
         assertNotNull(task.getTaskStartDate());
-        assertEquals("taskStatus", task.getStatus());
+        assertEquals(TaskDao.STATE_ACTIVE, task.getStatus());
         assertEquals("task details", task.getDetails());
         assertEquals(Integer.valueOf(50), task.getPercentComplete());
 
@@ -513,12 +511,11 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstanceQuery.singleResult()).andReturn(mockHistoricTaskInstance);
 
         expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
-        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended);
+        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended).atLeastOnce();
         expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
 
         Map<String, Object> taskLocalVars = new HashMap<>();
         taskLocalVars.put("START_DATE", new Date());
-        taskLocalVars.put("TASK_STATUS", "taskStatus");
         taskLocalVars.put("PERCENT_COMPLETE", 50);
         taskLocalVars.put("DETAILS", "details");
         taskLocalVars.put("outcome", "formValueId");
@@ -575,7 +572,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertTrue(task.isCompleted());
 
         assertNotNull(task.getTaskStartDate());
-        assertEquals("taskStatus", task.getStatus());
+
+        assertEquals(TaskDao.STATE_CLOSED, task.getStatus());
         assertEquals("details", task.getDetails());
         assertEquals(Integer.valueOf(50), task.getPercentComplete());
 
@@ -643,7 +641,6 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         Map<String, Object> taskLocalVars = new HashMap<>();
         taskLocalVars.put("START_DATE", new Date());
-        taskLocalVars.put("TASK_STATUS", "taskStatus");
         taskLocalVars.put("PERCENT_COMPLETE", 25);
         taskLocalVars.put("DETAILS", "details");
 
@@ -711,7 +708,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertFalse(found.isAdhocTask());
         assertFalse(found.isCompleted());
         assertNotNull(found.getTaskStartDate());
-        assertEquals("taskStatus", found.getStatus());
+        assertEquals(TaskDao.STATE_ACTIVE, found.getStatus());
         assertEquals("details", found.getDetails());
         assertEquals(Integer.valueOf(25), found.getPercentComplete());
         assertEquals(1, found.getAvailableOutcomes().size());
