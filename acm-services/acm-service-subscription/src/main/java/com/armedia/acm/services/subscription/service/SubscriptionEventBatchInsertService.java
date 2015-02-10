@@ -67,10 +67,12 @@ public class SubscriptionEventBatchInsertService {
                     getSubscriptionEventDao().save(subscriptionEvent);
                 }
         } catch ( AcmObjectNotFoundException e ) {
-            e.printStackTrace();
+            if (log.isInfoEnabled())
+                log.info("There are no new events to be added",e);
         }
         } catch (ParseException e) {
-            e.printStackTrace();
+            if (log.isErrorEnabled())
+                log.error("Parsing exception occurred while fetching lastBatchRunDate ",e);
         }
         List<AcmSubscriptionEvent> subscriptionEventList = null;
     }
