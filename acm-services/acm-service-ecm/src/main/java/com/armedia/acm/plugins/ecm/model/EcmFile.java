@@ -28,6 +28,7 @@ import java.util.Date;
 public class EcmFile implements AcmEntity, Serializable, AcmObject
 {
     private static final long serialVersionUID = -5177153023458655846L;
+    private static final String OBJECT_TYPE = "FILE";
 
     @Id
     @Column(name = "cm_file_id")
@@ -79,7 +80,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
         {
             parentObject.setTargetId(fileId);
             parentObject.setTargetName(fileName);
-            parentObject.setTargetType("FILE");
+            parentObject.setTargetType(OBJECT_TYPE);
         }
     }
 
@@ -200,14 +201,14 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
     {
         parentObjects.add(parentObject);
         parentObject.setTargetName(getFileName());
-        parentObject.setTargetType("FILE");
+        parentObject.setTargetType(OBJECT_TYPE);
         parentObject.setTargetId(getFileId());
     }
 
     @JsonIgnore
     @Override
     public String getObjectType() {
-        return "FILE";
+        return OBJECT_TYPE;
     }
 
     @JsonIgnore
