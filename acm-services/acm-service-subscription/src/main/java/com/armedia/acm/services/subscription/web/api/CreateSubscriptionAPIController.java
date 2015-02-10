@@ -98,6 +98,11 @@ public class CreateSubscriptionAPIController {
     }
 
     private AcmSubscription prepareSubscription(String userId, String objectType, Long objectId , Authentication auth) throws AcmObjectNotFoundException {
+        JSONObject solrResponse = findSolrObjectForSubscription(objectType, objectId, auth);
+        return prepareSubscriptionObject(userId,objectId,objectType,solrResponse);
+    }
+
+    private JSONObject findSolrObjectForSubscription(String objectType, Long objectId, Authentication auth) throws AcmObjectNotFoundException {
 
         Map<String, Object> properties =  getSubscriptionPlugin().getPluginProperties();
         String predefinedQuery = (String)properties.get(QUERY_KEY);
@@ -109,19 +114,22 @@ public class CreateSubscriptionAPIController {
         try {
             solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(query, FIRST_ROW, MAX_ROWS, SORT, auth);
         } catch ( MuleException e ) {
-                if(log.isErrorEnabled()){
-                    log.error("Mule exception occurred while performing quick search for object:"+id,e);
-                }
-                throw new AcmObjectNotFoundException(objectType,objectId,"Exception occurred while performing quick search for object:"+id,e);
+            if(log.isErrorEnabled()){
+                log.error("Mule exception occurred while performing quick search for object:"+id,e);
+            }
+            throw new AcmObjectNotFoundException(objectType,objectId,"Exception occurred while performing quick search for object:"+id,e);
         }
+        return new JSONObject(solrResponseJsonString);
+    }
 
-        JSONObject solrResponse = new JSONObject(solrResponseJsonString);
+    private AcmSubscription prepareSubscriptionObject( String userId, Long objectId, String objectType, JSONObject solrResponse ) throws AcmObjectNotFoundException {
+
         JSONObject responseBody = solrResponse.getJSONObject(SOLR_RESPONSE_BODY);
         JSONArray docsList  = responseBody.getJSONArray(SOLR_RESPONSE_DOCS);
 
         if(docsList.length()==0) {
             if(log.isErrorEnabled()){
-                log.error("no such object to subscribe to:"+id);
+                log.error("no such object to subscribe to:"+objectId  +"-" + objectType);
             }
             throw new AcmObjectNotFoundException(objectType,objectId,"no such object to subscribe to",null);
         }
@@ -138,7 +146,6 @@ public class CreateSubscriptionAPIController {
 
         return subscription;
     }
-
     public AcmPlugin getSubscriptionPlugin() {
         return subscriptionPlugin;
     }
