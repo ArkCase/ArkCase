@@ -93,7 +93,7 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription> {
             subscriptionEvent.setEventType((String)row[i++]);
             subscriptionEvent.setSubscriptionOwner((String) row[i++]);
             subscriptionEvent.setEventObjectName((String)row[i++]);
-            subscriptionEvent.setEventObjectNumber((String)row[i]);
+            subscriptionEvent.setEventObjectNumber((String)row[i++]);
             result.add(subscriptionEvent);
         }
         if( result.isEmpty() ) {

@@ -67,8 +67,8 @@ public class SubscriptionEventBatchInsertService {
                     getSubscriptionEventDao().save(subscriptionEvent);
                 }
         } catch ( AcmObjectNotFoundException e ) {
-            if (log.isDebugEnabled())
-                log.error("There are no new events to be added",e);
+            if (log.isInfoEnabled())
+                log.info("There are no new events to be added",e);
         }
         } catch (ParseException e) {
             if (log.isErrorEnabled())
