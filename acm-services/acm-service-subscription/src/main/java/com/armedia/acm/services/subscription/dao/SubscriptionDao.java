@@ -46,15 +46,17 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription> {
     }
     public List<AcmSubscription> getListOfSubscriptionsByUser(String userId,int start, int numrows) throws AcmObjectNotFoundException {
 
-        CriteriaBuilder builder = getEm().getCriteriaBuilder();
-            CriteriaQuery<AcmSubscription> query = builder.createQuery(AcmSubscription.class);
-        Root<AcmSubscription> d = query.from(AcmSubscription.class);
-        query.select(d).where(builder.equal(d.get("userId"), userId));
-        query.orderBy(builder.desc(d.get("created")));
-        TypedQuery<AcmSubscription> dbQuery = getEm().createQuery(query).setFirstResult(start).setMaxResults(numrows);
+        Query query = getEm().createQuery(
+                "SELECT sub FROM AcmSubscription sub " +
+                        "WHERE sub.userId =:userId " +
+                        "ORDER BY sub.created");
+        query.setParameter("userId", userId);
+        query.setFirstResult(start);
+        query.setMaxResults(numrows);
+
         List<AcmSubscription> results;
 
-        results = dbQuery.getResultList();
+        results = query.getResultList();
 
         if( results.isEmpty()){
             throw new AcmObjectNotFoundException("SUBSCRIPTION", null, "No Subscriptions are found", null);
@@ -74,7 +76,7 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription> {
                 "WHERE sub.subscriptionObjectType = aud.objectType " +
                 "AND sub.objectId = aud.objectId " +
                 "AND aud.eventResult =:activityResult " +
-                "AND sub.eventDate >:lastRunDate");
+                "AND aud.eventDate >:lastRunDate ");
 
         query.setParameter("activityResult", AUDIT_ACTIVITY_RESULT_SUCCESS);
         query.setParameter("lastRunDate", lastRunDate);
@@ -91,7 +93,7 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription> {
             subscriptionEvent.setEventType((String)row[i++]);
             subscriptionEvent.setSubscriptionOwner((String) row[i++]);
             subscriptionEvent.setEventObjectName((String)row[i++]);
-            subscriptionEvent.setEventObjectNumber((String)row[i++]);
+            subscriptionEvent.setEventObjectNumber((String)row[i]);
             result.add(subscriptionEvent);
         }
         if( result.isEmpty() ) {

@@ -7,6 +7,7 @@ import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -75,7 +76,8 @@ public class CreateSubscriptionAPIController {
         try {
             subscription = getSubscriptionDao().save(subscription);
         } catch ( Exception e ) {
-               if ( e.getCause().getCause().getCause() instanceof  SQLIntegrityConstraintViolationException ) {
+               Throwable t =  ExceptionUtils.getRootCause(e);
+               if ( t instanceof  SQLIntegrityConstraintViolationException ) {
                    if (log.isDebugEnabled())
                        log.debug("Subscription on object['" + objectType + "]:[" + objectId + "] by user: " + userId + " already exists", e);
 
