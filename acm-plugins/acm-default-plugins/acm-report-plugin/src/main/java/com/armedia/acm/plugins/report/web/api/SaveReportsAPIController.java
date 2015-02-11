@@ -18,12 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.service.ReportService;
 
-/**
- * @author riste.tutureski
- *
- */
-@Controller
 
+@Controller
 @RequestMapping( { "/api/v1/plugin/report", "/api/latest/plugin/report"} )
 public class SaveReportsAPIController {
 	

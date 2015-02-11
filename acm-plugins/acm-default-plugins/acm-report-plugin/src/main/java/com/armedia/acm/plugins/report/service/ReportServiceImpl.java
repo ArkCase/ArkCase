@@ -3,10 +3,7 @@ package com.armedia.acm.plugins.report.service;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -14,11 +11,13 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -30,8 +29,11 @@ import com.armedia.acm.plugins.report.model.Reports;
 public class ReportServiceImpl implements ReportService{
 
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
-	
-	private String reportsPropertyFileLocation;
+
+    private String reportsPropertiesFileLocation;
+    private String reportToGroupsMapPropertiesFileLocation;
+    private Map<String, String> reportToGroupsMapProperties;
+    private Map<String, String> reportPluginProperties;
 	private MuleClient muleClient;
 	private PropertyFileManager propertyFileManager;
 	private PentahoReportUrl reportUrl;
@@ -81,6 +83,30 @@ public class ReportServiceImpl implements ReportService{
 		return null;
 	}
 
+    @Override
+    public boolean saveReportToGroupsMap(Map<String, List<String>> reportsToGroupsMap, Authentication auth)
+    {
+        boolean success;
+        try
+        {
+            getPropertyFileManager().storeMultiple(prepareReportToGroupsMapForSaving(reportsToGroupsMap), getReportToGroupsMapPropertiesFileLocation(), true);
+            success = true;
+        }
+        catch (Exception e)
+        {
+            LOG.error("Cannot save report to groups map", e);
+            success = false;
+        }
+        return success;
+    }
+
+    @Override
+    public Map<String, List<String>> getReportToGroupsMap()
+    {
+        Map<String, String> reportsToGroupsMap = getReportToGroupsMapProperties();
+        return prepareReportToGroupsMapForRetrieving(reportsToGroupsMap);
+    }
+
 	@Override
 	public boolean saveReports(List<Report> reports) {
 		
@@ -103,18 +129,17 @@ public class ReportServiceImpl implements ReportService{
 				}
 			}
 			
-			getPropertyFileManager().storeMultiple(propertiesToUpdate, getReportsPropertyFileLocation(), false);
-			getPropertyFileManager().removeMultiple(propertiesToDelete, getReportsPropertyFileLocation());
+			getPropertyFileManager().storeMultiple(propertiesToUpdate, getReportsPropertiesFileLocation(), false);
+			getPropertyFileManager().removeMultiple(propertiesToDelete, getReportsPropertiesFileLocation());
 		}
-		
 		return true;
 	}
 	
 	private String createPentahoReportUri(String path)
 	{
-		String url = getPropertyFileManager().load(getReportsPropertyFileLocation(), PENTAHO_REPORT_URL_TEMPLATE, PENTAHO_REPORT_URL_TEMPLATE_DEFAULT);
-		String user = getPropertyFileManager().load(getReportsPropertyFileLocation(), PENTAHO_SERVER_USER, PENTAHO_SERVER_USER_DEFAULT);
-		String password = getPropertyFileManager().load(getReportsPropertyFileLocation(), PENTAHO_SERVER_PASSWORD, PENTAHO_SERVER_PASSWORD_DEFAULT);
+		String url = getPropertyFileManager().load(getReportsPropertiesFileLocation(), PENTAHO_REPORT_URL_TEMPLATE, PENTAHO_REPORT_URL_TEMPLATE_DEFAULT);
+		String user = getPropertyFileManager().load(getReportsPropertiesFileLocation(), PENTAHO_SERVER_USER, PENTAHO_SERVER_USER_DEFAULT);
+		String password = getPropertyFileManager().load(getReportsPropertiesFileLocation(), PENTAHO_SERVER_PASSWORD, PENTAHO_SERVER_PASSWORD_DEFAULT);
 		
 		if (url != null)
 		{
@@ -147,13 +172,38 @@ public class ReportServiceImpl implements ReportService{
 		return obj;
 	}
 
-	public String getReportsPropertyFileLocation() {
-		return reportsPropertyFileLocation;
-	}
+    private Map<String, String> prepareReportToGroupsMapForSaving(Map<String, List<String>> reportsToGroupsMap)
+    {
+        Map<String, String> retval = new HashMap<String, String>();
 
-	public void setReportsPropertyFileLocation(String reportsPropertyFileLocation) {
-		this.reportsPropertyFileLocation = reportsPropertyFileLocation;
-	}
+        if (reportsToGroupsMap != null && reportsToGroupsMap.size() > 0)
+        {
+            for (Map.Entry<String, List<String>> entry : reportsToGroupsMap.entrySet())
+            {
+                retval.put(entry.getKey(), StringUtils.join(entry.getValue(), ","));
+            }
+        }
+
+        return retval;
+    }
+
+    private Map<String, List<String>> prepareReportToGroupsMapForRetrieving(Map<String, String> reportsToGroupsMap)
+    {
+        Map<String, List<String>> retval = new HashMap<String, List<String>>();
+
+        if (reportsToGroupsMap != null && reportsToGroupsMap.size() > 0)
+        {
+            for (Map.Entry<String, String> entry : reportsToGroupsMap.entrySet())
+            {
+                if(!("".equals(entry.getValue())) && entry.getValue() != null){
+                    retval.put(entry.getKey(), Arrays.asList(entry.getValue().split(",")));
+                }
+            }
+        }
+
+        return retval;
+    }
+
 
 	public MuleClient getMuleClient() {
 		return muleClient;
@@ -178,5 +228,37 @@ public class ReportServiceImpl implements ReportService{
 	public void setReportUrl(PentahoReportUrl reportUrl) {
 		this.reportUrl = reportUrl;
 	}
+
+    public String getReportsPropertiesFileLocation() {
+        return reportsPropertiesFileLocation;
+    }
+
+    public void setReportsPropertiesFileLocation(String reportsPropertiesFileLocation) {
+        this.reportsPropertiesFileLocation = reportsPropertiesFileLocation;
+    }
+
+    public String getReportToGroupsMapPropertiesFileLocation() {
+        return reportToGroupsMapPropertiesFileLocation;
+    }
+
+    public void setReportToGroupsMapPropertiesFileLocation(String reportToGroupsMapPropertiesFileLocation) {
+        this.reportToGroupsMapPropertiesFileLocation = reportToGroupsMapPropertiesFileLocation;
+    }
+
+    public Map<String, String> getReportToGroupsMapProperties() {
+        return reportToGroupsMapProperties;
+    }
+
+    public void setReportToGroupsMapProperties(Map<String, String> reportToGroupsMapProperties) {
+        this.reportToGroupsMapProperties = reportToGroupsMapProperties;
+    }
+
+    public Map<String, String> getReportPluginProperties() {
+        return reportPluginProperties;
+    }
+
+    public void setReportPluginProperties(Map<String, String> reportPluginProperties) {
+        this.reportPluginProperties = reportPluginProperties;
+    }
 
 }
