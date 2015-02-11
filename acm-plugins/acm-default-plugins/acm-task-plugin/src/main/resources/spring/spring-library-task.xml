@@ -352,6 +352,7 @@
     <bean id="taskAssigneeChangeChecker" class="com.armedia.acm.plugins.task.service.TaskAssigneeChangeChecker">
     	<property name="acmObjectHistoryDao" ref="acmObjectHistoryDao" />
     	<property name="eventPublisher" ref="acmObjectHistoryEventPublisher" />
+    	<property name="acmAssignmentDao" ref="acmAssignmentDao" />
     </bean>
 
 </beans>

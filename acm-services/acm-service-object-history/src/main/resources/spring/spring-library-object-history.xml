@@ -16,4 +16,7 @@
     	<property name="acmObjectHistoryDao" ref="acmObjectHistoryDao" />
     	<property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher" />
     </bean>
+    
+    <!-- Assignment DAO -->
+    <bean id="acmAssignmentDao" class="com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao"/>
 </beans>
