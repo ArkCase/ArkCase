@@ -131,7 +131,7 @@
     </bean>
 
     <bean id="subscribePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-search"/>
+        <property name="privilegeName" value="acm-subscription"/>
         <property name="applicationRolesWithPrivilege">
             <list>
                 <value>ROLE_INVESTIGATOR</value>
