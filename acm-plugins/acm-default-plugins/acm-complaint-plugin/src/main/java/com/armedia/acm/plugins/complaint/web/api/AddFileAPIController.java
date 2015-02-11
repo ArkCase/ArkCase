@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ public class AddFileAPIController
 
     private ComplaintDao complaintDao;
     private EcmFileService ecmFileService;
+    private ComplaintEventPublisher eventPublisher;
 
     private final String uploadFileType = "attachment";
 
@@ -46,10 +48,10 @@ public class AddFileAPIController
         {
             log.info("Adding file to complaint id " + complaintId);
         }
-
+        Complaint in = null;
         try
         {
-            Complaint in = getComplaintDao().find(complaintId);
+             in = getComplaintDao().find(complaintId);
 
             if ( in == null )
             {
@@ -64,17 +66,29 @@ public class AddFileAPIController
 
             String contextPath = request.getServletContext().getContextPath();
 
-            return getEcmFileService().upload(uploadFileType, file, acceptType, contextPath, authentication, folderId,
+            ResponseEntity<? extends Object> responseEntity =  getEcmFileService().
+                    upload(uploadFileType, file, acceptType, contextPath, authentication, folderId,
                     objectType, objectId, objectName);
+
+            getEventPublisher().publishComplaintFileAddedEvent(in,true);
+
+            return responseEntity;
         }
         catch (PersistenceException e)
         {
+            getEventPublisher().publishComplaintFileAddedEvent(in,false);
             throw new AcmObjectNotFoundException("complaint", complaintId, e.getMessage(), e);
         }
     }
 
 
+    public ComplaintEventPublisher getEventPublisher() {
+        return eventPublisher;
+    }
 
+    public void setEventPublisher(ComplaintEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
     public ComplaintDao getComplaintDao()
     {

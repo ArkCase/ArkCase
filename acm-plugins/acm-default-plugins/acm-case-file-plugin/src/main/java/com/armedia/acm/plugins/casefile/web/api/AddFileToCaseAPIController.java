@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class AddFileToCaseAPIController {
 
     private CaseFileDao caseFileDao;
     private EcmFileService ecmFileService;
+    private CaseFileEventUtility caseFileEventUtility;
 
     //private final String uploadFileType = "attachment_case";
 
@@ -47,13 +49,13 @@ public class AddFileToCaseAPIController {
         {
             log.info("Adding file to case id " + caseId);
         }
-        if(uploadFileType == null){
+        if( uploadFileType == null ) {
             uploadFileType = "Case Attachment";
         }
-
+        CaseFile in = null;
         try
         {
-            CaseFile in = getCaseFileDao().find(caseId);
+            in = getCaseFileDao().find(caseId);
 
             if ( in == null )
             {
@@ -68,13 +70,26 @@ public class AddFileToCaseAPIController {
 
             String contextPath = request.getServletContext().getContextPath();
 
-            return getEcmFileService().upload(uploadFileType, file, acceptType, contextPath, authentication, folderId,
+            ResponseEntity<? extends Object> responseEntity =  getEcmFileService().upload(uploadFileType, file, acceptType, contextPath, authentication, folderId,
                     objectType, objectId, objectName);
+
+            getCaseFileEventUtility().raiseFileAddedEvent(in,true);
+
+            return responseEntity;
         }
         catch (PersistenceException e)
         {
+            getCaseFileEventUtility().raiseFileAddedEvent(in,false);
             throw new AcmObjectNotFoundException("case", caseId, e.getMessage(), e);
         }
+    }
+
+    public CaseFileEventUtility getCaseFileEventUtility() {
+        return caseFileEventUtility;
+    }
+
+    public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility) {
+        this.caseFileEventUtility = caseFileEventUtility;
     }
 
     public CaseFileDao getCaseFileDao() {

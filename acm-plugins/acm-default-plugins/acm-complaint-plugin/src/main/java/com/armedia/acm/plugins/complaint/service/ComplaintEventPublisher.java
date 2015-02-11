@@ -1,15 +1,7 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
-import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.model.ComplaintApprovalWorkflowRequestedEvent;
-import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
-import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
-import com.armedia.acm.plugins.complaint.model.ComplaintListView;
-import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
-import com.armedia.acm.plugins.complaint.model.ComplaintSearchResultEvent;
-import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
-import com.armedia.acm.plugins.complaint.model.FindComplaintByIdEvent;
+import com.armedia.acm.plugins.complaint.model.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,5 +96,12 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
     	ComplaintClosedEvent event = new ComplaintClosedEvent(source, succeeded, userId, closeDate);
 
     	eventPublisher.publishEvent(event);
+    }
+
+    public void publishComplaintFileAddedEvent(Complaint source, boolean succeeded) {
+
+        ComplaintFileAddedEvent event = new ComplaintFileAddedEvent(source);
+        event.setSucceeded(succeeded);
+        eventPublisher.publishEvent(event);
     }
 }
