@@ -5,16 +5,22 @@
  */
 var Subscription = Subscription || {
     create: function() {
-        if (Subscription.Model.create)      {Subscription.Model.create();}
-        if (Subscription.Service.create)    {Subscription.Service.create();}
-        if (Subscription.View.create)       {Subscription.View.create();}
         if (Subscription.Controller.create) {Subscription.Controller.create();}
+        if (Subscription.Model.create)      {Subscription.Model.create();}
+        if (Subscription.View.create)       {Subscription.View.create();}
+
+        SearchBase.create("subscription"
+            ,Subscription.View.$edtSearch
+            ,Subscription.View.$btnSearch
+            ,Subscription.View.$divFacet
+            ,Subscription.View.$divResults
+            ,Subscription.View.args
+            ,Subscription.View.jtDataMaker
+        );
     }
     ,onInitialized: function() {
-        if (Subscription.Model.onInitialized)      {Subscription.Model.onInitialized();}
-        if (Subscription.Service.onInitialized)    {Subscription.Service.onInitialized();}
-        if (Subscription.View.onInitialized)       {Subscription.View.onInitialized();}
         if (Subscription.Controller.onInitialized) {Subscription.Controller.onInitialized();}
+        if (Subscription.Model.onInitialized)      {Subscription.Model.onInitialized();}
+        if (Subscription.View.onInitialized)       {Subscription.View.onInitialized();}
     }
 };
-

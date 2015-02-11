@@ -5,10 +5,9 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title><spring:message code="subscription.page.title" text="Subscription | ACM | ArkCase" /></title>
+    <title><spring:message code="notification.page.title" text="Notification | ACM | ArkCase" /></title>
 
     <div id="microData" itemscope="true" style="display: none">
-        <%--<span itemprop="searchEx">${searchEx}</span>--%>
     </div>
 </script>
 </jsp:attribute>
@@ -20,11 +19,11 @@
     <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseView.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseController.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscription.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionModel.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionView.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/notification/notification.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/notification/notificationModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/notification/notificationService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/notification/notificationView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/notification/notificationController.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js'/>"></script>
 
