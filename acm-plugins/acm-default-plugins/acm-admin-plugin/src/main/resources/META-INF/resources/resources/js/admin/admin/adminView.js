@@ -9,6 +9,8 @@ Admin.View = Admin.View || {
         if (Admin.View.Correspondence.create)       	{Admin.View.Correspondence.create();}
         if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
         if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
+        if (Admin.View.ReportsConfiguration.create)     {Admin.View.ReportsConfiguration.create();}
+
 
         if (Admin.View.Tree.create)                 	{Admin.View.Tree.create();}
     }
@@ -17,6 +19,8 @@ Admin.View = Admin.View || {
         if (Admin.View.Correspondence.onInitialized)       		{Admin.View.Correspondence.onInitialized();}
         if (Admin.View.Organization.onInitialized)         		{Admin.View.Organization.onInitialized();}
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
+        if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
+
 
         if (Admin.View.Tree.onInitialized)                 		{Admin.View.Tree.onInitialized();}
     }
@@ -1129,6 +1133,185 @@ Admin.View = Admin.View || {
             // Show authorized and not authorized groups on the screen
             Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, authGroups);
             Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, notAuthGroups);
+        }
+
+        ,createOptions: function(element, optionsArray) {
+            var options = '';
+            if (optionsArray) {
+                for (var i = 0; i < optionsArray.length; i++) {
+                    options += '<option value="' + optionsArray[i] + '">' + optionsArray[i] + '</option>';
+                }
+            }
+            element.html(options);
+        }
+
+        ,removeElements: function(elements, elementsToRemove) {
+            var output = [];
+
+            if (elements) {
+                if (elementsToRemove) {
+                    for (var i = 0; i < elements.length; i++) {
+                        var found = false;
+                        for (var j = 0; j < elementsToRemove.length; j++) {
+                            if (elements[i] === elementsToRemove[j]) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            output.push(elements[i]);
+                        }
+                    }
+                }else{
+                    return elements;
+                }
+            }
+
+            return output;
+        }
+    }
+
+    ,ReportsConfiguration:{
+        create: function () {
+            // Initialize select HTML elements for reports, not authorized and authorized groups
+            this.$selectReport = $("#selectReport");
+            this.$selectNotAuthorized = $("#selectNotAuthorizedReport");
+            this.$selectAuthorized = $("#selectAuthorizedReport");
+
+            // Initialize buttons
+            this.$btnSelectReport = $("#btnSelectReport");
+            this.$btnAuthorize = $("#btnAuthorize");
+            this.$btnUnauthorize = $("#btnUnauthorize");
+
+            // Add listeners for buttons and reports select element
+            this.$btnSelectReport.on("click", function(e) {Admin.View.ReportsConfiguration.onClickBtnSelectReport(e, this);});
+            this.$btnAuthorize.on("click", function(e) {Admin.View.ReportsConfiguration.onClickBtnAuthorize(e, this);});
+            this.$btnUnauthorize.on("click", function(e) {Admin.View.ReportsConfiguration.onClickBtnUnauthorize(e, this);});
+            this.$selectReport.on("change", function(e) {Admin.View.ReportsConfiguration.onChangeSelectReport(e, this);});
+
+            // Add listeners for retrieving information like reports, groups and reports to groups Map
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_RETRIEVED_REPORTS, this.onModelReportConfigRetrievedReports);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_ERROR, this.onModelReportConfigError);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP, this.onModelReportConfigSavedReportToGroupsMap);
+
+
+        }
+        , onInitialized: function () {
+
+        }
+
+        ,onClickBtnSelectReport: function(event, ctrl) {
+            // When "Go" button is clicked, just refresh the not authorized and authorized groups for selected report  && selectedGroups.length > 0
+            Admin.View.ReportsConfiguration.refresh();
+        }
+
+        ,onClickBtnAuthorize: function(event, ctrl) {
+            // Get selected reports and selected groups from not authorized section
+            var selectedReport = Admin.View.ReportsConfiguration.$selectReport.val();
+            var selectedGroups = Admin.View.ReportsConfiguration.$selectNotAuthorized.val();
+
+            if (selectedReport && selectedGroups && selectedGroups.length > 0) {
+                // Get authorized groups from the cached data
+                var authGroups = [];
+                if (Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap") &&
+                    Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport]) {
+                    authGroups = Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport];
+                }
+
+                // Update authorized groups in the cached data (add selected groups)
+                authGroups = authGroups.concat(selectedGroups);
+                Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport] = authGroups;
+
+                // Save authorized groups changes on ACM side
+                Admin.Controller.viewSavedReportToGroupsMap(Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap"));
+            }
+        }
+
+        ,onClickBtnUnauthorize: function(event, ctrl) {
+            // Get selected report and selected groups from authorized section
+            var selectedReport = Admin.View.ReportsConfiguration.$selectReport.val();
+            var selectedGroups = Admin.View.ReportsConfiguration.$selectAuthorized.val();
+
+            if (selectedReport && selectedGroups && selectedGroups.length > 0) {
+                // Get authorized groups from the cached data
+                var authGroups = [];
+                if (Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap") &&
+                    Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport]) {
+                    authGroups = Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport];
+                }
+
+                // Update authorized groups in the cached data (remove selected groups)
+                authGroups = Admin.View.ReportsConfiguration.removeElements(authGroups, selectedGroups);
+                Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport] = authGroups;
+
+                // Save authorized groups changes on ACM side
+                Admin.Controller.viewSavedReportToGroupsMap(Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap"));
+            }
+        }
+
+        ,onChangeSelectReport: function(event, ctrl) {
+            // Remove data from not authorized and authorized section when report is changed
+            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectAuthorized, []);
+            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectNotAuthorized, []);
+        }
+
+        ,onModelReportConfigRetrievedReports: function() {
+            // Get reports from cached data
+            var reports = Admin.Model.ReportsConfiguration.cacheReports.get("reports");
+
+            // Show reports on the view
+            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectReport, reports);
+        }
+
+        ,onModelReportConfigError: function(errorMsg) {
+            Acm.Dialog.error(errorMsg);
+        }
+
+        ,onModelReportConfigSavedReportToGroupsMap:function(success){
+            if(true == success){
+                // Refresh not authorized and authorized groups on the screen
+                Admin.View.ReportsConfiguration.refresh();
+            }
+        }
+        ,refresh: function() {
+            // Initialize authorized and not authorized groups to empty arrays
+            var authGroups = [];
+            var notAuthGroups = [];
+
+            // Get selected report
+            var selected = Admin.View.ReportsConfiguration.$selectReport.val();
+
+            if (selected && selected != '') {
+                // Get all groups
+                var groups = Admin.Model.ReportsConfiguration.cacheGroups.get("groups");
+
+                // Get authorized groups for given report
+                if (Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap") &&
+                    Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selected]) {
+                    authGroups = Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selected];
+                }
+
+                // Get not authorized groups
+                if (groups) {
+                    for (var i = 0; i < groups.length; i++) {
+                        var found = false;
+                        for (var j = 0; j < authGroups.length; j++) {
+                            if (groups[i].name === authGroups[j]) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            notAuthGroups.push(groups[i].name);
+                        }
+                    }
+                }
+            }
+
+            // Show authorized and not authorized groups on the screen
+            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectAuthorized, authGroups);
+            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectNotAuthorized, notAuthGroups);
         }
 
         ,createOptions: function(element, optionsArray) {

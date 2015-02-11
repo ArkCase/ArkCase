@@ -9,15 +9,18 @@
     
     <bean id="getPentahoReportsAPIController" class="com.armedia.acm.plugins.report.web.api.GetPentahoReportsAPIController">
     	<property name="reportService" ref="reportService"/>
-    	<property name="propertyFileManager">
-            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
-        </property>
-        <property name="reportsPropertyFileLocation" value="${user.home}/.acm/acm-reports.properties"/>
     </bean>
     
     <bean id="saveReportsAPIController" class="com.armedia.acm.plugins.report.web.api.SaveReportsAPIController">
     	<property name="reportService" ref="reportService"/>
     </bean>
-    
+
+    <bean id="getReportsToGroupsAPIController" class="com.armedia.acm.plugins.report.web.api.GetReportToGroupsMapAPIController">
+        <property name="reportService" ref="reportService"/>
+    </bean>
+
+    <bean id="saveReportsToGroupsAPIController" class="com.armedia.acm.plugins.report.web.api.SaveReportToGroupsMapAPIController">
+        <property name="reportService" ref="reportService"/>
+    </bean>
 </beans>
 
