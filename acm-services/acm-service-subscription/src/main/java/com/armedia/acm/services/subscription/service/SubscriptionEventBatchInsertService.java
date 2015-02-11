@@ -63,8 +63,10 @@ public class SubscriptionEventBatchInsertService {
             List<AcmSubscriptionEvent> subscriptionEventList = null;
         try {
                 subscriptionEventList = getSubscriptionDao().createListOfNewSubscriptionEventsForInserting(lastBatchRunDate);
+                SubscriptionEventPublisher subscriptionEventPublisher = new SubscriptionEventPublisher();
                 for( AcmSubscriptionEvent subscriptionEvent: subscriptionEventList ){
-                    getSubscriptionEventDao().save(subscriptionEvent);
+                    subscriptionEvent = getSubscriptionEventDao().save(subscriptionEvent);
+                    subscriptionEventPublisher.publishAcmSubscriptionEventCreatedEvent(subscriptionEvent,true);
                 }
         } catch ( AcmObjectNotFoundException e ) {
             if (log.isInfoEnabled())

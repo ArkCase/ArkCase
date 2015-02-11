@@ -5,7 +5,9 @@
 
     <task:scheduler id="subscriptionEventTaskScheduler" pool-size="1"/>
 
-    
+
+    <bean id="subscriptionEventPublisher" class="com.armedia.acm.services.subscription.service.SubscriptionEventPublisher"/>
+
     <bean id="subscriptionDao" class="com.armedia.acm.services.subscription.dao.SubscriptionDao"/>
 
     <bean id="subscriptionEventDao" class="com.armedia.acm.services.subscription.dao.SubscriptionEventDao"/>
