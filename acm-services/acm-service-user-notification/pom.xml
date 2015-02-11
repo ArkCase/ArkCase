@@ -47,6 +47,12 @@
             <artifactId>slf4j-log4j12</artifactId>
             <scope>runtime</scope>
         </dependency>
+        
+        <!-- Reloading .property file without restarting the server -->
+        <dependency>
+			<groupId>net.unicon.springframework</groupId>
+			<artifactId>springframework-addons</artifactId>
+		</dependency>
 	</dependencies>
 	
 </project>

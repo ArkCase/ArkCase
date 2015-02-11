@@ -5,6 +5,7 @@ package com.armedia.acm.service.objecthistory.service;
 
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.dao.AcmObjectHistoryDao;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
@@ -18,6 +19,7 @@ public abstract class AcmAssigneeChangeChacker{
 	
 	private AcmObjectHistoryDao acmObjectHistoryDao;
 	private AcmObjectHistoryEventPublisher eventPublisher;
+	private AcmAssignmentDao acmAssignmentDao;
 	
 	public void onApplicationEvent(AcmObjectHistoryEvent event) 
 	{
@@ -99,7 +101,11 @@ public abstract class AcmAssigneeChangeChacker{
 		
 		// Raise event if the flag is set to true
 		if (raiseEvent) 
-		{			
+		{		
+			// Save assignment change in the database
+			getAcmAssignmentDao().save(assignment);
+			
+			// Raise an event
 			getEventPublisher().publishAssigneeChangeEvent(assignment, userId, ipAddress);
 		}
 	}
@@ -132,6 +138,14 @@ public abstract class AcmAssigneeChangeChacker{
 
 	public void setEventPublisher(AcmObjectHistoryEventPublisher eventPublisher) {
 		this.eventPublisher = eventPublisher;
+	}
+
+	public AcmAssignmentDao getAcmAssignmentDao() {
+		return acmAssignmentDao;
+	}
+
+	public void setAcmAssignmentDao(AcmAssignmentDao acmAssignmentDao) {
+		this.acmAssignmentDao = acmAssignmentDao;
 	}
 
 }

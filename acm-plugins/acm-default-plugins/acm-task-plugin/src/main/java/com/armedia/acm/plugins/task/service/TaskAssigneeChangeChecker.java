@@ -47,7 +47,7 @@ public class TaskAssigneeChangeChecker extends AcmAssigneeChangeChacker implemen
 		
 		if (task != null)
 		{
-			return task.getId();
+			return task.getTaskId();
 		}
 		
 		return null;
