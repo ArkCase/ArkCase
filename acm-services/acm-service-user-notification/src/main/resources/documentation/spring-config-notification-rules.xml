@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+
+    <bean id="assignRule" class="com.armedia.acm.service.usernotification.model.AssignmentRule">
+		<property name="globalRule" value="true"/>	
+		<property name="jpaQuery">
+			<value>
+				<![CDATA[
+					SELECT 	
+					  a.newAssignee AS owner,
+					  CONCAT(
+						a.objectType, 
+						CONCAT(
+						  CONCAT(
+							' ', 
+							a.objectName), 
+						  CONCAT(
+							CONCAT(
+							  ' assigned to ', 
+							  u.fullName), 
+							CONCAT(
+							  ' on ', 
+							  a.created
+							)
+						  )
+						)
+					  ) AS title,
+					  a.objectType AS object_type,
+					  a.objectName AS object_name,
+					  a.objectId AS object_id
+					FROM 
+						AcmAssignment a, AcmUser u 
+					WHERE 
+						a.newAssignee IS NOT NULL 
+					AND
+						a.newAssignee=u.userId 
+					AND 
+						a.created >= :lastRunDate
+					ORDER BY 
+						a.created
+				]]>
+			</value>
+		</property>
+    </bean>
+	
+	<bean id="unassignRule" class="com.armedia.acm.service.usernotification.model.AssignmentRule">
+		<property name="globalRule" value="true"/>	
+		<property name="jpaQuery">
+			<value>
+				<![CDATA[
+					SELECT 	
+					  a.oldAssignee AS owner,
+					  CONCAT(
+						a.objectType, 
+						CONCAT(
+						  CONCAT(
+							' ', 
+							a.objectName), 
+						  CONCAT(
+							CONCAT(
+							  ' unassigned from ', 
+							  u.fullName), 
+							CONCAT(
+							  ' on ', 
+							  a.created
+							)
+						  )
+						)
+					  ) AS title,
+					  a.objectType AS object_type,
+					  a.objectName AS object_name,
+					  a.objectId AS object_id
+					FROM 
+						AcmAssignment a, AcmUser u 
+					WHERE 
+						a.oldAssignee IS NOT NULL
+					AND
+						a.oldAssignee=u.userId 
+					AND 
+						a.created >= :lastRunDate
+					ORDER BY 
+						a.created
+				]]>
+			</value>
+		</property>
+
+    </bean>
+
+</beans>
