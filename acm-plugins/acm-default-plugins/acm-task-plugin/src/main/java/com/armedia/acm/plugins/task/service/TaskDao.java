@@ -16,9 +16,6 @@ import java.util.List;
  */
 public interface TaskDao
 {
-    String STATE_ACTIVE = "ACTIVE";
-    String STATE_CLOSED = "CLOSED";
-    Integer DEFAULT_PRIORITY = 50;
 
     @Transactional
     AcmTask createAdHocTask(AcmTask in) throws AcmTaskException;
