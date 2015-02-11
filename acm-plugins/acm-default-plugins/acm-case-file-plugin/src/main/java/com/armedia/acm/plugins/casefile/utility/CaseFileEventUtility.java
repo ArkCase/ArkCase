@@ -3,6 +3,8 @@ package com.armedia.acm.plugins.casefile.utility;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.FileAddedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -14,6 +16,8 @@ import java.util.Date;
  */
 public class CaseFileEventUtility implements ApplicationEventPublisherAware
 {
+    private Logger log = LoggerFactory.getLogger(getClass());
+
     private ApplicationEventPublisher applicationEventPublisher;
 
     public void raiseEvent(CaseFile caseFile, String caseState, Date eventDate, String ipAddress, String userId, Authentication auth)
@@ -31,6 +35,7 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         fileAddedEvent.setSucceeded(succeeded);
 
         applicationEventPublisher.publishEvent(fileAddedEvent);
+        log.info("MARJAN: 'com.armedia.acm.case_file.file.added'");
     }
 
     @Override

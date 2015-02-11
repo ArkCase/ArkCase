@@ -7,6 +7,7 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="subscriptionDao" ref="subscriptionDao"/>
         <property name="subscriptionPlugin" ref="subscriptionPlugin"/>
+        <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
     </bean>
 
     <bean id="listSubscriptionByUserAPIController" class="com.armedia.acm.services.subscription.web.api.ListSubscriptionByUserAPIController">

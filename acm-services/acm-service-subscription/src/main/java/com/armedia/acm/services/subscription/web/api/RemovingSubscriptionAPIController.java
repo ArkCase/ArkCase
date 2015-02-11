@@ -3,6 +3,7 @@ package com.armedia.acm.services.subscription.web.api;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
+import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -27,6 +28,8 @@ public class RemovingSubscriptionAPIController {
 
     private SubscriptionDao subscriptionDao;
     private AcmPlugin subscriptionPlugin;
+    private SubscriptionEventPublisher subscriptionEventPublisher;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private final static String SUCCESS_MSG = "subscription.removed.successful";
@@ -56,20 +59,32 @@ public class RemovingSubscriptionAPIController {
         } catch ( SQLTimeoutException e ) {
             if(log.isErrorEnabled())
                 log.error("Exception occurred while removing subscription on object['" + objectType + "]:[" + objectId + "] by user: "+userId,e);
+            getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, false);
             return (String)getSubscriptionPlugin().getPluginProperties().get(FAIL_MSG);
         } catch ( SQLException e ) {
             if(log.isErrorEnabled())
                 log.error("Exception occurred while removing subscription on object['" + objectType + "]:[" + objectId + "] by user: "+userId,e);
+            getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, false);
             return (String)getSubscriptionPlugin().getPluginProperties().get(FAIL_MSG);
         }
         if ( resultFromDeleteAction == NO_ROW_DELETED ) {
             if(log.isDebugEnabled())
                 log.debug("Subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "] not found in the DB");
+            getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, false);
             return (String)getSubscriptionPlugin().getPluginProperties().get(SUBSCRIPTION_NOT_FOUND_MSG);
         } else {
             log.debug("Subscription for user:"+userId+" on object['" + objectType + "]:[" + objectId + "] successfully removed");
+            getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, true);
             return (String)getSubscriptionPlugin().getPluginProperties().get(SUCCESS_MSG);
         }
+    }
+
+    public SubscriptionEventPublisher getSubscriptionEventPublisher() {
+        return subscriptionEventPublisher;
+    }
+
+    public void setSubscriptionEventPublisher(SubscriptionEventPublisher subscriptionEventPublisher) {
+        this.subscriptionEventPublisher = subscriptionEventPublisher;
     }
 
     public AcmPlugin getSubscriptionPlugin() {
