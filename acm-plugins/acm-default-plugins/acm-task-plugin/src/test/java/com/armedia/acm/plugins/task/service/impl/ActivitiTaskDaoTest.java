@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.model.TaskOutcome;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener;
@@ -277,7 +278,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(acmPriority, completed.getPriority());
 
         assertNotNull(completed.getTaskStartDate());
-        assertEquals(TaskDao.STATE_ACTIVE, completed.getStatus());
+        assertEquals(TaskConstants.STATE_ACTIVE, completed.getStatus());
         assertEquals("task details", completed.getDetails());
         assertEquals(Integer.valueOf(75), completed.getPercentComplete());
 
@@ -374,7 +375,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(acmPriority, deleted.getPriority());
 
         assertNotNull(deleted.getTaskStartDate());
-        assertEquals(TaskDao.STATE_ACTIVE, deleted.getStatus());
+        assertEquals(TaskConstants.STATE_ACTIVE, deleted.getStatus());
         assertEquals("task details", deleted.getDetails());
         assertEquals(Integer.valueOf(75), deleted.getPercentComplete());
 
@@ -467,7 +468,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertFalse(task.isCompleted());
 
         assertNotNull(task.getTaskStartDate());
-        assertEquals(TaskDao.STATE_ACTIVE, task.getStatus());
+        assertEquals(TaskConstants.STATE_ACTIVE, task.getStatus());
         assertEquals("task details", task.getDetails());
         assertEquals(Integer.valueOf(50), task.getPercentComplete());
 
@@ -573,7 +574,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         assertNotNull(task.getTaskStartDate());
 
-        assertEquals(TaskDao.STATE_CLOSED, task.getStatus());
+        assertEquals(TaskConstants.STATE_CLOSED, task.getStatus());
         assertEquals("details", task.getDetails());
         assertEquals(Integer.valueOf(50), task.getPercentComplete());
 
@@ -708,7 +709,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertFalse(found.isAdhocTask());
         assertFalse(found.isCompleted());
         assertNotNull(found.getTaskStartDate());
-        assertEquals(TaskDao.STATE_ACTIVE, found.getStatus());
+        assertEquals(TaskConstants.STATE_ACTIVE, found.getStatus());
         assertEquals("details", found.getDetails());
         assertEquals(Integer.valueOf(25), found.getPercentComplete());
         assertEquals(1, found.getAvailableOutcomes().size());

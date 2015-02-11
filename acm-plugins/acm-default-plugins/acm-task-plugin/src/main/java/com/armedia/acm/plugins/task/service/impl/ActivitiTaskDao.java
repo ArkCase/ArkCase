@@ -4,6 +4,7 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
+import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.model.TaskOutcome;
 import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
 import com.armedia.acm.plugins.task.service.TaskDao;
@@ -579,13 +580,13 @@ class ActivitiTaskDao implements TaskDao
 
     private String findTaskStatus(HistoricTaskInstance historicTaskInstance)
     {
-        return historicTaskInstance.getEndTime() == null ? STATE_ACTIVE : STATE_CLOSED;
+        return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_CLOSED;
     }
 
     private String findTaskStatus(Task task)
     {
         // tasks in ACT_RU_TASK table (where Task objects come from) are active by definition
-        return STATE_ACTIVE;
+        return TaskConstants.STATE_ACTIVE;
     }
 
     @Override
@@ -616,6 +617,11 @@ class ActivitiTaskDao implements TaskDao
 
     protected AcmTask acmTaskFromHistoricActivitiTask(HistoricTaskInstance hti)
     {
+        if ( hti == null )
+        {
+            return null;
+        }
+
         // even active tasks have an entry in the historic task table, so this HistoricTaskInstance may
         // represent an active task
         AcmTask retval;
@@ -807,11 +813,16 @@ class ActivitiTaskDao implements TaskDao
             }
         }
 
-        return DEFAULT_PRIORITY;
+        return TaskConstants.DEFAULT_PRIORITY;
     }
 
     protected AcmTask acmTaskFromActivitiTask(Task activitiTask)
     {
+        if ( activitiTask == null )
+        {
+            return null;
+        }
+
         AcmTask acmTask = new AcmTask();
 
         acmTask.setTaskId(Long.valueOf(activitiTask.getId()));
