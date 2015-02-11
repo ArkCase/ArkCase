@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.casefile.utility;
 
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.FileAddedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,14 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         CaseEvent event = new CaseEvent(caseFile, ipAddress, userId, eventType, eventDate, true, auth);
 
         applicationEventPublisher.publishEvent(event);
+    }
+
+    public void raiseFileAddedEvent(CaseFile source,boolean succeeded) {
+
+        FileAddedEvent fileAddedEvent = new FileAddedEvent(source);
+        fileAddedEvent.setSucceeded(succeeded);
+
+        applicationEventPublisher.publishEvent(fileAddedEvent);
     }
 
     @Override
