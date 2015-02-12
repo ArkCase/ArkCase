@@ -93,4 +93,8 @@
 
     <bean id="participantAccessChecker" class="com.armedia.acm.services.dataaccess.service.ParticipantAccessChecker"/>
 
+    <bean id="searchAccessControlFields" class="com.armedia.acm.services.dataaccess.service.SearchAccessControlFields">
+        <property name="participantAccessChecker" ref="participantAccessChecker"/>
+    </bean>
+
 </beans>

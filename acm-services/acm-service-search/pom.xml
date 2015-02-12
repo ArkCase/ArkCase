@@ -47,9 +47,10 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-data-access-control</artifactId>
+            <artifactId>acm-service-plugin-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
 
         <!-- spring -->
         <dependency>
