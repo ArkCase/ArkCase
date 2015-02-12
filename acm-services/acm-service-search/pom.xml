@@ -84,6 +84,12 @@
             <artifactId>mule-transport-vm</artifactId>
         </dependency>
 
+        <!-- expression language -->
+        <dependency>
+            <groupId>org.mvel</groupId>
+            <artifactId>mvel2</artifactId>
+        </dependency>
+
         <!-- this entry is needed for IDEA v12 -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
