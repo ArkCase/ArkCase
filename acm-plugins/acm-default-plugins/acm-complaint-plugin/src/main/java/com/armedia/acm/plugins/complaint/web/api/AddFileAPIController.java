@@ -70,13 +70,13 @@ public class AddFileAPIController
                     upload(uploadFileType, file, acceptType, contextPath, authentication, folderId,
                     objectType, objectId, objectName);
 
-            getEventPublisher().publishComplaintFileAddedEvent(in,true);
+            getEventPublisher().publishComplaintFileAddedEvent(in,authentication.getName(),true);
 
             return responseEntity;
         }
         catch (PersistenceException e)
         {
-            getEventPublisher().publishComplaintFileAddedEvent(in,false);
+            getEventPublisher().publishComplaintFileAddedEvent(in,authentication.getName(), false);
             throw new AcmObjectNotFoundException("complaint", complaintId, e.getMessage(), e);
         }
     }

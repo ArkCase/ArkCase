@@ -73,13 +73,13 @@ public class AddFileToCaseAPIController {
             ResponseEntity<? extends Object> responseEntity =  getEcmFileService().upload(uploadFileType, file, acceptType, contextPath, authentication, folderId,
                     objectType, objectId, objectName);
 
-            getCaseFileEventUtility().raiseFileAddedEvent(in,true);
+            getCaseFileEventUtility().raiseFileAddedEvent(in,authentication.getName(),true);
 
             return responseEntity;
         }
         catch (PersistenceException e)
         {
-            getCaseFileEventUtility().raiseFileAddedEvent(in,false);
+            getCaseFileEventUtility().raiseFileAddedEvent(in,authentication.getName(),false);
             throw new AcmObjectNotFoundException("case", caseId, e.getMessage(), e);
         }
     }

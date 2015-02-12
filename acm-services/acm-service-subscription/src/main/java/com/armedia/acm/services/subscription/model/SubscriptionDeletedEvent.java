@@ -1,5 +1,7 @@
 package com.armedia.acm.services.subscription.model;
 
+import java.util.Date;
+
 /**
  * Created by marjan.stefanoski on 11.02.2015.
  */
@@ -15,6 +17,7 @@ public class SubscriptionDeletedEvent extends SubscriptionPersistenceEvent {
         super(null);
         setObjectType(objectType);
         setObjectId(objectId);
+        setEventDate(new Date());
         setUserId(userId);
     }
 
