@@ -14,7 +14,7 @@ public class SubscriptionDeletedEvent extends SubscriptionPersistenceEvent {
     }
 
     public SubscriptionDeletedEvent(String userId, Long objectId,String objectType) {
-        super(null);
+        super(new AcmSubscription());
         setObjectType(objectType);
         setObjectId(objectId);
         setEventDate(new Date());
