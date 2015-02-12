@@ -1,14 +1,14 @@
 /**
- * Test script for Search.Model
+ * Test script for SearchBase.Model
  *
  * @author jwu
  */
 
-describe("Search.Model", function() {
+describe("SearchBase.Model", function() {
     var testData = null;
 
     beforeEach(function() {
-        Search.Model.setSearchInfo(AcmEx.Model.Search.getDefaultSearchInfo());
+        SearchBase.Model.setSearchInfo(AcmEx.Model.Search.getDefaultSearchInfo());
 
         testData =
         {
@@ -112,48 +112,48 @@ describe("Search.Model", function() {
             }};
     });
 
-    it("Search.Model: parse facet label, key, def", function() {
+    it("SearchBase.Model: parse facet label, key, def", function() {
         var s = "";
-        var facetEntry = Search.Model._parseFacetLabelKeyDef(s);
+        var facetEntry = SearchBase.Model._parseFacetLabelKeyDef(s);
         expect(facetEntry).toEqual(null);
 
         s = "object_type_s";
-        facetEntry = Search.Model._parseFacetLabelKeyDef(s);
+        facetEntry = SearchBase.Model._parseFacetLabelKeyDef(s);
         expect(facetEntry.label).toEqual(undefined);
         expect(facetEntry.key)  .toEqual("object_type_s");
         expect(facetEntry.def)  .toEqual(undefined);
 
         s = "{!key='Object Type'}object_type_s";
-        facetEntry = Search.Model._parseFacetLabelKeyDef(s);
+        facetEntry = SearchBase.Model._parseFacetLabelKeyDef(s);
         expect(facetEntry.label).toEqual("Object Type");
         expect(facetEntry.key)  .toEqual("object_type_s");
         expect(facetEntry.def)  .toEqual(undefined);
 
         s = "{!key='Object Type'}object_type_s:something";
-        facetEntry = Search.Model._parseFacetLabelKeyDef(s);
+        facetEntry = SearchBase.Model._parseFacetLabelKeyDef(s);
         expect(facetEntry.label).toEqual("Object Type");
         expect(facetEntry.key)  .toEqual("object_type_s");
         expect(facetEntry.def)  .toEqual("something");
 
         s = "{!key='Incident Date, Previous Week'}incident_date_tdt:[NOW/DAY-7DAY TO *]";
-        facetEntry = Search.Model._parseFacetLabelKeyDef(s);
+        facetEntry = SearchBase.Model._parseFacetLabelKeyDef(s);
         expect(facetEntry.label).toEqual("Incident Date, Previous Week");
         expect(facetEntry.key)  .toEqual("incident_date_tdt");
         expect(facetEntry.def)  .toEqual("[NOW/DAY-7DAY TO *]");
     });
 
-    it("Search.Model: parse facet param", function() {
+    it("SearchBase.Model: parse facet param", function() {
         var param = "";
-        var facetEntries = Search.Model._parseFacetEntries(param);
+        var facetEntries = SearchBase.Model._parseFacetEntries(param);
         expect(facetEntries).toEqual([]);
 
         param = "object_type_s";
-        facetEntries = Search.Model._parseFacetEntries(param);
+        facetEntries = SearchBase.Model._parseFacetEntries(param);
         expect(facetEntries.length).toEqual(1);
         expect(facetEntries[0].key).toEqual("object_type_s");
 
         param = ["{!key='Object Type'}object_type_s"];
-        facetEntries = Search.Model._parseFacetEntries(param);
+        facetEntries = SearchBase.Model._parseFacetEntries(param);
         expect(facetEntries.length).toEqual(1);
         expect(facetEntries[0].label).toEqual("Object Type");
         expect(facetEntries[0].key)  .toEqual("object_type_s");
@@ -161,7 +161,7 @@ describe("Search.Model", function() {
         param = ["{!key='Object Type'}object_type_s"
             ,"{!key='Status'}status_lcs"
         ];
-        facetEntries = Search.Model._parseFacetEntries(param);
+        facetEntries = SearchBase.Model._parseFacetEntries(param);
         expect(facetEntries.length).toEqual(2);
         expect(facetEntries[0].key).toEqual("object_type_s");
         expect(facetEntries[1].key).toEqual("status_lcs");
@@ -172,7 +172,7 @@ describe("Search.Model", function() {
             ,"{!key='Incident Date, Previous Year'}incident_date_tdt:[NOW/DAY-1YEAR TO *]"
             ,"{!key='Create Date, Previous Year'}create_date_tdt:[NOW/DAY-1YEAR TO *]"
         ];
-        facetEntries = Search.Model._parseFacetEntries(param);
+        facetEntries = SearchBase.Model._parseFacetEntries(param);
         expect(facetEntries.length).toEqual(4);
         expect(facetEntries[0].key).toEqual("incident_date_tdt");
         expect(facetEntries[1].key).toEqual("incident_date_tdt");
@@ -180,10 +180,10 @@ describe("Search.Model", function() {
         expect(facetEntries[3].key).toEqual("create_date_tdt");
     });
 
-    it("Search.Model: make facet", function() {
-        expect(Search.Model.validateFacetSearchData(testData)).toEqual(true);
+    it("SearchBase.Model: make facet", function() {
+        expect(SearchBase.Model.validateFacetSearchData(testData)).toEqual(true);
 
-        var facet = Search.Model.makeFacet(testData);
+        var facet = SearchBase.Model.makeFacet(testData);
         expect(facet.facet_queries.length).toEqual(4);
         expect(facet.facet_fields .length).toEqual(4);
         expect(facet.facet_dates  .length).toEqual(1);
@@ -214,70 +214,70 @@ describe("Search.Model", function() {
 
     });
 
-    it("Search.Model: add/remove/find filter, makeFilterParam", function() {
-        var si = Search.Model.getSearchInfo();
+    it("SearchBase.Model: add/remove/find filter, makeFilterParam", function() {
+        var si = SearchBase.Model.getSearchInfo();
         var k;
         var v;
 
-        expect(Search.Model.findFilter(si, k, v)).toEqual(false);
-        expect(Search.Model.makeFilterParam(si)).toEqual('');
+        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(false);
+        expect(SearchBase.Model.makeFilterParam(si)).toEqual('');
 
         k = "Create Date";
         v = "Previous Year";
-        Search.Model.addFilter(si, k, v);
-        expect(Search.Model.findFilter(si, k, v)).toEqual(true);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year');
+        SearchBase.Model.addFilter(si, k, v);
+        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(true);
+        expect(SearchBase.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year');
 
-        Search.Model.removeFilter(si, k, v);
-        expect(Search.Model.findFilter(si, k, v)).toEqual(false);
-        expect(Search.Model.makeFilterParam(si)).toEqual('');
+        SearchBase.Model.removeFilter(si, k, v);
+        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(false);
+        expect(SearchBase.Model.makeFilterParam(si)).toEqual('');
 
-        Search.Model.addFilter(si, k, v);
-        expect(Search.Model.findFilter(si, k, v)).toEqual(true);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year');
+        SearchBase.Model.addFilter(si, k, v);
+        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(true);
+        expect(SearchBase.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year');
 
         k = "Create Date";
         v = "Previous Month";
-        Search.Model.addFilter(si, k, v);
-        expect(Search.Model.findFilter(si, k, v)).toEqual(true);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month');
+        SearchBase.Model.addFilter(si, k, v);
+        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(true);
+        expect(SearchBase.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month');
 
         k = "Object Type";
         v = "CASE_FILE";
-        Search.Model.addFilter(si, k, v);
-        expect(Search.Model.findFilter(si, k, v)).toEqual(true);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month%26fq="Object Type":CASE_FILE');
+        SearchBase.Model.addFilter(si, k, v);
+        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(true);
+        expect(SearchBase.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month%26fq="Object Type":CASE_FILE');
 
         k = "Create Date";
         v = "Previous Year";
-        Search.Model.removeFilter(si, k, v);
-        expect(Search.Model.findFilter(si, k, v)).toEqual(false);
-        expect(Search.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Month%26fq="Object Type":CASE_FILE');
+        SearchBase.Model.removeFilter(si, k, v);
+        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(false);
+        expect(SearchBase.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Month%26fq="Object Type":CASE_FILE');
 
     });
 
 
-    it("Search.Model: onViewChangedFacetSelection", function() {
-        var si = Search.Model.getSearchInfo();
+    it("SearchBase.Model: onViewChangedFacetSelection", function() {
+        var si = SearchBase.Model.getSearchInfo();
 
         var selected = null;
-        Search.Model.onViewChangedFacetSelection(selected);
+        SearchBase.Model.onViewChangedFacetSelection(selected);
         expect(si.filter).toEqual([]);
 
         selected = [];
-        Search.Model.onViewChangedFacetSelection(selected);
+        SearchBase.Model.onViewChangedFacetSelection(selected);
         expect(si.filter).toEqual([]);
 
         si.filter = [];
         selected = [{type:"facet_fields", name:"Object Type", value:"CASE_FILE"}];
-        Search.Model.onViewChangedFacetSelection(selected);
+        SearchBase.Model.onViewChangedFacetSelection(selected);
         expect(si.filter).toEqual([{key:"Object Type", values:["CASE_FILE"]}]);
 
         si.filter = [];
         selected = [{type:"facet_fields", name:"Object Type", value:"CASE_FILE"}
             ,{type:"facet_fields", name:"Object Type", value:"TASK"}
         ];
-        Search.Model.onViewChangedFacetSelection(selected);
+        SearchBase.Model.onViewChangedFacetSelection(selected);
         expect(si.filter).toEqual([{key:"Object Type", values:["CASE_FILE","TASK"]}]);
 
         si.filter = [];
@@ -285,7 +285,7 @@ describe("Search.Model", function() {
             ,{type:"facet_fields", name:"Object Type", value:"TASK"}
             ,{type:"facet_fields", name:"Status", value:"valid"}
         ];
-        Search.Model.onViewChangedFacetSelection(selected);
+        SearchBase.Model.onViewChangedFacetSelection(selected);
         expect(si.filter).toEqual([{key:"Object Type", values:["CASE_FILE","TASK"]}
             ,{key:"Status", values:["valid"]}
         ]);

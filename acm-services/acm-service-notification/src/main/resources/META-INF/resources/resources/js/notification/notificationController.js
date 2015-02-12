@@ -1,9 +1,9 @@
 /**
- * Subscription.Controller
+ * AcmNotification.Controller
  *
  * @author jwu
  */
-Subscription.Controller = {
+AcmNotification.Controller = {
     create : function() {
     }
     ,onInitialized: function() {

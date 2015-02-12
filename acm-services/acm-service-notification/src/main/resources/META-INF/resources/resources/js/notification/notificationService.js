@@ -1,16 +1,15 @@
 /**
- * Search.Service
+ * AcmNotification.Service
  *
  * manages all service call to application server
  *
  * @author jwu
  */
-Search.Service = {
+AcmNotification.Service = {
     create : function() {
     }
     ,onInitialized: function() {
     }
 
     ,API_FACET_SEARCH_       : "/api/v1/plugin/search/facetedSearch?q="
-
 };
