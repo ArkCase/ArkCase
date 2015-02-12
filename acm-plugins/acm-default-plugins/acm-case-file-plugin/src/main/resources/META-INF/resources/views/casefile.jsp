@@ -25,6 +25,11 @@
 
 <jsp:attribute name="endOfBody">
 
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBase.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFile.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileView.js'/>"></script>
@@ -224,6 +229,63 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <%--<div class="modal fade" id="dlgPickObjectDemo" tabindex="-1" role="dialog" aria-labelledby="labPickObjectDemo" aria-hidden="true">--%>
+                                                <%--<div class="modal-dialog" style="height:540px; width:1030px;">--%>
+                                                    <%--<div class="modal-content">--%>
+                                                        <%--<div class="modal-header">--%>
+                                                            <%--<button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>--%>
+                                                            <%--<h4 class="modal-title" id="labPickObjectDemo">Object Picker Demo</h4>--%>
+                                                        <%--</div>--%>
+                                                        <%--<div class="modal-body">--%>
+                                                            <%--<section class="row">--%>
+
+
+                                                                <%--<header class="header bg-gradient b-b clearfix">--%>
+                                                                    <%--<div class="row m-t-sm">--%>
+                                                                        <%--<div class="col-md-12 m-b-sm">--%>
+                                                                            <%--<div class="input-group">--%>
+                                                                                <%--<input type="text" class="input-md form-control" id="edtPoSearch" placeholder='<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />'>--%>
+                                                                                <%--<span class="input-group-btn">--%>
+                                                                                <%--<button class="btn btn-md" type="button"><spring:message code="search.submit.text" text="Go!" /></button>--%>
+                                                                                <%--</span>--%>
+                                                                            <%--</div>--%>
+                                                                        <%--</div>--%>
+                                                                    <%--</div>--%>
+                                                                <%--</header>--%>
+
+                                                                <%--<section class="hbox stretchSearch">--%>
+                                                                    <%--<aside class="aside-md bg-light dker b-r" id="subNav">--%>
+                                                                        <%--<section class="vbox">--%>
+                                                                            <%--<section class="scrollable">--%>
+
+                                                                                <%--<div class="wrapper facets" id="divPoFacet">--%>
+                                                                                <%--</div>--%>
+
+                                                                            <%--</section>--%>
+                                                                        <%--</section>--%>
+                                                                    <%--</aside>--%>
+
+                                                                    <%--<aside>--%>
+                                                                        <%--<section class="vbox">--%>
+                                                                            <%--<section class="scrollable wrapper w-f">--%>
+                                                                                <%--<section class="panel panel-default">--%>
+                                                                                    <%--<div id="divPoResults" style="width:100%"></div>--%>
+                                                                                <%--</section>--%>
+                                                                            <%--</section>--%>
+                                                                        <%--</section>--%>
+                                                                    <%--</aside>--%>
+                                                                <%--</section>--%>
+
+
+                                                            <%--</section>--%>
+                                                        <%--</div>--%>
+                                                        <%--<div class="modal-footer">--%>
+                                                            <%--<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>--%>
+                                                            <%--<button type="button" class="btn btn-primary">Select</button>--%>
+                                                        <%--</div>--%>
+                                                    <%--</div>--%>
+                                                <%--</div>--%>
+                                            <%--</div>--%>
                                         </div>
                                     </div>
                                     <%--<h4 class="m-n">Case Details</h4>--%>
@@ -351,6 +413,60 @@
 </t:layout>
 
 
+<div class="modal fade" id="dlgPickObjectDemo" tabindex="-1" role="dialog" aria-labelledby="labPickObjectDemo" aria-hidden="true">
+    <div class="modal-dialog" style="height:540px; width:1030px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="labPickObjectDemo">Object Picker Demo</h4>
+            </div>
+            <div class="modal-body">
+                <section class="row">
 
+                    <!-- copy from search page -->
+                    <header class="header bg-gradient b-b clearfix">
+                        <div class="row m-t-sm">
+                            <div class="col-md-12 m-b-sm">
+                                <div class="input-group">
+                                    <input type="text" class="input-md form-control" id="edtPoSearch" placeholder='<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />'>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-md" type="button"><spring:message code="search.submit.text" text="Go!" /></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
 
+                    <%--<section class="hbox stretchSearch">--%>
+                        <%--<aside class="aside-md bg-light dker b-r" id="subNav">--%>
+                            <%--<section class="vbox">--%>
+                                <section class="scrollable">
 
+                                    <div class="wrapper facets" id="divPoFacet">
+                                    </div>
+
+                                </section>
+                            <%--</section>--%>
+                        <%--</aside>--%>
+
+                        <%--<aside>--%>
+                            <%--<section class="vbox">--%>
+                                <section class="scrollable wrapper w-f">
+                                    <section class="panel panel-default">
+                                        <div id="divPoResults" style="width:100%"></div>
+                                    </section>
+                                </section>
+                            <%--</section>--%>
+                        <%--</aside>--%>
+                    <%--</section>--%>
+                    <!-- end of copy from search page -->
+
+                </section>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Select</button>
+            </div>
+        </div>
+    </div>
+</div>

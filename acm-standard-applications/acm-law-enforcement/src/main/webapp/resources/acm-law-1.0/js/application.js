@@ -72,8 +72,8 @@ var Application = Application || {
         if ("undefined" != typeof Subscription) {
             acmModules.push(Subscription);
         }
-        if ("undefined" != typeof Notification) {
-            acmModules.push(Notification);
+        if ("undefined" != typeof AcmNotification) {
+            acmModules.push(AcmNotification);
         }
 
         for (var i = 0; i < acmModules.length; i++) {
