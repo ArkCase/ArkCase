@@ -8,6 +8,8 @@ Admin.Model = Admin.Model || {
         if (Admin.Model.Correspondence.create)          {Admin.Model.Correspondence.create();}
         if (Admin.Model.Organization.create)            {Admin.Model.Organization.create();}
         if (Admin.Model.FunctionalAccessControl.create) {Admin.Model.FunctionalAccessControl.create();}
+        if (Admin.Model.ReportsConfiguration.create) {Admin.Model.ReportsConfiguration.create();}
+
 
         if (Admin.Model.Tree.create)                    {Admin.Model.Tree.create();}
     }
@@ -15,7 +17,9 @@ Admin.Model = Admin.Model || {
         if (Admin.Model.AccessControl.onInitialized)            {Admin.Model.AccessControl.onInitialized();}
         if (Admin.Model.Correspondence.onInitialized)           {Admin.Model.Correspondence.onInitialized();}
         if (Admin.Model.Organization.onInitialized)             {Admin.Model.Organization.onInitialized();}
-        if (Admin.Model.FunctionalAccessControl.onInitialized) {Admin.Model.Organization.onInitialized();}
+        if (Admin.Model.FunctionalAccessControl.onInitialized)  {Admin.Model.FunctionalAccessControl.onInitialized();}
+        if (Admin.Model.ReportsConfiguration.onInitialized)     {Admin.Model.ReportsConfiguration.onInitialized();}
+
 
         if (Admin.Model.Tree.onInitialized)                     {Admin.Model.Tree.onInitialized();}
     }
@@ -714,6 +718,58 @@ Admin.Model = Admin.Model || {
         ,onSaveFunctionalAccessControlApplicationRolesToGroups: function(applicationRolesToGroups) {
             Admin.Service.FunctionalAccessControl.saveApplicationRolesToGroups(applicationRolesToGroups);
         }
+    }
+    ,ReportsConfiguration:{
+        create : function() {
+            this.cacheReports = new Acm.Model.CacheFifo(1);
+            this.cacheGroups = new Acm.Model.CacheFifo(1);
+            this.cacheReportToGroupsMap = new Acm.Model.CacheFifo(1);
+
+            Admin.Service.ReportsConfiguration.retrieveReports();
+
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_RETRIEVED_REPORTS, this.onModelReportConfigRetrievedReports);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_RETRIEVED_GROUPS, this.onModelReportConfigRetrievedGroups);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP, this.onViewReportConfigSaveReportToGroupsMap);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,validateReports: function(reports) {
+            if (Acm.isEmpty(reports)) {
+                return false;
+            }
+            if(!Acm.isArray(reports)){
+                return false;
+            }
+            return true;
+        }
+
+        ,validateGroup: function(response) {
+            if (!Acm.Validator.validateSolrData(response)) {
+                return false;
+            }
+            return true;
+        }
+
+        ,validateReportToGroupsMap: function(reportsToGroups) {
+            if (Acm.isEmpty(reportsToGroups)) {
+                return false;
+            }
+            return true;
+        }
+
+        ,onModelReportConfigRetrievedReports: function() {
+            Admin.Service.ReportsConfiguration.retrieveGroups();
+        }
+
+        ,onModelReportConfigRetrievedGroups: function() {
+            Admin.Service.ReportsConfiguration.retrieveReportToGroupsMap();
+        }
+
+        ,onViewReportConfigSaveReportToGroupsMap: function(reportsToGroups) {
+            Admin.Service.ReportsConfiguration.saveReportToGroupsMap(reportsToGroups);
+        }
+
     }
 
 

@@ -513,7 +513,7 @@ Admin.Service = {
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                        var errorMsg = "Failed to retrieve application roles to groups mapping:" + response.errorMsg;
+                        var errorMsg = "Failed to retrieve application roles to groups map:" + response.errorMsg;
 
                         Admin.Controller.modelErrorRetrievingFunctionalAccessControlApplicationRolesToGroups(errorMsg);
                     } else {
@@ -534,13 +534,105 @@ Admin.Service = {
             Acm.Service.asyncPost(
                 function(response) {
                     if (response !== true) {
-                        var errorMsg = "Failed to save application roles to groups mapping.";
+                        var errorMsg = "Failed to save application roles to groups map.";
 
                         Admin.Controller.modelErrorSavingFunctionalAccessControlApplicationRolesToGroups(errorMsg);
                     }
                 }
                 ,url
                 ,JSON.stringify(applicationRolesToGroups)
+            )
+        }
+    }
+
+    ,ReportsConfiguration : {
+
+        create: function() {
+        }
+
+        ,onInitialized: function() {
+        }
+
+        ,API_RETRIEVE_REPORTS: 			  "/api/latest/plugin/report/get/pentaho"
+        ,API_RETRIEVE_GROUPS: 			  "/api/latest/users/groups/get"
+        ,API_RETRIEVE_REPORT_TO_GROUPS_MAP:  "/api/latest/plugin/report/reporttogroupsmap"
+        ,API_SAVE_REPORT_TO_GROUPS_MAP:      "/api/latest/plugin/report/reporttogroupsmap"
+
+        ,retrieveReports : function() {
+            var url = App.getContextPath() + Admin.Service.ReportsConfiguration.API_RETRIEVE_REPORTS;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve application roles:" + response.errorMsg;
+                        Admin.Controller.modelReportConfigError(errorMsg);
+                    } else {
+                        if (Admin.Model.ReportsConfiguration.validateReports(response)) {
+                            var reports = [];
+                            for(var i = 0; i < response.length; i++){
+                                reports.push(response[i].title);
+                            }
+                            Admin.Model.ReportsConfiguration.cacheReports.put("reports", reports);
+                            Admin.Controller.modelReportConfigRetrievedReports(reports);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+
+        ,retrieveGroups : function() {
+            var url = App.getContextPath() + Admin.Service.ReportsConfiguration.API_RETRIEVE_GROUPS;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve groups:" + response.errorMsg;
+                        Admin.Controller.modelReportConfigError(errorMsg);
+                    } else {
+                        if (Admin.Model.ReportsConfiguration.validateGroup(response)) {
+                            var groups = response.response.docs;
+                            Admin.Model.ReportsConfiguration.cacheGroups.put("groups", groups);
+                            Admin.Controller.modelReportConfigRetrievedGroups(groups);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+
+        ,retrieveReportToGroupsMap : function() {
+            var url = App.getContextPath() + Admin.Service.ReportsConfiguration.API_RETRIEVE_REPORT_TO_GROUPS_MAP;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve reports to groups map:" + response.errorMsg;
+                        Admin.Controller.modelReportConfigError(errorMsg);
+                    } else {
+                        if (Admin.Model.ReportsConfiguration.validateReportToGroupsMap(response)) {
+                            var reportToGroupsMap = response;
+
+                            Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.put("reportToGroupsMap", reportToGroupsMap);
+                            Admin.Controller.modelReportConfigRetrievedReportToGroupsMap(reportToGroupsMap);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+
+        ,saveReportToGroupsMap : function(reportToGroupsMap){
+            var url = App.getContextPath() + Admin.Service.ReportsConfiguration.API_SAVE_REPORT_TO_GROUPS_MAP;
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (false == response) {
+                        var errorMsg = "Failed to save reports to groups map";
+                        Admin.Controller.modelReportConfigError(errorMsg);
+                    }
+                    else if(true == response){
+                        Admin.Controller.modelReportConfigSavedReportToGroupsMap(response);
+                    }
+                }
+                ,url
+                ,JSON.stringify(reportToGroupsMap)
             )
         }
     }
