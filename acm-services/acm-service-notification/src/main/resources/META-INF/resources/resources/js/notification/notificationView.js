@@ -1,9 +1,9 @@
 /**
- * Subscription.View
+ * AcmNotification.View
  *
  * @author jwu
  */
-Subscription.View = {
+AcmNotification.View = {
     create : function() {
         this.$edtSearch = $("#searchQuery");
         this.$btnSearch = this.$edtSearch.next().find("button");
@@ -24,7 +24,7 @@ Subscription.View = {
                 ,sorting: false
             }
             ,name: {
-                title: 'Name4'
+                title: 'Name3'
                 ,width: '15%'
                 ,sorting: false
                 ,display: function(data) {
@@ -82,9 +82,8 @@ Subscription.View = {
                 ,width: '20%'
                 ,sorting: false
             }
-        }
-    } //end args
-
+        }//end field
+    }
 
     ,jtDataMaker: function(result) {
         var jtData = AcmEx.Object.JTable.getEmptyRecords();
