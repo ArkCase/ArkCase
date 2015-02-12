@@ -1,17 +1,19 @@
 package com.armedia.acm.services.search.web.api;
 
-import java.util.*;
-
-import javax.servlet.http.HttpSession;
-
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.services.search.model.ApplicationSearchEvent;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.model.solr.SolrResponse;
+import com.armedia.acm.services.search.service.SearchEventPublisher;
+import com.armedia.acm.services.search.service.SolrSearchService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -23,20 +25,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.services.search.model.ApplicationSearchEvent;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
-import com.armedia.acm.services.search.model.solr.SolrResponse;
-import com.armedia.acm.services.search.service.SearchEventPublisher;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Controller
 @RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
 public class SearchObjectByTypeAPIController {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    private MuleClient muleClient;
+    private SolrSearchService solrSearchService;
     private SearchEventPublisher searchEventPublisher;
     private AcmPluginManager acmPluginManager;
 
@@ -52,7 +52,7 @@ public class SearchObjectByTypeAPIController {
             @RequestParam(value = "filters", required = false, defaultValue = "") String filters,
             Authentication authentication,
             HttpSession httpSession
-    ) throws Exception {
+    ) throws MuleException {
         String[] f = null;
         String sortParams = null;
         String params = "";
@@ -95,30 +95,11 @@ public class SearchObjectByTypeAPIController {
         // try what the user sent, if no sort properties were found
         sortParams = StringUtils.isBlank(sortParams) ? sort : sortParams;
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sortParams);
-        headers.put("acmUser", authentication);
-        headers.put("rowQueryParametars",params);
+        String results = getSolrSearchService().search(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParams, params);
 
-
-
-        MuleMessage response = getMuleClient().send("vm://quickSearchQuery.in", "", headers);
-
-        log.debug("Response type: " + response.getPayload().getClass());
-
-        if ( response.getPayload() instanceof String )
-        {
-            String responsePayload = (String) response.getPayload();
-           
-            publishSearchEvent(authentication, httpSession, true, responsePayload);
+        publishSearchEvent(authentication, httpSession, true, results);
           
-            return responsePayload;
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        return results;
     }
     
     @RequestMapping(value = "/advanced/{objectType}", method  = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -132,7 +113,7 @@ public class SearchObjectByTypeAPIController {
             @RequestParam(value = "activeOnly", required = false, defaultValue = "true") boolean activeOnly,
             Authentication authentication,
             HttpSession httpSession
-    ) throws MuleException, Exception
+    ) throws MuleException
     {
         String query = "object_type_s:" + objectType;  
         
@@ -149,28 +130,12 @@ public class SearchObjectByTypeAPIController {
         {
             log.debug("Advanced Search: User '" + authentication.getName() + "' is searching for '" + query + "'");
         }
+
+        String results = getSolrSearchService().search(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
      
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-        headers.put("acmUser", authentication);
+        publishSearchEvent(authentication, httpSession, true, results);
 
-        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
-
-        log.debug("Response type: " + response.getPayload().getClass());
-
-        if ( response.getPayload() instanceof String )
-        {
-            String responsePayload = (String) response.getPayload();
-           
-            publishSearchEvent(authentication, httpSession, true, responsePayload);
-          
-            return responsePayload;
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        return results;
     }
     
     protected void publishSearchEvent(Authentication authentication,
@@ -237,7 +202,6 @@ public class SearchObjectByTypeAPIController {
     private List<String> findFilters(String objectType, String[] filterNames) {
         Collection<AcmPlugin> plugins = getAcmPluginManager().getAcmPlugins();
         List<String> suportedObjectTypes = null;
-        JSONObject objectFromProperty = null;
         List<String> filters = new ArrayList<>();
         for( AcmPlugin plugin: plugins ) {
             if( plugin.getSuportedObjectTypesNames()!=null ) {
@@ -271,14 +235,14 @@ public class SearchObjectByTypeAPIController {
         this.acmPluginManager = acmPluginManager;
     }
 
-    public MuleClient getMuleClient()
+    public SolrSearchService getSolrSearchService()
     {
-        return muleClient;
+        return solrSearchService;
     }
 
-    public void setMuleClient(MuleClient muleClient)
+    public void setSolrSearchService(SolrSearchService solrSearchService)
     {
-        this.muleClient = muleClient;
+        this.solrSearchService = solrSearchService;
     }
 
     public SearchEventPublisher getSearchEventPublisher() {

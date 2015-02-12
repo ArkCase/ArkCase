@@ -1,11 +1,9 @@
 package com.armedia.acm.services.search.web.api;
 
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
-import org.json.JSONObject;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.SolrSearchService;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,18 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Controller
 @RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
 public class QuickSearchAPIController
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    private MuleClient muleClient;
-    private static final String catchAll = "catch_all:";
+    private SolrSearchService solrSearchService;
 
     @RequestMapping(value = "/quickSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -44,34 +37,18 @@ public class QuickSearchAPIController
             log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
         }
 
-        String q=catchAll+query;
+        String q = SearchConstants.CATCH_ALL_QUERY + query;
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", q);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-        headers.put("acmUser", authentication);
-
-        MuleMessage response = getMuleClient().send("vm://quickSearchQuery.in", "", headers);
-
-        log.debug("Response type: " + response.getPayload().getClass());
-
-        if ( response.getPayload() instanceof String )
-        {
-            return (String) response.getPayload();
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        return getSolrSearchService().search(authentication, SolrCore.QUICK_SEARCH, q, startRow, maxRows, sort);
     }
 
-    public MuleClient getMuleClient()
+    public SolrSearchService getSolrSearchService()
     {
-        return muleClient;
+        return solrSearchService;
     }
 
-    public void setMuleClient(MuleClient muleClient)
+    public void setSolrSearchService(SolrSearchService solrSearchService)
     {
-        this.muleClient = muleClient;
+        this.solrSearchService = solrSearchService;
     }
 }
