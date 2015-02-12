@@ -248,8 +248,4 @@
         </property>
     </bean>
 
-   <bean id="searchAccessControlFields" class="com.armedia.acm.services.search.service.SearchAccessControlFields">
-       <property name="participantAccessChecker" ref="participantAccessChecker"/>
-   </bean>
-
 </beans>
