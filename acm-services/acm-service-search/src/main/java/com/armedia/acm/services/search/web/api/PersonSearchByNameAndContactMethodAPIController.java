@@ -1,8 +1,8 @@
 package com.armedia.acm.services.search.web.api;
 
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.SolrSearchService;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -13,19 +13,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 @Controller
 @RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
 public class PersonSearchByNameAndContactMethodAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    private MuleClient muleClient;
+    private SolrSearchService solrSearchService;
 
     @RequestMapping(value = "/personSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -36,7 +34,7 @@ public class PersonSearchByNameAndContactMethodAPIController
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             Authentication authentication,
             HttpServletResponse httpResponse
-    ) throws MuleException
+    ) throws MuleException, UnsupportedEncodingException
     {
         if ( log.isDebugEnabled() )
         {
@@ -46,42 +44,30 @@ public class PersonSearchByNameAndContactMethodAPIController
 
         // use a SOLR join query to restrict person results to persons with a contact method matching the
         // given value.
-        final String encodedContactMethodJoin = URLEncoder.encode("{!join from=id to=contact_method_ss}");
+        final String encodedContactMethodJoin = URLEncoder.encode("{!join from=id to=contact_method_ss}", "UTF-8");
 
-        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(personName) + " AND " +
-                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(contactMethod);
+        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(personName, "UTF-8") + " AND " +
+                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(contactMethod, "UTF-8");
         String sort = "last_name_lcs ASC, first_name_lcs ASC";
 
         query = query.replaceAll(" ", "+");
         sort = sort.replaceAll(" ", "+");
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-        headers.put("acmUser", authentication);
+        String results = getSolrSearchService().search(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
 
-        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
+        httpResponse.addHeader("X-JSON", results);
 
-        log.debug("Response type: " + response.getPayload().getClass());
+        return results;
 
-        if ( response.getPayload() instanceof String )
-        {
-        	httpResponse.addHeader("X-JSON", response.getPayload().toString());
-            return (String) response.getPayload();
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 
-    public MuleClient getMuleClient()
+    public SolrSearchService getSolrSearchService()
     {
-        return muleClient;
+        return solrSearchService;
     }
 
-    public void setMuleClient(MuleClient muleClient)
+    public void setSolrSearchService(SolrSearchService solrSearchService)
     {
-        this.muleClient = muleClient;
+        this.solrSearchService = solrSearchService;
     }
 }

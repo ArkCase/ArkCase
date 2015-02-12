@@ -1,8 +1,8 @@
 package com.armedia.acm.services.search.web.api;
 
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.SolrSearchService;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 20.11.2014.
@@ -27,7 +25,7 @@ public class ComplaintsSearchByAssignedUserAPIController {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private MuleClient muleClient;
+    private SolrSearchService solrSearchService;
 
     @RequestMapping(value = "/complaintsSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -49,30 +47,20 @@ public class ComplaintsSearchByAssignedUserAPIController {
         query = query.replaceAll(" ", "+");
         sort = sort.replaceAll(" ", "+");
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-        headers.put("acmUser", authentication);
+        String results = getSolrSearchService().search(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
 
-        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
+        httpResponse.addHeader("X-JSON", results);
 
-        log.debug("Response type: " + response.getPayload().getClass());
-
-        if ( response.getPayload() instanceof String ) {
-            httpResponse.addHeader("X-JSON", response.getPayload().toString());
-            return (String) response.getPayload();
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        return results;
     }
 
-    public MuleClient getMuleClient() {
-        return muleClient;
+    public SolrSearchService getSolrSearchService()
+    {
+        return solrSearchService;
     }
 
-    public void setMuleClient(MuleClient muleClient) {
-        this.muleClient = muleClient;
+    public void setSolrSearchService(SolrSearchService solrSearchService)
+    {
+        this.solrSearchService = solrSearchService;
     }
 }

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,7 @@ public class ComplaintUiController
 	private FormUrl formUrl;
 	private UserActionDao userActionDao;
 	private Map<String, Object> formProperties;
-	
+
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openComplaints(Authentication auth, HttpServletRequest request) {
         ModelAndView retval = new ModelAndView();
@@ -66,6 +67,7 @@ public class ComplaintUiController
         return retval;
     }
 
+    @PreAuthorize("hasPermission(#complaintId, 'COMPLAINT', 'read')")
     @RequestMapping(value = "/{complaintId}", method = RequestMethod.GET)
     public ModelAndView openComplaint(Authentication auth, @PathVariable(value = "complaintId") Long complaintId
     ) {

@@ -1,12 +1,12 @@
 package com.armedia.acm.services.search.web.api;
 
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.SolrSearchService;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.DefaultMuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,8 +35,7 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
 {
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
-    private MuleClient mockMuleClient;
-    private MuleMessage mockMuleMessage;
+    private SolrSearchService mockSolrSearchService;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -52,10 +49,9 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
     {
         unit = new PersonSearchByNameAndContactMethodAPIController();
 
-        mockMuleClient = createMock(MuleClient.class);
-        mockMuleMessage = createMock(MuleMessage.class);
+        mockSolrSearchService = createMock(SolrSearchService.class);
 
-        unit.setMuleClient(mockMuleClient);
+        unit.setSolrSearchService(mockSolrSearchService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
@@ -78,18 +74,10 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         query = query.replaceAll(" ", "+");
         sort = sort.replaceAll(" ", "+");
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("sort", sort);
-        headers.put("firstRow", 0);
-        headers.put("maxRows", 10);
-        headers.put("acmUser", mockAuthentication);
-
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockMuleClient.send("vm://advancedSearchQuery.in", "", headers)).andReturn(mockMuleMessage);
-        expect(mockMuleMessage.getPayload()).andReturn(solrResponse).atLeastOnce();
+        expect(mockSolrSearchService.search(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, sort)).andReturn(solrResponse);
 
         replayAll();
 
@@ -125,17 +113,10 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         query = query.replaceAll(" ", "+");
         sort = sort.replaceAll(" ", "+");
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("sort", sort);
-        headers.put("firstRow", 0);
-        headers.put("maxRows", 10);
-        headers.put("acmUser", mockAuthentication);
-
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockMuleClient.send("vm://advancedSearchQuery.in", "", headers)).
+        expect(mockSolrSearchService.search(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, sort)).
                 andThrow(new DefaultMuleException("test Exception"));
 
         replayAll();
