@@ -163,15 +163,6 @@
                                             <%--</div>--%>
 
 
-                                            <%--JTable - Access Control Policy--%>
-                                            <div class="row" id="tabACP" style="display:none;">
-                                                <div class="col-md-12">
-                                                    <section class="panel panel-default">
-                                                        <div id="divACP" style="width:100%"></div>
-                                                    </section>
-                                                </div>
-                                            </div>
-
                                                     <%--JTable - Correspondence--%>
                                             <div class="row" id="tabCorrespondenceTemplates" style="display:none;">
                                                 <div class="col-md-12">
@@ -184,8 +175,6 @@
                                                     </section>
                                                 </div>
                                             </div>
-
-                                                    <%--JTable - Access Control Policy Tree--%>
 
 											<%--   Functional Access controls    --%>
  											<div class="row" id="tabFunctoinalAccessControl" style="display:none;">
