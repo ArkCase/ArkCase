@@ -71,6 +71,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
     {
         String complaintId = "500";
         String acceptHeader = MediaType.APPLICATION_JSON_VALUE;
+        String userId="user-acm";
 
         // use an empty context path since the controller actually gets the servletContext's context path; which
         // we can't set through Spring MVC.
@@ -83,11 +84,11 @@ public class AddFileAPIControllerTest extends EasyMockSupport
         complaint.setComplaintNumber("complaintNumber");
 
         // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
+        expect(mockAuthentication.getName()).andReturn(userId).anyTimes();
 
         expect(mockComplaintDao.find(complaint.getComplaintId())).andReturn(complaint);
 
-        mockComplaintEventPublisher.publishComplaintFileAddedEvent(complaint,true);
+        mockComplaintEventPublisher.publishComplaintFileAddedEvent( complaint, userId, true );
 
         expect(mockEcmFileService.upload(
                 "attachment",
