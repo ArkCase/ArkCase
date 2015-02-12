@@ -27,6 +27,20 @@
         </property>
     </bean>
 
+    <bean id="reportToGroupsMapProperties" class="net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryBean" >
+
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/reportToGroupsMap.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
+
     
     <bean id="reportPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
          <property name="pluginName" value="Report Plugin"/>
@@ -51,6 +65,16 @@
                 <bean id="saveReportsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/report/save"/>
+                    <property name="requiredPrivilege" ref="reportPrivilege"/>
+                </bean>
+                <bean id="reportsToGroupsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/report/reporttogroupsmap"/>
+                    <property name="requiredPrivilege" ref="reportPrivilege"/>
+                </bean>
+                <bean id="saveReportsToGroupsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/report/reporttogroupsmap"/>
                     <property name="requiredPrivilege" ref="reportPrivilege"/>
                 </bean>
             </list>
@@ -78,7 +102,11 @@
     	<property name="propertyFileManager">
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
-        <property name="reportsPropertyFileLocation" value="${user.home}/.acm/acm-reports.properties"/>
+        <property name="reportsPropertiesFileLocation" value="${user.home}/.acm/acm-reports.properties"/>
+        <property name="reportToGroupsMapPropertiesFileLocation" value="${user.home}/.acm/reportToGroupsMap.properties"/>
+        <property name="reportPluginProperties" ref="reportPluginProperties"/>
+        <property name="reportToGroupsMapProperties" ref="reportToGroupsMapProperties"/>
+
     </bean>
 
 </beans>
