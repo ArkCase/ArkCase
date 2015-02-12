@@ -42,6 +42,9 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
                     acmEvent.getUserId(),
                     acmEvent.isSucceeded() ? "success" : "failure",
                     params);
+        } else {
+            if(log.isErrorEnabled())
+                log.error("Event "+ acmEvent.getEventType()+" is not auditable");
         }
 
     }

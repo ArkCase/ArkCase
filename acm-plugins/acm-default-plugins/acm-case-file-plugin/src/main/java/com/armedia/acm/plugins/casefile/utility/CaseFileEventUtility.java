@@ -29,10 +29,11 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
-    public void raiseFileAddedEvent(CaseFile source,boolean succeeded) {
+    public void raiseFileAddedEvent(CaseFile source, String userId, boolean succeeded) {
 
         FileAddedEvent fileAddedEvent = new FileAddedEvent(source);
         fileAddedEvent.setSucceeded(succeeded);
+        fileAddedEvent.setUserId(userId);
 
         applicationEventPublisher.publishEvent(fileAddedEvent);
         log.info("MARJAN: 'com.armedia.acm.case_file.file.added'");

@@ -98,10 +98,11 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
     	eventPublisher.publishEvent(event);
     }
 
-    public void publishComplaintFileAddedEvent(Complaint source, boolean succeeded) {
+    public void publishComplaintFileAddedEvent(Complaint source, String userId, boolean succeeded) {
 
         ComplaintFileAddedEvent event = new ComplaintFileAddedEvent(source);
         event.setSucceeded(succeeded);
+        event.setUserId(userId);
         eventPublisher.publishEvent(event);
     }
 }

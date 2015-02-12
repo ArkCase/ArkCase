@@ -25,15 +25,16 @@ public class AcmTaskActivityListener implements ApplicationListener<AcmTaskActiv
             AcmTask source = (AcmTask)acmTaskActivitiEvent.getSource();
             Long objectId =  acmTaskActivitiEvent.getParentObjectId();
             String objectType = acmTaskActivitiEvent.getParentObjectType();
-
-            publishTaskAddedEvent( source, objectType, objectId, true );
+            String userId = acmTaskActivitiEvent.getUserId();
+            publishTaskAddedEvent( source, userId, objectType, objectId, true );
         }
     }
 
-    protected void publishTaskAddedEvent( AcmTask source, String objectType, Long  objectId,boolean succeeded ) {
+    protected void publishTaskAddedEvent( AcmTask source,String userId, String objectType, Long  objectId,boolean succeeded ) {
 
         AcmTaskAddedEvent acmTaskAddedEvent = new AcmTaskAddedEvent( source, objectId, objectType );
         acmTaskAddedEvent.setSucceeded(succeeded);
+        acmTaskAddedEvent.setUserId(userId);
 
         getTaskEventPublisher().publishAcmEvent(acmTaskAddedEvent);
     }
