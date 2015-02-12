@@ -18,6 +18,7 @@
     <bean id="removingSubscriptionAPIController" class="com.armedia.acm.services.subscription.web.api.RemovingSubscriptionAPIController">
         <property name="subscriptionDao" ref="subscriptionDao"/>
         <property name="subscriptionPlugin" ref="subscriptionPlugin"/>
+        <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
     </bean>
 
     <bean class="com.armedia.acm.services.subscription.web.api.GetUserSubscriptionAPIController">

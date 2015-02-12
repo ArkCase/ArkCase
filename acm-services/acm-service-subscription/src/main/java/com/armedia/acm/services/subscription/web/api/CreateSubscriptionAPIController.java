@@ -82,7 +82,7 @@ public class CreateSubscriptionAPIController {
                Throwable t =  ExceptionUtils.getRootCause(e);
                if ( t instanceof  SQLIntegrityConstraintViolationException ) {
                    if (log.isDebugEnabled())
-                       log.debug("Subscription on object['" + objectType + "]:[" + objectId + "] by user: " + userId + " already exists", e);
+                       log.debug("Subscription on object[" + objectType + "]:[" + objectId + "] by user: " + userId + " already exists", e);
 
                    List<AcmSubscription> subscriptionList = getSubscriptionDao().getSubscriptionByUserObjectIdAndType(userId, objectId, objectType);
                    if(subscriptionList.isEmpty()){
