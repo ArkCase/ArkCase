@@ -3,7 +3,7 @@ package com.armedia.acm.services.search.web.api;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
-import com.armedia.acm.services.search.service.SolrSearchService;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +32,7 @@ public class FacetedSearchAPIController {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    private SolrSearchService solrSearchService;
+    private ExecuteSolrQuery executeSolrQuery;
 
     private AcmPlugin pluginSearch;
 
@@ -54,7 +54,8 @@ public class FacetedSearchAPIController {
         String query = SearchConstants.CATCH_ALL_QUERY + q;
         query = URLEncoder.encode(query, "UTF-8");
 
-        String results = getSolrSearchService().search(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort, rowQueryParametars);
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
+                query, startRow, maxRows, sort, rowQueryParametars);
 
         return results;
 
@@ -290,13 +291,13 @@ public class FacetedSearchAPIController {
         this.pluginSearch = pluginSearch;
     }
 
-    public SolrSearchService getSolrSearchService()
+    public ExecuteSolrQuery getExecuteSolrQuery()
     {
-        return solrSearchService;
+        return executeSolrQuery;
     }
 
-    public void setSolrSearchService(SolrSearchService solrSearchService)
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
-        this.solrSearchService = solrSearchService;
+        this.executeSolrQuery = executeSolrQuery;
     }
 }

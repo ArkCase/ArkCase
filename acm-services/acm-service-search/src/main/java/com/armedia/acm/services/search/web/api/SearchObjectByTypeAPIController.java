@@ -6,8 +6,8 @@ import com.armedia.acm.services.search.model.ApplicationSearchEvent;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrResponse;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchEventPublisher;
-import com.armedia.acm.services.search.service.SolrSearchService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +36,7 @@ public class SearchObjectByTypeAPIController {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    private SolrSearchService solrSearchService;
+    private ExecuteSolrQuery executeSolrQuery;
     private SearchEventPublisher searchEventPublisher;
     private AcmPluginManager acmPluginManager;
 
@@ -95,7 +95,8 @@ public class SearchObjectByTypeAPIController {
         // try what the user sent, if no sort properties were found
         sortParams = StringUtils.isBlank(sortParams) ? sort : sortParams;
 
-        String results = getSolrSearchService().search(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParams, params);
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query,
+                startRow, maxRows, sortParams, params);
 
         publishSearchEvent(authentication, httpSession, true, results);
           
@@ -131,7 +132,8 @@ public class SearchObjectByTypeAPIController {
             log.debug("Advanced Search: User '" + authentication.getName() + "' is searching for '" + query + "'");
         }
 
-        String results = getSolrSearchService().search(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
+                query, startRow, maxRows, sort);
      
         publishSearchEvent(authentication, httpSession, true, results);
 
@@ -235,14 +237,14 @@ public class SearchObjectByTypeAPIController {
         this.acmPluginManager = acmPluginManager;
     }
 
-    public SolrSearchService getSolrSearchService()
+    public ExecuteSolrQuery getExecuteSolrQuery()
     {
-        return solrSearchService;
+        return executeSolrQuery;
     }
 
-    public void setSolrSearchService(SolrSearchService solrSearchService)
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
-        this.solrSearchService = solrSearchService;
+        this.executeSolrQuery = executeSolrQuery;
     }
 
     public SearchEventPublisher getSearchEventPublisher() {

@@ -4,8 +4,8 @@ import com.armedia.acm.services.search.model.ApplicationSearchEvent;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrResponse;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchEventPublisher;
-import com.armedia.acm.services.search.service.SolrSearchService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.easymock.Capture;
@@ -45,7 +45,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
     private Authentication mockAuthentication;
     private MockHttpSession mockHttpSession;
 
-    private SolrSearchService mockSolrSearchService;
+    private ExecuteSolrQuery mockExecuteSolrQuery;
     private SearchEventPublisher mockSearchEventPublisher;
 
     @Autowired
@@ -61,9 +61,9 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         unit = new SearchObjectByTypeAPIController();
 
         mockSearchEventPublisher = createMock(SearchEventPublisher.class);
-        mockSolrSearchService = createMock(SolrSearchService.class);
+        mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
 
-        unit.setSolrSearchService(mockSolrSearchService);
+        unit.setExecuteSolrQuery(mockExecuteSolrQuery);
 
         unit.setSearchEventPublisher(mockSearchEventPublisher);
 
@@ -108,7 +108,8 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockSolrSearchService.search(mockAuthentication, SolrCore.QUICK_SEARCH, query, firstRow, maxRows, sort, params)).andReturn(solrResponse);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query,
+                firstRow, maxRows, sort, params)).andReturn(solrResponse);
 
         mockSearchEventPublisher.publishSearchEvent(capture(capturedEvent));
 
@@ -146,7 +147,8 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
-        expect(mockSolrSearchService.search(mockAuthentication, SolrCore.QUICK_SEARCH, query, firstRow, maxRows, sort, params)).
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query,
+                firstRow, maxRows, sort, params)).
             andThrow(new DefaultMuleException("Test Exception"));
         
         replayAll();

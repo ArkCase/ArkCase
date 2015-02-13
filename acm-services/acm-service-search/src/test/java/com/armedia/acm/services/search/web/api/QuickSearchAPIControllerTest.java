@@ -1,7 +1,7 @@
 package com.armedia.acm.services.search.web.api;
 
 import com.armedia.acm.services.search.model.SolrCore;
-import com.armedia.acm.services.search.service.SolrSearchService;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class QuickSearchAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
-    private SolrSearchService mockSolrSearchService;
+    private ExecuteSolrQuery mockExecuteSolrQuery;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -47,9 +47,9 @@ public class QuickSearchAPIControllerTest extends EasyMockSupport
     {
         unit = new QuickSearchAPIController();
 
-        mockSolrSearchService = createMock(SolrSearchService.class);
+        mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
 
-        unit.setSolrSearchService(mockSolrSearchService);
+        unit.setExecuteSolrQuery(mockExecuteSolrQuery);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
@@ -67,7 +67,8 @@ public class QuickSearchAPIControllerTest extends EasyMockSupport
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockSolrSearchService.search(mockAuthentication, SolrCore.QUICK_SEARCH, q, 0, 10, "")).andReturn(solrResponse);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, q, 0, 10, "")).
+                andReturn(solrResponse);
 
         replayAll();
 
@@ -99,7 +100,7 @@ public class QuickSearchAPIControllerTest extends EasyMockSupport
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockSolrSearchService.search(mockAuthentication, SolrCore.QUICK_SEARCH, q, 0, 10, "")).
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, q, 0, 10, "")).
                 andThrow(new DefaultMuleException("test Exception"));
 
         replayAll();

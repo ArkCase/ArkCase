@@ -1,7 +1,7 @@
 package com.armedia.acm.services.search.web.api;
 
 import com.armedia.acm.services.search.model.SolrCore;
-import com.armedia.acm.services.search.service.SolrSearchService;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AdvancedSearchAPIController {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private SolrSearchService solrSearchService;
+    private ExecuteSolrQuery executeSolrQuery;
 
     @RequestMapping(value = "/advancedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -37,16 +37,16 @@ public class AdvancedSearchAPIController {
             log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
         }
 
-        return getSolrSearchService().search(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
     }
 
-    public SolrSearchService getSolrSearchService()
+    public ExecuteSolrQuery getExecuteSolrQuery()
     {
-        return solrSearchService;
+        return executeSolrQuery;
     }
 
-    public void setSolrSearchService(SolrSearchService solrSearchService)
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
-        this.solrSearchService = solrSearchService;
+        this.executeSolrQuery = executeSolrQuery;
     }
 }

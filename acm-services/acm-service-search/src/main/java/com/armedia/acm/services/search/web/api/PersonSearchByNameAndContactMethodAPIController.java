@@ -1,7 +1,7 @@
 package com.armedia.acm.services.search.web.api;
 
 import com.armedia.acm.services.search.model.SolrCore;
-import com.armedia.acm.services.search.service.SolrSearchService;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class PersonSearchByNameAndContactMethodAPIController
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    private SolrSearchService solrSearchService;
+    private ExecuteSolrQuery executeSolrQuery;
 
     @RequestMapping(value = "/personSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -53,7 +53,8 @@ public class PersonSearchByNameAndContactMethodAPIController
         query = query.replaceAll(" ", "+");
         sort = sort.replaceAll(" ", "+");
 
-        String results = getSolrSearchService().search(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
+                query, startRow, maxRows, sort);
 
         httpResponse.addHeader("X-JSON", results);
 
@@ -61,13 +62,13 @@ public class PersonSearchByNameAndContactMethodAPIController
 
     }
 
-    public SolrSearchService getSolrSearchService()
+    public ExecuteSolrQuery getExecuteSolrQuery()
     {
-        return solrSearchService;
+        return executeSolrQuery;
     }
 
-    public void setSolrSearchService(SolrSearchService solrSearchService)
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
-        this.solrSearchService = solrSearchService;
+        this.executeSolrQuery = executeSolrQuery;
     }
 }

@@ -3,55 +3,51 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="solrSearchService" class="com.armedia.acm.services.search.service.SolrSearchService">
-        <property name="muleClient" ref="muleClient"/>
-    </bean>
-
     <bean id="searchUiController" class="com.armedia.acm.services.search.web.SearchUiController">
         <property name="plugin" ref="pluginSearch"/>
         <property name="pluginManager" ref="acmPluginManager"/>
     </bean>
 
     <bean id="quickSearchAPIController" class="com.armedia.acm.services.search.web.api.QuickSearchAPIController">
-        <property name="solrSearchService" ref="solrSearchService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     <bean id="SearchChildrenAPIController" class="com.armedia.acm.services.search.web.api.SearchChildrenAPIController">
-        <property name="solrSearchService" ref="solrSearchService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     <bean id="searchObjectByTypeAPIController" class="com.armedia.acm.services.search.web.api.SearchObjectByTypeAPIController">
-        <property name="solrSearchService" ref="solrSearchService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="searchEventPublisher" ref="acmSearchEventPublisher" />
     </bean>
 
     <bean id="personSearchByNameAndContactMethodAPIController"
           class="com.armedia.acm.services.search.web.api.PersonSearchByNameAndContactMethodAPIController">
-        <property name="solrSearchService" ref="solrSearchService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     
     <bean id="searchUsersAPIController"
           class="com.armedia.acm.services.search.web.api.SearchUsersAPIController">
-        <property name="solrSearchService" ref="solrSearchService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="complaintsSearchByAssignedUserAPIController" class="com.armedia.acm.services.search.web.api.ComplaintsSearchByAssignedUserAPIController">
-        <property name="solrSearchService" ref="solrSearchService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     <bean id="caseFilesSearchByCreatorAPIController" class="com.armedia.acm.services.search.web.api.CaseFilesSearchByCreatorAPIController">
-        <property name="solrSearchService" ref="solrSearchService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     <bean id="complaintsSearchByCreatedDateAPIController" class="com.armedia.acm.services.search.web.api.ComplaintsSearchByCreatedDateAPIController">
-        <property name="solrSearchService" ref="solrSearchService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     <bean id="caseFilesSearchByDueDateTimeIntervalAPIController" class="com.armedia.acm.services.search.web.api.CaseFilesSearchByDueDateTimeIntervalAPIController">
-        <property name="solrSearchService" ref="solrSearchService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     <bean id="facetedSearchAPIController" class="com.armedia.acm.services.search.web.api.FacetedSearchAPIController">
         <property name="pluginSearch" ref="pluginSearch"/>
-        <property name="solrSearchService" ref="solrSearchService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     <bean id="advancedSearchAPIController" class="com.armedia.acm.services.search.web.api.AdvancedSearchAPIController">
-        <property name="solrSearchService" ref="solrSearchService"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
 </beans>
