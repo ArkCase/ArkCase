@@ -63,7 +63,7 @@ public class SaveNotificationAPIController
             newNotification.setModifier(notification.getModifier());
             newNotification.setModified(notification.getModified());
             newNotification.setData(notification.getData());
-            newNotification.setAuto(notification.getAuto());
+            newNotification.setType(notification.getType());
             newNotification.setUser(notification.getUser());
 
 
@@ -90,7 +90,7 @@ public class SaveNotificationAPIController
             fakeNotification.setModifier(notification.getModifier());
             fakeNotification.setModified(notification.getModified());
             fakeNotification.setData(notification.getData());
-            fakeNotification.setAuto(notification.getAuto());
+            fakeNotification.setType(notification.getType());
             fakeNotification.setUser(notification.getUser());
 
             publishNotificationEvent(httpSession, fakeNotification, false);

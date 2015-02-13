@@ -19,6 +19,7 @@ import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
+import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -90,6 +91,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
 	private RuntimeService activitiRuntimeService;
+	
+	private ComplaintEventPublisher complaintEventPublisher;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -412,5 +415,14 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
 	{
 		this.activitiRuntimeService = activitiRuntimeService;
+	}
+
+	public ComplaintEventPublisher getComplaintEventPublisher() {
+		return complaintEventPublisher;
+	}
+
+	public void setComplaintEventPublisher(
+			ComplaintEventPublisher complaintEventPublisher) {
+		this.complaintEventPublisher = complaintEventPublisher;
 	}
 }

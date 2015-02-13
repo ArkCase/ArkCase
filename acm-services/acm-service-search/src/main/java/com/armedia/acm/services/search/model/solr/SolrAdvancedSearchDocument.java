@@ -109,6 +109,11 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String content_type;
     private String ecmFileId;
 
+/////////////////////// for notification /////////////////////////////////////////
+	private String state_lcs;
+	private String data_lcs;
+	private String action_lcs;
+
     @JsonIgnore
     public String getEcmFileId() {
         return ecmFileId;
@@ -590,7 +595,31 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
         return public_doc_b;
     }
 
-    @Override
+	public String getState_lcs() {
+		return state_lcs;
+	}
+
+	public void setState_lcs(String state_lcs) {
+		this.state_lcs = state_lcs;
+	}
+
+	public String getData_lcs() {
+		return data_lcs;
+	}
+
+	public void setData_lcs(String data_lcs) {
+		this.data_lcs = data_lcs;
+	}
+
+	public String getAction_lcs() {
+		return action_lcs;
+	}
+
+	public void setAction_lcs(String action_lcs) {
+		this.action_lcs = action_lcs;
+	}
+
+	@Override
     public void setPublic_doc_b(boolean public_doc_b)
     {
         this.public_doc_b = public_doc_b;
@@ -684,6 +713,9 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
                 ", adhocTask_b=" + adhocTask_b +
                 ", owner_lcs='" + owner_lcs + '\'' +
                 ", business_process_name_lcs='" + business_process_name_lcs + '\'' +
+                ", state_lcs='" + state_lcs + '\'' +
+                ", action_lcs='" + action_lcs + '\'' +
+                ", data_lcs='" + data_lcs + '\'' +
                 '}';
     }
 }
