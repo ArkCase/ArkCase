@@ -24,7 +24,9 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-data-access-control.xml"
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-data-access-test.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class ParticipantPrivilegeIT
