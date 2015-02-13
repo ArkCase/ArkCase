@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
@@ -21,11 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.RollbackException;
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +37,8 @@ public class CreateSubscriptionAPIController {
 
     private final static String QUERY_KEY = "subscription.get.object.byId";
     private final static String QUERY_PLACEHOLDER_CHARACTER = "?";
-    private final static String FIRST_ROW = "0";
-    private final static String MAX_ROWS = "1";
+    private final static int FIRST_ROW = 0;
+    private final static int MAX_ROWS = 1;
     private final static String SORT = "";
 
     private final static String SOLR_RESPONSE_BODY = "response";
@@ -64,8 +61,7 @@ public class CreateSubscriptionAPIController {
             @PathVariable("userId") String userId,
             @PathVariable("objType") String objectType,
             @PathVariable("objId") Long objectId,
-            Authentication authentication,
-            HttpSession httpSession
+            Authentication authentication
     ) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException {
 
         if ( log.isInfoEnabled() ) {
@@ -114,7 +110,8 @@ public class CreateSubscriptionAPIController {
 
         String solrResponseJsonString;
         try {
-            solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(query, FIRST_ROW, MAX_ROWS, SORT, auth);
+            solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH,
+                    query, FIRST_ROW, MAX_ROWS, SORT);
         } catch ( MuleException e ) {
             if(log.isErrorEnabled()){
                 log.error("Mule exception occurred while performing quick search for object:"+id,e);
