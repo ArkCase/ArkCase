@@ -1,7 +1,7 @@
 package com.armedia.acm.services.search.web.api;
 
 import com.armedia.acm.services.search.model.SolrCore;
-import com.armedia.acm.services.search.service.SolrSearchService;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
 {
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
-    private SolrSearchService mockSolrSearchService;
+    private ExecuteSolrQuery mockExecuteSolrQuery;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -49,9 +49,9 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
     {
         unit = new PersonSearchByNameAndContactMethodAPIController();
 
-        mockSolrSearchService = createMock(SolrSearchService.class);
+        mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
 
-        unit.setSolrSearchService(mockSolrSearchService);
+        unit.setExecuteSolrQuery(mockExecuteSolrQuery);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
@@ -77,7 +77,8 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockSolrSearchService.search(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, sort)).andReturn(solrResponse);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query,
+                0, 10, sort)).andReturn(solrResponse);
 
         replayAll();
 
@@ -116,7 +117,7 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockSolrSearchService.search(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, sort)).
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, sort)).
                 andThrow(new DefaultMuleException("test Exception"));
 
         replayAll();
