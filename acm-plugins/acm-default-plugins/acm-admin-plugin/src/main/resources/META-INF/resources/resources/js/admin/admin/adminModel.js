@@ -7,7 +7,8 @@ Admin.Model = Admin.Model || {
         if (Admin.Model.Correspondence.create)          {Admin.Model.Correspondence.create();}
         if (Admin.Model.Organization.create)            {Admin.Model.Organization.create();}
         if (Admin.Model.FunctionalAccessControl.create) {Admin.Model.FunctionalAccessControl.create();}
-        if (Admin.Model.ReportsConfiguration.create) {Admin.Model.ReportsConfiguration.create();}
+        if (Admin.Model.ReportsConfiguration.create)    {Admin.Model.ReportsConfiguration.create();}
+        if (Admin.Model.WorkflowConfiguration.create)   {Admin.Model.WorkflowConfiguration.create();}
 
 
         if (Admin.Model.Tree.create)                    {Admin.Model.Tree.create();}
@@ -17,17 +18,10 @@ Admin.Model = Admin.Model || {
         if (Admin.Model.Organization.onInitialized)             {Admin.Model.Organization.onInitialized();}
         if (Admin.Model.FunctionalAccessControl.onInitialized)  {Admin.Model.FunctionalAccessControl.onInitialized();}
         if (Admin.Model.ReportsConfiguration.onInitialized)     {Admin.Model.ReportsConfiguration.onInitialized();}
+        if (Admin.Model.WorkflowConfiguration.onInitialized)    {Admin.Model.WorkflowConfiguration.onInitialized();}
 
 
         if (Admin.Model.Tree.onInitialized)                     {Admin.Model.Tree.onInitialized();}
-    }
-
-    ,_totalCount: 0
-    ,getTotalCount: function() {
-        return this._totalCount;
-    }
-    ,setTotalCount: function(totalCount) {
-        this._totalCount = totalCount;
     }
 
     ,Organization: {
@@ -44,15 +38,15 @@ Admin.Model = Admin.Model || {
 
             Admin.Service.Organization.retrieveGroups();
 
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_GROUPS, this.onModelRetrievedGroups);
-            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_CREATED_AD_HOC_GROUP, this.onViewCreatedAdHocGroup);
-            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_REMOVED_GROUP_MEMBER, this.onViewRemovedGroupMember);
-            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ADDED_GROUP_MEMBERS, this.onViewAddedMembers);
-            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_REMOVED_GROUP, this.onViewRemovedGroup);
-            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_SEARCHED_MEMBERS, this.onViewSearchedMembers);
-            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_SUBMITTED_QUERY          ,Admin.Model.Organization.ModalDialog.Members.Facets.onViewSubmittedQuery);
-            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_CHANGED_FACET_SELECTION  ,Admin.Model.Organization.ModalDialog.Members.Facets.onViewChangedFacetSelection);
-            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ADDED_GROUP_SUPERVISOR, this.onViewAddedSupervisor);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ORG_HIERARCHY_RETRIEVED_GROUPS, this.onModelRetrievedGroups);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ORG_HIERARCHY_CREATED_AD_HOC_GROUP, this.onViewCreatedAdHocGroup);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ORG_HIERARCHY_REMOVED_MEMBERS, this.onViewRemovedGroupMember);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ORG_HIERARCHY_ADDED_MEMBERS, this.onViewAddedMembers);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ORG_HIERARCHY_REMOVED_GROUP, this.onViewRemovedGroup);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ORG_HIERARCHY_SEARCHED_MEMBERS, this.onViewSearchedMembers);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ORG_HIERARCHY_SUBMITTED_QUERY          ,Admin.Model.Organization.ModalDialog.Members.Facets.onViewSubmittedQuery);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ORG_HIERARCHY_CHANGED_FACET  ,Admin.Model.Organization.ModalDialog.Members.Facets.onViewChangedFacetSelection);
+            Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ORG_HIERARCHY_ADDED_SUPERVISOR, this.onViewAddedSupervisor);
 
         }
         ,onInitialized: function() {
@@ -666,7 +660,7 @@ Admin.Model = Admin.Model || {
             Admin.Service.FunctionalAccessControl.retrieveGroups();
             Admin.Service.FunctionalAccessControl.retrieveApplicationRolesToGroups();
 
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_SAVE_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onSaveFunctionalAccessControlApplicationRolesToGroups);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FAC_SAVED_APPLICATION_ROLES_TO_GROUPS, this.onSaveFunctionalAccessControlApplicationRolesToGroups);
         }
         ,onInitialized: function() {
         }
@@ -702,13 +696,13 @@ Admin.Model = Admin.Model || {
             this.cacheGroups = new Acm.Model.CacheFifo(1);
             this.cacheReportToGroupsMap = new Acm.Model.CacheFifo(1);
 
-            Admin.Service.ReportsConfiguration.retrieveReports();
 
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_RETRIEVED_REPORTS, this.onModelReportConfigRetrievedReports);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_RETRIEVED_GROUPS, this.onModelReportConfigRetrievedGroups);
             Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP, this.onViewReportConfigSaveReportToGroupsMap);
         }
         ,onInitialized: function() {
+            Admin.Service.ReportsConfiguration.retrieveReports();
         }
 
         ,validateReports: function(reports) {
@@ -749,6 +743,13 @@ Admin.Model = Admin.Model || {
 
     }
 
+    ,WorkflowConfiguration:{
+        create: function () {
+
+        }
+        , onInitialized: function () {
+        }
+    }
 
     ,Tree: {
         create : function() {
@@ -772,31 +773,34 @@ Admin.Model = Admin.Model || {
             ,onInitialized: function() {
             }
 
-            ,NODE_TYPE_PART_BRANCH_MAIN_PAGE:        "mp"
-            ,NODE_TYPE_PART_LEAF_ACCESS_CONTROL:     "dac"
-            ,NODE_TYPE_PART_LEAF_DASHBOARD:          "dc"
-            ,NODE_TYPE_PART_LEAF_REPORTS:            "rc"
-            ,NODE_TYPE_PART_BRANCH_ACCESS_CONTROL:   "acc"
-            ,NODE_TYPE_PART_BRANCH_DASHBOARD:        "dsh"
-            ,NODE_TYPE_PART_BRANCH_REPORTS:          "rpt"
-            ,NODE_TYPE_PART_BRANCH_CORRESPONDENCE:   "cm"
-            ,NODE_TYPE_PART_BRANCH_TEMPLATES:        "ct"
-            ,NODE_TYPE_PART_BRANCH_ORGANIZATION:     "og"
-            ,NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL:"fac"
+            ,NODE_TYPE_PART_BRANCH_MAIN_PAGE                    :          "mp"
+            ,NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL      :          "fac"
+            ,NODE_TYPE_PART_LEAF_ORGANIZATION                   :          "og"
+            ,NODE_TYPE_PART_BRANCH_DASHBOARD                    :          "dsh"
+            ,NODE_TYPE_PART_LEAF_DASHBOARD                      :          "dc"
+            ,NODE_TYPE_PART_BRANCH_REPORTS                      :          "rpt"
+            ,NODE_TYPE_PART_LEAF_REPORTS                        :          "rc"
+            ,NODE_TYPE_PART_BRANCH_WORKFLOW_CONFIGURATION       :          "wfc"
+            ,NODE_TYPE_PART_LEAF_WORKFLOW_CONFIGURATION         :          "wf"
+            ,NODE_TYPE_PART_BRANCH_TEMPLATES                    :          "ct"
+            ,NODE_TYPE_PART_LEAF_TEMPLATES                      :          "cm"
+
+
 
 
             ,_mapNodeType: [
-                {nodeType: "mp"      ,icon: "",tabIds: ["tabMainPage"]}
-                ,{nodeType: "acc"      ,icon: "",tabIds: ["tabACP"]}
+                 {nodeType: "mp"       ,icon: "",tabIds: ["tabMainPage"]}
                 ,{nodeType: "dsh"      ,icon: "",tabIds: ["tabDashboard"]}
                 ,{nodeType: "rpt"      ,icon: "",tabIds: ["tabReports"]}
                 ,{nodeType: "dac"      ,icon: "",tabIds: ["tabACP"]}
-                ,{nodeType: "dc"      ,icon: "",tabIds: ["tabDashboard"]}
-                ,{nodeType: "rc"      ,icon: "",tabIds: ["tabReports"]}
-                ,{nodeType: "cm"      ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
-                ,{nodeType: "ct"      ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
-                ,{nodeType: "og"      ,icon: "",tabIds: ["tOrganization"]}
-                ,{nodeType: "fac"      ,icon: "",tabIds: ["tabFunctoinalAccessControl"]}
+                ,{nodeType: "dc"       ,icon: "",tabIds: ["tabDashboard"]}
+                ,{nodeType: "rc"       ,icon: "",tabIds: ["tabReports"]}
+                ,{nodeType: "ct"       ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
+                ,{nodeType: "cm"       ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
+                ,{nodeType: "og"       ,icon: "",tabIds: ["tOrganization"]}
+                ,{nodeType: "fac"      ,icon: "",tabIds: ["tabFunctionalAccessControl"]}
+                ,{nodeType: "wfc"      ,icon: "",tabIds: ["tabWorkflowConfiguration"]}
+                ,{nodeType: "wf"       ,icon: "",tabIds: ["tabWorkflowConfiguration"]}
             ]
 
             ,getTabIdsByKey: function(key) {
@@ -829,26 +833,26 @@ Admin.Model = Admin.Model || {
                 if (Acm.isEmpty(key)) {
                     return null;
                 }
-                if (key == this.NODE_TYPE_PART_LEAF_ACCESS_CONTROL) {
-                    return this.NODE_TYPE_PART_LEAF_ACCESS_CONTROL;
+                if (key == this.NODE_TYPE_PART_LEAF_ORGANIZATION) {
+                    return this.NODE_TYPE_PART_LEAF_ORGANIZATION;
+                } else if (key == this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL) {
+                    return this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL;
                 } else if (key == this.NODE_TYPE_PART_LEAF_DASHBOARD) {
                     return this.NODE_TYPE_PART_LEAF_DASHBOARD;
-                } else if (key == this.NODE_TYPE_PART_LEAF_REPORTS) {
-                    return this.NODE_TYPE_PART_LEAF_REPORTS;
-                } else if (key == this.NODE_TYPE_PART_BRANCH_ACCESS_CONTROL) {
-                    return this.NODE_TYPE_PART_BRANCH_ACCESS_CONTROL;
                 } else if (key == this.NODE_TYPE_PART_BRANCH_DASHBOARD) {
                     return this.NODE_TYPE_PART_BRANCH_DASHBOARD;
                 } else if (key == this.NODE_TYPE_PART_BRANCH_REPORTS) {
                     return this.NODE_TYPE_PART_BRANCH_REPORTS;
-                }else if (key == this.NODE_TYPE_PART_BRANCH_CORRESPONDENCE) {
-                    return this.NODE_TYPE_PART_BRANCH_CORRESPONDENCE;
-                }else if (key == this.NODE_TYPE_PART_BRANCH_TEMPLATES) {
+                } else if (key == this.NODE_TYPE_PART_LEAF_REPORTS) {
+                    return this.NODE_TYPE_PART_LEAF_REPORTS;
+                } else if (key == this.NODE_TYPE_PART_BRANCH_TEMPLATES) {
                     return this.NODE_TYPE_PART_BRANCH_TEMPLATES;
-                }else if (key == this.NODE_TYPE_PART_BRANCH_ORGANIZATION) {
-                    return this.NODE_TYPE_PART_BRANCH_ORGANIZATION;
-                }else if (key == this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL) {
-                    return this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL;
+                } else if (key == this.NODE_TYPE_PART_LEAF_TEMPLATES) {
+                    return this.NODE_TYPE_PART_LEAF_TEMPLATES;
+                } else if (key == this.NODE_TYPE_PART_BRANCH_WORKFLOW_CONFIGURATION) {
+                    return this.NODE_TYPE_PART_BRANCH_WORKFLOW_CONFIGURATION;
+                } else if (key == this.NODE_TYPE_PART_LEAF_WORKFLOW_CONFIGURATION) {
+                    return this.NODE_TYPE_PART_LEAF_WORKFLOW_CONFIGURATION;
                 }
                 return null;
             }
