@@ -26,4 +26,8 @@
         <property name="participantAccessChecker" ref="participantAccessChecker"/>
     </bean>
 
+    <bean id="arkPermissionEvaluator" class="com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator">
+
+    </bean>
+
 </beans>
