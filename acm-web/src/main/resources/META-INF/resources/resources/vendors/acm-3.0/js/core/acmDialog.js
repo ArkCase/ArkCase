@@ -88,7 +88,7 @@ Acm.Dialog = {
         bootbox.prompt(msg, callback);
     }
 
-    ,bootstrapModal: function($s, onClickBtnPrimary, onClickBtnDefault) {
+    ,modal: function($s, onClickBtnPrimary, onClickBtnDefault) {
         if (onClickBtnPrimary) {
             $s.find("button.btn-primary").unbind("click").on("click", function(e){
                 onClickBtnPrimary(e, this);

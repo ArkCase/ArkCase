@@ -15,11 +15,6 @@
 
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBase.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseModel.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseView.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscription.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionService.js'/>"></script>
@@ -53,7 +48,7 @@
                 <section class="vbox">
                     <section class="scrollable">
 
-                        <div class="wrapper facets">
+                        <div class="wrapper facets" id="divFacets">
                         </div>
 
                     </section>
