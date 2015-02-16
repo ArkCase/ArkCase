@@ -4,11 +4,11 @@
  * @author jwu
  */
 SearchBase.Controller = {
-    create : function(name) {
-        this.MODEL_CHANGED_RESULT          = name + "-search-changed-result";                   //param: result
-        this.MODEL_CHANGED_FACET           = name + "-search-changed-facet";                    //param: facet
-        this.VIEW_SUBMITTED_QUERY          = name + "-search-view-submitted-query";             //param: term
-        this.VIEW_CHANGED_FACET_SELECTION  = name + "-search-view-changed-facet-selection";     //param: selected
+    create : function(args) {
+        this.MODEL_CHANGED_RESULT          = args.name + "-search-changed-result";                   //param: result
+        this.MODEL_CHANGED_FACET           = args.name + "-search-changed-facet";                    //param: facet
+        this.VIEW_SUBMITTED_QUERY          = args.name + "-search-view-submitted-query";             //param: term
+        this.VIEW_CHANGED_FACET_SELECTION  = args.name + "-search-view-changed-facet-selection";     //param: selected
     }
     ,onInitialized: function() {
     }
