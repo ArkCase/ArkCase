@@ -9,19 +9,21 @@ var Search = Search || {
         if (Search.Model.create)      {Search.Model.create();}
         if (Search.View.create)       {Search.View.create();}
 
-        SearchBase.create("search"
-            ,Search.View.Query.$edtSearch
-            ,Search.View.Query.$btnSearch
-            ,Search.View.$divFacet
-            ,Search.View.$divResults
-//            ,Search.View.args
-//            ,Search.View.jtDataMaker
-        );
+        if (SearchBase.create) {
+            SearchBase.create({name: "search"
+                ,$edtSearch : Search.View.Query.$edtSearch
+                ,$btnSearch : Search.View.Query.$btnSearch
+                ,$divFacets : Search.View.$divFacets
+                ,$divResults: Search.View.$divResults
+            });
+        }
     }
     ,onInitialized: function() {
         if (Search.Controller.onInitialized) {Search.Controller.onInitialized();}
         if (Search.Model.onInitialized)      {Search.Model.onInitialized();}
         if (Search.View.onInitialized)       {Search.View.onInitialized();}
+
+        if (SearchBase.onInitialized)        {SearchBase.onInitialized();}
     }
 };
 

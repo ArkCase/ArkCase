@@ -1026,7 +1026,7 @@ TaskList.Object = {
     	this.$btnSubmitRejectTask.addClass('disabled');
     }
     ,showDlgRejectTask: function(onClickBtnPrimary) {    	
-        Acm.Dialog.bootstrapModal(this.$dlgRejectTask, onClickBtnPrimary);
+        Acm.Dialog.modal(this.$dlgRejectTask, onClickBtnPrimary);
     }
     ,refreshDlgRejectTaskUsers: function(data) {
     	var tbodyOwner = this.$dlgRejectTask.find('table#ownerTableRejectTask tbody');

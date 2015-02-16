@@ -36,10 +36,10 @@ Admin.View = Admin.View || {
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ORG_HIERARCHY_RETRIEVED_ERROR, this.onModelRetrievedError);
 
 
-            if (Admin.View.Organization.ModalDialog.create)         {Admin.View.Organization.ModalDialog.create();}
+            //if (Admin.View.Organization.ModalDialog.create)         {Admin.View.Organization.ModalDialog.create();}
         }
         , onInitialized: function () {
-            if (Admin.View.Organization.ModalDialog.onInitialized)         {Admin.View.Organization.ModalDialog.onInitialized();}
+            //if (Admin.View.Organization.ModalDialog.onInitialized)         {Admin.View.Organization.ModalDialog.onInitialized();}
         }
         ,onModelRetrievedHierarchy: function(){
             if (Admin.View.Organization.Tree.create)        {Admin.View.Organization.Tree.create();}
@@ -572,20 +572,53 @@ Admin.View = Admin.View || {
             }
             ,onClickAddSubgroup: function(node){
                 Admin.Model.Organization.setParentNodeFlag(true);
-                Admin.View.Organization.ModalDialog.$modalLabelCreateAdHocGroup.text("Add Subgroup to " + "'" + node.title + "'");
-                Admin.View.Organization.ModalDialog.$modalCreateAdHocGroup.modal('show');
+//                Admin.View.Organization.ModalDialog.$modalLabelCreateAdHocGroup.text("Add Subgroup to " + "'" + node.title + "'");
+//                Admin.View.Organization.ModalDialog.$modalCreateAdHocGroup.modal('show');
+
+                SearchBase.showSearchDialog({name: "pickSubGroup"
+                    ,filters: [{key: "Object Type", values: ["GROUP"]}]
+                    ,onClickBtnPrimary : function(event, ctrl) {
+                        SearchBase.View.Results.getSelectedRows().each(function () {
+                            var record = $(this).data('record');
+
+                            //collect selected users here
+                        });
+                    }
+                });
             }
             ,onClickAddMembers: function(node){
                 Admin.Model.Organization.setParentNodeFlag(true);
-                Admin.Model.Organization.ModalDialog.Members.setSupervisorFlag(false);
-                Admin.View.Organization.ModalDialog.$modalLabelPeople.text("Add Members to " + "'" + node.title + "'");
-                Admin.View.Organization.ModalDialog.$modalAddPeople.modal('show');
+//                Admin.Model.Organization.ModalDialog.Members.setSupervisorFlag(false);
+//                Admin.View.Organization.ModalDialog.$modalLabelPeople.text("Add Members to " + "'" + node.title + "'");
+//                Admin.View.Organization.ModalDialog.$modalAddPeople.modal('show');
+
+                SearchBase.showSearchDialog({name: "pickMember"
+                    ,filters: [{key: "Object Type", values: ["USER"]}]
+                    ,onClickBtnPrimary : function(event, ctrl) {
+                        SearchBase.View.Results.getSelectedRows().each(function () {
+                            var record = $(this).data('record');
+
+                            //collect selected users here2
+                        });
+                    }
+                });
             }
             ,onClickAddSupervisors: function(node){
                 Admin.Model.Organization.setParentNodeFlag(true);
-                Admin.Model.Organization.ModalDialog.Members.setSupervisorFlag(true);
-                Admin.View.Organization.ModalDialog.$modalLabelPeople.text("Add Supervisor to " + "'" + node.title + "'");
-                Admin.View.Organization.ModalDialog.$modalAddPeople.modal('show');
+//                Admin.Model.Organization.ModalDialog.Members.setSupervisorFlag(true);
+//                Admin.View.Organization.ModalDialog.$modalLabelPeople.text("Add Supervisor to " + "'" + node.title + "'");
+//                Admin.View.Organization.ModalDialog.$modalAddPeople.modal('show');
+
+                SearchBase.showSearchDialog({name: "pickSupervisor"
+                    ,filters: [{key: "Object Type", values: ["USER"]}]
+                    ,onClickBtnPrimary : function(event, ctrl) {
+                        SearchBase.View.Results.getSelectedRows().each(function () {
+                            var record = $(this).data('record');
+
+                            //collect selected users here
+                        });
+                    }
+                });
             }
             ,onClickButtonsCancelEventBubble: function (e) {
                 var evt = e ? e:window.event;
