@@ -31,8 +31,6 @@ Admin.Controller = Admin.Controller || {
 
     ,MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES                 : "admin-model-retrieved-correspondence-templates"              //param : templatesList
 
-    ,MODEL_UPDATED_ACCESS_CONTROL                             : "access-control-updated"                                      //param : accessControlList
-
     ,MODEL_CREATED_ADHOC_GROUP                                : "organization-hierarchy-group-created"                        //param : group
 
     ,MODEL_REMOVED_GROUP                                      : "organization-hierarchy-group-removed"                        //param : removedGroup
@@ -154,10 +152,6 @@ Admin.Controller = Admin.Controller || {
 
     ,modelAddedGroupSupervisor: function(addedSupervisor){
         Acm.Dispatcher.fireEvent(this.MODEL_ADDED_GROUP_SUPERVISOR, addedSupervisor);
-    }
-
-    ,modelUpdatedAccessControl : function(accessControlList){
-        Acm.Dispatcher.fireEvent(this.MODEL_UPDATED_ACCESS_CONTROL, accessControlList);
     }
 
     ,modelRetrievedUsers : function(allUsers){

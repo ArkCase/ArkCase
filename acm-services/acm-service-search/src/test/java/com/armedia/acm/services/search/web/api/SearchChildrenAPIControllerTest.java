@@ -1,12 +1,12 @@
 package com.armedia.acm.services.search.web.api;
 
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.DefaultMuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -36,8 +33,7 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
-    private MuleClient mockMuleClient;
-    private MuleMessage mockMuleMessage;
+    private ExecuteSolrQuery mockExecuteSolrQuery;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -51,10 +47,9 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
     {
         unit = new SearchChildrenAPIController();
 
-        mockMuleClient = createMock(MuleClient.class);
-        mockMuleMessage = createMock(MuleMessage.class);
+        mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
 
-        unit.setMuleClient(mockMuleClient);
+        unit.setExecuteSolrQuery(mockExecuteSolrQuery);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
@@ -72,18 +67,11 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
                    
         String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", 0);
-        headers.put("maxRows", 10);
-        headers.put("sort", "");
-        headers.put("acmUser", mockAuthentication);
-       
-
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
-        expect(mockMuleClient.send("vm://quickSearchQuery.in", "", headers)).andReturn(mockMuleMessage);
-        expect(mockMuleMessage.getPayload()).andReturn(solrResponse).atLeastOnce();
+
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, "")).
+                andReturn(solrResponse);
 
         replayAll();
 
@@ -119,19 +107,11 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         String childType = "TASK";
         
        String query = "parent_object_type_s:" + parentType+ " AND parent_object_id_i:"+ parentId + " AND object_type_s:" + childType;
-            
-           
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("sort", "");
-        headers.put("firstRow", 0);
-        headers.put("maxRows", 10);
-        headers.put("acmUser", mockAuthentication);
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockMuleClient.send("vm://quickSearchQuery.in", "", headers)).
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, "")).
                 andThrow(new DefaultMuleException("test Exception"));
 
         replayAll();
