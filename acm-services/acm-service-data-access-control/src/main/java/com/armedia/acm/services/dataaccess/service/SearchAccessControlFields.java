@@ -1,9 +1,7 @@
-package com.armedia.acm.services.search.service;
+package com.armedia.acm.services.dataaccess.service;
 
-import com.armedia.acm.services.dataaccess.service.ParticipantAccessChecker;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import java.util.List;
 

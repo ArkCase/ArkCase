@@ -4,7 +4,6 @@
 
 Admin.Model = Admin.Model || {
     create : function() {
-        if (Admin.Model.AccessControl.create)           {Admin.Model.AccessControl.create();}
         if (Admin.Model.Correspondence.create)          {Admin.Model.Correspondence.create();}
         if (Admin.Model.Organization.create)            {Admin.Model.Organization.create();}
         if (Admin.Model.FunctionalAccessControl.create) {Admin.Model.FunctionalAccessControl.create();}
@@ -14,7 +13,6 @@ Admin.Model = Admin.Model || {
         if (Admin.Model.Tree.create)                    {Admin.Model.Tree.create();}
     }
     ,onInitialized: function() {
-        if (Admin.Model.AccessControl.onInitialized)            {Admin.Model.AccessControl.onInitialized();}
         if (Admin.Model.Correspondence.onInitialized)           {Admin.Model.Correspondence.onInitialized();}
         if (Admin.Model.Organization.onInitialized)             {Admin.Model.Organization.onInitialized();}
         if (Admin.Model.FunctionalAccessControl.onInitialized)  {Admin.Model.FunctionalAccessControl.onInitialized();}
@@ -30,27 +28,6 @@ Admin.Model = Admin.Model || {
     }
     ,setTotalCount: function(totalCount) {
         this._totalCount = totalCount;
-    }
-
-    ,AccessControl:{
-        create : function() {
-            this.cacheAccessControlList = new Acm.Model.CacheFifo(4);
-        }
-        ,onInitialized: function() {
-        }
-
-        ,validateAccessControlList: function(accessControlList) {
-            if (Acm.isEmpty(accessControlList)) {
-                return false;
-            }
-            if (Acm.isEmpty(accessControlList.totalCount)) {
-                return false;
-            }
-            if (!Acm.isArray(accessControlList.resultPage)) {
-                return false;
-            }
-            return true;
-        }
     }
 
     ,Organization: {

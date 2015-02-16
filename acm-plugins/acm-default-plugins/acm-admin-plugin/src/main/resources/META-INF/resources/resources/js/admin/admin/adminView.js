@@ -5,7 +5,6 @@
 
 Admin.View = Admin.View || {
     create: function() {
-        if (Admin.View.AccessControl.create)        	{Admin.View.AccessControl.create();}
         if (Admin.View.Correspondence.create)       	{Admin.View.Correspondence.create();}
         if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
         if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
@@ -15,7 +14,6 @@ Admin.View = Admin.View || {
         if (Admin.View.Tree.create)                 	{Admin.View.Tree.create();}
     }
     ,onInitialized: function() {
-        if (Admin.View.AccessControl.onInitialized)        		{Admin.View.AccessControl.onInitialized();}
         if (Admin.View.Correspondence.onInitialized)       		{Admin.View.Correspondence.onInitialized();}
         if (Admin.View.Organization.onInitialized)         		{Admin.View.Organization.onInitialized();}
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
@@ -757,164 +755,6 @@ Admin.View = Admin.View || {
                 return Admin.Model.Organization.cacheTreeSource.get("source");
 
             }
-        }
-    }
-    ,AccessControl : {
-        create: function () {
-
-            this.$divAdminAccessControlPolicy = $("#divACP");
-            this.createJTableAdminAccessControl(this.$divAdminAccessControlPolicy);
-
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_UPDATED_ACCESS_CONTROL, this.onModelUpdatedAccessControlList);
-
-        }
-        , onInitialized: function () {
-        }
-
-
-        , onModelUpdatedAccessControlList: function () {
-            AcmEx.Object.JTable.load(Admin.View.AccessControl.$divAdminAccessControlPolicy);
-        }
-        , _makeJtData: function (accessControlList) {
-            var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if (accessControlList) {
-                for (var i = 0; i < accessControlList.length; i++) {
-                    var Record = {};
-                    Record.objectType = accessControlList[i].objectType;
-                    Record.objectState = accessControlList[i].objectState;
-                    Record.accessLevel = accessControlList[i].accessLevel;
-                    Record.accessorType = accessControlList[i].accessorType;
-                    Record.accessDecision = accessControlList[i].accessDecision;
-                    Record.allowDiscretionaryUpdate = (accessControlList[i].allowDiscretionaryUpdate);
-                    Record.id = accessControlList[i].id;
-                    jtData.Records.push(Record);
-                }
-                jtData.TotalRecordCount = Admin.Model.getTotalCount();
-            }
-            return jtData;
-        }
-        , createJTableAdminAccessControl: function ($jt) {
-            var sortMap = {};
-            sortMap["dateTime"] = "auditDateTime";
-
-            AcmEx.Object.JTable.usePaging($jt
-                , {
-                    title: 'Data Access Control'
-                    , selecting: true
-                    , multiselect: false
-                    , selectingCheckboxes: false
-                    , actions: {
-                        pagingListAction: function (postData, jtParams, sortMap) {
-                            //var pageIndex = jtParams.jtStartIndex;
-                            var pageIndex = jtParams.jtPageSize.toString() + jtParams.jtStartIndex.toString();
-                            if (0 > pageIndex) {
-                                return AcmEx.Object.JTable.getEmptyRecords();
-                            }
-                            var accessControlList = Admin.Model.AccessControl.cacheAccessControlList.get(pageIndex);
-                            if (accessControlList) {
-                                return Admin.View.AccessControl._makeJtData(accessControlList);
-
-                            } else {
-                                return Admin.Service.AccessControl.retrieveAccessControlListDeferred(postData
-                                    , jtParams
-                                    , sortMap
-                                    , function (data) {
-                                        var accessControlList = data;
-                                        return Admin.View.AccessControl._makeJtData(accessControlList);
-                                    }
-                                    , function (error) {
-                                    }
-                                );
-                            }  //end else
-                        }
-                        , updateAction: function (postData, jtParams) {
-                            var record = Acm.urlToJson(postData);
-                            var rc = {"Result": "OK", "Record": {}};
-                            rc = AcmEx.Object.JTable.getEmptyRecord();
-                            rc.Record.accessDecision = record.accessDecision;
-                            rc.Record.allowDiscretionaryUpdate = record.allowDiscretionaryUpdate;
-                            return rc;
-
-//                        return {
-//                            "Result": "OK", "Record": { "id": 3, "objectType": "Dr.", "objectState": "Joe", "accessLevel": "Lee", "accessorType": "Witness", "accessDecision": "someone", "allowDiscretionaryUpdate": "dd" }
-//                        };
-                            //                    var rc = {"Result": "OK", "Record": {id:123, objectType:"hello", objectState:"st", accessLevel: "lv", accessDecision:"ds", allowDiscretionaryUpdate:"ad"}};
-                            //                    return rc;
-                        }
-                    }
-                    , fields: {
-                        id: {
-                            title: 'ID', key: true, type: 'hidden'
-                            //   ,list: true
-                            , create: false, edit: false
-                        }, objectType: {
-                            title: 'Object Type', width: '3%', edit: false
-                            //,sorting : true
-                            , options: [
-                                { Value: 'Complaint', DisplayText: 'Complaint' },
-                                { Value: 'Task', DisplayText: 'Task' },
-                                { Value: 'caseFile', DisplayText: 'Case File' }
-                            ]
-
-                        }, objectState: {
-                            title: 'State', width: '3%', edit: false, options: [
-                                { Value: 'ACTIVE', DisplayText: 'Active' },
-                                { Value: 'ASSIGNED', DisplayText: 'Assigned' },
-                                { Value: 'COMPLETE', DisplayText: 'Complete' },
-                                { Value: 'DRAFT', DisplayText: 'Draft' },
-                                { Value: 'IN APPROVAL', DisplayText: 'In Approval' },
-                                { Value: 'Scheduled', DisplayText: 'Scheduled' },
-                                { Value: 'UNASSIGNED', DisplayText: 'Unassigned' }
-                            ]
-                        }, accessLevel: {
-                            title: 'Access Level', width: '5%', edit: false, options: [
-                                { Value: 'Add Document', DisplayText: 'Add Document' },
-                                { Value: 'Add Item', DisplayText: 'Add Item' },
-                                { Value: 'Approve Complaint', DisplayText: 'Approve Complaint' },
-                                { Value: 'delete', DisplayText: 'Delete' },
-                                { Value: 'read', DisplayText: 'Read' },
-                                { Value: 'Save', DisplayText: 'Save' },
-                                { Value: 'Submit for Approval', DisplayText: 'Submit for Approval' },
-                                { Value: 'update', DisplayText: 'Update' }
-                            ]
-                        }, accessorType: {
-                            title: 'Accessor Type', width: '5%', edit: false
-                        }, accessDecision: {
-                            title: 'Access Decision',
-                            width: '5%', options: [
-                                { Value: 'GRANT', DisplayText: 'Grant' },
-                                { Value: 'DENY', DisplayText: 'Deny' },
-                                { Value: 'MANDATORY_DENY', DisplayText: 'Mandatory Deny' }
-                            ]
-
-                            // ,options: ['GRANT' , 'DENY', 'MANDATORY_DENY']
-                        }, allowDiscretionaryUpdate: {
-                            title: 'Allow Discretionary',
-                            width: '10%', options: [
-                                { Value: 'true', DisplayText: 'True' } ,
-                                { Value: 'false', DisplayText: 'False' }
-                            ]
-                        }
-
-                    } //end field
-                    ,recordUpdated: function (event, data) { //opened handler
-                        var adminAccessUpdated = {};
-                        adminAccessUpdated.id = data.record.id;
-                        adminAccessUpdated.objectType = data.record.objectType;
-                        adminAccessUpdated.objectState = data.record.objectState;
-                        adminAccessUpdated.accessLevel = data.record.accessLevel;
-                        adminAccessUpdated.accessorType = data.record.accessorType;
-                        adminAccessUpdated.accessDecision = data.record.accessDecision;
-                        if ("true" == data.record.allowDiscretionaryUpdate) {
-                            adminAccessUpdated.allowDiscretionaryUpdate = true;
-                        } else {
-                            adminAccessUpdated.allowDiscretionaryUpdate = false;
-                        }
-                        Admin.Service.AccessControl.updateAdminAccess(adminAccessUpdated);
-                    }
-                } //end arg
-                , sortMap
-            );
         }
     }
     ,Correspondence : {
