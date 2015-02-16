@@ -56,6 +56,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     private SaveComplaintTransaction saveComplaintTransaction;
     private AcmPluginManager acmPluginManager;
     private PersonDao personDao;
+    private ComplaintEventPublisher complaintEventPublisher;
 
     private ComplaintFactory complaintFactory = new ComplaintFactory();
 
@@ -140,7 +141,11 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     	getComplaintFactory().setPersonDao(getPersonDao());
         Complaint acmComplaint = getComplaintFactory().asAcmComplaint(complaint);
 
+        boolean isNew = acmComplaint.getComplaintId() == null;
+        
         acmComplaint = getSaveComplaintTransaction().saveComplaint(acmComplaint, getAuthentication());
+        
+        getComplaintEventPublisher().publishComplaintEvent(acmComplaint, getAuthentication(), isNew, true);
 
         complaint = getComplaintFactory().asFrevvoComplaint(acmComplaint);
 
@@ -532,5 +537,14 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	 */
 	public void setPersonDao(PersonDao personDao) {
 		this.personDao = personDao;
+	}
+
+	public ComplaintEventPublisher getComplaintEventPublisher() {
+		return complaintEventPublisher;
+	}
+
+	public void setComplaintEventPublisher(
+			ComplaintEventPublisher complaintEventPublisher) {
+		this.complaintEventPublisher = complaintEventPublisher;
 	}
 }
