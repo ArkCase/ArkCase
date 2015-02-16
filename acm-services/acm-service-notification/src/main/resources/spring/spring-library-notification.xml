@@ -1,10 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       					   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+       					   http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+
+	<context:property-placeholder
+        properties-ref="notificationProperties"
+        ignore-unresolvable="true"
+        local-override="false"
+        order="987691"/>
+        
+    <bean id="notificationProperties"
+          class="net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/notification.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="notification.user.batch.run">true</prop>
+                <prop key="notification.user.batch.frequency">100000</prop>
+                <prop key="notification.user.batch.size">50</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="notificationPropertiesConfigurer" class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
+		<property name="properties" ref="notificationProperties"/>
+	</bean>
+	
+	<!-- Notification Service is defined under $HOME/.acm/spring folder -->
+	
+	<!-- We need these for adding in the Notification Service defined under $HOME/.acm/spring  -->
+	<bean id="notificationUserBatchRun" class="java.lang.Boolean">
+		<constructor-arg value="${notification.user.batch.run}"/>
+	</bean>
+	<bean id="notificationUserBatchSize" class="java.lang.Integer">
+		<constructor-arg value="${notification.user.batch.size}"/>
+	</bean>
+	<bean id="notificationUserBatchFrequency" class="java.lang.Long">
+		<constructor-arg value="${notification.user.batch.frequency}"/>
+	</bean>
+	<bean id="notificationPropertyFileLocation" class="java.lang.String">
+		<constructor-arg value="${user.home}/.acm/notification.properties"/>
+	</bean>
 
     <bean id="notificationDao" class="com.armedia.acm.services.notification.dao.NotificationDao"/>
     <bean id="notificationEventPublisher" class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
+    
+    <bean id="notificationToSolrTransformer" class="com.armedia.acm.services.notification.service.NotificationToSolrTransformer">
+    	<property name="notificationDao" ref="notificationDao"/>
+    </bean>
 
     <bean id="acmNotificationPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
         <property name="privilegeName" value="acm-notification"/>

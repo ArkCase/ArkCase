@@ -3,8 +3,14 @@
  */
 package com.armedia.acm.plugins.task.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationListener;
 
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmAssigneeChangeChacker;
@@ -73,7 +79,26 @@ public class TaskAssigneeChangeChecker extends AcmAssigneeChangeChacker implemen
 		
 		if (task != null)
 		{
-			return task.getBusinessProcessName();
+			SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.TASK_NAME_DATE_FORMAT);
+			
+			List<String> nameArray = new ArrayList<>();
+			
+			if (task.getDueDate() != null)
+			{
+				nameArray.add(formatter.format(task.getDueDate()));
+			}
+			
+			if (task.getPriority() != null)
+			{
+				nameArray.add(task.getPriority());
+			}
+			
+			if (task.getTitle() != null)
+			{
+				nameArray.add(task.getTitle());
+			}
+			
+			return StringUtils.join(nameArray, ",");
 		}
 		
 		return null;
