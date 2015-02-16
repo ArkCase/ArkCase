@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.service.usernotification.model;
+package com.armedia.acm.services.notification.model;
 
 /**
  * @author riste.tutureski

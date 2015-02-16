@@ -43,7 +43,7 @@ public class NotificationIT
         n.setStatus("testStatus");
         n.setNote("testNote");
         n.setAction("Acknow");
-        n.setAuto("true");
+        n.setType("type");
         n.setData("data");
         n.setUser("user");
 

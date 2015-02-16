@@ -27,4 +27,12 @@ public interface SearchConstants
     String DOTS_SPLITTER = ":";
     String PIPE_SPLITTER = "\\|";
     String AND_SPLITTER = "&";
+
+    String PROPERTY_NUMBER_FOUND = "numFound";
+    String PROPERTY_RESPONSE = "response";
+
+    /**
+     * The date format SOLR expects.  Any other date format causes SOLR to throw an exception.
+     */
+    String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 }

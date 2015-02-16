@@ -27,7 +27,8 @@
     </bean>
 
     <bean id="arkPermissionEvaluator" class="com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator">
-
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="searchResults" ref="searchResults"/>
     </bean>
 
 </beans>
