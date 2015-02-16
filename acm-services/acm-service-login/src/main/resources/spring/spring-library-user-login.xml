@@ -27,10 +27,10 @@
              below list. -->
         <property name="properties">
             <props>
-                <prop key="ROLE_INVESTIGATOR">INVESTIGATOR</prop>
-                <prop key="ROLE_INVESTIGATOR_SUPERVISOR">INVESTIGATOR_SUPERVISOR</prop>
-                <prop key="ROLE_ANALYST">ANALYST</prop>
-                <prop key="ROLE_CALLCENTER">CALLCENTER</prop>
+                <prop key="ROLE_INVESTIGATOR"></prop>
+                <prop key="ROLE_INVESTIGATOR_SUPERVISOR"></prop>
+                <prop key="ROLE_ANALYST"></prop>
+                <prop key="ROLE_CALLCENTER"></prop>
             </props>
         </property>
     </bean>

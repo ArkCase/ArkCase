@@ -23,13 +23,13 @@ Admin.Controller = Admin.Controller || {
 
     ,VIEW_SUBMITTED_QUERY                                     : "organization-hierarchy-search-view-submitted-query"                                 //param: term
 
+    ,MODEL_RETRIEVED_ERROR                                    : "organization-hierarchy-general-error"                                          //param: errorMsg
+
     ,MODEL_CHANGED_RESULT                                     : "organization-hierarchy-search-changed-result"                                     //param: result
 
     ,MODEL_CHANGED_FACET                                      : "organization-hierarchy-search-changed-facet"                                      //param: facet
 
     ,MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES                 : "admin-model-retrieved-correspondence-templates"              //param : templatesList
-
-    ,MODEL_UPDATED_ACCESS_CONTROL                             : "access-control-updated"                                      //param : accessControlList
 
     ,MODEL_CREATED_ADHOC_GROUP                                : "organization-hierarchy-group-created"                        //param : group
 
@@ -49,21 +49,33 @@ Admin.Controller = Admin.Controller || {
 
     ,MODEL_RETRIEVED_USERS                                    : "organization-hierarchy-all-users-retrieved"                  //param : allUsers
 
-    ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES : "functional-access-control-application-roles" 			  // param : roles
+    ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES        : "functional-access-control-application-roles" 			  // param : roles
     	
     ,MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES : "error-functional-access-control-application-roles" // errorMsg
     	
-    ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS 		  : "functional-access-control-groups" 			                  // param : groups
+    ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS 		            : "functional-access-control-groups" 			                  // param : groups
     	
-    ,MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_GROUPS 		  : "error-functional-access-control-groups" 			  // param : errorMsg
+    ,MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_GROUPS 		    : "error-functional-access-control-groups" 			  // param : errorMsg
     	
-    ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS : "functional-access-control-application-roles-to-groups" // param : rolesToGroups
+    ,MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS          : "functional-access-control-application-roles-to-groups" // param : rolesToGroups
     	
-    ,MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS : "error-functional-access-control-application-roles-to-groups" // param : rolesToGroups
+    ,MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS   : "error-functional-access-control-application-roles-to-groups" // param : rolesToGroups
     	
-    ,MODEL_SAVE_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS: "save-functional-access-control-application-roles-to-groups" // param: errorMsg
+    ,MODEL_SAVE_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS               : "save-functional-access-control-application-roles-to-groups" // param: errorMsg
     	
-    ,MODEL_ERROR_SAVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS: "error-save-functional-access-control-application-roles-to-groups" // param: errorMsg
+    ,MODEL_ERROR_SAVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS       : "error-save-functional-access-control-application-roles-to-groups" // param: errorMsg
+
+    ,VIEW_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP                      : "reports-configuration-view-saved-reports-to-groups-map"		  // param : reportToGroupsMap
+
+    ,MODEL_REPORT_CONFIGURATION_RETRIEVED_REPORTS                                   : "reports-configuration-model-retrieved-reports" 			  // param : reports
+
+    ,MODEL_REPORT_CONFIGURATION_RETRIEVED_GROUPS                                    : "reports-configuration-model-retrieved-groups" 			  // param : groups
+
+    ,MODEL_REPORT_CONFIGURATION_RETRIEVED_REPORT_TO_GROUPS_MAP                 : "reports-configuration-model-retrieved-reports-to-groups-map"		  // param : reportToGroupsMap
+
+    ,MODEL_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP                      : "reports-configuration-model-saved-reports-to-groups-map"		  // param : success
+
+    ,MODEL_REPORT_CONFIGURATION_ERROR                                           : "reports-configuration-model-error"		                    // param : errorMsg
 
     ,viewCreatedAdHocGroup: function(group,parentId){
         Acm.Dispatcher.fireEvent(this.VIEW_CREATED_AD_HOC_GROUP, group,parentId);
@@ -100,10 +112,12 @@ Admin.Controller = Admin.Controller || {
     ,modelChangedResult: function(result) {
         Acm.Dispatcher.fireEvent(this.MODEL_CHANGED_RESULT, result);
     }
-    ,modeChangedFacet: function(facet) {
+    ,modelChangedFacet: function(facet) {
         Acm.Dispatcher.fireEvent(this.MODEL_CHANGED_FACET, facet);
     }
-
+    ,modelRetrievedError: function(errorMsg) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_ERROR, errorMsg);
+    }
     ,modelRetrievedCorrespondenceTemplates : function(templatesList) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES, templatesList);
     }
@@ -140,10 +154,6 @@ Admin.Controller = Admin.Controller || {
         Acm.Dispatcher.fireEvent(this.MODEL_ADDED_GROUP_SUPERVISOR, addedSupervisor);
     }
 
-    ,modelUpdatedAccessControl : function(accessControlList){
-        Acm.Dispatcher.fireEvent(this.MODEL_UPDATED_ACCESS_CONTROL, accessControlList);
-    }
-
     ,modelRetrievedUsers : function(allUsers){
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_USERS, allUsers);
     }
@@ -178,5 +188,24 @@ Admin.Controller = Admin.Controller || {
     
     ,modelErrorSavingFunctionalAccessControlApplicationRolesToGroups : function(errorMsg) {
     	Acm.Dispatcher.fireEvent(this.MODEL_ERROR_SAVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, errorMsg);
+    }
+    ,viewSavedReportToGroupsMap: function(reportToGroupsMap){
+        Acm.Dispatcher.fireEvent(this.VIEW_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP, reportToGroupsMap);
+    }
+    ,modelReportConfigRetrievedReports: function(reports){
+        Acm.Dispatcher.fireEvent(this.MODEL_REPORT_CONFIGURATION_RETRIEVED_REPORTS, reports);
+    }
+    ,modelReportConfigRetrievedGroups: function(groups){
+        Acm.Dispatcher.fireEvent(this.MODEL_REPORT_CONFIGURATION_RETRIEVED_GROUPS, groups);
+    }
+    ,modelReportConfigRetrievedReportToGroupsMap: function(reportToGroupsMap){
+        Acm.Dispatcher.fireEvent(this.MODEL_REPORT_CONFIGURATION_RETRIEVED_REPORT_TO_GROUPS_MAP, reportToGroupsMap);
+    }
+
+    ,modelReportConfigError: function(errorMsg){
+        Acm.Dispatcher.fireEvent(this.MODEL_REPORT_CONFIGURATION_ERROR, errorMsg);
+    }
+    ,modelReportConfigSavedReportToGroupsMap: function(success){
+        Acm.Dispatcher.fireEvent(this.MODEL_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP, success);
     }
 }

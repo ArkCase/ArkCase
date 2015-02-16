@@ -16,6 +16,7 @@ import java.util.List;
  */
 public interface TaskDao
 {
+
     @Transactional
     AcmTask createAdHocTask(AcmTask in) throws AcmTaskException;
 

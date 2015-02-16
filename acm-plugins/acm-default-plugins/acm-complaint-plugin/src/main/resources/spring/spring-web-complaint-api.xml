@@ -6,12 +6,11 @@
     <bean id="createComplaintAPIController" class="com.armedia.acm.plugins.complaint.web.api.CreateComplaintAPIController">
         <property name="complaintTransaction" ref="saveComplaintTransaction"/>
         <property name="eventPublisher" ref="complaintEventPublisher"/>
+        <property name="complaintService" ref="complaintService"></property>
     </bean>
 
     <bean id="getComplaintTypesAPIController" class="com.armedia.acm.plugins.complaint.web.api.GetComplaintListOfValuesAPIController">
-        <property name="listOfValuesService" ref="listOfValuesService"/>
-        <property name="priorityDescriptor" ref="complaintPriorityTable"/>
-        <property name="typesDescriptor" ref="complaintTypeTable"/>
+        <property name="complaintProperties" ref="complaintPluginProperties"/>
     </bean>
 
     <bean id="addComplaintFileController" class="com.armedia.acm.plugins.complaint.web.api.AddFileAPIController">

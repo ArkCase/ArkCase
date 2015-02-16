@@ -88,7 +88,7 @@ public class SaveNotificationAPIControllerTest extends EasyMockSupport
         incomingNotification.setModifier("modifier");
         incomingNotification.setModified(new Date());
         incomingNotification.setData("data");
-        incomingNotification.setAuto("auto");
+        incomingNotification.setType("type");
         incomingNotification.setNote("note");
 
 
@@ -140,7 +140,7 @@ public class SaveNotificationAPIControllerTest extends EasyMockSupport
         incomingNotification.setModifier("modifier");
         incomingNotification.setModified(new Date());
         incomingNotification.setData("data");
-        incomingNotification.setAuto("auto");
+        incomingNotification.setType("type");
         incomingNotification.setNote("note");
 
         Capture<Notification> notificationToSave = new Capture<>();

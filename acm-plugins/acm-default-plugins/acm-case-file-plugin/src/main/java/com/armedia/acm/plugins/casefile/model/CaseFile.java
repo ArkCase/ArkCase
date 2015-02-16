@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.casefile.model;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -22,6 +22,7 @@ import java.util.*;
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
+    public static final String OBJECT_TYPE = "CASE_FILE";
 
     @Id
     @Column(name = "cm_case_id")
@@ -115,6 +116,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @JoinColumn(name = "cm_originator_id")
     private PersonAssociation originator;
 
+    @Column(name = "cm_case_restricted_flag", nullable = false)
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean restricted = Boolean.FALSE;
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -137,7 +142,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         {
             childObject.setParentId(getId());
             childObject.setParentName(getCaseNumber());
-            childObject.setParentType("CASE_FILE");
+            childObject.setParentType(getObjectType());
         }
         for ( PersonAssociation persAssoc : personAssociations)
         {
@@ -146,7 +151,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getId());
-            ap.setObjectType("CASE_FILE");
+            ap.setObjectType(getObjectType());
         }
     }
 
@@ -158,7 +163,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     private void personAssociationResolver (PersonAssociation personAssoc)
     {
         personAssoc.setParentId(getId());
-        personAssoc.setParentType("CASE");
+        personAssoc.setParentType(getObjectType());
 
         personAssoc.getPerson().setPersonAssociations(Arrays.asList(personAssoc));
     }
@@ -181,7 +186,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     {
         childObjects.add(childObject);
         childObject.setParentName(getCaseNumber());
-        childObject.setParentType("CASE");
+        childObject.setParentType(getObjectType());
         childObject.setParentId(getId());
     }
 
@@ -383,12 +388,12 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
             }
         }
 
-        if ( ! found )
+        if ( ! found && assigneeUserId != null )
         {
             AcmParticipant p = new AcmParticipant();
             p.setParticipantLdapId(assigneeUserId);
             p.setParticipantType("assignee");
-            p.setObjectType("CASE_FILE");
+            p.setObjectType(getObjectType());
             p.setObjectId(getId());
             participants.add(p);
         }
@@ -474,11 +479,21 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         this.milestones = milestones;
     }
 
+    public Boolean getRestricted()
+    {
+        return restricted;
+    }
+
+    public void setRestricted(Boolean restricted)
+    {
+        this.restricted = restricted;
+    }
+
     @Override
     @JsonIgnore
     public String getObjectType()
     {
-        return "CASE_FILE";
+        return OBJECT_TYPE;
     }
 
     @Override
@@ -490,14 +505,26 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
                 ", caseType='" + caseType + '\'' +
                 ", title='" + title + '\'' +
                 ", status='" + status + '\'' +
+                ", details='" + details + '\'' +
+                ", incidentDate=" + incidentDate +
                 ", created=" + created +
                 ", creator='" + creator + '\'' +
                 ", modified=" + modified +
                 ", modifier='" + modifier + '\'' +
                 ", closed=" + closed +
                 ", disposition='" + disposition + '\'' +
+                ", priority='" + priority + '\'' +
+                ", participants=" + participants +
+                ", dueDate=" + dueDate +
+                ", changeCaseStatus=" + changeCaseStatus +
+                ", approvers=" + approvers +
                 ", ecmFolderPath='" + ecmFolderPath + '\'' +
+                ", personAssociations=" + personAssociations +
+                ", milestones=" + milestones +
+                ", originator=" + originator +
+                ", restricted=" + restricted +
                 ", ecmFolderId='" + ecmFolderId + '\'' +
+                ", childObjects=" + childObjects +
                 '}';
     }
 }

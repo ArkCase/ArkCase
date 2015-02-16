@@ -15,6 +15,6 @@
             validateConnections="true"
             doc:name="Active MQ"
             connectionFactory-ref="jmsConnectionFactory"
-            maxRedelivery="5"/>
+            maxRedelivery="10"/>
 
 </mule>

@@ -12,9 +12,11 @@ public class PentahoReportUrl implements ReportUrl{
     private Logger log = LoggerFactory.getLogger(getClass());
     private static final String REPORT_SERVER_URL = "PENTAHO_SERVER_URL";
     private static final String REPORT_SERVER_PORT = "PENTAHO_SERVER_PORT";
+    private static final String PENTAHO_SERVER_INTERNAL_URL = "PENTAHO_SERVER_INTERNAL_URL";
+    private static final String PENTAHO_SERVER_INTERNAL_PORT = "PENTAHO_SERVER_INTERNAL_PORT";
     private static final String PENTAHO_SERVER_USER = "PENTAHO_SERVER_USER";
     private static final String PENTAHO_SERVER_PASSWORD = "PENTAHO_SERVER_PASSWORD";
-    
+    private static final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
     private static final String REPORTS_URL = "PENTAHO_REPORTS_URL";
 
     /**
@@ -81,7 +83,10 @@ public class PentahoReportUrl implements ReportUrl{
             String keyStr = entry.getKey();
             
             //skip the host and port properties
-            if ( !keyStr.equalsIgnoreCase(REPORT_SERVER_URL) && !keyStr.equalsIgnoreCase(REPORT_SERVER_PORT) ) {
+            if ( !keyStr.equalsIgnoreCase(REPORT_SERVER_URL) && !keyStr.equalsIgnoreCase(REPORT_SERVER_PORT) &&
+            	 !keyStr.equalsIgnoreCase(PENTAHO_SERVER_USER) && !keyStr.equalsIgnoreCase(PENTAHO_SERVER_PASSWORD) &&
+            	 !keyStr.equalsIgnoreCase(REPORTS_URL) && !keyStr.equalsIgnoreCase(PENTAHO_REPORT_URL_TEMPLATE) &&
+            	 !keyStr.equalsIgnoreCase(PENTAHO_SERVER_INTERNAL_URL) && !keyStr.equalsIgnoreCase(PENTAHO_SERVER_INTERNAL_PORT)) {
             	ReportName enumName = ReportName.valueOf(keyStr);
             	if (null != enumName) {
                 	urlsMap.put(enumName.getDisplayName(), formulateUrl(serverFormUrl, serverFormPort, entry.getValue()));            		
@@ -105,7 +110,7 @@ public class PentahoReportUrl implements ReportUrl{
 	{
 		StringBuilder builder = new StringBuilder();
 		
-        String serverFormUrl = getReportsProperties().get(REPORT_SERVER_URL).toString();
+        String serverFormUrl = getReportsProperties().get(PENTAHO_SERVER_INTERNAL_URL).toString();
         
         String serverFormUser = getReportsProperties().get(PENTAHO_SERVER_USER).toString();
         String serverFormPassword = getReportsProperties().get(PENTAHO_SERVER_PASSWORD).toString();
@@ -118,7 +123,7 @@ public class PentahoReportUrl implements ReportUrl{
         
         builder.append(serverFormUrl);
 
-        String serverFormPort = getReportsProperties().get(REPORT_SERVER_PORT).toString();
+        String serverFormPort = getReportsProperties().get(PENTAHO_SERVER_INTERNAL_PORT).toString();
         builder.append(serverFormPort);
         
         String pentahoReportsUrl = getReportsProperties().get(REPORTS_URL).toString();

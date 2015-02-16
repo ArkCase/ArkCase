@@ -20,14 +20,14 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
     @Override
     public void beforeInsert(Object object)
     {
-        log.debug("inserted: " + object);
+        log.trace("inserted: " + object);
         applyAssignmentAndAccessRules(object);
     }
 
     @Override
     public void beforeUpdate(Object object)
     {
-        log.debug("updated: " + object);
+        log.trace("updated: " + object);
         applyAssignmentAndAccessRules(object);
     }
 
@@ -49,10 +49,10 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
             participant.setObjectType(assignedObject.getObjectType());
             participant.setObjectId(assignedObject.getId());
 
-            log.debug("participant '" + participant.getParticipantLdapId() + "'");
+            log.trace("participant '" + participant.getParticipantLdapId() + "'");
             for (AcmParticipantPrivilege priv : participant.getPrivileges() )
             {
-                log.debug("\t privilege: " + priv.getAccessType() + " " + priv.getObjectAction());
+                log.trace("\t privilege: " + priv.getAccessType() + " " + priv.getObjectAction());
                 priv.setParticipant(participant);
             }
         }

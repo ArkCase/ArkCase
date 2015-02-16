@@ -45,6 +45,7 @@ public class FrevvoFormServiceFactory {
             service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
             service.setPersonDao(frevvoFormController.getPersonDao());
+            service.setComplaintEventPublisher(frevvoFormController.getComplaintEventPublisher());
             
             return service;
 		}
@@ -143,6 +144,7 @@ public class FrevvoFormServiceFactory {
             service.setPersonIdentificationDao(frevvoFormController.getPersonIdentificationDao());
             service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
             service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
+            service.setCaseFileFactory(frevvoFormController.getCaseFileFactory());
             
             return service;
 		}

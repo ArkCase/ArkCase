@@ -63,6 +63,17 @@
     							 deferrable="true"
     							 initiallyDeferred="true" />
     </changeSet>
+
+    <changeSet id="complaint-constraint-08-restricted-flag" author="dmiller">
+        <addForeignKeyConstraint
+                baseTableName="acm_complaint"
+                baseColumnNames="cm_complaint_restricted_flag"
+                constraintName="fk_complaint_restricted_flag"
+                referencedTableName="acm_boolean_lu"
+                referencedColumnNames="cm_value"
+                deferrable="true"
+                initiallyDeferred="true"/>
+    </changeSet>
     
     
 </databaseChangeLog>

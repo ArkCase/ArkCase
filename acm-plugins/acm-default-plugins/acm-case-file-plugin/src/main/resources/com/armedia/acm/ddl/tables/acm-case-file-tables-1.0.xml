@@ -196,5 +196,13 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
     </changeSet>
+
+    <changeSet id="case-file-13-add-restricted-flag" author="dmiller">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_case_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
     
 </databaseChangeLog>

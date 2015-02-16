@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder/>
+    <!-- change the cron to the desired cron expression 
+		(see JavaDoc for org.springframework.scheduling.support.CronSequenceGenerator).  
+         No other changes are needed. -->
+    <task:scheduled-tasks scheduler="subscriptionEventTaskScheduler">
+		<!-- Run every two minutes for debugging */5 * * * * -->
+		<task:scheduled ref="arm_subscriptionEventBatchInsertJob" method="insertNewSubscriptionEvents" cron="0 0/30 * * * *"/>
+    </task:scheduled-tasks>
+
+    <bean id="arm_subscriptionEventBatchInsertJob" class="com.armedia.acm.services.subscription.service.SubscriptionEventBatchInsertService" init-method="insertNewSubscriptionEvents">
+        <property name="userHomeDir" value="${user.home}"/>
+        <property name="lastBatchInsertPropertyFileLocation" value="/.acm/subscriptionEventLastBatchInsert.property"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="subscriptionDao" ref="subscriptionDao"/>
+        <property name="subscriptionEventDao" ref="subscriptionEventDao"/>
+    </bean>
+
+
+</beans>

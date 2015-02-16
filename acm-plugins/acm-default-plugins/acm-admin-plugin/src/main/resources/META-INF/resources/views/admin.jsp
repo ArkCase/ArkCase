@@ -19,28 +19,28 @@
     <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/admin/admin/adminService.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
     <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 
     <!-- Fancy Tree -->
-    <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
-    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree}"></script>
-    <script src="<c:url value='/'/>resources/vendors/${vd_contextmenu}/${js_contextmenu}"></script>
-    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/jquery.fancytree.table.js"></script>
+    <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_contextmenu}/${js_contextmenu}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/jquery.fancytree.table.js'/>"></script>
 
 
 
     <!-- Dashboard -->
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/angular-resource.min.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/moment.min.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/ng-table.js"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/angular.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/angular-resource.min.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/moment.min.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/ng-table.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/js/admin/dashboard/angular/dashboardConfigServices.js"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/js/admin/dashboard/angular/dashboardConfig.js"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/dashboard/angular/dashboardConfigServices.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/admin/dashboard/angular/dashboardConfig.js'/>"></script>
 
 
 
@@ -163,15 +163,6 @@
                                             <%--</div>--%>
 
 
-                                            <%--JTable - Access Control Policy--%>
-                                            <div class="row" id="tabACP" style="display:none;">
-                                                <div class="col-md-12">
-                                                    <section class="panel panel-default">
-                                                        <div id="divACP" style="width:100%"></div>
-                                                    </section>
-                                                </div>
-                                            </div>
-
                                                     <%--JTable - Correspondence--%>
                                             <div class="row" id="tabCorrespondenceTemplates" style="display:none;">
                                                 <div class="col-md-12">
@@ -184,8 +175,6 @@
                                                     </section>
                                                 </div>
                                             </div>
-
-                                                    <%--JTable - Access Control Policy Tree--%>
 
 											<%--   Functional Access controls    --%>
  											<div class="row" id="tabFunctoinalAccessControl" style="display:none;">
@@ -244,45 +233,40 @@
 
                                             <%--Reports Configuration Table--%>
                                             <div class="row" id="tabReports" style="display:none;">
-                                                <div class="col-xs-12">
-                                                    <div class="col-xs-3 b-r"><label>Choose Reports</label>
-                                                        <select name=""  size="10" multiple class="form-control">
-                                                            <option>Case Summary Report</option>
-                                                            <option>Complaint Report</option>
-                                                            <%--<option>Report 3</option>
-                                                            <option>Report 4</option>--%>
-                                                        </select></div>
-                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection" onclick="save()"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
-                                                    <div class="col-xs-3 b-r"><label>Not Authorized</label>
-                                                        <select name="" size="10" multiple class="form-control">
-                                                            <%--<option> ROLE_ADMINISTRATOR</option>
-                                                            <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
-                                                            <option>ROLE_INVESTIGATOR_SUPERVISOR</option>
-                                                            <option>ROLE_ANALYST</option>
-                                                            <option>ACM_ANALYST_DEV</option>
-                                                            <option>ACM_ADMINISTRATOR_DEV</option>
-                                                            <option>ACM_SUPERVISOR_DEV</option>
-                                                            <option>ACM_SUPERVISOR_DEV</option>
-                                                            <option>ACM_INVESTIGATOR_DEV</option>--%>
-                                                        </select></div>
-                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right" onclick="save()"> <i class="fa fa-angle-double-right"></i></button> <br/>
-                                                        <button class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left" onclick="save()"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/></div>
-                                                    <div class="col-xs-4 b-r"><label>Authorized</label>
-                                                        <select name=""  size="10" multiple  class="form-control">
-                                                            <%--<option>ROLE_INVESTIGATOR</option>--%>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <%--JTable - Reports--%>
-                                            <%--<div class="row" id="tabReports" style="display:none;">
-                                                <div class="col-md-12">
-                                                    <section class="panel panel-default">
-                                                        <div id="divRPT" style="width:100%"></div>
+                                                    <%--Title--%>
+                                                    <section class="row m-b-md">
+                                                        <div class="col-sm-12">
+                                                            <h3 class="m-b-xs text-black">Reports Configuration</h3>
+                                                        </div>
                                                     </section>
-                                                </div>
-                                            </div>--%>
+
+                                                    <section class="panel panel-default">
+                                                        <div class="wrapper">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <div class="col-xs-3 b-r"><label>Choose Report</label>
+                                                                        <select id="selectReport" size="10" class="form-control">
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnSelectReport" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
+                                                                    <div class="col-xs-3 b-r"><label>Not Authorized</label>
+                                                                        <select id="selectNotAuthorizedReport" size="10" multiple class="form-control">
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
+                                                                        <button id="btnAuthorize" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Authorize"> <i class="fa fa-angle-double-right"></i></button> <br/>
+                                                                        <button id="btnUnauthorize" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Unauthorize"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
+                                                                    </div>
+                                                                    <div class="col-xs-4 b-r"><label>Authorized</label>
+                                                                        <select id="selectAuthorizedReport" size="10" multiple  class="form-control">
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </section>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -317,92 +301,9 @@
                             <label>Description</label>
                             <textarea class="form-control" id='groupDescription' placeholder="Enter description"></textarea>
                         </div>
-
-                        <%--<div class="col-sm-12">
-                            <label>Add people to group</label>
-                            <div class="input-group">
-                                <input type="text" class="input-sm form-control" placeholder="Search people.." >
-                                  <span class="input-group-btn">
-                                    <button class="btn btn-sm btn-default" type="button"><i class="fa fa-search"></i></button>
-                                  </span>
-                            </div>
-                        </div>--%>
-                            <%--<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Simple collapsible</button>--%>
-<%--
-                        <div class="col-sm-12">
-                            <label></label>
-                            <div id="additionalFields" class="collapse in">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Title" >
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Location" >
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Phone Number" >
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="input-sm form-control" placeholder="Email Address" >
-                                    </div>
-                                </div>
-                            </div>
-                            <a id="lnkHideAdditionalFields" href="#" data-toggle="collapse" data-target="#additionalFields">
-                                <small class="text-muted inline m-t-sm m-b-sm">
-                                    <u>Hide Additional Fields</u>
-                                </small>
-                            </a>
-                        </div>
---%>
                     </div>
                 </section>
 
-<%--
-                <section class="panel panel-default">
-                    <div class="table-responsive">
-                        <table class="table table-striped b-t b-light">
-                            <thead>
-                            <tr>
-                                <th width="20"></th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Location</th>
-                                <th>Phone</th>
-                                <th>Email</th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td><label class="checkbox m-n">
-                                    <input type="checkbox" name="post[]">
-                                    <i></i></label></td>
-                                <td>[First Name]</td>
-                                <td>[Last Name]</td>
-                                <td>[Location]</td>
-                                <td>[Phone]</td>
-                                <td>[Email]</td>
-
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    &lt;%&ndash;<footer class="panel-footer">
-                        <div class="row">
-                            <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 20-30 of 50 items</small> </div>
-                            <div class="col-sm-6 text-right text-center-xs">
-                                <ul class="pagination pagination-sm m-t-none m-b-none">
-                                    <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </footer>&ndash;%&gt;
-                </section>
---%>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -429,9 +330,12 @@
                         <div class="col-sm-12">
                             <div class="input-group">
                                 <input type="text" class="input-sm form-control" id="findMember" placeholder="Search people.." >
-                                  <span class="input-group-btn">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-default" id="btnFindMembers" type="button">Go!</button>
+                                </span>
+                                <%--<span class="input-group-btn">
                                     <button class="btn btn-sm btn-default" id="btnFindMembers" type="button"><i class="fa fa-search"></i></button>
-                                  </span>
+                                  </span>--%>
                             </div>
                         <br>
 

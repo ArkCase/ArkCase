@@ -52,5 +52,4 @@
     </bean>
 
     <bean id="searchTestMuleClient" factory-bean="searchTestMuleContextManager" factory-method="getMuleClient" scope="prototype"/>
-
 </beans>
