@@ -9,6 +9,7 @@ Admin.View = Admin.View || {
         if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
         if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
         if (Admin.View.ReportsConfiguration.create)     {Admin.View.ReportsConfiguration.create();}
+        if (Admin.View.WorkflowConfiguration.create)    {Admin.View.WorkflowConfiguration.create();}
 
 
         if (Admin.View.Tree.create)                 	{Admin.View.Tree.create();}
@@ -18,6 +19,7 @@ Admin.View = Admin.View || {
         if (Admin.View.Organization.onInitialized)         		{Admin.View.Organization.onInitialized();}
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
         if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
+        if (Admin.View.WorkflowConfiguration.onInitialized)    {Admin.View.WorkflowConfiguration.onInitialized();}
 
 
         if (Admin.View.Tree.onInitialized)                 		{Admin.View.Tree.onInitialized();}
@@ -25,13 +27,13 @@ Admin.View = Admin.View || {
 
     ,Organization:{
         create: function () {
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP_MEMBER, this.onModelRetrievedHierarchy);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CREATED_ADHOC_GROUP, this.onModelRetrievedHierarchy);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REMOVED_GROUP, this.onModelRetrievedHierarchy);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_USERS, this.onModelRetrievedHierarchy);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_MEMBER, this.onModelRetrievedHierarchy);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_SUPERVISOR, this.onModelRetrievedHierarchy);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_ERROR, this.onModelRetrievedError);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ORG_HIERARCHY_REMOVED_MEMBER , this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ORG_HIERARCHY_CREATED_ADHOC_GROUP, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ORG_HIERARCHY_REMOVED_ADHOC_GROUP, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ORG_HIERARCHY_RETRIEVED_USERS, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ORG_HIERARCHY_ADDED_MEMBERS, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ORG_HIERARCHY_ADDED_SUPERVISOR, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ORG_HIERARCHY_RETRIEVED_ERROR, this.onModelRetrievedError);
 
 
             if (Admin.View.Organization.ModalDialog.create)         {Admin.View.Organization.ModalDialog.create();}
@@ -183,7 +185,7 @@ Admin.View = Admin.View || {
                             }
                         });
                         /*this.$modalBtnFindMembers = $("#btnFindMembers");
-                        this.$modalBtnFindMembers.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Query.onClickBtnFindMembers(e, this);});*/
+                         this.$modalBtnFindMembers.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Query.onClickBtnFindMembers(e, this);});*/
                     }
                     ,onInitialized: function() {
                     }
@@ -201,7 +203,7 @@ Admin.View = Admin.View || {
                 ,Facets: {
                     create: function(){
                         this.$divFacets = $("#divFacets");
-                        Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
+                        Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ORG_HIERARCHY_CHANGED_FACET  ,this.onModelChangedFacet);
 
                     }
                     ,onInitialized: function(){}
@@ -332,8 +334,8 @@ Admin.View = Admin.View || {
                         this.$divResults = $("#divMembers");
                         this.createJTableMembers(this.$divResults);
 
-                        Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_SUBMITTED_QUERY         ,this.onViewSubmittedQuery        ,Acm.Dispatcher.PRIORITY_LOW);
-                        Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_CHANGED_FACET_SELECTION ,this.onViewChangedFacetSelection ,Acm.Dispatcher.PRIORITY_LOW);
+                        Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ORG_HIERARCHY_SUBMITTED_QUERY         ,this.onViewSubmittedQuery        ,Acm.Dispatcher.PRIORITY_LOW);
+                        Acm.Dispatcher.addEventListener(Admin.Controller.VIEW_ORG_HIERARCHY_CHANGED_FACET ,this.onViewChangedFacetSelection ,Acm.Dispatcher.PRIORITY_LOW);
                     }
                     ,onInitialized: function() {
                     }
@@ -724,6 +726,7 @@ Admin.View = Admin.View || {
             }
         }
     }
+
     ,Correspondence : {
         create: function () {
 
@@ -737,7 +740,7 @@ Admin.View = Admin.View || {
 
             AcmEx.Object.JTable.clickAddRecordHandler(this.$divCorrespondenceTemplates,this.onClickSpanAddNewTemplate);
 
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_CORRESPONDENCE_TEMPLATES, this.onModelRetrievedCorrespondenceTemplates);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CORRESPONDENCE_TEMPLATES_RETRIEVED_TEMPLATES, this.onModelRetrievedCorrespondenceTemplates);
 
         }
         , onInitialized: function () {
@@ -797,7 +800,7 @@ Admin.View = Admin.View || {
                         , edit: false
                     }, title: {
                         title: 'Title'
-                        , width: '30%'
+                        , width: '15%'
                         , display: function (commData) {
                             var a = "<a href='" + App.getContextPath() + Admin.Service.Correspondence.API_DOWNLOAD_TEMPLATE
                                 + commData.record.path + "'>" + commData.record.title + "</a>";
@@ -841,13 +844,13 @@ Admin.View = Admin.View || {
             this.$selectRoles.on("change", function(e) {Admin.View.FunctionalAccessControl.onChangeSelectRoles(e, this);});
 
             // Add listeners for retriving information like roles, groups and roles to groups mapping
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, this.onModelRetrievedFunctionalAccessControlApplicationRoles);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, this.onModelError);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS, this.onModelRetrievedFunctionalAccessControlGroups);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_GROUPS, this.onModelError);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelRetrievedFunctionalAccessControlApplicationRolesToGroups);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelError);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_SAVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelError);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FAC_RETRIEVED_APPLICATION_ROLES, this.onModelRetrievedFunctionalAccessControlApplicationRoles);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FAC_RETRIEVED_APPLICATION_ROLES_ERROR, this.onModelError);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FAC_RETRIEVED_GROUPS, this.onModelRetrievedFunctionalAccessControlGroups);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FAC_RETRIEVED_ACCESS_CONTROL_GROUPS_ERROR, this.onModelError);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FAC_RETRIEVED_APPLICATION_ROLES_TO_GROUPS_MAP, this.onModelRetrievedFunctionalAccessControlApplicationRolesToGroups);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FAC_RETRIEVED_APPLICATION_ROLES_TO_GROUPS_MAP_ERROR, this.onModelError);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FAC_RETRIEVED_SAVE_APPLICATION_ROLES_TO_GROUPS_ERROR, this.onModelError);
         }
         , onInitialized: function () {
 
@@ -897,7 +900,7 @@ Admin.View = Admin.View || {
                 }
 
                 // Update authorized groups in the cached data (remove selected groups)
-                authGroups = Admin.View.FunctionalAccessControl.removeElements(authGroups, selectedGroups);
+                authGroups = Acm.Object.removeElements(authGroups, selectedGroups);
                 Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole] = authGroups;
 
                 // Save authorized groups changes on ACM side
@@ -910,8 +913,8 @@ Admin.View = Admin.View || {
 
         ,onChangeSelectRoles: function(event, ctrl) {
             // Remove data from not authorized and authorized section when role is changed
-            Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, []);
-            Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, []);
+            Acm.Object.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, []);
+            Acm.Object.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, []);
         }
 
         ,onModelRetrievedFunctionalAccessControlApplicationRoles: function() {
@@ -919,7 +922,7 @@ Admin.View = Admin.View || {
             var roles = Admin.Model.FunctionalAccessControl.cacheApplicationRoles.get(0);
 
             // Show roles on the view
-            Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectRoles, roles);
+            Acm.Object.createOptions(Admin.View.FunctionalAccessControl.$selectRoles, roles);
         }
 
         ,onModelRetrievedFunctionalAccessControlGroups: function() {
@@ -971,43 +974,8 @@ Admin.View = Admin.View || {
             }
 
             // Show authorized and not authorized groups on the screen
-            Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, authGroups);
-            Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, notAuthGroups);
-        }
-
-        ,createOptions: function(element, optionsArray) {
-            var options = '';
-            if (optionsArray) {
-                for (var i = 0; i < optionsArray.length; i++) {
-                    options += '<option value="' + optionsArray[i] + '">' + optionsArray[i] + '</option>';
-                }
-            }
-            element.html(options);
-        }
-
-        ,removeElements: function(elements, elementsToRemove) {
-            var output = [];
-
-            if (elements) {
-                if (elementsToRemove) {
-                    for (var i = 0; i < elements.length; i++) {
-                        var found = false;
-                        for (var j = 0; j < elementsToRemove.length; j++) {
-                            if (elements[i] === elementsToRemove[j]) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            output.push(elements[i]);
-                        }
-                    }
-                }else{
-                    return elements;
-                }
-            }
-
-            return output;
+            Acm.Object.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, authGroups);
+            Acm.Object.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, notAuthGroups);
         }
     }
 
@@ -1031,7 +999,7 @@ Admin.View = Admin.View || {
 
             // Add listeners for retrieving information like reports, groups and reports to groups Map
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_RETRIEVED_REPORTS, this.onModelReportConfigRetrievedReports);
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_ERROR, this.onModelReportConfigError);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_RETRIEVED_ERROR, this.onModelReportConfigError);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP, this.onModelReportConfigSavedReportToGroupsMap);
 
 
@@ -1081,7 +1049,7 @@ Admin.View = Admin.View || {
                 }
 
                 // Update authorized groups in the cached data (remove selected groups)
-                authGroups = Admin.View.ReportsConfiguration.removeElements(authGroups, selectedGroups);
+                authGroups = Acm.Object.removeElements(authGroups, selectedGroups);
                 Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport] = authGroups;
 
                 // Save authorized groups changes on ACM side
@@ -1091,8 +1059,8 @@ Admin.View = Admin.View || {
 
         ,onChangeSelectReport: function(event, ctrl) {
             // Remove data from not authorized and authorized section when report is changed
-            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectAuthorized, []);
-            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectNotAuthorized, []);
+            Acm.Object.createOptions(Admin.View.ReportsConfiguration.$selectAuthorized, []);
+            Acm.Object.createOptions(Admin.View.ReportsConfiguration.$selectNotAuthorized, []);
         }
 
         ,onModelReportConfigRetrievedReports: function() {
@@ -1100,7 +1068,7 @@ Admin.View = Admin.View || {
             var reports = Admin.Model.ReportsConfiguration.cacheReports.get("reports");
 
             // Show reports on the view
-            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectReport, reports);
+            Acm.Object.createOptions(Admin.View.ReportsConfiguration.$selectReport, reports);
         }
 
         ,onModelReportConfigError: function(errorMsg) {
@@ -1148,51 +1116,158 @@ Admin.View = Admin.View || {
                     }
                 }
             }
-
             // Show authorized and not authorized groups on the screen
-            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectAuthorized, authGroups);
-            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectNotAuthorized, notAuthGroups);
+            Acm.Object.createOptions(Admin.View.ReportsConfiguration.$selectAuthorized, authGroups);
+            Acm.Object.createOptions(Admin.View.ReportsConfiguration.$selectNotAuthorized, notAuthGroups);
         }
+    }
 
-        ,createOptions: function(element, optionsArray) {
-            var options = '';
-            if (optionsArray) {
-                for (var i = 0; i < optionsArray.length; i++) {
-                    options += '<option value="' + optionsArray[i] + '">' + optionsArray[i] + '</option>';
+    ,WorkflowConfiguration:{
+        create: function () {
+            if (Admin.View.WorkflowConfiguration.History.create)        	{Admin.View.WorkflowConfiguration.History.create();}
+
+            this.$divWorkflowConfiguration = $("#divWorkflowConfiguration");
+            this.createJTableWorkflowConfiguration(this.$divWorkflowConfiguration);
+
+            this.$modalUploadBPMN = $("#uploadBPMNModal");
+            this.$formUploadBPMN = $("#formUploadBPMN");
+            this.$filesSelection = $("#filesSelection");
+            this.$btnUploadBPMNConfirm = $("#btnUploadBPMNConfirm");
+            this.$btnUploadBPMNConfirm.on("click", function(e) {Admin.View.WorkflowConfiguration.onSubmitUploadBPMN(e, this);});
+        }
+        , onInitialized: function () {
+            if (Admin.View.WorkflowConfiguration.History.onInitialized)        	{Admin.View.WorkflowConfiguration.History.onInitialized();}
+        }
+        ,onSubmitUploadBPMN: function(event, ctrl) {
+            event.preventDefault();
+            var count = Admin.View.WorkflowConfiguration.$filesSelection[0].files.length;
+            if(count > 0){
+                var fd = new FormData();
+                for(var i = 0; i < count; i++ ){
+                    fd.append("files[]", Admin.View.WorkflowConfiguration.$filesSelection[0].files[i]);
                 }
+
+                //todo: fire an event here with fd as content once service is available
+
+                Admin.View.WorkflowConfiguration.$formUploadBPMN[0].reset();
+                Admin.View.WorkflowConfiguration.$modalUploadBPMN.modal('hide');
             }
-            element.html(options);
         }
-
-        ,removeElements: function(elements, elementsToRemove) {
-            var output = [];
-
-            if (elements) {
-                if (elementsToRemove) {
-                    for (var i = 0; i < elements.length; i++) {
-                        var found = false;
-                        for (var j = 0; j < elementsToRemove.length; j++) {
-                            if (elements[i] === elementsToRemove[j]) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            output.push(elements[i]);
+        ,History: {
+            create: function () {
+                this.$divBPMNHistory = $("#divBPMNHistory");
+                this.createJTableBPMNHistory(this.$divBPMNHistory);
+            }
+            , onInitialized: function () {
+            }
+            ,createJTableBPMNHistory: function ($s) {
+                $s.jtable({
+                    actions: {
+                        listAction: function (postData, jtParams) {
+                            var rc = AcmEx.Object.jTableGetEmptyRecords();
+                            //show some dummy records for now
+                            rc.Records = [
+                                 {"id": 1, "title": "BPMN", "description": "BPMN description", "author": "ArkCase", "modified": "02/12/2015"}
+                                ,{"id": 2, "title": "BPMN_1", "description": "BPMN_1 description", "author": "ArkCase", "modified": "02/13/2015"}
+                            ];
+                            return rc;
                         }
                     }
-                }else{
-                    return elements;
-                }
+                    , fields: {
+                        id: {
+                            title: 'ID'
+                            , key: true
+                            , list: false
+                            , create: false
+                            , edit: false
+                        }, actions: {
+                            title: 'Active'
+                            , width: '3%'
+                            , edit: false
+                            , display: function (data) {
+                                if (data.record) {
+                                    // custom action.
+                                    return '<input type="radio" name="activeBPMN" checked/>';
+                                }
+                            }
+                        }, title: {
+                            title: 'Business Process'
+                            , width: '25%'
+                        }, description: {
+                            title: 'Description'
+                            , width: '15%'
+                            , edit: false
+                        }, modified: {
+                            title: 'Modified'
+                            , width: '15%'
+                            , edit: false
+                        }, author: {
+                            title: 'Author'
+                            , width: '15%'
+                            , edit: false
+                        }
+                    }
+                });
+                $s.jtable('load');
             }
 
-            return output;
+        }
+        ,createJTableWorkflowConfiguration: function ($s) {
+            $s.jtable({
+                title:'Workflow Configuration'
+                , actions: {
+                    listAction: function (postData, jtParams) {
+                        var rc = AcmEx.Object.jTableGetEmptyRecords();
+                        rc.Records = [
+                            {"id": 1, "title": "BPMN", "description": "BPMN description", "author": "ArkCase", "modified": "02/12/2015"}
+                            ,{"id": 2, "title": "BPMN_1", "description": "BPMN_1 description", "author": "ArkCase", "modified": "02/13/2015"}
+                        ];
+                        return rc;
+                    }
+                }
+                , fields: {
+                    id: {
+                        title: 'ID'
+                        , key: true
+                        , list: false
+                        , create: false
+                        , edit: false
+                    }, title: {
+                        title: 'Business Process'
+                        , width: '20%'
+                    }, description: {
+                        title: 'Description'
+                        , width: '15%'
+                        , edit: false
+                    }, modified: {
+                        title: 'Modified'
+                        , width: '15%'
+                        , edit: false
+                    }, author: {
+                        title: 'Author'
+                        , width: '15%'
+                        , edit: false
+                    }, actions: {
+                        title: 'Active'
+                        , width: '30%'
+                        , edit: false
+                        , display: function (data) {
+                            if (data.record) {
+                                // custom action.
+                                return '<a href="#" class="active"><i class="fa fa-download text-active"> Download </i></a>'
+                                    + ' | <a href="#" class="active" data-toggle="modal" data-target="#uploadBPMNModal"><i class="fa fa-upload text-active"> Replace File </i></a>'
+                                    + ' | <a href="#" class="active"   data-toggle="modal" data-target="#BPMNHistory"><i class="fa fa-retweet text-active"> Version History </i></a>';
+                            }
+                        }
+                    }
+                }
+            });
+            $s.jtable('load');
         }
     }
 
     ,Tree:{
         create: function () {
-            this.$btnCreateAdHocGroup = $("#btnCreateAdHoc");
             this.$tree = $("#tree");
             this._useFancyTree(this.$tree);
         }
@@ -1204,13 +1279,6 @@ Admin.View = Admin.View || {
             for (var i = 0; i < tabIds.length; i++) {
                 var show = Acm.isItemInArray(tabIds[i], tabIdsToShow);
                 Acm.Object.show($("#" + tabIds[i]), show);
-                if(show == true && tabIdsToShow == "tOrganization"){
-                    this.$btnCreateAdHocGroup.show();
-                    //break;
-                }
-                else if(tabIdsToShow != "tOrganization"){
-                    this.$btnCreateAdHocGroup.hide();
-                }
             }
         }
         ,_useFancyTree: function($s) {
@@ -1250,41 +1318,37 @@ Admin.View = Admin.View || {
                 ,folder : true
                 ,expanded: true
             })
-                .addLeaf({key: "dac"                                                        //level 1.1: /Access Control/Data Access Control
-                    ,title: "Data Access Control"
-                    ,tooltip: "Data Access Control"
-                })
-                .addLeaf({key: "fac"                                                        //level 1.2: /Access Control/Functional Access Control
+                .addLeaf({key: "fac"                                                            //level 1.1: /Security/Functional Access Control
                     ,title: "Functional Access Control"
                     ,tooltip: "Functional Access Control"
                 })
-                .addLeaf({key: "ldap"                                                   //level 1.3: /Access Control/LDAP Configuration
+                .addLeaf({key: "ldap"                                                           //level 1.2: /Security/LDAP Configuration
                     ,title: "LDAP Configuration"
                     ,tooltip: "LDAP Configuration"
                 })
-                .addLeafLast({key: "og"                                                        //level 1.1: /Access Control/Data Access Control
+                .addLeafLast({key: "og"                                                         //level 1.3: /Security/Organization Hierarchy
                     ,title: "Organizational Hierarchy"
                     ,tooltip: "Organizational Hierarchy"
                 })
 
-            builder.addBranch({key: "dsh"                                               //level 2: /Dashboard
+            builder.addBranch({key: "dsh"                                                       //level 2: /Dashboard
                 ,title: "Dashboard"
                 ,tooltip: "Dashboard"
                 ,folder : true
                 ,expanded: true
             })
-                .addLeafLast({key: "dc"                                                 //level 2.1: /Dashboard/Dashboard Configuration
+                .addLeafLast({key: "dc"                                                         //level 2.1: /Dashboard/Dashboard Configuration
                     ,title: "Dashboard Configuration"
                     ,tooltip: "Dashboard Configuration"
                 })
 
-            builder.addBranch({key: "rpt"                                               //level 3: /Reports
+            builder.addBranch({key: "rpt"                                                       //level 3: /Reports
                 ,title: "Reports"
                 ,tooltip: "Reports"
                 ,folder : true
                 ,expanded: true
             })
-                .addLeafLast({key: "rc"                                                     //level 3.1: /Reports/Reports Configuration
+                .addLeafLast({key: "rc"                                                         //level 3.1: /Reports/Reports Configuration
                     ,title: "Reports Configuration"
                     ,tooltip: "Reports Configuration"
                 })
@@ -1318,7 +1382,7 @@ Admin.View = Admin.View || {
                     ,folder : true
                     ,expanded: true
                 })
-                .addLeafLast({key: "wfc"                                                                //level 4.2.1.1: /Forms/Form Configuration/Form/Workflow Link/Link Forms/Workflows
+                .addLeafLast({key: "wflc"                                                                //level 4.2.1.1: /Forms/Form Configuration/Form/Workflow Link/Link Forms/Workflows
                     ,title: "Link Forms/Workflows"
                     ,tooltip: "Link Forms/Workflows"
                 })
@@ -1329,7 +1393,7 @@ Admin.View = Admin.View || {
                     ,folder : true
                     ,expanded: true
                 })
-                .addLeafLast({key: "wfc"                                                                    //level 4.3.1.1: /Forms/Form Configuration/Form/Business Objects/Business Object Configuration
+                .addLeafLast({key: "boc"                                                                    //level 4.3.1.1: /Forms/Form Configuration/Form/Business Objects/Business Object Configuration
                     ,title: "Business Object Configuration"
                     ,tooltip: "Business Object Configuration"
                 })
