@@ -392,8 +392,8 @@ CaseFile.View = CaseFile.View || {
 
         ,onClickBtnConsolidateCase: function() {
 //borrow it to test object picker dialog
-            this.onPickObjectDemo();
-            return;
+//            this.onPickObjectDemo();
+//            return;
 
             CaseFile.View.Action.setValueEdtConsolidateCase("");
             CaseFile.View.Action.showDlgConsolidateCase(function(event, ctrl) {

@@ -15,10 +15,6 @@ var Search = Search || {
                 ,$btnSearch : Search.View.Query.$btnSearch
                 ,$divFacets : Search.View.$divFacets
                 ,$divResults: Search.View.$divResults
-                ,jtArgs     : Search.View.getJtArgs()
-                ,jtDataMaker: Search.View.jtDataMaker
-                ,url        : Search.Service.API_FACET_SEARCH_
-                ,filters    : [{key: "Object Type", values: ["CASE_FILE", "TASK"]}]
             });
         }
     }
