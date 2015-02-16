@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.FileUpload;
@@ -34,7 +35,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private EcmFileTransaction ecmFileTransaction;
-
+    
+    private EcmFileDao ecmFileDao;
 
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -244,6 +246,22 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
         }
 	}
+    
+    @Override
+	public String download(Long id) throws MuleException 
+    {    
+    	try
+    	{
+    		EcmFile ecmFile = getEcmFileDao().find(id);
+	    	String content = getEcmFileTransaction().downloadFileTransaction(ecmFile);
+	    	
+	    	return content;
+	    } 
+		catch (MuleException e) 
+		{
+			throw e;
+		}
+	}
 
     public String constructJqueryFileUploadJson(FileUpload fileUpload) throws IOException
     {
@@ -315,10 +333,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.ecmFileTransaction = ecmFileTransaction;
     }
 
-    @Override
+    public EcmFileDao getEcmFileDao() {
+		return ecmFileDao;
+	}
+
+	public void setEcmFileDao(EcmFileDao ecmFileDao) {
+		this.ecmFileDao = ecmFileDao;
+	}
+
+	@Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
-    }
-    
+    }    
 }

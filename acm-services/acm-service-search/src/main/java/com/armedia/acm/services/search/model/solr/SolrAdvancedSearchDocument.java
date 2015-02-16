@@ -1,13 +1,19 @@
 package com.armedia.acm.services.search.model.solr;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Property names must be identical to the desired SOLR field names.
  */
-public class SolrAdvancedSearchDocument implements SolrBaseDocument
+public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializable
 {
+    private static final long serialVersionUID = 1L;
+
     /////////////////////  fields for all documents ///////////////////////////
     private String id;
     private String object_id_s;
@@ -77,6 +83,8 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String child_type_s;
     private String parent_id_s;
     private String parent_type_s;
+    private String parent_name_t;
+    private String parent_number_lcs;
 
 
     ////////////////// for objects that own organizations, e.g. persons /////////////////////
@@ -96,6 +104,32 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
     private String owner_lcs;
     private String business_process_name_lcs;
 
+
+    /////////////////////// for content files /////////////////////////////////////////
+    private String content_type;
+    private String ecmFileId;
+
+/////////////////////// for notification /////////////////////////////////////////
+	private String state_lcs;
+	private String data_lcs;
+	private String action_lcs;
+
+    @JsonIgnore
+    public String getEcmFileId() {
+        return ecmFileId;
+    }
+
+    public void setEcmFileId(String ecmFileId) {
+        this.ecmFileId = ecmFileId;
+    }
+
+    public String getContent_type() {
+        return content_type;
+    }
+
+    public void setContent_type(String content_type) {
+        this.content_type = content_type;
+    }
 
     @Override
     public String getId()
@@ -360,6 +394,22 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
         return parent_type_s;
     }
 
+    public String getParent_name_t() {
+        return parent_name_t;
+    }
+
+    public void setParent_name_t(String parent_name_t) {
+        this.parent_name_t = parent_name_t;
+    }
+
+    public String getParent_number_lcs() {
+        return parent_number_lcs;
+    }
+
+    public void setParent_number_lcs(String parent_number_lcs) {
+        this.parent_number_lcs = parent_number_lcs;
+    }
+
     public String getDescription_no_html_tags_parseable() {
         return description_no_html_tags_parseable;
     }
@@ -545,7 +595,31 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
         return public_doc_b;
     }
 
-    @Override
+	public String getState_lcs() {
+		return state_lcs;
+	}
+
+	public void setState_lcs(String state_lcs) {
+		this.state_lcs = state_lcs;
+	}
+
+	public String getData_lcs() {
+		return data_lcs;
+	}
+
+	public void setData_lcs(String data_lcs) {
+		this.data_lcs = data_lcs;
+	}
+
+	public String getAction_lcs() {
+		return action_lcs;
+	}
+
+	public void setAction_lcs(String action_lcs) {
+		this.action_lcs = action_lcs;
+	}
+
+	@Override
     public void setPublic_doc_b(boolean public_doc_b)
     {
         this.public_doc_b = public_doc_b;
@@ -628,6 +702,8 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
                 ", child_type_s='" + child_type_s + '\'' +
                 ", parent_id_s='" + parent_id_s + '\'' +
                 ", parent_type_s='" + parent_type_s + '\'' +
+                ", parent_name_t='" + parent_name_t + '\'' +
+                ", parent_number_lcs='" + parent_number_lcs + '\'' +
                 ", organization_id_ss=" + organization_id_ss +
                 ", postal_address_id_ss=" + postal_address_id_ss +
                 ", contact_method_ss=" + contact_method_ss +
@@ -637,6 +713,9 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument
                 ", adhocTask_b=" + adhocTask_b +
                 ", owner_lcs='" + owner_lcs + '\'' +
                 ", business_process_name_lcs='" + business_process_name_lcs + '\'' +
+                ", state_lcs='" + state_lcs + '\'' +
+                ", action_lcs='" + action_lcs + '\'' +
+                ", data_lcs='" + data_lcs + '\'' +
                 '}';
     }
 }

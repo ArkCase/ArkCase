@@ -41,6 +41,12 @@ public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransfo
         return cmDoc;
     }
 
+    @Override
+    public SolrAdvancedSearchDocument toContentFileIndex(ContactMethod in) {
+        //No implementation needed
+        return null;
+    }
+
     //  No implementation needed  because we don't want ContactMethod indexed in the SolrQuickSearch
     @Override
     public SolrDocument toSolrQuickSearch(ContactMethod in)

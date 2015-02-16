@@ -6,13 +6,13 @@ import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +145,10 @@ public class LdapSyncDatabaseHelper
             		
             		parentGroup.setName(parentName);
             		parentGroup.setType(ROLE_TYPE_LDAP_GROUP);
-            		parentGroup.setStatus("ACTIVE");
+            		
+            		if (!AcmGroupStatus.DELETE.equals(parentGroup.getStatus())){
+            			parentGroup.setStatus(AcmGroupStatus.ACTIVE);            			
+            		}
             	}
             	
             	// Save group with parent group (if parent group exist, otherwise just save the group)
@@ -159,7 +162,9 @@ public class LdapSyncDatabaseHelper
             	group.setName(role);
             	group.setType(roleType);
             	group.setParentGroup(parentGroup);
-            	group.setStatus("ACTIVE");
+            	if (!AcmGroupStatus.DELETE.equals(group.getStatus())){
+            		group.setStatus(AcmGroupStatus.ACTIVE);                   			
+        		}
             	
             	getGroupDao().save(group);
             }

@@ -77,6 +77,12 @@ public class DocumentToSolrTrasnformer implements AcmObjectToSolrDocTransformer<
     }
 
     @Override
+    public SolrAdvancedSearchDocument toContentFileIndex(EcmFile in) {
+        //No implementation needed
+        return null;
+    }
+
+    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType) {
 
         boolean objectNotNull = acmObjectType != null;

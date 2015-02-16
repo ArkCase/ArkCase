@@ -7,7 +7,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="dashboard.page.title" text="Dashboard | ACM | Armedia Case Management" /></title>
 
-    <link rel="stylesheet" media="screen" href="<c:url value='/'/>resources/vendors/${vd_angular}/css/sample.test.css" />
+    <link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${vd_angular}/css/sample.test.css'/>" />
 
     <!--[if lte IE 8]>
       <script>
@@ -30,14 +30,14 @@
     <script type="text/javascript" src="<c:url value='/resources/js/dashboard/dashboardService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/dashboard/dashboardCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${js_angular_min}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${js_angular_route_min}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${js_angular_moment}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_angular}/js/${js_angular_table}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/${js_angular_min}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/${js_angular_route_min}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/${js_angular_moment}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/${js_angular_table}'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/js/dashboard/dashboardAngular/${dashboardFileName}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/dashboard/dashboardAngular/${dashboardFileName}'/>"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -51,7 +51,7 @@
 
 <%--</section>--%>
 <footer class="footer bg-white b-t b-light">
-    <p>Powered by Armedia Case Manager 3.0</p>
+    <p>Powered by ArkCase</p>
 </footer>
 </section>
 </section>

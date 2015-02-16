@@ -97,11 +97,10 @@ CaseFile.View = CaseFile.View || {
         }
 
         ,onModelRetrievedCaseFileList: function(key) {
-            if (key.hasError) {
-                alert(key.errorMsg);
-            } else {
-                AcmEx.Object.Tree.refreshTree(key);
+            if (key && key.hasError) {
+                key = null;
             }
+            AcmEx.Object.Tree.refreshTree(key);
         }
         ,onViewChangedCaseTitle: function(caseFileId, title) {
             CaseFile.View.Tree.updateTitle(caseFileId, title);
@@ -112,7 +111,7 @@ CaseFile.View = CaseFile.View || {
                     var treeInfo = AcmEx.Model.Tree.Config.getTreeInfo();
                     if (AcmEx.Model.Tree.Config.sameResultSet(asnData)) {
                         if (asnData.key) {
-                            var key = CaseFile.Model.Tree.Key.getSubKeyWithPage(asnData.start, asnData.key);
+                            var key = CaseFile.Model.Tree.Key.getKeyBySubWithPage(asnData.start, asnData.key);
                             AcmEx.Object.Tree.refreshTree(key);
                         }
                         return true;
@@ -195,7 +194,7 @@ CaseFile.View = CaseFile.View || {
 
         ,updateTitle: function(caseFileId, caseTitle) {
             var key = CaseFile.Model.Tree.Key.getKeyByObj(caseFileId);
-            var node = this.tree.getNodeByKey(key);
+            var node = AcmEx.Object.Tree.tree.getNodeByKey(key);
             var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
             if (node && caseFile) {
                 var nodeDisplay = Acm.goodValue(caseTitle) + " (" + Acm.goodValue(caseFile.caseNumber) + ")";
@@ -372,8 +371,44 @@ CaseFile.View = CaseFile.View || {
             });
         }
 
+        //---- demo how to use object picker ----
+//        ,onPickObjectDemo: function() {
+//            CaseFile.View.Action.showDlgPickObjectDemo(function(event, ctrl) {
+//                SearchBase.View.Results.getSelectedRows().each(function () {
+//                    var record = $(this).data('record');
+//
+//                    var z = 1;
+//                });
+//
+//
+//                alert("Pick Object:" + 'objectInfo');
+//            }
+//            ,function(event, ctrl) {
+//                alert("Pick Object:" + 'Cancel');
+//            });
+//        }
+//        ,showDlgPickObjectDemo: function(onClickBtnPrimary, onClickBtnDefault) {
+//            var $edtSearch = $("#edtPoSearch");
+//            var $btnSearch = $edtSearch.next().find("button");
+//            var $divFacet = $("#divPoFacet");
+//            var $divResults = $("#divPoResults");
+//            SearchBase.createDialog("demoDialog"
+//                ,$edtSearch
+//                ,$btnSearch
+//                ,$divFacet
+//                ,$divResults
+////                ,args
+////                ,jtDataMaker
+//            );
+//            SearchBase.Model.fixFilters("fixmeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+//            Acm.Dialog.bootstrapModal($("#dlgPickObjectDemo"), onClickBtnPrimary, onClickBtnDefault);
+//        }
+        //---------------------------------------
 
         ,onClickBtnConsolidateCase: function() {
+//            this.onPickObjectDemo();
+//            return;
+
             CaseFile.View.Action.setValueEdtConsolidateCase("");
             CaseFile.View.Action.showDlgConsolidateCase(function(event, ctrl) {
                 var caseNumber = CaseFile.View.Action.getValueEdtConsolidateCase();
@@ -422,7 +457,8 @@ CaseFile.View = CaseFile.View || {
         ,populate: function(caseFile) {
             if (CaseFile.Model.Detail.validateData(caseFile)) {
                 CaseFile.View.Action.showBtnChangeCaseStatus(Acm.goodValue(caseFile.changeCaseStatus, true));
-                CaseFile.View.Action.showMilestone(Acm.goodValue(caseFile.milestones));
+                //Comment out temporarily
+                //CaseFile.View.Action.showMilestone(Acm.goodValue(caseFile.milestones));
             }
         }
         ,showMilestone: function(milestones) {
@@ -494,6 +530,10 @@ CaseFile.View = CaseFile.View || {
             this.$lnkDueDate      = $("#dueDate");
             this.$lnkStatus       = $("#status");
 
+            this.$chkRestrict     = $("#restrict");
+            this.$chkRestrict.on("click", function(e) {CaseFile.View.Detail.onClickRestrictCheckbox(e, this);});
+
+
             AcmEx.Object.XEditable.useEditable(this.$lnkCaseTitle, {
                 success: function(response, newValue) {
                     CaseFile.Controller.viewChangedCaseTitle(AcmEx.Object.Tree.getActiveObjId(), newValue);
@@ -511,18 +551,19 @@ CaseFile.View = CaseFile.View || {
             });
 
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_ASSIGNEES        ,this.onModelFoundAssignees);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES    ,this.onModelFoundSubjectTypes);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PRIORITIES       ,this.onModelFoundPriorities);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE    ,this.onModelRetrievedCaseFile);
-            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE        ,this.onModelSavedCaseFile);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE       ,this.onModelSavedCaseTitle);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_INCIDENT_DATE    ,this.onModelSavedIncidentDate);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE         ,this.onModelSavedAssignee);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_SUBJECT_TYPE     ,this.onModelSavedSubjectType);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_PRIORITY         ,this.onModelSavedPriority);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE         ,this.onModelSavedDueDate);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DETAIL           ,this.onModelSavedDetail);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_ASSIGNEES          ,this.onModelFoundAssignees);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES      ,this.onModelFoundSubjectTypes);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PRIORITIES         ,this.onModelFoundPriorities);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE_LIST ,this.onModelRetrievedCaseFileList);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE      ,this.onModelRetrievedCaseFile);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE          ,this.onModelSavedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE         ,this.onModelSavedCaseTitle);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_INCIDENT_DATE      ,this.onModelSavedIncidentDate);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE           ,this.onModelSavedAssignee);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_SUBJECT_TYPE       ,this.onModelSavedSubjectType);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_PRIORITY           ,this.onModelSavedPriority);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE           ,this.onModelSavedDueDate);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DETAIL             ,this.onModelSavedDetail);
             //MODEL_ADDED_PARTICIPANT
             //MODEL_UPDATED_PARTICIPANT
             //MODEL_DELETED_PARTICIPANT
@@ -546,8 +587,8 @@ CaseFile.View = CaseFile.View || {
             //MODEL_UPDATED_CONTACT_METHOD
             //MODEL_DELETED_CONTACT_METHOD
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_TREE_NODE     ,this.onViewSelectedTreeNode);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE     ,this.onViewSelectedCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_TREE_NODE       ,this.onViewSelectedTreeNode);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE       ,this.onViewSelectedCaseFile);
         }
         ,onInitialized: function() {
         }
@@ -600,6 +641,16 @@ CaseFile.View = CaseFile.View || {
                     CaseFile.Controller.viewChangedPriority(AcmEx.Object.Tree.getActiveObjId(), newValue);
                 }
             });
+        }
+        ,onModelRetrievedCaseFileList: function(key) {
+            if (key && key.hasError) {
+                alert(key.errorMsg);
+                key = null;
+            }
+            if (Acm.isEmpty(key)) {
+                CaseFile.View.Detail.showTopPanel(false);
+                CaseFile.View.Detail.showPanel(null);
+            }
         }
         ,onModelRetrievedCaseFile: function(caseFile) {
             if (caseFile.hasError) {
@@ -676,6 +727,10 @@ CaseFile.View = CaseFile.View || {
             CaseFile.Controller.viewChangedDetail(AcmEx.Object.Tree.getActiveObjId(), htmlDetail);
             App.Object.Dirty.clear("Editing case detail");
         }
+        ,onClickRestrictCheckbox: function(event,ctrl){
+            var restriction = ($(ctrl).prop('checked')) ? true : false;
+            CaseFile.Controller.viewClickedRestrictCheckbox(AcmEx.Object.Tree.getActiveObjId(),restriction);
+        }
 
 
         ,showTopPanel: function(show) {
@@ -693,6 +748,7 @@ CaseFile.View = CaseFile.View || {
         ,populateCaseFile: function(c) {
             if (c) {
                 this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
+                this.setPropertyRestricted(Acm.goodValue(c.restricted));
                 this.setTextLnkCaseTitle(Acm.goodValue(c.title));
                 this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));//c.incidentDate
                 this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
@@ -730,6 +786,9 @@ CaseFile.View = CaseFile.View || {
         }
         ,setTextLnkStatus: function(txt) {
             Acm.Object.setText(this.$lnkStatus, txt);
+        }
+        ,setPropertyRestricted: function(restriction){
+            this.$chkRestrict.prop('checked', restriction);
         }
         ,getHtmlDivDetail: function() {
             return AcmEx.Object.SummerNote.get(this.$divDetail);
@@ -830,8 +889,9 @@ CaseFile.View = CaseFile.View || {
                 ]
                 ,{
                     title: 'People'
-                    ,paging: true   //fix me
-                    ,sorting: true  //fix me
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Person'
                     }
@@ -1014,7 +1074,9 @@ CaseFile.View = CaseFile.View || {
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
                     title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_CONTACT_METHODS
-                    ,sorting: true
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Device'
                     }
@@ -1172,7 +1234,9 @@ CaseFile.View = CaseFile.View || {
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
                     title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_SECURITY_TAGS
-                    ,sorting: true
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Device'
                     }
@@ -1322,7 +1386,9 @@ CaseFile.View = CaseFile.View || {
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
                     title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
-                    ,sorting: true
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Organization'
                     }
@@ -1470,7 +1536,9 @@ CaseFile.View = CaseFile.View || {
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
                     title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ADDRESSES
-                    ,sorting: true
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Location'
                     }
@@ -1677,7 +1745,9 @@ CaseFile.View = CaseFile.View || {
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
                     title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ALIASES
-                    ,sorting: true
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Alias'
                     }
@@ -1942,8 +2012,9 @@ CaseFile.View = CaseFile.View || {
         ,createJTableDocuments: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: 'Documents'
-                ,paging: true   //fix me
-                ,sorting: true  //fix me
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Document'
                 }
@@ -2106,8 +2177,9 @@ CaseFile.View = CaseFile.View || {
         ,createJTableParticipants: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: 'Participants'
-                ,paging: true   //fix me
-                ,sorting: true  //fix me
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Participant'
                 }
@@ -2289,6 +2361,9 @@ CaseFile.View = CaseFile.View || {
             AcmEx.Object.JTable.usePaging($jt
                 ,{
                     title: 'Notes'
+                    ,paging: true
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,selecting: true
                     ,multiselect: false
                     ,selectingCheckboxes: false
@@ -2569,8 +2644,9 @@ CaseFile.View = CaseFile.View || {
                     ,multiselect: false
                     ,selecting: false
                     ,selectingCheckboxes: false
-                    ,paging: true   //fix me
-                    ,sorting: true  //fix me
+                    ,paging: true
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Task'
                     }
@@ -2612,7 +2688,6 @@ CaseFile.View = CaseFile.View || {
                             ,list: true
                             ,create: false
                             ,edit: false
-                            ,sorting: false
                             ,display: function (commData) {
                                 var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
                                     + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -2623,7 +2698,6 @@ CaseFile.View = CaseFile.View || {
                         ,title: {
                             title: 'Title'
                             ,width: '30%'
-                            //,sorting: false
                             ,display: function (commData) {
                                 var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
                                     + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -2639,27 +2713,22 @@ CaseFile.View = CaseFile.View || {
                         ,created: {
                             title: 'Created'
                             ,width: '15%'
-                            //,sorting: false
                         }
                         ,priority: {
                             title: 'Priority'
                             ,width: '10%'
-                            //,sorting: false
                         }
                         ,dueDate: {
                             title: 'Due'
                             ,width: '15%'
-                            //,sorting: true
                         }
                         ,status: {
                             title: 'Status'
                             ,width: '10%'
-                            //,sorting: false
                         }
                         ,description: {
                             title: 'Action'
                             ,width: '10%'
-                            //,sorting: false
                             ,edit: false
                             ,create: false
                             ,display: function (commData) {
@@ -2720,8 +2789,9 @@ CaseFile.View = CaseFile.View || {
 
             AcmEx.Object.JTable.useBasic($jt, {
                     title: 'References'
-                    ,paging: true   //fix me
-                    ,sorting: true  //fix me
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: 'Add Reference'
                     }
@@ -2778,7 +2848,7 @@ CaseFile.View = CaseFile.View || {
                             ,edit: true
                             ,create: false
                             ,display: function(data) {
-                                var url = App.getContextPath() + '/plugin/casefile/' + data.record.id;
+                                var url = App.buildObjectUrl(data.record.type, data.record.id);
                                 var $lnk = $("<a href='" + url + "'>" + data.record.title + "</a>");
                                 return $lnk;
                             }
@@ -2895,7 +2965,10 @@ CaseFile.View = CaseFile.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'Events'
+                    title: 'History'
+                    ,paging: true //fix me
+                    ,sorting: true //fix me
+                    ,pageSize: 10 //Set page size (default: 10)
                     ,selecting: true
                     ,multiselect: false
                     ,selectingCheckboxes: false
@@ -3009,6 +3082,7 @@ CaseFile.View = CaseFile.View || {
                 + "<option value='MedicalRelease.docx'>Medical Release</option>"
                 + "<option value='ClearanceGranted.docx'>Clearance Granted</option>"
                 + "<option value='ClearanceDenied.docx'>Clearance Denied</option>"
+                + "<option value='NoticeofInvestigation.docx'>Notice of Investigation</option>"
                 + "</select>"
                 + "</span>"
                 ;
@@ -3020,8 +3094,9 @@ CaseFile.View = CaseFile.View || {
         , createJTableCorrespondence: function ($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: 'Correspondence'
-                ,paging: true   //fix me
-                ,sorting: true  //fix me
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 , messages: {
                     addNewRecord: 'Add Correspondence'
                 }

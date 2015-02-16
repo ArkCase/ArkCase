@@ -583,10 +583,10 @@ TaskList.Object = {
                 })
 
                     .addLeaf({key: pageId + "." + taskBranchID + ".Details"                   //level 2: /Task/Details
-                        , title: "Details"
+                        , title: "Task Details"
                     })
-                    .addLeaf({key: pageId + "." + taskBranchID + ".ReworkInstructions"                   //level 2: /Task/Waiver Details
-                        , title: "Waiver Details"
+                    .addLeaf({key: pageId + "." + taskBranchID + ".ReworkInstructions"                   //level 2: /Task/Rework Details
+                        , title: "Rework Details"
                     })
                     .addLeaf({key: pageId + "." + taskBranchID + ".Documents"                   //level 2: /Task/Documents
                         , title: "Documents Under Review"
@@ -776,6 +776,9 @@ TaskList.Object = {
 
 
     //parent object information setters
+    ,setHrefLnkParentObjNumber: function(objectId, objectType) {
+
+    }
     ,setLnkParentObjTitle: function(txt) {
         if (txt) {
             Acm.Object.setText(this.$lnkParentObjTitle, txt);
@@ -921,6 +924,21 @@ TaskList.Object = {
         this.setLnkParentObjStatus(parentObj.status);
         this.setLnkParentObjSubjectType(parentObj.subjectType);
         this.setValueLnkParentObjNumber(parentObj.number);
+
+        this.setParentObjLink(parentObj.id, parentObj.objectType);
+    }
+
+    ,setParentObjLink: function(objectId, objectType) {
+        if (Acm.isNotEmpty(objectId) && Acm.isNotEmpty(objectType)) {
+            var url = "#";
+            if ("COMPLAINT" == objectType) {
+                url = App.getContextPath() + "/plugin/complaint/" + objectId;
+            } else if ("CASE_FILE" == objectType) {
+                url = App.getContextPath() + "/plugin/casefile/" + objectId;
+            }
+            this.$lnkParentObjTitle.prop("href", url);
+            this.$lnkParentNumber.prop("href", url);
+        }
     }
 
     ,editDivDetails: function() {

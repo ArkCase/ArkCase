@@ -22,18 +22,17 @@ Acm.Dispatcher = {
     ,PRIORITY_HIGH   : 3
 
     // events mappedto listeners
-    ,events:[],
+    ,events:[]
 
-    addEventListener: function(event,callback, priority) {
+    ,addEventListener: function(event, callback, priority) {
         priority = priority || this.PRIORITY_NORMAL;
 
         this.events[event] = this.events[event] || [];
         if ( this.events[event] ) {
             this.events[event].push({callback:callback, priority:priority});
         }
-    },
-
-    removeEventListener: function(event,callback) {
+    }
+    ,removeEventListener: function(event, callback) {
         if ( this.events[event] ) {
             var listeners = this.events[event];
             for ( var i = listeners.length-1; i>=0; --i ){
@@ -44,19 +43,23 @@ Acm.Dispatcher = {
             }
         }
         return false;
-    },
+    }
+    ,replaceEventListener: function(event, callback, priority) {
+        this.removeEventListener(event,callback);
+        this.addEventListener(event, callback, priority);
+    }
 
-    //phase out triggerEvent, use fireEvent instead
-    triggerEvent:function(event, data) {
+    //todo: phase out triggerEvent, use fireEvent instead
+    ,triggerEvent:function(event, data) {
         if ( this.events[event] ) {
             var listeners = this.events[event], len = listeners.length;
             while ( len-- ) {
                 listeners[len].callback(this, data);
             }
         }
-    },
+    }
 
-    fireEvent:function(event) {
+    ,fireEvent:function(event) {
         var responseCount = 0;
 
         if (!event) {
@@ -71,10 +74,6 @@ Acm.Dispatcher = {
             var listeners = this.events[event];
             var len = listeners.length;
             while ( len-- ) {
-                var a = this.PRIORITY_HIGH;
-                var b = Acm.Dispatcher.PRIORITY_HIGH;
-                var c = listeners[len];
-
                 if (this.PRIORITY_HIGH == listeners[len].priority) {
                     if (listeners[len].callback.apply(this, args)) {
                         responseCount++;
@@ -100,16 +99,16 @@ Acm.Dispatcher = {
         }
 
         return responseCount;
-    },
+    }
 
-    numOfListeners: function(event) {
+    ,numOfListeners: function(event) {
         if ( this.events[event] ) {
             return this.events[event].length;
         }
         return 0;
-    },
+    }
 
-    isListening: function(event, callback) {
+    ,isListening: function(event, callback) {
         if ( this.events[event] ) {
             var listeners = this.events[event];
             for ( var i = listeners.length-1; i>=0; --i ){

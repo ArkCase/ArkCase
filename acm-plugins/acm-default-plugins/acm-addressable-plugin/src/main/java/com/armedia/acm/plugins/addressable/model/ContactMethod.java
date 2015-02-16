@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.addressable.model;
 
 import com.armedia.acm.data.AcmEntity;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,21 +11,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlTransient;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "acm_contact_method")
 public class ContactMethod implements Serializable, AcmEntity
@@ -37,22 +33,10 @@ public class ContactMethod implements Serializable, AcmEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @XmlElements({
-		@XmlElement(name="created"),
-		@XmlElement(name="initiatorDeviceDate"),
-		@XmlElement(name="peopleDeviceDate")
-		
-	})
     @Column(name = "cm_contact_method_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @XmlElements({
-		@XmlElement(name="creator"),
-		@XmlElement(name="initiatorDeviceAddedBy"),
-		@XmlElement(name="peopleDeviceAddedBy")
-		
-	})
     @Column(name = "cm_contact_method_creator", insertable = true, updatable = false)
     private String creator;
 
@@ -66,26 +50,12 @@ public class ContactMethod implements Serializable, AcmEntity
     @Column(name = "cm_contact_method_status")
     private String status;
 
-    @XmlElements({
-		@XmlElement(name="type"),
-		@XmlElement(name="contactType"),
-		@XmlElement(name="initiatorDeviceType"),
-		@XmlElement(name="peopleDeviceType")
-		
-	})
     @Column(name = "cm_contact_type")
     private String type;
     
     @Transient
     private List<String> types;
 
-    @XmlElements({
-		@XmlElement(name="value"),
-		@XmlElement(name="contactValue"),
-		@XmlElement(name="initiatorDeviceValue"),
-		@XmlElement(name="peopleDeviceValue")
-		
-	})
     @Column(name = "cm_contact_value")
     private String value;
 
@@ -98,6 +68,7 @@ public class ContactMethod implements Serializable, AcmEntity
         }
     }
 
+    @XmlTransient
     public Long getId()
     {
         return id;
@@ -108,6 +79,7 @@ public class ContactMethod implements Serializable, AcmEntity
         this.id = id;
     }
 
+    @XmlTransient
     @Override
     public Date getCreated()
     {
@@ -120,6 +92,7 @@ public class ContactMethod implements Serializable, AcmEntity
         this.created = created;
     }
 
+    @XmlTransient
     @Override
     public String getCreator()
     {
@@ -132,6 +105,7 @@ public class ContactMethod implements Serializable, AcmEntity
         this.creator = creator;
     }
 
+    @XmlTransient
     @Override
     public Date getModified()
     {
@@ -144,6 +118,7 @@ public class ContactMethod implements Serializable, AcmEntity
         this.modified = modified;
     }
 
+    @XmlTransient
     @Override
     public String getModifier()
     {
@@ -156,6 +131,7 @@ public class ContactMethod implements Serializable, AcmEntity
         this.modifier = modifier;
     }
 
+    @XmlTransient
     public String getStatus()
     {
         return status;
@@ -166,6 +142,7 @@ public class ContactMethod implements Serializable, AcmEntity
         this.status = status;
     }
 
+    @XmlTransient
     public String getType()
     {
         return type;
@@ -175,7 +152,8 @@ public class ContactMethod implements Serializable, AcmEntity
     {
         this.type = type;
     }
-    
+
+    @XmlTransient
 	public List<String> getTypes() {
 		return types;
 	}
@@ -184,6 +162,7 @@ public class ContactMethod implements Serializable, AcmEntity
 		this.types = types;
 	}
 
+    @XmlTransient
 	public String getValue()
     {
         return value;
@@ -192,5 +171,10 @@ public class ContactMethod implements Serializable, AcmEntity
     public void setValue(String value)
     {
         this.value = value;
+    }
+    
+    public ContactMethod returnBase() 
+    {
+    	return this;
     }
 }

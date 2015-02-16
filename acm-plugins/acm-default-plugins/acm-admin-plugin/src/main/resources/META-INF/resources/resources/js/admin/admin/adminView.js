@@ -5,18 +5,20 @@
 
 Admin.View = Admin.View || {
     create: function() {
-        if (Admin.View.AccessControl.create)        	{Admin.View.AccessControl.create();}
         if (Admin.View.Correspondence.create)       	{Admin.View.Correspondence.create();}
         if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
         if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
+        if (Admin.View.ReportsConfiguration.create)     {Admin.View.ReportsConfiguration.create();}
+
 
         if (Admin.View.Tree.create)                 	{Admin.View.Tree.create();}
     }
     ,onInitialized: function() {
-        if (Admin.View.AccessControl.onInitialized)        		{Admin.View.AccessControl.onInitialized();}
         if (Admin.View.Correspondence.onInitialized)       		{Admin.View.Correspondence.onInitialized();}
         if (Admin.View.Organization.onInitialized)         		{Admin.View.Organization.onInitialized();}
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
+        if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
+
 
         if (Admin.View.Tree.onInitialized)                 		{Admin.View.Tree.onInitialized();}
     }
@@ -29,9 +31,10 @@ Admin.View = Admin.View || {
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_USERS, this.onModelRetrievedHierarchy);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_MEMBER, this.onModelRetrievedHierarchy);
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ADDED_GROUP_SUPERVISOR, this.onModelRetrievedHierarchy);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_ERROR, this.onModelRetrievedError);
 
 
-           if (Admin.View.Organization.ModalDialog.create)         {Admin.View.Organization.ModalDialog.create();}
+            if (Admin.View.Organization.ModalDialog.create)         {Admin.View.Organization.ModalDialog.create();}
         }
         , onInitialized: function () {
             if (Admin.View.Organization.ModalDialog.onInitialized)         {Admin.View.Organization.ModalDialog.onInitialized();}
@@ -39,56 +42,26 @@ Admin.View = Admin.View || {
         ,onModelRetrievedHierarchy: function(){
             if (Admin.View.Organization.Tree.create)        {Admin.View.Organization.Tree.create();}
             if (Admin.View.Organization.Tree.onInitialized)        {Admin.View.Organization.Tree.onInitialized();}
+        }
+        ,onModelRetrievedError: function(errorMsg){
+            Acm.Dialog.error(errorMsg);
+        }
 
-        }
-        ,findSubgroup: function(subgroupName){
-            var subgroups = Admin.Model.Organization.cacheSubgroups.get("subgroups");
-            if(subgroups != null){
-                for(var i = 0; i < subgroups.length; i++){
-                    if(subgroups[i].title == subgroupName){
-                        var subgroup = {};
-                        subgroup = subgroups[i];
-                        return subgroup;
-                    }
-                }
-            }
-        }
-        ,findMembers: function(memberId, users){
-            if(users != null){
-                for(var i = 0; i < users.length; i++){
-                    if(users[i].object_id_s == memberId){
-                        var member = {};
-                        member = users[i];
-                        return member;
-                    }
-                }
-            }
-        }
-        ,makeAcmUser: function(selectedMember){
-            var acmUsersFromSolr = Admin.Model.Organization.cacheAcmUsersFromSolr.get("acmUsersFromSolr");
-            var userFound = Admin.View.Organization.findMembers(selectedMember,acmUsersFromSolr);
-            var acmUser = {};
-            acmUser.userId=userFound.object_id_s;
-            acmUser.fullName=userFound.name;
-            acmUser.firstName=userFound.first_name_lcs;
-            acmUser.lastName=userFound.last_name_lcs;
-            acmUser.userDirectoryName=userFound.userDirectoryName;
-            acmUser.userCreated=userFound.create_date_tdt;
-            acmUser.userModified=userFound.modified_date_tdt;
-            acmUser.userState=userFound.status_lcs;
-            acmUser.mail=userFound.email_lcs;
-            acmUser.distinguishedName=userFound.distinguishedName;
-            return acmUser;
-        }
         ,ModalDialog:{
             create: function () {
                 if (Admin.View.Organization.ModalDialog.Members.create)         {Admin.View.Organization.ModalDialog.Members.create();}
 
+                this.$btnCreateAdHocGroup = $("#btnCreateAdHoc");
+                this.$btnCreateAdHocGroup.on("click", function(e) {
+                    Admin.Model.Organization.setParentNodeFlag(false);
+                });
 
                 this.$modalCreateAdHocGroup = $("#createAdHoc");
                 //clear existing fields after modal dialog is closed or hidden
                 this.$modalLabelCreateAdHocGroup = $("#modalLabelCreateAdHoc");
-                this.$modalCreateAdHocGroup.on("hidden.bs.modal", function(e) {Admin.View.Organization.ModalDialog.$modalLabelCreateAdHocGroup.text("Add Ad-Hoc Group");
+
+                this.$modalCreateAdHocGroup.on("hidden.bs.modal", function(e) {
+                    Admin.View.Organization.ModalDialog.$modalLabelCreateAdHocGroup.text("Add Ad-Hoc Group");
                     Admin.View.Organization.ModalDialog.clearModalContents();
                 });
                 this.$txtGroupName = $("#groupName");
@@ -110,7 +83,11 @@ Admin.View = Admin.View || {
             }
             ,onClickBtnCreateAdHocGroup:function(event, ctrl){
                 event.preventDefault();
-                var parentId = Admin.Model.Organization.Tree.getParentNode();
+                var parentId = null;
+                var hasParentFlag = Admin.Model.Organization.getParentNodeFlag();
+                if(hasParentFlag == true){
+                    var parentId = Admin.Model.Organization.Tree.getParentNodeTitle();
+                }
                 var groupName = Admin.View.Organization.ModalDialog.getTextGroupName();
                 var groupDescription = Admin.View.Organization.ModalDialog.getTextGroupDescription();
                 if(groupName != null && groupName != ""){
@@ -122,8 +99,7 @@ Admin.View = Admin.View || {
                     Admin.View.Organization.ModalDialog.hideCreateAdHocGroupModal();
                     Admin.View.Organization.ModalDialog.clearModalContents();
                     Admin.Controller.viewCreatedAdHocGroup(group,parentId);
-                    //reset the saved parent node in preparation of next addition
-                    Admin.Model.Organization.Tree.setParentNode(null);
+                    Admin.Model.Organization.Tree.setParentNodeTitle(null);
                 }
                 else{
                     Acm.Dialog.info("Please enter group name.");
@@ -151,64 +127,80 @@ Admin.View = Admin.View || {
                 }
                 , onInitialized: function () {
                 }
+                ,makeAcmUser: function(selectedMember){
+                    var acmUsersFromSolr = Admin.Model.Organization.cacheAcmUsersFromSolr.get("acmUsersFromSolr");
+                    var userFound = Admin.View.Organization.Tree.findMembers(selectedMember,acmUsersFromSolr);
+                    var acmUser = {};
+                    acmUser.userId=userFound.object_id_s;
+                    acmUser.fullName=userFound.name;
+                    acmUser.firstName=userFound.first_name_lcs;
+                    acmUser.lastName=userFound.last_name_lcs;
+                    acmUser.userDirectoryName=userFound.userDirectoryName;
+                    acmUser.created=userFound.create_date_tdt;
+                    acmUser.modified=userFound.modified_date_tdt;
+                    acmUser.userState=userFound.status_lcs;
+                    acmUser.mail=userFound.email_lcs;
+                    acmUser.distinguishedName=userFound.distinguishedName;
+                    return acmUser;
+                }
                 ,onClickBtnAddPeople: function(){
-                    var selectedPeople = Admin.Model.Organization.cacheSelectedMembers.get("selectedPeople");
-
+                    var selectedPeople = Admin.Model.Organization.ModalDialog.Members.getSelectedPeople();
                     if(selectedPeople != null){
                         var people = [];
-                        var parentGroupId = Admin.Model.Organization.Tree.getParentNode();
+                        var parentGroupId = Admin.Model.Organization.Tree.getParentNodeTitle();
 
                         for(var i = 0 ; i < selectedPeople.length; i++){
                             var selectedPerson = selectedPeople[i];
-                            var acmUser = Admin.View.Organization.makeAcmUser(selectedPerson);
+                            var acmUser = Admin.View.Organization.ModalDialog.Members.makeAcmUser(selectedPerson);
                             people.push(acmUser);
                         }
 
                         if(Admin.View.Organization.ModalDialog.$modalLabelPeople){
-                            var label = Admin.View.Organization.ModalDialog.$modalLabelPeople[0].innerText;
-                            if(label.indexOf("Supervisor") > -1){
+                            var supervisorFlag = Admin.Model.Organization.ModalDialog.Members.hasSupervisorFlag();
+                            if(supervisorFlag == true){
                                 if(people.length > 1){
                                     Acm.Dialog.info("Please select one supervisor");
                                 }
                                 else{
                                     Admin.Controller.viewAddedSupervisor(people[0],parentGroupId);
                                 }
-                                //alert("Supervisor");
                             }
-                            else if(label.indexOf("Members") > -1){
-                                //alert("Members ");
+                            else if(supervisorFlag == false){
                                 Admin.Controller.viewAddedMembers(people,parentGroupId);
                             }
                         }
-                        //Admin.Controller.viewAddedMembers(people,parentGroupId);
                     }
                     Admin.View.Organization.ModalDialog.$modalAddPeople.modal('hide');
                 }
                 ,Query: {
                     create: function() {
-                        this.$txtFindMembers = $("#findMember");
-                        this.$modalBtnFindMembers = $("#btnFindMembers");
-                        this.$modalBtnFindMembers.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Query.onClickBtnFindMembers(e, this);});
-
+                        this.$edtFindMembers = $("#findMember");
+                        this.$btnSearch = this.$edtFindMembers.next().find("button");
+                        this.$btnSearch.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Query.onClickBtnFindMembers(e, this);});
+                        this.$edtFindMembers.keyup(function(event){
+                            if(13 == event.keyCode){
+                                Admin.View.Organization.ModalDialog.Members.Query.$btnSearch.click();
+                            }
+                        });
+                        /*this.$modalBtnFindMembers = $("#btnFindMembers");
+                        this.$modalBtnFindMembers.on("click", function(e) {Admin.View.Organization.ModalDialog.Members.Query.onClickBtnFindMembers(e, this);});*/
                     }
                     ,onInitialized: function() {
                     }
+
                     ,onClickBtnFindMembers: function(event,ctrl){
                         event.preventDefault();
                         var term = Admin.View.Organization.ModalDialog.Members.Query.getTextFindMember();
                         Admin.Controller.viewSubmittedQuery(term);
                     }
                     ,getTextFindMember: function(){
-                        return Acm.Object.getValue(this.$txtFindMembers);
+                        return Acm.Object.getValue(this.$edtFindMembers);
                     }
 
                 }
                 ,Facets: {
                     create: function(){
                         this.$divFacets = $("#divFacets");
-                        /*var facet = Admin.Model.Organization.Facets.makeFacet();
-                        Admin.View.Organization.ModalDialog.Members.Facets.buildFacetPanel(facet);*/
-
                         Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
 
                     }
@@ -241,11 +233,13 @@ Admin.View = Admin.View || {
                             return Acm.goodValue(key);
                         }
                     }
+
                     ,buildFacetPanel: function(facet) {
                         var html = "";
+                        var si = Admin.Model.Organization.ModalDialog.Members.Facets.getSearchInfo();
 
-                        if (Admin.Model.Organization.Facets.validateSearchFacet(facet)) {
-                            if (0 < Admin.Model.Organization.Facets.getCountFacetFields(facet)){
+                        if (Admin.Model.Organization.ModalDialog.Members.Facets.validateSearchFacet(facet)) {
+                            if (0 < Admin.Model.Organization.ModalDialog.Members.Facets.getCountFacetFields(facet)){
                                 html += "<div name='facet_fields'>";
                                 for(var i = 0; i < facet.facet_fields.length; i++) {
                                     if (0 < Acm.goodValue(facet.facet_fields[i].count, 0)) {
@@ -255,8 +249,11 @@ Admin.View = Admin.View || {
                                             html += "<label class='label'>" + display + "</label>";
                                             for (var j = 0; j < facet.facet_fields[i].values.length; j++) {
                                                 if (0 < Acm.goodValue(facet.facet_fields[i].values[j].count, 0)) {
-                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name)
-                                                    + "'>" + Acm.goodValue(facet.facet_fields[i].values[j].name)
+                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name) + "'";
+                                                    if (Admin.Model.Organization.ModalDialog.Members.Facets.findFilter(si, display, Acm.goodValue(facet.facet_fields[i].values[j].name))) {
+                                                        html += " checked";
+                                                    }
+                                                    html += ">" + Acm.goodValue(facet.facet_fields[i].values[j].name)
                                                     + "(<span>" + facet.facet_fields[i].values[j].count + "</span>)</input>";
                                                 }
                                             }
@@ -268,7 +265,7 @@ Admin.View = Admin.View || {
                             }
 
 
-                            if (0 < Admin.Model.Organization.Facets.getCountFacetQueries(facet)){
+                            if (0 < Admin.Model.Organization.ModalDialog.Members.Facets.getCountFacetQueries(facet)){
                                 html += "<div name='facet_queries'>";
                                 for(var i = 0; i < facet.facet_queries.length; i++) {
                                     if (0 < Acm.goodValue(facet.facet_queries[i].count, 0)) {
@@ -278,8 +275,11 @@ Admin.View = Admin.View || {
                                             html += "<label class='label'>" + display + "</label>";
                                             for (var j = 0; j < facet.facet_queries[i].values.length; j++) {
                                                 if (0 < Acm.goodValue(facet.facet_queries[i].values[j].count, 0)) {
-                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name)
-                                                    + "'>" + Acm.goodValue(facet.facet_queries[i].values[j].name)
+                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name) + "'";
+                                                    if (Admin.Model.Organization.ModalDialog.Members.Facets.findFilter(si, display, Acm.goodValue(facet.facet_queries[i].values[j].name))) {
+                                                        html += " checked";
+                                                    }
+                                                    html += ">" + Acm.goodValue(facet.facet_queries[i].values[j].name)
                                                     + "(<span>" + facet.facet_queries[i].values[j].count + "</span>)</input>";
                                                 }
                                             }
@@ -291,7 +291,7 @@ Admin.View = Admin.View || {
                             }
 
 
-                            if (0 < Admin.Model.Organization.Facets.getCountFacetDates(facet)){
+                            if (0 < Admin.Model.Organization.ModalDialog.Members.Facets.getCountFacetDates(facet)){
                                 html += "<div name='facet_dates'>";
                                 for(var i = 0; i < facet.facet_dates.length; i++) {
                                     if (0 < Acm.goodValue(facet.facet_dates[i].count, 0)) {
@@ -301,8 +301,11 @@ Admin.View = Admin.View || {
                                             html += "<label class='label'>" + display + "</label>";
                                             for (var j = 0; j < facet.facet_dates[i].values.length; j++) {
                                                 if (0 < Acm.goodValue(facet.facet_dates[i].values[j].count, 0)) {
-                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name)
-                                                    + "'>" + Acm.goodValue(facet.facet_dates[i].values[j].name)
+                                                    html += "</br><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name) + "'";
+                                                    if (Admin.Model.Organization.ModalDialog.Members.Facets.findFilter(si, display, Acm.goodValue(facet.facet_dates[i].values[j].name))) {
+                                                        html += " checked";
+                                                    }
+                                                    html += ">" + Acm.goodValue(facet.facet_dates[i].values[j].name)
                                                     + "(<span>" + facet.facet_dates[i].values[j].count + "</span>)</input>";
                                                 }
                                             }
@@ -376,16 +379,16 @@ Admin.View = Admin.View || {
                                 ,sorting: true
                                 ,actions: {
                                     pagingListAction: function (postData, jtParams, sortMap) {
-                                        var si = Admin.Model.Organization.Facets.getSearchInfo();
+                                        var si = Admin.Model.Organization.ModalDialog.Members.Facets.getSearchInfo();
                                         if (Acm.isEmpty(si.q)) {
                                             return AcmEx.Object.JTable.getEmptyRecords();
                                         }
                                         si.start = Acm.goodValue(jtParams.jtStartIndex, 0);
 
-                                        if (Admin.Model.Organization.Facets.isFacetUpToDate()) {
+                                        if (Admin.Model.Organization.ModalDialog.Members.Facets.isFacetUpToDate()) {
                                             //var page = si.start;
                                             //var result = Search.Model.cacheResult.get(page);
-                                            var result = Admin.Model.Organization.Facets.getCachedResult(si);
+                                            var result = Admin.Model.Organization.ModalDialog.Members.Facets.getCachedResult(si);
                                             if (result) {
                                                 return Admin.View.Organization.ModalDialog.Members.Results._makeJtData(result);
                                             }
@@ -395,11 +398,22 @@ Admin.View = Admin.View || {
                                             ,postData
                                             ,jtParams
                                             ,sortMap
+                                            /*,function(data) {
+                                             var result = data;
+                                             return Admin.View.Organization.ModalDialog.Members.Results._makeJtData(result);
+                                             }
+                                             ,function(error) {
+                                             }*/
                                             ,function(data) {
                                                 var result = data;
+
+                                                var title = si.total + ' results of "' + si.q + '"';
+                                                AcmEx.Object.JTable.setTitle($jt, title);
+
                                                 return Admin.View.Organization.ModalDialog.Members.Results._makeJtData(result);
                                             }
                                             ,function(error) {
+                                                AcmEx.Object.JTable.setTitle($jt, "Error occurred");
                                             }
                                         );
 
@@ -450,11 +464,11 @@ Admin.View = Admin.View || {
                                         $selectedRows.each(function () {
                                             var record = $(this).data('record');
                                             selectedPeople.push(record.id);
-                                            Admin.Model.Organization.cacheSelectedMembers.put("selectedPeople", selectedPeople);
+                                            Admin.Model.Organization.ModalDialog.Members.setSelectedPeople(selectedPeople);
                                         });
                                     }
                                     else if($selectedRows.length == 0){
-                                        Admin.Model.Organization.cacheSelectedMembers.reset();
+                                        Admin.Model.Organization.ModalDialog.Members.setSelectedPeople(null);
                                     }
                                 }
                             } //end arg
@@ -472,12 +486,36 @@ Admin.View = Admin.View || {
             }
             , onInitialized: function () {
             }
-            ,allSubgroups: function(group, children){
+            ,findSubgroup: function(subgroupName){
+                var subgroups = Admin.Model.Organization.cacheSubgroups.get("subgroups");
+                if(subgroups != null){
+                    for(var i = 0; i < subgroups.length; i++){
+                        if(subgroups[i].title == subgroupName){
+                            var subgroup = {};
+                            subgroup = subgroups[i];
+                            return subgroup;
+                        }
+                    }
+                }
+            }
+            ,findMembers: function(memberId, users){
+                if(users != null){
+                    for(var i = 0; i < users.length; i++){
+                        if(users[i].object_id_s == memberId){
+                            var member = {};
+                            member = users[i];
+                            return member;
+                        }
+                    }
+                }
+            }
+
+            ,findAllSubgroupsRecursively: function(group, children){
                 //this one is recursive
                 if(group.subgroups && group.subgroups !=null){
                     for (var i = 0; i < group.subgroups.length; i++) {
                         var subgroupName = group.subgroups[i];
-                        var subgroup = Admin.View.Organization.findSubgroup(subgroupName);
+                        var subgroup = Admin.View.Organization.Tree.findSubgroup(subgroupName);
                         if(subgroup != null) {
                             subgroup.folder = true;
                             children.push(subgroup);
@@ -487,7 +525,7 @@ Admin.View = Admin.View || {
                             else if(subgroup.children){
                                 subgroup.children.splice(0,subgroup.children.length);
                             }
-                            Admin.View.Organization.Tree.allSubgroups(subgroup,subgroup.children);
+                            Admin.View.Organization.Tree.findAllSubgroupsRecursively(subgroup,subgroup.children);
                             Admin.View.Organization.Tree.findPeopleInvolvedInGroup(subgroup);
                         }
                     }
@@ -495,18 +533,18 @@ Admin.View = Admin.View || {
             }
             ,findPeopleInvolvedInGroup: function(group){
                 //check for subgroup members and supervisors
-                var allUsers = Admin.Model.Organization.cacheAllUsers.get("allUsers");
+                var membersForTree = Admin.Model.Organization.cacheMembersForTree.get("membersForTree");
                 if(group.members && group.members !=null){
                     for(var j = 0; j < group.members.length ; j++){
                         var groupMemberId = group.members[j];
-                        var groupMember = Admin.View.Organization.findMembers(groupMemberId,allUsers);
+                        var groupMember = Admin.View.Organization.Tree.findMembers(groupMemberId,membersForTree);
                         if(groupMember != null){
                             group.children.push(groupMember)
                         }
                     }
                 }
                 if(group.supervisor && group.supervisor !=null){
-                    var supervisor = Admin.View.Organization.findMembers(group.supervisor,allUsers);
+                    var supervisor = Admin.View.Organization.Tree.findMembers(group.supervisor,membersForTree);
                     if(supervisor){
                         group.supervisor = supervisor.title;
                     }
@@ -522,7 +560,6 @@ Admin.View = Admin.View || {
                 if(node.title != "" && node.title != null){
                     if(node.data.isMember == true){
                         var member = {};
-                        //member.userId = node.title;
                         member.userId = node.data.object_id_s;
                         var parentGroupId = node.parent.title;
                         //data should be sth like this : [{"userId":"ann-acm"}]
@@ -532,14 +569,19 @@ Admin.View = Admin.View || {
                 }
             }
             ,onClickAddSubgroup: function(node){
+                Admin.Model.Organization.setParentNodeFlag(true);
                 Admin.View.Organization.ModalDialog.$modalLabelCreateAdHocGroup.text("Add Subgroup to " + "'" + node.title + "'");
                 Admin.View.Organization.ModalDialog.$modalCreateAdHocGroup.modal('show');
             }
             ,onClickAddMembers: function(node){
+                Admin.Model.Organization.setParentNodeFlag(true);
+                Admin.Model.Organization.ModalDialog.Members.setSupervisorFlag(false);
                 Admin.View.Organization.ModalDialog.$modalLabelPeople.text("Add Members to " + "'" + node.title + "'");
                 Admin.View.Organization.ModalDialog.$modalAddPeople.modal('show');
             }
             ,onClickAddSupervisors: function(node){
+                Admin.Model.Organization.setParentNodeFlag(true);
+                Admin.Model.Organization.ModalDialog.Members.setSupervisorFlag(true);
                 Admin.View.Organization.ModalDialog.$modalLabelPeople.text("Add Supervisor to " + "'" + node.title + "'");
                 Admin.View.Organization.ModalDialog.$modalAddPeople.modal('show');
             }
@@ -566,22 +608,22 @@ Admin.View = Admin.View || {
                         var groups = Admin.Model.Organization.cacheGroups.get("groups");
                         var node = data.node,
                             $tdList = $(node.tr).find(">td");
-                            // (index #0 is rendered by fancytree by adding the checkbox)
-                            //$tdList.eq(1).text(node.getIndexHier()).addClass("alignRight");
-                            // (index #2 is rendered by fancytree)
+                        // (index #0 is rendered by fancytree by adding the checkbox)
+                        //$tdList.eq(1).text(node.getIndexHier()).addClass("alignRight");
+                        // (index #2 is rendered by fancytree)
 
                         if(node.data.type != null){
                             $tdList.eq(3).text(node.data.type);
                         }
-                        if(node.data.supervisor != null){
+                        if(node.data.supervisor){
                             $tdList.eq(4).text(node.data.supervisor);
                         }
                         if(node.data.type == "ADHOC_GROUP"){
 
                             $tdList.eq(6).html("<button class='btn btn-link btn-xs pull-left' type='button' name='addSupervisor' title='Add/Edit Supervisor'><i class='fa fa-edit'></i></button>" +
                                 "<button class='btn btn-link btn-xs' type='button' name='addSubgroup' title='Add Subgroup'><i class='fa fa-users'></i></button>" +
-                            "<button class='btn btn-link btn-xs' type='button' name='addMembers' title='Add Members'><i class='fa fa-user'></i></button>" +
-                            "<button class='btn btn-link btn-xs' type='button' name='removeGroup' title='Remove Group'><i class='fa fa-trash-o'></i></button>"
+                                "<button class='btn btn-link btn-xs' type='button' name='addMembers' title='Add Members'><i class='fa fa-user'></i></button>" +
+                                "<button class='btn btn-link btn-xs' type='button' name='removeGroup' title='Remove Group'><i class='fa fa-trash-o'></i></button>"
                             );
                         }
                         if(node.data.isMember == true && node.parent.data.type == "ADHOC_GROUP"){
@@ -592,15 +634,14 @@ Admin.View = Admin.View || {
 
                 $s.delegate("button[name=addSupervisor]", "click", function(e){
 
-                //$("button[name='addSupervisor']").off("click").on("click",function(e) {
+                    //$("button[name='addSupervisor']").off("click").on("click",function(e) {
                     var node = $.ui.fancytree.getNode(e),
-                            $input = $(e.target);
-                        //e.stopPropagation();
+                        $input = $(e.target);
+                    //e.stopPropagation();
                     e.stopImmediatePropagation();
 
                     //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
-                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
-                    Admin.Model.Organization.Tree.setParentNode(node.title);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title,node.data.isInGroupCache);
                     Admin.View.Organization.Tree.onClickAddSupervisors(node);
                 });
 
@@ -609,13 +650,12 @@ Admin.View = Admin.View || {
                 //$s.undelegate("click").delegate("button[name=removeGroup]", "click", function(e) {
                 //$("button[name='removeGroup']").one("click",function(e){
                 $s.delegate("button[name=removeGroup]", "click", function(e){
-                //$("button[name='removeGroup']").off("click").on("click",function(e) {
+                    //$("button[name='removeGroup']").off("click").on("click",function(e) {
                     var node = $.ui.fancytree.getNode(e),
                         $input = $(e.target);
                     e.stopImmediatePropagation();
                     //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
-                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
-                    Admin.Model.Organization.Tree.setParentNode(node.title);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title,node.data.isInGroupCache);
                     Admin.View.Organization.Tree.onClickRemoveGroup(node);
                 });
 
@@ -625,21 +665,19 @@ Admin.View = Admin.View || {
                     var node = $.ui.fancytree.getNode(e),
                         $input = $(e.target);
                     e.stopImmediatePropagation();
-                    Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
-                    Admin.Model.Organization.Tree.setCurrentGroup(node.parent.title);
-                    Admin.Model.Organization.Tree.setParentNode(node.parent.title);
+                    //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.parent.title,node.parent.data.isInGroupCache);
                     Admin.View.Organization.Tree.onClickRemoveMember(node);
                 });
 
                 $s.delegate("button[name=addSubgroup]", "click", function(e){
 
-                //$("button[name='addSubgroup']").off("click").on("click",function(e) {
+                    //$("button[name='addSubgroup']").off("click").on("click",function(e) {
                     var node = $.ui.fancytree.getNode(e),
                         $input = $(e.target);
                     e.stopImmediatePropagation();
                     //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
-                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
-                    Admin.Model.Organization.Tree.setParentNode(node.title);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title,node.data.isInGroupCache);
                     Admin.View.Organization.Tree.onClickAddSubgroup(node);
                 });
 
@@ -652,8 +690,7 @@ Admin.View = Admin.View || {
                         $input = $(e.target);
                     e.stopImmediatePropagation();
                     //Admin.View.Organization.Tree.onClickButtonsCancelEventBubble(e);
-                    Admin.Model.Organization.Tree.setCurrentGroup(node.title);
-                    Admin.Model.Organization.Tree.setParentNode(node.title);
+                    Admin.Model.Organization.Tree.setCurrentGroup(node.title,node.data.isInGroupCache);
                     Admin.View.Organization.Tree.onClickAddMembers(node);
                 });
 
@@ -671,7 +708,7 @@ Admin.View = Admin.View || {
                         group.folder = true;
                         group.children = [];
                         if(group.subgroups != null) {
-                            Admin.View.Organization.Tree.allSubgroups(group, group.children);
+                            Admin.View.Organization.Tree.findAllSubgroupsRecursively(group, group.children);
                         }
 
                         //check for group members and supervisor
@@ -685,164 +722,6 @@ Admin.View = Admin.View || {
                 return Admin.Model.Organization.cacheTreeSource.get("source");
 
             }
-        }
-    }
-    ,AccessControl : {
-        create: function () {
-
-            this.$divAdminAccessControlPolicy = $("#divACP");
-            this.createJTableAdminAccessControl(this.$divAdminAccessControlPolicy);
-
-            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_UPDATED_ACCESS_CONTROL, this.onModelUpdatedAccessControlList);
-
-        }
-        , onInitialized: function () {
-        }
-
-
-        , onModelUpdatedAccessControlList: function () {
-            AcmEx.Object.JTable.load(Admin.View.AccessControl.$divAdminAccessControlPolicy);
-        }
-        , _makeJtData: function (accessControlList) {
-            var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if (accessControlList) {
-                for (var i = 0; i < accessControlList.length; i++) {
-                    var Record = {};
-                    Record.objectType = accessControlList[i].objectType;
-                    Record.objectState = accessControlList[i].objectState;
-                    Record.accessLevel = accessControlList[i].accessLevel;
-                    Record.accessorType = accessControlList[i].accessorType;
-                    Record.accessDecision = accessControlList[i].accessDecision;
-                    Record.allowDiscretionaryUpdate = (accessControlList[i].allowDiscretionaryUpdate);
-                    Record.id = accessControlList[i].id;
-                    jtData.Records.push(Record);
-                }
-                jtData.TotalRecordCount = Admin.Model.getTotalCount();
-            }
-            return jtData;
-        }
-        , createJTableAdminAccessControl: function ($jt) {
-            var sortMap = {};
-            sortMap["dateTime"] = "auditDateTime";
-
-            AcmEx.Object.JTable.usePaging($jt
-                , {
-                    title: 'Data Access Control'
-                    , selecting: true
-                    , multiselect: false
-                    , selectingCheckboxes: false
-                    , actions: {
-                        pagingListAction: function (postData, jtParams, sortMap) {
-                            //var pageIndex = jtParams.jtStartIndex;
-                            var pageIndex = jtParams.jtPageSize.toString() + jtParams.jtStartIndex.toString();
-                            if (0 > pageIndex) {
-                                return AcmEx.Object.JTable.getEmptyRecords();
-                            }
-                            var accessControlList = Admin.Model.AccessControl.cacheAccessControlList.get(pageIndex);
-                            if (accessControlList) {
-                                return Admin.View.AccessControl._makeJtData(accessControlList);
-
-                            } else {
-                                return Admin.Service.AccessControl.retrieveAccessControlListDeferred(postData
-                                    , jtParams
-                                    , sortMap
-                                    , function (data) {
-                                        var accessControlList = data;
-                                        return Admin.View.AccessControl._makeJtData(accessControlList);
-                                    }
-                                    , function (error) {
-                                    }
-                                );
-                            }  //end else
-                        }
-                        , updateAction: function (postData, jtParams) {
-                            var record = Acm.urlToJson(postData);
-                            var rc = {"Result": "OK", "Record": {}};
-                            rc = AcmEx.Object.JTable.getEmptyRecord();
-                            rc.Record.accessDecision = record.accessDecision;
-                            rc.Record.allowDiscretionaryUpdate = record.allowDiscretionaryUpdate;
-                            return rc;
-
-//                        return {
-//                            "Result": "OK", "Record": { "id": 3, "objectType": "Dr.", "objectState": "Joe", "accessLevel": "Lee", "accessorType": "Witness", "accessDecision": "someone", "allowDiscretionaryUpdate": "dd" }
-//                        };
-                            //                    var rc = {"Result": "OK", "Record": {id:123, objectType:"hello", objectState:"st", accessLevel: "lv", accessDecision:"ds", allowDiscretionaryUpdate:"ad"}};
-                            //                    return rc;
-                        }
-                    }
-                    , fields: {
-                        id: {
-                            title: 'ID', key: true, type: 'hidden'
-                            //   ,list: true
-                            , create: false, edit: false
-                        }, objectType: {
-                            title: 'Object Type', width: '3%', edit: false
-                            //,sorting : true
-                            , options: [
-                                { Value: 'Complaint', DisplayText: 'Complaint' },
-                                { Value: 'Task', DisplayText: 'Task' },
-                                { Value: 'caseFile', DisplayText: 'Case File' }
-                            ]
-
-                        }, objectState: {
-                            title: 'State', width: '3%', edit: false, options: [
-                                { Value: 'ACTIVE', DisplayText: 'Active' },
-                                { Value: 'ASSIGNED', DisplayText: 'Assigned' },
-                                { Value: 'COMPLETE', DisplayText: 'Complete' },
-                                { Value: 'DRAFT', DisplayText: 'Draft' },
-                                { Value: 'IN APPROVAL', DisplayText: 'In Approval' },
-                                { Value: 'Scheduled', DisplayText: 'Scheduled' },
-                                { Value: 'UNASSIGNED', DisplayText: 'Unassigned' }
-                            ]
-                        }, accessLevel: {
-                            title: 'Access Level', width: '5%', edit: false, options: [
-                                { Value: 'Add Document', DisplayText: 'Add Document' },
-                                { Value: 'Add Item', DisplayText: 'Add Item' },
-                                { Value: 'Approve Complaint', DisplayText: 'Approve Complaint' },
-                                { Value: 'delete', DisplayText: 'Delete' },
-                                { Value: 'read', DisplayText: 'Read' },
-                                { Value: 'Save', DisplayText: 'Save' },
-                                { Value: 'Submit for Approval', DisplayText: 'Submit for Approval' },
-                                { Value: 'update', DisplayText: 'Update' }
-                            ]
-                        }, accessorType: {
-                            title: 'Accessor Type', width: '5%', edit: false
-                        }, accessDecision: {
-                            title: 'Access Decision',
-                            width: '5%', options: [
-                                { Value: 'GRANT', DisplayText: 'Grant' },
-                                { Value: 'DENY', DisplayText: 'Deny' },
-                                { Value: 'MANDATORY_DENY', DisplayText: 'Mandatory Deny' }
-                            ]
-
-                            // ,options: ['GRANT' , 'DENY', 'MANDATORY_DENY']
-                        }, allowDiscretionaryUpdate: {
-                            title: 'Allow Discretionary',
-                            width: '10%', options: [
-                                { Value: 'true', DisplayText: 'True' } ,
-                                { Value: 'false', DisplayText: 'False' }
-                            ]
-                        }
-
-                    } //end field
-                    ,recordUpdated: function (event, data) { //opened handler
-                        var adminAccessUpdated = {};
-                        adminAccessUpdated.id = data.record.id;
-                        adminAccessUpdated.objectType = data.record.objectType;
-                        adminAccessUpdated.objectState = data.record.objectState;
-                        adminAccessUpdated.accessLevel = data.record.accessLevel;
-                        adminAccessUpdated.accessorType = data.record.accessorType;
-                        adminAccessUpdated.accessDecision = data.record.accessDecision;
-                        if ("true" == data.record.allowDiscretionaryUpdate) {
-                            adminAccessUpdated.allowDiscretionaryUpdate = true;
-                        } else {
-                            adminAccessUpdated.allowDiscretionaryUpdate = false;
-                        }
-                        Admin.Service.AccessControl.updateAdminAccess(adminAccessUpdated);
-                    }
-                } //end arg
-                , sortMap
-            );
         }
     }
     ,Correspondence : {
@@ -942,193 +821,372 @@ Admin.View = Admin.View || {
             $s.jtable('load');
         }
     }
-    
+
     ,FunctionalAccessControl:{
         create: function () {
-        	// Initialize select HTML elements for roles, not authorized and authorized groups
-        	this.$selectRoles = $("#selectRoles");
-        	this.$selectNotAuthorized = $("#selectNotAuthorized");
-        	this.$selectAuthorized = $("#selectAuthorized");
-        	
-        	// Initialize buttons
-        	this.$btnGo = $("#btnGo");
-        	this.$btnMoveRight = $("#btnMoveRight");
-        	this.$btnMoveLeft = $("#btnMoveLeft");
-        	
-        	// Add listeners for buttons and roles select element
-        	this.$btnGo.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnGo(e, this);});
-        	this.$btnMoveRight.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnMoveRight(e, this);});
-        	this.$btnMoveLeft.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnMoveLeft(e, this);});
-        	this.$selectRoles.on("change", function(e) {Admin.View.FunctionalAccessControl.onChangeSelectRoles(e, this);});
+            // Initialize select HTML elements for roles, not authorized and authorized groups
+            this.$selectRoles = $("#selectRoles");
+            this.$selectNotAuthorized = $("#selectNotAuthorized");
+            this.$selectAuthorized = $("#selectAuthorized");
 
-        	// Add listeners for retriving information like roles, groups and roles to groups mapping
-        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, this.onModelRetrievedFunctionalAccessControlApplicationRoles);
-        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, this.onModelError);
-        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS, this.onModelRetrievedFunctionalAccessControlGroups);
-        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_GROUPS, this.onModelError);
-        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelRetrievedFunctionalAccessControlApplicationRolesToGroups);
-        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelError);
-        	Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_SAVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelError);
+            // Initialize buttons
+            this.$btnGo = $("#btnGo");
+            this.$btnMoveRight = $("#btnMoveRight");
+            this.$btnMoveLeft = $("#btnMoveLeft");
+
+            // Add listeners for buttons and roles select element
+            this.$btnGo.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnGo(e, this);});
+            this.$btnMoveRight.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnMoveRight(e, this);});
+            this.$btnMoveLeft.on("click", function(e) {Admin.View.FunctionalAccessControl.onClickBtnMoveLeft(e, this);});
+            this.$selectRoles.on("change", function(e) {Admin.View.FunctionalAccessControl.onChangeSelectRoles(e, this);});
+
+            // Add listeners for retriving information like roles, groups and roles to groups mapping
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, this.onModelRetrievedFunctionalAccessControlApplicationRoles);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES, this.onModelError);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_GROUPS, this.onModelRetrievedFunctionalAccessControlGroups);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_GROUPS, this.onModelError);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_RETRIEVED_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelRetrievedFunctionalAccessControlApplicationRolesToGroups);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_RETRIEVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelError);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_ERROR_SAVING_FUNCTIONAL_ACCESS_CONTROL_APPLICATION_ROLES_TO_GROUPS, this.onModelError);
         }
         , onInitialized: function () {
-            
-        }
-        
-        ,onClickBtnGo: function(e) {
-        	// When "Go" button is clicked, just refresh the not authorized and authorized groups for selected role
-        	Admin.View.FunctionalAccessControl.refresh();
-        }
-        
-        ,onClickBtnMoveRight: function(e) {
-        	// Get selected role and selected groups from not authorized section
-        	var selectedRole = Admin.View.FunctionalAccessControl.$selectRoles.val();
-        	var selectedGroups = Admin.View.FunctionalAccessControl.$selectNotAuthorized.val();
-        	
-        	if (selectedRole && selectedGroups && selectedGroups.length > 0) {
-        		// Get authorized groups from the cached data
-        		var authGroups = [];
-        		if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
-        			Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole]) {
-        			authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole];        			
-        		}
-        		
-        		// Update authorized groups in the cached data (add selected groups)
-        		authGroups = authGroups.concat(selectedGroups);
-        		Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole] = authGroups;
-        		
-        		// Save authorized groups changes on ACM side
-        		Admin.Controller.modelSaveFunctionalAccessControlApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
 
-        		// Refresh not authorized and authorized groups on the screen
-        		Admin.View.FunctionalAccessControl.refresh();
-        	}
         }
-        
-        ,onClickBtnMoveLeft: function(e) {
-        	// Get selected role and selected groups from authorized section
-        	var selectedRole = Admin.View.FunctionalAccessControl.$selectRoles.val();
-        	var selectedGroups = Admin.View.FunctionalAccessControl.$selectAuthorized.val();
-        	
-        	if (selectedRole && selectedGroups && selectedGroups.length > 0) {
-        		// Get authorized groups from the cached data
-        		var authGroups = [];
-        		if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
-        			Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole]) {
-        			authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole];        			
-        		}
-        		
-        		// Update authorized groups in the cached data (remove selected groups)
-        		authGroups = Admin.View.FunctionalAccessControl.removeElements(authGroups, selectedGroups);
-        		Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole] = authGroups;
-        		
-        		// Save authorized groups changes on ACM side
-        		Admin.Controller.modelSaveFunctionalAccessControlApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
 
-        		// Refresh not authorized and authorized groups on the screen
-        		Admin.View.FunctionalAccessControl.refresh();
-        	}
+        ,onClickBtnGo: function(event, ctrl) {
+            // When "Go" button is clicked, just refresh the not authorized and authorized groups for selected role
+            Admin.View.FunctionalAccessControl.refresh();
         }
-        
-        ,onChangeSelectRoles: function(e) {
-        	// Remove data from not authorized and authorized section when role is changed
-        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, []);
-        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, []);
+
+        ,onClickBtnMoveRight: function(event, ctrl) {
+            // Get selected role and selected groups from not authorized section
+            var selectedRole = Admin.View.FunctionalAccessControl.$selectRoles.val();
+            var selectedGroups = Admin.View.FunctionalAccessControl.$selectNotAuthorized.val();
+
+            if (selectedRole && selectedGroups && selectedGroups.length > 0) {
+                // Get authorized groups from the cached data
+                var authGroups = [];
+                if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
+                    Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole]) {
+                    authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole];
+                }
+
+                // Update authorized groups in the cached data (add selected groups)
+                authGroups = authGroups.concat(selectedGroups);
+                Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole] = authGroups;
+
+                // Save authorized groups changes on ACM side
+                Admin.Controller.modelSaveFunctionalAccessControlApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
+
+                // Refresh not authorized and authorized groups on the screen
+                Admin.View.FunctionalAccessControl.refresh();
+            }
         }
-        
+
+        ,onClickBtnMoveLeft: function(event, ctrl) {
+            // Get selected role and selected groups from authorized section
+            var selectedRole = Admin.View.FunctionalAccessControl.$selectRoles.val();
+            var selectedGroups = Admin.View.FunctionalAccessControl.$selectAuthorized.val();
+
+            if (selectedRole && selectedGroups && selectedGroups.length > 0) {
+                // Get authorized groups from the cached data
+                var authGroups = [];
+                if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
+                    Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole]) {
+                    authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole];
+                }
+
+                // Update authorized groups in the cached data (remove selected groups)
+                authGroups = Admin.View.FunctionalAccessControl.removeElements(authGroups, selectedGroups);
+                Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selectedRole] = authGroups;
+
+                // Save authorized groups changes on ACM side
+                Admin.Controller.modelSaveFunctionalAccessControlApplicationRolesToGroups(Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0));
+
+                // Refresh not authorized and authorized groups on the screen
+                Admin.View.FunctionalAccessControl.refresh();
+            }
+        }
+
+        ,onChangeSelectRoles: function(event, ctrl) {
+            // Remove data from not authorized and authorized section when role is changed
+            Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, []);
+            Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, []);
+        }
+
         ,onModelRetrievedFunctionalAccessControlApplicationRoles: function() {
-        	// Get roles from cached data
-        	var roles = Admin.Model.FunctionalAccessControl.cacheApplicationRoles.get(0);
-        	
-        	// Show roles on the view
-        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectRoles, roles);
+            // Get roles from cached data
+            var roles = Admin.Model.FunctionalAccessControl.cacheApplicationRoles.get(0);
+
+            // Show roles on the view
+            Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectRoles, roles);
         }
-        
+
         ,onModelRetrievedFunctionalAccessControlGroups: function() {
-        	// Do nothing
+            // Do nothing
         }
-        
+
         ,onModelRetrievedFunctionalAccessControlApplicationRolesToGroups: function() {
-        	// Do nothing
+            // Do nothing
         }
-        
+
         ,onModelError: function(errorMsg) {
-        	Acm.Dialog.error(errorMsg);
+            Acm.Dialog.error(errorMsg);
         }
-        
+
         ,refresh: function() {
-        	// Initialize authorized and not authorized groups to empty arrays
-        	var authGroups = [];
-        	var notAuthGroups = [];
-        	
-        	// Get selected role
-        	var selected = Admin.View.FunctionalAccessControl.$selectRoles.val();
-        	
-        	if (selected && selected != '') {
-        		// Get all groups
-        		var groups = Admin.Model.FunctionalAccessControl.cacheGroups.get(0);
-        		
-        		// Get authorized groups for given role
-        		if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
-        			Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected]) {
-        			authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected];        			
-        		}
-        		
-        		// Get not authorized groups
-        		if (groups) {
-        			for (var i = 0; i < groups.length; i++) {
-        				var found = false;
-        				for (var j = 0; j < authGroups.length; j++) {
-        					if (groups[i].name === authGroups[j]) {
-        						found = true;
-        						break;
-        					}
-        				}
-        				
-        				if (!found) {
-        					notAuthGroups.push(groups[i].name);
-        				}
-        			}
-        		}
-        	}
-        	
-        	// Show authorized and not authorized groups on the screen
-        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, authGroups);
-        	Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, notAuthGroups);
+            // Initialize authorized and not authorized groups to empty arrays
+            var authGroups = [];
+            var notAuthGroups = [];
+
+            // Get selected role
+            var selected = Admin.View.FunctionalAccessControl.$selectRoles.val();
+
+            if (selected && selected != '') {
+                // Get all groups
+                var groups = Admin.Model.FunctionalAccessControl.cacheGroups.get(0);
+
+                // Get authorized groups for given role
+                if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
+                    Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected]) {
+                    authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected];
+                }
+
+                // Get not authorized groups
+                if (groups) {
+                    for (var i = 0; i < groups.length; i++) {
+                        var found = false;
+                        for (var j = 0; j < authGroups.length; j++) {
+                            if (groups[i].name === authGroups[j]) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            notAuthGroups.push(groups[i].name);
+                        }
+                    }
+                }
+            }
+
+            // Show authorized and not authorized groups on the screen
+            Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, authGroups);
+            Admin.View.FunctionalAccessControl.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, notAuthGroups);
         }
-        
+
         ,createOptions: function(element, optionsArray) {
-        	var options = '';
-        	if (optionsArray) {
-        		for (var i = 0; i < optionsArray.length; i++) {
-        		   options += '<option value="' + optionsArray[i] + '">' + optionsArray[i] + '</option>';
-        		} 
-        	}
-        	element.html(options);        		
+            var options = '';
+            if (optionsArray) {
+                for (var i = 0; i < optionsArray.length; i++) {
+                    options += '<option value="' + optionsArray[i] + '">' + optionsArray[i] + '</option>';
+                }
+            }
+            element.html(options);
         }
-        
+
         ,removeElements: function(elements, elementsToRemove) {
-        	var output = [];
-        	
-        	if (elements) {
-        		if (elementsToRemove) {
-        			for (var i = 0; i < elements.length; i++) {
-        				var found = false;
-        				for (var j = 0; j < elementsToRemove.length; j++) {
-        					if (elements[i] === elementsToRemove[j]) {
-        						found = true;
-        						break;
-        					}
-        				}
-        				if (!found) {
-        					output.push(elements[i]);
-        				}
-        			}
-        		}else{
-        			return elements;
-        		}
-        	}
-        	
-        	return output;
+            var output = [];
+
+            if (elements) {
+                if (elementsToRemove) {
+                    for (var i = 0; i < elements.length; i++) {
+                        var found = false;
+                        for (var j = 0; j < elementsToRemove.length; j++) {
+                            if (elements[i] === elementsToRemove[j]) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            output.push(elements[i]);
+                        }
+                    }
+                }else{
+                    return elements;
+                }
+            }
+
+            return output;
+        }
+    }
+
+    ,ReportsConfiguration:{
+        create: function () {
+            // Initialize select HTML elements for reports, not authorized and authorized groups
+            this.$selectReport = $("#selectReport");
+            this.$selectNotAuthorized = $("#selectNotAuthorizedReport");
+            this.$selectAuthorized = $("#selectAuthorizedReport");
+
+            // Initialize buttons
+            this.$btnSelectReport = $("#btnSelectReport");
+            this.$btnAuthorize = $("#btnAuthorize");
+            this.$btnUnauthorize = $("#btnUnauthorize");
+
+            // Add listeners for buttons and reports select element
+            this.$btnSelectReport.on("click", function(e) {Admin.View.ReportsConfiguration.onClickBtnSelectReport(e, this);});
+            this.$btnAuthorize.on("click", function(e) {Admin.View.ReportsConfiguration.onClickBtnAuthorize(e, this);});
+            this.$btnUnauthorize.on("click", function(e) {Admin.View.ReportsConfiguration.onClickBtnUnauthorize(e, this);});
+            this.$selectReport.on("change", function(e) {Admin.View.ReportsConfiguration.onChangeSelectReport(e, this);});
+
+            // Add listeners for retrieving information like reports, groups and reports to groups Map
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_RETRIEVED_REPORTS, this.onModelReportConfigRetrievedReports);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_ERROR, this.onModelReportConfigError);
+            Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP, this.onModelReportConfigSavedReportToGroupsMap);
+
+
+        }
+        , onInitialized: function () {
+
+        }
+
+        ,onClickBtnSelectReport: function(event, ctrl) {
+            // When "Go" button is clicked, just refresh the not authorized and authorized groups for selected report  && selectedGroups.length > 0
+            Admin.View.ReportsConfiguration.refresh();
+        }
+
+        ,onClickBtnAuthorize: function(event, ctrl) {
+            // Get selected reports and selected groups from not authorized section
+            var selectedReport = Admin.View.ReportsConfiguration.$selectReport.val();
+            var selectedGroups = Admin.View.ReportsConfiguration.$selectNotAuthorized.val();
+
+            if (selectedReport && selectedGroups && selectedGroups.length > 0) {
+                // Get authorized groups from the cached data
+                var authGroups = [];
+                if (Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap") &&
+                    Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport]) {
+                    authGroups = Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport];
+                }
+
+                // Update authorized groups in the cached data (add selected groups)
+                authGroups = authGroups.concat(selectedGroups);
+                Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport] = authGroups;
+
+                // Save authorized groups changes on ACM side
+                Admin.Controller.viewSavedReportToGroupsMap(Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap"));
+            }
+        }
+
+        ,onClickBtnUnauthorize: function(event, ctrl) {
+            // Get selected report and selected groups from authorized section
+            var selectedReport = Admin.View.ReportsConfiguration.$selectReport.val();
+            var selectedGroups = Admin.View.ReportsConfiguration.$selectAuthorized.val();
+
+            if (selectedReport && selectedGroups && selectedGroups.length > 0) {
+                // Get authorized groups from the cached data
+                var authGroups = [];
+                if (Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap") &&
+                    Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport]) {
+                    authGroups = Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport];
+                }
+
+                // Update authorized groups in the cached data (remove selected groups)
+                authGroups = Admin.View.ReportsConfiguration.removeElements(authGroups, selectedGroups);
+                Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selectedReport] = authGroups;
+
+                // Save authorized groups changes on ACM side
+                Admin.Controller.viewSavedReportToGroupsMap(Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap"));
+            }
+        }
+
+        ,onChangeSelectReport: function(event, ctrl) {
+            // Remove data from not authorized and authorized section when report is changed
+            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectAuthorized, []);
+            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectNotAuthorized, []);
+        }
+
+        ,onModelReportConfigRetrievedReports: function() {
+            // Get reports from cached data
+            var reports = Admin.Model.ReportsConfiguration.cacheReports.get("reports");
+
+            // Show reports on the view
+            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectReport, reports);
+        }
+
+        ,onModelReportConfigError: function(errorMsg) {
+            Acm.Dialog.error(errorMsg);
+        }
+
+        ,onModelReportConfigSavedReportToGroupsMap:function(success){
+            if(true == success){
+                // Refresh not authorized and authorized groups on the screen
+                Admin.View.ReportsConfiguration.refresh();
+            }
+        }
+        ,refresh: function() {
+            // Initialize authorized and not authorized groups to empty arrays
+            var authGroups = [];
+            var notAuthGroups = [];
+
+            // Get selected report
+            var selected = Admin.View.ReportsConfiguration.$selectReport.val();
+
+            if (selected && selected != '') {
+                // Get all groups
+                var groups = Admin.Model.ReportsConfiguration.cacheGroups.get("groups");
+
+                // Get authorized groups for given report
+                if (Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap") &&
+                    Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selected]) {
+                    authGroups = Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap")[selected];
+                }
+
+                // Get not authorized groups
+                if (groups) {
+                    for (var i = 0; i < groups.length; i++) {
+                        var found = false;
+                        for (var j = 0; j < authGroups.length; j++) {
+                            if (groups[i].name === authGroups[j]) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            notAuthGroups.push(groups[i].name);
+                        }
+                    }
+                }
+            }
+
+            // Show authorized and not authorized groups on the screen
+            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectAuthorized, authGroups);
+            Admin.View.ReportsConfiguration.createOptions(Admin.View.ReportsConfiguration.$selectNotAuthorized, notAuthGroups);
+        }
+
+        ,createOptions: function(element, optionsArray) {
+            var options = '';
+            if (optionsArray) {
+                for (var i = 0; i < optionsArray.length; i++) {
+                    options += '<option value="' + optionsArray[i] + '">' + optionsArray[i] + '</option>';
+                }
+            }
+            element.html(options);
+        }
+
+        ,removeElements: function(elements, elementsToRemove) {
+            var output = [];
+
+            if (elements) {
+                if (elementsToRemove) {
+                    for (var i = 0; i < elements.length; i++) {
+                        var found = false;
+                        for (var j = 0; j < elementsToRemove.length; j++) {
+                            if (elements[i] === elementsToRemove[j]) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            output.push(elements[i]);
+                        }
+                    }
+                }else{
+                    return elements;
+                }
+            }
+
+            return output;
         }
     }
 

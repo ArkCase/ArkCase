@@ -3,6 +3,8 @@
  */
 package com.armedia.acm.form.casefile.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 import org.activiti.engine.RuntimeService;
@@ -17,10 +20,12 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.file.AcmMultipartFile;
 import com.armedia.acm.form.casefile.model.AddressHistory;
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.form.casefile.model.EmploymentHistory;
@@ -31,7 +36,6 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
-import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
 import com.armedia.acm.plugins.person.model.Organization;
@@ -48,11 +52,10 @@ import com.google.gson.GsonBuilder;
 public class CaseFileService extends FrevvoFormAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
-	private CaseFileFactory caseFileFactory = new CaseFileFactory();
+	private CaseFileFactory caseFileFactory;
 	private SaveCaseService saveCaseService;
 	private AcmHistoryDao acmHistoryDao;
 	private CaseFileDao caseFileDao;
-	private ObjectAssociationDao objectAssociationDao;
 	private PersonIdentificationDao personIdentificationDao;
 	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
@@ -108,7 +111,12 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		// Save Reference (Reinvestigation)
 		form = saveReference(form);
 		
-		// Cave Attachments
+		// Create Frevvo form from CaseFile
+		form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), form);
+		
+		updateXMLAttachment(attachments, FrevvoFormName.CASE_FILE, form);
+		
+		// Save Attachments
 		FrevvoUploadedFiles frevvoFiles = saveAttachments(attachments, form.getCmisFolderId(),
 				FrevvoFormName.CASE_FILE.toUpperCase(), form.getId(), form.getNumber());
 		
@@ -245,7 +253,9 @@ public class CaseFileService extends FrevvoFormAbstractService {
 				acmHistory.setStartDate(addressHistory.getStartDate());
 				acmHistory.setEndDate(addressHistory.getEndDate());
 				
-				getAcmHistoryDao().save(acmHistory);
+				acmHistory = getAcmHistoryDao().save(acmHistory);
+				
+				addressHistory.setId(acmHistory.getId());
 			}
 		}
 		
@@ -286,7 +296,8 @@ public class CaseFileService extends FrevvoFormAbstractService {
 				acmHistory.setStartDate(employmentHistory.getStartDate());
 				acmHistory.setEndDate(employmentHistory.getEndDate());
 				
-				getAcmHistoryDao().save(acmHistory);
+				acmHistory = getAcmHistoryDao().save(acmHistory);
+				employmentHistory.setId(acmHistory.getId());
 			}
 		}
 		
@@ -339,6 +350,20 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		return form;
 	}
 	
+	public void updateXML(CaseFile caseFile, Authentication auth)
+    {
+    	if (caseFile != null)
+    	{    		
+    		CaseFileForm form = getCaseFileFactory().asFrevvoCaseFile(caseFile, null);
+    		
+    		if (form != null)
+    		{
+    			String xml = convertFromObjectToXML(form);
+    			updateXML(xml, FrevvoFormName.CASE_FILE.toUpperCase(), caseFile.getId(), auth);		
+    		}
+    	}
+    }
+	
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#getFormName()
 	 */
@@ -379,7 +404,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		caseFileForm.setAddressHistory(addressHistoryList);
 		caseFileForm.setEmploymentHistory(employmentHistoryList);
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(caseFileForm);
 		
 		JSONObject json = new JSONObject(jsonString);
@@ -423,14 +448,6 @@ public class CaseFileService extends FrevvoFormAbstractService {
 
 	public void setCaseFileDao(CaseFileDao caseFileDao) {
 		this.caseFileDao = caseFileDao;
-	}
-
-	public ObjectAssociationDao getObjectAssociationDao() {
-		return objectAssociationDao;
-	}
-
-	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
-		this.objectAssociationDao = objectAssociationDao;
 	}
 
 	public PersonIdentificationDao getPersonIdentificationDao() {

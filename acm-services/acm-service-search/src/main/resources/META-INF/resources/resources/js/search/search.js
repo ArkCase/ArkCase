@@ -5,16 +5,23 @@
  */
 var Search = Search || {
     create: function() {
-        if (Search.Model.create)      {Search.Model.create();}
-        if (Search.Service.create)    {Search.Service.create();}
-        if (Search.View.create)       {Search.View.create();}
         if (Search.Controller.create) {Search.Controller.create();}
+        if (Search.Model.create)      {Search.Model.create();}
+        if (Search.View.create)       {Search.View.create();}
+
+        SearchBase.create("search"
+            ,Search.View.Query.$edtSearch
+            ,Search.View.Query.$btnSearch
+            ,Search.View.$divFacet
+            ,Search.View.$divResults
+//            ,Search.View.args
+//            ,Search.View.jtDataMaker
+        );
     }
     ,onInitialized: function() {
-        if (Search.Model.onInitialized)      {Search.Model.onInitialized();}
-        if (Search.Service.onInitialized)    {Search.Service.onInitialized();}
-        if (Search.View.onInitialized)       {Search.View.onInitialized();}
         if (Search.Controller.onInitialized) {Search.Controller.onInitialized();}
+        if (Search.Model.onInitialized)      {Search.Model.onInitialized();}
+        if (Search.View.onInitialized)       {Search.View.onInitialized();}
     }
 };
 

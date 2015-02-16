@@ -72,6 +72,11 @@ Complaint.Event = {
         }
         Complaint.Object.showTab(node.key);
     }
+    ,onCheckedRestricted: function(restriction){
+        var c = Complaint.getComplaint();
+        c.restricted = restriction;
+        Complaint.Service.saveComplaint(c);
+    }
     ,onSaveTitle: function(value) {
         var c = Complaint.getComplaint();
         c.complaintTitle = value;
@@ -124,8 +129,8 @@ Complaint.Event = {
     }
     ,onSaveComplaintType: function(value) {
         var c = Complaint.getComplaint();
-        //c.complaintType = value;            //fix meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-        //Complaint.Service.saveComplaint(c);
+        c.complaintType = value;
+        Complaint.Service.saveComplaint(c);
     }
     ,onClickBtnEditDetails: function(e) {
         Complaint.Object.editDivDetails();

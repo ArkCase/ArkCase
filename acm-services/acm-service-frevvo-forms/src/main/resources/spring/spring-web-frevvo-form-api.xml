@@ -36,6 +36,8 @@
         <property name="personIdentificationDao" ref="acmPersonIdentificationDao"/>
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="caseFileFactory" ref="caseFileFactory"/>
+        <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
 	</bean>
 
 </beans>

@@ -8,22 +8,14 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +24,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by armdev on 09/03/14.
  */
-@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "acm_organization")
 public class Organization implements Serializable, AcmEntity
@@ -45,43 +36,19 @@ public class Organization implements Serializable, AcmEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long organizationId;
    
-    @XmlElements({
-		@XmlElement(name="organizationType"),
-		@XmlElement(name="initiatorOrganizationType"),
-		@XmlElement(name="peopleOrganizationType")
-		
-	})
     @Column(name = "cm_organization_type")
     private String organizationType;
     
     @Transient
     private List<String> organizationTypes;
 
-    @XmlElements({
-		@XmlElement(name="organizationValue"),
-		@XmlElement(name="initiatorOrganizationName"),
-		@XmlElement(name="peopleOrganizationName")
-		
-	})
     @Column(name = "cm_organization_value")
     private String organizationValue;
 
-    @XmlElements({
-		@XmlElement(name="created"),
-		@XmlElement(name="initiatorOrganizationDate"),
-		@XmlElement(name="peopleOrganizationDate")
-		
-	})
     @Column(name = "cm_organization_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @XmlElements({
-		@XmlElement(name="creator"),
-		@XmlElement(name="initiatorOrganizationAddedBy"),
-		@XmlElement(name="peopleOrganizationAddedBy")
-		
-	})
     @Column(name = "cm_organization_creator", insertable = true, updatable = false)
     private String creator;
 
@@ -92,6 +59,7 @@ public class Organization implements Serializable, AcmEntity
     @Column(name = "cm_organization_modifier")
     private String modifier;
 
+    @XmlTransient
     public Long getOrganizationId() {
         return organizationId;
     }
@@ -100,7 +68,7 @@ public class Organization implements Serializable, AcmEntity
         this.organizationId = organizationId;
     }
 
-
+    @XmlTransient
     public String getOrganizationType() {
         return organizationType;
     }
@@ -108,6 +76,8 @@ public class Organization implements Serializable, AcmEntity
     public void setOrganizationType(String organizationType) {
         this.organizationType = organizationType;
     }
+    
+    @XmlTransient
 	public List<String> getOrganizationTypes() {
 		return organizationTypes;
 	}
@@ -116,6 +86,7 @@ public class Organization implements Serializable, AcmEntity
 		this.organizationTypes = organizationTypes;
 	}
 
+	@XmlTransient
 	public String getOrganizationValue() {
         return organizationValue;
     }
@@ -124,6 +95,7 @@ public class Organization implements Serializable, AcmEntity
         this.organizationValue = organizationValue;
     }
 
+    @XmlTransient
     @Override
     public Date getCreated() {
         return created;
@@ -134,6 +106,7 @@ public class Organization implements Serializable, AcmEntity
         this.created = created;
     }
 
+    @XmlTransient
     @Override
     public String getCreator() {
         return creator;
@@ -144,6 +117,7 @@ public class Organization implements Serializable, AcmEntity
         this.creator = creator;
     }
 
+    @XmlTransient
     @Override
     public Date getModified() {
         return modified;
@@ -154,6 +128,7 @@ public class Organization implements Serializable, AcmEntity
         this.modified = modified;
     }
 
+    @XmlTransient
     @Override
     public String getModifier() {
         return modifier;
@@ -164,5 +139,8 @@ public class Organization implements Serializable, AcmEntity
         this.modifier = modifier;
     }
     
+    public Organization returnBase() {
+    	return this;
+    }
     
-    }   
+}

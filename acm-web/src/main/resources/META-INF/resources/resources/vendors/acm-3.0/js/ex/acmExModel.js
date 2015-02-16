@@ -75,7 +75,8 @@ AcmEx.Model = {
                 var ti = this.getTreeInfo();
                 var tiInit = this._initTreeInfo.get();
                 if (this.validateTreeInfo(tiInit)) {
-                    if (this.getName() == Acm.goodValue(tiInit.name)) {
+                    //if (this.getName() == Acm.goodValue(tiInit.name)) {
+                        ti.name   = Acm.goodValue(tiInit.name);
                         ti.start  = Acm.goodValue(tiInit.start, 0);
                         ti.n      = Acm.goodValue(tiInit.n, 50);
                         ti.sort   = Acm.goodValue(tiInit.sort, null);
@@ -85,7 +86,7 @@ AcmEx.Model = {
                         ti.objId  = Acm.goodValue(tiInit.objId, 0);
 
                         this._initTreeInfo.set(null);
-                    }
+                    //}
                 }
 
                 if (0 == ti.objId && null == ti.key) {
@@ -146,24 +147,28 @@ AcmEx.Model = {
             }
 
             ,getTabIdsByKey: function(key) {
-                var nodeType = this.getNodeTypeByKey(key);
-                //var tabIds = ["tabBlank"];
                 var tabIds = [];
-                for (var i = 0; i < this._nodeTypeMap.length; i++) {
-                    if (nodeType == this._nodeTypeMap[i].nodeType) {
-                        tabIds = this._nodeTypeMap[i].tabIds;
-                        break;
+                //var tabIds = ["tabBlank"];
+                if (Acm.isNotEmpty(key)) {
+                    var nodeType = this.getNodeTypeByKey(key);
+                    for (var i = 0; i < this._nodeTypeMap.length; i++) {
+                        if (nodeType == this._nodeTypeMap[i].nodeType) {
+                            tabIds = this._nodeTypeMap[i].tabIds;
+                            break;
+                        }
                     }
                 }
                 return tabIds;
             }
             ,getIconByKey: function(key) {
-                var nodeType = this.getNodeTypeByKey(key);
                 var icon = null;
-                for (var i = 0; i < this._nodeTypeMap.length; i++) {
-                    if (nodeType == this._nodeTypeMap[i].nodeType) {
-                        icon = this._nodeTypeMap[i].icon;
-                        break;
+                if (Acm.isNotEmpty(key)) {
+                    var nodeType = this.getNodeTypeByKey(key);
+                    for (var i = 0; i < this._nodeTypeMap.length; i++) {
+                        if (nodeType == this._nodeTypeMap[i].nodeType) {
+                            icon = this._nodeTypeMap[i].icon;
+                            break;
+                        }
                     }
                 }
                 return icon;

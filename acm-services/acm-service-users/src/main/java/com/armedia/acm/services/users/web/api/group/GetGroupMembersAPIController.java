@@ -83,7 +83,7 @@ public class GetGroupMembersAPIController {
 	
 	private String getGroup(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
 	{		
-		String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:CLOSED";
+		String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 		
 		if ( LOG.isDebugEnabled() )
         {
