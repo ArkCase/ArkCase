@@ -1,5 +1,6 @@
 package com.armedia.acm.services.search.service;
 
+import com.armedia.acm.services.search.model.SearchConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 

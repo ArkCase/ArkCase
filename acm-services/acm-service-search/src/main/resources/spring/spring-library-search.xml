@@ -58,6 +58,7 @@
     <bean id="sendDocumentsToSolr" class="com.armedia.acm.services.search.service.SendDocumentsToSolr">
         <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
+    <bean id="searchResults" class="com.armedia.acm.services.search.service.SearchResults"/>
     <bean id="jpaObjectsToSearchService" class="com.armedia.acm.services.search.service.JpaObjectsToSearchService">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="sendToSolr" ref="sendDocumentsToSolr"/>
