@@ -24,12 +24,6 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
-
-    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBase.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseModel.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseView.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFile.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileView.js'/>"></script>
@@ -229,63 +223,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <%--<div class="modal fade" id="dlgPickObjectDemo" tabindex="-1" role="dialog" aria-labelledby="labPickObjectDemo" aria-hidden="true">--%>
-                                                <%--<div class="modal-dialog" style="height:540px; width:1030px;">--%>
-                                                    <%--<div class="modal-content">--%>
-                                                        <%--<div class="modal-header">--%>
-                                                            <%--<button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>--%>
-                                                            <%--<h4 class="modal-title" id="labPickObjectDemo">Object Picker Demo</h4>--%>
-                                                        <%--</div>--%>
-                                                        <%--<div class="modal-body">--%>
-                                                            <%--<section class="row">--%>
-
-
-                                                                <%--<header class="header bg-gradient b-b clearfix">--%>
-                                                                    <%--<div class="row m-t-sm">--%>
-                                                                        <%--<div class="col-md-12 m-b-sm">--%>
-                                                                            <%--<div class="input-group">--%>
-                                                                                <%--<input type="text" class="input-md form-control" id="edtPoSearch" placeholder='<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />'>--%>
-                                                                                <%--<span class="input-group-btn">--%>
-                                                                                <%--<button class="btn btn-md" type="button"><spring:message code="search.submit.text" text="Go!" /></button>--%>
-                                                                                <%--</span>--%>
-                                                                            <%--</div>--%>
-                                                                        <%--</div>--%>
-                                                                    <%--</div>--%>
-                                                                <%--</header>--%>
-
-                                                                <%--<section class="hbox stretchSearch">--%>
-                                                                    <%--<aside class="aside-md bg-light dker b-r" id="subNav">--%>
-                                                                        <%--<section class="vbox">--%>
-                                                                            <%--<section class="scrollable">--%>
-
-                                                                                <%--<div class="wrapper facets" id="divPoFacet">--%>
-                                                                                <%--</div>--%>
-
-                                                                            <%--</section>--%>
-                                                                        <%--</section>--%>
-                                                                    <%--</aside>--%>
-
-                                                                    <%--<aside>--%>
-                                                                        <%--<section class="vbox">--%>
-                                                                            <%--<section class="scrollable wrapper w-f">--%>
-                                                                                <%--<section class="panel panel-default">--%>
-                                                                                    <%--<div id="divPoResults" style="width:100%"></div>--%>
-                                                                                <%--</section>--%>
-                                                                            <%--</section>--%>
-                                                                        <%--</section>--%>
-                                                                    <%--</aside>--%>
-                                                                <%--</section>--%>
-
-
-                                                            <%--</section>--%>
-                                                        <%--</div>--%>
-                                                        <%--<div class="modal-footer">--%>
-                                                            <%--<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>--%>
-                                                            <%--<button type="button" class="btn btn-primary">Select</button>--%>
-                                                        <%--</div>--%>
-                                                    <%--</div>--%>
-                                                <%--</div>--%>
-                                            <%--</div>--%>
                                         </div>
                                     </div>
                                     <%--<h4 class="m-n">Case Details</h4>--%>
@@ -412,61 +349,105 @@
 </jsp:body>
 </t:layout>
 
-
-<div class="modal fade" id="dlgPickObjectDemo" tabindex="-1" role="dialog" aria-labelledby="labPickObjectDemo" aria-hidden="true">
-    <div class="modal-dialog" style="height:540px; width:1030px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="labPickObjectDemo">Object Picker Demo</h4>
-            </div>
-            <div class="modal-body">
-                <section class="row">
-
-                    <!-- copy from search page -->
-                    <header class="header bg-gradient b-b clearfix">
-                        <div class="row m-t-sm">
-                            <div class="col-md-12 m-b-sm">
-                                <div class="input-group">
-                                    <input type="text" class="input-md form-control" id="edtPoSearch" placeholder='<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />'>
-                                    <span class="input-group-btn">
-                                    <button class="btn btn-md" type="button"><spring:message code="search.submit.text" text="Go!" /></button>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-
-                    <%--<section class="hbox stretchSearch">--%>
-                        <%--<aside class="aside-md bg-light dker b-r" id="subNav">--%>
-                            <%--<section class="vbox">--%>
-                                <section class="scrollable">
-
-                                    <div class="wrapper facets" id="divPoFacet">
-                                    </div>
-
-                                </section>
-                            <%--</section>--%>
-                        <%--</aside>--%>
-
-                        <%--<aside>--%>
-                            <%--<section class="vbox">--%>
-                                <section class="scrollable wrapper w-f">
-                                    <section class="panel panel-default">
-                                        <div id="divPoResults" style="width:100%"></div>
-                                    </section>
-                                </section>
-                            <%--</section>--%>
-                        <%--</aside>--%>
-                    <%--</section>--%>
-                    <!-- end of copy from search page -->
-
-                </section>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Select</button>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- used for testing -->
+<%--<div class="modal fade" id="dlgObjectPicker" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">--%>
+    <%--<div class="modal-dialog modal-lg">--%>
+        <%--<div class="modal-content">--%>
+            <%--<div class="modal-header">--%>
+                <%--<button type="button" class="close" data-dismiss="modal">×<span class="sr-only">Close</span></button>--%>
+                <%--<h4 class="modal-title" id="myModalLabel">Object Picker Demo</h4>--%>
+            <%--</div>--%>
+            <%--<header class="header bg-gradient b-b clearfix">--%>
+                <%--<div class="row m-t-sm">--%>
+                    <%--<div class="col-md-12 m-b-sm">--%>
+                        <%--<div class="input-group">--%>
+                            <%--<input type="text" class="input-md form-control" id="edtPoSearch" placeholder='<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />'>--%>
+                            <%--<span class="input-group-btn">--%>
+                            <%--&lt;%&ndash;<button class="btn btn-md btn-default" type="button"><spring:message code="search.submit.text" text="Go!" /></button>&ndash;%&gt;--%>
+                            <%--<button class="btn btn-md" type="button"><spring:message code="search.submit.text" text="Go!" /></button>--%>
+                            <%--</span> </div>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</header>--%>
+            <%--<div class="modal-body">--%>
+                <%--<div class="row">--%>
+                    <%--<div class="col-xs-3">--%>
+                        <%--<div class="facets" id="divPoFacets">--%>
+                            <%--&lt;%&ndash;<h6>Create User</h6>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<div class="list-group ">&ndash;%&gt;--%>
+                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<span class="badge bg-info">5</span> sally-acm </label>&ndash;%&gt;--%>
+                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<span class="badge bg-info">2</span> ann-acm </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<h6>Person, Organization Type</h6>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<div class="list-group auto">&ndash;%&gt;--%>
+                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<span class="badge bg-info">2</span> initiator </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<h6>Object Type</h6>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<div class="list-group auto">&ndash;%&gt;--%>
+                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<span class="badge bg-info">6</span> TASK </label>&ndash;%&gt;--%>
+                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<span class="badge bg-info">2</span> PERSON-ASSOCIATION </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<h6>Assignee Full Name</h6>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<div class="list-group auto">&ndash;%&gt;--%>
+                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<span class="badge bg-info">6</span> sally supervisor </label>&ndash;%&gt;--%>
+                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<span class="badge bg-info">2</span> ann administrator </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<h6>Priority</h6>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<div class="list-group ">&ndash;%&gt;--%>
+                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<span class="badge bg-info">6</span> medium </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                    <%--<div class="col-xs-9">--%>
+                        <%--<section class="panel panel-default">--%>
+                            <%--<div class="table-responsive" id="divPoResults">--%>
+                                <%--&lt;%&ndash;<table class="table table-striped b-t b-light">&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<thead>&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<tr>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<th width="10"><input type="checkbox"> </th>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<th class="th-sortable" data-toggle="class">Type <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<th class="th-sortable" data-toggle="class">ID <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<th class="th-sortable" data-toggle="class">Title <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<th class="th-sortable" data-toggle="class">Created <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<th class="th-sortable" data-toggle="class">Status <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;</tr>&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;</thead>&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<tbody>&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<tr>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<td><input type="checkbox"></td>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<td>[Type]</td>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<td>[ID]</td>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<td>[Title]</td>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<td>[Created]</td>&ndash;%&gt;--%>
+                                        <%--&lt;%&ndash;<td>[Status]</td>&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;</tr>&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;</tbody>&ndash;%&gt;--%>
+                                <%--&lt;%&ndash;</table>&ndash;%&gt;--%>
+                            <%--</div>--%>
+                        <%--</section>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+            <%--<div class="modal-footer">--%>
+                <%--<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>--%>
+                <%--<button type="button" class="btn btn-primary">Select</button>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</div>--%>

@@ -11,18 +11,25 @@ var AcmNotification = AcmNotification || {
         if (AcmNotification.Model.create)      {AcmNotification.Model.create();}
         if (AcmNotification.View.create)       {AcmNotification.View.create();}
 
-        SearchBase.create("notification"
-            ,AcmNotification.View.$edtSearch
-            ,AcmNotification.View.$btnSearch
-            ,AcmNotification.View.$divFacet
-            ,AcmNotification.View.$divResults
-            ,AcmNotification.View.args
-            ,AcmNotification.View.jtDataMaker
-        );
+
+        if (SearchBase.create) {
+            SearchBase.create({name: "notification"
+                ,$edtSearch : AcmNotification.View.$edtSearch
+                ,$btnSearch : AcmNotification.View.$btnSearch
+                ,$divFacets : AcmNotification.View.$divFacets
+                ,$divResults: AcmNotification.View.$divResults
+                ,jtArgs     : AcmNotification.View.getJtArgs()
+                ,jtDataMaker: AcmNotification.View.jtDataMaker
+                ,filters    : [{key: "Object Type", values: ["CASE_FILE"]}]
+            });
+        }
     }
+
     ,onInitialized: function() {
         if (AcmNotification.Controller.onInitialized) {AcmNotification.Controller.onInitialized();}
         if (AcmNotification.Model.onInitialized)      {AcmNotification.Model.onInitialized();}
         if (AcmNotification.View.onInitialized)       {AcmNotification.View.onInitialized();}
+
+        if (SearchBase.onInitialized)        {SearchBase.onInitialized();}
     }
 };

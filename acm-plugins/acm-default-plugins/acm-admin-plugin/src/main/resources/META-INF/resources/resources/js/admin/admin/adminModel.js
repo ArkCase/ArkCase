@@ -55,7 +55,7 @@ Admin.Model = Admin.Model || {
 
     ,Organization: {
         create : function() {
-            if (Admin.Model.Organization.ModalDialog.create)           {Admin.Model.Organization.ModalDialog.create();}
+            //if (Admin.Model.Organization.ModalDialog.create)           {Admin.Model.Organization.ModalDialog.create();}
             if (Admin.Model.Organization.Tree.create)           {Admin.Model.Organization.Tree.create();}
 
             this.cacheGroups = new Acm.Model.CacheFifo(4);
@@ -79,7 +79,7 @@ Admin.Model = Admin.Model || {
 
         }
         ,onInitialized: function() {
-            if (Admin.Model.Organization.ModalDialog.onInitialized)           {Admin.Model.Organization.ModalDialog.onInitialized();}
+            //if (Admin.Model.Organization.ModalDialog.onInitialized)           {Admin.Model.Organization.ModalDialog.onInitialized();}
             if (Admin.Model.Organization.Tree.onInitialized)           {Admin.Model.Organization.Tree.onInitialized();}
 
         }

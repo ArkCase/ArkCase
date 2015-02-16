@@ -8,7 +8,7 @@ describe("SearchBase.Model", function() {
     var testData = null;
 
     beforeEach(function() {
-        SearchBase.Model.setSearchInfo(AcmEx.Model.Search.getDefaultSearchInfo());
+        SearchBase.Model.setSearchInfo(SearchBase.Model.getDefaultSearchInfo());
 
         testData =
         {
@@ -219,40 +219,40 @@ describe("SearchBase.Model", function() {
         var k;
         var v;
 
-        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(false);
-        expect(SearchBase.Model.makeFilterParam(si)).toEqual('');
+        expect(SearchBase.Model.findFilter(si.filters, k, v)).toEqual(false);
+        expect(SearchBase.Model.makeFilterParam(si.filters)).toEqual('');
 
         k = "Create Date";
         v = "Previous Year";
-        SearchBase.Model.addFilter(si, k, v);
-        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(true);
-        expect(SearchBase.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year');
+        SearchBase.Model.addFilter(si.filters, k, v);
+        expect(SearchBase.Model.findFilter(si.filters, k, v)).toEqual(true);
+        expect(SearchBase.Model.makeFilterParam(si.filters)).toEqual('&filters=fq="Create Date":Previous Year');
 
-        SearchBase.Model.removeFilter(si, k, v);
-        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(false);
-        expect(SearchBase.Model.makeFilterParam(si)).toEqual('');
+        SearchBase.Model.removeFilter(si.filters, k, v);
+        expect(SearchBase.Model.findFilter(si.filters, k, v)).toEqual(false);
+        expect(SearchBase.Model.makeFilterParam(si.filters)).toEqual('');
 
-        SearchBase.Model.addFilter(si, k, v);
-        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(true);
-        expect(SearchBase.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year');
+        SearchBase.Model.addFilter(si.filters, k, v);
+        expect(SearchBase.Model.findFilter(si.filters, k, v)).toEqual(true);
+        expect(SearchBase.Model.makeFilterParam(si.filters)).toEqual('&filters=fq="Create Date":Previous Year');
 
         k = "Create Date";
         v = "Previous Month";
-        SearchBase.Model.addFilter(si, k, v);
-        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(true);
-        expect(SearchBase.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month');
+        SearchBase.Model.addFilter(si.filters, k, v);
+        expect(SearchBase.Model.findFilter(si.filters, k, v)).toEqual(true);
+        expect(SearchBase.Model.makeFilterParam(si.filters)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month');
 
         k = "Object Type";
         v = "CASE_FILE";
-        SearchBase.Model.addFilter(si, k, v);
-        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(true);
-        expect(SearchBase.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month%26fq="Object Type":CASE_FILE');
+        SearchBase.Model.addFilter(si.filters, k, v);
+        expect(SearchBase.Model.findFilter(si.filters, k, v)).toEqual(true);
+        expect(SearchBase.Model.makeFilterParam(si.filters)).toEqual('&filters=fq="Create Date":Previous Year|Previous Month%26fq="Object Type":CASE_FILE');
 
         k = "Create Date";
         v = "Previous Year";
-        SearchBase.Model.removeFilter(si, k, v);
-        expect(SearchBase.Model.findFilter(si, k, v)).toEqual(false);
-        expect(SearchBase.Model.makeFilterParam(si)).toEqual('&filters=fq="Create Date":Previous Month%26fq="Object Type":CASE_FILE');
+        SearchBase.Model.removeFilter(si.filters, k, v);
+        expect(SearchBase.Model.findFilter(si.filters, k, v)).toEqual(false);
+        expect(SearchBase.Model.makeFilterParam(si.filters)).toEqual('&filters=fq="Create Date":Previous Month%26fq="Object Type":CASE_FILE');
 
     });
 
@@ -262,31 +262,31 @@ describe("SearchBase.Model", function() {
 
         var selected = null;
         SearchBase.Model.onViewChangedFacetSelection(selected);
-        expect(si.filter).toEqual([]);
+        expect(si.filters).toEqual([]);
 
         selected = [];
         SearchBase.Model.onViewChangedFacetSelection(selected);
-        expect(si.filter).toEqual([]);
+        expect(si.filters).toEqual([]);
 
         si.filter = [];
         selected = [{type:"facet_fields", name:"Object Type", value:"CASE_FILE"}];
         SearchBase.Model.onViewChangedFacetSelection(selected);
-        expect(si.filter).toEqual([{key:"Object Type", values:["CASE_FILE"]}]);
+        expect(si.filters).toEqual([{key:"Object Type", values:["CASE_FILE"]}]);
 
         si.filter = [];
         selected = [{type:"facet_fields", name:"Object Type", value:"CASE_FILE"}
             ,{type:"facet_fields", name:"Object Type", value:"TASK"}
         ];
         SearchBase.Model.onViewChangedFacetSelection(selected);
-        expect(si.filter).toEqual([{key:"Object Type", values:["CASE_FILE","TASK"]}]);
+        expect(si.filters).toEqual([{key:"Object Type", values:["CASE_FILE","TASK"]}]);
 
-        si.filter = [];
+        si.filters = [];
         selected = [{type:"facet_fields", name:"Object Type", value:"CASE_FILE"}
             ,{type:"facet_fields", name:"Object Type", value:"TASK"}
             ,{type:"facet_fields", name:"Status", value:"valid"}
         ];
         SearchBase.Model.onViewChangedFacetSelection(selected);
-        expect(si.filter).toEqual([{key:"Object Type", values:["CASE_FILE","TASK"]}
+        expect(si.filters).toEqual([{key:"Object Type", values:["CASE_FILE","TASK"]}
             ,{key:"Status", values:["valid"]}
         ]);
 

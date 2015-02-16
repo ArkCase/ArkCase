@@ -4,10 +4,10 @@
  * @author jwu
  */
 var SearchBase = SearchBase || {
-    create: function(name, $edtSearch, $btnSearch, $divFacet, $divResults, args, jtDataMaker) {
-        if (SearchBase.Controller.create) {SearchBase.Controller.create(name);}
-        if (SearchBase.Model.create)      {SearchBase.Model.create();}
-        if (SearchBase.View.create)       {SearchBase.View.create($edtSearch, $btnSearch, $divFacet, $divResults, args, jtDataMaker);}
+    create: function(args) {
+        if (SearchBase.Controller.create) {SearchBase.Controller.create(args);}
+        if (SearchBase.Model.create)      {SearchBase.Model.create(args);}
+        if (SearchBase.View.create)       {SearchBase.View.create(args);}
     }
     ,onInitialized: function() {
         if (SearchBase.Controller.onInitialized) {SearchBase.Controller.onInitialized();}
@@ -15,18 +15,48 @@ var SearchBase = SearchBase || {
         if (SearchBase.View.onInitialized)       {SearchBase.View.onInitialized();}
     }
 
-    ,createDialog: function(name, $edtSearch, $btnSearch, $divFacet, $divResults, args, jtDataMaker) {
-        if (!args) {
-            args = {multiselect:true, selecting:true, selectingCheckboxes:true};
+    ,showSearchDialog: function(args) {
+        if (Acm.isEmpty(args.$dlgObjectPicker)) {
+            args.$dlgObjectPicker = $("#dlgObjectPicker");
         }
-        this.create(name, $edtSearch, $btnSearch, $divFacet, $divResults, args, jtDataMaker);
-        this.onInitialized();
+        if (Acm.isEmpty(args.$edtSearch)) {
+            args.$edtSearch = $("#edtPoSearch");
+        }
+        if (Acm.isEmpty(args.$btnSearch)) {
+            args.$btnSearch = args.$edtSearch.next().find("button");
+        }
+        if (Acm.isEmpty(args.$divFacets)) {
+            args.$divFacets = $("#divPoFacets");
+        }
+        if (Acm.isEmpty(args.$divResults)) {
+            args.$divResults = $("#divPoResults");
+        }
+        if (!args.jtArgs) {
+            args.jtArgs = {multiselect:true, selecting:true, selectingCheckboxes:true};
+        }
+        this.create(args);
+
+        Acm.deferred(SearchBase.onInitialized);
+
+        Acm.Dialog.modal(args.$dlgObjectPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
     }
-    ,setApi: function(url) {
-        SearchBase.Model.setApi(url);
-    }
-    ,fixFilters: function(filters) {
-        SearchBase.Model.fixFilters(filters);
-    }
+//    ,validateArgs: function(data) {
+//        if (Acm.isEmpty(data)) {
+//            return false;
+//        }
+//        if (Acm.isEmpty(data.$edtSearch)) {
+//            return false;
+//        }
+//        if (Acm.isEmpty(data.$btnSearch)) {
+//            return false;
+//        }
+//        if (Acm.isEmpty(data.$divFacets)) {
+//            return false;
+//        }
+//        if (Acm.isEmpty(data.$divResults)) {
+//            return false;
+//        }
+//        return true;
+//    }
 };
 

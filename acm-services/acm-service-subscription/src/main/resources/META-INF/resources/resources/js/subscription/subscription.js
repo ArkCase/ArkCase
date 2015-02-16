@@ -9,18 +9,24 @@ var Subscription = Subscription || {
         if (Subscription.Model.create)      {Subscription.Model.create();}
         if (Subscription.View.create)       {Subscription.View.create();}
 
-        SearchBase.create("subscription"
-            ,Subscription.View.$edtSearch
-            ,Subscription.View.$btnSearch
-            ,Subscription.View.$divFacet
-            ,Subscription.View.$divResults
-            ,Subscription.View.args
-            ,Subscription.View.jtDataMaker
-        );
+        if (SearchBase.create) {
+            SearchBase.create({name: "subscription"
+                ,$edtSearch : Subscription.View.$edtSearch
+                ,$btnSearch : Subscription.View.$btnSearch
+                ,$divFacets : Subscription.View.$divFacets
+                ,$divResults: Subscription.View.$divResults
+                ,jtArgs     : Subscription.View.getJtArgs
+                ,jtDataMaker: Subscription.View.jtDataMaker
+                ,filters    : [{key: "Object Type", values: ["CASE_FILE"]}]
+            });
+        }
     }
+
     ,onInitialized: function() {
         if (Subscription.Controller.onInitialized) {Subscription.Controller.onInitialized();}
         if (Subscription.Model.onInitialized)      {Subscription.Model.onInitialized();}
         if (Subscription.View.onInitialized)       {Subscription.View.onInitialized();}
+
+        if (SearchBase.onInitialized)              {SearchBase.onInitialized();}
     }
 };
