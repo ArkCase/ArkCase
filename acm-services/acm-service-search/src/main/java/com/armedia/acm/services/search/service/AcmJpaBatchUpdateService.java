@@ -3,6 +3,7 @@ package com.armedia.acm.services.search.service;
 import com.armedia.acm.data.AcmObjectChangelist;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
