@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.complaint.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -36,6 +37,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
     private ComplaintDao mockComplaintDao;
     private EcmFileService mockEcmFileService;
     private MockMultipartFile mockMultipartFile;
+    private ComplaintEventPublisher mockComplaintEventPublisher;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -54,12 +56,14 @@ public class AddFileAPIControllerTest extends EasyMockSupport
         mockAuthentication = createMock(Authentication.class);
         mockComplaintDao = createMock(ComplaintDao.class);
         mockEcmFileService = createMock(EcmFileService.class);
+        mockComplaintEventPublisher = createMock(ComplaintEventPublisher.class);
 
         // first argument below must match the request param name expected by the controller.
         mockMultipartFile = new MockMultipartFile("files[]", "test.txt", "text/plain", "test me".getBytes());
 
         unit.setComplaintDao(mockComplaintDao);
         unit.setEcmFileService(mockEcmFileService);
+        unit.setEventPublisher(mockComplaintEventPublisher);
     }
 
     @Test
@@ -67,6 +71,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
     {
         String complaintId = "500";
         String acceptHeader = MediaType.APPLICATION_JSON_VALUE;
+        String userId="user-acm";
 
         // use an empty context path since the controller actually gets the servletContext's context path; which
         // we can't set through Spring MVC.
@@ -74,13 +79,16 @@ public class AddFileAPIControllerTest extends EasyMockSupport
 
         Complaint complaint = new Complaint();
         complaint.setComplaintId(Long.valueOf(complaintId));
+        //complaint.s("COMPLAINT");
         complaint.setEcmFolderId("cmisFolderId");
         complaint.setComplaintNumber("complaintNumber");
 
         // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
+        expect(mockAuthentication.getName()).andReturn(userId).anyTimes();
 
         expect(mockComplaintDao.find(complaint.getComplaintId())).andReturn(complaint);
+
+        mockComplaintEventPublisher.publishComplaintFileAddedEvent( complaint, userId, true );
 
         expect(mockEcmFileService.upload(
                 "attachment",
@@ -128,6 +136,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
         expect(mockAuthentication.getName()).andReturn("user");
 
         expect(mockComplaintDao.find(complaint.getComplaintId())).andReturn(complaint);
+
 
         expect(mockEcmFileService.upload(
                 "attachment",
