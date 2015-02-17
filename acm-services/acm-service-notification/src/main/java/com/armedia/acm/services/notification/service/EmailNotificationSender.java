@@ -45,7 +45,7 @@ public class EmailNotificationSender implements NotificationSender {
 			messageProps.put("user", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null));
 			messageProps.put("password", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY, null));
 			messageProps.put("from", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
-			messageProps.put("to", "riste.tutureski@armedia.com");
+			messageProps.put("to", notification.getUserEmail());
 			messageProps.put("subject", notification.getTitle());
 			
 			MuleMessage received = getMuleClient().send("vm://sendEmail.in", notification.getNote(), messageProps);
