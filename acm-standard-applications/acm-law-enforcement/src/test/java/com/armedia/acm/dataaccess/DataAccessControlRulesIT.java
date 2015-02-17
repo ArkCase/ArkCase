@@ -1,9 +1,9 @@
 package com.armedia.acm.dataaccess;
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.services.dataaccess.service.impl.AcmPrivilegeService;
-import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
@@ -86,9 +86,9 @@ public class DataAccessControlRulesIT
 
         AcmParticipantPrivilege priv = assignee.getPrivileges().get(0);
 
-        assertEquals(AcmPrivilegeService.ACCESS_GRANT, priv.getAccessType());
-        assertEquals(AcmPrivilegeService.ACCESS_LEVEL_READ, priv.getObjectAction());
-        assertEquals(AcmPrivilegeService.ACCESS_REASON_POLICY, priv.getAccessReason());
+        assertEquals(DataAccessControlConstants.ACCESS_GRANT, priv.getAccessType());
+        assertEquals(DataAccessControlConstants.ACCESS_LEVEL_READ, priv.getObjectAction());
+        assertEquals(DataAccessControlConstants.ACCESS_REASON_POLICY, priv.getAccessReason());
 
         // since we have privileges now, if we run the rule again, it should not add any more
         workingMemory.execute(c);
@@ -122,9 +122,9 @@ public class DataAccessControlRulesIT
 
         AcmParticipantPrivilege priv = assignee.getPrivileges().get(0);
 
-        assertEquals(AcmPrivilegeService.ACCESS_GRANT, priv.getAccessType());
-        assertEquals(AcmPrivilegeService.ACCESS_LEVEL_READ, priv.getObjectAction());
-        assertEquals(AcmPrivilegeService.ACCESS_REASON_POLICY, priv.getAccessReason());
+        assertEquals(DataAccessControlConstants.ACCESS_GRANT, priv.getAccessType());
+        assertEquals(DataAccessControlConstants.ACCESS_LEVEL_READ, priv.getObjectAction());
+        assertEquals(DataAccessControlConstants.ACCESS_REASON_POLICY, priv.getAccessReason());
 
         // since we have privileges now, if we run the rule again, it should not add any more
         workingMemory.execute(c);
