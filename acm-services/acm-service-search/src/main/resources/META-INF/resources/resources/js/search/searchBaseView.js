@@ -15,11 +15,32 @@ SearchBase.View = {
         if (SearchBase.View.Results.onInitialized)   {SearchBase.View.Results.onInitialized();}
     }
 
+    ,showDialog: function(args) {
+        if (Acm.isNotEmpty(args.title)) {
+            //todo: set title
+        }
+        if (Acm.isNotEmpty(args.prompt)) {
+            //todo: set placeholder text
+        }
+        if (Acm.isNotEmpty(args.btnGoText)) {
+            //todo
+        }
+        if (Acm.isNotEmpty(args.btnOkText)) {
+            //todo
+        }
+        if (Acm.isNotEmpty(args.btnCancelText)) {
+            //todo
+        }
+
+        Acm.Dialog.modal(args.$dlgObjectPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
+    }
 
     ,Query: {
         create: function($edtSearch, $btnSearch) {
-            this.$edtSearch = $edtSearch;
-            this.$btnSearch = $btnSearch;
+            var $edtSearchDefault  = $("#searchQuery");
+            var $btnSearchDefault  = $edtSearchDefault.next().find("button");
+            this.$edtSearch = ($edtSearch)? $edtSearch : $edtSearchDefault;
+            this.$btnSearch = ($btnSearch)? $btnSearch : $btnSearchDefault;
             this.$btnSearch.unbind("click").on("click", function(e) {SearchBase.View.Query.onClickBtnSearch(e, this);});
             this.$edtSearch.keyup(function(event){
                 if(13 == event.keyCode){
@@ -53,7 +74,7 @@ SearchBase.View = {
 
     ,Facet: {
         create: function($divFacets) {
-            this.$divFacets = $divFacets;
+            this.$divFacets = ($divFacets)? $divFacets : $("#divFacets");
 
             Acm.Dispatcher.replaceEventListener(SearchBase.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
         }
@@ -219,7 +240,7 @@ SearchBase.View = {
 
     ,Results: {
         create: function($divResults, jtArgs, jtDataMaker) {
-            this.$divResults = $divResults;
+            this.$divResults = ($divResults)? $divResults : $("#divResults");
             this.jtDataMaker = (jtDataMaker)? jtDataMaker : this._jtDataMakerDefault;
             SearchBase.View.Results._useJTable(jtArgs);
 

@@ -374,6 +374,11 @@ CaseFile.View = CaseFile.View || {
         //---- demo how to use object picker ----
         ,onPickObjectDemo: function() {
             SearchBase.showSearchDialog({name: "demoDialog"
+                ,title: "My Dialog Title"
+                ,prompt: "Enter to search Case or Task"
+                ,btnGoText: "Search Now!"
+                ,btnOkText: "Select"
+                ,btnCancelText: "Away"
                 ,filters: [{key: "Object Type", values: ["CASE_FILE", "TASK"]}]
                 ,onClickBtnPrimary : function(event, ctrl) {
                     SearchBase.View.Results.getSelectedRows().each(function () {
@@ -392,8 +397,8 @@ CaseFile.View = CaseFile.View || {
 
         ,onClickBtnConsolidateCase: function() {
 //borrow it to test object picker dialog
-//            this.onPickObjectDemo();
-//            return;
+            this.onPickObjectDemo();
+            return;
 
             CaseFile.View.Action.setValueEdtConsolidateCase("");
             CaseFile.View.Action.showDlgConsolidateCase(function(event, ctrl) {

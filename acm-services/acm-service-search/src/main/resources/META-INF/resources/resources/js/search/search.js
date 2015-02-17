@@ -10,12 +10,7 @@ var Search = Search || {
         if (Search.View.create)       {Search.View.create();}
 
         if (SearchBase.create) {
-            SearchBase.create({name: "search"
-                ,$edtSearch : Search.View.Query.$edtSearch
-                ,$btnSearch : Search.View.Query.$btnSearch
-                ,$divFacets : Search.View.$divFacets
-                ,$divResults: Search.View.$divResults
-            });
+            SearchBase.create();
         }
     }
     ,onInitialized: function() {

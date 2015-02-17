@@ -11,10 +11,6 @@ var Subscription = Subscription || {
 
         if (SearchBase.create) {
             SearchBase.create({name: "subscription"
-                ,$edtSearch : Subscription.View.$edtSearch
-                ,$btnSearch : Subscription.View.$btnSearch
-                ,$divFacets : Subscription.View.$divFacets
-                ,$divResults: Subscription.View.$divResults
                 ,jtArgs     : Subscription.View.getJtArgs
                 ,jtDataMaker: Subscription.View.jtDataMaker
                 ,filters    : [{key: "Object Type", values: ["CASE_FILE"]}]
