@@ -5,6 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
+	<!-- Rules definitions -->
     <bean id="assignRule" class="com.armedia.acm.services.notification.model.AssignmentRule">
 		<property name="globalRule" value="true"/>	
 		<property name="jpaQuery">
@@ -65,14 +66,26 @@
 		</property>
     </bean>
 	
+	<!-- Senders Definition -->
+	<bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
+		<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+		<property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+		<property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
+		<property name="muleClient" ref="muleClient" />
+	</bean>
+	
+	<!-- Task Scheduler -->
 	<task:scheduler id="notificationTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="notificationTaskScheduler">
         <task:scheduled
                 ref="notificationService"
                 method="run"
-                fixed-delay="100000"/>
+                fixed-delay="300000"/>
     </task:scheduled-tasks>
     
+	<!-- Service Definition -->
     <bean id="notificationService" class="com.armedia.acm.services.notification.service.NotificationServiceImpl">
     	<property name="batchRun" ref="notificationUserBatchRun" />
     	<property name="batchSize" ref="notificationUserBatchSize" />
@@ -80,12 +93,10 @@
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
         <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
-        <property name="assignRule" ref="assignRule" />
-        <property name="unassignRule" ref="unassignRule" />
         <property name="notificationDao" ref="notificationDao" />
         <property name="muleClient" ref="muleClient" />
 		<property name="notificationEventPublisher" ref="notificationEventPublisher" />
-		<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+		<property name="springContextHolder" ref="acmContextHolder"/> 
     </bean>
 
 </beans>

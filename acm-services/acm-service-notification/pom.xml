@@ -273,15 +273,6 @@
             <artifactId>mule-transport-email</artifactId>
             <version>${mule.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-cmis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-scripting</artifactId>
-            <scope>compile</scope>
-        </dependency>
 
     </dependencies>
 
