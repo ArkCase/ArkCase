@@ -121,6 +121,13 @@
             <artifactId>acm-spring-context-holder</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-login</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
     </dependencies>
 
 
