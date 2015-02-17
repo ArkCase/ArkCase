@@ -1,6 +1,6 @@
 package com.armedia.acm.services.dataaccess.service;
 
-import com.armedia.acm.services.dataaccess.service.impl.AcmPrivilegeService;
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
@@ -30,7 +30,7 @@ public class ParticipantAccessChecker
         {
             for ( AcmParticipantPrivilege priv : ap.getPrivileges() )
             {
-                if (AcmPrivilegeService.ACCESS_LEVEL_READ.equals(priv.getObjectAction()) && level.equals(priv.getAccessType()) )
+                if (DataAccessControlConstants.ACCESS_LEVEL_READ.equals(priv.getObjectAction()) && level.equals(priv.getAccessType()) )
                 {
                     readers.add(ap.getParticipantLdapId());
                     break;
@@ -47,13 +47,13 @@ public class ParticipantAccessChecker
 
         for ( AcmParticipant ap : in.getParticipants() )
         {
-            if ( AcmPrivilegeService.DEFAULT_ACCESSOR.equals(ap.getParticipantLdapId()) )
+            if ( DataAccessControlConstants.DEFAULT_ACCESSOR.equals(ap.getParticipantLdapId()) )
             {
                 defaultAccessorFound = true;
                 for ( AcmParticipantPrivilege priv : ap.getPrivileges() )
                 {
-                    if ( AcmPrivilegeService.ACCESS_LEVEL_READ.equals(priv.getObjectAction()) &&
-                            AcmPrivilegeService.ACCESS_GRANT.equals(priv.getAccessType()) )
+                    if ( DataAccessControlConstants.ACCESS_LEVEL_READ.equals(priv.getObjectAction()) &&
+                            DataAccessControlConstants.ACCESS_GRANT.equals(priv.getAccessType()) )
                     {
                         return true;
                     }
