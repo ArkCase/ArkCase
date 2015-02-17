@@ -5,7 +5,7 @@
 
     <queues>
         <queue id="acmEvents">
-            <className>com.armedia.commons.audit.MemoryThreadedAuditQueue</className>
+            <className>com.armedia.commons.audit.MemorySynchronousAuditQueue</className>
             <includes>
                 <pattern>com.armedia.acm.*</pattern>
             </includes>
