@@ -7,6 +7,7 @@ import com.armedia.acm.services.search.service.SearchConstants;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.dao.SubscriptionEventDao;
 import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
+import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.xmlbeans.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +28,12 @@ public class SubscriptionEventBatchInsertService {
     private SubscriptionEventDao subscriptionEventDao;
     private PropertyFileManager propertyFileManager;
     private String lastBatchInsertPropertyFileLocation;
+    private SubscriptionEventPublisher subscriptionEventPublisher;
     private String userHomeDir;
     private String fileSeparator = SystemProperties.getProperty("file.separator");
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private String fullPath;
+    private SpringContextHolder springContextHolder;
 
     /**
      * The default run date to use if this generator has never run before (or if the properties file that stores the
@@ -52,7 +55,7 @@ public class SubscriptionEventBatchInsertService {
         getAuditPropertyEntityAdapter().setUserId("SUBSCRIPTION-BATCH-INSERT");
 
         String lastRunDate = getPropertyFileManager().load(
-                getLastBatchInsertPropertyFileLocation(),
+                getFullPath(),
                 SUBSCRIPTION_EVENT_LAST_RUN_DATE_PROPERTY_KEY,
                 DEFAULT_LAST_RUN_DATE);
         DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -63,20 +66,18 @@ public class SubscriptionEventBatchInsertService {
             List<AcmSubscriptionEvent> subscriptionEventList = null;
         try {
                 subscriptionEventList = getSubscriptionDao().createListOfNewSubscriptionEventsForInserting(lastBatchRunDate);
-                SubscriptionEventPublisher subscriptionEventPublisher = new SubscriptionEventPublisher();
                 for( AcmSubscriptionEvent subscriptionEvent: subscriptionEventList ){
-                    subscriptionEvent = getSubscriptionEventDao().save(subscriptionEvent);
-                    subscriptionEventPublisher.publishAcmSubscriptionEventCreatedEvent(subscriptionEvent,true);
+                    AcmSubscriptionEvent subscriptionEventSaved = getSubscriptionEventDao().save(subscriptionEvent);
+                    subscriptionEventPublisher.publishAcmSubscriptionEventCreatedEvent(subscriptionEventSaved,true);
                 }
         } catch ( AcmObjectNotFoundException e ) {
-            if (log.isInfoEnabled())
+            if ( log.isInfoEnabled() )
                 log.info("There are no new events to be added",e);
         }
-        } catch (ParseException e) {
-            if (log.isErrorEnabled())
+        } catch ( ParseException e ) {
+            if ( log.isErrorEnabled() )
                 log.error("Parsing exception occurred while fetching lastBatchRunDate ",e);
         }
-        List<AcmSubscriptionEvent> subscriptionEventList = null;
     }
 
     private void storeCurrentDateForNextBatchRun(DateFormat dateFormat)
@@ -163,4 +164,19 @@ public class SubscriptionEventBatchInsertService {
         this.subscriptionDao = subscriptionDao;
     }
 
+    public SubscriptionEventPublisher getSubscriptionEventPublisher() {
+        return subscriptionEventPublisher;
+    }
+
+    public void setSubscriptionEventPublisher(SubscriptionEventPublisher subscriptionEventPublisher) {
+        this.subscriptionEventPublisher = subscriptionEventPublisher;
+    }
+
+    public SpringContextHolder getSpringContextHolder() {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder) {
+        this.springContextHolder = springContextHolder;
+    }
 }

@@ -76,13 +76,13 @@ public class CreateSubscriptionAPIController {
 
         AcmSubscription subscription = prepareSubscription(userId, objectType, objectId, authentication);
         try {
-            subscription = getSubscriptionDao().save(subscription);
-            getSubscriptionEventPublisher().publishSubscriptionCreatedEvent(subscription,authentication,true);
+           AcmSubscription addedSubscription = getSubscriptionDao().save(subscription);
+            getSubscriptionEventPublisher().publishSubscriptionCreatedEvent(addedSubscription,authentication,true);
         } catch ( Exception e ) {
                Throwable t =  ExceptionUtils.getRootCause(e);
                if ( t instanceof  SQLIntegrityConstraintViolationException ) {
                    if (log.isDebugEnabled())
-                       log.debug("Subscription on object[" + objectType + "]:[" + objectId + "] by user: " + userId + " already exists", e);
+                       log.debug("Subscription on object['" + objectType + "]:[" + objectId + "] by user: " + userId + " already exists", e);
 
                    List<AcmSubscription> subscriptionList = getSubscriptionDao().getSubscriptionByUserObjectIdAndType(userId, objectId, objectType);
                    if(subscriptionList.isEmpty()){

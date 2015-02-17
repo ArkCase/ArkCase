@@ -36,7 +36,6 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         fileAddedEvent.setUserId(userId);
 
         applicationEventPublisher.publishEvent(fileAddedEvent);
-        log.info("MARJAN: 'com.armedia.acm.case_file.file.added'");
     }
 
     @Override
