@@ -5,7 +5,7 @@ package com.armedia.acm.services.subscription.model;
  */
 public class AcmSubscriptionEventCreatedEvent extends AcmSubscriptionEventPersistenceEvent {
 
-    private static final String EVENT_TYPE = "com.armedia.acm.subscription-event.created";
+    private static final String EVENT_TYPE = "com.armedia.acm.subscriptionevent.created";
 
     public AcmSubscriptionEventCreatedEvent( AcmSubscriptionEvent source ) {
         super(source);

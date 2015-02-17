@@ -49,7 +49,7 @@ public class SubscriptionEventPublisher  implements ApplicationEventPublisherAwa
         if ( log.isDebugEnabled() ) {
             log.debug("Publishing a AcmSubscriptionEvent created event.");
         }
-        AcmSubscriptionEventPersistenceEvent acmSubscriptionEventPersistenceEvent = new AcmSubscriptionEventCreatedEvent(source);
+        AcmSubscriptionEventCreatedEvent acmSubscriptionEventPersistenceEvent = new AcmSubscriptionEventCreatedEvent(source);
         acmSubscriptionEventPersistenceEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(acmSubscriptionEventPersistenceEvent);

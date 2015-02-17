@@ -69,9 +69,9 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription> {
 
         //this should be native query? Actually acm_audit_log table is mapped as JPA entity class AuditEvent
         // and I used this model.
-        Query query = getEm().createQuery("SELECT aud.objectType, aud.ObjectId, " +
-                "aud.userId, aud.auditDateTime, aud.fullEventType, sub.userId, " +
-                "sub.objectName, sub.objectNumber " +
+        Query query = getEm().createQuery("SELECT aud.objectType, aud.objectId, " +
+                "aud.userId, aud.eventDate, aud.fullEventType, sub.userId, " +
+                "sub.objectName, sub.objectTitle " +
                 "FROM AuditEvent aud, AcmSubscription sub " +
                 "WHERE sub.subscriptionObjectType = aud.objectType " +
                 "AND sub.objectId = aud.objectId " +
