@@ -310,7 +310,6 @@
                 <form id="formUploadBPMN" method="post">
                     <input id="filesSelection" type="file" name="files[]" multiple/>
                 </form>
-                <%--<input type="file" />--%>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -379,62 +378,3 @@
         </div>
     </div>
 </div>
-
-
-
-<div class="modal fade" id="addPeople" tabindex="-1" role="dialog" aria-labelledby="modalLabelPeople" aria-hidden="true">
-    <div class="modal-dialog"  style="height:540px; width:1030px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="modalLabelPeople" ></h4>
-
-            </div>
-
-            <div class="modal-body">
-                <section class="panel panel-default">
-                    <div class="row wrapper">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <input type="text" class="input-sm form-control" id="findMember" placeholder="Search people.." >
-                                <span class="input-group-btn">
-                                    <button class="btn btn-sm btn-default" id="btnFindMembers" type="button">Go!</button>
-                                </span>
-                                <%--<span class="input-group-btn">
-                                    <button class="btn btn-sm btn-default" id="btnFindMembers" type="button"><i class="fa fa-search"></i></button>
-                                  </span>--%>
-                            </div>
-                        <br>
-
-                        <div class="form-group" id="divFacets">Available Facets
-                        <br />
-                        </div>
-
-
-
-                        <div id="divMembersResults">
-                            <%--JTable - People Picker--%>
-                            <div class="row" id="tabMembers">
-                                <div class="col-md-12">
-                                    <%--<section class="panel panel-default">--%>
-                                        <div id="divMembers" style="width:100%"></div>
-                                    <%--</section>--%>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-
-                </section>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="btnAddPeople" >Add</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
