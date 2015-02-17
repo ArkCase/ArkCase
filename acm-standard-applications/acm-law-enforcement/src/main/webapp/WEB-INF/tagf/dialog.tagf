@@ -1,9 +1,9 @@
-<div class="modal fade" id="dlgObjectPicker" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div class="modal fade" id="dlgObjectPicker" tabindex="-1" role="dialog" aria-labelledby="labPoTitle" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Object Picker Dialog</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="labPoTitle">Choose Objects</h4>
             </div>
             <header class="header bg-gradient b-b clearfix">
                 <div class="row m-t-sm">
@@ -94,7 +94,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Select</button>
+                <button type="button" class="btn btn-primary">OK</button>
             </div>
         </div>
     </div>

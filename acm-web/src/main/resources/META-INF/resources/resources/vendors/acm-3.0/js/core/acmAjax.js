@@ -47,7 +47,7 @@ Acm.Ajax = {
 
     //,asyncGet : function(url, callback, data) {
 	,asyncGet : function(url, callback) {
-        console.log("asyncGet:url=" + url);
+        Acm.log("asyncGet:url=" + url);
         var arg = {type: 'GET'
             ,url: url
             ,async: true
@@ -56,8 +56,8 @@ Acm.Ajax = {
                 Acm.Dispatcher.triggerEvent(callback, response);
             }
             ,error: function(xhr, status, error) {
-                console.log("asyncGet:error=" + error + ", status=" + status);
-                console.log("asyncGet:responseText=" + xhr.responseText);
+                Acm.log("asyncGet:error=" + error + ", status=" + status);
+                Acm.log("asyncGet:responseText=" + xhr.responseText);
                 Acm.Dispatcher.triggerEvent(callback, {hasError:true,errorMsg:xhr.responseText});
             }
         };

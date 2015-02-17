@@ -62,7 +62,7 @@ Acm.Dialog = {
     //
     ,confirm: function(msg, callback, title){
         if (Acm.isEmpty(callback)) {
-            console.log("Confirm dialog needs callback");
+            Acm.log("Confirm dialog needs callback");
             return;
         }
 
@@ -81,7 +81,7 @@ Acm.Dialog = {
     //
     ,prompt: function(msg, callback, title){
         if (Acm.isEmpty(callback)) {
-            console.log("Prompt dialog needs callback");
+            Acm.log("Prompt dialog needs callback");
             return;
         }
 
