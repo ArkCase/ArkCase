@@ -7,11 +7,12 @@ package com.armedia.acm.services.notification.model;
  * @author riste.tutureski
  *
  */
-public class AssignmentRule {
+public class AssignmentRule implements NotificationRule {
 
 	private boolean globalRule;
 	private String jpaQuery;
 	
+	@Override
 	public boolean isGlobalRule() {
 		return globalRule;
 	}
@@ -20,6 +21,7 @@ public class AssignmentRule {
 		this.globalRule = globalRule;
 	}
 	
+	@Override
 	public String getJpaQuery() {
 		return jpaQuery;
 	}

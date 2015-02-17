@@ -17,7 +17,7 @@ public interface NotificationConstants {
 	/**
 	 * User who trigger scheduled task (this should be system user)
 	 */
-	public static final String SYSTEM_USER = "ACM3";
+	public static final String SYSTEM_USER = "NOTIFICATION-BATCH-INSERT";
 	
 	/**
      * The default run date to use if this generator has never run before (or if the properties file that stores the

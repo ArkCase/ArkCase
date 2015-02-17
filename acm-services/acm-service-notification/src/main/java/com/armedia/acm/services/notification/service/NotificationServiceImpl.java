@@ -11,19 +11,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
-import com.armedia.acm.services.notification.model.AssignmentRule;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.model.NotificationRule;
+import com.armedia.acm.spring.SpringContextHolder;
 
 /**
  * @author riste.tutureski
@@ -37,12 +35,10 @@ public class NotificationServiceImpl implements NotificationService {
     private int batchSize;
     private PropertyFileManager propertyFileManager;
     private String notificationPropertyFileLocation;
-    private AssignmentRule assignRule;
-    private AssignmentRule unassignRule;
     private NotificationDao notificationDao;
     private MuleClient muleClient;
     private NotificationEventPublisher notificationEventPublisher;
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private SpringContextHolder springContextHolder;
 	
     /**
      * This method is called by scheduled task
@@ -64,11 +60,15 @@ public class NotificationServiceImpl implements NotificationService {
 			Date lastRun = getLastRunDate(lastRunDate, dateFormat);
 			setLastRunDate(dateFormat);
 			
-			// Send assign notifications
-			runRule(lastRun, getAssignRule());
+			Map<String, NotificationRule> rules = getSpringContextHolder().getAllBeansOfType(NotificationRule.class);
 			
-			// Send unassign notifications
-			runRule(lastRun, getUnassignRule());
+			if (rules != null)
+			{
+				for (NotificationRule rule : rules.values())
+				{
+					runRule(lastRun, rule);
+				}
+			}
 						
 		}
 		catch(Exception e)
@@ -81,7 +81,7 @@ public class NotificationServiceImpl implements NotificationService {
 	 * This method is called for executing the rule query and sending notifications
 	 */
 	@Override
-	public void runRule(Date lastRun, AssignmentRule rule)
+	public void runRule(Date lastRun, NotificationRule rule)
 	{
 		int firstResult = 0;
 		int maxResult = getBatchSize();
@@ -98,6 +98,7 @@ public class NotificationServiceImpl implements NotificationService {
 				
 				for (Notification notification : notifications)
 				{
+					// Send notification
 					notification = send(notification);	
 					
 					// Save notification to database
@@ -115,40 +116,15 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public Notification send(Notification notification) 
 	{
-		Exception exception = null;
+		// Get all registered senders
+		Map<String, NotificationSender> senders = getSpringContextHolder().getAllBeansOfType(NotificationSender.class);
 		
-		try 
+		if (senders != null)
 		{
-			getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
-			
-			Map<String, Object> messageProps = new HashMap<>();
-			messageProps.put("host", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_HOST_KEY, null));
-			messageProps.put("port", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PORT_KEY, null));
-			messageProps.put("user", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null));
-			messageProps.put("password", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY, null));
-			messageProps.put("from", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
-			messageProps.put("to", notification.getUserEmail());
-			messageProps.put("subject", notification.getTitle());
-			
-			MuleMessage received = getMuleClient().send("vm://sendEmail.in", notification.getNote(), messageProps);
-			
-			exception = received.getInboundProperty("sendEmailException");
-		} 
-		catch (MuleException e) 
-		{
-			exception = e;
-		}
-		
-		if (notification != null)
-		{
-			if (exception == null)
+			for (NotificationSender sender : senders.values())
 			{
-				notification.setState(NotificationConstants.STATE_SENT);
-			}
-			else
-			{
-				LOG.error("Notification message not sent ...", exception);
-				notification.setState(NotificationConstants.STATE_NOT_SENT);
+				// Send notification
+				notification = sender.send(notification);
 			}
 		}
 				
@@ -218,22 +194,6 @@ public class NotificationServiceImpl implements NotificationService {
 		this.notificationPropertyFileLocation = notificationPropertyFileLocation;
 	}
 
-	public AssignmentRule getAssignRule() {
-		return assignRule;
-	}
-
-	public void setAssignRule(AssignmentRule assignRule) {
-		this.assignRule = assignRule;
-	}
-
-	public AssignmentRule getUnassignRule() {
-		return unassignRule;
-	}
-
-	public void setUnassignRule(AssignmentRule unassignRule) {
-		this.unassignRule = unassignRule;
-	}
-
 	public NotificationDao getNotificationDao() {
 		return notificationDao;
 	}
@@ -258,11 +218,11 @@ public class NotificationServiceImpl implements NotificationService {
 		this.notificationEventPublisher = notificationEventPublisher;
 	}
 
-	public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() {
-		return auditPropertyEntityAdapter;
+	public SpringContextHolder getSpringContextHolder() {
+		return springContextHolder;
 	}
 
-	public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
-		this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+	public void setSpringContextHolder(SpringContextHolder springContextHolder) {
+		this.springContextHolder = springContextHolder;
 	}
 }
