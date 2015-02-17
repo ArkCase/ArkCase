@@ -3,9 +3,31 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <task:scheduler id="subscriptionEventTaskScheduler" pool-size="1"/>
+    <!--<task:scheduler id="subscriptionEventTaskScheduler" pool-size="1"/>-->
 
-    
+    <task:scheduler id="searchTaskScheduler" pool-size="1"/>
+    <task:scheduled-tasks scheduler="searchTaskScheduler">
+        <task:scheduled
+                ref="arm_subscriptionEventBatchInsertJob"
+                method="insertNewSubscriptionEvents"
+                fixed-delay="${solr.batchUpdateFrequencyInMilliseconds}"/>
+    </task:scheduled-tasks>
+
+    <bean id="arm_subscriptionEventBatchInsertJob" class="com.armedia.acm.services.subscription.service.SubscriptionEventBatchInsertService">
+        <property name="userHomeDir" value="${user.home}"/>
+        <property name="lastBatchInsertPropertyFileLocation" value="/.acm/subscriptionEventLastBatchInsert.properties"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="subscriptionDao" ref="subscriptionDao"/>
+        <property name="subscriptionEventDao" ref="subscriptionEventDao"/>
+        <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
+    </bean>
+
+    <bean id="subscriptionEventPublisher" class="com.armedia.acm.services.subscription.service.SubscriptionEventPublisher"/>
+
     <bean id="subscriptionDao" class="com.armedia.acm.services.subscription.dao.SubscriptionDao"/>
 
     <bean id="subscriptionEventDao" class="com.armedia.acm.services.subscription.dao.SubscriptionEventDao"/>

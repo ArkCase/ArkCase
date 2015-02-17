@@ -11,7 +11,7 @@ import java.util.Date;
  * Created by marjan.stefanoski on 29.01.2015.
  */
 @Entity
-@Table(name = "acm_subscription")
+@Table(name = "acm_subscription_event")
 public class AcmSubscriptionEvent implements AcmObject, AcmEntity {
 
     @Id
