@@ -5,10 +5,6 @@
  */
 AcmNotification.View = {
     create : function() {
-        this.$edtSearch  = $("#searchQuery");
-        this.$btnSearch  = this.$edtSearch.next().find("button");
-        this.$divFacets  = $("#divFacets");
-        this.$divResults = $("#divResults");
     }
     ,onInitialized: function() {
     }

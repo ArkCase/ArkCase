@@ -739,7 +739,7 @@ Topbar.View = {
                                 App.gotoPage(url);
                             }
                         } catch(e) {
-                            console.log(e.message);
+                            Acm.log(e.message);
                         }
                     } //validateAsn(asn)
                 } //validateAsnList(asnList)

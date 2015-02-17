@@ -14,10 +14,6 @@ var AcmNotification = AcmNotification || {
 
         if (SearchBase.create) {
             SearchBase.create({name: "notification"
-                ,$edtSearch : AcmNotification.View.$edtSearch
-                ,$btnSearch : AcmNotification.View.$btnSearch
-                ,$divFacets : AcmNotification.View.$divFacets
-                ,$divResults: AcmNotification.View.$divResults
                 ,jtArgs     : AcmNotification.View.getJtArgs()
                 ,jtDataMaker: AcmNotification.View.jtDataMaker
                 ,filters    : [{key: "Object Type", values: ["CASE_FILE"]}]
