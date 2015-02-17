@@ -2,6 +2,7 @@ package web.api;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
@@ -113,7 +114,7 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport {
         Capture<AcmSubscription> subscriptionToSave = new Capture<>();
 
         expect(mockSubscriptionPlugin.getPluginProperties()).andReturn(prop).once();
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(solrQuery,"0","1","",mockAuthentication)).andReturn(jsonString).once();
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH,solrQuery,0, 1, "")).andReturn(jsonString).once();
         expect(mockSubscriptionDao.save(capture(subscriptionToSave))).andReturn(subscription).anyTimes();
 
        mockSubscriptionEventPublisher.publishSubscriptionCreatedEvent(subscription, mockAuthentication, true);
