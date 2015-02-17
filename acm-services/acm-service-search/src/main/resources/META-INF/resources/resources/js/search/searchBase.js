@@ -5,6 +5,10 @@
  */
 var SearchBase = SearchBase || {
     create: function(args) {
+        if (Acm.isEmpty(args)) {
+            args = {};
+        }
+
         if (SearchBase.Controller.create) {SearchBase.Controller.create(args);}
         if (SearchBase.Model.create)      {SearchBase.Model.create(args);}
         if (SearchBase.View.create)       {SearchBase.View.create(args);}
@@ -38,25 +42,8 @@ var SearchBase = SearchBase || {
 
         Acm.deferred(SearchBase.onInitialized);
 
-        Acm.Dialog.modal(args.$dlgObjectPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
+        SearchBase.View.showDialog(args);
     }
-//    ,validateArgs: function(data) {
-//        if (Acm.isEmpty(data)) {
-//            return false;
-//        }
-//        if (Acm.isEmpty(data.$edtSearch)) {
-//            return false;
-//        }
-//        if (Acm.isEmpty(data.$btnSearch)) {
-//            return false;
-//        }
-//        if (Acm.isEmpty(data.$divFacets)) {
-//            return false;
-//        }
-//        if (Acm.isEmpty(data.$divResults)) {
-//            return false;
-//        }
-//        return true;
-//    }
+
 };
 

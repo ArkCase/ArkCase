@@ -40,7 +40,7 @@ var app = angular.module('config', ['ngTable','dashboardConfigServices'])
             angular.forEach($scope.widgets, function(widget) {
                 if(angular.equals(widget.name,$scope.selectedWidget.name)) {// $scope.tmpWidget[0].name)) {
                     angular.forEach($scope.selectedNotAuthorized, function(selectedRole,index) {
-                        console.log(selectedRole);
+                        Acm.log(selectedRole);
                         widget.widgetAuthorizedRoles.push(selectedRole);
                         var i = elementIndexFromArray(widget.widgetNotAuthorizedRoles,selectedRole);
                         if(i!=-1) {
@@ -58,7 +58,7 @@ var app = angular.module('config', ['ngTable','dashboardConfigServices'])
             angular.forEach($scope.widgets, function(widget) {
                 if(angular.equals(widget.name,$scope.selectedWidget.name)) {// $scope.tmpWidget[0].name)) {
                     angular.forEach($scope.selectedAuthorized, function (selectedRole, index) {
-                        console.log(selectedRole);
+                        Acm.log(selectedRole);
                         widget.widgetNotAuthorizedRoles.push(selectedRole);
                         var i = elementIndexFromArray(widget.widgetAuthorizedRoles, selectedRole);
                         if (i != -1) {
@@ -110,7 +110,7 @@ var app = angular.module('config', ['ngTable','dashboardConfigServices'])
                        $scope.notAuthorized = widget.widgetNotAuthorizedRoles;
                    }
             });
-            console.log($scope.selectedWidget);
+            Acm.log($scope.selectedWidget);
         }
 
          var elementIndexFromArray = function(arr,elm){
@@ -125,7 +125,7 @@ var app = angular.module('config', ['ngTable','dashboardConfigServices'])
         //this save is functional example when used multiselect with chosen.
         $scope.save = function(idx){
            var allRoles="";
-           console.log($scope.widgets[idx].widgetRoles);
+           Acm.log($scope.widgets[idx].widgetRoles);
            angular.forEach($scope.widgets[idx].widgetAuthorizedRoles ,function(role) {
                allRoles += role.name;
            });

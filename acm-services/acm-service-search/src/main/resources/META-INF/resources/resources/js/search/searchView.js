@@ -16,9 +16,6 @@ Search.View = {
 
     ,Query: {
         create: function() {
-            this.$edtSearch = $("#searchQuery");
-            this.$btnSearch = this.$edtSearch.next().find("button");
-
             if ("undefined" != typeof Topbar) {
                 Acm.Dispatcher.addEventListener(Topbar.Controller.QuickSearch.VIEW_CHANGED_QUICK_SEARCH_TERM ,this.onTopbarViewChangedQuickSearchTerm);
             }
