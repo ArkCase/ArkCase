@@ -290,4 +290,8 @@
     	<property name="eventPublisher" ref="acmObjectHistoryEventPublisher" />
     	<property name="acmAssignmentDao" ref="acmAssignmentDao" />
     </bean>
+
+    <bean id="complaintDataAccessUpdateLocator" class="com.armedia.acm.plugins.complaint.service.ComplaintDataAccessUpdateLocator">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+    </bean>
 </beans>
