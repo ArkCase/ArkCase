@@ -82,7 +82,8 @@ public class DataAccessControlRulesIT
 
         assertEquals(assignee.getParticipantLdapId(), c.getParticipants().get(0).getParticipantLdapId());
 
-        assertEquals(1, assignee.getPrivileges().size());
+        // 3 privileges: add file, save, read
+        assertEquals(3, assignee.getPrivileges().size());
 
         AcmParticipantPrivilege priv = assignee.getPrivileges().get(0);
 
@@ -92,7 +93,7 @@ public class DataAccessControlRulesIT
 
         // since we have privileges now, if we run the rule again, it should not add any more
         workingMemory.execute(c);
-        assertEquals(1, c.getParticipants().get(0).getPrivileges().size());
+        assertEquals(3, c.getParticipants().get(0).getPrivileges().size());
 
     }
 
