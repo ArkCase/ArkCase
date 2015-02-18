@@ -68,6 +68,9 @@ public class ComplaintServiceIT
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
 
+    @Autowired
+    ComplaintEventPublisher complaintEventPublisher;
+
     @Before
     public void setUp() throws Exception
     {
@@ -75,6 +78,7 @@ public class ComplaintServiceIT
 
         service = new ComplaintService();
         service.setSaveComplaintTransaction(saveComplaintTransaction);
+        service.setComplaintEventPublisher(complaintEventPublisher);
 
         Authentication auth = new UsernamePasswordAuthenticationToken("anotherUser", "password");
         service.setAuthentication(auth);
