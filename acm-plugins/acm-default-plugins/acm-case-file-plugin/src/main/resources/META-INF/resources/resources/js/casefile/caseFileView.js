@@ -443,6 +443,7 @@ CaseFile.View = CaseFile.View || {
         ,onViewSelectedCaseFile: function(caseFileId) {
             var caseFile = CaseFile.Model.Detail.cacheCaseFile.get(caseFileId);
             CaseFile.View.Action.populate(caseFile);
+            SubscriptionOp.Model.checkSubscription(App.getUserName(), CaseFile.Model.getObjectType(), caseFileId);
         }
 
         ,populate: function(caseFile) {

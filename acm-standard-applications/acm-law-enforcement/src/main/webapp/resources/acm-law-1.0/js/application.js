@@ -60,9 +60,6 @@ var Application = Application || {
         if ("undefined" != typeof Audit) {
             acmModules.push(Audit);
         }
-        if ("undefined" != typeof AdminAccess) {
-            acmModules.push(AdminAccess);
-        }
         if ("undefined" != typeof Report) {
             acmModules.push(Report);
         }
