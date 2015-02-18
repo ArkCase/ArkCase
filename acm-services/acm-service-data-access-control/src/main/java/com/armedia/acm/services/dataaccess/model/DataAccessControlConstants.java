@@ -12,4 +12,6 @@ public interface DataAccessControlConstants
     String ACCESS_REASON_POLICY = "policy";
     String DEFAULT_ACCESSOR = "*";
     String ACCESS_LEVEL_READ = "read";
+
+    String LAST_RUN_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 }

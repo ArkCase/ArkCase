@@ -355,4 +355,8 @@
     	<property name="acmAssignmentDao" ref="acmAssignmentDao" />
     </bean>
 
+    <bean id="taskDataAccessUpdateLocator" class="com.armedia.acm.plugins.task.service.impl.TaskDataAccessUpdateLocator">
+        <property name="taskDao" ref="acmTaskDao"/>
+    </bean>
+
 </beans>
