@@ -30,6 +30,7 @@ import static org.junit.Assert.*;
         "classpath:/spring/spring-library-data-access-control.xml",
         "classpath:/spring/spring-library-folder-watcher.xml",
         "classpath:/spring/spring-library-activiti-configuration.xml",
+        "classpath:/spring/spring-library-particpants.xml",
         "classpath:/spring/spring-library-drools-monitor.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
