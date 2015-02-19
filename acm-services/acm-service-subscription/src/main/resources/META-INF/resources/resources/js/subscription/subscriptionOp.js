@@ -201,7 +201,7 @@ var SubscriptionOp = SubscriptionOp || {
                         SubscriptionOp.Controller.modelUnsubscribedObjectError(userId, objectType, objectId, response.errorMsg);
 
                     } else if (!SubscriptionOp.Model.validateUnsubscribe(response)) {
-                        SubscriptionOp.Controller.modelUnsubscribedObjectError(userId, objectType, objectId, "Invalidate nnsubscribe data");
+                        SubscriptionOp.Controller.modelUnsubscribedObjectError(userId, objectType, objectId, "Invalidate unsubscribe data");
 
                     } else {
                         SubscriptionOp.Model.setSubscribed(false);
