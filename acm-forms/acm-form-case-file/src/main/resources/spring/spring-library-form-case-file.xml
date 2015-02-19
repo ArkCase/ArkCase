@@ -19,8 +19,24 @@
     	<property name="ecmFileService" ref="ecmFileService" />
     </bean>
     
+    <bean id="caseFilePSFactory" class="com.armedia.acm.form.casefile.service.CaseFilePSFactory">
+    	<property name="acmHistoryDao" ref="acmHistoryDao" />
+    	<property name="objectAssociationDao" ref="objectAssociationDao" />
+    	<property name="ecmFileDao" ref="ecmFileDao" />
+    	<property name="ecmFileService" ref="ecmFileService" />    	
+    </bean>
+    
+    <bean id="caseFilePSService" class="com.armedia.acm.form.casefile.service.CaseFilePSService">
+    	<property name="caseFilePSFactory" ref="caseFilePSFactory"/>
+    	<property name="objectAssociationDao" ref="objectAssociationDao" />
+    	<property name="ecmFileDao" ref="ecmFileDao" />
+    	<property name="ecmFileService" ref="ecmFileService" />
+    </bean>
+    
     <bean id="caseFileUpdatedListener" class="com.armedia.acm.form.casefile.service.CaseFileUpdatedListener">
+    	<property name="properties" ref="acm-forms-properties" />
     	<property name="caseFileService" ref="caseFileService" />
+    	<property name="caseFilePSService" ref="caseFilePSService" />
     </bean>
 
 </beans>

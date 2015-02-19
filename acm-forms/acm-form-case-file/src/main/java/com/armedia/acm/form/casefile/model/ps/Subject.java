@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.form.casefile.model;
+package com.armedia.acm.form.casefile.model.ps;
 
 import java.util.Date;
 import java.util.List;

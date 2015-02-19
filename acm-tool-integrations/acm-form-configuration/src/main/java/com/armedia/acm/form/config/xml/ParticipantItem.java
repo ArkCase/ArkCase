@@ -15,6 +15,17 @@ public class ParticipantItem  extends Item{
 	
 	private String type;
 
+	@XmlElement(name="participantId")
+	@Override
+	public Long getId() {
+		return super.getId();
+	}
+
+	@Override
+	public void setId(Long id) {
+		super.setId(id);
+	}
+	
 	@XmlElement(name="participant")
 	@Override
 	public String getValue() {

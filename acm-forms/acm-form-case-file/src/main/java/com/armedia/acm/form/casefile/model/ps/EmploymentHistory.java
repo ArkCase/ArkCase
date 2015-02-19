@@ -1,15 +1,15 @@
 /**
  * 
  */
-package com.armedia.acm.form.casefile.model;
+package com.armedia.acm.form.casefile.model.ps;
 
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import com.armedia.acm.form.casefile.model.xml.EmployerReference;
-import com.armedia.acm.form.casefile.model.xml.EmployerSupervisor;
+import com.armedia.acm.form.casefile.model.ps.xml.EmployerReference;
+import com.armedia.acm.form.casefile.model.ps.xml.EmployerSupervisor;
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.xml.GeneralOrganization;
