@@ -5,21 +5,22 @@
  */
 CaseFile.Model = CaseFile.Model || {
     create : function() {
-        if (CaseFile.Model.Lookup.create)        {CaseFile.Model.Lookup.create();}
-        if (CaseFile.Model.Tree.create)          {CaseFile.Model.Tree.create();}
-        if (CaseFile.Model.List.create)          {CaseFile.Model.List.create();}
-        if (CaseFile.Model.Documents.create)     {CaseFile.Model.Documents.create();}
-        if (CaseFile.Model.Detail.create)        {CaseFile.Model.Detail.create();}
-        if (CaseFile.Model.Notes.create)         {CaseFile.Model.Notes.create();}
-        if (CaseFile.Model.Tasks.create)         {CaseFile.Model.Tasks.create();}
-        if (CaseFile.Model.References.create)    {CaseFile.Model.References.create();}
-        if (CaseFile.Model.Events.create)        {CaseFile.Model.Events.create();}
+        if (CaseFile.Model.Lookup.create)         {CaseFile.Model.Lookup.create();}
+        if (CaseFile.Model.Tree.create)           {CaseFile.Model.Tree.create();}
+        if (CaseFile.Model.List.create)           {CaseFile.Model.List.create();}
+        if (CaseFile.Model.Documents.create)      {CaseFile.Model.Documents.create();}
+        if (CaseFile.Model.Detail.create)         {CaseFile.Model.Detail.create();}
+        if (CaseFile.Model.Notes.create)          {CaseFile.Model.Notes.create();}
+        if (CaseFile.Model.Tasks.create)          {CaseFile.Model.Tasks.create();}
+        if (CaseFile.Model.References.create)     {CaseFile.Model.References.create();}
+        if (CaseFile.Model.Events.create)         {CaseFile.Model.Events.create();}
         if (CaseFile.Model.Correspondence.create) {CaseFile.Model.Correspondence.create();}
+
+        if (CaseFile.Service.create)              {CaseFile.Service.create();}
 
         if ("undefined" != typeof Topbar) {
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_SET_ASN_DATA, this.onTopbarViewSetAsnData);
         }
-
     }
     ,onInitialized: function() {
         AcmEx.Model.Tree.Key.setNodeTypeMap(CaseFile.Model.Tree.Key.nodeTypeMap);
@@ -34,17 +35,18 @@ CaseFile.Model = CaseFile.Model || {
 
         CaseFile.Model.retrieveData(treeInfo);
 
-        if (CaseFile.Model.Lookup.onInitialized)     {CaseFile.Model.Lookup.onInitialized();}
-        if (CaseFile.Model.Tree.onInitialized)       {CaseFile.Model.Tree.onInitialized();}
-        if (CaseFile.Model.List.onInitialized)       {CaseFile.Model.List.onInitialized();}
-        if (CaseFile.Model.Documents.onInitialized)  {CaseFile.Model.Documents.onInitialized();}
-        if (CaseFile.Model.Detail.onInitialized)     {CaseFile.Model.Detail.onInitialized();}
-        if (CaseFile.Model.Notes.onInitialized)      {CaseFile.Model.Notes.onInitialized();}
-        if (CaseFile.Model.Tasks.onInitialized)      {CaseFile.Model.Tasks.onInitialized();}
-        if (CaseFile.Model.References.onInitialized) {CaseFile.Model.References.onInitialized();}
-        if (CaseFile.Model.Events.onInitialized)     {CaseFile.Model.Events.onInitialized();}
+        if (CaseFile.Model.Lookup.onInitialized)         {CaseFile.Model.Lookup.onInitialized();}
+        if (CaseFile.Model.Tree.onInitialized)           {CaseFile.Model.Tree.onInitialized();}
+        if (CaseFile.Model.List.onInitialized)           {CaseFile.Model.List.onInitialized();}
+        if (CaseFile.Model.Documents.onInitialized)      {CaseFile.Model.Documents.onInitialized();}
+        if (CaseFile.Model.Detail.onInitialized)         {CaseFile.Model.Detail.onInitialized();}
+        if (CaseFile.Model.Notes.onInitialized)          {CaseFile.Model.Notes.onInitialized();}
+        if (CaseFile.Model.Tasks.onInitialized)          {CaseFile.Model.Tasks.onInitialized();}
+        if (CaseFile.Model.References.onInitialized)     {CaseFile.Model.References.onInitialized();}
+        if (CaseFile.Model.Events.onInitialized)         {CaseFile.Model.Events.onInitialized();}
         if (CaseFile.Model.Correspondence.onInitialized) {CaseFile.Model.Correspondence.onInitialized();}
 
+        if (CaseFile.Service.onInitialized)              {CaseFile.Service.onInitialized();}
     }
 
     ,onTopbarViewSetAsnData: function(asnData) {

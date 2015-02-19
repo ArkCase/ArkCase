@@ -13,7 +13,14 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
+    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/task.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/taskModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/taskView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/taskController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/taskService.js'/>"></script>
+
+    <script type="text/javascript" src="<c:url value='/resources/js/task/taskOld.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskList.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListObject.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListEvent.js'/>"></script>
@@ -157,6 +164,7 @@
                         <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
                         <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
 
+                        <button class="btn btn-info btn-sm" id="btnSubscribe"><i class="i i-alarm"></i> Subscribe</button>
                     </div>
                     
                 </div>
