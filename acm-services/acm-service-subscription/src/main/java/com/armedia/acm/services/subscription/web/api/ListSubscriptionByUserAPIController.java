@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public class ListSubscriptionByUserAPIController {
         } catch (AcmObjectNotFoundException e) {
             if (log.isDebugEnabled())
                 log.debug("No Subscriptions Found for user: "+ userId, e);
-            throw new AcmSubscriptionException("No Subscriptions Found ", e);
+            return new ArrayList<>();
         }
         return subscriptionList;
     }
