@@ -35,11 +35,9 @@ public class RemovingSubscriptionAPIController {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private final static String SUCCESS_MSG = "subscription.removed.successful";
-    private final static String FAIL_MSG = "subscription.removed.failed";
     private final static String SUBSCRIPTION_NOT_FOUND_MSG="subscription.not.found";
 
     private final static String OBJECT_TYPE = "SUBSCRIPTION";
-    private final static String USER_ACTION = "Remove Subscription";
 
     private final static int NO_ROW_DELETED = 0;
 
@@ -76,7 +74,7 @@ public class RemovingSubscriptionAPIController {
 
     private String prepareJsonReturnMsg( String successMsg,Long objectId ) {
         JSONObject objectToReturnJSON = new JSONObject();
-        objectToReturnJSON.put("DeletedSubscriptionId", objectId);
+        objectToReturnJSON.put("deletedSubscriptionId", objectId);
         objectToReturnJSON.put("Message",successMsg);
         String objectToReturn;
         objectToReturn = objectToReturnJSON.toString();
