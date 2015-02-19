@@ -11,9 +11,11 @@ var Subscription = Subscription || {
 
         if (SearchBase.create) {
             SearchBase.create({name: "subscription"
-                ,jtArgs     : Subscription.View.getJtArgs
+                ,jtArgs     : Subscription.View.getJtArgs()
                 ,jtDataMaker: Subscription.View.jtDataMaker
-                ,filters    : [{key: "Object Type", values: ["CASE_FILE"]}]
+                ,filters    : [{key: "Object Type", values: ["SUBSCRIPTION_EVENT"]}
+                    ,{key: "Owner", values: [App.getUserName()]}
+                ]
             });
         }
     }

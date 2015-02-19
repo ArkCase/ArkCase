@@ -64,6 +64,9 @@ var Acm = Acm || {
         }
         return false;
     }
+    ,isNotArray: function (arr) {
+        return !this.isArray(arr);
+    }
 	,isArrayEmpty: function (arr) {
         if(!this.isArray(arr)) {
             return true;
