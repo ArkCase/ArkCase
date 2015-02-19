@@ -71,8 +71,8 @@ public class CaseFileUiController
         mv.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
         mv.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS));
         mv.addObject("enableFrevvoFormEngine", formUrl.enableFrevvoFormEngine(FrevvoFormName.ROI));
-        mv.addObject("editCaseFileFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE));
-        mv.addObject("reinvestigateCaseFileFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE));
+        mv.addObject("editCaseFileFormUrl", getCaseFileUrl());
+        mv.addObject("reinvestigateCaseFileFormUrl", getCaseFileUrl());
         mv.addObject("formDocuments", getFormProperties().get("form.documents"));
         return mv;
     }
@@ -84,10 +84,43 @@ public class CaseFileUiController
         mv.setViewName("casefileWizard");
 
         // Frevvo form URLs
-        mv.addObject("newCaseFileFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE));
+        mv.addObject("newCaseFileFormUrl", getCaseFileUrl());
 
         return mv;
 
+    }
+    
+    private String getCaseFileUrl()
+    {
+    	if (getFormProperties() != null)
+		{
+			boolean isCaseFile = false;
+			boolean isCaseFilePS = false;
+			
+			if (getFormProperties().containsKey(FrevvoFormName.CASE_FILE + ".id"))
+			{
+				isCaseFile = true;
+			}
+			
+			if (getFormProperties().containsKey(FrevvoFormName.CASE_FILE_PS + ".id"))
+			{
+				isCaseFilePS = true;
+			}
+			
+			// Ark Case File have advantage over PS Case File
+			// NOTE: In the acm-forms.properties should be defined only one - case_file or case_file_ps, otherwise Ark Case File logic will be processed
+			
+			if (isCaseFile)
+			{
+				return formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE);
+			} 
+			else if (isCaseFilePS)
+			{
+				return formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE_PS);
+			}
+		}
+    	
+    	return null;
     }
 
 	public FormUrl getFormUrl() {

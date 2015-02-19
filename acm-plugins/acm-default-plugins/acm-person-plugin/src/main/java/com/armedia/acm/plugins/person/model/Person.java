@@ -175,6 +175,7 @@ public class Person implements Serializable, AcmEntity
         }
     }
 
+    @XmlTransient
     public String getStatus()
     {
         return status;
@@ -185,6 +186,7 @@ public class Person implements Serializable, AcmEntity
         this.status = status;
     }
 
+    @XmlTransient
     public String getGivenName()
     {
         return givenName;
@@ -195,6 +197,7 @@ public class Person implements Serializable, AcmEntity
         this.givenName = givenName;
     }
 
+    @XmlTransient
     public String getFamilyName()
     {
         return familyName;
@@ -205,6 +208,7 @@ public class Person implements Serializable, AcmEntity
         this.familyName = familyName;
     }
 
+    @XmlTransient
     @Override
     public Date getCreated()
     {
@@ -217,6 +221,7 @@ public class Person implements Serializable, AcmEntity
         this.created = created;
     }
 
+    @XmlTransient
     @Override
     public String getCreator()
     {
@@ -229,6 +234,7 @@ public class Person implements Serializable, AcmEntity
         this.creator = creator;
     }
 
+    @XmlTransient
     @Override
     public Date getModified()
     {
@@ -241,6 +247,7 @@ public class Person implements Serializable, AcmEntity
         this.modified = modified;
     }
 
+    @XmlTransient
     @Override
     public String getModifier()
     {
@@ -253,6 +260,7 @@ public class Person implements Serializable, AcmEntity
         this.modifier = modifier;
     }
 
+    @XmlTransient
     public Long getId()
     {
         return id;
@@ -263,6 +271,7 @@ public class Person implements Serializable, AcmEntity
         this.id = id;
     }
 
+    @XmlTransient
     public String getTitle()
     {
         return title;
@@ -273,6 +282,7 @@ public class Person implements Serializable, AcmEntity
         this.title = title;
     }
 
+    @XmlTransient
     public String getCompany()
     {
         return company;
@@ -283,6 +293,7 @@ public class Person implements Serializable, AcmEntity
         this.company = company;
     }
 
+    @XmlTransient
     public List<PostalAddress> getAddresses()
     {
         return addresses;
@@ -293,6 +304,7 @@ public class Person implements Serializable, AcmEntity
         this.addresses = addresses;
     }
 
+    @XmlTransient
     public List<ContactMethod> getContactMethods()
     {
         return contactMethods;
@@ -303,6 +315,7 @@ public class Person implements Serializable, AcmEntity
         this.contactMethods = contactMethods;
     }
 
+    @XmlTransient
     public List<String> getSecurityTags()
     {
         return securityTags;
@@ -313,6 +326,7 @@ public class Person implements Serializable, AcmEntity
         this.securityTags = securityTags;
     }
 
+    @XmlTransient
     public List<PersonAlias> getPersonAliases() 
     {
         return personAliases;
@@ -344,6 +358,7 @@ public class Person implements Serializable, AcmEntity
         }
     }
 
+    @XmlTransient
     public String getHairColor()
     {
         return hairColor;
@@ -354,6 +369,7 @@ public class Person implements Serializable, AcmEntity
         this.hairColor = hairColor;
     }
 
+    @XmlTransient
     public String getEyeColor()
     {
         return eyeColor;
@@ -364,6 +380,7 @@ public class Person implements Serializable, AcmEntity
         this.eyeColor = eyeColor;
     }
 
+    @XmlTransient
     public Long getHeightInInches()
     {
         return heightInInches;
@@ -374,6 +391,7 @@ public class Person implements Serializable, AcmEntity
         this.heightInInches = heightInInches;
     }
 
+    @XmlTransient
     public Long getWeightInPounds()
     {
         return weightInPounds;
@@ -384,6 +402,7 @@ public class Person implements Serializable, AcmEntity
         this.weightInPounds = weightInPounds;
     }
 
+    @XmlTransient
     public Date getDateOfBirth()
     {
         return dateOfBirth;
@@ -394,6 +413,7 @@ public class Person implements Serializable, AcmEntity
         this.dateOfBirth = dateOfBirth;
     }
 
+    @XmlTransient
     public Date getDateMarried()
     {
         return dateMarried;
@@ -404,6 +424,7 @@ public class Person implements Serializable, AcmEntity
         this.dateMarried = dateMarried;
     }
 
+    @XmlTransient
     public List<Organization> getOrganizations() {
         return organizations;
     }
@@ -412,11 +433,17 @@ public class Person implements Serializable, AcmEntity
         this.organizations = organizations;
     }
 
+    @XmlTransient
     public List<PersonIdentification> getPersonIdentification() {
         return personIdentification;
     }
 
     public void setPersonIdentification(List<PersonIdentification> personIdentification) {
         this.personIdentification = personIdentification;
+    }
+    
+    public Person returnBase()
+    {
+    	return this;
     }
 }
