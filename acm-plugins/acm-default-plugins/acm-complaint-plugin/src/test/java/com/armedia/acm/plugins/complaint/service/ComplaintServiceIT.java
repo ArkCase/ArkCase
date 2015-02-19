@@ -48,6 +48,7 @@ import static org.junit.Assert.assertTrue;
                 "/spring/spring-library-data-access-control.xml",
                 "/spring/spring-library-search.xml",
                 "/spring/spring-library-ecm-file.xml",
+                "/spring/spring-library-particpants.xml",
                 "/spring/spring-library-activemq.xml"
         }
 )
