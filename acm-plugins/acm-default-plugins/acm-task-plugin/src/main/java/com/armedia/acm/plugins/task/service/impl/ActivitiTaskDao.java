@@ -158,9 +158,6 @@ class ActivitiTaskDao implements TaskDao
         }
     }
 
-
-
-    @Override
     public void ensureCorrectAssigneeInParticipants(AcmTask in)
     {
         boolean assigneeFound = false;
@@ -171,17 +168,26 @@ class ActivitiTaskDao implements TaskDao
             {
                 if ( "assignee".equals(ap.getParticipantType()) )
                 {
-                    assigneeFound = true;
-                    if ( ap.getParticipantLdapId() == null || !ap.getParticipantLdapId().equalsIgnoreCase(in.getAssignee()) )
+                    if ( in.getAssignee() == null )
                     {
-                        ap.setParticipantLdapId(in.getAssignee());
-                        break;
+                        // task has no assignee so we need to remove this participant
+                        in.getParticipants().remove(ap);
                     }
+                    else
+                    {
+                        assigneeFound = true;
+                        if ( ap.getParticipantLdapId() == null || !ap.getParticipantLdapId().equalsIgnoreCase(in.getAssignee()) )
+                        {
+                            ap.setParticipantLdapId(in.getAssignee());
+                            break;
+                        }
+                    }
+
                 }
             }
         }
 
-        if ( ! assigneeFound )
+        if ( ! assigneeFound && in.getAssignee() != null )
         {
             AcmParticipant assignee = new AcmParticipant();
             assignee.setParticipantLdapId(in.getAssignee());
@@ -541,10 +547,9 @@ class ActivitiTaskDao implements TaskDao
 	    	{
 	    		for (HistoricTaskInstance historicTaskInstance : historicTaskInstances)
 	    		{
-	    			AcmUser user = getUserDao().findByUserId(historicTaskInstance.getAssignee());
 	    			
 	    			String taskId = historicTaskInstance.getId();
-	    			String participant = user.getFullName();
+
 	    			// TODO: For now Role is empty. This is agreed with Dave. Once we have that information, we should add it here.
 	    			String role = "";
 	    			Date startDate = historicTaskInstance.getStartTime();
@@ -564,11 +569,18 @@ class ActivitiTaskDao implements TaskDao
 	    			WorkflowHistoryInstance workflowHistoryInstance = new WorkflowHistoryInstance();
 	    			
 	    			workflowHistoryInstance.setId(taskId);
-	    			workflowHistoryInstance.setParticipant(participant);
+
 	    			workflowHistoryInstance.setRole(role);
 	    			workflowHistoryInstance.setStatus(status);
 	    			workflowHistoryInstance.setStartDate(startDate);
 	    			workflowHistoryInstance.setEndDate(endDate);
+
+                    if ( historicTaskInstance.getAssignee() != null )
+                    {
+                        AcmUser user = getUserDao().findByUserId(historicTaskInstance.getAssignee());
+                        String participant = user.getFullName();
+                        workflowHistoryInstance.setParticipant(participant);
+                    }
 	    			
 	    			retval.add(workflowHistoryInstance);
 	    		}

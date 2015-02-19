@@ -56,6 +56,52 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         return retval;
     }
 
+    public boolean hasObjectAccess(String userId, Long objectId, String objectType, String objectAction, String accessType)
+    {
+        String jpql = "" +
+                "SELECT count(app.id) AS numFound " +
+                "FROM AcmParticipantPrivilege app " +
+                "WHERE ( app.participant.participantLdapId = :userid OR app.participant.participantLdapId = '*' )" +
+                "AND app.participant.objectId = :objectId " +
+                "AND app.participant.objectType = :objectType " +
+                "AND app.objectAction = :action " +
+                "AND app.accessType = :accessType";
+
+        Query find = getEm().createQuery(jpql);
+        find.setParameter("userid", userId);
+        find.setParameter("objectId", objectId);
+        find.setParameter("objectType", objectType);
+        find.setParameter("action", objectAction);
+        find.setParameter("accessType", accessType);
+
+        // count query will always have exactly one result row.
+        Long count = (Long) find.getSingleResult();
+        return count > 0;
+    }
+
+    public boolean hasObjectAccessViaGroup(String userId, Long objectId, String objectType, String objectAction, String accessType)
+    {
+        String jpql = "" +
+                "SELECT count(app.id) AS numFound " +
+                "FROM AcmParticipantPrivilege app JOIN AcmGroup ag JOIN ag.members m " +
+                "WHERE app.participant.objectId = :objectId " +
+                "AND app.participant.objectType = :objectType " +
+                "AND app.objectAction = :action " +
+                "AND app.accessType = :accessType " +
+                "AND app.participant.participantLdapId = ag.name " +
+                "AND m.userId = :userid";
+
+        Query find = getEm().createQuery(jpql);
+        find.setParameter("userid", userId);
+        find.setParameter("objectId", objectId);
+        find.setParameter("objectType", objectType);
+        find.setParameter("action", objectAction);
+        find.setParameter("accessType", accessType);
+
+        Long count = (Long) find.getSingleResult();
+        return count > 0;
+    }
+
     public List<AcmParticipant> findParticipantsForObject(String objectType, Long objectId)
     {
 
