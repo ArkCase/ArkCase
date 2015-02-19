@@ -117,27 +117,6 @@ SearchBase.View = {
         ,initFacetPanel: function() {
             var si = SearchBase.Model.getSearchInfo();
             var html = this._buildFilterSection(si.filters);
-//            var html = "";
-//            if (SearchBase.Model.validateFilters(si.filters)) {
-//                html += "<div name='init_fields'>";
-//                for (var i = 0; i < si.filters.length; i++) {
-//                    var display = si.filters[i].key;
-//                    html += "<h6>" + display + "</h6>";
-//                    html += "<div class='list-group auto' name='" + display + "'>";
-//                    for (var j = 0; j < si.filters[i].values.length; j++) {
-//                        var value = Acm.goodValue(si.filters[i].values[j]);
-//                        html += "<label class='list-group-item'><input type='checkbox' value='" + value + "'";
-//                        if (SearchBase.Model.findFilter(si.filters, display, value)) {
-//                            html += " checked disabled";
-//                        }
-//                        html += " /><span class='badge bg-info'>" + "0"
-//                            + "</span>" + value
-//                            + "</label>";
-//                    }
-//                    html += "</div>";
-//                }
-//                html += "</div>";
-//            }
             this.setHtmlDivFacet(html);
         }
         //mergeFilters
@@ -201,7 +180,6 @@ SearchBase.View = {
                                     + "</span>" + fieldValue
                                     + "</label>";
                             }
-
                         }
                         html += "</div>";
                     }
@@ -230,113 +208,6 @@ SearchBase.View = {
             }  //end if validateSearchFacet
 
             html = this._buildFilterSection(copiedFilters) + html;
-
-            this.setHtmlDivFacet(html);
-
-            this.$divFacets.find("input[type='checkbox']").on("click", function(e) {SearchBase.View.Facet.onClickCheckBox(e, this);});
-        }
-        ,buildFacetPanel0: function(facet) {
-            var html = "";
-            var si = SearchBase.Model.getSearchInfo();
-            var fixedFilters = SearchBase.Model.getFixedFilters();
-            var otherFilters = [];
-            SearchBase.Model.mergeFilters(fixedFilters, otherFilters);
-            var aFilters = [];
-
-            if (SearchBase.Model.validateSearchFacet(facet)) {
-
-                if (0 < SearchBase.Model.getCountFacetFields(facet)){
-                    html += "<div name='facet_fields'>";
-                    for(var i = 0; i < facet.facet_fields.length; i++) {
-                        if (0 < Acm.goodValue(facet.facet_fields[i].count, 0)) {
-                            if (Acm.isArray(facet.facet_fields[i].values)) {
-                                var display = this._getFacetDisplay(facet.facet_fields[i].label, facet.facet_fields[i].key);
-                                html += "<h6>" + display + "</h6>";
-                                html += "<div class='list-group auto' name='" + display + "'>";
-                                for (var j = 0; j < facet.facet_fields[i].values.length; j++) {
-                                    var isFixedFilter = SearchBase.Model.findFilter(fixedFilters, display, Acm.goodValue(facet.facet_fields[i].values[j].name));
-                                    if (0 < Acm.goodValue(facet.facet_fields[i].values[j].count, 0) || isFixedFilter) {
-                                        html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name) + "'";
-                                        if (SearchBase.Model.findFilter(si.filters, display, Acm.goodValue(facet.facet_fields[i].values[j].name))) {
-                                            html += " checked";
-                                        }
-                                        if (isFixedFilter) {
-                                            html += " disabled";
-                                        }
-                                        html += " /><span class='badge bg-info'>" + facet.facet_fields[i].values[j].count
-                                            + "</span>" + Acm.goodValue(facet.facet_fields[i].values[j].name)
-                                            + "</label>";
-                                    }
-                                }
-                                html += "</div>";
-                            }
-                        }
-                    }
-                    html += "</div>";
-                }
-
-                if (0 < SearchBase.Model.getCountFacetQueries(facet)){
-                    //html += "<div name='facet_queries'>";
-                    html += "";
-                    for(var i = 0; i < facet.facet_queries.length; i++) {
-                        if (0 < Acm.goodValue(facet.facet_queries[i].count, 0)) {
-                            if (Acm.isArray(facet.facet_queries[i].values)) {
-                                var display = this._getFacetDisplay(facet.facet_queries[i].label, facet.facet_queries[i].key);
-                                html += "<h6>" + display + "</h6>";
-                                html += "<div class='list-group auto' name='" + display + "'>";
-                                for (var j = 0; j < facet.facet_queries[i].values.length; j++) {
-                                    var isFixedFilter = SearchBase.Model.findFilter(fixedFilters, display, Acm.goodValue(facet.facet_queries[i].values[j].name));
-                                    if (0 < Acm.goodValue(facet.facet_queries[i].values[j].count, 0) || isFixedFilter) {
-                                        html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name) + "'";
-                                        if (SearchBase.Model.findFilter(si.filters, display, Acm.goodValue(facet.facet_queries[i].values[j].name))) {
-                                            html += " checked";
-                                        }
-                                        if (isFixedFilter) {
-                                            html += " disabled";
-                                        }
-                                        html += " /><span class='badge bg-info'>" + facet.facet_queries[i].values[j].count
-                                            + "</span>" + Acm.goodValue(facet.facet_queries[i].values[j].name)
-                                            + "</label>";
-                                    }
-                                }
-                                html += "</div>";
-                            }
-                        }
-                    }
-                    //html += "</div>";
-                }
-
-                if (0 < SearchBase.Model.getCountFacetDates(facet)){
-                    //html += "<div name='facet_dates'>";
-                    html += "";
-                    for(var i = 0; i < facet.facet_dates.length; i++) {
-                        if (0 < Acm.goodValue(facet.facet_dates[i].count, 0)) {
-                            if (Acm.isArray(facet.facet_dates[i].values)) {
-                                var display = this._getFacetDisplay(facet.facet_dates[i].label, facet.facet_dates[i].key);
-                                html += "<h6>" + display + "</h6>";
-                                html += "<div class='list-group auto' name='" + display + "'>";
-                                for (var j = 0; j < facet.facet_dates[i].values.length; j++) {
-                                    var isFixedFilter = SearchBase.Model.findFilter(fixedFilters, display, Acm.goodValue(facet.facet_dates[i].values[j].name));
-                                    if (0 < Acm.goodValue(facet.facet_dates[i].values[j].count, 0) || isFixedFilter) {
-                                        html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name) + "'";
-                                        if (SearchBase.Model.findFilter(si.filters, display, Acm.goodValue(facet.facet_dates[i].values[j].name))) {
-                                            html += " checked";
-                                        }
-                                        if (isFixedFilter) {
-                                            html += " disabled";
-                                        }
-                                        html += " /><span class='badge bg-info'>" + facet.facet_dates[i].values[j].count
-                                            + "</span>" + Acm.goodValue(facet.facet_dates[i].values[j].name)
-                                            + "</label>";
-                                    }
-                                }
-                                html += "</div>";
-                            }
-                        }
-                    }
-                    //html += "</div>";
-                }
-            }  //end if validateSearchFacet
 
             this.setHtmlDivFacet(html);
 
