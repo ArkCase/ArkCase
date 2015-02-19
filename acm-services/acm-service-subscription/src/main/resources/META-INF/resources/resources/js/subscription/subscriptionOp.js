@@ -71,10 +71,20 @@ var SubscriptionOp = SubscriptionOp || {
         }
 
         ,onViewSubscribedObject: function(userId, objectType, objectId) {
-            SubscriptionOp.Service.subscribe(userId, objectType, objectId);
+            var isSubscribed = SubscriptionOp.Model.isSubscribed();
+            if (Acm.isNotEmpty(isSubscribed)) {
+                if (!isSubscribed) {
+                    SubscriptionOp.Service.subscribe(userId, objectType, objectId);
+                }
+            }
         }
         ,onViewUnsubscribedObject: function(userId, objectType, objectId) {
-            SubscriptionOp.Service.unsubscribe(userId, objectType, objectId);
+            var isSubscribed = SubscriptionOp.Model.isSubscribed();
+            if (Acm.isNotEmpty(isSubscribed)) {
+                if (isSubscribed) {
+                    SubscriptionOp.Service.unsubscribe(userId, objectType, objectId);
+                }
+            }
         }
 
         ,_subscribed: null
@@ -102,23 +112,33 @@ var SubscriptionOp = SubscriptionOp || {
             return true;
         }
         ,validateSubscription: function(data) {
-            if (Acm.isNotEmpty(data)) {
+            if (Acm.isEmpty(data)) {
                 return false;
             }
             if (Acm.isEmpty(data.userId)) {
                 return false;
             }
-            if (Acm.isEmpty(data.objectType)) {
+            if (Acm.isEmpty(data.subscriptionObjectType)) {
                 return false;
             }
             if (Acm.isEmpty(data.objectId)) {
                 return false;
             }
-            if (Acm.isEmpty(data.id)) {
+//            if (Acm.isEmpty(data.subscriptionId)) {
+//                return false;
+//            }
+            return true;
+        }
+        ,validateUnsubscribe: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.DeletedSubscriptionId)) {
                 return false;
             }
             return true;
         }
+        ,
     }
 
     ,Service: {
@@ -133,21 +153,23 @@ var SubscriptionOp = SubscriptionOp || {
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
-                        SubscriptionOp.Controller.modelCheckedSubscriptionError(response.errorMsg);
+                        SubscriptionOp.Controller.modelCheckedSubscriptionError(userId, objectType, objectId, response.errorMsg);
+
+                    } else if (!SubscriptionOp.Model.validateSubscriptions(response)) {
+                        SubscriptionOp.Controller.modelCheckedSubscriptionError(userId, objectType, objectId, "Invalidate subscription check data");
 
                     } else {
-                        if (SubscriptionOp.Model.validateSubscriptions(response)) {
-                            var subscribed = false;
-                            for (var i = 0; i < response.length; i++) {
-                                if (userId == response[i].userId
-                                    && objectType == response[i].objectType
-                                    && objectId == response[i].objectId) {
-                                    subscribed = true;
-                                    break;
-                                }
+                        var subscribed = false;
+                        for (var i = 0; i < response.length; i++) {
+                            if (userId == response[i].userId
+                                && objectType == response[i].subscriptionObjectType
+                                && objectId == response[i].objectId) {
+                                subscribed = true;
+                                break;
                             }
-                            SubscriptionOp.Controller.modelCheckedSubscription(userId, objectType, objectId, subscribed);
                         }
+                        SubscriptionOp.Model.setSubscribed(subscribed);
+                        SubscriptionOp.Controller.modelCheckedSubscription(userId, objectType, objectId, subscribed);
                     }
                 }
                 ,App.getContextPath() + this.API_CHECK_SUBSCRIPTION_ + userId + "/" + objectType + "/" + objectId
@@ -157,16 +179,16 @@ var SubscriptionOp = SubscriptionOp || {
             Acm.Service.asyncPut(
                 function(response) {
                     if (response.hasError) {
-                        SubscriptionOp.Controller.modelSubscribedObjectError(response.errorMsg);
+                        SubscriptionOp.Controller.modelSubscribedObjectError(userId, objectType, objectId, response.errorMsg);
 
-                    } else {
-                        if (SubscriptionOp.Model.validateSubscription(response)) {
-                            if (userId == response.userId
-                                && objectType == response.objectType
-                                && objectId == response.objectId) {
-                                SubscriptionOp.Controller.modelSubscribedObject(userId, objectType, objectId);
-                            }
-                        }
+                    } else if (!SubscriptionOp.Model.validateSubscription(response)) {
+                        SubscriptionOp.Controller.modelSubscribedObjectError(userId, objectType, objectId, "Invalidate subscribe data");
+
+                    } else if (userId     == response.userId
+                            && objectType == response.subscriptionObjectType
+                            && objectId   == response.objectId) {
+                        SubscriptionOp.Model.setSubscribed(true);
+                        SubscriptionOp.Controller.modelSubscribedObject(userId, objectType, objectId);
                     }
                 }
                 ,App.getContextPath() + this.API_SUBSCRIBE_ + userId + "/" + objectType + "/" + objectId
@@ -176,14 +198,14 @@ var SubscriptionOp = SubscriptionOp || {
             Acm.Service.asyncDelete(
                 function(response) {
                     if (response.hasError) {
-                        SubscriptionOp.Controller.modelUnsubscribedObjectError(response.errorMsg);
+                        SubscriptionOp.Controller.modelUnsubscribedObjectError(userId, objectType, objectId, response.errorMsg);
+
+                    } else if (!SubscriptionOp.Model.validateUnsubscribe(response)) {
+                        SubscriptionOp.Controller.modelUnsubscribedObjectError(userId, objectType, objectId, "Invalidate nnsubscribe data");
 
                     } else {
-                        if (SubscriptionOp.Model.validateSubscription(response)) {
-                            if ([] == response) {
-                                SubscriptionOp.Controller.modelUnsubscribedObject(userId, objectType, objectId);
-                            }
-                        }
+                        SubscriptionOp.Model.setSubscribed(false);
+                        SubscriptionOp.Controller.modelUnsubscribedObject(userId, objectType, objectId);
                     }
                 }
                 ,App.getContextPath() + this.API_UNSUBSCRIBE_ + userId + "/" + objectType + "/" + objectId
@@ -195,11 +217,11 @@ var SubscriptionOp = SubscriptionOp || {
 
     ,View: {
         create : function(args) {
+            if (SubscriptionOp.View.MicroData.create) {SubscriptionOp.View.MicroData.create();}
+
             this.getSubscriptionInfo = args.getSubscriptionInfo;
             this.$btnSubscribe = (args.$btnSubscribe)? args.$btnSubscribe : $("#btnSubscribe");
-            this.$btnUnsubscribe = (args.$btnUnsubscribe)? args.$btnUnsubscribe : $("#btnUnsubscribe");
             this.$btnSubscribe.on("click", function(e) {SubscriptionOp.View.onClickBtnSubscribe(e, this);});
-            this.$btnUnsubscribe.on("click", function(e) {SubscriptionOp.View.onClickBtnUnsubscribe(e, this);});
 
             Acm.Dispatcher.addEventListener(SubscriptionOp.Controller.MODEL_CHECKED_SUBSCRIPTION       ,this.onModelCheckedSubscription);
             Acm.Dispatcher.addEventListener(SubscriptionOp.Controller.MODEL_CHECKED_SUBSCRIPTION_ERROR ,this.onModelCheckedSubscriptionError);
@@ -208,39 +230,50 @@ var SubscriptionOp = SubscriptionOp || {
             Acm.Dispatcher.addEventListener(SubscriptionOp.Controller.MODEL_UNSUBSCRIBED_OBJECT        ,this.onModelUnsubscribedObject);
             Acm.Dispatcher.addEventListener(SubscriptionOp.Controller.MODEL_UNSUBSCRIBED_OBJECT_ERROR  ,this.onModelUnsubscribedObjectError);
         }
-        ,onInitialized: function() {}
+        ,onInitialized: function() {
+            if (SubscriptionOp.View.MicroData.onInitialized) {SubscriptionOp.View.MicroData.onInitialized();}
+        }
+
+        ,MicroData: {
+            create : function() {
+                this.msgBtnSubscribeText = "Subscribe";
+                this.msgBtnUnsubscribeText = "Unsubscribe";
+                this.msgBtnErrorSubscribeText = "N/A";
+
+                this.msgSubscribeSuccess = "Object subscribed";
+                this.msgUnsubscribeSuccess = "Object unsubscribed";
+            }
+            ,onInitialized : function() {}
+        }
 
         ,onModelCheckedSubscription: function(userId, objectType, objectId, subscribed) {
-            SubscriptionOp.View.setEnableBtnSubscribe(subscribed);
-            SubscriptionOp.View.setEnableBtnUnsubscribe(subscribed);
-            SubscriptionOp.View.showBtnSubscribe(!subscribed);
-            SubscriptionOp.View.showBtnUnsubscribe(subscribed);
+            var btnText = (subscribed)? SubscriptionOp.View.MicroData.msgBtnUnsubscribeText : SubscriptionOp.View.MicroData.msgBtnSubscribeText;
+            SubscriptionOp.View.setTextBtnSubscribe(btnText)
+            SubscriptionOp.View.setEnableBtnSubscribe(true);
         }
         ,onModelCheckedSubscriptionError: function(userId, objectType, objectId, errorMsg) {
-            SubscriptionOp.View.showBtnSubscribe(false);
-            SubscriptionOp.View.showBtnUnsubscribe(false);
+            SubscriptionOp.View.setTextBtnSubscribe(SubscriptionOp.View.MicroData.msgBtnErrorSubscribeText);
+            SubscriptionOp.View.setEnableBtnSubscribe(false);
             Acm.Dialog.error(errorMsg);
         }
         ,onModelSubscribedObject: function(userId, objectType, objectId) {
+            SubscriptionOp.View.setTextBtnSubscribe(SubscriptionOp.View.MicroData.msgBtnUnsubscribeText);
             SubscriptionOp.View.setEnableBtnSubscribe(true);
-            SubscriptionOp.View.setEnableBtnUnsubscribe(true);
-            SubscriptionOp.View.showBtnSubscribe(false);
-            SubscriptionOp.View.showBtnUnsubscribe(true);
-            Topbar.Model.Flash.add("Subscribed");
+            Topbar.Model.Flash.add(SubscriptionOp.View.MicroData.msgSubscribeSuccess);
         }
         ,onModelSubscribedObjectError: function(userId, objectType, objectId, errorMsg) {
-            SubscriptionOp.View.setEnableBtnSubscribe(true);
+            SubscriptionOp.View.setTextBtnSubscribe(SubscriptionOp.View.MicroData.msgBtnErrorSubscribeText);
+            SubscriptionOp.View.setEnableBtnSubscribe(false);
             Acm.Dialog.error(errorMsg);
         }
         ,onModelUnsubscribedObject: function(userId, objectType, objectId) {
+            SubscriptionOp.View.setTextBtnSubscribe(SubscriptionOp.View.MicroData.msgBtnSubscribeText);
             SubscriptionOp.View.setEnableBtnSubscribe(true);
-            SubscriptionOp.View.setEnableBtnUnsubscribe(true);
-            SubscriptionOp.View.showBtnSubscribe(true);
-            SubscriptionOp.View.showBtnUnsubscribe(false);
-            Topbar.Model.Flash.add("Unsubscribed");
+            Topbar.Model.Flash.add(SubscriptionOp.View.MicroData.msgUnsubscribeSuccess);
         }
         ,onModelUnsubscribedObjectError: function(userId, objectType, objectId, errorMsg) {
-            SubscriptionOp.View.setEnableBtnUnsubscribe(true);
+            SubscriptionOp.View.setTextBtnSubscribe(SubscriptionOp.View.MicroData.msgBtnErrorSubscribeText);
+            SubscriptionOp.View.setEnableBtnSubscribe(false);
             Acm.Dialog.error(errorMsg);
         }
 
@@ -248,26 +281,21 @@ var SubscriptionOp = SubscriptionOp || {
             SubscriptionOp.View.setEnableBtnSubscribe(false);
 
             var info = SubscriptionOp.View.getSubscriptionInfo();
-            SubscriptionOp.Controller.viewSubscribedObject(info.userId, info.objectType, info.objectId);
+            var isSubscribed = SubscriptionOp.Model.isSubscribed();
+            if (Acm.isNotEmpty(isSubscribed)) {
+                if (isSubscribed) {
+                    SubscriptionOp.Controller.viewUnsubscribedObject(info.userId, info.objectType, info.objectId);
+                } else {
+                    SubscriptionOp.Controller.viewSubscribedObject(info.userId, info.objectType, info.objectId);
+                }
+            }
         }
-        ,onClickBtnUnsubscribe: function(event, ctrl) {
-            SubscriptionOp.View.setEnableBtnUnsubscribe(false);
 
-            var info = SubscriptionOp.View.getObjInfo();
-            SubscriptionOp.Controller.viewUnsubscribedObject(info.userId, info.objectType, info.objectId);
-        }
-
-        ,showBtnSubscribe: function(show) {
-            Acm.Object.show(this.$btnSubscribe, show);
-        }
-        ,showBtnUnsubscribe: function(show) {
-            Acm.Object.show(this.$btnUnsubscribe, show);
-        }
         ,setEnableBtnSubscribe: function(enable) {
             Acm.Object.setEnable(this.$btnSubscribe, enable);
         }
-        ,setEnableBtnUnsubscribe: function(enable) {
-            Acm.Object.setEnable(this.$btnUnsubscribe, enable);
+        ,setTextBtnSubscribe: function(text) {
+            Acm.Object.setTextNodeText(this.$btnSubscribe, " " + text, -1);
         }
     }
 };
