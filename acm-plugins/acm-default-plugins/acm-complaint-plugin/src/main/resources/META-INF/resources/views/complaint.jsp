@@ -14,12 +14,18 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
+    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaint.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintService.js'/>"></script>
+
+    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintServiceNew.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintObject.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintEvent.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintPage.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintJTable.js'/>"></script>
 
@@ -161,6 +167,8 @@
                                                         <div class="btn-group">
                                                             <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> Close Complaint</button>
                                                             <input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />
+
+                                                            <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="i i-alarm"></i> Subscribe</button>
                                                         </div>
                                                     </div>
 

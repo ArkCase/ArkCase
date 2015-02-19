@@ -12,7 +12,7 @@ TaskWizard.Object = {
         var parentType = items.properties("parentType").itemValue();
         var reference = items.properties("reference").itemValue();
         if (Acm.isNotEmpty(parentType) && Acm.isNotEmpty(reference) ) {
-            var t = Task.getTask();
+            var t = TaskOld.getTask();
             t.attachedToObjectType = parentType;
             t.attachedToObjectId = reference;
         }
@@ -249,12 +249,12 @@ TaskWizard.Object = {
 /////////// older setter ang getter ///////////////////////////////////////////////
     
     ,getAttachedToObjectType: function() {
-        var t = Task.getTask();
+        var t = TaskOld.getTask();
         return Acm.goodValue(t.attachedToObjectType);
     }
     
     ,getAttachedToObjectId: function() {
-        var t = Task.getTask();
+        var t = TaskOld.getTask();
         return Acm.goodValue(t.attachedToObjectId);
     }
     
@@ -272,7 +272,7 @@ TaskWizard.Object = {
     }
 
     ,setTaskData : function(data) {
-        var t = Task.getTask();
+        var t = TaskOld.getTask();
         t.title = data.title;
         t.priority = data.priority;
         t.dueDate = data.dueDate;
@@ -291,7 +291,7 @@ TaskWizard.Object = {
     
     ,getTaskData : function() {
         var data = {};
-        var t = Task.getTask();
+        var t = TaskOld.getTask();
         data.assignee = this.getSelectValueSelOwners();
         if(data.assignee == null){data.assignee = App.getUserName();}
         data.attachedToObjectType = t.attachedToObjectType;
@@ -339,7 +339,7 @@ TaskWizard.Object = {
 //
 //
 //    ,setTaskData : function(data) {
-//        var t = Task.getTask();
+//        var t = TaskOld.getTask();
 //        t.title = data.title;
 //        t.priority = data.priority;
 //        t.dueDate = data.dueDate;
@@ -357,7 +357,7 @@ TaskWizard.Object = {
 //    }
 //    ,getTaskData : function() {
 //        var data = {};
-//        var t = Task.getTask();
+//        var t = TaskOld.getTask();
 //        data.title = this.getValueEdtTitle();
 //        data.priority = this.getValueEdtPriority();
 //        data.dueDate = this.getValueEdtDueDate();
