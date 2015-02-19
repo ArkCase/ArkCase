@@ -1,4 +1,4 @@
-package com.armedia.acm.services.dataaccess.service.impl;
+package com.armedia.acm.services.participants.dao;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -23,10 +23,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-search.xml",
-        "/spring/spring-library-data-access-test.xml"
+        "/spring/spring-library-context-holder.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class ParticipantPrivilegeIT
@@ -36,9 +33,6 @@ public class ParticipantPrivilegeIT
 
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
-
-    @Autowired
-    private DataAccessPrivilegeListener dataAccessPrivilegeListener;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
