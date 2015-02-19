@@ -277,4 +277,8 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
     </changeSet>
+
+    <changeSet id="user-tables-15-add-group_member_primary_key" author="dmiller">
+        <addPrimaryKey tableName="acm_group_member" columnNames="cm_group_name, cm_user_id"/>
+    </changeSet>
 </databaseChangeLog>

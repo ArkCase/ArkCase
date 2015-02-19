@@ -36,6 +36,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-particpants.xml",
         "/spring/spring-library-drools-monitor.xml"
         })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
