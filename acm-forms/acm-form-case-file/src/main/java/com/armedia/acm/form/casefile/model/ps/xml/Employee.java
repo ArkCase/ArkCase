@@ -1,14 +1,14 @@
 /**
  * 
  */
-package com.armedia.acm.form.casefile.model.xml;
+package com.armedia.acm.form.casefile.model.ps.xml;
 
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import com.armedia.acm.form.casefile.model.Subject;
+import com.armedia.acm.form.casefile.model.ps.Subject;
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
 
 /**
