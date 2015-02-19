@@ -7,6 +7,7 @@ AcmNotification.View = {
     create : function() {
     }
     ,onInitialized: function() {
+        SearchBase.View.Query.submit("*");
     }
 
     ,getJtArgs: function() {
@@ -76,7 +77,7 @@ AcmNotification.View = {
         if (result) {
             for (var i = 0; i < result.docs.length; i++) {
                 var Record = {};
-                Record.id = result.docs[i].object_id_s;
+                Record.id         = Acm.goodValue(result.docs[i].object_id_s);
                 Record.name       = Acm.goodValue(result.docs[i].name);
                 Record.type       = Acm.goodValue(result.docs[i].object_type_s);
                 Record.description      = Acm.goodValue(result.docs[i].description_parseable);
