@@ -71,6 +71,9 @@ Complaint.Event = {
             Complaint.Service.retrieveDetail(complaintId);
         }
         Complaint.Object.showTab(node.key);
+
+
+        SubscriptionOp.Model.checkSubscription(App.getUserName(), Complaint.Model.getObjectType(), complaintId);
     }
     ,onCheckedRestricted: function(restriction){
         var c = Complaint.getComplaint();

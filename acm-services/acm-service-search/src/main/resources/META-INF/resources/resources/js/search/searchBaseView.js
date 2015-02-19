@@ -155,12 +155,13 @@ SearchBase.View = {
                                 html += "<h6>" + display + "</h6>";
                                 html += "<div class='list-group auto' name='" + display + "'>";
                                 for (var j = 0; j < facet.facet_fields[i].values.length; j++) {
-                                    if (0 < Acm.goodValue(facet.facet_fields[i].values[j].count, 0)) {
+                                    var isFixedFilter = SearchBase.Model.findFilter(fixedFilters, display, Acm.goodValue(facet.facet_fields[i].values[j].name));
+                                    if (0 < Acm.goodValue(facet.facet_fields[i].values[j].count, 0) || isFixedFilter) {
                                         html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name) + "'";
                                         if (SearchBase.Model.findFilter(si.filters, display, Acm.goodValue(facet.facet_fields[i].values[j].name))) {
                                             html += " checked";
                                         }
-                                        if (SearchBase.Model.findFilter(fixedFilters, display, Acm.goodValue(facet.facet_fields[i].values[j].name))) {
+                                        if (isFixedFilter) {
                                             html += " disabled";
                                         }
                                         html += " /><span class='badge bg-info'>" + facet.facet_fields[i].values[j].count
@@ -184,10 +185,14 @@ SearchBase.View = {
                                 html += "<h6>" + display + "</h6>";
                                 html += "<div class='list-group auto' name='" + display + "'>";
                                 for (var j = 0; j < facet.facet_queries[i].values.length; j++) {
-                                    if (0 < Acm.goodValue(facet.facet_queries[i].values[j].count, 0)) {
+                                    var isFixedFilter = SearchBase.Model.findFilter(fixedFilters, display, Acm.goodValue(facet.facet_queries[i].values[j].name));
+                                    if (0 < Acm.goodValue(facet.facet_queries[i].values[j].count, 0) || isFixedFilter) {
                                         html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name) + "'";
                                         if (SearchBase.Model.findFilter(si.filters, display, Acm.goodValue(facet.facet_queries[i].values[j].name))) {
                                             html += " checked";
+                                        }
+                                        if (isFixedFilter) {
+                                            html += " disabled";
                                         }
                                         html += " /><span class='badge bg-info'>" + facet.facet_queries[i].values[j].count
                                             + "</span>" + Acm.goodValue(facet.facet_queries[i].values[j].name)
@@ -210,10 +215,14 @@ SearchBase.View = {
                                 html += "<h6>" + display + "</h6>";
                                 html += "<div class='list-group auto' name='" + display + "'>";
                                 for (var j = 0; j < facet.facet_dates[i].values.length; j++) {
-                                    if (0 < Acm.goodValue(facet.facet_dates[i].values[j].count, 0)) {
+                                    var isFixedFilter = SearchBase.Model.findFilter(fixedFilters, display, Acm.goodValue(facet.facet_dates[i].values[j].name));
+                                    if (0 < Acm.goodValue(facet.facet_dates[i].values[j].count, 0) || isFixedFilter) {
                                         html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name) + "'";
                                         if (SearchBase.Model.findFilter(si.filters, display, Acm.goodValue(facet.facet_dates[i].values[j].name))) {
                                             html += " checked";
+                                        }
+                                        if (isFixedFilter) {
+                                            html += " disabled";
                                         }
                                         html += " /><span class='badge bg-info'>" + facet.facet_dates[i].values[j].count
                                             + "</span>" + Acm.goodValue(facet.facet_dates[i].values[j].name)

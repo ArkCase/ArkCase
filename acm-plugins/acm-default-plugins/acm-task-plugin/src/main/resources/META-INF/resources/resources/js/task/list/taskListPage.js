@@ -22,7 +22,7 @@ TaskList.Page = {
                 var t = arr[i];
                 var taskId = t.object_id_s;
                 if (0 == i) {
-                    Task.setTaskId(taskId);
+                    TaskOld.setTaskId(taskId);
                 }
 
                 html += "<li class='list-group-item'><a href='#' class='thumb-sm pull-left m-r-sm'> <img src='"
