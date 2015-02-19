@@ -72,8 +72,9 @@ public class CreateSubscriptionAPIController {
 
         AcmSubscription subscription = prepareSubscription(userId, objectType, objectId, authentication);
         try {
-           AcmSubscription addedSubscription = getSubscriptionDao().save(subscription);
+            AcmSubscription addedSubscription = getSubscriptionDao().save(subscription);
             getSubscriptionEventPublisher().publishSubscriptionCreatedEvent(addedSubscription,authentication,true);
+            subscription = addedSubscription;
         } catch ( Exception e ) {
                Throwable t =  ExceptionUtils.getRootCause(e);
                if ( t instanceof  SQLIntegrityConstraintViolationException ) {
