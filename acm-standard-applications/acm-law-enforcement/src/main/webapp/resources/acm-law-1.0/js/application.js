@@ -45,6 +45,9 @@ var Application = Application || {
         if ("undefined" != typeof Task) {
             acmModules.push(Task);
         }
+        if ("undefined" != typeof TaskOld) {
+            acmModules.push(TaskOld);
+        }
         if ("undefined" != typeof TaskWizard) {
             acmModules.push(TaskWizard);
         }

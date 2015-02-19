@@ -17,7 +17,6 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
         if (CaseFile.View.Events.create)          {CaseFile.View.Events.create();}
         if (CaseFile.View.Correspondence.create)  {CaseFile.View.Correspondence.create();}
-
     }
     ,onInitialized: function() {
         if (CaseFile.View.MicroData.onInitialized)      {CaseFile.View.MicroData.onInitialized();}
@@ -32,7 +31,6 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.onInitialized)     {CaseFile.View.References.onInitialized();}
         if (CaseFile.View.Events.onInitialized)         {CaseFile.View.Events.onInitialized();}
         if (CaseFile.View.Correspondence.onInitialized) {CaseFile.View.Correspondence.onInitialized();}
-
     }
 
     ,MicroData: {

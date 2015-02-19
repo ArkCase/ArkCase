@@ -5,6 +5,34 @@
  */
 var Complaint = Complaint || {
     create: function() {
+        if (Complaint.Model.create)      {Complaint.Model.create();}
+        if (Complaint.View.create)       {Complaint.View.create();}
+        if (Complaint.Controller.create) {Complaint.Controller.create();}
+
+        if (SubscriptionOp.create) {
+            SubscriptionOp.create({
+                getSubscriptionInfo: function() {
+                    return {userId: App.getUserName()
+                        ,objectType: Complaint.Model.getObjectType()
+                        ,objectId: Complaint.Model.getObjectId()
+                    };
+                }
+            });
+        }
+
+        this.cretae_old();
+    }
+
+    ,onInitialized: function() {
+        if (Complaint.Model.onInitialized)      {Complaint.Model.onInitialized();}
+        if (Complaint.View.onInitialized)       {Complaint.View.onInitialized();}
+        if (Complaint.Controller.onInitialized) {Complaint.Controller.onInitialized();}
+        if (SubscriptionOp.onInitialized)       {SubscriptionOp.onInitialized();}
+    }
+
+
+    //------------------------------
+    ,create_old: function() {
         Complaint.cachePage = new Acm.Model.CacheFifo(2);
         Complaint.cacheComplaint = new Acm.Model.CacheFifo(3);
         Complaint.cachePersonList = new Acm.Model.CacheFifo(3);
