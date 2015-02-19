@@ -54,10 +54,57 @@ public class ParticipantDaoIT
 
     @Test
     @Transactional
+    public void findParticipantWithPrivilege()
+    {
+        AcmParticipant p = makeAcmParticipant("first", "assignee", "grant", "save");
+
+        dao.save(p);
+
+        boolean hasAccess = dao.hasObjectAccess(p.getParticipantLdapId(), objectId, objectType, "save", "grant");
+
+        assertTrue(hasAccess);
+
+        boolean anotherUserHasAccess = dao.hasObjectAccess("random-user", objectId, objectType, "save", "grant");
+
+        assertFalse(anotherUserHasAccess);
+    }
+
+    @Test
+    @Transactional
+    public void findDefaultUserWithPrivilege()
+    {
+        AcmParticipant p = makeAcmParticipant("*", "assignee", "grant", "save");
+
+        dao.save(p);
+
+        boolean hasAccess = dao.hasObjectAccess("any-user", objectId, objectType, "save", "grant");
+
+        assertTrue(hasAccess);
+    }
+
+    @Test
+    @Transactional
+    public void findParticipantInGroupWithPrivilege()
+    {
+        AcmParticipant p = makeAcmParticipant("first", "assignee", "grant", "save");
+
+        dao.save(p);
+
+        boolean hasAccess = dao.hasObjectAccessViaGroup(p.getParticipantLdapId(), objectId, objectType, "read", "grant");
+
+        // should not find any since our user is not part of a group!
+        assertFalse(hasAccess);
+    }
+
+
+
+
+    @Test
+    @Transactional
     public void participants()
     {
-        AcmParticipant first = makeAcmParticipant("first", "assignee");
-        AcmParticipant second = makeAcmParticipant("second", "follower");
+        AcmParticipant first = makeAcmParticipant("first", "assignee", "type", "action");
+        AcmParticipant second = makeAcmParticipant("second", "follower", "type", "action");
 
         List<AcmParticipant> participantList = Arrays.asList(first, second);
 
@@ -81,7 +128,7 @@ public class ParticipantDaoIT
             firstBatchOfParticipantIds.add(ap.getId());
         }
 
-        AcmParticipant third = makeAcmParticipant("third", "owner");
+        AcmParticipant third = makeAcmParticipant("third", "owner", "type", "action");
 
         found.add(third);
 
@@ -161,7 +208,7 @@ public class ParticipantDaoIT
 
     }
 
-    private AcmParticipant makeAcmParticipant(String ldapId, String participantType)
+    private AcmParticipant makeAcmParticipant(String ldapId, String participantType, String accessType, String objectAction)
     {
         AcmParticipant participant = new AcmParticipant();
         participant.setObjectType(objectType);
@@ -172,8 +219,8 @@ public class ParticipantDaoIT
         AcmParticipantPrivilege privilege = new AcmParticipantPrivilege();
         participant.getPrivileges().add(privilege);
         privilege.setAccessReason("reason");
-        privilege.setAccessType("type");
-        privilege.setObjectAction("action");
+        privilege.setAccessType(accessType);
+        privilege.setObjectAction(objectAction);
 
         return participant;
     }
