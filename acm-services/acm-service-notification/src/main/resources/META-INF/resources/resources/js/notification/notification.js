@@ -16,7 +16,8 @@ var AcmNotification = AcmNotification || {
             SearchBase.create({name: "notification"
                 ,jtArgs     : AcmNotification.View.getJtArgs()
                 ,jtDataMaker: AcmNotification.View.jtDataMaker
-                ,filters    : [{key: "Object Type", values: ["CASE_FILE"]}]
+                ,filters    : [{key: "Object Type", values: ["NOTIFICATION"]}
+                              ,{key: "Owner", values: [App.getUserName()]}]
             });
         }
     }
