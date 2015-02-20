@@ -44,6 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.armedia.acm.form.casefile.service.CaseFileFactory;
+import com.armedia.acm.form.casefile.service.CaseFilePSFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
@@ -74,6 +75,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
     private ChangeCaseStatusDao changeCaseStatusDao;
     private PersonDao personDao;
     private EcmFileDao ecmFileDao;
+    private CaseFilePSFactory caseFilePSFactory;
     private CaseFileFactory caseFileFactory;
     private AcmUserActionExecutor userActionExecutor;
 
@@ -339,13 +341,21 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setEcmFileDao(EcmFileDao ecmFileDao) {
 		this.ecmFileDao = ecmFileDao;
 	}
-
+	
 	public CaseFileFactory getCaseFileFactory() {
 		return caseFileFactory;
 	}
 
 	public void setCaseFileFactory(CaseFileFactory caseFileFactory) {
 		this.caseFileFactory = caseFileFactory;
+	}
+
+	public CaseFilePSFactory getCaseFilePSFactory() {
+		return caseFilePSFactory;
+	}
+
+	public void setCaseFilePSFactory(CaseFilePSFactory caseFilePSFactory) {
+		this.caseFilePSFactory = caseFilePSFactory;
 	}
 
 	public MuleClient getMuleClient() {

@@ -8,6 +8,7 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
+import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,6 +52,7 @@ public class CreateSubscriptionAPIController {
     private SubscriptionDao subscriptionDao;
     private AcmPlugin subscriptionPlugin;
     private ExecuteSolrQuery executeSolrQuery;
+    private SubscriptionEventPublisher subscriptionEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -70,7 +72,9 @@ public class CreateSubscriptionAPIController {
 
         AcmSubscription subscription = prepareSubscription(userId, objectType, objectId, authentication);
         try {
-            subscription = getSubscriptionDao().save(subscription);
+            AcmSubscription addedSubscription = getSubscriptionDao().save(subscription);
+            getSubscriptionEventPublisher().publishSubscriptionCreatedEvent(addedSubscription,authentication,true);
+            subscription = addedSubscription;
         } catch ( Exception e ) {
                Throwable t =  ExceptionUtils.getRootCause(e);
                if ( t instanceof  SQLIntegrityConstraintViolationException ) {
@@ -88,6 +92,8 @@ public class CreateSubscriptionAPIController {
                } else {
                    if(log.isErrorEnabled())
                        log.error("Exception occurred while trying to create subscription on object[" + objectType + "]:[" + objectId + "] for user: " + userId,e);
+
+                   getSubscriptionEventPublisher().publishSubscriptionCreatedEvent(subscription,authentication,false);
 
                    throw new AcmCreateObjectFailedException(objectType,"Subscription for user: "+userId+" on object [" + objectType + "]:[" + objectId + "] was not inserted into the DB",e);
                }
@@ -145,6 +151,15 @@ public class CreateSubscriptionAPIController {
 
         return subscription;
     }
+
+    public SubscriptionEventPublisher getSubscriptionEventPublisher() {
+        return subscriptionEventPublisher;
+    }
+
+    public void setSubscriptionEventPublisher(SubscriptionEventPublisher subscriptionEventPublisher) {
+        this.subscriptionEventPublisher = subscriptionEventPublisher;
+    }
+
     public AcmPlugin getSubscriptionPlugin() {
         return subscriptionPlugin;
     }

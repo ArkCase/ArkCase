@@ -11,6 +11,6 @@ Search.Service = {
     ,onInitialized: function() {
     }
 
-    ,API_FACET_SEARCH_       : "/api/v1/plugin/search/facetedSearch?q="
+//    ,API_FACET_SEARCH_       : "/api/v1/plugin/search/facetedSearch?q="
 
 };

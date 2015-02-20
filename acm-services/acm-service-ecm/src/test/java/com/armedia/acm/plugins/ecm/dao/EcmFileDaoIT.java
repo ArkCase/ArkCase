@@ -29,7 +29,6 @@ import static org.junit.Assert.*;
         "/spring/spring-library-cmis-configuration.xml",
         "/spring/spring-library-activemq.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-activiti-actions.xml",
         "/spring/spring-library-activiti-configuration.xml",

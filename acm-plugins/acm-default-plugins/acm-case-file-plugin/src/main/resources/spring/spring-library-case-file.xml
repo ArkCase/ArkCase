@@ -196,5 +196,9 @@
     	<property name="eventPublisher" ref="acmObjectHistoryEventPublisher" />
     	<property name="acmAssignmentDao" ref="acmAssignmentDao" />
     </bean>
+
+    <bean id="caseFileDataAccessUpdateLocator" class="com.armedia.acm.plugins.casefile.service.CaseFileDataAccessUpdateLocator">
+        <property name="caseFileDao" ref="caseFileDao"/>
+    </bean>
     
 </beans>
