@@ -230,6 +230,11 @@ Admin.View = Admin.View || {
                 Admin.Model.Organization.Tree.setSupervisorFlag(false);
 
                 SearchBase.showSearchDialog({name: "pickMember"
+                    ,title: "Add Members"
+                    ,prompt: "Enter to search for members."
+                    ,btnGoText: "Go!"
+                    ,btnOkText: "Add"
+                    ,btnCancelText: "Cancel"
                     ,filters: [{key: "Object Type", values: ["USER"]}]
                     ,onClickBtnPrimary : function(event, ctrl) {
                         var people = [];
@@ -254,6 +259,11 @@ Admin.View = Admin.View || {
                 Admin.Model.Organization.Tree.setSupervisorFlag(true);
 
                 SearchBase.showSearchDialog({name: "pickSupervisor"
+                    ,title: "Add Supervisor"
+                    ,prompt: "Enter to search for supervisor."
+                    ,btnGoText: "Go!"
+                    ,btnOkText: "Add"
+                    ,btnCancelText: "Cancel"
                     ,filters: [{key: "Object Type", values: ["USER"]}]
                     ,onClickBtnPrimary : function(event, ctrl) {
                         var people = [];
